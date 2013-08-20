@@ -174,7 +174,8 @@ public class AssetMigrater {
             guidedDecisionTableMigrater.migrate(jcrModule, jcrAssetItem);
         } else if (AssetFormats.ENUMERATION.equals(jcrAssetItem.getFormat())
                 || AssetFormats.DSL.equals(jcrAssetItem.getFormat())
-                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())
+                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
+        		|| AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
                 || AssetFormats.FORM_DEFINITION.equals(jcrAssetItem.getFormat())
                 || AssetFormats.SPRING_CONTEXT.equals(jcrAssetItem.getFormat())
                 || AssetFormats.SERVICE_CONFIG.equals(jcrAssetItem.getFormat())
