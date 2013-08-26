@@ -259,7 +259,10 @@ public class AssetMigrater {
         
         //System.out.format("    Metadata: setDescription... \n" + jcrAssetItem.getDescription());
 
-
+        metadata.setDescription(jcrAssetItem.getDescription());
+        metadata.setSubject(jcrAssetItem.getSubject());
+        metadata.setExternalRelation(jcrAssetItem.getExternalRelation());
+        metadata.setExternalSource(jcrAssetItem.getExternalSource());
         List<CategoryItem> jcrCategories = jcrAssetItem.getCategories();
         for(CategoryItem c : jcrCategories) {
             //System.out.format("    Metadata: addCategory... \n" + c.getFullPath());
