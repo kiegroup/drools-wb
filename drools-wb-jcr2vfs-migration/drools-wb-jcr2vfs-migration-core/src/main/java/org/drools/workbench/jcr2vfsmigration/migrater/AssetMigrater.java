@@ -22,6 +22,7 @@ import org.drools.guvnor.server.RepositoryModuleService;
 import org.drools.guvnor.server.repository.Preferred;
 import org.drools.guvnor.server.util.Discussion;
 import org.drools.repository.AssetItem;
+import org.drools.repository.CategoryItem;
 import org.drools.repository.RulesRepository;
 import org.drools.workbench.jcr2vfsmigration.Jcr2VfsMigrationApp;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.AttachementAssetMigrater;
@@ -144,9 +145,6 @@ public class AssetMigrater {
                         migrate(jcrModule, assetItemJCR);
                         System.out.format("    Done.\n",
                                 assetItemJCR.getName(), assetItemJCR.getFormat());
-
-                        //Migrate asset discussions
-                        migrateAssetDiscussions(jcrModule, row.getUuid());
                     }
                 } catch (SerializationException e) {
                 	Jcr2VfsMigrationApp.hasErrors = true;
@@ -165,7 +163,7 @@ public class AssetMigrater {
         System.out.println("  Asset migration ended");
     }
 
-    private void migrate(Module jcrModule, AssetItem jcrAssetItem) {
+    private void migrate(Module jcrModule, AssetItem jcrAssetItem) throws SerializationException {
         if (AssetFormats.DRL_MODEL.equals(jcrAssetItem.getFormat())) {
             factModelsMigrater.migrate(jcrModule, jcrAssetItem);
         } else if (AssetFormats.BUSINESS_RULE.equals(jcrAssetItem.getFormat())) {
@@ -213,7 +211,9 @@ public class AssetMigrater {
         	Jcr2VfsMigrationApp.hasWarnings = true;
         	System.out.format("    WARNING: asset [%s] with format[%s] is not supported by migration tool. \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
         }
-        // TODO When all assetFormats types have been tried, the last else should throw an IllegalArgumentException
+        
+        //Migrate asset metadata
+        migrateMetaData(jcrModule, jcrAssetItem);
     }
     
     public void migrateAssetHistory(Module jcrModule, String assetUUID) throws SerializationException {
@@ -241,23 +241,35 @@ public class AssetMigrater {
         }
     }
 
-    public void migrateAssetDiscussions(Module jcrModule, String assetUUID)  throws SerializationException {
+    public void migrateMetaData(Module jcrModule, AssetItem jcrAssetItem)  throws SerializationException {
+/*        System.out.format("    Metadata: Asset [%s] with format [%s] is being migrated... \n",
+        		jcrAssetItem.getName(), jcrAssetItem.getFormat());       */
+        
         //avoid using RepositoryAssetService as it calls assets' content handler
-        AssetItem assetItemJCR = rulesRepository.loadAssetByUUID(assetUUID);
-        List<DiscussionRecord> discussions = new Discussion().fromString( assetItemJCR.getStringProperty( Discussion.DISCUSSION_PROPERTY_KEY ) );
+        Metadata metadata = new Metadata();        
         
-        if(discussions.size() == 0) {
-            return;
+        List<DiscussionRecord> discussions = new Discussion().fromString( jcrAssetItem.getStringProperty( Discussion.DISCUSSION_PROPERTY_KEY ) );
+        
+        if(discussions.size() != 0) {
+            //final org.kie.commons.java.nio.file.Path nioPath = paths.convert( path );
+            for(DiscussionRecord discussion: discussions) {
+                metadata.addDiscussion( new org.guvnor.common.services.shared.metadata.model.DiscussionRecord( discussion.timestamp, discussion.author, discussion.note ) );
+            }
         }
         
-         //final org.kie.commons.java.nio.file.Path nioPath = paths.convert( path );
-        Metadata metadata = new Metadata();
-        for(DiscussionRecord discussion: discussions) {
-            metadata.addDiscussion( new org.guvnor.common.services.shared.metadata.model.DiscussionRecord( discussion.timestamp, discussion.author, discussion.note ) );
-        }
+        //System.out.format("    Metadata: setDescription... \n" + jcrAssetItem.getDescription());
 
-        Path path = migrationPathManager.generatePathForAsset(jcrModule, assetItemJCR);
+
+        List<CategoryItem> jcrCategories = jcrAssetItem.getCategories();
+        for(CategoryItem c : jcrCategories) {
+            //System.out.format("    Metadata: addCategory... \n" + c.getFullPath());
+            metadata.addCategory(c.getFullPath());        	
+        }
+        
+        Path path = migrationPathManager.generatePathForAsset(jcrModule, jcrAssetItem);
         metadataService.setUpAttributes(path, metadata);
+                
+        //System.out.format("    Metadata migration done.\n");
     }
 
 }

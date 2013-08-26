@@ -27,9 +27,7 @@ public class MigrationPathManager {
     @Inject
     @Named("migrationFS")
     private FileSystem fs;
-    
-    private Map<String, Path> uuidToPathMap = new HashMap<String, Path>();
-    private Map<Path, String> pathToUuidMap = new HashMap<Path, String>();
+
 
     // Generate methods
 
@@ -39,16 +37,15 @@ public class MigrationPathManager {
 
         return paths.convert( _path, false);
 
-//        final Path path = PathFactory.newPath( paths.convert( _path.getFileSystem() ), _path.getFileName().toString(), _path.toUri().toString() );
-//        return path;
+        //final Path path = PathFactory.newPath( paths.convert( _path.getFileSystem() ), _path.getFileName().toString(), _path.toUri().toString() );
+        //return path;
     }
     
-    public Path generatePathForModule( Module jcrModule ) {
-        final org.kie.commons.java.nio.file.Path modulePath = fs.getPath( "/" + escapePathEntry( jcrModule.getName() ) );
+    public Path generatePathForModule( String jcrModuleName ) {
+        final org.kie.commons.java.nio.file.Path modulePath = fs.getPath( "/" + escapePathEntry( jcrModuleName ) );
 
         final Path path = PathFactory.newPath( paths.convert( modulePath.getFileSystem() ), modulePath.getFileName().toString(), modulePath.toUri().toString() );
 
-        register( jcrModule.getUuid(), path );
         return path;
     }
 
@@ -71,7 +68,6 @@ public class MigrationPathManager {
 
         final Path path = PathFactory.newPath( paths.convert( assetPath.getFileSystem() ), assetPath.getFileName().toString(), assetPath.toUri().toString() );
 
-        register( jcrAsset.getUuid(), path );
         return path;
     }
 
@@ -95,7 +91,6 @@ public class MigrationPathManager {
 
         final Path path = PathFactory.newPath(paths.convert(assetPath.getFileSystem()), assetPath.getFileName().toString(), assetPath.toUri().toString());
 
-        register(jcrAssetItem.getUUID(), path);
         return path;
     }
     
@@ -115,33 +110,4 @@ public class MigrationPathManager {
         // TODO Once porcelli has a list of all illegal and escaped characters in PathEntry, deal with them here
         return pathEntry;
     }
-
-    protected void register( String uuid,
-                             Path path ) {
-        if ( uuidToPathMap.containsKey( uuid ) ) {
-            //already registered
-            return;
-/*            throw new IllegalArgumentException( "The uuid (" + uuid + ") cannot be registered for path ("
-                                                        + path + ") because it has already been registered once. Last time it was for path ("
-                                                        + uuidToPathMap.get( uuid ) + "), but even if it's equal, it should never be registered twice." );
-*/        }
-        if ( pathToUuidMap.containsKey( path ) ) {
-            //already registered
-            return;
-/*            throw new IllegalArgumentException( "The path (" + path + ") cannot be registered from uuid ("
-                                                        + uuid + ") because it has already been registered once. Last time it was for uuid ("
-                                                        + pathToUuidMap.get( path ) + "), but even if it's equal, it should never be registered twice." );
-*/        }
-        uuidToPathMap.put( uuid, path );
-        pathToUuidMap.put( path, uuid );
-    }
-
-    public Path getPath( String uuid ) {
-        return uuidToPathMap.get( uuid );
-    }
-
-    public String getUuid( Path path ) {
-        return pathToUuidMap.get( path );
-    }
-
 }

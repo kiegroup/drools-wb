@@ -76,7 +76,7 @@ public class FactModelsMigrater {
         initAnnotationDefinitions();        
         
         if(project == null) {
-        	Path projectRootPath = migrationPathManager.generatePathForModule(jcrModule);
+        	Path projectRootPath = migrationPathManager.generatePathForModule(jcrModule.getName());
         	//Quick hack to pass mock values for pomPath etc, to make Project constructor happy. We only use projectRootPath anyway
         	project = new Project( projectRootPath,
         			projectRootPath,
