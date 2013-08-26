@@ -1,5 +1,7 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.Map;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,7 +19,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class AttachementAssetMigrater {
+public class AttachementAssetMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( AttachementAssetMigrater.class );
 
@@ -35,7 +37,7 @@ public class AttachementAssetMigrater {
     protected MigrationPathManager migrationPathManager;
 
     public void migrate( Module jcrModule,
-                         AssetItem jcrAssetItem ) {
+                         AssetItem jcrAssetItem) {
         Path path = migrationPathManager.generatePathForAsset( jcrModule,
                                                                jcrAssetItem );
         final org.kie.commons.java.nio.file.Path nioPath = paths.convert( path );
@@ -47,6 +49,7 @@ public class AttachementAssetMigrater {
 
         ioService.write( nioPath,
                          attachement,
+                         migrateMetaData(jcrModule, jcrAssetItem),
                          new CommentedOption( jcrAssetItem.getLastContributor(),
                                               null,
                                               jcrAssetItem.getCheckinComment(),

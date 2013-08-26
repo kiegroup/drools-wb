@@ -34,7 +34,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class FactModelsMigrater {
+public class FactModelsMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger(FactModelsMigrater.class);
 

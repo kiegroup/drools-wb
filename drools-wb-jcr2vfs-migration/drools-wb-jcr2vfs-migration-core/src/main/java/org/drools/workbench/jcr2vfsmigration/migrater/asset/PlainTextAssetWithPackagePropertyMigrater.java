@@ -20,7 +20,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class PlainTextAssetWithPackagePropertyMigrater {
+public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( PlainTextAssetWithPackagePropertyMigrater.class );
 
@@ -79,6 +79,7 @@ public class PlainTextAssetWithPackagePropertyMigrater {
 
         ioService.write( nioPath,
                          sourceWithImport,
+                         migrateMetaData(jcrModule, jcrAssetItem),
                          new CommentedOption( jcrAssetItem.getLastContributor(),
                                               null,
                                               jcrAssetItem.getCheckinComment(),

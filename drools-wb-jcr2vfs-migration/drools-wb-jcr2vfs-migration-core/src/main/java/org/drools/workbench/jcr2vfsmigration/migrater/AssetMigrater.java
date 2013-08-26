@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -34,12 +36,9 @@ import org.drools.workbench.jcr2vfsmigration.migrater.asset.PlainTextAssetMigrat
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.PlainTextAssetWithPackagePropertyMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.TestScenarioMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
-import org.guvnor.common.services.shared.metadata.MetadataService;
-import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
-import org.uberfire.backend.vfs.Path;
 
 
 @ApplicationScoped
@@ -70,8 +69,7 @@ public class AssetMigrater {
     protected GuidedScoreCardMigrater guidedScoreCardMigrater;
     @Inject
     protected TestScenarioMigrater testScenarioMigrater;
-    @Inject
-    protected MetadataService metadataService;
+
     @Inject
     protected MigrationPathManager migrationPathManager;
     @Inject
@@ -159,7 +157,6 @@ public class AssetMigrater {
             }
         }
         
-
         System.out.println("  Asset migration ended");
     }
 
@@ -211,9 +208,6 @@ public class AssetMigrater {
         	Jcr2VfsMigrationApp.hasWarnings = true;
         	System.out.format("    WARNING: asset [%s] with format[%s] is not supported by migration tool. \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
         }
-        
-        //Migrate asset metadata
-        migrateMetaData(jcrModule, jcrAssetItem);
     }
     
     public void migrateAssetHistory(Module jcrModule, String assetUUID) throws SerializationException {
@@ -239,40 +233,6 @@ public class AssetMigrater {
             logger.debug("    Asset ({}) with format ({}) migrated: version [{}], comment[{}], lastModified[{}]",
                     historicalAssetJCR.getName(), historicalAssetJCR.getFormat(), historicalAssetJCR.getVersionNumber(), historicalAssetJCR.getCheckinComment(), historicalAssetJCR.getLastModified().getTime());
         }
-    }
-
-    public void migrateMetaData(Module jcrModule, AssetItem jcrAssetItem)  throws SerializationException {
-/*        System.out.format("    Metadata: Asset [%s] with format [%s] is being migrated... \n",
-        		jcrAssetItem.getName(), jcrAssetItem.getFormat());       */
-        
-        //avoid using RepositoryAssetService as it calls assets' content handler
-        Metadata metadata = new Metadata();        
-        
-        List<DiscussionRecord> discussions = new Discussion().fromString( jcrAssetItem.getStringProperty( Discussion.DISCUSSION_PROPERTY_KEY ) );
-        
-        if(discussions.size() != 0) {
-            //final org.kie.commons.java.nio.file.Path nioPath = paths.convert( path );
-            for(DiscussionRecord discussion: discussions) {
-                metadata.addDiscussion( new org.guvnor.common.services.shared.metadata.model.DiscussionRecord( discussion.timestamp, discussion.author, discussion.note ) );
-            }
-        }
-        
-        //System.out.format("    Metadata: setDescription... \n" + jcrAssetItem.getDescription());
-
-        metadata.setDescription(jcrAssetItem.getDescription());
-        metadata.setSubject(jcrAssetItem.getSubject());
-        metadata.setExternalRelation(jcrAssetItem.getExternalRelation());
-        metadata.setExternalSource(jcrAssetItem.getExternalSource());
-        List<CategoryItem> jcrCategories = jcrAssetItem.getCategories();
-        for(CategoryItem c : jcrCategories) {
-            //System.out.format("    Metadata: addCategory... \n" + c.getFullPath());
-            metadata.addCategory(c.getFullPath());        	
-        }
-        
-        Path path = migrationPathManager.generatePathForAsset(jcrModule, jcrAssetItem);
-        metadataService.setUpAttributes(path, metadata);
-                
-        //System.out.format("    Metadata migration done.\n");
     }
 
 }

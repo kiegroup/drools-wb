@@ -1,5 +1,7 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.Map;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,7 +29,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class GuidedDecisionTableMigrater {
+public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( GuidedDecisionTableMigrater.class );
 
@@ -57,7 +59,7 @@ public class GuidedDecisionTableMigrater {
     private PackageHeaderInfo packageHeaderInfo;
 
     public void migrate( Module jcrModule,
-                         AssetItem jcrAssetItem ) {
+                         AssetItem jcrAssetItem) {
         if ( !AssetFormats.DECISION_TABLE_GUIDED.equals( jcrAssetItem.getFormat() ) ) {
             throw new IllegalArgumentException( "The jcrAsset (" + jcrAssetItem.getName() + ") has the wrong format (" + jcrAssetItem.getFormat() + ")." );
         }
@@ -107,6 +109,7 @@ public class GuidedDecisionTableMigrater {
 
         ioService.write( nioPath,
                          sourceContent,
+                         migrateMetaData(jcrModule, jcrAssetItem),
                          new CommentedOption( jcrAssetItem.getLastContributor(),
                                               null,
                                               jcrAssetItem.getCheckinComment(),

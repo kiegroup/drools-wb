@@ -26,7 +26,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class TestScenarioMigrater {
+public class TestScenarioMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( TestScenarioMigrater.class );
 
@@ -59,18 +59,11 @@ public class TestScenarioMigrater {
             ioService.createFile( nioPath );
         }
 
-        Map<String, Object> attrs;
-        try {
-            attrs = ioService.readAttributes( nioPath );
-        } catch ( final NoSuchFileException ex ) {
-            attrs = new HashMap<String, Object>();
-        }
-
         String content = jcrAssetItem.getContent();
 
         String sourceContentWithPackage = packageImportHelper.assertPackageNameXML( content, path );
         sourceContentWithPackage = packageImportHelper.assertPackageImportXML( sourceContentWithPackage, path );
 
-        ioService.write( nioPath, content, attrs, new CommentedOption( jcrAssetItem.getLastContributor(), null, jcrAssetItem.getCheckinComment(), jcrAssetItem.getLastModified().getTime() ) );
+        ioService.write( nioPath, content, migrateMetaData(jcrModule, jcrAssetItem), new CommentedOption( jcrAssetItem.getLastContributor(), null, jcrAssetItem.getCheckinComment(), jcrAssetItem.getLastModified().getTime() ) );
     }
 }

@@ -1,5 +1,7 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.Map;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,7 +22,7 @@ import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class GuidedScoreCardMigrater {
+public class GuidedScoreCardMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( GuidedScoreCardMigrater.class );
 
@@ -44,7 +46,7 @@ public class GuidedScoreCardMigrater {
     protected PackageImportHelper packageImportHelper;
 
     public void migrate( Module jcrModule,
-                         AssetItem jcrAssetItem ) {
+                         AssetItem jcrAssetItem) {
         if ( !AssetFormats.SCORECARD_GUIDED.equals( jcrAssetItem.getFormat() ) ) {
             throw new IllegalArgumentException( "The jcrAsset (" + jcrAssetItem.getName() + ") has the wrong format (" + jcrAssetItem.getFormat() + ")." );
         }
@@ -68,6 +70,7 @@ public class GuidedScoreCardMigrater {
 
         ioService.write( nioPath,
                          sourceContentWithPackage,
+                         migrateMetaData(jcrModule, jcrAssetItem),
                          new CommentedOption( jcrAssetItem.getLastContributor(),
                                               null,
                                               jcrAssetItem.getCheckinComment(),
