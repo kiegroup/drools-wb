@@ -60,9 +60,9 @@ import org.drools.workbench.screens.guided.rule.client.editor.BindingTextBox;
 import org.drools.workbench.screens.guided.rule.client.editor.CEPOperatorsDropdown;
 import org.drools.workbench.screens.guided.rule.client.editor.CEPWindowOperatorsDropdown;
 import org.drools.workbench.screens.guided.rule.client.editor.OperatorSelection;
-import org.kie.workbench.common.widgets.client.resources.HumanReadable;
 import org.kie.workbench.common.services.datamodel.model.FieldAccessorsAndMutators;
 import org.kie.workbench.common.services.datamodel.oracle.PackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.resources.HumanReadable;
 import org.uberfire.client.common.FormStylePopup;
 import org.uberfire.client.common.ImageButton;
 import org.uberfire.client.common.InfoPopup;
@@ -393,9 +393,20 @@ public class ConditionPopup extends FormStylePopup {
                 }
 
                 //Check for unique binding
-                if ( editingCol.isBound() && !isBindingUnique( editingCol.getBinding() ) ) {
-                    Window.alert( GuidedDecisionTableConstants.INSTANCE.PleaseEnterANameThatIsNotAlreadyUsedByAnotherPattern() );
-                    return;
+                if ( isNew ) {
+                    if ( editingCol.isBound() && !isBindingUnique( editingCol.getBinding() ) ) {
+                        Window.alert( GuidedDecisionTableConstants.INSTANCE.PleaseEnterANameThatIsNotAlreadyUsedByAnotherPattern() );
+                        return;
+                    }
+                } else {
+                    if ( col.isBound() && editingCol.isBound() ) {
+                        if ( !col.getBinding().equals( editingCol.getBinding() ) ) {
+                            if ( editingCol.isBound() && !isBindingUnique( editingCol.getBinding() ) ) {
+                                Window.alert( GuidedDecisionTableConstants.INSTANCE.PleaseEnterANameThatIsNotAlreadyUsedByAnotherPattern() );
+                                return;
+                            }
+                        }
+                    }
                 }
 
                 //Check column header is unique
@@ -574,7 +585,7 @@ public class ConditionPopup extends FormStylePopup {
         } else if ( nil( editingCol.getOperator() ) ) {
             operatorLabel.setText( GuidedDecisionTableConstants.INSTANCE.pleaseSelectAField() );
         } else {
-            operatorLabel.setText( HumanReadable.getOperatorDisplayName(editingCol.getOperator()) );
+            operatorLabel.setText( HumanReadable.getOperatorDisplayName( editingCol.getOperator() ) );
         }
     }
 
