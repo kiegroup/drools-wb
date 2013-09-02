@@ -13,6 +13,7 @@
   <name>Drools Workbench - JCR to UberFire VFS migration</name>
   <description>Migrates the data of Guvnor 5 to Drools Workbench 6</description>
 
+
   <dependencies>
     <dependency>
       <groupId>org.drools</groupId>
@@ -179,6 +180,7 @@
       <groupId>org.kie.commons</groupId>
       <artifactId>kie-nio2-fs</artifactId>
     </dependency>
+
   </dependencies>
   
 <build>
