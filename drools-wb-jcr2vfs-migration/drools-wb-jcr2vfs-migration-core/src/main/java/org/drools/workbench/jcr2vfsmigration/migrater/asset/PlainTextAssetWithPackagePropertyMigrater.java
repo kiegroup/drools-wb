@@ -68,9 +68,15 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
         sb.append( "\n" );
         sb.append( "end" );
 
-        //Support for # has been removed from Drools Expert
-        String content = sb.toString().replaceAll( "#",
-                                                   "//" );
+        String content = sb.toString();
+        if (AssetFormats.DSL.equals(jcrAssetItem.getFormat())
+                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
+        		|| AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
+        		|| AssetFormats.DRL.equals(jcrAssetItem.getFormat())
+                || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
+            //Support for # has been removed from Drools Expert
+            content = content.replaceAll( "#", "//" );
+        }
 
         String sourceWithImport = drlTextEditorServiceImpl.assertPackageName( content,
                                                                               path );

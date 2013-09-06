@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.drools.guvnor.client.common.AssetFormats;
 import org.drools.guvnor.client.rpc.Module;
 import org.drools.guvnor.server.RepositoryAssetService;
 import org.drools.repository.AssetItem;
@@ -47,8 +48,15 @@ public class PlainTextAssetMigrater extends BaseAssetMigrater {
 
         String content = jcrAssetItem.getContent();
 
-        //Support for # has been removed from Drools Expert
-        content = content.replaceAll( "#", "//" );
+        if (AssetFormats.DSL.equals(jcrAssetItem.getFormat())
+                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
+        		|| AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
+        		|| AssetFormats.DRL.equals(jcrAssetItem.getFormat())
+                || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
+            //Support for # has been removed from Drools Expert
+            content = content.replaceAll( "#", "//" );
+        }
+
         ioService.write( nioPath,
                          content,
                          migrateMetaData(jcrModule, jcrAssetItem),
