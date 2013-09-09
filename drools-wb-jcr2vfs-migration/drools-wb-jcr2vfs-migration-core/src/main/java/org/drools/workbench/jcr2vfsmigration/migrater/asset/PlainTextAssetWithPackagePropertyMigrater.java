@@ -1,5 +1,7 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.Scanner;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -68,16 +70,31 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
         sb.append( "\n" );
         sb.append( "end" );
 
-        String content = sb.toString();
+        String content = sb.toString();        
+       
+        //Support for # has been removed from Drools Expert
         if (AssetFormats.DSL.equals(jcrAssetItem.getFormat())
                 || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
         		|| AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
         		|| AssetFormats.DRL.equals(jcrAssetItem.getFormat())
                 || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
-            //Support for # has been removed from Drools Expert
-            content = content.replaceAll( "#", "//" );
+        	StringBuffer sb1 = new StringBuffer();
+            Scanner scanner = new Scanner(content);
+            
+            while (scanner.hasNextLine()) {
+            	  String line = scanner.nextLine();
+            	  if(line.startsWith("#")) {
+            		  sb1.append(line.replaceFirst("#", "//"));
+            	  } else {
+            		  sb1.append(line);
+            	  }            	  
+            }
+            
+            scanner.close();
+            content = sb1.toString();
         }
-
+        
+        
         String sourceWithImport = drlTextEditorServiceImpl.assertPackageName( content,
                                                                               path );
         sourceWithImport = packageImportHelper.assertPackageImportDRL( sourceWithImport,
