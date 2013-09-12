@@ -7,7 +7,7 @@ import javax.enterprise.inject.New;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
+import org.drools.workbench.models.commons.shared.oracle.PackageDataModelOracle;
 import org.drools.workbench.screens.globals.client.resources.i18n.GlobalsEditorConstants;
 import org.drools.workbench.screens.globals.client.type.GlobalResourceType;
 import org.drools.workbench.screens.globals.model.GlobalsEditorContent;
@@ -219,7 +219,7 @@ public class GlobalsEditorPresenter {
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.COPY ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.RENAME ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.DELETE ).setEnabled( false );
-        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled( false );
+        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled(false);
     }
 
     private void loadContent() {

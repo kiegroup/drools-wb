@@ -21,8 +21,8 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
+import org.drools.workbench.models.commons.shared.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.commons.shared.rule.RuleModel;
-import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.common.BusyPopup;
@@ -53,7 +53,7 @@ public class GuidedRuleEditorViewImpl
                                      localBus,
                                      isReadOnly,
                                      isDSLEnabled );
-        panel.setWidget( this.modeller );
+        panel.setWidget(this.modeller);
     }
 
     @Override

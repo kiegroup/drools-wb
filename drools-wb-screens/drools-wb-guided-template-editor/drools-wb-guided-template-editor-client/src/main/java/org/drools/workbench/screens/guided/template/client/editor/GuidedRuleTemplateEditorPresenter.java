@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.datamodel.events.ImportAddedEvent;
 import org.drools.workbench.models.datamodel.events.ImportRemovedEvent;
-import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.guided.template.shared.TemplateModel;
 import org.drools.workbench.screens.guided.template.client.type.GuidedRuleTemplateResourceType;
 import org.drools.workbench.screens.guided.template.model.GuidedTemplateEditorContent;
@@ -37,6 +36,9 @@ import org.guvnor.common.services.shared.metadata.MetadataService;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.guvnor.common.services.shared.version.events.RestoreEvent;
 import org.jboss.errai.common.client.api.Caller;
+import org.drools.workbench.models.datamodel.events.ImportAddedEvent;
+import org.drools.workbench.models.datamodel.events.ImportRemovedEvent;
+import org.drools.workbench.models.commons.shared.oracle.PackageDataModelOracle;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -259,7 +261,7 @@ public class GuidedRuleTemplateEditorPresenter {
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.COPY ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.RENAME ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.DELETE ).setEnabled( false );
-        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled( false );
+        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled(false);
     }
 
     private void loadContent() {

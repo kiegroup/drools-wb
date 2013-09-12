@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.models.commons.shared.imports.Imports;
-import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
+import org.drools.workbench.models.commons.shared.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.testscenarios.shared.CallFixtureMap;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
@@ -268,7 +268,7 @@ public class ScenarioEditorViewImpl
     public void addTestRunnerWidget( final Scenario scenario,
                                      final Caller<ScenarioTestEditorService> service,
                                      final Path path ) {
-        layout.add( new TestRunnerWidget( scenario, service, path ) );
+        layout.add(new TestRunnerWidget(scenario, service, path));
     }
 
     @Override
@@ -281,7 +281,7 @@ public class ScenarioEditorViewImpl
                 metadataWidget.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
                 metadataService.call( new MetadataSuccessCallback( metadataWidget,
                                                                    isReadOnly ),
-                                      new HasBusyIndicatorDefaultErrorCallback( metadataWidget ) ).getMetadata( path );
+                                      new HasBusyIndicatorDefaultErrorCallback( metadataWidget ) ).getMetadata(path);
             }
 
             @Override

@@ -22,8 +22,8 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
+import org.drools.workbench.models.commons.shared.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.commons.shared.workitems.PortableWorkDefinition;
-import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.widget.GuidedDecisionTableWidget;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
@@ -61,7 +61,7 @@ public class GuidedDecisionTableEditorViewImpl extends Composite implements Guid
                                                      identity,
                                                      workItemDefinitions,
                                                      isReadOnly );
-        panel.setWidget( this.editor );
+        panel.setWidget(this.editor);
     }
 
     @Override
