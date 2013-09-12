@@ -112,6 +112,7 @@ public class DRLEditorPresenter {
         this.path = path;
         this.place = place;
         this.isReadOnly = place.getParameter( "readOnly", null ) != null;
+
         this.path.onRename( new Command() {
             @Override
             public void execute() {
@@ -212,25 +213,6 @@ public class DRLEditorPresenter {
                                    new HasBusyIndicatorDefaultErrorCallback( view ) ).loadContent( path );
     }
 
-    private void makeMenuBar() {
-        if ( isReadOnly ) {
-            menus = menuBuilder.addRestoreVersion( path ).build();
-        } else {
-            menus = menuBuilder
-                    .addSave( new Command() {
-                        @Override
-                        public void execute() {
-                            onSave();
-                        }
-                    } )
-                    .addCopy( path )
-                    .addRename( path )
-                    .addDelete( path )
-                    .addValidate( onValidate() )
-                    .build();
-        }
-    }
-
     private RemoteCallback<DrlModelContent> getModelSuccessCallback() {
         return new RemoteCallback<DrlModelContent>() {
 
@@ -248,6 +230,25 @@ public class DRLEditorPresenter {
                 view.hideBusyIndicator();
             }
         };
+    }
+
+    private void makeMenuBar() {
+        if ( isReadOnly ) {
+            menus = menuBuilder.addRestoreVersion( path ).build();
+        } else {
+            menus = menuBuilder
+                    .addSave( new Command() {
+                        @Override
+                        public void execute() {
+                            onSave();
+                        }
+                    } )
+                    .addCopy( path )
+                    .addRename( path )
+                    .addDelete( path )
+                    .addValidate( onValidate() )
+                    .build();
+        }
     }
 
     private Command onValidate() {
