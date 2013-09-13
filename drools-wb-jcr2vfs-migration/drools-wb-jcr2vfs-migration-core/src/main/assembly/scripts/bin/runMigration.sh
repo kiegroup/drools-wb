@@ -14,11 +14,12 @@ mainClass=org.drools.workbench.jcr2vfsmigration.Jcr2VfsMigrationApp
 # echo "Starting migration app..."
 
 # You can use -Xmx128m or less too, but it might be slower
-# TODO: Change guvnor-jcr2vfs-migration-droolsjbpm-as-uberjar-5.5.1-20130606.153149-125-jars-as-uberjar.jar to a release version
-if [ -f $JAVA_HOME/bin/java ]; then
-    $JAVA_HOME/bin/java -Xms256m -Xmx1024m -server -cp ../libs/guvnor-jcr2vfs-migration-droolsjbpm-as-uberjar-5.5.1-20130606.153149-125-jars-as-uberjar.jar:../libs/* ${mainClass} $*
+if [ ! -z "$JAVA_HOME" -a -f "$JAVA_HOME/bin/java" ]; then
+    echo "Using $JAVA_HOME/bin/java to run the application..."
+    "$JAVA_HOME/bin/java" -Xms256m -Xmx1024m -server -cp "../libs/*" ${mainClass} $*
 else
-    java -Xms256m -Xmx1024m -cp ../libs/guvnor-jcr2vfs-migration-droolsjbpm-as-uberjar-5.5.1-20130606.153149-125-jars-as-uberjar.jar:../libs/* ${mainClass} $*
+    echo "Using `which java` to run the application..."
+    java -Xms256m -Xmx1024m -cp "../libs/*" ${mainClass} $*
 fi
 
 if [ $? != 0 ] ; then
