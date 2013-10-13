@@ -234,5 +234,4 @@ public class AssetMigrater {
                     historicalAssetJCR.getName(), historicalAssetJCR.getFormat(), historicalAssetJCR.getVersionNumber(), historicalAssetJCR.getCheckinComment(), historicalAssetJCR.getLastModified().getTime());
         }
     }
-
 }
