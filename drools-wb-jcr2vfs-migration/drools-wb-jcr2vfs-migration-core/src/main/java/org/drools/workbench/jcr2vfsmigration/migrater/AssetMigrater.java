@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.google.gwt.user.client.rpc.SerializationException;
 import org.drools.guvnor.client.common.AssetFormats;
@@ -39,6 +40,8 @@ import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
+import org.uberfire.backend.vfs.Path;
+import org.uberfire.io.IOService;
 
 
 @ApplicationScoped
@@ -74,6 +77,9 @@ public class AssetMigrater {
     protected MigrationPathManager migrationPathManager;
     @Inject
     private Paths paths;
+    @Inject
+    @Named("ioStrategy")
+    private IOService ioService;
     
     private String header = null;
 
@@ -140,7 +146,7 @@ public class AssetMigrater {
                         //Still need to migrate the "current version" even though in most cases the "current version" (actually it is not a version in version 
                         //control, its just the current content on jcr node) is equal to the latest version that had been checked in. 
                         //Eg, when we import mortgage example, we just dump the mortgage package to a jcr node, no version check in.    
-                        migrate(jcrModule, assetItemJCR);
+                        migrate(jcrModule, assetItemJCR, null);
                         System.out.format("    Done.\n",
                                 assetItemJCR.getName(), assetItemJCR.getFormat());
                     }
@@ -160,13 +166,13 @@ public class AssetMigrater {
         System.out.println("  Asset migration ended");
     }
 
-    private void migrate(Module jcrModule, AssetItem jcrAssetItem) throws SerializationException {
+    private Path migrate(Module jcrModule, AssetItem jcrAssetItem, Path previousVersionPath) throws SerializationException {
         if (AssetFormats.DRL_MODEL.equals(jcrAssetItem.getFormat())) {
-            factModelsMigrater.migrate(jcrModule, jcrAssetItem);
+            return factModelsMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.BUSINESS_RULE.equals(jcrAssetItem.getFormat())) {
-            guidedEditorMigrater.migrate(jcrModule, jcrAssetItem);
+            return guidedEditorMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.DECISION_TABLE_GUIDED.equals(jcrAssetItem.getFormat())) {
-            guidedDecisionTableMigrater.migrate(jcrModule, jcrAssetItem);
+            return guidedDecisionTableMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.ENUMERATION.equals(jcrAssetItem.getFormat())
                 || AssetFormats.DSL.equals(jcrAssetItem.getFormat())
                 || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
@@ -183,9 +189,9 @@ public class AssetMigrater {
                 || "ftl".equals(jcrAssetItem.getFormat())
                 || "json".equals(jcrAssetItem.getFormat())
                 || "fw".equals(jcrAssetItem.getFormat())) {
-            plainTextAssetMigrater.migrate(jcrModule, jcrAssetItem);
+            return plainTextAssetMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.DRL.equals(jcrAssetItem.getFormat())) {
-            plainTextAssetWithPackagePropertyMigrater.migrate(jcrModule, jcrAssetItem);
+            return plainTextAssetWithPackagePropertyMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.DECISION_SPREADSHEET_XLS.equals(jcrAssetItem.getFormat())
                  ||AssetFormats.SCORECARD_SPREADSHEET_XLS.equals(jcrAssetItem.getFormat())
                  ||"png".equals(jcrAssetItem.getFormat())
@@ -194,24 +200,27 @@ public class AssetMigrater {
                  ||"pdf".equals(jcrAssetItem.getFormat())
                  ||"doc".equals(jcrAssetItem.getFormat())
                  ||"odt".equals(jcrAssetItem.getFormat())) {
-            attachementAssetMigrater.migrate(jcrModule, jcrAssetItem);
+            return attachementAssetMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.MODEL.equals(jcrAssetItem.getFormat())) {
             Jcr2VfsMigrationApp.hasWarnings = true;
             System.out.println("    WARNING: POJO Model jar [" + jcrAssetItem.getName() + "] is not supported by migration tool. Please add your POJO model jar to Guvnor manually.");
         } else if (AssetFormats.SCORECARD_GUIDED.equals(jcrAssetItem.getFormat())) {
-            guidedScoreCardMigrater.migrate(jcrModule, jcrAssetItem);
+            return guidedScoreCardMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.TEST_SCENARIO.equals(jcrAssetItem.getFormat())) {
-            testScenarioMigrater.migrate(jcrModule, jcrAssetItem);
+            return testScenarioMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if ("package".equals(jcrAssetItem.getFormat())) {
             //Ignore
         } else {
             Jcr2VfsMigrationApp.hasWarnings = true;
             System.out.format("    WARNING: asset [%s] with format[%s] is not supported by migration tool. \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
         }
+        
+        return null;
     }
     
     public void migrateAssetHistory(Module jcrModule, String assetUUID) throws SerializationException {
         //loadItemHistory wont return the current version
+        Path previousVersionPath = null;
         TableDataResult history = jcrRepositoryAssetService.loadItemHistory(assetUUID);
         TableDataRow[] rows = history.data;
         Arrays.sort( rows,
@@ -226,10 +235,12 @@ public class AssetMigrater {
                 } );
 
         for (TableDataRow row : rows) {
+
             String versionSnapshotUUID = row.id;
 
             AssetItem historicalAssetJCR = rulesRepository.loadAssetByUUID(versionSnapshotUUID);
-            migrate(jcrModule, historicalAssetJCR);
+            String currentVersionAssetName = historicalAssetJCR.getName();
+            previousVersionPath = migrate(jcrModule, historicalAssetJCR, previousVersionPath);
             logger.debug("    Asset ({}) with format ({}) migrated: version [{}], comment[{}], lastModified[{}]",
                     historicalAssetJCR.getName(), historicalAssetJCR.getFormat(), historicalAssetJCR.getVersionNumber(), historicalAssetJCR.getCheckinComment(), historicalAssetJCR.getLastModified().getTime());
         }

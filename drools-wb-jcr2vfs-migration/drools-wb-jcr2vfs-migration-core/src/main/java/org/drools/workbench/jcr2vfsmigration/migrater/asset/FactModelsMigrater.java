@@ -22,6 +22,7 @@ import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
 import org.guvnor.common.services.project.model.Project;
 import org.guvnor.common.services.project.service.ProjectService;
 import org.uberfire.io.IOService;
+import org.uberfire.java.nio.file.StandardCopyOption;
 import org.kie.workbench.common.screens.datamodeller.model.AnnotationDefinitionTO;
 import org.kie.workbench.common.screens.datamodeller.model.DataModelTO;
 import org.kie.workbench.common.screens.datamodeller.model.DataObjectTO;
@@ -63,13 +64,18 @@ public class FactModelsMigrater extends BaseAssetMigrater {
     private Map <String, String> orderedBaseTypes = new TreeMap<String, String>();
     private Map<String, AnnotationDefinitionTO> annotationDefinitions;
     
-    public void migrate(Module jcrModule, AssetItem jcrAssetItem) {
+    public Path migrate(Module jcrModule, AssetItem jcrAssetItem, Path previousVersionPath) {
         if (!AssetFormats.DRL_MODEL.equals(jcrAssetItem.getFormat())) {
             throw new IllegalArgumentException("The jcrAsset (" + jcrAssetItem.getName()
                     + ") has the wrong format (" + jcrAssetItem.getFormat() + ").");
         }
         
         Path path = migrationPathManager.generatePathForAsset(jcrModule, jcrAssetItem);   
+        //The asset was renamed in this version. We move this asset first.
+        if(previousVersionPath != null && !previousVersionPath.equals(path)) {
+             ioService.move(paths.convert( previousVersionPath ), paths.convert( path ), StandardCopyOption.REPLACE_EXISTING);
+        }
+        
         Project project = projectService.resolveProject(path);
         
         initBasePropertyTypes();
@@ -122,6 +128,8 @@ public class FactModelsMigrater extends BaseAssetMigrater {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        return path;
      }
 
     //The JCR Module name also contains the project name. This code attempts to create a package name

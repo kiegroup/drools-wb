@@ -16,6 +16,7 @@ import org.drools.workbench.screens.drltext.service.DRLTextEditorService;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
 import org.uberfire.java.nio.file.Files;
+import org.uberfire.java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
@@ -45,11 +46,17 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
     @Inject
     PackageImportHelper packageImportHelper;
 
-    public void migrate( Module jcrModule,
-                         AssetItem jcrAssetItem ) {
+    public Path migrate( Module jcrModule,
+                         AssetItem jcrAssetItem,
+                         Path previousVersionPath) {
         Path path = migrationPathManager.generatePathForAsset( jcrModule,
                                                                jcrAssetItem );
         final org.uberfire.java.nio.file.Path nioPath = paths.convert( path );
+        //The asset was renamed in this version. We move this asset first.
+        if(previousVersionPath != null && !previousVersionPath.equals(path)) {
+             ioService.move(paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
+        }
+        
         if ( !Files.exists( nioPath ) ) {
             ioService.createFile( nioPath );
         }
@@ -103,6 +110,8 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
                                               null,
                                               jcrAssetItem.getCheckinComment(),
                                               jcrAssetItem.getLastModified().getTime() ) );
+        
+        return path;
     }
 
 }
