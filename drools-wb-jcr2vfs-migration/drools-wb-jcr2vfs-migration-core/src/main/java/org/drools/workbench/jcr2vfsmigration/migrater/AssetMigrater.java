@@ -30,6 +30,7 @@ import org.drools.repository.RulesRepository;
 import org.drools.workbench.jcr2vfsmigration.Jcr2VfsMigrationApp;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.AttachementAssetMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.FactModelsMigrater;
+import org.drools.workbench.jcr2vfsmigration.migrater.asset.GlobalMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.GuidedDecisionTableMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.GuidedEditorMigrater;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.GuidedScoreCardMigrater;
@@ -72,7 +73,9 @@ public class AssetMigrater {
     protected GuidedScoreCardMigrater guidedScoreCardMigrater;
     @Inject
     protected TestScenarioMigrater testScenarioMigrater;
-
+    @Inject
+    protected GlobalMigrater globalMigrater;
+    
     @Inject
     protected MigrationPathManager migrationPathManager;
     @Inject
@@ -160,6 +163,12 @@ public class AssetMigrater {
                 } else {
                     startRowIndex += pageSize;
                 }
+            }
+            
+            //Migrate global
+            List<String> globals = GlobalParser.parseGlobals(header);
+            if(globals.size() > 0) {
+                globalMigrater.migrate(jcrModule, globals);
             }
         }
         

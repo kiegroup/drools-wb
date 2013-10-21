@@ -68,6 +68,19 @@ public class MigrationPathManager {
 
         return path;
     }
+    
+    public Path generatePathForGlobal(Module jcrModule) {
+        final org.uberfire.java.nio.file.Path modulePath = fs.getPath("/"
+                + escapePathEntry(jcrModule.getName()));
+
+        org.uberfire.java.nio.file.Path assetPath = modulePath.resolve("src/main/resources/" + "globals.gdrl");
+
+        final Path path = PathFactory.newPath(paths.convert(assetPath
+                .getFileSystem()), assetPath.getFileName().toString(),
+                assetPath.toUri().toString());
+
+        return path;
+    }
 
     public Path generatePathForAsset(Module jcrModule, Asset jcrAsset) {        
         return  generatePathForAsset( jcrModule, jcrAsset, false );
