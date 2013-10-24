@@ -1,7 +1,5 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
-import java.util.Map;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,14 +18,14 @@ import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTabl
 import org.drools.workbench.screens.guided.rule.service.GuidedRuleEditorService;
 import org.guvnor.common.services.project.model.Package;
 import org.guvnor.common.services.project.service.ProjectService;
-import org.uberfire.io.IOService;
-import org.uberfire.java.nio.base.options.CommentedOption;
-import org.uberfire.java.nio.file.Files;
-import org.uberfire.java.nio.file.StandardCopyOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.io.IOService;
+import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.Files;
+import org.uberfire.java.nio.file.StandardCopyOption;
 
 @ApplicationScoped
 public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
@@ -42,9 +40,6 @@ public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
 
     @Inject
     protected MigrationPathManager migrationPathManager;
-
-    @Inject
-    private Paths paths;
 
     @Inject
     @Named("ioStrategy")
@@ -68,12 +63,12 @@ public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
 
         Path path = migrationPathManager.generatePathForAsset( jcrModule,
                                                                jcrAssetItem );
-        final org.uberfire.java.nio.file.Path nioPath = paths.convert( path );
+        final org.uberfire.java.nio.file.Path nioPath = Paths.convert( path );
         //The asset was renamed in this version. We move this asset first.
         if(previousVersionPath != null && !previousVersionPath.equals(path)) {
-             ioService.move(paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
+            ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
-        
+
         if ( !Files.exists( nioPath ) ) {
             ioService.createFile( nioPath );
         }

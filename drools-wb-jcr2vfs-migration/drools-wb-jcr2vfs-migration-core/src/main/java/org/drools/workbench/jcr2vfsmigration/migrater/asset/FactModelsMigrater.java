@@ -21,8 +21,6 @@ import org.drools.workbench.jcr2vfsmigration.migrater.PackageImportHelper;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
 import org.guvnor.common.services.project.model.Project;
 import org.guvnor.common.services.project.service.ProjectService;
-import org.uberfire.io.IOService;
-import org.uberfire.java.nio.file.StandardCopyOption;
 import org.kie.workbench.common.screens.datamodeller.model.AnnotationDefinitionTO;
 import org.kie.workbench.common.screens.datamodeller.model.DataModelTO;
 import org.kie.workbench.common.screens.datamodeller.model.DataObjectTO;
@@ -33,6 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.io.IOService;
+import org.uberfire.java.nio.file.StandardCopyOption;
 
 @ApplicationScoped
 public class FactModelsMigrater extends BaseAssetMigrater {
@@ -48,9 +48,6 @@ public class FactModelsMigrater extends BaseAssetMigrater {
     @Inject
     @Named("ioStrategy")
     private IOService ioService;
-    
-    @Inject
-    private Paths paths;
     
     @Inject
     PackageImportHelper packageImportHelper;
@@ -73,7 +70,7 @@ public class FactModelsMigrater extends BaseAssetMigrater {
         Path path = migrationPathManager.generatePathForAsset(jcrModule, jcrAssetItem);   
         //The asset was renamed in this version. We move this asset first.
         if(previousVersionPath != null && !previousVersionPath.equals(path)) {
-             ioService.move(paths.convert( previousVersionPath ), paths.convert( path ), StandardCopyOption.REPLACE_EXISTING);
+             ioService.move(Paths.convert( previousVersionPath ), Paths.convert( path ), StandardCopyOption.REPLACE_EXISTING);
         }
         
         Project project = projectService.resolveProject(path);

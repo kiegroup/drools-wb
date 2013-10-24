@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -15,7 +13,6 @@ import com.google.gwt.user.client.rpc.SerializationException;
 import org.drools.guvnor.client.common.AssetFormats;
 import org.drools.guvnor.client.rpc.AssetPageRequest;
 import org.drools.guvnor.client.rpc.AssetPageRow;
-import org.drools.guvnor.client.rpc.DiscussionRecord;
 import org.drools.guvnor.client.rpc.Module;
 import org.drools.guvnor.client.rpc.PageResponse;
 import org.drools.guvnor.client.rpc.TableDataResult;
@@ -23,9 +20,7 @@ import org.drools.guvnor.client.rpc.TableDataRow;
 import org.drools.guvnor.server.RepositoryAssetService;
 import org.drools.guvnor.server.RepositoryModuleService;
 import org.drools.guvnor.server.repository.Preferred;
-import org.drools.guvnor.server.util.Discussion;
 import org.drools.repository.AssetItem;
-import org.drools.repository.CategoryItem;
 import org.drools.repository.RulesRepository;
 import org.drools.workbench.jcr2vfsmigration.Jcr2VfsMigrationApp;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.AttachementAssetMigrater;
@@ -40,7 +35,6 @@ import org.drools.workbench.jcr2vfsmigration.migrater.asset.TestScenarioMigrater
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.io.IOService;
 
@@ -78,8 +72,6 @@ public class AssetMigrater {
     
     @Inject
     protected MigrationPathManager migrationPathManager;
-    @Inject
-    private Paths paths;
     @Inject
     @Named("ioStrategy")
     private IOService ioService;

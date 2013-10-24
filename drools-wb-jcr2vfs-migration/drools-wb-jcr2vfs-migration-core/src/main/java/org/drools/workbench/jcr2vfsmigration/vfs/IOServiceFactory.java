@@ -70,11 +70,4 @@ public class IOServiceFactory {
     public FileSystem migrationFS() {
         return fs;
     }
-
-    @Produces
-    @Named("system")
-    public Repository systemRepository() {
-        return SystemRepository.SYSTEM_REPO;
-    }
-
 }

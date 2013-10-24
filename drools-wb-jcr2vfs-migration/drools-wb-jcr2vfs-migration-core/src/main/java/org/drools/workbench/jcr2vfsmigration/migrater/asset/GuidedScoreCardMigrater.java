@@ -37,9 +37,6 @@ public class GuidedScoreCardMigrater extends BaseAssetMigrater {
     protected MigrationPathManager migrationPathManager;
 
     @Inject
-    private Paths paths;
-
-    @Inject
     @Named("ioStrategy")
     private IOService ioService;
 
@@ -55,12 +52,12 @@ public class GuidedScoreCardMigrater extends BaseAssetMigrater {
 
         Path path = migrationPathManager.generatePathForAsset( jcrModule,
                                                                jcrAssetItem );
-        final org.uberfire.java.nio.file.Path nioPath = paths.convert( path );
+        final org.uberfire.java.nio.file.Path nioPath = Paths.convert( path );
         //The asset was renamed in this version. We move this asset first.
         if(previousVersionPath != null && !previousVersionPath.equals(path)) {
-             ioService.move(paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
+            ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
-        
+
         if ( !Files.exists( nioPath ) ) {
             ioService.createFile( nioPath );
         }
