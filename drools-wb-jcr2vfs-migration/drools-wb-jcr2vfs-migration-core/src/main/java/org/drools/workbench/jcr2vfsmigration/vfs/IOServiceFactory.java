@@ -16,33 +16,19 @@
 
 package org.drools.workbench.jcr2vfsmigration.vfs;
 
-import java.net.URI;
-import java.util.HashMap;
-import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.uberfire.io.FileSystemType;
 import org.uberfire.io.IOService;
 import org.uberfire.io.impl.IOServiceDotFileImpl;
-import org.uberfire.java.nio.file.FileSystem;
-import org.uberfire.backend.repositories.Repository;
-import org.uberfire.backend.server.repositories.SystemRepository;
 
-import static org.drools.workbench.jcr2vfsmigration.vfs.IOServiceFactory.Migration.*;
-
-//import org.kie.workbench.io.FileSystemType;
-//import org.kie.workbench.io.IOService;
-//import org.kie.workbench.java.nio.file.FileSystem;
-
-@Singleton
+@ApplicationScoped
 public class IOServiceFactory {
 
     private final IOService ioService = new IOServiceDotFileImpl();
-    private FileSystem fs;
-
-    public static String DEFAULT_MIGRATION_FILE_SYSTEM = "guvnor-jcr2vfs-migration";
 
     public static enum Migration implements FileSystemType {
 
@@ -53,21 +39,14 @@ public class IOServiceFactory {
         }
     }
 
-    @PostConstruct
-    public void onStartup() {
-        URI uri = URI.create( "git://" + DEFAULT_MIGRATION_FILE_SYSTEM );
-        this.fs = ioService.newFileSystem( uri, new HashMap<String, Object>(), MIGRATION_INSTANCE );
+    @PreDestroy
+    public void onShutdown() {
+        ioService.dispose();
     }
 
     @Produces
     @Named("ioStrategy")
     public IOService ioService() {
         return ioService;
-    }
-
-    @Produces
-    @Named("migrationFS")
-    public FileSystem migrationFS() {
-        return fs;
     }
 }
