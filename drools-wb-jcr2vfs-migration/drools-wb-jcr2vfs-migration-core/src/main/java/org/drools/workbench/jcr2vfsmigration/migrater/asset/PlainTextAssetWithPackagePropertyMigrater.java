@@ -10,6 +10,7 @@ import org.drools.guvnor.client.rpc.Module;
 import org.drools.guvnor.server.RepositoryAssetService;
 import org.drools.repository.AssetItem;
 import org.drools.workbench.jcr2vfsmigration.migrater.PackageImportHelper;
+import org.drools.workbench.jcr2vfsmigration.migrater.util.DRLMigrationUtils;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
 import org.drools.workbench.screens.drltext.service.DRLTextEditorService;
 import org.slf4j.Logger;
@@ -71,29 +72,16 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
 
         String content = sb.toString();        
        
-        //Support for # has been removed from Drools Expert
+        // Support for '#' has been removed from Drools Expert -> replace it with '//'
         if (AssetFormats.DSL.equals(jcrAssetItem.getFormat())
-                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
-        		|| AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
-        		|| AssetFormats.DRL.equals(jcrAssetItem.getFormat())
+                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())
+                || AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
+                || AssetFormats.DRL.equals(jcrAssetItem.getFormat())
                 || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
-        	StringBuffer sb1 = new StringBuffer();
-            Scanner scanner = new Scanner(content);
-            
-            while (scanner.hasNextLine()) {
-            	  String line = scanner.nextLine();
-            	  if(line.startsWith("#")) {
-            		  sb1.append(line.replaceFirst("#", "//"));
-            	  } else {
-            		  sb1.append(line);
-            	  }            	  
-            }
-            
-            scanner.close();
-            content = sb1.toString();
+            content = DRLMigrationUtils.migrateStartOfCommentChar(content);
         }
         
-        
+
         String sourceWithImport = drlTextEditorServiceImpl.assertPackageName( content,
                                                                               path );
         sourceWithImport = packageImportHelper.assertPackageImportDRL( sourceWithImport,
@@ -106,7 +94,7 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
                                               null,
                                               jcrAssetItem.getCheckinComment(),
                                               jcrAssetItem.getLastModified().getTime() ) );
-        
+
         return path;
     }
 
