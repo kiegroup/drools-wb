@@ -499,7 +499,7 @@ end</programlisting>
           <section>
             <title>Set the value of a field on a new Fact with a Work Item parameter</title>
 
-            <para>An Action setting the value of a new Fact's field to that of a jBOM Work Item Handlers result
+            <para>An Action setting the value of a new Fact's field to that of a jBPM Work Item Handlers result
             parameter.</para>
           </section>
 
