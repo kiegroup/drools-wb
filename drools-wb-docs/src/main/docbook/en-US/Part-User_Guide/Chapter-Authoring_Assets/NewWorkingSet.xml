@@ -81,7 +81,7 @@
   <section>
     <title>Activating and Using Working Sets</title>
 
-    <para>Working Sets are no active by default in Guvnor. Because this is an
+    <para>Working Sets are not active by default in Guvnor. Because this is an
     experimental feature, you must enable them manually in the Guided Editor
     panel if you want to use them. In the future, Working Sets will be
     associated to each user's profile.</para>
