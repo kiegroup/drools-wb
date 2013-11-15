@@ -68,7 +68,7 @@
     <para>It is also possible to create a package by importing an existing DRL
     file. When you choose to create a new package, you can choose an option to
     upload a <filename>.drl</filename> file. The Guvnor will then attempt to
-    understand that DRL, break create a package for you. The rules in it will
+    understand that DRL, and it will create a package for you. The rules in it will
     be stored as individual assets (but still as DRL text content). Note that
     to actually build the package, you will need to upload an appropriate
     model (as a JAR) to validate against, as a separate step.</para>
