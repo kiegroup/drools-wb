@@ -134,11 +134,11 @@ public class FactModelsMigrater extends BaseAssetMigrater {
     private String getPackageName(Module jcrModule) {
         String packageName = jcrModule.getName();
         int dotIndex = packageName.indexOf( "." );
-        if(dotIndex==-1) {
-            packageName="";
-        } else {
-            packageName = packageName.substring( dotIndex +1 );
-        }
+//        if(dotIndex==-1) {
+            //packageName="";
+//        } else {
+//            packageName = packageName.substring( dotIndex +1 );
+//        }
         return packageName;
     }
     

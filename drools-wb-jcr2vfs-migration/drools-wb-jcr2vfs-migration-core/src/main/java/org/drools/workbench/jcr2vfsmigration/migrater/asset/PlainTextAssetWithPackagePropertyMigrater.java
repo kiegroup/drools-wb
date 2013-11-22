@@ -1,5 +1,8 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,6 +12,7 @@ import org.drools.guvnor.client.common.AssetFormats;
 import org.drools.guvnor.client.rpc.Module;
 import org.drools.guvnor.server.RepositoryAssetService;
 import org.drools.repository.AssetItem;
+import org.drools.repository.CategoryItem;
 import org.drools.workbench.jcr2vfsmigration.migrater.PackageImportHelper;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.DRLMigrationUtils;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
@@ -60,8 +64,10 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
 
         StringBuilder sb = new StringBuilder();
 
+
         if ( AssetFormats.DRL.equals( jcrAssetItem.getFormat() ) ) {
-            sb.append( "rule '" + jcrAssetItem.getName() + "'" );
+            sb.append( "rule \"" + jcrAssetItem.getName() + "\"" );
+            sb.append( getExtendExpression(jcrModule,jcrAssetItem,"") );
             sb.append( "\n" );
             sb.append( "\n" );
         }

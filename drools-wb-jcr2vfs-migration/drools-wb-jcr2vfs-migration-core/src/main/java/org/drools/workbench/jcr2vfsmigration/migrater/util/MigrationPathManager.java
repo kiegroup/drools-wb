@@ -57,16 +57,16 @@ public class MigrationPathManager {
     public Path generatePathForAsset( Module jcrModule,
                                       Asset jcrAsset,
                                       boolean hasDSL ) {
-        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName() ) );
+        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName())  );
 
         //final org.uberfire.java.nio.file.Path directory = getPomDirectoryPath(pathToPom);
         org.uberfire.java.nio.file.Path assetPath = null;
         if ( AssetFormats.BUSINESS_RULE.equals( jcrAsset.getFormat() ) && !hasDSL ) {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAsset.getName() + ".rdrl" );
+            assetPath = modulePath.resolve( "src/main/resources/" + dotToSlash(jcrAsset.getName()) + ".rdrl" );
         } else if ( AssetFormats.BUSINESS_RULE.equals( jcrAsset.getFormat() ) && hasDSL ) {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAsset.getName() + ".rdslr" );
+            assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAsset.getName() + ".rdslr" );
         } else {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAsset.getName() + "." + jcrAsset.getFormat() );
+            assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAsset.getName() + "." + jcrAsset.getFormat() );
         }
 
         //final org.uberfire.java.nio.file.Path _path = fs.getPath( "/" + escapePathEntry( jcrModule.getName() ) + "/" + escapePathEntry( jcrAsset.getName() ) + "." + jcrAsset.getFormat() );
@@ -77,9 +77,9 @@ public class MigrationPathManager {
     }
 
     public Path generatePathForGlobal( Module jcrModule ) {
-        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName() ) );
+        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName())  );
 
-        org.uberfire.java.nio.file.Path assetPath = modulePath.resolve( "src/main/resources/" + "globals.gdrl" );
+        org.uberfire.java.nio.file.Path assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ "globals.gdrl" );
 
         final Path path = PathFactory.newPath( Paths.convert( assetPath.getFileSystem() ), assetPath.getFileName().toString(),
                                                assetPath.toUri().toString() );
@@ -90,19 +90,22 @@ public class MigrationPathManager {
     public Path generatePathForAsset( Module jcrModule,
                                       AssetItem jcrAssetItem,
                                       boolean hasDSL ) {
-        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName() ) );
+        final org.uberfire.java.nio.file.Path modulePath = getFileSystem().getPath( "/" + escapePathEntry( jcrModule.getName())  );
 
         org.uberfire.java.nio.file.Path assetPath = null;
+
+
+
         if ( AssetFormats.BUSINESS_RULE.equals( jcrAssetItem.getFormat() ) && !hasDSL ) {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAssetItem.getName() + ".rdrl" );
+            assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAssetItem.getName() + ".rdrl" );
         } else if ( AssetFormats.BUSINESS_RULE.equals( jcrAssetItem.getFormat() ) && hasDSL ) {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAssetItem.getName() + ".rdslr" );
+            assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAssetItem.getName() + ".rdslr" );
         } else if ( AssetFormats.FUNCTION.equals( jcrAssetItem.getFormat() ) ) {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAssetItem.getName() + ".drl" );
+            assetPath = modulePath.resolve( "src/main/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAssetItem.getName() + ".drl" );
         } else if ( AssetFormats.TEST_SCENARIO.equals( jcrAssetItem.getFormat() ) ) {
-            assetPath = modulePath.resolve( "src/test/resources/" + jcrAssetItem.getName() + "." + jcrAssetItem.getFormat() );
+            assetPath = modulePath.resolve( "src/test/resources/" +dotToSlash(jcrModule.getName())+"/"+ jcrAssetItem.getName() + "." + jcrAssetItem.getFormat() );
         } else {
-            assetPath = modulePath.resolve( "src/main/resources/" + jcrAssetItem.getName() + "." + jcrAssetItem.getFormat() );
+            assetPath = modulePath.resolve( "src/main/resources/" + dotToSlash(jcrModule.getName())+"/"+ jcrAssetItem.getName() + "." + jcrAssetItem.getFormat() );
         }
 
         final Path path = PathFactory.newPath( Paths.convert( assetPath.getFileSystem() ), assetPath.getFileName().toString(), assetPath.toUri().toString() );
@@ -123,7 +126,14 @@ public class MigrationPathManager {
 
     public String escapePathEntry( String pathEntry ) {
         // VFS doesn't support /'s in the path entries
-        pathEntry = pathEntry.replaceAll( "/", " slash " );
+        pathEntry = pathEntry.replace( "/", " slash " );
+        // TODO Once porcelli has a list of all illegal and escaped characters in PathEntry, deal with them here
+        return pathEntry;
+    }
+
+    public String dotToSlash( String pathEntry ) {
+        // VFS doesn't support /'s in the path entries
+        pathEntry = pathEntry.replace( ".", "/" );
         // TODO Once porcelli has a list of all illegal and escaped characters in PathEntry, deal with them here
         return pathEntry;
     }

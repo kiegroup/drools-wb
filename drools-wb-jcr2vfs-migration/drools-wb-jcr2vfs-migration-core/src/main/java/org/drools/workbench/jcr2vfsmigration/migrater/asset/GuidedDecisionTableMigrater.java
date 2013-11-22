@@ -90,6 +90,7 @@ public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
         if ( requiredPackageName != null || !"".equals( requiredPackageName ) ) {
             model.setPackageName( requiredPackageName );
         }
+        model.setParentName(getExtendedRuleFromCategoryRules(jcrModule,jcrAssetItem,""));
 
         //Add import
         if ( packageHeaderInfo.getHeader() != null ) {

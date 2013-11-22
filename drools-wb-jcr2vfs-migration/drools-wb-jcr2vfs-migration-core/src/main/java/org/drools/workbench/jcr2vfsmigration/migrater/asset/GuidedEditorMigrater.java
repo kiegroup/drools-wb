@@ -1,5 +1,8 @@
 package org.drools.workbench.jcr2vfsmigration.migrater.asset;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,6 +21,7 @@ import org.drools.ide.common.client.modeldriven.brl.RuleModel;
 import org.drools.ide.common.server.util.BRLPersistence;
 import org.drools.ide.common.server.util.BRXMLPersistence;
 import org.drools.repository.AssetItem;
+import org.drools.repository.CategoryItem;
 import org.drools.repository.RulesRepository;
 import org.drools.workbench.jcr2vfsmigration.migrater.PackageImportHelper;
 import org.drools.workbench.jcr2vfsmigration.migrater.util.MigrationPathManager;
@@ -97,6 +101,7 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
             StringBuilder sb = new StringBuilder();
             BRMSPackageBuilder builder = new BRMSPackageBuilder( rulesRepository.loadModuleByUUID( jcrModule.getUuid() ) );
             BRLContentHandler handler = new BRLContentHandler();
+
             handler.assembleDRL( builder,
                                  jcrAsset,
                                  sb );
@@ -104,6 +109,8 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
             //Support for # has been removed from Drools Expert
             String content = sb.toString().replaceAll( "#",
                                                        "//" );
+
+            content = getExtendExpression(jcrModule,jcrAssetItem,content);
 
             String sourceDRLWithImport = drlTextEditorServiceImpl.assertPackageName( content,
                                                                                      path );

@@ -1,9 +1,6 @@
 package org.drools.workbench.jcr2vfsmigration.migrater;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
@@ -21,6 +18,8 @@ import org.drools.guvnor.server.RepositoryAssetService;
 import org.drools.guvnor.server.RepositoryModuleService;
 import org.drools.guvnor.server.repository.Preferred;
 import org.drools.repository.AssetItem;
+import org.drools.repository.ModuleItem;
+import org.drools.repository.ModuleIterator;
 import org.drools.repository.RulesRepository;
 import org.drools.workbench.jcr2vfsmigration.Jcr2VfsMigrationApp;
 import org.drools.workbench.jcr2vfsmigration.migrater.asset.AttachementAssetMigrater;
@@ -47,10 +46,11 @@ public class AssetMigrater {
     @Inject
     protected RepositoryModuleService jcrRepositoryModuleService;
     @Inject
-    protected RepositoryAssetService jcrRepositoryAssetService;    
-    @Inject @Preferred
+    protected RepositoryAssetService jcrRepositoryAssetService;
+    @Inject
+    @Preferred
     private RulesRepository rulesRepository;
-    
+
     @Inject
     protected FactModelsMigrater factModelsMigrater;
     @Inject
@@ -69,43 +69,55 @@ public class AssetMigrater {
     protected TestScenarioMigrater testScenarioMigrater;
     @Inject
     protected GlobalMigrater globalMigrater;
-    
+
     @Inject
     protected MigrationPathManager migrationPathManager;
     @Inject
     @Named("ioStrategy")
     private IOService ioService;
-    
+
     private String header = null;
 
-   
+
     @Produces
     public PackageHeaderInfo getPackageHeaderInfo() {
         return new PackageHeaderInfo(header);
     }
-    
+
     public void migrateAll() {
         System.out.println("  Asset migration started");
-        Module[] jcrModules = jcrRepositoryModuleService.listModules();        
+        Module[] jcrModules = jcrRepositoryModuleService.listModules();
         List<Module> modules = new ArrayList<Module>(Arrays.asList(jcrModules));
         Module globalModule = jcrRepositoryModuleService.loadGlobalModule();
         modules.add(globalModule);
-        
+
+        //setting module CategoryRules
         for (Module jcrModule : modules) {
-            
-            //Load drools.package first if it exists            
+            for(ModuleIterator packageItems = rulesRepository.listModules();packageItems.hasNext();){
+                ModuleItem packageItem = packageItems.next();
+                if(packageItem.getUUID().equals(jcrModule.getUuid())){
+                    jcrModule.setCatRules(packageItem.getCategoryRules());
+                    break;
+                }
+            }
+        }
+
+        for (Module jcrModule : modules) {
+
+            //Load drools.package first if it exists
             try {
                 List<String> formats = new ArrayList<String>();
                 formats.add("package");
                 AssetPageRequest request = new AssetPageRequest(jcrModule.getUuid(),
-                        formats, 
+                        formats,
                         null,
                         0,
                         10);
                 PageResponse<AssetPageRow> response = jcrRepositoryAssetService.findAssetPage(request);
-                if (response.getTotalRowSize() >0) {
+                if (response.getTotalRowSize() > 0) {
                     AssetPageRow row = response.getPageRowList().get(0);
                     AssetItem assetItemJCR = rulesRepository.loadAssetByUUID(row.getUuid());
+
                     header = assetItemJCR.getContent();
                 }
 
@@ -113,8 +125,8 @@ public class AssetMigrater {
                 Jcr2VfsMigrationApp.hasErrors = true;
                 throw new IllegalStateException(e);
             }
-            
-            
+
+
             boolean hasMorePages = true;
             int startRowIndex = 0;
             final int pageSize = 100;
@@ -125,19 +137,19 @@ public class AssetMigrater {
                         null,
                         startRowIndex,
                         pageSize);
-                
+
                 try {
                     response = jcrRepositoryAssetService.findAssetPage(request);
-                    for (AssetPageRow row : response.getPageRowList()) {     
+                    for (AssetPageRow row : response.getPageRowList()) {
                         AssetItem assetItemJCR = rulesRepository.loadAssetByUUID(row.getUuid());
                         System.out.format("    Asset [%s] with format [%s] is being migrated... \n",
                                 assetItemJCR.getName(), assetItemJCR.getFormat());
                         //TODO: Git wont check in a version if the file is not changed in this version. Eg, the version 3 of "testFunction.function"
                         //We need to find a way to force a git check in. Otherwise migrated version history is not consistent with the version history in old Guvnor.
-                        
+
                         //Migrate historical versions first, this includes the head version(i.e., the latest version)
                         migrateAssetHistory(jcrModule, row.getUuid());
-                        
+
                         //Still need to migrate the "current version" even though in most cases the "current version" (actually it is not a version in version 
                         //control, its just the current content on jcr node) is equal to the latest version that had been checked in. 
                         //Eg, when we import mortgage example, we just dump the mortgage package to a jcr node, no version check in.    
@@ -148,22 +160,22 @@ public class AssetMigrater {
                 } catch (SerializationException e) {
                     Jcr2VfsMigrationApp.hasErrors = true;
                     throw new IllegalStateException(e);
-                } 
-                
+                }
+
                 if (response.isLastPage()) {
                     hasMorePages = false;
                 } else {
                     startRowIndex += pageSize;
                 }
             }
-            
+
             //Migrate global
             List<String> globals = GlobalParser.parseGlobals(header);
-            if(globals.size() > 0) {
+            if (globals.size() > 0) {
                 globalMigrater.migrate(jcrModule, globals);
             }
         }
-        
+
         System.out.println("  Asset migration ended");
     }
 
@@ -176,7 +188,7 @@ public class AssetMigrater {
             return guidedDecisionTableMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.ENUMERATION.equals(jcrAssetItem.getFormat())
                 || AssetFormats.DSL.equals(jcrAssetItem.getFormat())
-                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())                
+                || AssetFormats.DSL_TEMPLATE_RULE.equals(jcrAssetItem.getFormat())
                 || AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())
                 || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())
                 || AssetFormats.FORM_DEFINITION.equals(jcrAssetItem.getFormat())
@@ -194,13 +206,13 @@ public class AssetMigrater {
         } else if (AssetFormats.DRL.equals(jcrAssetItem.getFormat())) {
             return plainTextAssetWithPackagePropertyMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.DECISION_SPREADSHEET_XLS.equals(jcrAssetItem.getFormat())
-                 ||AssetFormats.SCORECARD_SPREADSHEET_XLS.equals(jcrAssetItem.getFormat())
-                 ||"png".equals(jcrAssetItem.getFormat())
-                 ||"gif".equals(jcrAssetItem.getFormat())
-                 ||"jpg".equals(jcrAssetItem.getFormat())
-                 ||"pdf".equals(jcrAssetItem.getFormat())
-                 ||"doc".equals(jcrAssetItem.getFormat())
-                 ||"odt".equals(jcrAssetItem.getFormat())) {
+                || AssetFormats.SCORECARD_SPREADSHEET_XLS.equals(jcrAssetItem.getFormat())
+                || "png".equals(jcrAssetItem.getFormat())
+                || "gif".equals(jcrAssetItem.getFormat())
+                || "jpg".equals(jcrAssetItem.getFormat())
+                || "pdf".equals(jcrAssetItem.getFormat())
+                || "doc".equals(jcrAssetItem.getFormat())
+                || "odt".equals(jcrAssetItem.getFormat())) {
             return attachementAssetMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if (AssetFormats.MODEL.equals(jcrAssetItem.getFormat())) {
             Jcr2VfsMigrationApp.hasWarnings = true;
@@ -215,25 +227,25 @@ public class AssetMigrater {
             Jcr2VfsMigrationApp.hasWarnings = true;
             System.out.format("    WARNING: asset [%s] with format[%s] is not supported by migration tool. \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
         }
-        
+
         return null;
     }
-    
+
     public void migrateAssetHistory(Module jcrModule, String assetUUID) throws SerializationException {
         //loadItemHistory wont return the current version
         Path previousVersionPath = null;
         TableDataResult history = jcrRepositoryAssetService.loadItemHistory(assetUUID);
         TableDataRow[] rows = history.data;
-        Arrays.sort( rows,
+        Arrays.sort(rows,
                 new Comparator<TableDataRow>() {
-                    public int compare( TableDataRow r1,
-                                        TableDataRow r2 ) {
-                        Integer v2 = Integer.valueOf( r2.values[0] );
-                        Integer v1 = Integer.valueOf( r1.values[0] );
+                    public int compare(TableDataRow r1,
+                                       TableDataRow r2) {
+                        Integer v2 = Integer.valueOf(r2.values[0]);
+                        Integer v1 = Integer.valueOf(r1.values[0]);
 
-                        return v1.compareTo( v2 );
+                        return v1.compareTo(v2);
                     }
-                } );
+                });
 
         for (TableDataRow row : rows) {
 
