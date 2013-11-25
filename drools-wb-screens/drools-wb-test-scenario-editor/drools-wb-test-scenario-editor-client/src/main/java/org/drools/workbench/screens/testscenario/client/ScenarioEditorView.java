@@ -25,7 +25,8 @@ public interface ScenarioEditorView
 
     void showSaveSuccessful();
 
-    String getTitle( final String fileName );
+    String getTitle( final String fileName,
+                     final String version );
 
     Metadata getMetadata();
 

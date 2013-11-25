@@ -26,9 +26,9 @@ import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.model.TestScenarioModelContent;
 import org.drools.workbench.screens.testscenario.service.ScenarioTestEditorService;
+import org.guvnor.common.services.shared.rulenames.RuleNamesService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.guvnor.common.services.shared.rulenames.RuleNamesService;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.widgets.client.callbacks.CommandBuilder;
 import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallback;
@@ -75,6 +75,7 @@ public class ScenarioEditorPresenter {
     private ObservablePath path;
     private PlaceRequest place;
     private boolean isReadOnly;
+    private String version;
     private ObservablePath.OnConcurrentUpdateEvent concurrentUpdateSessionInfo = null;
 
     private Scenario scenario;
@@ -88,7 +89,7 @@ public class ScenarioEditorPresenter {
                                     final Event<ChangeTitleWidgetEvent> changeTitleNotification,
                                     final TestScenarioResourceType type,
                                     final AsyncPackageDataModelOracleFactory oracleFactory,
-                                    final Caller<RuleNamesService> ruleNameService) {
+                                    final Caller<RuleNamesService> ruleNameService ) {
         this.view = view;
         this.menuBuilder = menuBuilder;
         this.service = service;
@@ -106,6 +107,7 @@ public class ScenarioEditorPresenter {
         this.path = path;
         this.place = place;
         this.isReadOnly = place.getParameter( "readOnly", null ) == null ? false : true;
+        this.version = place.getParameter( "version", null );
 
         this.path.onRename( new Command() {
             @Override
@@ -287,7 +289,8 @@ public class ScenarioEditorPresenter {
     @WorkbenchPartTitle
     public String getTitle() {
         return view.getTitle( FileNameUtil.removeExtension( path,
-                                                            type ) );
+                                                            type ),
+                              version );
     }
 
     @WorkbenchPartView
