@@ -45,6 +45,7 @@ import org.kie.workbench.common.widgets.client.callbacks.HasBusyIndicatorDefault
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.client.widget.BusyIndicatorView;
+import org.kie.workbench.common.widgets.client.widget.NoSuchFileWidget;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.callbacks.MetadataSuccessCallback;
 import org.kie.workbench.common.widgets.metadata.client.resources.i18n.MetadataConstants;
@@ -91,13 +92,45 @@ public class ScenarioEditorViewImpl
         this.busyIndicatorView = busyIndicatorView;
         this.bulkRunTestScenarioEditor = bulkRunTestScenarioEditor;
 
-        multiPage.addWidget( layout, TestScenarioConstants.INSTANCE.TestScenario() );
-
         layout.setWidth( "100%" );
+    }
 
+    @Override
+    public void setContent( final Path path,
+                            final boolean isReadOnly,
+                            final Scenario scenario,
+                            final AsyncPackageDataModelOracle oracle,
+                            final Caller<RuleNamesService> ruleNameService,
+                            final Caller<ScenarioTestEditorService> service ) {
+        layout.clear();
+        multiPage.clear();
+        multiPage.addWidget( layout,
+                             TestScenarioConstants.INSTANCE.TestScenario() );
         multiPage.addWidget( importsWidget,
                              CommonConstants.INSTANCE.ConfigTabTitle() );
 
+        if ( !isReadOnly ) {
+            addMetaDataPage( path,
+                             isReadOnly );
+        }
+        addBulkRunTestScenarioPanel( path,
+                                     isReadOnly );
+
+        setScenario( scenario,
+                     oracle,
+                     ruleNameService );
+
+        if ( !isReadOnly ) {
+            addTestRunnerWidget( scenario,
+                                 service,
+                                 path );
+        }
+
+        renderEditor();
+
+        initImportsTab( oracle,
+                        scenario.getImports(),
+                        isReadOnly );
     }
 
     @Override
@@ -108,15 +141,6 @@ public class ScenarioEditorViewImpl
 
     public String getTitle( final String fileName ) {
         return TestScenarioConstants.INSTANCE.TestScenarioParamFileName( fileName );
-    }
-
-    @Override
-    public void initImportsTab( final AsyncPackageDataModelOracle oracle,
-                                final Imports imports,
-                                final boolean readOnly ) {
-        importsWidget.setContent( oracle,
-                                  imports,
-                                  readOnly );
     }
 
     @Override
@@ -136,11 +160,6 @@ public class ScenarioEditorViewImpl
         editorLayout.setWidget( layoutRow,
                                 layoutColumn,
                                 widget );
-    }
-
-    @Override
-    public void clear() {
-        layout.clear();
     }
 
     public void renderEditor() {
@@ -264,16 +283,14 @@ public class ScenarioEditorViewImpl
                                                                                        previousExecutionTrace ) );
     }
 
-    @Override
-    public void addTestRunnerWidget( final Scenario scenario,
-                                     final Caller<ScenarioTestEditorService> service,
-                                     final Path path ) {
-        layout.add(new TestRunnerWidget(scenario, service, path));
+    private void addTestRunnerWidget( final Scenario scenario,
+                                      final Caller<ScenarioTestEditorService> service,
+                                      final Path path ) {
+        layout.add( new TestRunnerWidget( scenario, service, path ) );
     }
 
-    @Override
-    public void addMetaDataPage( final Path path,
-                                 final boolean isReadOnly ) {
+    private void addMetaDataPage( final Path path,
+                                  final boolean isReadOnly ) {
         multiPage.addPage( new Page( metadataWidget,
                                      MetadataConstants.INSTANCE.Metadata() ) {
             @Override
@@ -291,9 +308,8 @@ public class ScenarioEditorViewImpl
         } );
     }
 
-    @Override
-    public void addBulkRunTestScenarioPanel( final Path path,
-                                             final boolean isReadOnly ) {
+    private void addBulkRunTestScenarioPanel( final Path path,
+                                              final boolean isReadOnly ) {
         multiPage.addPage( new Page( bulkRunTestScenarioEditor, TestScenarioConstants.INSTANCE.TestScenarios() ) {
             @Override
             public void onFocus() {
@@ -306,15 +322,22 @@ public class ScenarioEditorViewImpl
         } );
     }
 
-    @Override
-    public void setScenario( final Scenario scenario,
-                             final AsyncPackageDataModelOracle oracle,
-                             final Caller<RuleNamesService> ruleNameService ) {
+    private void setScenario( final Scenario scenario,
+                              final AsyncPackageDataModelOracle oracle,
+                              final Caller<RuleNamesService> ruleNameService ) {
         scenarioWidgetComponentCreator = new ScenarioWidgetComponentCreator( this,
                                                                              oracle,
                                                                              ruleNameService);
         scenarioWidgetComponentCreator.setScenario( scenario );
         scenarioWidgetComponentCreator.setShowResults( false );
+    }
+
+    private void initImportsTab( final AsyncPackageDataModelOracle oracle,
+                                 final Imports imports,
+                                 final boolean readOnly ) {
+        importsWidget.setContent( oracle,
+                                  imports,
+                                  readOnly );
     }
 
     @Override
@@ -347,6 +370,13 @@ public class ScenarioEditorViewImpl
     @Override
     public void hideBusyIndicator() {
         busyIndicatorView.hideBusyIndicator();
+    }
+
+    @Override
+    public void handleNoSuchFileException() {
+        multiPage.clear();
+        multiPage.addWidget( new NoSuchFileWidget(),
+                             CommonConstants.INSTANCE.NoSuchFileTabTitle() );
     }
 
 }

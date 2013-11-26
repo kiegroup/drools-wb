@@ -35,6 +35,8 @@ import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.guvnor.common.services.shared.rulenames.RuleNamesService;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
+import org.kie.workbench.common.widgets.client.callbacks.CommandBuilder;
+import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallback;
 import org.kie.workbench.common.widgets.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
@@ -199,44 +201,6 @@ public class GuidedDecisionTableEditorPresenter {
 
         view.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
 
-        multiPage.addWidget( view,
-                             CommonConstants.INSTANCE.EditTabTitle() );
-
-        multiPage.addPage( new Page( viewSource,
-                                     CommonConstants.INSTANCE.SourceTabTitle() ) {
-            @Override
-            public void onFocus() {
-                viewSource.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
-                service.call( new ViewSourceSuccessCallback( viewSource ),
-                              new HasBusyIndicatorDefaultErrorCallback( viewSource ) ).toSource( path,
-                                                                                                 view.getContent() );
-            }
-
-            @Override
-            public void onLostFocus() {
-                viewSource.clear();
-            }
-        } );
-
-        multiPage.addWidget( importsWidget,
-                             CommonConstants.INSTANCE.ConfigTabTitle() );
-
-        multiPage.addPage( new Page( metadataWidget,
-                                     CommonConstants.INSTANCE.MetadataTabTitle() ) {
-            @Override
-            public void onFocus() {
-                metadataWidget.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
-                metadataService.call( new MetadataSuccessCallback( metadataWidget,
-                                                                   isReadOnly ),
-                                      new HasBusyIndicatorDefaultErrorCallback( metadataWidget ) ).getMetadata( path );
-            }
-
-            @Override
-            public void onLostFocus() {
-                //Nothing to do
-            }
-        } );
-
         loadContent();
     }
 
@@ -255,7 +219,9 @@ public class GuidedDecisionTableEditorPresenter {
 
     private void loadContent() {
         service.call( getModelSuccessCallback(),
-                      new HasBusyIndicatorDefaultErrorCallback( view ) ).loadContent( path );
+                      new CommandDrivenErrorCallback( view,
+                                                      new CommandBuilder().addNoSuchFileException( view,
+                                                                                                   multiPage ).build() ) ).loadContent( path );
     }
 
     private RemoteCallback<GuidedDecisionTableEditorContent> getModelSuccessCallback() {
@@ -263,6 +229,45 @@ public class GuidedDecisionTableEditorPresenter {
 
             @Override
             public void callback( final GuidedDecisionTableEditorContent content ) {
+                multiPage.clear();
+                multiPage.addWidget( view,
+                                     CommonConstants.INSTANCE.EditTabTitle() );
+
+                multiPage.addPage( new Page( viewSource,
+                                             CommonConstants.INSTANCE.SourceTabTitle() ) {
+                    @Override
+                    public void onFocus() {
+                        viewSource.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
+                        service.call( new ViewSourceSuccessCallback( viewSource ),
+                                      new HasBusyIndicatorDefaultErrorCallback( viewSource ) ).toSource( path,
+                                                                                                         view.getContent() );
+                    }
+
+                    @Override
+                    public void onLostFocus() {
+                        viewSource.clear();
+                    }
+                } );
+
+                multiPage.addWidget( importsWidget,
+                                     CommonConstants.INSTANCE.ConfigTabTitle() );
+
+                multiPage.addPage( new Page( metadataWidget,
+                                             CommonConstants.INSTANCE.MetadataTabTitle() ) {
+                    @Override
+                    public void onFocus() {
+                        metadataWidget.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
+                        metadataService.call( new MetadataSuccessCallback( metadataWidget,
+                                                                           isReadOnly ),
+                                              new HasBusyIndicatorDefaultErrorCallback( metadataWidget ) ).getMetadata( path );
+                    }
+
+                    @Override
+                    public void onLostFocus() {
+                        //Nothing to do
+                    }
+                } );
+
                 model = content.getModel();
                 final PackageDataModelOracleBaselinePayload dataModel = content.getDataModel();
                 oracle = oracleFactory.makeAsyncPackageDataModelOracle( path,
