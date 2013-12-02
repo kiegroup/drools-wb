@@ -112,7 +112,7 @@ public class Jcr2VfsMigrater {
 
     protected void setupDirectories() {
         guvnorBootstrapConfiguration.getProperties().put( "repository.root.directory", determineJcrRepositoryRootDirectory() );
-//        System.setProperty( "org.kie.nio.git.dir", migrationConfig.getOutputVfsRepository().getAbsolutePath() );
+//        System.setProperty( "org.uberfire.nio.git.dir", migrationConfig.getOutputVfsRepository().getAbsolutePath() );
     }
 
     /**
