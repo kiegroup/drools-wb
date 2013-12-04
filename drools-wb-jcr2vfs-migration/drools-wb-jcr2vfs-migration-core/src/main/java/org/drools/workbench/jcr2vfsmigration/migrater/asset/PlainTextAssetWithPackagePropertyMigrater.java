@@ -58,10 +58,6 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
             ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-
         StringBuilder sb = new StringBuilder();
 
 

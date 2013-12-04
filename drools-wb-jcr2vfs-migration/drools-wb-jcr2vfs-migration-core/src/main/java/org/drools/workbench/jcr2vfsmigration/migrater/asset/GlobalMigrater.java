@@ -57,10 +57,6 @@ public class GlobalMigrater extends BaseAssetMigrater {
         Path path = migrationPathManager.generatePathForGlobal( jcrModule );
         final org.uberfire.java.nio.file.Path nioPath = paths.convert( path );
         
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-        
         StringBuffer content = new StringBuffer();
         for(String global : globals) {
             content.append(global);

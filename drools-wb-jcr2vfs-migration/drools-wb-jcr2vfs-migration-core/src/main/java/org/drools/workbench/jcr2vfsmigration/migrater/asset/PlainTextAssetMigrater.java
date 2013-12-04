@@ -45,10 +45,6 @@ public class PlainTextAssetMigrater extends BaseAssetMigrater {
             ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-
         String content = jcrAssetItem.getContent();
 
 

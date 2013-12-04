@@ -94,10 +94,6 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
                 ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
             }
 
-            if ( !Files.exists( nioPath ) ) {
-                ioService.createFile( nioPath );
-            }
-
             StringBuilder sb = new StringBuilder();
             BRMSPackageBuilder builder = new BRMSPackageBuilder( rulesRepository.loadModuleByUUID( jcrModule.getUuid() ) );
             BRLContentHandler handler = new BRLContentHandler();

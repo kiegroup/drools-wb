@@ -69,10 +69,6 @@ public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
             ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-
         String content = jcrAssetItem.getContent();
         
 /*        while(content.indexOf("<auditLog>") > -1) {

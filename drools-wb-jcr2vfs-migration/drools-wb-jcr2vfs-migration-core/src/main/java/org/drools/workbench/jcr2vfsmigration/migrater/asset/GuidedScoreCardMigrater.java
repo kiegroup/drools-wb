@@ -58,10 +58,6 @@ public class GuidedScoreCardMigrater extends BaseAssetMigrater {
             ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-
 /*        ScorecardsContentHandler h = new ScorecardsContentHandler();
         String sourceDRL = h.getRawDRL(jcrAssetItem);*/
 

@@ -43,10 +43,6 @@ public class AttachementAssetMigrater extends BaseAssetMigrater {
             ioService.move(Paths.convert( previousVersionPath ), nioPath, StandardCopyOption.REPLACE_EXISTING);
         }
 
-        if ( !Files.exists( nioPath ) ) {
-            ioService.createFile( nioPath );
-        }
-
         byte[] attachement = jcrAssetItem.getBinaryContentAsBytes();
 
         ioService.write( nioPath,
