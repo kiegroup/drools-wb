@@ -223,9 +223,10 @@ public class AssetMigrater {
             return testScenarioMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         } else if ("package".equals(jcrAssetItem.getFormat())) {
             //Ignore
-        } else {
+        } else { //another format is migrated as a attachmentAsset
             Jcr2VfsMigrationApp.hasWarnings = true;
-            System.out.format("    WARNING: asset [%s] with format[%s] is not supported by migration tool. \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
+            System.out.format("    WARNING: asset [%s] with format[%s] is not a known format by migration tool. It will be migrated as attachmentAsset \n", jcrAssetItem.getName(), jcrAssetItem.getFormat());
+            return attachementAssetMigrater.migrate(jcrModule, jcrAssetItem, previousVersionPath);
         }
 
         return null;
