@@ -61,7 +61,7 @@ public class TestScenarioMigrater extends BaseAssetMigrater {
         String sourceContentWithPackage = packageImportHelper.assertPackageNameXML( content, path );
         sourceContentWithPackage = packageImportHelper.assertPackageImportXML( sourceContentWithPackage, path );
 
-        ioService.write( nioPath, content, migrateMetaData(jcrModule, jcrAssetItem), new CommentedOption( jcrAssetItem.getLastContributor(), null, jcrAssetItem.getCheckinComment(), jcrAssetItem.getLastModified().getTime() ) );
+        ioService.write( nioPath, sourceContentWithPackage, migrateMetaData(jcrModule, jcrAssetItem), new CommentedOption( jcrAssetItem.getLastContributor(), null, jcrAssetItem.getCheckinComment(), jcrAssetItem.getLastModified().getTime() ) );
         
         return path;
     }

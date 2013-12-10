@@ -84,7 +84,7 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
         }
         
 
-        String sourceWithImport = drlTextEditorServiceImpl.assertPackageName( content,
+        String sourceWithImport = packageImportHelper.assertPackageName( content,
                                                                               path );
         sourceWithImport = packageImportHelper.assertPackageImportDRL( sourceWithImport,
                                                                        path );

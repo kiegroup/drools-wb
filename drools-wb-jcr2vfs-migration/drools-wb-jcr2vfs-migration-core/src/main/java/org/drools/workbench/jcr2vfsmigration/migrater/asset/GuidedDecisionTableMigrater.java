@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.httpclient.util.URIUtil;
 import org.drools.guvnor.client.common.AssetFormats;
 import org.drools.guvnor.client.rpc.Module;
 import org.drools.guvnor.server.RepositoryAssetService;
@@ -82,7 +83,15 @@ public class GuidedDecisionTableMigrater extends BaseAssetMigrater {
 
         //Add package
         final Package pkg = projectService.resolvePackage( path );
-        final String requiredPackageName = ( pkg == null ? null : pkg.getPackageName() );
+        String pkName =pkg.getPackageName();
+        try{
+            if(pkName!=null && pkg.getPackageName().endsWith(path.getFileName())){
+                pkName = pkg.getPackageName().substring(0,pkg.getPackageName().indexOf(path.getFileName())-1);
+            }
+        }catch (Exception e){
+
+        }
+        final String requiredPackageName = pkName;
         if ( requiredPackageName != null || !"".equals( requiredPackageName ) ) {
             model.setPackageName( requiredPackageName );
         }

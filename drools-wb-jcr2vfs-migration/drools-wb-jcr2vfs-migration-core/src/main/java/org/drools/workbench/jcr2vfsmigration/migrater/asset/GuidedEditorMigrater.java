@@ -108,7 +108,7 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
 
             content = getExtendExpression(jcrModule,jcrAssetItem,content);
 
-            String sourceDRLWithImport = drlTextEditorServiceImpl.assertPackageName( content,
+            String sourceDRLWithImport = packageImportHelper.assertPackageName( content,
                                                                                      path );
             sourceDRLWithImport = packageImportHelper.assertPackageImportDRL( sourceDRLWithImport,
                                                                               path );

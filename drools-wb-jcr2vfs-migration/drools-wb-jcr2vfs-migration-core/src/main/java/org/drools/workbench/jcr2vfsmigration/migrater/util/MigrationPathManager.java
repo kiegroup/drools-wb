@@ -11,6 +11,12 @@ import org.drools.guvnor.client.common.AssetFormats;
 import org.drools.guvnor.client.rpc.Asset;
 import org.drools.guvnor.client.rpc.Module;
 import org.drools.repository.AssetItem;
+import org.drools.workbench.models.commons.backend.packages.PackageNameParser;
+import org.drools.workbench.models.commons.backend.packages.PackageNameWriter;
+import org.drools.workbench.models.datamodel.packages.HasPackageName;
+import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
+import org.guvnor.common.services.project.model.*;
+import org.guvnor.common.services.project.service.ProjectService;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
@@ -30,9 +36,21 @@ public class MigrationPathManager {
     @Named("ioStrategy")
     private IOService ioService;
 
+
+
     private Map<String, Path> uuidToPathMap = new HashMap<String, Path>();
     private Map<Path, String> pathToUuidMap = new HashMap<Path, String>();
     private FileSystem fs;
+
+    private static final String[] JAVA_KEYWORDS = { "package", "import",
+            "class", "public", "protected", "private", "extends", "implements",
+            "return", "if", "while", "for", "do", "else", "try", "new", "void",
+            "catch", "throws", "throw", "static", "final", "break", "continue",
+            "super", "finally", "true", "false", "true;", "false;", "null",
+            "boolean", "int", "char", "long", "float", "double", "short",
+            "abstract", "this","switch","assert","default","goto","synchronized",
+            "byte","case","enum","instanceof","transient","interface","strictfp","volatile","const","native" };
+
 
     // Generate methods
 
@@ -126,15 +144,26 @@ public class MigrationPathManager {
 
     public String escapePathEntry( String pathEntry ) {
         // VFS doesn't support /'s in the path entries
-        pathEntry = pathEntry.replace( "/", " slash " );
+        pathEntry = pathEntry.replace("/", " slash ");
+        pathEntry=normalizePackageName(pathEntry);
         // TODO Once porcelli has a list of all illegal and escaped characters in PathEntry, deal with them here
         return pathEntry;
+    }
+
+    public String normalizePackageName( String stringToEscape ) {
+
+        for(int i=0;i<JAVA_KEYWORDS.length;i++){
+            if(JAVA_KEYWORDS[i].equals(stringToEscape)){
+                return "mod_"+stringToEscape.toLowerCase();
+            }
+        }
+        return stringToEscape.toLowerCase();
     }
 
     public String dotToSlash( String pathEntry ) {
         // VFS doesn't support /'s in the path entries
         pathEntry = pathEntry.replace( ".", "/" );
-        // TODO Once porcelli has a list of all illegal and escaped characters in PathEntry, deal with them here
+        pathEntry=normalizePackageName(pathEntry); //Added to be consistent with project creation
         return pathEntry;
     }
 
@@ -149,5 +178,6 @@ public class MigrationPathManager {
     public FileSystem getFileSystem() {
         return fs;
     }
+
 
 }

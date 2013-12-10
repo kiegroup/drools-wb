@@ -95,6 +95,7 @@ public class FactModelsMigrater extends BaseAssetMigrater {
             DataModelTO dataModelTO  = new DataModelTO();
             
             String packageName = getPackageName(jcrModule);
+            packageName = migrationPathManager.normalizePackageName(packageName);
             
             for ( FactMetaModel factMetaModel : factModels.models ) {
                 DataObjectTO dataObjectTO = createDataObject(packageName, factMetaModel.getName(), factMetaModel.getSuperType());
