@@ -70,9 +70,9 @@ public class PackageImportHelper {
             }
 
             Element root = doc.getDocumentElement();
-            Element nameElement = doc.createElement( "name" );
-            nameElement.appendChild( doc.createTextNode( resource.getFileName()) );
-            root.appendChild( nameElement );
+//            Element nameElement = doc.createElement( "name" );
+//            nameElement.appendChild( doc.createTextNode( resource.getFileName()) );
+//            root.appendChild( nameElement );
 
             Element packageElement = doc.createElement( "packageName" );
             packageElement.appendChild( doc.createTextNode( requiredPackageName ) );
@@ -154,11 +154,17 @@ public class PackageImportHelper {
 
             Element root = doc.getDocumentElement();
             Element importsElement = doc.createElement( "imports" );
+            if(imports!=null && imports.getImports().size()==0){
+                Element defaultImportElement = doc.createElement( "imports" );
+                importsElement.appendChild(defaultImportElement);
+            }
+
             for ( final Import i : imports.getImports() ) {
                 Element importElement = doc.createElement( "import" );
                 importElement.appendChild( doc.createTextNode( i.getType() ) );
                 importsElement.appendChild( importElement );
             }
+
 
             root.appendChild( importsElement );
 
