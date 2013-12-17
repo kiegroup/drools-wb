@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-jcr2vfs-migration</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-jcr2vfs-migration-core</artifactId>
@@ -65,8 +65,8 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!--  Temporary hack until we fix the dependency problem. jbpm-bpmn2 resolves to 6.0.0-SNAPSHOT:
-    org.jbpm:jbpm-bpmn2:jar:6.0.0-SNAPSHOT:compile (version managed from 5.4.1-SNAPSHOT)-->
+    <!--  Temporary hack until we fix the dependency problem. jbpm-bpmn2 resolves to 6.0.1-SNAPSHOT:
+    org.jbpm:jbpm-bpmn2:jar:6.0.1-SNAPSHOT:compile (version managed from 5.4.1-SNAPSHOT)-->
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-bpmn2</artifactId>
