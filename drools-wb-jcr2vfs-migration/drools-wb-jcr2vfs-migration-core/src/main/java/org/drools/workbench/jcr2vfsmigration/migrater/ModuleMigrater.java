@@ -45,6 +45,8 @@ public class ModuleMigrater {
 
     private void migrate( Module jcrModule ) {
         //Set up project structure:
+        jcrModule.setName(migrationPathManager.normalizePackageName(jcrModule.getName()));
+
         String [] nameSplit = jcrModule.getName().split("\\.");
         String groupId=nameSplit[0];
         String artifactId=nameSplit[nameSplit.length-1];
@@ -52,8 +54,6 @@ public class ModuleMigrater {
         for(int i =1 ;i< nameSplit.length-1;i++){
             groupId +="."+ nameSplit[i];
         }
-        artifactId=migrationPathManager.normalizePackageName(artifactId);
-        groupId=migrationPathManager.normalizePackageName(groupId);
 
         GAV gav = new GAV(groupId,
                           artifactId,
@@ -62,7 +62,7 @@ public class ModuleMigrater {
 
         Path modulePath = migrationPathManager.generateRootPath();
         projectService.newProject( makeRepository( modulePath ),
-                                   migrationPathManager.normalizePackageName(jcrModule.getName()),
+                                   jcrModule.getName(),
                                    pom,
                                    "http://localhost" );
     }

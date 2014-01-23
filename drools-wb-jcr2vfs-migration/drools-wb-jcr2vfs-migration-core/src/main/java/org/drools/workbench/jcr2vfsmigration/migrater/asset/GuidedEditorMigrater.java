@@ -72,7 +72,7 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
         }
 
         try {
-            Asset jcrAsset = jcrRepositoryAssetService.loadRuleAsset( jcrAssetItem.getUUID() );
+           // Asset jcrAsset = jcrRepositoryAssetService.loadRuleAsset( jcrAssetItem.getUUID() );
 
             RuleModel ruleModel = getBrlXmlPersistence().unmarshal( jcrAssetItem.getContent() );
 
@@ -99,7 +99,7 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
             BRLContentHandler handler = new BRLContentHandler();
 
             handler.assembleDRL( builder,
-                                 jcrAsset,
+                                 jcrAssetItem,
                                  sb );
 
             //Support for # has been removed from Drools Expert
@@ -123,7 +123,7 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
             
             return path;
 
-        } catch ( SerializationException e ) {
+        } catch ( Exception e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

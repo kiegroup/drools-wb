@@ -151,13 +151,21 @@ public class MigrationPathManager {
     }
 
     public String normalizePackageName( String stringToEscape ) {
+        String [] nameSplit = stringToEscape.split("\\.");
+        String normalizedStr="";
 
-        for(int i=0;i<JAVA_KEYWORDS.length;i++){
-            if(JAVA_KEYWORDS[i].equals(stringToEscape)){
-                return "mod_"+stringToEscape.toLowerCase();
+        for(int j =0 ;j< nameSplit.length;j++){
+            int i=0;
+            if(j>0 && j< nameSplit.length) normalizedStr+= ".";
+            for(;i<JAVA_KEYWORDS.length;i++){
+                if(JAVA_KEYWORDS[i].equals(nameSplit[j])){
+                    normalizedStr+= "mod_"+nameSplit[j].toLowerCase();
+                    break;
+                }
             }
+            if(i==JAVA_KEYWORDS.length) normalizedStr+= nameSplit[j].toLowerCase();
         }
-        return stringToEscape.toLowerCase();
+        return normalizedStr;
     }
 
     public String dotToSlash( String pathEntry ) {

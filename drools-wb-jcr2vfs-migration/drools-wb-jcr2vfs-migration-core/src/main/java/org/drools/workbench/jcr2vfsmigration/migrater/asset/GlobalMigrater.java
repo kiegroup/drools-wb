@@ -28,6 +28,7 @@ import org.uberfire.backend.vfs.Path;
 public class GlobalMigrater extends BaseAssetMigrater {
 
     protected static final Logger logger = LoggerFactory.getLogger( GlobalMigrater.class );
+    private static final String GLOBAL_KEYWORD = "global ";
 
     @Inject
     protected RepositoryAssetService jcrRepositoryAssetService;
@@ -59,10 +60,13 @@ public class GlobalMigrater extends BaseAssetMigrater {
         
         StringBuffer content = new StringBuffer();
         for(String global : globals) {
+            content.append(GLOBAL_KEYWORD);
             content.append(global);
             content.append("\n");
         }
-        String contentWithPackage = packageImportHelper.assertPackageImportDRL(content.toString(), null);
+        String contentWithPackage = packageImportHelper.assertPackageName( content.toString(), path );
+
+        contentWithPackage = packageImportHelper.assertPackageImportDRL(contentWithPackage, null);
         ioService.write( nioPath,
                          contentWithPackage,
                          new CommentedOption( jcrModule.getLastContributor(),

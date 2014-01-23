@@ -56,6 +56,12 @@ public class PlainTextAssetMigrater extends BaseAssetMigrater {
                 || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
             content = DRLMigrationUtils.migrateStartOfCommentChar(content);
         }
+        if (AssetFormats.RULE_TEMPLATE.equals(jcrAssetItem.getFormat())){
+            content = content.replaceAll("org.drools.guvnor.client.modeldriven.dt.TemplateModel","rule");
+        }
+        if (AssetFormats.WORKITEM_DEFINITION.equals(jcrAssetItem.getFormat())){
+            content = content.replaceAll("org.drools.process.core.","org.drools.core.process.core.");
+        }
 
         ioService.write( nioPath,
                          content,

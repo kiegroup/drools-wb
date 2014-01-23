@@ -106,6 +106,7 @@ public class AssetMigrater {
 
             //Load drools.package first if it exists
             try {
+                jcrModule.setName(migrationPathManager.normalizePackageName(jcrModule.getName()));
                 List<String> formats = new ArrayList<String>();
                 formats.add("package");
                 AssetPageRequest request = new AssetPageRequest(jcrModule.getUuid(),
@@ -137,11 +138,12 @@ public class AssetMigrater {
                         null,
                         startRowIndex,
                         pageSize);
-
+                String assetName="";
                 try {
                     response = jcrRepositoryAssetService.findAssetPage(request);
                     for (AssetPageRow row : response.getPageRowList()) {
                         AssetItem assetItemJCR = rulesRepository.loadAssetByUUID(row.getUuid());
+                        assetName =assetItemJCR.getName();
                         System.out.format("    Asset [%s] with format [%s] is being migrated... \n",
                                 assetItemJCR.getName(), assetItemJCR.getFormat());
                         //TODO: Git wont check in a version if the file is not changed in this version. Eg, the version 3 of "testFunction.function"
@@ -158,6 +160,11 @@ public class AssetMigrater {
                                 assetItemJCR.getName(), assetItemJCR.getFormat());
                     }
                 } catch (SerializationException e) {
+                    System.out.println("SerializationException migrating asset: " + assetName +" from module: "+jcrModule.getName());
+                    Jcr2VfsMigrationApp.hasErrors = true;
+                    throw new IllegalStateException(e);
+                } catch (Exception e) {
+                    System.out.println("Exception migrating asset: " + assetName +" from module: "+jcrModule.getName());
                     Jcr2VfsMigrationApp.hasErrors = true;
                     throw new IllegalStateException(e);
                 }
@@ -234,6 +241,8 @@ public class AssetMigrater {
 
     public void migrateAssetHistory(Module jcrModule, String assetUUID) throws SerializationException {
         //loadItemHistory wont return the current version
+        String currentVersionAssetName="";
+        try{
         Path previousVersionPath = null;
         TableDataResult history = jcrRepositoryAssetService.loadItemHistory(assetUUID);
         TableDataRow[] rows = history.data;
@@ -253,10 +262,13 @@ public class AssetMigrater {
             String versionSnapshotUUID = row.id;
 
             AssetItem historicalAssetJCR = rulesRepository.loadAssetByUUID(versionSnapshotUUID);
-            String currentVersionAssetName = historicalAssetJCR.getName();
+            currentVersionAssetName = historicalAssetJCR.getName();
             previousVersionPath = migrate(jcrModule, historicalAssetJCR, previousVersionPath);
             logger.debug("    Asset ({}) with format ({}) migrated: version [{}], comment[{}], lastModified[{}]",
                     historicalAssetJCR.getName(), historicalAssetJCR.getFormat(), historicalAssetJCR.getVersionNumber(), historicalAssetJCR.getCheckinComment(), historicalAssetJCR.getLastModified().getTime());
+        }
+        } catch (Exception e){
+            System.out.println("Exception migrating assetHistory at version: "+currentVersionAssetName +" from module: "+jcrModule.getName());
         }
     }
 }
