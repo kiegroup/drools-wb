@@ -66,11 +66,16 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
             sb.append( getExtendExpression(jcrModule,jcrAssetItem,"") );
             sb.append( "\n" );
             sb.append( "\n" );
+            sb.append( jcrAssetItem.getContent() );
+            sb.append( "\n" );
+            sb.append( "\n" );
+            sb.append( "end" );
         }
-        sb.append( jcrAssetItem.getContent() );
-        sb.append( "\n" );
-        sb.append( "\n" );
-        sb.append( "end" );
+        else{
+            sb.append( jcrAssetItem.getContent() );
+            sb.append( "\n" );
+        }
+
 
         String content = sb.toString();        
        
@@ -82,7 +87,7 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
                 || AssetFormats.FUNCTION.equals(jcrAssetItem.getFormat())) {
             content = DRLMigrationUtils.migrateStartOfCommentChar(content);
         }
-        
+
 
         String sourceWithImport = packageImportHelper.assertPackageName( content,
                                                                               path );
