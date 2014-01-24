@@ -92,7 +92,7 @@ public class PackageImportHelper {
             trans.transform( s, result );
             String xmlString = sw.toString();
             if(xmlString!=null)
-                xmlString =xmlString.substring(xmlString.indexOf("\n")+1);
+                xmlString =xmlString.substring(xmlString.indexOf(">")+1);
             return xmlString;
         } catch ( TransformerConfigurationException e ) {
             e.printStackTrace();
@@ -182,7 +182,7 @@ public class PackageImportHelper {
             trans.transform( s, result );
             String xmlString = sw.toString();
             if(xmlString!=null)
-                xmlString =xmlString.substring(xmlString.indexOf("\n")+1);
+                xmlString =xmlString.substring(xmlString.indexOf(">")+1);
             return xmlString;
         } catch ( TransformerConfigurationException e ) {
             e.printStackTrace();
