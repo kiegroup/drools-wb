@@ -13,7 +13,7 @@ public class WorkItemsResourceType
         extends WorkItemsTypeDefinition
         implements ClientResourceType {
 
-    private static final Image IMAGE = new Image( WorkItemsEditorResources.INSTANCE.images().workitemIcon() );
+    private static final Image IMAGE = new Image( WorkItemsEditorResources.INSTANCE.images().typeWorkItem() );
 
     @Override
     public IsWidget getIcon() {
