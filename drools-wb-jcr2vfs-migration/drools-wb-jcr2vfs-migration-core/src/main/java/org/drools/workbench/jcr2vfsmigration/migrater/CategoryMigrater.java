@@ -40,15 +40,12 @@ public class CategoryMigrater {
     
     private void loadChildCategories(String category, CategoryItem vfsCategoryItem) {
         String[] categories = jcrRepositoryCategoryService.loadChildCategories(category);
+
         for(String c : categories) {
         	String categoryPath = getItemPath(c, vfsCategoryItem.getFullPath());
         	CategoryItem categoryItem = vfsCategoryItem.addChildren(c, "");
-
-        	String[] childrenCategories = jcrRepositoryCategoryService.loadChildCategories(categoryItem.getFullPath());
-        	if(childrenCategories.length != 0) {
-        		loadChildCategories(c,  categoryItem);
-        	}        	
-        }   	
+            loadChildCategories(categoryPath,categoryItem);
+        }
     }
     private String getItemPath(String categoryName, String parentItemPath) {
         String path;
