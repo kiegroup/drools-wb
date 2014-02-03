@@ -60,8 +60,7 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
 
         StringBuilder sb = new StringBuilder();
 
-
-        if ( AssetFormats.DRL.equals( jcrAssetItem.getFormat() ) ) {
+        if ( AssetFormats.DRL.equals( jcrAssetItem.getFormat() ) && jcrAssetItem.getContent().toLowerCase().indexOf("rule ")==-1 ) {
             sb.append( "rule \"" + jcrAssetItem.getName() + "\"" );
             sb.append( getExtendExpression(jcrModule,jcrAssetItem,"") );
             sb.append( "\n" );
@@ -89,9 +88,10 @@ public class PlainTextAssetWithPackagePropertyMigrater extends BaseAssetMigrater
         }
 
 
-        String sourceWithImport = packageImportHelper.assertPackageName( content,
+
+        String sourceWithImport = packageImportHelper.assertPackageImportDRL( content,
                                                                               path );
-        sourceWithImport = packageImportHelper.assertPackageImportDRL( sourceWithImport,
+        sourceWithImport = packageImportHelper.assertPackageName( sourceWithImport,
                                                                        path );
 
         ioService.write( nioPath,

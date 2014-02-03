@@ -118,7 +118,7 @@ public class PackageImportHelper {
         }
 
         final Imports imports = ImportsParser.parseImports( packageHeaderInfo.getHeader() );
-        if ( imports == null ) {
+        if ( imports == null || drl.toLowerCase().indexOf("import ")!=-1) {
             return drl;
         }
         StringBuilder sb = new StringBuilder();

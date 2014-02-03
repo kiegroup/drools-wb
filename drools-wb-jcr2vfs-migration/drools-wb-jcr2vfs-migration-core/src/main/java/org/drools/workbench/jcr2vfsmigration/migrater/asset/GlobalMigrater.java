@@ -64,9 +64,9 @@ public class GlobalMigrater extends BaseAssetMigrater {
             content.append(global);
             content.append("\n");
         }
-        String contentWithPackage = packageImportHelper.assertPackageName( content.toString(), path );
+        String contentWithImport = packageImportHelper.assertPackageImportDRL( content.toString(), path );
 
-        contentWithPackage = packageImportHelper.assertPackageImportDRL(contentWithPackage, null);
+        String contentWithPackage = packageImportHelper.assertPackageName(contentWithImport, null);
         ioService.write( nioPath,
                          contentWithPackage,
                          new CommentedOption( jcrModule.getLastContributor(),

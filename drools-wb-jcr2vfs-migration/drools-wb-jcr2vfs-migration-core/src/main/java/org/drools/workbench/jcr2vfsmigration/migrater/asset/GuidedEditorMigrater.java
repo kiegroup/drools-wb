@@ -108,9 +108,9 @@ public class GuidedEditorMigrater extends BaseAssetMigrater {
 
             content = getExtendExpression(jcrModule,jcrAssetItem,content);
 
-            String sourceDRLWithImport = packageImportHelper.assertPackageName( content,
+            String sourceDRLWithImport = packageImportHelper.assertPackageImportDRL( content,
                                                                                      path );
-            sourceDRLWithImport = packageImportHelper.assertPackageImportDRL( sourceDRLWithImport,
+            sourceDRLWithImport = packageImportHelper.assertPackageName( sourceDRLWithImport,
                                                                               path );
 
             ioService.write( nioPath,
