@@ -222,7 +222,7 @@ public class GuidedDecisionTableEditorPresenter {
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.COPY ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.RENAME ).setEnabled( false );
         menus.getItemsMap().get( FileMenuBuilder.MenuItems.DELETE ).setEnabled( false );
-        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled(false);
+        menus.getItemsMap().get( FileMenuBuilder.MenuItems.VALIDATE ).setEnabled( false );
     }
 
     private void loadContent() {
@@ -230,7 +230,9 @@ public class GuidedDecisionTableEditorPresenter {
                       new CommandDrivenErrorCallback( view,
                                                       new CommandBuilder().addNoSuchFileException( view,
                                                                                                    multiPage,
-                                                                                                   menus ).build() ) ).loadContent( path );
+                                                                                                   menus ).build()
+                      )
+                    ).loadContent( path );
     }
 
     private RemoteCallback<GuidedDecisionTableEditorContent> getModelSuccessCallback() {
@@ -265,10 +267,13 @@ public class GuidedDecisionTableEditorPresenter {
                                              CommonConstants.INSTANCE.MetadataTabTitle() ) {
                     @Override
                     public void onFocus() {
-                        metadataWidget.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
-                        metadataService.call( new MetadataSuccessCallback( metadataWidget,
-                                                                           isReadOnly ),
-                                              new HasBusyIndicatorDefaultErrorCallback( metadataWidget ) ).getMetadata( path );
+                        if ( !metadataWidget.isAlreadyLoaded() ) {
+                            metadataWidget.showBusyIndicator( CommonConstants.INSTANCE.Loading() );
+                            metadataService.call( new MetadataSuccessCallback( metadataWidget,
+                                                                               isReadOnly ),
+                                                  new HasBusyIndicatorDefaultErrorCallback( metadataWidget )
+                                                ).getMetadata( path );
+                        }
                     }
 
                     @Override
@@ -383,7 +388,8 @@ public class GuidedDecisionTableEditorPresenter {
                                                                                                                         metadataWidget.getContent(),
                                                                                                                         commitMessage );
                                              }
-                                         } );
+                                         }
+                                       );
         concurrentUpdateSessionInfo = null;
     }
 
@@ -402,7 +408,7 @@ public class GuidedDecisionTableEditorPresenter {
 
     @IsDirty
     public boolean isDirty() {
-        return view.isDirty();
+        return view.isDirty() || metadataWidget.isDirty();
     }
 
     @OnClose
