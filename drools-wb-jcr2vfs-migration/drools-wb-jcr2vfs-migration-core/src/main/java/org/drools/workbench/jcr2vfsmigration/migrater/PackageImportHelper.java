@@ -218,8 +218,9 @@ public class PackageImportHelper {
             }
 
             final Package pkg = projectService.resolvePackage( resource );
-            String pkName =pkg.getPackageName();
+            String pkName =null;
             try{
+                pkName =pkg.getPackageName();
                 if(pkName!=null && pkg.getPackageName().endsWith(URIUtil.decode(resource.getFileName()))){
                     pkName = pkg.getPackageName().substring(0,pkg.getPackageName().indexOf(URIUtil.decode(resource.getFileName()))-1);
                 }
