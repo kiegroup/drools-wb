@@ -152,21 +152,29 @@ public class PackageImportHelper {
                 return xml;
             }
 
+            /* The imports should have following format (used by the workbench):
+             *  <imports>
+             *    <imports>
+             *      <org.drools.workbench.models.datamodel.imports.Import>
+             *        <type>java.lang.Number</type>
+             *      </org.drools.workbench.models.datamodel.imports.Import>
+             *   </imports>
+             *  </imports>
+             */
             Element root = doc.getDocumentElement();
-            Element importsElement = doc.createElement( "imports" );
-            if(imports!=null && imports.getImports().size()==0){
-                Element defaultImportElement = doc.createElement( "imports" );
-                importsElement.appendChild(defaultImportElement);
-            }
+            Element topImportsElement = doc.createElement( "imports" );
+            Element nestedImportsElement = doc.createElement( "imports" );
+            topImportsElement.appendChild(nestedImportsElement);
 
             for ( final Import i : imports.getImports() ) {
-                Element importElement = doc.createElement( "import" );
-                importElement.appendChild( doc.createTextNode( i.getType() ) );
-                importsElement.appendChild( importElement );
+                Element importElement = doc.createElement( Import.class.getCanonicalName() );
+                Element typeElement = doc.createElement( "type" );
+                typeElement.appendChild( doc.createTextNode( i.getType() ) );
+                importElement.appendChild( typeElement );
+                nestedImportsElement.appendChild( importElement );
             }
 
-
-            root.appendChild( importsElement );
+            root.appendChild( topImportsElement );
 
             //output xml with pretty format
             TransformerFactory transfac = TransformerFactory.newInstance();
