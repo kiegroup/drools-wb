@@ -112,7 +112,7 @@ public class ActionCallMethodWidget extends RuleModellerWidget {
         String factType = getFactTypeLHS();
 
         if (factType == null) {
-            factType = getFactTypeFromRHS(factType);
+            factType = getFactTypeFromRHS(null);
         }
 
         if (factType == null) {

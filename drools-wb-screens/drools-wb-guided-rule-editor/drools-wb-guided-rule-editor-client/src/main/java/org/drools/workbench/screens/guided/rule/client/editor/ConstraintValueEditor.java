@@ -330,9 +330,8 @@ public class ConstraintValueEditor
 
         //Date picker
         boolean isCEPOperator = false;
-        if ( this.constraint instanceof HasOperator ) {
-            isCEPOperator = CEPOracle.isCEPOperator( ( (HasOperator) this.constraint ).getOperator() );
-        }
+        isCEPOperator = CEPOracle.isCEPOperator( ( this.constraint ).getOperator() );
+
         if ( DataType.TYPE_DATE.equals( this.fieldType ) || ( DataType.TYPE_THIS.equals( this.fieldName ) && isCEPOperator ) ) {
 
             if ( this.readOnly ) {
