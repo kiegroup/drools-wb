@@ -148,12 +148,10 @@ public class ConstraintValueEditorHelper {
                         @Override
                         public void callback(final Boolean result) {
                             if (Boolean.TRUE.equals(result)) {
-                                if (constraint instanceof HasOperator) {
-                                    HasOperator hop = (HasOperator) constraint;
-                                    if (CEPOracle.isCEPOperator(hop.getOperator())) {
-                                        callback.callback(true);
-                                        return;
-                                    }
+                                HasOperator hop = constraint;
+                                if (CEPOracle.isCEPOperator(hop.getOperator())) {
+                                    callback.callback(true);
+                                    return;
                                 }
                             }
                         }
@@ -162,12 +160,10 @@ public class ConstraintValueEditorHelper {
 
         //'this' can be compared to bound Dates if using a CEP operator
         if (this.fieldName.equals(DataType.TYPE_THIS) && boundFieldType.equals(DataType.TYPE_DATE)) {
-            if (this.constraint instanceof HasOperator) {
-                HasOperator hop = (HasOperator) this.constraint;
-                if (CEPOracle.isCEPOperator(hop.getOperator())) {
-                    callback.callback(true);
-                    return;
-                }
+            HasOperator hop = this.constraint;
+            if (CEPOracle.isCEPOperator(hop.getOperator())) {
+                callback.callback(true);
+                return;
             }
         }
 
@@ -178,12 +174,10 @@ public class ConstraintValueEditorHelper {
                         @Override
                         public void callback(final Boolean result) {
                             if (Boolean.TRUE.equals(result)) {
-                                if (constraint instanceof HasOperator) {
-                                    HasOperator hop = (HasOperator) constraint;
-                                    if (CEPOracle.isCEPOperator(hop.getOperator())) {
-                                        callback.callback(true);
-                                        return;
-                                    }
+                                HasOperator hop = constraint;
+                                if (CEPOracle.isCEPOperator(hop.getOperator())) {
+                                    callback.callback(true);
+                                    return;
                                 }
                             }
                         }
@@ -212,17 +206,14 @@ public class ConstraintValueEditorHelper {
                 callback.callback(false);
                 return;
             }
-            FieldConstraint fc = this.model.getLHSBoundField(boundVariable);
-            if (fc instanceof SingleFieldConstraint) {
-                String fieldName = ((SingleFieldConstraint) fc).getFieldName();
-                String parentFactTypeForBinding = this.model.getLHSParentFactPatternForBinding(boundVariable).getFactType();
-                String[] dd = this.oracle.getEnumValues(parentFactTypeForBinding,
-                        fieldName);
-                callback.callback(isEnumEquivalent(dd));
-                return;
-            }
-            callback.callback(false);
+            SingleFieldConstraint fc = this.model.getLHSBoundField(boundVariable);
+            String fieldName = fc.getFieldName();
+            String parentFactTypeForBinding = this.model.getLHSParentFactPatternForBinding(boundVariable).getFactType();
+            String[] dd = this.oracle.getEnumValues(parentFactTypeForBinding,
+                                                    fieldName);
+            callback.callback(isEnumEquivalent(dd));
             return;
+
         }
 
         isBoundVariableApplicableByFieldType(boundVariable,
@@ -230,10 +221,7 @@ public class ConstraintValueEditorHelper {
     }
 
     private boolean isEnumEquivalent(String[] values) {
-        if (values == null && this.dropDownData.getFixedList() != null) {
-            return false;
-        }
-        if (values != null && this.dropDownData.getFixedList() == null) {
+        if (values == null || this.dropDownData.getFixedList() == null) {
             return false;
         }
         if (values.length != this.dropDownData.getFixedList().length) {
