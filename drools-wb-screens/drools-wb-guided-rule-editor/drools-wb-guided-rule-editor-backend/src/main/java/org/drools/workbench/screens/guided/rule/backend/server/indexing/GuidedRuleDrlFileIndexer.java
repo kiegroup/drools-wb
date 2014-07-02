@@ -23,6 +23,8 @@ import org.drools.compiler.compiler.DrlParser;
 import org.drools.compiler.lang.descr.PackageDescr;
 import org.drools.workbench.models.datamodel.oracle.ProjectDataModelOracle;
 import org.drools.workbench.screens.guided.rule.type.GuidedRuleDRLResourceTypeDefinition;
+import org.guvnor.common.services.project.model.Project;
+import org.guvnor.common.services.project.service.ProjectService;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
 import org.kie.workbench.common.services.refactoring.backend.server.indexing.DefaultIndexBuilder;
 import org.kie.workbench.common.services.refactoring.backend.server.indexing.PackageDescrIndexVisitor;
@@ -51,6 +53,9 @@ public class GuidedRuleDrlFileIndexer implements Indexer {
     @Inject
     protected GuidedRuleDRLResourceTypeDefinition type;
 
+    @Inject
+    protected ProjectService projectService;
+
     @Override
     public boolean supportsPath( final Path path ) {
         return type.accept( Paths.convert( path ) );
@@ -71,7 +76,11 @@ public class GuidedRuleDrlFileIndexer implements Indexer {
             }
 
             final ProjectDataModelOracle dmo = getProjectDataModelOracle( path );
-            final DefaultIndexBuilder builder = new DefaultIndexBuilder();
+            final Project project = projectService.resolveProject( Paths.convert( path ) );
+            final org.guvnor.common.services.project.model.Package pkg = projectService.resolvePackage( Paths.convert( path ) );
+
+            final DefaultIndexBuilder builder = new DefaultIndexBuilder( project,
+                                                                         pkg );
             final PackageDescrIndexVisitor visitor = new PackageDescrIndexVisitor( dmo,
                                                                                    builder,
                                                                                    packageDescr );

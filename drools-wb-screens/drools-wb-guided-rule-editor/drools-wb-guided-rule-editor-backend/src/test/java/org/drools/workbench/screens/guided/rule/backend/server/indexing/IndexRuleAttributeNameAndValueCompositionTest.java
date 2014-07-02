@@ -49,11 +49,6 @@ public class IndexRuleAttributeNameAndValueCompositionTest extends BaseIndexingT
 
     @Test
     public void testIndexDrlRuleAttributeNameAndValues() throws IOException, InterruptedException {
-        //Don't ask, but we need to write a single file first in order for indexing to work
-        final Path basePath = getDirectoryPath().resolveSibling( "someNewOtherPath" );
-        ioService().write( basePath.resolve( "dummy" ),
-                           "<none>" );
-
         //Add test files
         final Path path = basePath.resolve( "drl1.rdrl" );
         final String drl = loadText( "drl1.rdrl" );

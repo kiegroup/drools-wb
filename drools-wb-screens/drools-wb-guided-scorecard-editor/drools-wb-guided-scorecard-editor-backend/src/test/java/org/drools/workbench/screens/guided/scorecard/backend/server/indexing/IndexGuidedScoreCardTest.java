@@ -52,11 +52,6 @@ public class IndexGuidedScoreCardTest extends BaseIndexingTest<GuidedScoreCardRe
 
     @Test
     public void testIndexGuidedScoreCard() throws IOException, InterruptedException {
-        //Don't ask, but we need to write a single file first in order for indexing to work
-        final Path basePath = getDirectoryPath().resolveSibling( "someNewOtherPath" );
-        ioService().write( basePath.resolve( "dummy" ),
-                           "<none>" );
-
         //Add test files
         final Path path1 = basePath.resolve( "scorecard1.scgd" );
         final ScoreCardModel model1 = GuidedScoreCardFactory.makeScoreCardWithCharacteristics( "org.drools.workbench.screens.guided.scorecard.backend.server.indexing",

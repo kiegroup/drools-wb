@@ -33,6 +33,7 @@ import org.drools.compiler.lang.dsl.DefaultExpander;
 import org.drools.workbench.models.datamodel.oracle.ProjectDataModelOracle;
 import org.drools.workbench.screens.drltext.type.DSLRResourceTypeDefinition;
 import org.guvnor.common.services.backend.file.FileDiscoveryService;
+import org.guvnor.common.services.project.model.Project;
 import org.guvnor.common.services.project.service.ProjectService;
 import org.kie.workbench.common.services.backend.file.DSLFileFilter;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
@@ -93,7 +94,11 @@ public class DslrFileIndexer implements Indexer {
             }
 
             final ProjectDataModelOracle dmo = getProjectDataModelOracle( path );
-            final DefaultIndexBuilder builder = new DefaultIndexBuilder();
+            final Project project = projectService.resolveProject( Paths.convert( path ) );
+            final org.guvnor.common.services.project.model.Package pkg = projectService.resolvePackage( Paths.convert( path ) );
+
+            final DefaultIndexBuilder builder = new DefaultIndexBuilder( project,
+                                                                         pkg );
             final PackageDescrIndexVisitor visitor = new PackageDescrIndexVisitor( dmo,
                                                                                    builder,
                                                                                    packageDescr );

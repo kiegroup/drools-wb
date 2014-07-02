@@ -52,11 +52,6 @@ public class IndexDecisionTableXLSAttributeNameAndValueCompositionTest extends B
 
     @Test
     public void testIndexDecisionTableXLSAttributeNameAndValueComposition() throws IOException, InterruptedException {
-        //Don't ask, but we need to write a single file first in order for indexing to work
-        final Path basePath = getDirectoryPath().resolveSibling( "someNewOtherPath" );
-        ioService().write( basePath.resolve( "dummy" ),
-                           "<none>" );
-
         //Add test files
         final Path path1 = loadXLSFile( basePath,
                                         "dtable3.xls" );

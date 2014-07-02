@@ -52,11 +52,6 @@ public class IndexGuidedRuleTemplateAttributesTest extends BaseIndexingTest<Guid
 
     @Test
     public void testIndexGuidedRuleTemplateAttributes() throws IOException, InterruptedException {
-        //Don't ask, but we need to write a single file first in order for indexing to work
-        final Path basePath = getDirectoryPath().resolveSibling( "someNewOtherPath" );
-        ioService().write( basePath.resolve( "dummy" ),
-                           "<none>" );
-
         //Add test files
         final Path path = basePath.resolve( "template1.template" );
         final TemplateModel model = GuidedRuleTemplateFactory.makeModelWithAttributes( "org.drools.workbench.screens.guided.template.server.indexing",

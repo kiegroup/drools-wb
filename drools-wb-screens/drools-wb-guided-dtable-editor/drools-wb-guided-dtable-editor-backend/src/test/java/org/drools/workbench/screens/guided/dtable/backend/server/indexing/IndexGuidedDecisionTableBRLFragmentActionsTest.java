@@ -51,11 +51,6 @@ public class IndexGuidedDecisionTableBRLFragmentActionsTest extends BaseIndexing
 
     @Test
     public void testIndexGuidedDecisionTableBRLFragmentActions() throws IOException, InterruptedException {
-        //Don't ask, but we need to write a single file first in order for indexing to work
-        final Path basePath = getDirectoryPath().resolveSibling( "someNewOtherPath" );
-        ioService().write( basePath.resolve( "dummy" ),
-                           "<none>" );
-
         //Add test files
         final Path path = basePath.resolve( "dtable1.gdst" );
         final GuidedDecisionTable52 model = GuidedDecisionTableFactory.makeTableWithBRLFragmentActionCol( "org.drools.workbench.screens.guided.dtable.backend.server.indexing",
