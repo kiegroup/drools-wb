@@ -53,7 +53,9 @@ import org.uberfire.workbench.model.menu.MenuPosition;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.uberfire.workbench.model.menu.MenuFactory.*;
-
+import org.kie.workbench.common.services.security.KieWorkbenchACL;
+import org.kie.workbench.common.services.shared.security.KieWorkbenchSecurityService;
+import org.kie.workbench.common.services.security.KieWorkbenchPolicy;
 /**
  * GWT's Entry-point for Drools Workbench
  */
@@ -74,12 +76,25 @@ public class DroolsWorkbenchEntryPoint {
 
     @Inject
     private ActivityManager activityManager;
+    
+    @Inject
+	private KieWorkbenchACL kieACL;
 
+	@Inject
+	private Caller<KieWorkbenchSecurityService> kieSecurityService;
+
+	
     @AfterInitialization
     public void startApp() {
-        loadPreferences();
-        setupMenu();
-        hideLoadingPopup();
+    	kieSecurityService.call(new RemoteCallback<String>() {
+			public void callback(final String str) {
+				KieWorkbenchPolicy policy = new KieWorkbenchPolicy(str);
+				kieACL.activatePolicy(policy);
+				loadPreferences();
+				setupMenu();
+				hideLoadingPopup();
+			}
+		}).loadPolicy();
     }
 
     private void loadPreferences() {
