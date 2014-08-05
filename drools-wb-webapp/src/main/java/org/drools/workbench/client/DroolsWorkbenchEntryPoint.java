@@ -42,6 +42,9 @@ import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.uberfire.client.menu.CustomSplashHelp;
 import org.uberfire.client.mvp.AbstractWorkbenchPerspectiveActivity;
+import org.kie.workbench.common.services.security.KieWorkbenchACL;
+import org.kie.workbench.common.services.security.KieWorkbenchPolicy;
+import org.kie.workbench.common.services.shared.security.KieWorkbenchSecurityService;
 import org.uberfire.client.mvp.ActivityManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
@@ -75,11 +78,23 @@ public class DroolsWorkbenchEntryPoint {
     @Inject
     private ActivityManager activityManager;
 
+    @Inject
+    private KieWorkbenchACL kieACL;
+
+    @Inject
+    private Caller<KieWorkbenchSecurityService> kieSecurityService;
+    
     @AfterInitialization
     public void startApp() {
-        loadPreferences();
-        setupMenu();
-        hideLoadingPopup();
+        kieSecurityService.call(new RemoteCallback<String>() {
+            public void callback(final String str) {
+                KieWorkbenchPolicy policy = new KieWorkbenchPolicy(str);
+                kieACL.activatePolicy(policy);
+                loadPreferences();
+                setupMenu();
+                hideLoadingPopup();
+            }
+        }).loadPolicy();
     }
 
     private void loadPreferences() {
