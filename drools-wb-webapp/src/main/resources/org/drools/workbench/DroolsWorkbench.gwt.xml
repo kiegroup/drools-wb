@@ -4,7 +4,6 @@
 <module>
   <!-- Uberfire dependencies -->
   <inherits name="org.uberfire.UberfireClientAll"/>
-  <inherits name="org.uberfire.UberfireNSWEManager"/>
 
   <!-- Uberfire Extensions - Runtime Plugin -->
   <inherits name="org.kie.uberfire.plugin.RuntimePluginClient"/>
