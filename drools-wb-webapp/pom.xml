@@ -71,6 +71,11 @@
 
     <dependency>
       <groupId>org.drools</groupId>
+      <artifactId>drools-workbench-models-guided-dtree</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
       <artifactId>drools-workbench-models-guided-scorecard</artifactId>
     </dependency>
 
@@ -316,6 +321,21 @@
       <artifactId>kie-wb-common-social-home-page-backend</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-backend</artifactId>
+    </dependency>
+
     <!-- Drools Workbench REST -->
     <dependency>
       <groupId>org.drools</groupId>
@@ -365,6 +385,16 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtable-editor-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-dtree-editor-client</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-dtree-editor-backend</artifactId>
     </dependency>
 
     <dependency>
@@ -631,6 +661,8 @@
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-client</compileSourcesArtifact>
 
             <!-- Models for drools-wb -->
             <compileSourcesArtifact>org.drools:drools-workbench-models-commons</compileSourcesArtifact>
@@ -652,6 +684,8 @@
             <compileSourcesArtifact>org.drools:drools-wb-guided-template-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-guided-dtable-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-guided-dtable-editor-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.drools:drools-wb-guided-dtree-editor-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.drools:drools-wb-guided-dtree-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-guided-scorecard-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-guided-scorecard-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-dsl-text-editor-api</compileSourcesArtifact>
@@ -666,6 +700,19 @@
             <compileSourcesArtifact>org.drools:drools-wb-scorecard-xls-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-workitems-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-workitems-editor-client</compileSourcesArtifact>
+
+            <!-- Dashbuilder -->
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-shared</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-common-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-editor</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-screen</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-google</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-table</compileSourcesArtifact>
+            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-selector</compileSourcesArtifact>
 
             <!-- UberFire -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
