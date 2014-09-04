@@ -47,6 +47,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import org.drools.core.util.StringUtils;
 import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.datamodel.oracle.ModelField;
 import org.drools.workbench.models.guided.scorecard.shared.Attribute;
@@ -86,6 +87,10 @@ public class GuidedScoreCardEditor extends Composite {
     private TextBox tbInitialScore;
     private Grid scorecardPropertiesGrid;
 
+    private TextBox tbRuleFlowGroup;
+    private TextBox tbAgendaGroup;
+    private Grid ruleAttributesGrid;
+
     private ListBox dropDownFields = new ListBox();
     private ListBox dropDownFacts = new ListBox();
 
@@ -106,6 +111,11 @@ public class GuidedScoreCardEditor extends Composite {
         disclosurePanel.setTitle( GuidedScoreCardConstants.INSTANCE.scorecard() );
         disclosurePanel.setOpen( true );
 
+        final DecoratedDisclosurePanel ruleAttributesPanel = new DecoratedDisclosurePanel( GuidedScoreCardConstants.INSTANCE.ruleAttributes() );
+        ruleAttributesPanel.setWidth( "95%" );
+        ruleAttributesPanel.setOpen( false );
+        ruleAttributesPanel.add( getRuleAttributesPanel() );
+
         final DecoratedDisclosurePanel configPanel = new DecoratedDisclosurePanel( GuidedScoreCardConstants.INSTANCE.setupParameters() );
         configPanel.setWidth( "95%" );
         configPanel.setOpen( true );
@@ -118,6 +128,7 @@ public class GuidedScoreCardEditor extends Composite {
 
         final VerticalPanel config = new VerticalPanel();
         config.setWidth( "100%" );
+        config.add(ruleAttributesPanel);
         config.add( configPanel );
         config.add( characteristicsPanel );
 
@@ -185,6 +196,9 @@ public class GuidedScoreCardEditor extends Composite {
 
             model.getCharacteristics().add( characteristic );
         }
+
+        model.setAgendaGroup(tbAgendaGroup.getValue());
+        model.setRuleFlowGroup(tbRuleFlowGroup.getValue());
 
         return model;
     }
@@ -270,6 +284,28 @@ public class GuidedScoreCardEditor extends Composite {
         scoreCardPropertyFactChanged( dropDownFacts,
                                       dropDownFields );
 
+    }
+
+    private Widget getRuleAttributesPanel(){
+        ruleAttributesGrid = new Grid( 2, 4 );
+        ruleAttributesGrid.setCellSpacing( 5 );
+        ruleAttributesGrid.setCellPadding( 5 );
+        ruleAttributesGrid.setText(0, 0, GuidedScoreCardConstants.INSTANCE.ruleFlowGroup());
+        ruleAttributesGrid.setText(0, 1, GuidedScoreCardConstants.INSTANCE.agendaGroup());
+
+        tbRuleFlowGroup = TextBoxFactory.getTextBox( DataType.TYPE_STRING );
+        if (!StringUtils.isEmpty(model.getRuleFlowGroup())){
+            tbRuleFlowGroup.setText(model.getRuleFlowGroup());
+        }
+        tbAgendaGroup = TextBoxFactory.getTextBox( DataType.TYPE_STRING );
+        if (!StringUtils.isEmpty(model.getAgendaGroup())){
+            tbAgendaGroup.setText(model.getAgendaGroup());
+        }
+
+        scorecardPropertiesGrid.setWidget( 1, 0, tbRuleFlowGroup );
+        scorecardPropertiesGrid.setWidget( 1, 1, tbAgendaGroup );
+
+        return ruleAttributesGrid;
     }
 
     private Widget getScorecardProperties() {
@@ -864,28 +900,28 @@ public class GuidedScoreCardEditor extends Composite {
     private void getDataTypeForField( final String factName,
                                       final String fieldName,
                                       final Callback<String> callback ) {
-        oracle.getFieldCompletions( factName,
-                                    new Callback<ModelField[]>() {
+        oracle.getFieldCompletions(factName,
+                new Callback<ModelField[]>() {
 
-                                        @Override
-                                        public void callback( final ModelField[] fields ) {
-                                            for ( final ModelField field : fields ) {
-                                                if ( fieldName.equalsIgnoreCase( field.getName() ) ) {
-                                                    String type = field.getClassName();
-                                                    if ( type.endsWith( "String" ) ) {
-                                                        type = "String";
-                                                    } else if ( type.endsWith( "Double" ) ) {
-                                                        type = "Double";
-                                                    } else if ( endsWithIgnoreCase( type, "integer" ) ) {
-                                                        type = "int";
-                                                    }
-                                                    callback.callback( type );
-                                                    return;
-                                                }
-                                            }
-                                            callback.callback( null );
-                                        }
-                                    } );
+                    @Override
+                    public void callback(final ModelField[] fields) {
+                        for (final ModelField field : fields) {
+                            if (fieldName.equalsIgnoreCase(field.getName())) {
+                                String type = field.getClassName();
+                                if (type.endsWith("String")) {
+                                    type = "String";
+                                } else if (type.endsWith("Double")) {
+                                    type = "Double";
+                                } else if (endsWithIgnoreCase(type, "integer")) {
+                                    type = "int";
+                                }
+                                callback.callback(type);
+                                return;
+                            }
+                        }
+                        callback.callback(null);
+                    }
+                });
     }
 
     private ListBox booleanEditor( final String currentValue ) {
@@ -918,7 +954,7 @@ public class GuidedScoreCardEditor extends Composite {
             listBox.addItem( value );
         }
         final int selectedIndex = Arrays.asList( values ).indexOf( currentValue );
-        listBox.setSelectedIndex( selectedIndex >= 0 ? selectedIndex : 0 );
+        listBox.setSelectedIndex(selectedIndex >= 0 ? selectedIndex : 0);
         return listBox;
     }
 
