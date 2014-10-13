@@ -319,8 +319,7 @@ public class ProjectResource {
             @PathParam("projectName") String projectName ) {
         logger.info( "-----deleteProject--- , repositoryName:" + repositoryName + ", project name:" + projectName );
 
-        throw new WebApplicationException( Response.status( Response.Status.NOT_ACCEPTABLE )
-                                                   .entity( "UNIMPLEMENTED" ).build() );
+        throw new WebApplicationException( Response.status( Response.Status.NOT_ACCEPTABLE ).entity( "UNIMPLEMENTED" ).build() );
         
 /*        String id = "" + System.currentTimeMillis() + "-" + counter.incrementAndGet();
         CreateProjectRequest jobRequest = new CreateProjectRequest();
@@ -468,6 +467,24 @@ public class ProjectResource {
         return organizationalUnits;
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/organizationalunits/{organizationalUnitName}")
+    public OrganizationalUnit getOrganizationalUnit(@PathParam("organizationalUnitName") String organizationalUnitName) {
+        logger.debug( "-----getOrganizationalUnit ---, OrganizationalUnit name: {}", organizationalUnitName );
+        
+        org.uberfire.backend.organizationalunit.OrganizationalUnit origOrgUnit = checkOrganizationalUnitExistence(organizationalUnitName);
+        OrganizationalUnit orgUnit = new OrganizationalUnit();
+        orgUnit.setName( origOrgUnit.getName() );
+        orgUnit.setOwner( origOrgUnit.getOwner() );
+        List<String> repoNames = new ArrayList<String>();
+        for ( Repository r : origOrgUnit.getRepositories() ) {
+            repoNames.add( r.getAlias() );
+        }
+        orgUnit.setRepositories( repoNames );
+        return orgUnit;
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -499,7 +516,9 @@ public class ProjectResource {
     public JobRequest addRepositoryToOrganizationalUnit( @PathParam("organizationalUnitName") String organizationalUnitName,
                                                          @PathParam("repositoryName") String repositoryName ) {
         logger.info( "-----addRepositoryToOrganizationalUnit--- , OrganizationalUnit name:" + organizationalUnitName + ", Repository name:" + repositoryName );
-
+        
+        checkOrganizationalUnitExistence(organizationalUnitName);
+        
         String id = "" + System.currentTimeMillis() + "-" + counter.incrementAndGet();
         AddRepositoryToOrganizationalUnitRequest jobRequest = new AddRepositoryToOrganizationalUnitRequest();
         jobRequest.setStatus( JobStatus.ACCEPTED );
@@ -524,6 +543,8 @@ public class ProjectResource {
                                                               @PathParam("repositoryName") String repositoryName ) {
         logger.info( "-----removeRepositoryFromOrganizationalUnit--- , OrganizationalUnit name:" + organizationalUnitName + ", Repository name:" + repositoryName );
 
+        checkOrganizationalUnitExistence(organizationalUnitName);
+        
         String id = "" + System.currentTimeMillis() + "-" + counter.incrementAndGet();
         RemoveRepositoryFromOrganizationalUnitRequest jobRequest = new RemoveRepositoryFromOrganizationalUnitRequest();
         jobRequest.setStatus( JobStatus.ACCEPTED );
@@ -593,9 +614,12 @@ public class ProjectResource {
 
         return repositoryRootPath;
     }
+    
+    private org.uberfire.backend.organizationalunit.OrganizationalUnit checkOrganizationalUnitExistence(String orgUnitName) {
+        org.uberfire.backend.organizationalunit.OrganizationalUnit origOrgUnit = organizationalUnitService.getOrganizationalUnit(orgUnitName);
+        if( origOrgUnit == null ) {
+            throw new WebApplicationException( Response.status( Response.Status.NOT_FOUND ).entity( orgUnitName ).build() );
+        }
+        return origOrgUnit;
+    }
 }
-
-
-
-
-
