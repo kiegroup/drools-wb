@@ -249,13 +249,19 @@ public class ProjectResource {
         jobRequest.setStatus( JobStatus.ACCEPTED );
         jobRequest.setJobId( id );
         jobRequest.setRepository( repository );
-
+        
+        createOrCloneJobRequestEvent.fire( jobRequest );
+        
         JobResult jobResult = new JobResult();
         jobResult.setJobId( id );
         jobResult.setStatus( JobStatus.ACCEPTED );
         jobs.put( id, jobResult );
 
-        createOrCloneJobRequestEvent.fire( jobRequest );
+        String reqType = repository.getRequestType();
+        if ( reqType == null || reqType.trim().isEmpty() 
+             || !( "new".equals( reqType ) || ( "clone".equals( reqType ) ) ) ) {
+            jobResult.setStatus(JobStatus.BAD_REQUEST);
+        }
 
         return jobRequest;
     }
