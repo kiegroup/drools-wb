@@ -10,8 +10,11 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.inject.Inject;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.guvnor.common.services.shared.identity.RequestIdentityProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,6 +25,9 @@ public class Jcr2VfsMigrationAppTest {
 
     final static Jcr2VfsMigrationApp app = new Jcr2VfsMigrationApp();
 
+    @Inject
+    RequestIdentityProvider identityProvider;
+    
     @BeforeClass
     public static void setup() {
         app.startUp();
