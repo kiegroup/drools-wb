@@ -250,8 +250,6 @@ public class ProjectResource {
         jobRequest.setJobId( id );
         jobRequest.setRepository( repository );
         
-        createOrCloneJobRequestEvent.fire( jobRequest );
-        
         JobResult jobResult = new JobResult();
         jobResult.setJobId( id );
         jobResult.setStatus( JobStatus.ACCEPTED );
@@ -261,8 +259,10 @@ public class ProjectResource {
         if ( reqType == null || reqType.trim().isEmpty() 
              || !( "new".equals( reqType ) || ( "clone".equals( reqType ) ) ) ) {
             jobResult.setStatus(JobStatus.BAD_REQUEST);
+        } else { 
+            createOrCloneJobRequestEvent.fire( jobRequest );
         }
-
+        
         return jobRequest;
     }
 
