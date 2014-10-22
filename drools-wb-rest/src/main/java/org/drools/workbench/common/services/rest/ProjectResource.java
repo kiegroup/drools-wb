@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -58,6 +59,7 @@ import org.kie.workbench.common.services.shared.rest.JobRequest;
 import org.kie.workbench.common.services.shared.rest.JobResult;
 import org.kie.workbench.common.services.shared.rest.JobStatus;
 import org.kie.workbench.common.services.shared.rest.OrganizationalUnit;
+import org.kie.workbench.common.services.shared.rest.ProjectRequest;
 import org.kie.workbench.common.services.shared.rest.RemoveRepositoryFromOrganizationalUnitRequest;
 import org.kie.workbench.common.services.shared.rest.RemoveRepositoryRequest;
 import org.kie.workbench.common.services.shared.rest.RepositoryRequest;
@@ -296,7 +298,7 @@ public class ProjectResource {
     @Path("/repositories/{repositoryName}/projects")
     public JobRequest createProject(
             @PathParam("repositoryName") String repositoryName,
-            Entity project ) {
+            ProjectRequest project ) {
         logger.info( "-----createProject--- , repositoryName:" + repositoryName + ", project name:" + project.getName() );
 
         String id = "" + System.currentTimeMillis() + "-" + counter.incrementAndGet();
@@ -305,6 +307,8 @@ public class ProjectResource {
         jobRequest.setJobId( id );
         jobRequest.setRepositoryName( repositoryName );
         jobRequest.setProjectName( project.getName() );
+        jobRequest.setProjectGroupId( project.getGroupId() );
+        jobRequest.setProjectVersion( project.getVersion() );
         jobRequest.setDescription( project.getDescription() );
 
         JobResult jobResult = new JobResult();

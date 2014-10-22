@@ -175,13 +175,20 @@ public class JobRequestHelper {
 
     public void createProject( final String jobId,
                                final String repositoryName,
-                               final String projectName ) {
+                               final String projectName, String projectGroupId, String projectVersion ) {
         logger.info( "-----JobRequestHelper:createProject--- , repositoryName:" + repositoryName + ", project name:" + projectName );
         JobResult result = new JobResult();
         result.setJobId( jobId );
 
         org.uberfire.java.nio.file.Path repositoryPath = getRepositoryRootPath( repositoryName );
 
+        if( projectGroupId == null || projectGroupId.trim().isEmpty() ) { 
+           projectGroupId = projectName; 
+        }
+        if( projectVersion == null || projectVersion.trim().isEmpty() ) { 
+           projectVersion = "1.0"; 
+        }
+        
         if ( repositoryPath == null ) {
             result.setStatus( JobStatus.RESOURCE_NOT_EXIST );
             result.setResult( "Repository [" + repositoryName + "] does not exist" );
@@ -190,8 +197,8 @@ public class JobRequestHelper {
         } else {
             POM pom = new POM();
             pom.getGav().setArtifactId( projectName );
-            pom.getGav().setGroupId( projectName );
-            pom.getGav().setVersion( "1.0" );
+            pom.getGav().setGroupId( projectGroupId );
+            pom.getGav().setVersion( projectVersion );
 
             try {
                 projectService.newProject( makeRepository( Paths.convert( repositoryPath ) ),
