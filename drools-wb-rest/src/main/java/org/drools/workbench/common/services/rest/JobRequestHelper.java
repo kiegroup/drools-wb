@@ -59,6 +59,8 @@ public class JobRequestHelper {
 
     private static final Logger logger = LoggerFactory.getLogger( JobRequestHelper.class );
 
+    public static final String GUVNOR_BASE_URL = "/";
+    
     @Inject
     RepositoryService repositoryService;
 
@@ -204,7 +206,7 @@ public class JobRequestHelper {
                 projectService.newProject( makeRepository( Paths.convert( repositoryPath ) ),
                                            projectName,
                                            pom,
-                                           "/" );
+                                           GUVNOR_BASE_URL );
             } catch ( org.uberfire.java.nio.file.FileAlreadyExistsException e ) {
                 result.setStatus( JobStatus.DUPLICATE_RESOURCE );
                 result.setResult( "Project [" + projectName + "] already exists" );

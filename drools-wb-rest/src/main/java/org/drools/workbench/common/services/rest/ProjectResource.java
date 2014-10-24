@@ -15,6 +15,8 @@
 */
 package org.drools.workbench.common.services.rest;
 
+import static org.drools.workbench.common.services.rest.JobRequestHelper.GUVNOR_BASE_URL;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,6 +46,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.guvnor.common.services.project.builder.service.BuildService;
+import org.guvnor.common.services.project.model.GAV;
+import org.guvnor.common.services.project.model.Project;
 import org.guvnor.common.services.project.service.ProjectService;
 import org.jboss.resteasy.annotations.GZIP;
 import org.kie.workbench.common.services.shared.rest.AddRepositoryToOrganizationalUnitRequest;
@@ -53,7 +57,6 @@ import org.kie.workbench.common.services.shared.rest.CreateOrCloneRepositoryRequ
 import org.kie.workbench.common.services.shared.rest.CreateOrganizationalUnitRequest;
 import org.kie.workbench.common.services.shared.rest.CreateProjectRequest;
 import org.kie.workbench.common.services.shared.rest.DeployProjectRequest;
-import org.kie.workbench.common.services.shared.rest.Entity;
 import org.kie.workbench.common.services.shared.rest.InstallProjectRequest;
 import org.kie.workbench.common.services.shared.rest.JobRequest;
 import org.kie.workbench.common.services.shared.rest.JobResult;
@@ -321,6 +324,32 @@ public class ProjectResource {
         return jobRequest;
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/repositories/{repositoryName}/projects")
+    public List<ProjectRequest> getProjects( @PathParam("repositoryName") String repositoryName) {
+        logger.info( "-----getProjects--- , repositoryName:" + repositoryName );
+
+        
+        Repository repository = repositoryService.getRepository(repositoryName);
+        if( repository == null ) { 
+            throw new WebApplicationException( Response.status( Response.Status.NOT_FOUND ).entity( repositoryName ).build() );
+        }
+        List<Project> projects = projectService.getProjects(repository, GUVNOR_BASE_URL);
+        
+        List<ProjectRequest> projectRequests = new ArrayList<ProjectRequest>(projects.size());
+        for( Project project : projects ) { 
+           ProjectRequest projectReq = new ProjectRequest();
+           GAV projectGAV = project.getPom().getGav();
+           projectReq.setGroupId(projectGAV.getGroupId());
+           projectReq.setName(projectGAV.getArtifactId());
+           projectReq.setVersion(projectGAV.getVersion());
+           projectRequests.add(projectReq);
+        }
+        
+        return projectRequests;
+    }
+    
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/repositories/{repositoryName}/projects/{projectName}")
@@ -596,35 +625,6 @@ public class ProjectResource {
         */
     }
 
-    public org.uberfire.java.nio.file.Path getRepositoryRootPath( String repositoryName ) {
-        org.uberfire.java.nio.file.Path repositoryRootPath = null;
-
-        final Iterator<FileSystem> fsIterator = ioService.getFileSystems().iterator();
-
-        if ( fsIterator.hasNext() ) {
-            final FileSystem fileSystem = fsIterator.next();
-            logger.info( "-----FileSystem id--- :" + ( (org.uberfire.java.nio.base.FileSystemId) fileSystem ).id() );
-
-            if ( repositoryName.equalsIgnoreCase( ( (org.uberfire.java.nio.base.FileSystemId) fileSystem ).id() ) ) {
-                final Iterator<org.uberfire.java.nio.file.Path> rootIterator = fileSystem.getRootDirectories().iterator();
-                if ( rootIterator.hasNext() ) {
-                    repositoryRootPath = rootIterator.next();
-                    logger.info( "-----rootPath--- :" + repositoryRootPath );
-
-                    org.uberfire.java.nio.file.DirectoryStream<org.uberfire.java.nio.file.Path> paths = ioService
-                            .newDirectoryStream( repositoryRootPath );
-                    for ( final org.uberfire.java.nio.file.Path child : paths ) {
-                        logger.info( "-----child--- :" + child );
-                    }
-
-                    return repositoryRootPath;
-                }
-            }
-        }
-
-        return repositoryRootPath;
-    }
-    
     private org.uberfire.backend.organizationalunit.OrganizationalUnit checkOrganizationalUnitExistence(String orgUnitName) {
         org.uberfire.backend.organizationalunit.OrganizationalUnit origOrgUnit = organizationalUnitService.getOrganizationalUnit(orgUnitName);
         if( origOrgUnit == null ) {
