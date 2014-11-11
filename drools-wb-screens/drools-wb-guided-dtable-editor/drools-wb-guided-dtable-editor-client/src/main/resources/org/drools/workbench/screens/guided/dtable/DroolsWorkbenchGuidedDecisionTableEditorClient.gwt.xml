@@ -33,7 +33,7 @@
   <inherits name="org.guvnor.common.services.workingset.GuvnorWorkingsetAPI"/>
   <inherits name="org.guvnor.common.services.GuvnorServicesAPI"/>
 
-  <inherits name="org.kie.uberfire.KIEUberfireWidgetsCore"/>
+  <inherits name="org.uberfire.ext.widgets.core.UberfireWidgetsCore"/>
 
   <source path="client"/>
 

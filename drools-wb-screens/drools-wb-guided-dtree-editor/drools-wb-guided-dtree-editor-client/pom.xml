@@ -31,8 +31,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kie.uberfire</groupId>
-      <artifactId>kie-uberfire-widgets-core-client</artifactId>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-core-client</artifactId>
     </dependency>
 
     <!-- Needed for DataModelOracle builder used in tests -->
@@ -50,18 +50,18 @@
 
     <!-- Guided Decision Trees -->
     <dependency>
-      <groupId>org.kie.uberfire</groupId>
-      <artifactId>kie-uberfire-wires-core-api</artifactId>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.kie.uberfire</groupId>
-      <artifactId>kie-uberfire-wires-core-client</artifactId>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-client</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.kie.uberfire</groupId>
-      <artifactId>kie-uberfire-wires-core-trees</artifactId>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-trees</artifactId>
     </dependency>
 
     <dependency>
