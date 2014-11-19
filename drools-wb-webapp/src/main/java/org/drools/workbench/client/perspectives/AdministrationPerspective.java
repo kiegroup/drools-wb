@@ -24,6 +24,7 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.ui.PopupPanel;
 import org.drools.workbench.client.resources.i18n.AppConstants;
+import org.guvnor.asset.management.client.editors.repository.wizard.CreateRepositoryWizard;
 import org.guvnor.common.services.shared.security.AppRoles;
 import org.guvnor.structure.client.editors.repository.clone.CloneRepositoryForm;
 import org.guvnor.structure.client.editors.repository.create.CreateRepositoryForm;
@@ -32,6 +33,7 @@ import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.uberfire.client.annotations.Perspective;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPerspective;
+import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
 import org.uberfire.client.workbench.panels.impl.SimpleWorkbenchPanelPresenter;
@@ -132,15 +134,16 @@ public class AdministrationPerspective {
                 new Command() {
                     @Override
                     public void execute() {
-                        final CreateRepositoryForm newRepositoryWizard = iocManager.lookupBean( CreateRepositoryForm.class ).getInstance();
+
+                        final CreateRepositoryWizard newRepositoryWizard = iocManager.lookupBean( CreateRepositoryWizard.class ).getInstance();
                         //When pop-up is closed destroy bean to avoid memory leak
-                        newRepositoryWizard.addCloseHandler( new CloseHandler<CreateRepositoryForm>() {
-                            @Override
-                            public void onClose( CloseEvent<CreateRepositoryForm> event ) {
+                        newRepositoryWizard.onCloseCallback( new Callback<Void>() {
+                            @Override public void callback( Void result ) {
                                 iocManager.destroyBean( newRepositoryWizard );
                             }
                         } );
-                        newRepositoryWizard.show();
+                        newRepositoryWizard.start();
+
                     }
                 } ).endMenu().build().getItems().get( 0 ) );
         return menuItems;
