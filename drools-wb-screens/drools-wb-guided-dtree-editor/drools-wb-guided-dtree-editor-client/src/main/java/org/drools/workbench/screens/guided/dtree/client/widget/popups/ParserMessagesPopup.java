@@ -45,7 +45,7 @@ import org.drools.workbench.models.guided.dtree.shared.model.parser.messages.Uns
 import org.drools.workbench.screens.guided.dtree.client.resources.i18n.GuidedDecisionTreeConstants;
 import org.kie.uberfire.client.common.popups.KieBaseModal;
 import org.kie.uberfire.client.common.popups.footers.GenericModalFooter;
-import org.kie.workbench.common.widgets.viewsource.client.widget.ViewDRLSourceWidget;
+import org.kie.workbench.common.widgets.client.source.ViewDRLSourceWidget;
 import org.uberfire.commons.validation.PortablePreconditions;
 
 public class ParserMessagesPopup extends KieBaseModal {
