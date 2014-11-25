@@ -56,7 +56,6 @@ import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.Page;
-import org.uberfire.lifecycle.IsDirty;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
@@ -128,6 +127,7 @@ public class GuidedRuleTemplateEditorPresenter
                     return;
                 }
 
+                setOriginalHash(content.getModel().hashCode());
                 resetEditorPages( content.getOverview() );
                 addSourcePage();
 
@@ -232,11 +232,6 @@ public class GuidedRuleTemplateEditorPresenter
         } ).toSource( versionRecordManager.getCurrentPath(), model );
     }
 
-    @IsDirty
-    public boolean isDirty() {
-        return view.isDirty();
-    }
-
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
@@ -244,11 +239,8 @@ public class GuidedRuleTemplateEditorPresenter
     }
 
     @OnMayClose
-    public boolean checkIfDirty() {
-        if ( isDirty() ) {
-            return view.confirmClose();
-        }
-        return true;
+    public boolean mayClose() {
+        return super.mayClose(view.getContent().hashCode());
     }
 
     @WorkbenchPartTitle

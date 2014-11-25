@@ -47,7 +47,6 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
-import org.uberfire.lifecycle.IsDirty;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
@@ -115,6 +114,7 @@ public class WorkItemsEditorPresenter
                     return;
                 }
 
+                setOriginalHash(content.getDefinition().hashCode());
                 resetEditorPages( content.getOverview() );
 
                 metadata = content.getOverview().getMetadata();
@@ -165,22 +165,14 @@ public class WorkItemsEditorPresenter
         concurrentUpdateSessionInfo = null;
     }
 
-    @IsDirty
-    public boolean isDirty() {
-        return view.isDirty();
-    }
-
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
     }
 
     @OnMayClose
-    public boolean checkIfDirty() {
-        if ( isDirty() ) {
-            return view.confirmClose();
-        }
-        return true;
+    public boolean mayClose() {
+        return super.mayClose(view.getContent().hashCode());
     }
 
     @WorkbenchPartTitle
