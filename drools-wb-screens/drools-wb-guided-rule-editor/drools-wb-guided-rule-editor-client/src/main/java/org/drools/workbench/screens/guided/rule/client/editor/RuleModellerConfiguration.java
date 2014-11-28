@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.guided.rule.client.editor;
 
+import org.guvnor.common.services.shared.config.ApplicationPreferences;
+import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
+
 /**
  * Configuration class for Rule Modeller.
  */
@@ -43,9 +46,15 @@ public class RuleModellerConfiguration {
             DEFAULT = new RuleModellerConfiguration( false,
                                                      false,
                                                      false,
-                                                     false );
+                                                     !isRuleNameServiceEnabled() );
         }
         return DEFAULT;
+    }
+
+    //Patch for 6.0.x for https://bugzilla.redhat.com/show_bug.cgi?id=1106469 (which is not part of 6.0.x)
+    private static boolean isRuleNameServiceEnabled() {
+        final String flag = ApplicationPreferences.getStringPref( RuleNamesService.RULE_NAME_SERVICE_ENABLED );
+        return ( flag == null || Boolean.parseBoolean( flag ) );
     }
 
     public boolean isHideAttributes() {

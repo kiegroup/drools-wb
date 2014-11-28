@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import org.drools.workbench.models.guided.template.shared.TemplateModel;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModeller;
+import org.guvnor.common.services.shared.config.ApplicationPreferences;
 import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -60,12 +61,20 @@ public class GuidedRuleTemplateEditorViewImpl extends Composite implements Guide
                                           isReadOnly );
         panel.setWidget( modeller );
 
-        ruleNamesService.call( new RemoteCallback<Collection<String>>() {
-            @Override
-            public void callback( Collection<String> ruleNames ) {
-                modeller.setRuleNamesForPackage( ruleNames );
-            }
-        } ).getRuleNames(path, model.getPackageName());
+        if ( isRuleNameServiceEnabled() ) {
+            ruleNamesService.call( new RemoteCallback<Collection<String>>() {
+                @Override
+                public void callback( Collection<String> ruleNames ) {
+                    modeller.setRuleNamesForPackage( ruleNames );
+                }
+            } ).getRuleNames( path, model.getPackageName() );
+        }
+    }
+
+    //Patch for 6.0.x for https://bugzilla.redhat.com/show_bug.cgi?id=1106469 (which is not part of 6.0.x)
+    private boolean isRuleNameServiceEnabled() {
+        final String flag = ApplicationPreferences.getStringPref( RuleNamesService.RULE_NAME_SERVICE_ENABLED );
+        return ( flag == null || Boolean.parseBoolean( flag ) );
     }
 
     @Override
