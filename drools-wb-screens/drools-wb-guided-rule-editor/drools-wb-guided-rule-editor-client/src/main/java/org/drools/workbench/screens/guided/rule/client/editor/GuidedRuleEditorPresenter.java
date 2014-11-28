@@ -167,7 +167,7 @@ public class GuidedRuleEditorPresenter
 
                 view.hideBusyIndicator();
                 
-                setOriginalHash(content.getModel().hashCode());
+                setOriginalHash(model.hashCode());
             }
         };
     }
@@ -216,11 +216,11 @@ public class GuidedRuleEditorPresenter
                         @Override
                         public void execute(final String commitMessage) {
                             view.showSaving();
-                            service.call(getSaveSuccessCallback(),
+                            service.call(getSaveSuccessCallback(model.hashCode()),
                                     new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
-                                    view.getContent(),
-                                    metadata,
-                                    commitMessage);
+                                                                                         view.getContent(),
+                                                                                         metadata,
+                                                                                         commitMessage);
 
                         }
                     });

@@ -128,7 +128,7 @@ public class ScenarioEditorPresenter
 
                 view.hideBusyIndicator();
                 
-                setOriginalHash(scenario.hashCode());
+//                setOriginalHash(scenario.hashCode());
             }
         };
     }
@@ -146,11 +146,11 @@ public class ScenarioEditorPresenter
                                              @Override
                                              public void execute( final String commitMessage ) {
                                                  view.showSaving();
-                                                 service.call( getSaveSuccessCallback(),
-                                                               new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
-                                                                                                                        scenario,
-                                                                                                                        metadata,
-                                                                                                                        commitMessage );
+                                                 service.call( getSaveSuccessCallback(scenario.hashCode()),
+                                                               new HasBusyIndicatorDefaultErrorCallback( view)).save(versionRecordManager.getCurrentPath(),
+                                                                                                                     scenario,
+                                                                                                                     metadata,
+                                                                                                                     commitMessage );
                                              }
                                          } );
         concurrentUpdateSessionInfo = null;

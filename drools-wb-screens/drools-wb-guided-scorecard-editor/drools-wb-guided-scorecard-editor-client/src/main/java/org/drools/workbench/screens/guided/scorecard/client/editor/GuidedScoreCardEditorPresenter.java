@@ -120,18 +120,18 @@ public class GuidedScoreCardEditorPresenter
                                                                         model,
                                                                         dataModel );
 
-                setOriginalHash(content.getModel().hashCode());
-                resetEditorPages( content.getOverview() );
+                resetEditorPages(content.getOverview());
                 addSourcePage();
 
-                addImportsTab( importsWidget );
+                addImportsTab(importsWidget);
 
-                view.setContent( model,
-                                 oracle );
-                importsWidget.setContent( oracle,
-                                          model.getImports(),
-                                          isReadOnly );
+                view.setContent(model,
+                                oracle);
+                importsWidget.setContent(oracle,
+                                         model.getImports(),
+                                         isReadOnly);
 
+                setOriginalHash(model.hashCode());
                 view.hideBusyIndicator();
             }
         };
@@ -177,11 +177,11 @@ public class GuidedScoreCardEditorPresenter
                                              @Override
                                              public void execute( final String comment ) {
                                                  view.showSaving();
-                                                 scoreCardEditorService.call( getSaveSuccessCallback(),
-                                                                              new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
-                                                                                                                                       view.getModel(),
-                                                                                                                                       metadata,
-                                                                                                                                       comment );
+                                                 scoreCardEditorService.call( getSaveSuccessCallback(model.hashCode()),
+                                                                              new HasBusyIndicatorDefaultErrorCallback( view)).save(versionRecordManager.getCurrentPath(),
+                                                                                                                                    view.getModel(),
+                                                                                                                                    metadata,
+                                                                                                                                    comment );
                                              }
                                          }
                                        );
