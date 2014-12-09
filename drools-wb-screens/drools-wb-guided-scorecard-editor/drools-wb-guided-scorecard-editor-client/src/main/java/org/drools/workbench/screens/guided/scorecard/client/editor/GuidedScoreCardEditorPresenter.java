@@ -28,8 +28,6 @@ import org.drools.workbench.screens.guided.scorecard.client.type.GuidedScoreCard
 import org.drools.workbench.screens.guided.scorecard.model.ScoreCardModelContent;
 import org.drools.workbench.screens.guided.scorecard.service.GuidedScoreCardEditorService;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
-import org.kie.workbench.common.widgets.client.popups.file.CommandWithCommitMessage;
-import org.kie.workbench.common.widgets.client.popups.file.SaveOperationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
@@ -37,8 +35,6 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.datamodel.ImportAddedEvent;
 import org.kie.workbench.common.widgets.client.datamodel.ImportRemovedEvent;
-import org.kie.workbench.common.widgets.client.popups.file.CommandWithCommitMessage;
-import org.kie.workbench.common.widgets.client.popups.file.SaveOperationService;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
@@ -49,12 +45,13 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.ext.editor.commons.client.file.SaveOperationService;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
-import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
+import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
@@ -120,18 +117,18 @@ public class GuidedScoreCardEditorPresenter
                                                                         model,
                                                                         dataModel );
 
-                resetEditorPages(content.getOverview());
+                resetEditorPages( content.getOverview() );
                 addSourcePage();
 
-                addImportsTab(importsWidget);
+                addImportsTab( importsWidget );
 
-                view.setContent(model,
-                                oracle);
-                importsWidget.setContent(oracle,
-                                         model.getImports(),
-                                         isReadOnly);
+                view.setContent( model,
+                                 oracle );
+                importsWidget.setContent( oracle,
+                                          model.getImports(),
+                                          isReadOnly );
 
-                setOriginalHash(model.hashCode());
+                setOriginalHash( model.hashCode() );
                 view.hideBusyIndicator();
             }
         };
@@ -173,15 +170,15 @@ public class GuidedScoreCardEditorPresenter
 
     protected void save() {
         new SaveOperationService().save( versionRecordManager.getCurrentPath(),
-                                         new CommandWithCommitMessage() {
+                                         new ParameterizedCommand<String>() {
                                              @Override
                                              public void execute( final String comment ) {
                                                  view.showSaving();
-                                                 scoreCardEditorService.call( getSaveSuccessCallback(model.hashCode()),
-                                                                              new HasBusyIndicatorDefaultErrorCallback( view)).save(versionRecordManager.getCurrentPath(),
-                                                                                                                                    view.getModel(),
-                                                                                                                                    metadata,
-                                                                                                                                    comment );
+                                                 scoreCardEditorService.call( getSaveSuccessCallback( model.hashCode() ),
+                                                                              new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
+                                                                                                                                       view.getModel(),
+                                                                                                                                       metadata,
+                                                                                                                                       comment );
                                              }
                                          }
                                        );
