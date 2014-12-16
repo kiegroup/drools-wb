@@ -256,6 +256,12 @@
       <artifactId>pdfbox-app</artifactId>
     </dependency>
 
+    <!-- Introduced by drools-wb-jcr2vfs-migration-xml -->
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
+
     <!-- Weld Modules -->
     <dependency>
       <groupId>org.jboss.weld</groupId>
