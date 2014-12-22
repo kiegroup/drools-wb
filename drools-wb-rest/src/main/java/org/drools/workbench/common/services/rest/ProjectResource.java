@@ -344,6 +344,7 @@ public class ProjectResource {
            projectReq.setGroupId(projectGAV.getGroupId());
            projectReq.setName(projectGAV.getArtifactId());
            projectReq.setVersion(projectGAV.getVersion());
+           projectReq.setDescription(project.getPom().getDescription());
            projectRequests.add(projectReq);
         }
         

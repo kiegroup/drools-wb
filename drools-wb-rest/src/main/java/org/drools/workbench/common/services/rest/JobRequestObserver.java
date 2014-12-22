@@ -78,7 +78,7 @@ public class JobRequestObserver {
         }
         logger.info( "CreateProjectRequest event approved. Performing requested operation." );
         helper.createProject( jobRequest.getJobId(), jobRequest.getRepositoryName(), 
-                jobRequest.getProjectName(), jobRequest.getProjectGroupId(), jobRequest.getProjectVersion() );
+                jobRequest.getProjectName(), jobRequest.getProjectGroupId(), jobRequest.getProjectVersion(), jobRequest.getDescription() );
     }
 
     public void onCompileProjectRequest( final @Observes CompileProjectRequest jobRequest ) {
