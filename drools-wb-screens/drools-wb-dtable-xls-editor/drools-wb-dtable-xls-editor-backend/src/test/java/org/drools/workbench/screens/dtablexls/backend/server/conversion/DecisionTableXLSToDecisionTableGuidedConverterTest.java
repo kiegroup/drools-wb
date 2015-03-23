@@ -640,10 +640,10 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
     @Test
     public void testConditionsIndexedParameters() {
 
-        final List<String[]> expectedRows = new ArrayList<String[]>(2);
-        expectedRows.add(new String[]{ "1", "Created from row 7", "20", "Mike", "Brown", "BMW", "M3" });
-        expectedRows.add(new String[]{ "2", "Created from row 8", "30", "Jason", "Grey", "", "" });
-        conditionsTest("Conditions-indexedParameters.xls", expectedRows);
+        final List<String[]> expectedRows = new ArrayList<String[]>( 2 );
+        expectedRows.add( new String[]{ "1", "Created from row 7", "20", "Mike", "Brown", "BMW", "M3" });
+        expectedRows.add( new String[]{ "2", "Created from row 8", "30", "Jason", "Grey", "", "" });
+        conditionsTest( "Conditions-indexedParameters.xls", expectedRows );
     }
 
     private void conditionsTest(final String xlsFileName, final List<String[]> expectedRows) {
