@@ -676,14 +676,14 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
 
         assertNotNull( dtables );
         assertEquals( 1,
-                dtables.size() );
+                      dtables.size() );
 
         GuidedDecisionTable52 dtable = dtables.get( 0 );
 
         assertEquals( "ConditionsTest",
-                dtable.getTableName() );
+                      dtable.getTableName() );
         assertEquals( GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY,
-                dtable.getTableFormat() );
+                      dtable.getTableFormat() );
 
         //Check expanded columns
         List<BaseColumn> columns = dtable.getExpandedColumns();
