@@ -161,6 +161,7 @@ public class GuidedRuleEditorServiceImpl
             return ruleModel;
 
         } catch ( Exception e ) {
+            e.printStackTrace();
             throw ExceptionUtilities.handleException( e );
         }
     }
