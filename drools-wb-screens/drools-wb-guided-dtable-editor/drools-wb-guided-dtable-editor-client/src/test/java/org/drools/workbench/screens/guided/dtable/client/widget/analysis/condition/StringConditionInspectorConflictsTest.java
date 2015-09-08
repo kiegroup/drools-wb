@@ -16,97 +16,182 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition;
 
-import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
-import org.junit.Test;
-
+import static java.lang.String.format;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.junit.Test;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runner.RunWith;
+
+@RunWith( Parameterized.class )
 public class StringConditionInspectorConflictsTest {
 
-    @Test
-    public void test000() throws Exception {
-        StringConditionInspector a = getCondition( "Toni", "!=" );
-        StringConditionInspector b = getCondition( "Toni", "!=" );
+    private final String value1;
+    private final String value2;
+    private final String operator1;
+    private final String operator2;
+    private final boolean conflictExpected;
 
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
+    @Test
+    public void parametrizedTest() {
+        StringConditionInspector a = getCondition( value1, operator1 );
+        StringConditionInspector b = getCondition( value2, operator2 );
+
+        assertEquals( getAssertDescription(a, b, conflictExpected), conflictExpected, a.conflicts( b ) );
+        assertEquals( getAssertDescription(b, a, conflictExpected), conflictExpected, b.conflicts( a ) );
     }
 
-    @Test
-    public void test001() throws Exception {
-        StringConditionInspector a = getCondition( "Toni", "==" );
-        StringConditionInspector b = getCondition( "Toni", "!=" );
-
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
+    public StringConditionInspectorConflictsTest( String operator1,
+                                                              String value1,
+                                                              String operator2,
+                                                              String value2,
+                                                              boolean conflictExpected) {
+        this.value1 = value1;
+        this.value2 = value2;
+        this.operator1 = operator1;
+        this.operator2 = operator2;
+        this.conflictExpected = conflictExpected;
     }
 
-    @Test
-    public void test002() throws Exception {
-        StringConditionInspector a = getCondition( "Toni", "==" );
-        StringConditionInspector b = getCondition( "Eder", "!=" );
+    @Parameters
+    public static Collection<Object[]> testData() {
+        return Arrays.asList( new Object[][]{
+            // matches and soundslike are probably not doable...
+            // op1, val1, op2, val2, conflicts
+            { "==", "a", "==", "a", false },
+            { "!=", "a", "!=", "a", false },
+            { ">", "a", ">", "a", false },
+            { ">=", "a", ">=", "a", false },
+            { "<", "a", "<", "a", false },
+            { "<=", "a", "<=", "a", false },
+            { "in", "a,b", "in", "a,b", false },
+            { "not in", "a,b", "not in", "a,b", false },
+            { "matches", "a", "matches", "a", false },
+            { "soundslike", "a", "soundslike", "a", false },
 
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
+            { "==", "a", "!=", "b", false },
+            { "==", "a", ">", " ", false },
+            { "==", "a", ">=", "a", false },
+            { "==", "a", "<", "b", false },
+            { "==", "a", "<=", "a", false },
+            { "==", "a", "in", "a,b", false },
+            { "==", "a", "not in", "b,c,d", false },
+            { "==", "a", "matches", "a", false },
+            { "==", "a", "soundslike", "a", false },
 
-    @Test
-    public void test003() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael, Eder", "in" );
-        StringConditionInspector b = getCondition( "Toni", "!=" );
+            { "==", "a", "!=", "a", true },
+            { "==", "a", ">", "a", true },
+            { "==", "a", ">=", "b", true },
+            { "==", "a", "<", "a", true },
+            { "==", "a", "<=", " ", true },
+            { "==", "a", "in", "b,c,d", true },
+            { "==", "a", "not in", "a,b", true },
+            { "==", "a", "matches", "b", true },
+            { "==", "a", "soundslike", "b", true },
 
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
+            { "!=", "a", "!=", "b", false },
+            { "!=", "a", ">", " ", false },
+            { "!=", "a", ">=", "a", false },
+            { "!=", "a", "<", "b", false },
+            { "!=", "a", "<=", "a", false },
+            { "!=", "a", "in", "a,b", false },
+            { "!=", "a", "in", "b,c,d", false },
+            { "!=", "a", "not in", "b,c,d", false },
+            { "!=", "a", "matches", "b", false },
+            { "!=", "a", "soundslike", "b", false },
 
-    @Test
-    public void test004() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael, Eder", "in" );
-        StringConditionInspector b = getCondition( "Toni", "==" );
+            { "!=", "a", "in", "a", true },
+            { "!=", "a", "matches", "a", true },
+            { "!=", "a", "soundslike", "a", true },
 
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
+            { ">", "a", ">", "b", false },
+            { ">", "a", ">=", "a", false },
+            { ">", "a", "<", "c", false },
+            { ">", "a", "<=", "b", false },
+            { ">", "a", "in", "a,b", false },
+            { ">", "a", "not in", "b,c,d", false },
+            { ">", "a", "matches", "b", false },
+            { ">", "a", "soundslike", "b", false },
 
-    @Test
-    public void test005() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael", "in" );
-        StringConditionInspector b = getCondition( "Eder", "==" );
+            { ">", "a", "<", "a", true },
+            { ">", "a", "<=", "a", true },
+            { ">", "a", "in", "0,1,A,B,a", true },
+            { ">", "a", "matches", "a", true },
+            { ">", "a", "soundslike", "", true },
 
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
+            { ">=", "a", ">=", "b", false },
+            { ">=", "a", "<", "b", false },
+            { ">=", "a", "<=", "a", false },
+            { ">=", "a", "in", "a", false },
+            { ">=", "a", "not in", "b,c,d", false },
+            { ">=", "a", "matches", "a", false },
+            { ">=", "a", "soundslike", "a", false },
 
-    @Test
-    public void test006() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael", "in" );
-        StringConditionInspector b = getCondition( "Eder", "!=" );
+            { ">=", "a", "<", " ", true },
+            { ">=", "a", "<=", " ", true },
+            { ">=", "a", "in", "0,1,A,B", true },
+            { ">=", "a", "matches", "A", true },
+            { ">=", "a", "soundslike", "", true },
 
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
+            { "<", "a", "<", "b", false },
+            { "<", "a", "<=", "a", false },
+            { "<", "a", "in", "A,B,a,b", false },
+            { "<", "a", "not in", "b,c,d", false },
+            { "<", "a", "matches", "A", false },
+            { "<", "a", "soundslike", "", false },
 
-    @Test
-    public void test007() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael", "in" );
-        StringConditionInspector b = getCondition( "Eder, John", "in" );
+            { "<", "a", "in", "b,c,d", true },
+            { "<", "a", "matches", "b", true },
+            { "<", "a", "soundslike", "b", true },
 
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
+            { "<=", "a", "<=", "b", false },
+            { "<=", "a", "in", "A,B,a,b", false },
+            { "<=", "a", "not in", "b,c,d", false },
+            { "<=", "a", "matches", "A", false },
+            { "<=", "a", "soundslike", "", false },
 
-    @Test
-    public void test008() throws Exception {
-        StringConditionInspector a = getCondition( "Toni, Michael", "in" );
-        StringConditionInspector b = getCondition( "Toni, Eder", "in" );
+            { "<=", "a", "in", "b,c,d", true },
+            { "<=", "a", "matches", "b", true },
+            { "<=", "a", "soundslike", "b", true },
 
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
+            { "in", "a,b", "in", "b,c,d", false },
+            { "in", "a,b", "not in", "b,c,d", false },
+            { "in", "a,b", "matches", "a", false },
+            { "in", "a,b", "soundslike", "a", false },
+
+            { "in", "a,b", "in", "c,d", true },
+            { "in", "a,b", "not in", "a,b", true },
+            { "in", "a,b", "matches", "c", true },
+            { "in", "a,b", "soundslike", "c", true },
+
+            { "not in", "a,b", "matches", "c", false },
+            { "not in", "a,b", "soundslike", "c", false },
+
+            { "not in", "a,b", "matches", "a", true },
+
+            { "matches", "a", "soundslike", "a", false },
+
+            { "matches", "a", "soundslike", "b", true },
+        } );
     }
 
     private StringConditionInspector getCondition( String value,
                                                    String operator ) {
         return new StringConditionInspector( mock( Pattern52.class ), "name", value, operator );
+    }
+
+    private String getAssertDescription( StringConditionInspector a,
+                                         StringConditionInspector b,
+                                         boolean conflictExpected ) {
+        return format( "Expected condition '%s' %sto conflict with condition '%s':",
+                       a.toHumanReadableString(),
+                       conflictExpected ? "" : "not ",
+                       b.toHumanReadableString() );
     }
 }
