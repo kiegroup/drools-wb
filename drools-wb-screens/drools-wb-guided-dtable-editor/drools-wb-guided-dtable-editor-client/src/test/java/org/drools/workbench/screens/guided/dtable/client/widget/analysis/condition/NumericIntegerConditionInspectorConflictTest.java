@@ -16,116 +16,134 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition;
 
+import static java.lang.String.format;
+
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.junit.Test;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith( Parameterized.class )
 public class NumericIntegerConditionInspectorConflictTest {
 
-    @Test
-    public void testConflict001() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, "!=" );
+    private final Integer value1;
+    private final Integer value2;
+    private final String operator1;
+    private final String operator2;
+    private final boolean conflictExpected;
 
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
+    @Test
+    public void parametrizedTest() {
+        NumericIntegerConditionInspector a = getCondition( value1, operator1 );
+        NumericIntegerConditionInspector b = getCondition( value2, operator2 );
+
+        assertEquals( getAssertDescription(a, b, conflictExpected), conflictExpected, a.conflicts( b ) );
+        assertEquals( getAssertDescription(b, a, conflictExpected), conflictExpected, b.conflicts( a ) );
     }
 
-    @Test
-    public void testConflict002() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, "==" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
+    public NumericIntegerConditionInspectorConflictTest( String operator1,
+                                                         Integer value1,
+                                                         String operator2,
+                                                         Integer value2,
+                                                         boolean conflictExpected) {
+        this.value1 = value1;
+        this.value2 = value2;
+        this.operator1 = operator1;
+        this.operator2 = operator2;
+        this.conflictExpected = conflictExpected;
     }
 
-    @Test
-    public void testConflict003() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 1, "==" );
+    @Parameters
+    public static Collection<Object[]> testData() {
+        return Arrays.asList( new Object[][]{
+            // 'in' and 'not in' are not doable here
+            // op1, val1, op2, val2, conflicts
+            { "==", 0, "==", 0, false },
+            { "!=", 0, "!=", 0, false },
+            { ">", 0, ">", 0, false },
+            { ">=", 0, ">=", 0, false },
+            { "<", 0, "<", 0, false },
+            { "<=", 0, "<=", 0, false },
 
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
+            { "==", 0, "!=", 1, false },
+            { "==", 0, ">", -1, false },
+            { "==", 0, ">", -10, false },
+            { "==", 0, ">=", 0, false },
+            { "==", 0, ">=", -10, false },
+            { "==", 0, "<", 1, false },
+            { "==", 0, "<", 10, false },
+            { "==", 0, "<=", 0, false },
+            { "==", 0, "<=", 10, false },
+
+            { "==", 0, "==", 1, true },
+            { "==", 0, "!=", 0, true },
+            { "==", 0, ">", 0, true },
+            { "==", 0, ">", 10, true },
+            { "==", 0, ">=", 1, true },
+            { "==", 0, ">=", 10, true },
+            { "==", 0, "<", 0, true },
+            { "==", 0, "<", -10, true },
+            { "==", 0, "<=", -1, true },
+            { "==", 0, "<=", -10, true },
+
+            { "!=", 0, "!=", 1, false },
+            { "!=", 0, ">", -1, false },
+            { "!=", 0, ">=", 0, false },
+            { "!=", 0, "<", 1, false },
+            { "!=", 0, "<=", 0, false },
+
+            { ">", 0, ">", 1, false },
+            { ">", 0, ">=", 0, false },
+            { ">", 0, "<", 2, false },
+            { ">", 0, "<", 20, false },
+            { ">", 0, "<=", 1, false },
+            { ">", 0, "<=", 10, false },
+
+            { ">", 0, "<", -1, true },
+            { ">", 0, "<", 0, true },
+            { ">", 0, "<", 1, true },
+            { ">", 0, "<=", -2, true },
+            { ">", 0, "<=", -1, true },
+            { ">", 0, "<=", 0, true },
+
+            { ">=", 0, ">=", 1, false },
+            { ">=", 0, "<", 1, false },
+            { ">=", 0, "<", 10, false },
+            { ">=", 0, "<=", 0, false },
+            { ">=", 0, "<=", 10, false },
+
+            { ">=", 0, "<", -2, true },
+            { ">=", 0, "<", -1, true },
+            { ">=", 0, "<", 0, true },
+            { ">=", 0, "<=", -3, true },
+            { ">=", 0, "<=", -2, true },
+            { ">=", 0, "<=", -1, true },
+
+            { "<", 0, "<", 1, false },
+            { "<", 0, "<=", 0, false },
+
+            { "<=", 0, "<=", 1, false },
+        } );
     }
 
-    @Test
-    public void testConflict004() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 0, "!=" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict005() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 1, "!=" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict006() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "<" );
-        NumericIntegerConditionInspector b = getCondition( 10, ">" );
-
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict007() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 10, "<" );
-        NumericIntegerConditionInspector b = getCondition( 0, ">" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict008() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 10, ">" );
-
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict009() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 10, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, ">" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict010() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 10, ">" );
-        NumericIntegerConditionInspector b = getCondition( 0, "<=" );
-
-        assertTrue( a.conflicts( b ) );
-        assertTrue( b.conflicts( a ) );
-    }
-
-    @Test
-    public void testConflict011() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, ">" );
-        NumericIntegerConditionInspector b = getCondition( 100, ">" );
-
-        assertFalse( a.conflicts( b ) );
-        assertFalse( b.conflicts( a ) );
+    private String getAssertDescription( NumericIntegerConditionInspector a,
+                                         NumericIntegerConditionInspector b,
+                                         boolean conflictExpected ) {
+        return format( "Expected condition '%s' %sto conflict with condition '%s':",
+                       a.toHumanReadableString(),
+                       conflictExpected ? "" : "not ",
+                       b.toHumanReadableString() );
     }
 
     private NumericIntegerConditionInspector getCondition( Integer value,
                                                            String operator ) {
         return new NumericIntegerConditionInspector( mock( Pattern52.class ), "age", value, operator );
     }
-
 }
