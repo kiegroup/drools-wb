@@ -16,120 +16,136 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition;
 
-import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
-import org.junit.Test;
-
+import static java.lang.String.format;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+@RunWith( Parameterized.class )
 public class NumericIntegerConditionInspectorOverlapTest {
 
-    @Test
-    public void testOverlap001() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, "==" );
+    private final Integer value1;
+    private final Integer value2;
+    private final String operator1;
+    private final String operator2;
+    private final boolean overlapExpected;
 
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
+    @Test
+    public void parametrizedTest() {
+        NumericIntegerConditionInspector a = getCondition( value1, operator1 );
+        NumericIntegerConditionInspector b = getCondition( value2, operator2 );
+
+        assertEquals( getAssertDescription(a, b, overlapExpected), overlapExpected, a.overlaps( b ) );
+        assertEquals( getAssertDescription(b, a, overlapExpected), overlapExpected, b.overlaps( a ) );
     }
 
-    @Test
-    public void testOverlap002() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 10, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, ">" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
+    public NumericIntegerConditionInspectorOverlapTest( String operator1,
+                                                        Integer value1,
+                                                        String operator2,
+                                                        Integer value2,
+                                                        boolean overlapExpected) {
+        this.value1 = value1;
+        this.value2 = value2;
+        this.operator1 = operator1;
+        this.operator2 = operator2;
+        this.overlapExpected = overlapExpected;
     }
 
-    @Test
-    public void testOverlap003() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 0, "!=" );
+    @Parameters
+    public static Collection<Object[]> testData() {
+        return Arrays.asList( new Object[][] {
+            // op1, val1, op2, val2, overlaps
+            { "==", 0, "==", 0, true },
+            { "!=", 0, "!=", 0, true },
+            { ">", 0, ">", 0, true },
+            { ">=", 0, ">=", 0, true },
+            { "<", 0, "<", 0, true },
+            { "<=", 0, "<=", 0, true },
 
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
+            { "==", 0, "==", 1, false },
+            { "==", 0, "!=", 0, false },
+            { "==", 0, ">", 0, false },
+            { "==", 0, ">", 10, false },
+            { "==", 0, ">=", 1, false },
+            { "==", 0, ">=", 10, false },
+            { "==", 0, "<", 0, false },
+            { "==", 0, "<", -10, false },
+            { "==", 0, "<=", -1, false },
+            { "==", 0, "<=", -10, false },
+
+            { "==", 0, "!=", 1, true },
+            { "==", 0, ">", -1, true },
+            { "==", 0, ">", -10, true },
+            { "==", 0, ">=", 0, true },
+            { "==", 0, ">=", -10, true },
+            { "==", 0, "<", 1, true },
+            { "==", 0, "<", 10, true },
+            { "==", 0, "<=", 0, true },
+            { "==", 0, "<=", 10, true },
+
+            { "!=", 0, "!=", 1, true },
+            { "!=", 0, ">", -1, true },
+            { "!=", 0, ">", -10, true },
+            { "!=", 0, ">=", 0, true },
+            { "!=", 0, ">=", -10, true },
+            { "!=", 0, "<", 1, true },
+            { "!=", 0, "<", 10, true },
+            { "!=", 0, "<=", 0, true },
+            { "!=", 0, "<=", 10, true },
+
+            { ">", 0, "<", 1, false },
+            { ">", 0, "<", -10, false },
+            { ">", 0, "<=", 0, false },
+            { ">", 0, "<=", -10, false },
+
+            { ">", 0, ">", -1, true },
+            { ">", 0, ">", -10, true },
+            { ">", 0, ">=", 0, true },
+            { ">", 0, ">=", 1, true },
+            { ">", 0, ">=", -10, true },
+            { ">", 0, "<", 2, true },
+            { ">", 0, "<", 10, true },
+            { ">", 0, "<=", 1, true },
+            { ">", 0, "<=", 10, true },
+
+            { ">=", 0, "<", 0, false },
+            { ">=", 0, "<", -10, false },
+            { ">=", 0, "<=", -1, false },
+            { ">=", 0, "<=", -10, false },
+
+            { ">=", 0, ">=", 1, true },
+            { ">=", 0, ">=", -10, true },
+            { ">=", 0, "<", 1, true },
+            { ">=", 0, "<", 10, true },
+            { ">=", 0, "<=", 0, true },
+            { ">=", 0, "<=", 10, true },
+
+            { "<", 0, "<", 1, true },
+            { "<", 0, "<", 10, true },
+            { "<", 0, "<=", -1, true },
+            { "<", 0, "<=", 0, true },
+            { "<", 0, "<=", 10, true },
+
+            { "<=", 0, "<=", -1, true },
+            { "<=", 0, "<=", 10, true },
+        } );
     }
 
-    @Test
-    public void testOverlap004() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 1, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 0, "!=" );
-
-        assertFalse( a.overlaps( b ) );
-        assertFalse( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap005() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "<" );
-        NumericIntegerConditionInspector b = getCondition( 0, ">" );
-
-        assertFalse( a.overlaps( b ) );
-        assertFalse( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap006() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "==" );
-        NumericIntegerConditionInspector b = getCondition( 0, "!=" );
-
-        assertFalse( a.overlaps( b ) );
-        assertFalse( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap007() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, ">" );
-        NumericIntegerConditionInspector b = getCondition( 100, ">" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap008() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, ">=" );
-        NumericIntegerConditionInspector b = getCondition( 100, ">=" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap009() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, "<" );
-        NumericIntegerConditionInspector b = getCondition( 100, "<" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap010() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, "<=" );
-        NumericIntegerConditionInspector b = getCondition( 100, "<=" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap011() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 100, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 100, "<" );
-
-        assertTrue( a.overlaps( b ) );
-        assertTrue( b.overlaps( a ) );
-    }
-
-    @Test
-    public void testOverlap012() throws Exception {
-        NumericIntegerConditionInspector a = getCondition( 0, "!=" );
-        NumericIntegerConditionInspector b = getCondition( 100, "<" );
-
-        assertFalse( a.overlaps( b ) );
-        assertFalse( b.overlaps( a ) );
+    private String getAssertDescription( NumericIntegerConditionInspector a,
+                                         NumericIntegerConditionInspector b,
+                                         boolean conflictExpected ) {
+        return format( "Expected condition '%s' %sto overlap with condition '%s':",
+                       a.toHumanReadableString(),
+                       conflictExpected ? "" : "not ",
+                       b.toHumanReadableString() );
     }
 
     private NumericIntegerConditionInspector getCondition( int value,
