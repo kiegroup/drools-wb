@@ -30,7 +30,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith( Parameterized.class )
-public class NumericIntegerConditionInspectorOverlapTest {
+public class NumericIntegerConditionInspectorConflictOverlapTest {
 
     private final Integer value1;
     private final Integer value2;
@@ -39,19 +39,28 @@ public class NumericIntegerConditionInspectorOverlapTest {
     private final boolean overlapExpected;
 
     @Test
-    public void parametrizedTest() {
+    public void parametrizedOverlapTest() {
         NumericIntegerConditionInspector a = getCondition( value1, operator1 );
         NumericIntegerConditionInspector b = getCondition( value2, operator2 );
 
-        assertEquals( getAssertDescription(a, b, overlapExpected), overlapExpected, a.overlaps( b ) );
-        assertEquals( getAssertDescription(b, a, overlapExpected), overlapExpected, b.overlaps( a ) );
+        assertEquals( getAssertDescription( a, b, overlapExpected, "overlap" ), overlapExpected, a.overlaps( b ) );
+        assertEquals( getAssertDescription( b, a, overlapExpected, "overlap" ), overlapExpected, b.overlaps( a ) );
     }
 
-    public NumericIntegerConditionInspectorOverlapTest( String operator1,
-                                                        Integer value1,
-                                                        String operator2,
-                                                        Integer value2,
-                                                        boolean overlapExpected) {
+    @Test
+    public void parametrizedConflictTest() {
+        NumericIntegerConditionInspector a = getCondition( value1, operator1 );
+        NumericIntegerConditionInspector b = getCondition( value2, operator2 );
+
+        assertEquals( getAssertDescription( a, b, !overlapExpected, "conflict" ), !overlapExpected, a.conflicts( b ) );
+        assertEquals( getAssertDescription( b, a, !overlapExpected, "conflict" ), !overlapExpected, b.conflicts( a ) );
+    }
+
+    public NumericIntegerConditionInspectorConflictOverlapTest( String operator1,
+                                                                Integer value1,
+                                                                String operator2,
+                                                                Integer value2,
+                                                                boolean overlapExpected) {
         this.value1 = value1;
         this.value2 = value2;
         this.operator1 = operator1;
@@ -141,10 +150,12 @@ public class NumericIntegerConditionInspectorOverlapTest {
 
     private String getAssertDescription( NumericIntegerConditionInspector a,
                                          NumericIntegerConditionInspector b,
-                                         boolean conflictExpected ) {
-        return format( "Expected condition '%s' %sto overlap with condition '%s':",
+                                         boolean conflictExpected,
+                                         String condition ) {
+        return format( "Expected condition '%s' %sto %s with condition '%s':",
                        a.toHumanReadableString(),
                        conflictExpected ? "" : "not ",
+                       condition,
                        b.toHumanReadableString() );
     }
 

@@ -30,7 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.junit.runner.RunWith;
 
 @RunWith( Parameterized.class )
-public class StringConditionInspectorConflictsTest {
+public class StringConditionInspectorConflictOverlapTest {
 
     private final String value1;
     private final String value2;
@@ -39,19 +39,28 @@ public class StringConditionInspectorConflictsTest {
     private final boolean conflictExpected;
 
     @Test
-    public void parametrizedTest() {
+    public void parametrizedCoflictTest() {
         StringConditionInspector a = getCondition( value1, operator1 );
         StringConditionInspector b = getCondition( value2, operator2 );
 
-        assertEquals( getAssertDescription(a, b, conflictExpected), conflictExpected, a.conflicts( b ) );
-        assertEquals( getAssertDescription(b, a, conflictExpected), conflictExpected, b.conflicts( a ) );
+        assertEquals( getAssertDescription( a, b, conflictExpected, "conflict" ), conflictExpected, a.conflicts( b ) );
+        assertEquals( getAssertDescription( b, a, conflictExpected, "conflict" ), conflictExpected, b.conflicts( a ) );
     }
 
-    public StringConditionInspectorConflictsTest( String operator1,
-                                                              String value1,
-                                                              String operator2,
-                                                              String value2,
-                                                              boolean conflictExpected) {
+    @Test
+    public void parametrizedOverlapTest() {
+        StringConditionInspector a = getCondition( value1, operator1 );
+        StringConditionInspector b = getCondition( value2, operator2 );
+
+        assertEquals( getAssertDescription( a, b, !conflictExpected, "overlap" ), !conflictExpected, a.overlaps( b ) );
+        assertEquals( getAssertDescription( b, a, !conflictExpected, "overlap" ), !conflictExpected, b.overlaps( a ) );
+    }
+
+    public StringConditionInspectorConflictOverlapTest( String operator1,
+                                                        String value1,
+                                                        String operator2,
+                                                        String value2,
+                                                        boolean conflictExpected) {
         this.value1 = value1;
         this.value2 = value2;
         this.operator1 = operator1;
@@ -61,7 +70,7 @@ public class StringConditionInspectorConflictsTest {
 
     @Parameters
     public static Collection<Object[]> testData() {
-        return Arrays.asList( new Object[][]{
+        return Arrays.asList( new Object[][] {
             // matches and soundslike are probably not doable...
             // op1, val1, op2, val2, conflicts
             { "==", "a", "==", "a", false },
@@ -188,10 +197,12 @@ public class StringConditionInspectorConflictsTest {
 
     private String getAssertDescription( StringConditionInspector a,
                                          StringConditionInspector b,
-                                         boolean conflictExpected ) {
-        return format( "Expected condition '%s' %sto conflict with condition '%s':",
+                                         boolean conflictExpected,
+                                         String condition ) {
+        return format( "Expected condition '%s' %sto %s with condition '%s':",
                        a.toHumanReadableString(),
                        conflictExpected ? "" : "not ",
+                       condition,
                        b.toHumanReadableString() );
     }
 }
