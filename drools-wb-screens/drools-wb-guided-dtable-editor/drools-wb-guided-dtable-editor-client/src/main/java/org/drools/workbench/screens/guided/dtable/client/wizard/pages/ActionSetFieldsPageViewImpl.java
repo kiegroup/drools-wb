@@ -185,7 +185,7 @@ public class ActionSetFieldsPageViewImpl extends Composite
     private void initialiseAvailablePatterns() {
         availablePatternsContainer.add( availablePatternsWidget );
         availablePatternsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        availablePatternsWidget.setMinimumWidth( 180 );
+        availablePatternsWidget.setMinimumWidth( 175 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoAvailablePatterns() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );
@@ -208,7 +208,7 @@ public class ActionSetFieldsPageViewImpl extends Composite
     private void initialiseAvailableFields() {
         availableFieldsContainer.add( availableFieldsWidget );
         availableFieldsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        availableFieldsWidget.setMinimumWidth( 175 );
+        availableFieldsWidget.setMinimumWidth( 170 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoAvailableFields() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );
@@ -231,7 +231,7 @@ public class ActionSetFieldsPageViewImpl extends Composite
     private void initialiseChosenFields() {
         chosenFieldsContainer.add( chosenFieldsWidget );
         chosenFieldsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        chosenFieldsWidget.setMinimumWidth( 175 );
+        chosenFieldsWidget.setMinimumWidth( 170 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoChosenFields() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );

@@ -25,15 +25,18 @@
   <ui:with field="res" type="org.uberfire.ext.widgets.core.client.resources.WizardResources"/>
 
   <gwt:VerticalPanel ui:field="container" width="100%">
-    <b:Label text="{i18n.DecisionTableWizardDescriptionSummaryPage}" styleName="{res.css.wizardDTableCaption}"/>
-    <gwt:VerticalPanel styleName="{res.css.wizardDTableSummaryContainer}">
-      <gwt:HorizontalPanel ui:field="baseFileNameContainer" addStyleNames="{res.css.wizardDTableFieldContainerValid} form-group">
+    <b:Label text="{i18n.DecisionTableWizardDescriptionSummaryPage}" addStyleNames="{res.css.wizardDTableCaption}"/>
+    <gwt:HTML>
+      <hr/>
+    </gwt:HTML>
+    <gwt:VerticalPanel width="100%">
+      <gwt:HorizontalPanel ui:field="baseFileNameContainer" styleName="{res.css.wizardDTableFieldContainerValid}">
         <gwt:InlineHTML>
           <font color="red">*</font>
         </gwt:InlineHTML>
-        <b:Label text="{i18n.NameColon}" addStyleNames="{res.css.wizardDTableFields} help-block"/>
-        <b:TextBox ui:field="txtBaseFileName" addStyleNames="{res.css.wizardDTableFields}"/>
-        <b:HelpBlock ui:field="baseFileNameHelp" addStyleNames="{res.css.wizardDTableFields}" text="{i18n.DecisionTableWizardSummaryInvalidName}" visible="false"/>
+        <b:Label text="{i18n.NameColon}" styleName="{res.css.wizardDTableFields}"/>
+        <b:TextBox ui:field="txtBaseFileName"/>
+        <b:HelpBlock ui:field="baseFileNameHelp" text="{i18n.DecisionTableWizardSummaryInvalidName}" visible="false"/>
       </gwt:HorizontalPanel>
       <gwt:HorizontalPanel styleName="{res.css.wizardDTableFieldContainerValid}">
         <b:Label text="{i18n.PathColon}" styleName="{res.css.wizardDTableFields}"/>
