@@ -216,7 +216,7 @@ public class ActionInsertFactFieldsPageViewImpl extends Composite
     private void initialiseAvailableFactTypes() {
         availableFactTypesContainer.add( availableFactTypesWidget );
         availableFactTypesWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        availableFactTypesWidget.setMinimumWidth( 155 );
+        availableFactTypesWidget.setMinimumWidth( 130 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoAvailablePatterns() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );
@@ -239,7 +239,7 @@ public class ActionInsertFactFieldsPageViewImpl extends Composite
     private void initialiseChosenPatterns() {
         chosenPatternsContainer.add( chosenPatternsWidget );
         chosenPatternsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        chosenPatternsWidget.setMinimumWidth( 155 );
+        chosenPatternsWidget.setMinimumWidth( 130 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoChosenPatterns() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );
@@ -291,7 +291,7 @@ public class ActionInsertFactFieldsPageViewImpl extends Composite
     private void initialiseAvailableFields() {
         availableFieldsContainer.add( availableFieldsWidget );
         availableFieldsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        availableFieldsWidget.setMinimumWidth( 155 );
+        availableFieldsWidget.setMinimumWidth( 130 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoAvailableFields() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );
@@ -314,7 +314,7 @@ public class ActionInsertFactFieldsPageViewImpl extends Composite
     private void initialiseChosenFields() {
         chosenFieldsContainer.add( chosenFieldsWidget );
         chosenFieldsWidget.setKeyboardSelectionPolicy( KeyboardSelectionPolicy.ENABLED );
-        chosenFieldsWidget.setMinimumWidth( 155 );
+        chosenFieldsWidget.setMinimumWidth( 130 );
 
         final Label lstEmpty = new Label( GuidedDecisionTableConstants.INSTANCE.DecisionTableWizardNoChosenFields() );
         lstEmpty.setStyleName( WizardCellListResources.INSTANCE.cellListStyle().cellListEmptyItem() );

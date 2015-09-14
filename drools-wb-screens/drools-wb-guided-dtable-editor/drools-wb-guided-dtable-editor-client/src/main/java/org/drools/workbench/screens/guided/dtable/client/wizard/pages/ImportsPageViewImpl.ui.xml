@@ -25,8 +25,11 @@
   <ui:with field="res" type="org.uberfire.ext.widgets.core.client.resources.WizardResources"/>
 
   <gwt:VerticalPanel ui:field="container" width="100%">
-    <gwt:VerticalPanel>
-      <b:Label text="{i18n.DecisionTableWizardDescriptionImportsPage}" styleName="{res.css.wizardDTableCaption}"/>
+    <b:Label text="{i18n.DecisionTableWizardDescriptionImportsPage}" addStyleNames="{res.css.wizardDTableCaption}"/>
+    <gwt:HTML>
+      <hr/>
+    </gwt:HTML>
+    <gwt:VerticalPanel width="100%">
       <gwt:HorizontalPanel>
         <gwt:VerticalPanel>
           <gwt:SimplePanel>
@@ -35,8 +38,8 @@
           <gwt:ScrollPanel ui:field="availableImportsContainer" styleName="{res.css.wizardDTableList}" height="260px" width="280px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel ui:field="buttonBar" styleName="{res.css.wizardDTableButtons}">
-          <b:Button ui:field="btnAdd" enabled="false">&gt;&gt;</b:Button>
-          <b:Button ui:field="btnRemove" enabled="false">&lt;&lt;</b:Button>
+          <b:Button ui:field="btnAdd" enabled="false" icon="ANGLE_RIGHT" width="50px"/>
+          <b:Button ui:field="btnRemove" enabled="false" icon="ANGLE_LEFT" width="50px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel>
           <gwt:SimplePanel>

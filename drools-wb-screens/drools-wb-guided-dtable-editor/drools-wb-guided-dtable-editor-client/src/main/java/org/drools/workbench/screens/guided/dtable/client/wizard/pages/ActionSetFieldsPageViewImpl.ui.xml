@@ -25,8 +25,11 @@
   <ui:with field="res" type="org.uberfire.ext.widgets.core.client.resources.WizardResources"/>
 
   <gwt:VerticalPanel ui:field="container" width="100%">
-    <gwt:VerticalPanel>
-      <b:Label text="{i18n.DecisionTableWizardDescriptionActionSetFieldsPage}" styleName="{res.css.wizardDTableCaption}"/>
+    <gwt:VerticalPanel width="100%">
+      <b:Label text="{i18n.DecisionTableWizardDescriptionActionSetFieldsPage}" addStyleNames="{res.css.wizardDTableCaption}"/>
+      <gwt:HTML>
+        <hr/>
+      </gwt:HTML>
       <gwt:HorizontalPanel>
         <gwt:VerticalPanel>
           <gwt:SimplePanel>
@@ -41,8 +44,8 @@
           <gwt:ScrollPanel ui:field="availableFieldsContainer" styleName="{res.css.wizardDTableList}" height="235px" width="180px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel ui:field="buttonBar" styleName="{res.css.wizardDTableButtons}">
-          <b:Button ui:field="btnAdd" enabled="false">&gt;&gt;</b:Button>
-          <b:Button ui:field="btnRemove" enabled="false">&lt;&lt;</b:Button>
+          <b:Button ui:field="btnAdd" enabled="false" icon="ANGLE_RIGHT" width="50px"/>
+          <b:Button ui:field="btnRemove" enabled="false" icon="ANGLE_LEFT" width="50px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel>
           <gwt:SimplePanel>
@@ -52,20 +55,20 @@
         </gwt:VerticalPanel>
       </gwt:HorizontalPanel>
       <gwt:VerticalPanel ui:field="fieldDefinition" visible="false">
-        <gwt:HorizontalPanel ui:field="columnHeaderContainer" styleName="{res.css.wizardDTableFieldContainerValid} form-group">
+        <gwt:HorizontalPanel ui:field="columnHeaderContainer" styleName="{res.css.wizardDTableFieldContainerValid}">
           <gwt:InlineHTML>
             <font color="red">*</font>
           </gwt:InlineHTML>
-          <b:Label text="{i18n.ColumnHeaderDescription}" styleName="{res.css.wizardDTableFields} help-block"/>
-            <b:TextBox ui:field="txtColumnHeader" enabled="false" styleName="{res.css.wizardDTableFields}"/>
-            <b:HelpBlock ui:field="txtColumnHeaderHelp" addStyleNames="{res.css.wizardDTableFields}" text="{i18n.DecisionTableWizardIncompleteActions}" visible="false"/>
+          <b:Label text="{i18n.ColumnHeaderDescription}" styleName="{res.css.wizardDTableFields}"/>
+          <b:TextBox ui:field="txtColumnHeader" enabled="false"/>
+          <b:HelpBlock ui:field="txtColumnHeaderHelp" addStyleNames="{res.css.wizardDTableFields}" text="{i18n.DecisionTableWizardIncompleteActions}" visible="false"/>
         </gwt:HorizontalPanel>
         <gwt:VerticalPanel ui:field="criteriaExtendedEntry">
           <gwt:HorizontalPanel styleName="{res.css.wizardDTableFieldContainerValid}">
             <b:Label text="{i18n.optionalValueList}" styleName="{res.css.wizardDTableFields}"/>
-            <b:TextBox ui:field="txtValueList" enabled="false" styleName="{res.css.wizardDTableFields}"/>
+            <b:TextBox ui:field="txtValueList" enabled="false"/>
             <b:Popover placement="TOP" trigger="HOVER" title="{i18n.ValueList}" content="{i18n.ValueListsExplanation}">
-              <b:Icon type="QUESTION" addStyleNames="help-block"></b:Icon>
+              <b:Icon type="QUESTION" addStyleNames="help-block {res.css.wizardDTableFields}"></b:Icon>
             </b:Popover>
           </gwt:HorizontalPanel>
           <gwt:HorizontalPanel ui:field="defaultValueContainer" styleName="{res.css.wizardDTableFieldContainerValid}">
@@ -83,9 +86,9 @@
           </gwt:HorizontalPanel>
         </gwt:VerticalPanel>
         <gwt:HorizontalPanel styleName="{res.css.wizardDTableFieldContainerValid}">
-          <b:CheckBox ui:field="chkUpdateEngine" styleName="{res.css.wizardDTableFields}" text="{i18n.UpdateEngineWithChanges}:"/>
+          <b:CheckBox ui:field="chkUpdateEngine" text="{i18n.UpdateEngineWithChanges}:"/>
           <b:Popover placement="TOP" trigger="HOVER" title="{i18n.UpdateFact}" content="{i18n.UpdateDescription}">
-            <b:Icon type="QUESTION" addStyleNames="help-block"></b:Icon>
+            <b:Icon type="QUESTION" addStyleNames="help-block {res.css.wizardDTableFields}"></b:Icon>
           </b:Popover>
         </gwt:HorizontalPanel>
       </gwt:VerticalPanel>

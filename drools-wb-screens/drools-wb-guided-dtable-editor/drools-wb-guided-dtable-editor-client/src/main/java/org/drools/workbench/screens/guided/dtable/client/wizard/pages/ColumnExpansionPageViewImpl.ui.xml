@@ -25,10 +25,13 @@
   <ui:with field="res" type="org.uberfire.ext.widgets.core.client.resources.WizardResources"/>
 
   <gwt:VerticalPanel ui:field="container" width="100%">
-    <gwt:VerticalPanel>
-      <b:Label text="{i18n.DecisionTableWizardDescriptionExpandColumnsPage}" styleName="{res.css.wizardDTableCaption}"/>
+    <gwt:VerticalPanel width="100%">
+      <b:Label text="{i18n.DecisionTableWizardDescriptionExpandColumnsPage}" addStyleNames="{res.css.wizardDTableCaption}"/>
+      <gwt:HTML>
+        <hr/>
+      </gwt:HTML>
       <gwt:HorizontalPanel styleName="{res.css.wizardDTableFieldContainerValid}">
-        <b:CheckBox ui:field="chkExpandInFull" styleName="{res.css.wizardDTableFields}" text="{i18n.DecisionTableWizardExpandInFull}" value="true"/>
+        <b:CheckBox ui:field="chkExpandInFull" addStyleNames="{res.css.wizardDTableFields}" text="{i18n.DecisionTableWizardExpandInFull}" value="true"/>
       </gwt:HorizontalPanel>
       <gwt:HorizontalPanel ui:field="columnSelectorContainer" visible="false">
         <gwt:VerticalPanel>
@@ -38,8 +41,8 @@
           <gwt:ScrollPanel ui:field="availableColumnsContainer" styleName="{res.css.wizardDTableList}" height="300px" width="280px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel ui:field="buttonBar" styleName="{res.css.wizardDTableButtons}">
-          <b:Button ui:field="btnAdd" enabled="false">&gt;&gt;</b:Button>
-          <b:Button ui:field="btnRemove" enabled="false">&lt;&lt;</b:Button>
+          <b:Button ui:field="btnAdd" enabled="false" icon="ANGLE_RIGHT" width="50px"/>
+          <b:Button ui:field="btnRemove" enabled="false" icon="ANGLE_LEFT" width="50px"/>
         </gwt:VerticalPanel>
         <gwt:VerticalPanel>
           <gwt:SimplePanel>
