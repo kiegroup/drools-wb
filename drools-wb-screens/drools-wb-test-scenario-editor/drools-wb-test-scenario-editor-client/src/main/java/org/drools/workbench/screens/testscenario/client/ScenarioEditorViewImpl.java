@@ -75,6 +75,7 @@ public class ScenarioEditorViewImpl
     private OverviewWidgetPresenter  overviewWidget;
     private Callback<Scenario>       updateModelCallback;
     private VersionRecordManager     versionRecordManager;
+    private boolean isReadOnly = true;
 
     @Inject
     public ScenarioEditorViewImpl(
@@ -115,6 +116,7 @@ public class ScenarioEditorViewImpl
                            final Caller<ScenarioTestEditorService> service,
                            final Callback<Scenario> updateModelCallback) {
         this.updateModelCallback = updateModelCallback;
+        this.isReadOnly = isReadOnly;
         layout.clear();
         multiPage.clear();
 
@@ -343,6 +345,9 @@ public class ScenarioEditorViewImpl
                                                                             oracle,
                                                                             scenario,
                                                                             ruleNameService);
+
+        initImportsTab( oracle, scenario.getImports(), isReadOnly);
+
         scenarioWidgetComponentCreator.setShowResults(false);
     }
 
