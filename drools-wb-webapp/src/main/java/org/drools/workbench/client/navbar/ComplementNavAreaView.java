@@ -17,24 +17,34 @@
 package org.drools.workbench.client.navbar;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.RequiresResize;
+import org.kie.workbench.common.widgets.client.search.ClearSearchEvent;
+import org.kie.workbench.common.widgets.client.search.ContextualSearch;
+import org.kie.workbench.common.widgets.client.search.SearchBehavior;
+import org.kie.workbench.common.widgets.client.search.SetSearchTextEvent;
+import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.widgets.menu.PerspectiveContextMenusPresenter;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 /**
  * A stand-alone (i.e. devoid of Workbench dependencies) View
  */
 public class ComplementNavAreaView
         extends Composite
-        implements RequiresResize,
-                   ComplementNavAreaPresenter.View {
+        implements ComplementNavAreaPresenter.View {
 
     interface ViewBinder
             extends
@@ -45,7 +55,22 @@ public class ComplementNavAreaView
     private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
 
     @UiField
+    public Button searchButton;
+
+    @UiField
+    public TextBox searchTextBox;
+
+    @Inject
+    private ContextualSearch contextualSearch;
+
+    @Inject
+    private PlaceManager placeManager;
+
+    @UiField
     public FlowPanel contextMenuArea;
+
+    @UiField
+    public FlowPanel searchPanel;
 
     @Inject
     private PerspectiveContextMenusPresenter contextMenu;
@@ -53,11 +78,29 @@ public class ComplementNavAreaView
     @PostConstruct
     public void init() {
         initWidget( uiBinder.createAndBindUi( this ) );
+        if ( Window.Location.getParameterMap().containsKey( "no_search" ) ) {
+            searchPanel.setVisible( false );
+        }
         contextMenuArea.add( contextMenu.getView() );
+        contextualSearch.setDefaultSearchBehavior( new SearchBehavior() {
+            @Override
+            public void execute( final String term ) {
+                placeManager.goTo( new DefaultPlaceRequest( "FullTextSearchForm" ).addParameter( "term", term ) );
+            }
+        } );
     }
 
-    @Override
-    public void onResize() {
+    @UiHandler("searchButton")
+    public void search( ClickEvent e ) {
+        contextualSearch.getSearchBehavior().execute( searchTextBox.getText() );
+    }
+
+    public void onClearSearchBox( @Observes ClearSearchEvent clearSearch ) {
+        searchTextBox.setText( "" );
+    }
+
+    public void onSetSearchText( @Observes SetSearchTextEvent setSearchText ) {
+        searchTextBox.setText( setSearchText.getSearchText() );
     }
 
 }
