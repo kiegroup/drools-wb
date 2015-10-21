@@ -20,15 +20,12 @@
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui">
 
   <ui:with field="res" type="org.uberfire.client.resources.WorkbenchResources"/>
+  <ui:with field="i18n" type="org.drools.workbench.client.resources.i18n.AppConstants"/>
 
   <ui:style>
+
     .contextArea {
       height: 47px !important;
-    }
-
-    .logo {
-      float: left;
-      margin-left: 20px;
     }
 
     .search {
@@ -43,20 +40,13 @@
       margin-top: 7px;
     }
 
-    .searchForm {
-      margin-bottom: 0px !important;
-    }
   </ui:style>
 
   <g:FlowPanel styleName="{style.contextArea} {res.CSS.listbar}">
-    <g:HTMLPanel styleName="{style.logo}">
-      <img src="images/logo.png"/>
-    </g:HTMLPanel>
     <g:FlowPanel ui:field="contextMenuArea" styleName="{style.contextMenu}"/>
-    <g:FlowPanel addStyleNames="{style.search}">
-      <b:Form type="SEARCH" addStyleNames="{style.searchForm}">
-        <b:TextBox searchQuery="true" placeholder="search..."/>
-      </b:Form>
+    <g:FlowPanel addStyleNames="{style.search} input-append" ui:field="searchPanel">
+      <b:TextBox alternateSize="XLARGE" ui:field="searchTextBox" placeholder="{i18n.Search}"/>
+      <b:Button icon="SEARCH" ui:field="searchButton"/>
     </g:FlowPanel>
   </g:FlowPanel>
 
