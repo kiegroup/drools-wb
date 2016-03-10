@@ -296,7 +296,7 @@ public class KSessionSelectorTest {
                 return false;
             }
 
-            @Override public KieProject newProject(Repository repository, String name, POM pom, String baseURL) {
+            @Override public KieProject newProject(Path path, String name, POM pom, String baseURL) {
                 return null;
             }
 
