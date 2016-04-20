@@ -156,7 +156,7 @@ public class ModuleAssetImporter {
         POM pom = new POM( gav );
 
         Path modulePath = migrationPathManager.generateRootPath();
-        projectService.newProject( makeRepository( modulePath ),
+        projectService.newProject( modulePath,
                                    normalizedModuleName,
                                    pom,
                                    "http://localhost" );
@@ -270,13 +270,4 @@ public class ModuleAssetImporter {
         }
     }
 
-    private org.guvnor.structure.repositories.Repository makeRepository( final Path repositoryRoot ) {
-        return new GitRepository() {
-
-            @Override
-            public Path getRoot() {
-                return repositoryRoot;
-            }
-        };
-    }
 }
