@@ -66,6 +66,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.LimitedEntryBRLCon
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
+import org.drools.workbench.screens.guided.dtable.analysis.AnalysisMessage;
 import org.drools.workbench.screens.guided.dtable.client.GuidedDecisionTable;
 import org.drools.workbench.screens.guided.dtable.client.editor.clipboard.Clipboard;
 import org.drools.workbench.screens.guided.dtable.client.editor.clipboard.impl.DefaultClipboard;
@@ -141,6 +142,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     private final Event<RefreshConditionsPanelEvent> refreshConditionsPanelEvent;
     private final Event<RefreshActionsPanelEvent> refreshActionsPanelEvent;
     private final Event<NotificationEvent> notificationEvent;
+    private final Event<AnalysisMessage> analysisProgressEvent;
     private final GridWidgetCellFactory gridWidgetCellFactory;
     private final GridWidgetColumnFactory gridWidgetColumnFactory;
     private final AsyncPackageDataModelOracleFactory oracleFactory;
@@ -238,6 +240,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                          final Event<RefreshConditionsPanelEvent> refreshConditionsPanelEvent,
                                          final Event<RefreshActionsPanelEvent> refreshActionsPanelEvent,
                                          final Event<NotificationEvent> notificationEvent,
+                                         final Event<AnalysisMessage> analysisProgressEvent,
                                          final GridWidgetCellFactory gridWidgetCellFactory,
                                          final GridWidgetColumnFactory gridWidgetColumnFactory,
                                          final AsyncPackageDataModelOracleFactory oracleFactory,
@@ -258,6 +261,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
         this.refreshConditionsPanelEvent = refreshConditionsPanelEvent;
         this.refreshActionsPanelEvent = refreshActionsPanelEvent;
         this.notificationEvent = notificationEvent;
+        this.analysisProgressEvent = analysisProgressEvent;
         this.gridWidgetCellFactory = gridWidgetCellFactory;
         this.gridWidgetColumnFactory = gridWidgetColumnFactory;
         this.oracleFactory = oracleFactory;
@@ -473,7 +477,9 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
         this.decisionTableAnalyzer = new DecisionTableAnalyzer( placeRequest,
                                                                 oracle,
                                                                 model,
-                                                                eventBus );
+                                                                eventBus,
+                                                                identity,
+                                                                analysisProgressEvent );
     }
 
     //Setup Audit Log

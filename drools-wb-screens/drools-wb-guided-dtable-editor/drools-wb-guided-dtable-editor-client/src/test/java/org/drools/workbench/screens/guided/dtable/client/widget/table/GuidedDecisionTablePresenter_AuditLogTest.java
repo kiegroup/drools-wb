@@ -133,6 +133,7 @@ public class GuidedDecisionTablePresenter_AuditLogTest {
                                                         refreshActionsPanelEvent,
                                                         null,
                                                         null,
+                                                        null,
                                                         gridWidgetColumnFactory,
                                                         oracleFactory,
                                                         synchronizer,

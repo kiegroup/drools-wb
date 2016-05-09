@@ -20,8 +20,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
+import javax.enterprise.event.Event;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.screens.guided.dtable.analysis.AnalysisMessage;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.RuleInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.RuleInspectorCache;
@@ -30,7 +31,9 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReportScreen;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Issue;
+import org.guvnor.common.services.shared.message.Level;
 import org.jboss.errai.ioc.client.container.IOC;
+import org.jboss.errai.security.shared.api.identity.User;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.AfterColumnDeleted;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.AfterColumnInserted;
@@ -38,6 +41,7 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.Appen
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.DeleteRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.InsertRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.UpdateColumnDataEvent;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
@@ -60,10 +64,16 @@ public class DecisionTableAnalyzer
     private final GuidedDecisionTable52 model;
     private final EventManager eventManager = new EventManager();
 
+    private final User identity;
+    private final Path dtablePath;
+    private final Event<AnalysisMessage> analysisProgressEvent;
+
     public DecisionTableAnalyzer( final PlaceRequest place,
                                   final AsyncPackageDataModelOracle oracle,
                                   final GuidedDecisionTable52 model,
-                                  final EventBus eventBus ) {
+                                  final EventBus eventBus,
+                                  final User identity,
+                                  final Event<AnalysisMessage> analysisProgressEvent) {
         this.place = place;
         this.model = model;
 
@@ -85,6 +95,10 @@ public class DecisionTableAnalyzer
                              this );
         eventBus.addHandler( AfterColumnInserted.TYPE,
                              this );
+
+        this.identity = identity;
+        dtablePath = oracle.getResourcePath();
+        this.analysisProgressEvent = analysisProgressEvent;
     }
 
     //Override for tests where we do not want to perform checks using a Scheduled RepeatingCommand
@@ -98,9 +112,9 @@ public class DecisionTableAnalyzer
 
             @Override
             public void execute( final Status status ) {
-                Window.setTitle( AnalysisConstants.INSTANCE.AnalysingChecks0To1Of2( status.getStart(),
-                                                                                    status.getEnd(),
-                                                                                    status.getTotalCheckCount() ) );
+                notifyAnalysisProgress( AnalysisConstants.INSTANCE.AnalysingChecks0To1Of2( status.getStart(),
+                                                                                           status.getEnd(),
+                                                                                           status.getTotalCheckCount() ) );
             }
         };
     }
@@ -111,10 +125,20 @@ public class DecisionTableAnalyzer
 
             @Override
             public void execute() {
-                Window.setTitle( "" );
+                notifyAnalysisProgress( "" );
                 sendReport( makeAnalysisReport() );
             }
         };
+    }
+
+    protected void notifyAnalysisProgress( String text ) {
+        AnalysisMessage infoMsg = new AnalysisMessage();
+        infoMsg.setLevel( Level.INFO );
+        infoMsg.setText( text );
+        infoMsg.setUserId( identity.getIdentifier() );
+        infoMsg.setPath( dtablePath );
+        infoMsg.setAnalysisFinished( text == null || text.isEmpty() );
+        analysisProgressEvent.fire( infoMsg );
     }
 
     private void resetChecks() {

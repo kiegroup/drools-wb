@@ -278,7 +278,9 @@ public class DecisionTableAnalyzerTest {
         return new DecisionTableAnalyzer( mock( PlaceRequest.class ),
                                           oracle,
                                           table52,
-                                          mock( EventBus.class ) ) {
+                                          mock( EventBus.class ),
+                                          null,
+                                          null ) {
             @Override
             protected void sendReport( AnalysisReport report ) {
                 analysisReport = report;

@@ -154,6 +154,7 @@ public abstract class BaseGuidedDecisionTablePresenterTest {
                                                                                        refreshConditionsPanelEvent,
                                                                                        refreshActionsPanelEvent,
                                                                                        notificationEvent,
+                                                                                       null,
                                                                                        gridWidgetCellFactory,
                                                                                        gridWidgetColumnFactory,
                                                                                        oracleFactory,
