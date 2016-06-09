@@ -2246,6 +2246,8 @@ public abstract class AbstractDecisionTableWidget extends Composite
     public void onUpdateModel( final UpdateModelEvent event ) {
 
         //Copy data into the underlying model
+        boolean updateRowNumber = false;
+        boolean updateSalienceAttribute = false;
         Map<Coordinate, List<List<CellValue<? extends Comparable<?>>>>> updates = event.getUpdates();
         for ( Map.Entry<Coordinate, List<List<CellValue<? extends Comparable<?>>>>> e : updates.entrySet() ) {
 
@@ -2268,20 +2270,33 @@ public abstract class AbstractDecisionTableWidget extends Composite
                                                                              changedCell );
                     model.getData().get( targetRowIndex ).set( targetColumnIndex,
                                                                dcv );
+
+                    //Check whether we need to update System Controlled Columns' values.
+                    if ( col instanceof RowNumberCol52 ) {
+                        updateRowNumber = true;
+
+                    } else if ( col instanceof AttributeCol52 ) {
+                        final AttributeCol52 attributeCol = (AttributeCol52) col;
+                        if ( attributeCol.getAttribute().equals( RuleAttributeWidget.SALIENCE_ATTR ) ) {
+                            updateSalienceAttribute = !attributeCol.isUseRowNumber();
+                        }
+                    }
                 }
             }
         }
 
         eventBus.fireEvent( new ValidateEvent( event.getUpdates() ) );
 
-        //Update system controlled columns
-        Scheduler.get().scheduleFinally( new Command() {
+        //Update system controlled columns, if applicable
+        if ( updateRowNumber || updateSalienceAttribute ) {
+            Scheduler.get().scheduleFinally( new Command() {
 
-            public void execute() {
-                updateSystemControlledColumnValues();
-            }
+                public void execute() {
+                    updateSystemControlledColumnValues();
+                }
 
-        } );
+            } );
+        }
     }
 
 }
