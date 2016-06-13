@@ -24,6 +24,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.Redundancy;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.FieldConditionInspectorKey;
 
 public class Conditions
         extends MultiMap<ConditionInspectorKey, ConditionInspector>
@@ -71,11 +72,11 @@ public class Conditions
 
     @Override
     public boolean isDeficient( Object object ) {
-        if ( object instanceof ConditionInspectorKey ) {
+        if ( object instanceof FieldConditionInspectorKey ) {
             if ( !keys().contains( object ) ) {
                 return true;
             } else {
-                for ( ConditionInspector inspector : get( (ConditionInspectorKey) object ) ) {
+                for ( ConditionInspector inspector : get( (ConditionInspectorKey ) object ) ) {
                     if ( inspector.hasValue() ) {
                         return false;
                     }

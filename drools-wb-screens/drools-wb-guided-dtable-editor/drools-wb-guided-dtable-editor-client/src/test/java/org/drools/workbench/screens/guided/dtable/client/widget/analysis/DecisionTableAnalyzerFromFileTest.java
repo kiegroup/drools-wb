@@ -94,6 +94,17 @@ public class DecisionTableAnalyzerFromFileTest {
     }
 
     @Test
+    public void testFile3() throws Exception {
+        String xml = loadResource( "Score Achievements.gdst" );
+
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( GuidedDTXMLPersistence.getInstance().unmarshal( xml ) );
+
+        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+
+        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+    }
+
+    @Test
     public void testFile2WithUpdate() throws Exception {
         long baseline = System.currentTimeMillis();
         String xml = loadResource( "Large file.gdst" );

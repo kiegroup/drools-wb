@@ -24,6 +24,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.RowInsp
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FactFieldColumnActionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FieldActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.SingleCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Issue;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Severity;
@@ -73,10 +74,18 @@ public class DetectRedundantActionCheck
         issue.getExplanation()
                 .addParagraph( AnalysisConstants.INSTANCE.RedundantActionsP1() )
                 .startNote()
-                .addParagraph( AnalysisConstants.INSTANCE.RedundantActionsNote1P1( inspectorList.get( 0 ).toHumanReadableString(), inspectorList.get( 1 ).toHumanReadableString() ) )
+                .addParagraph( AnalysisConstants.INSTANCE.RedundantActionsNote1P1( getToHumanReadableString( inspectorList.get( 0 ) ), getToHumanReadableString( inspectorList.get( 1 ) ) ) )
                 .end();
 
         return issue;
+    }
+
+    private String getToHumanReadableString( final ActionInspector actionInspector ) {
+        if ( actionInspector instanceof FieldActionInspector ) {
+            return (( FieldActionInspector ) actionInspector).toHumanReadableString();
+        } else {
+            return "";
+        }
     }
 
     private String getMessage() {
