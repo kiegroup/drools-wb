@@ -21,6 +21,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.k
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Column
         implements HasKeys,
@@ -31,6 +32,7 @@ public class Column
     private UpdatableKey<Column> indexKey;
 
     public Column( final int columnIndex ) {
+        PortablePreconditions.checkNotNull( "columnIndex", columnIndex );
         this.indexKey = new UpdatableKey<>( IndexKey.INDEX_ID,
                                             columnIndex );
     }

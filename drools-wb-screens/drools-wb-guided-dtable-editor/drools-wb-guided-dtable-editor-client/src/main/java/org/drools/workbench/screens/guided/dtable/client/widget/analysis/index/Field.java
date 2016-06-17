@@ -21,6 +21,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Field
         implements Comparable<Field>,
@@ -37,9 +38,9 @@ public class Field
     public Field( final String factType,
                   final String fieldType,
                   final String name ) {
-        this.factType = factType;
-        this.fieldType = fieldType;
-        this.name = name;
+        this.factType = PortablePreconditions.checkNotNull( "factType", factType );
+        this.fieldType = PortablePreconditions.checkNotNull( "fieldType", fieldType );
+        this.name = PortablePreconditions.checkNotNull( "name", name );
     }
 
     public UUIDKey getUuidKey() {

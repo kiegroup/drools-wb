@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action.ActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action.FieldActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.condition.BooleanConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.condition.ComparableConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.condition.ConditionInspector;
@@ -34,6 +35,8 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Action;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Condition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Field;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.FieldAction;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.FieldCondition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.select.AllListener;
 
 public class FieldInspector
@@ -84,14 +87,16 @@ public class FieldInspector
     private void updateConditionInspectors( final Collection<Condition> all ) {
         conditionInspectorList.clear();
         for ( final Condition condition : all ) {
-            conditionInspectorList.add( buildConditionInspector( condition ) );
+            if ( condition instanceof FieldCondition ) {
+                conditionInspectorList.add( buildConditionInspector( ( FieldCondition ) condition ) );
+            }
         }
     }
 
     private void updateActionInspectors( final Collection<Action> all ) {
         actionInspectorList.clear();
         for ( final Action action : all ) {
-            actionInspectorList.add( new ActionInspector( action ) );
+            actionInspectorList.add( new FieldActionInspector( ( FieldAction ) action ) );
         }
     }
 
@@ -162,7 +167,7 @@ public class FieldInspector
         }
     }
 
-    private ConditionInspector buildConditionInspector( final Condition condition ) {
+    private ConditionInspector buildConditionInspector( final FieldCondition condition ) {
 
         if ( condition.getValue() instanceof String ) {
             return new StringConditionInspector( field,

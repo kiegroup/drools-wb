@@ -19,22 +19,22 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.H
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Pattern
         implements HasKeys {
 
     private final UUIDKey uuidKey = new UUIDKey( this );
-    private final String     name;
-    private final Fields     fields;
+    private final String name;
+    private final Fields fields = new Fields();
     private final String     boundName;
     private final ObjectType objectType;
 
     public Pattern( final String boundName,
                     final ObjectType objectType ) {
-        this.boundName = boundName;
-        this.objectType = objectType;
+        this.boundName = PortablePreconditions.checkNotNull( "boundName", boundName );
+        this.objectType = PortablePreconditions.checkNotNull( "objectType", objectType );
         this.name = objectType.getType();
-        this.fields = new Fields();
     }
 
     public UUIDKey getUuidKey() {

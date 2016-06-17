@@ -38,20 +38,20 @@ public class ConditionsTest {
 
     @Test
     public void testListen() throws Exception {
-        conditions.add( new Condition( new Field( "Person", "String", "name" ),
-                                       new Column( 1 ),
-                                       "==",
-                                       10 ) );
+        conditions.add( new FieldCondition( new Field( "Person", "String", "name" ),
+                                            new Column( 1 ),
+                                            "==",
+                                            10 ) );
 
         verify( allListener ).onAllChanged( anyCollection() );
     }
 
     @Test
     public void testUpdate() throws Exception {
-        final Condition condition = new Condition( new Field( "Person", "String", "name" ),
-                                                   new Column( 1 ),
-                                                   "==",
-                                                   10 );
+        final Condition condition = new FieldCondition( new Field( "Person", "String", "name" ),
+                                                        new Column( 1 ),
+                                                        "==",
+                                                        10 );
         conditions.add( condition );
 
         reset( allListener );

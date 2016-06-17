@@ -22,6 +22,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.k
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Value;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class KeyTreeMap<T extends HasKeys> {
 
@@ -48,6 +49,8 @@ public class KeyTreeMap<T extends HasKeys> {
     }
 
     public void put( final T object ) {
+        PortablePreconditions.checkNotNull( "Object can not be null", object );
+
         final UUIDKey uuidKey = UUIDKey.getUUIDKey( object.keys() );
 
         if ( keys.contains( uuidKey ) ) {

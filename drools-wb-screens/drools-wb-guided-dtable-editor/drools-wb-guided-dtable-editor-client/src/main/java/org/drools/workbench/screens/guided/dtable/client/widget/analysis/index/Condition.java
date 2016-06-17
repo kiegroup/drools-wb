@@ -21,25 +21,26 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.k
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.ComparableMatchers;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.FieldMatchers;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
+import org.uberfire.commons.validation.PortablePreconditions;
 
-public class Condition<T extends Comparable>
+public abstract class Condition<T extends Comparable>
         implements HasKeys {
 
-    private final UUIDKey uuidKey = new UUIDKey( this );
-    private final Field                   field;
-    private final Column                  column;
-    private final String                  operator;
-    private       UpdatableKey<Condition> valueKey;
+    private final static String SUPER_TYPE  = "superType";
+    private final static String COLUMN_UUID = "columnUUID";
+    private final static String VALUE       = "value";
 
-    public Condition( final Field field,
-                      final Column column,
-                      final String operator,
+    protected final UUIDKey uuidKey = new UUIDKey( this );
+    protected final Column                  column;
+    private         UpdatableKey<Condition> valueKey;
+    private         ConditionSuperType      superType;
+
+    public Condition( final Column column,
+                      final ConditionSuperType superType,
                       final T value ) {
-        this.field = field;
-        this.column = column;
-        this.operator = operator;
+        this.column = PortablePreconditions.checkNotNull( "column", column );
+        this.superType = PortablePreconditions.checkNotNull( "superType", superType );
         this.valueKey = new UpdatableKey<>( "value",
                                             value );
     }
@@ -49,23 +50,19 @@ public class Condition<T extends Comparable>
     }
 
     public static ComparableMatchers value() {
-        return new ComparableMatchers( "value" );
+        return new ComparableMatchers( VALUE );
     }
 
     public static Matchers columnUUID() {
-        return new Matchers( "columnUUID" );
+        return new Matchers( COLUMN_UUID );
     }
 
-    public static Matchers operator() {
-        return new Matchers( "operator" );
+    public static Matchers superType() {
+        return new Matchers( SUPER_TYPE );
     }
 
-    public static FieldMatchers field() {
-        return new FieldMatchers( "factType.fieldName" );
-    }
-
-    public Field getField() {
-        return field;
+    public static Matchers uuid() {
+        return new UUIDMatchers();
     }
 
     public T getValue() {
@@ -78,50 +75,36 @@ public class Condition<T extends Comparable>
         } else {
             final UpdatableKey<Condition> oldKey = valueKey;
 
-            final UpdatableKey<Condition> newKey = new UpdatableKey<>( "value",
+            final UpdatableKey<Condition> newKey = new UpdatableKey<>( VALUE,
                                                                        value );
 
             valueKey = newKey;
 
             oldKey.update( newKey,
-                             this );
+                           this );
 
         }
 
-    }
-
-    public String getOperator() {
-        return operator;
-    }
-
-    public static Matchers uuid() {
-        return new UUIDMatchers();
     }
 
     @Override
     public Key[] keys() {
         return new Key[]{
                 uuidKey,
-                new Key( "field",
-                         field ),
-                new Key( "factType.fieldName",
-                         field.getFactType() + "." + field.getName() ),
-                new Key( "columnUUID",
-                         column.getUuidKey() ),
                 valueKey,
-                new Key( "operator",
-                         operator )
+                new Key( SUPER_TYPE,
+                         superType ),
+                new Key( COLUMN_UUID,
+                         column.getUuidKey() ),
         };
     }
 
     public static String[] keyIds() {
         return new String[]{
                 UUIDKey.UNIQUE_UUID,
-                "field",
-                "factType.fieldName",
-                "columnUUID",
-                "value",
-                "operator"
+                VALUE,
+                SUPER_TYPE,
+                COLUMN_UUID
         };
     }
 }

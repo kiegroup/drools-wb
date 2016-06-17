@@ -26,7 +26,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Action;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 
-public class ActionInspector
+public abstract class ActionInspector
         implements IsRedundant,
                    IsSubsuming,
                    IsConflicting,
@@ -35,20 +35,16 @@ public class ActionInspector
     private static final String DATE_FORMAT = ApplicationPreferences.getDroolsDateFormat();
     private static final DateTimeFormat DATE_FORMATTER = DateTimeFormat.getFormat( DATE_FORMAT );
 
-    private Action action;
+    protected Action action;
 
-    public ActionInspector( final Action action ) {
+    protected ActionInspector( final Action action ) {
         this.action = action;
     }
 
     @Override
     public boolean isRedundant( final Object other ) {
         if ( other instanceof ActionInspector ) {
-            if ( !areFieldsEqual( ( ActionInspector ) other ) ) {
-                return false;
-            } else {
             return isValueRedundant( (( ActionInspector ) other).action.getValue() );
-            }
         } else {
             return false;
         }
@@ -85,11 +81,7 @@ public class ActionInspector
     public boolean conflicts( final Object other ) {
         if ( other instanceof ActionInspector ) {
             final ActionInspector otherActionInspector = ( ActionInspector ) other;
-            if ( areFieldsEqual( otherActionInspector ) ) {
-                return !isValueRedundant( otherActionInspector.action.getValue() );
-            } else {
-                return false;
-            }
+            return !isValueRedundant( otherActionInspector.action.getValue() );
         } else {
             return false;
         }
@@ -103,14 +95,14 @@ public class ActionInspector
     }
 
     public String toHumanReadableString() {
-        return action.getField().getName() + " = " + action.getValue();
+        if ( action.getValue() != null ) {
+            return action.getValue().toString();
+        } else {
+            return "";
+        }
     }
 
     public boolean hasValue() {
         return action.getValue() != null;
-    }
-
-    private boolean areFieldsEqual( final ActionInspector other ) {
-        return action.getField().equals( other.action.getField() );
     }
 }

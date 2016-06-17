@@ -15,26 +15,7 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.select.Listen;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.select.Select;
-import org.uberfire.commons.validation.PortablePreconditions;
-
-public class Where<S extends Select, L extends Listen> {
-
-    private S s;
-    private L l;
-
-    public Where( final S s,
-                  final L l ) {
-        this.s = PortablePreconditions.checkNotNull( "select", s );
-        this.l = PortablePreconditions.checkNotNull( "listen", l );
-    }
-
-    public S select() {
-        return s;
-    }
-
-    public L listen() {
-        return l;
-    }
+public enum ConditionSuperType {
+    BRL_CONDITION,
+    FIELD_CONDITION
 }

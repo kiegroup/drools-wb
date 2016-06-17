@@ -20,42 +20,40 @@ import java.util.List;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Utils.*;
 
-public class ConditionsBuilder {
+public class FieldConditionsBuilder {
 
 
-    private final Index                 index;
+    private final Index   index;
     private final GuidedDecisionTable52 model;
-    private final ColumnUtilities utils;
+    private final ColumnUtilities     utils;
     private final List<DTCellValue52> row;
-    private final Pattern52           pattern52;
-    private final Pattern               pattern;
+    private final Pattern pattern;
+    private final Rule    rule;
 
-    public ConditionsBuilder( final Index index,
-                              final GuidedDecisionTable52 model,
-                              final List<DTCellValue52> row,
-                              final ColumnUtilities utils,
-                              final Pattern52 pattern52,
-                              final Pattern pattern ) {
-        this.index = index;
-        this.model = model;
-        this.utils = utils;
-        this.row = row;
-        this.pattern52 = pattern52;
-        this.pattern = pattern;
+    public FieldConditionsBuilder( final Index index,
+                                   final GuidedDecisionTable52 model,
+                                   final Rule rule,
+                                   final List<DTCellValue52> row,
+                                   final ColumnUtilities utils,
+                                   final Pattern pattern ) {
+        this.index = PortablePreconditions.checkNotNull( "index", index );
+        this.model = PortablePreconditions.checkNotNull( "model", model );
+        this.rule = PortablePreconditions.checkNotNull( "rule", rule );
+        this.utils = PortablePreconditions.checkNotNull( "utils", utils );
+        this.row = PortablePreconditions.checkNotNull( "row", row );
+        this.pattern = PortablePreconditions.checkNotNull( "pattern", pattern );
     }
 
-    public void buildConditions() {
-
-        for ( final ConditionCol52 conditionCol52 : pattern52.getChildColumns() ) {
-            final int columnIndex = model.getExpandedColumns().indexOf( conditionCol52 );
+    public void buildConditions( final List<ConditionCol52> childColumns ) {
+        for ( final ConditionCol52 conditionCol52 : childColumns ) {
 
             buildCondition( conditionCol52,
-                            columnIndex );
+                            model.getExpandedColumns().indexOf( conditionCol52 ) );
         }
     }
 
@@ -64,24 +62,25 @@ public class ConditionsBuilder {
         if ( rowHasIndex( columnIndex,
                           row ) ) {
             final Field field = resolveField( conditionCol52 );
-            field.getConditions().add( buildCondition( field,
-                                                       conditionCol52,
-                                                       row.get( columnIndex ) ) );
+            final Condition condition = buildCondition( field,
+                                                        conditionCol52,
+                                                        row.get( columnIndex ) );
+            field.getConditions().add( condition );
+            rule.getConditions().add( condition );
         }
     }
 
     private Field resolveField( final ConditionCol52 conditionCol52 ) {
-        final Field field = Utils.resolveField( pattern,
+        return Utils.resolveField( pattern,
                                                 conditionCol52.getFieldType(),
                                                 conditionCol52.getFactField() );
-        return field;
     }
 
     private Condition buildCondition( final Field field,
                                       final ConditionCol52 conditionColumn,
                                       final DTCellValue52 visibleCellValue ) {
 
-        return new ConditionBuilder(
+        return new FieldConditionBuilder(
                 index,
                 model,
                 field,

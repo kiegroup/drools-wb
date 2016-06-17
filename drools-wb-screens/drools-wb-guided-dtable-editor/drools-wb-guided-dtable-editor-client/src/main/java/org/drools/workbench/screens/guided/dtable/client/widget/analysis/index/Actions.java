@@ -39,6 +39,7 @@ public class Actions {
     }
 
     void add( final Action action ) {
+
         map.put( action );
     }
 

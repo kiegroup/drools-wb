@@ -19,6 +19,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.H
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class ObjectType
         implements HasKeys {
@@ -28,7 +29,7 @@ public class ObjectType
     private final Fields fields = new Fields();
 
     public ObjectType( final String type ) {
-        this.type = type;
+        this.type = PortablePreconditions.checkNotNull( "type", type );
     }
 
     public UUIDKey getUuidKey() {

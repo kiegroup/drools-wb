@@ -28,6 +28,7 @@ import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Action;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Column;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Field;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.FieldAction;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -176,8 +177,8 @@ public class ActionInspectorConflictTest {
 
     @Test
     public void testNoConflict003() throws Exception {
-        ActionInspector a = createSetActionInspector( new Action( new Field( "Person", "String", "name" ), mock( Column.class ), DataType.DataTypes.BOOLEAN, true ) );
-        ActionInspector b = createSetActionInspector( new Action( new Field( "Person", "String", "name" ), mock( Column.class ), DataType.DataTypes.STRING, true ) );
+        ActionInspector a = createSetActionInspector( new FieldAction( new Field( "Person", "String", "name" ), mock( Column.class ), DataType.DataTypes.BOOLEAN, true ) );
+        ActionInspector b = createSetActionInspector( new FieldAction( new Field( "Person", "String", "name" ), mock( Column.class ), DataType.DataTypes.STRING, true ) );
 
         assertFalse( a.conflicts( b ) );
         assertFalse( b.conflicts( a ) );
@@ -186,10 +187,10 @@ public class ActionInspectorConflictTest {
     private ActionInspector createSetActionInspector( final Field field,
                                                       final DataType.DataTypes dataType,
                                                       final Comparable comparable ) {
-        return new ActionInspector( new Action( field,
-                                                mock( Column.class ),
-                                                dataType,
-                                                comparable ) );
+        return new FieldActionInspector( new FieldAction( field,
+                                                          mock( Column.class ),
+                                                          dataType,
+                                                          comparable ) );
     }
 
     private ActionInspector createSetActionInspector( final Action action ) {

@@ -23,14 +23,17 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.k
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.ComparableMatchers;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
+import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Rule
         implements Comparable<Rule>,
                    HasKeys,
                    HasIndex {
 
-    private final Patterns    patterns;
-    private final ObjectTypes objectTypes;
+    private final Patterns    patterns    = new Patterns();
+    private final Actions     actions     = new Actions();
+    private final Conditions  conditions  = new Conditions();
+    private final ObjectTypes objectTypes = new ObjectTypes();
 
     private final UUIDKey uuidKey = new UUIDKey( this );
 
@@ -40,10 +43,8 @@ public class Rule
 
     public Rule( final Integer rowNumber ) {
 
-        originalIndex = rowNumber;
+        originalIndex = PortablePreconditions.checkNotNull( "rowNumber", rowNumber );
 
-        this.patterns = new Patterns();
-        this.objectTypes = new ObjectTypes();
         this.indexKey = new UpdatableKey<>( IndexKey.INDEX_ID,
                                             rowNumber );
     }
@@ -54,6 +55,14 @@ public class Rule
 
     public Patterns getPatterns() {
         return patterns;
+    }
+
+    public Conditions getConditions() {
+        return conditions;
+    }
+
+    public Actions getActions() {
+        return actions;
     }
 
     public ObjectTypes getObjectTypes() {
