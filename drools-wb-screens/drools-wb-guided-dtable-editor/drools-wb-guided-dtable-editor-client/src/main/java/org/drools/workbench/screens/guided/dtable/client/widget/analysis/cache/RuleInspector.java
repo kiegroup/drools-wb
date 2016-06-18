@@ -22,6 +22,8 @@ import java.util.List;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action.ActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action.BRLActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.condition.BRLConditionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.condition.ConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.Conflict;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.HumanReadable;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsConflicting;
@@ -32,7 +34,9 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Action;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.ActionSuperType;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.BRLAction;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.BRLCondition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Condition;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.ConditionSuperType;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Conditions;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Field;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.FieldCondition;
@@ -52,7 +56,8 @@ public class RuleInspector
 
     private final InspectorList<PatternInspector> patternInspectorList = new InspectorList<>();
 
-    private final List<ActionInspector> brlActionInspectors = new ArrayList<>();
+    private final List<ConditionInspector> brlConditionsInspectors = new ArrayList<>();
+    private final List<ActionInspector>    brlActionInspectors     = new ArrayList<>();
 
     public RuleInspector( final Rule rule,
                           final RuleInspectorCache cache ) {
@@ -67,7 +72,6 @@ public class RuleInspector
             patternInspectorList.add( patternInspector );
         }
 
-        // TODO: ADD BRL FRAGMENTS TO ACTIONS I/CONDITIONS I
         updateBRLActionInspectors( rule.getActions()
                                        .where( Action.superType().is( ActionSuperType.BRL_ACTION ) )
                                        .select().all() );
@@ -79,6 +83,25 @@ public class RuleInspector
                 updateBRLActionInspectors( all );
             }
         } );
+
+        updateBRLConditionInspectors( rule.getConditions()
+                                          .where( Condition.superType().is( ConditionSuperType.BRL_CONDITION ) )
+                                          .select().all() );
+        rule.getConditions()
+            .where( Condition.superType().is( ConditionSuperType.BRL_CONDITION ) )
+            .listen().all( new AllListener<Condition>() {
+            @Override
+            public void onAllChanged( final Collection<Condition> all ) {
+                updateBRLConditionInspectors( all );
+            }
+        } );
+    }
+
+    private void updateBRLConditionInspectors( final Collection<Condition> conditions ) {
+        this.brlConditionsInspectors.clear();
+        for ( final Condition condition : conditions ) {
+            this.brlConditionsInspectors.add( new BRLConditionInspector( ( BRLCondition ) condition ) );
+        }
     }
 
     private void updateBRLActionInspectors( final Collection<Action> actions ) {
@@ -121,15 +144,27 @@ public class RuleInspector
     @Override
     public boolean isRedundant( final Object other ) {
         return other instanceof RuleInspector
-                && Redundancy.isRedundant( patternInspectorList,
-                                           (( RuleInspector ) other).patternInspectorList );
+                && Redundancy.isRedundant( brlConditionsInspectors,
+                                           (( RuleInspector ) other).brlConditionsInspectors )
+                && Redundancy.isRedundant( brlActionInspectors,
+                                           (( RuleInspector ) other).brlActionInspectors )
+                && Redundancy.isRedundant( getActionsInspectors(),
+                                           (( RuleInspector ) other).getActionsInspectors() )
+                && Redundancy.isRedundant( getConditionsInspectors(),
+                                           (( RuleInspector ) other).getConditionsInspectors() );
     }
 
     @Override
     public boolean subsumes( final Object other ) {
         return other instanceof RuleInspector
-                && Redundancy.subsumes( patternInspectorList,
-                                        (( RuleInspector ) other).patternInspectorList );
+                && Redundancy.subsumes( brlActionInspectors,
+                                        (( RuleInspector ) other).brlActionInspectors )
+                && Redundancy.subsumes( brlConditionsInspectors,
+                                        (( RuleInspector ) other).brlConditionsInspectors )
+                && Redundancy.subsumes( getActionsInspectors(),
+                                        (( RuleInspector ) other).getActionsInspectors() )
+                && Redundancy.subsumes( getConditionsInspectors(),
+                                        (( RuleInspector ) other).getConditionsInspectors() );
     }
 
     @Override
@@ -152,18 +187,13 @@ public class RuleInspector
 
     @Override
     public boolean isDeficient( final RuleInspector other ) {
-
         if ( other.atLeastOneActionHasAValue() && !Conflict.isConflicting( getActionsInspectors(),
                                                                            other.getActionsInspectors() ) ) {
             return false;
         }
 
-        final Collection<Condition> allConditionsFromTheOtherRule = other.rule.getPatterns()
-                                                    .where( Pattern.uuid().any() )
-                                                    .select().fields()
-                                                    .where( Field.uuid().any() )
-                                                    .select().conditions()
-                                                    .where( Condition.uuid().isNot( null ) )
+        final Collection<Condition> allConditionsFromTheOtherRule = other.rule.getConditions()
+                                                                              .where( Condition.value().any() )
                                                     .select().all();
 
         if ( allConditionsFromTheOtherRule.isEmpty() ) {
@@ -172,11 +202,9 @@ public class RuleInspector
 
             for ( final Condition condition : allConditionsFromTheOtherRule ) {
 
-                if ( condition.getValue() == null ) {
+                if ( condition.getValues() == null ) {
                     continue;
                 }
-
-                // TODO: Does BRL condition affect this?
 
                 if ( condition instanceof FieldCondition ) {
                     final FieldCondition fieldCondition = ( FieldCondition ) condition;
@@ -186,7 +214,7 @@ public class RuleInspector
                                                       .where( Field.name().is( fieldCondition.getField().getName() ) )
                                                       .select().conditions();
                     if ( conditions
-                            .where( Condition.value().isNot( null ) )
+                            .where( Condition.value().any() )
                             .select().exists() ) {
                         return false;
                     }
@@ -199,14 +227,14 @@ public class RuleInspector
 
     public boolean atLeastOneActionHasAValue() {
         final int amountOfActions = rule.getActions()
-                                        .where( Action.value().isNot( null ) )
+                                        .where( Action.value().any() )
                                         .select().all().size();
         return amountOfActions > 0;
     }
 
     public boolean atLeastOneConditionHasAValue() {
         final int amountOfConditions = rule.getConditions()
-                                           .where( Condition.value().isNot( null ) )
+                                           .where( Condition.value().any() )
                                            .select().all().size();
         return amountOfConditions > 0;
     }

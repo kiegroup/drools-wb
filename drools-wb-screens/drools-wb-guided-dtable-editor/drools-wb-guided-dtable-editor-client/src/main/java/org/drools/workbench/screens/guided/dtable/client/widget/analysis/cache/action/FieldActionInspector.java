@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action;
 
+import java.util.Iterator;
+
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.FieldAction;
 
 public class FieldActionInspector
@@ -27,7 +29,21 @@ public class FieldActionInspector
     }
 
     public String toHumanReadableString() {
-        return (( FieldAction ) action).getField().getName() + " = " + action.getValue();
+        return (( FieldAction ) action).getField().getName() + " = " + getValuesString();
+    }
+
+    private String getValuesString() {
+        final StringBuilder builder = new StringBuilder();
+
+        final Iterator<Comparable> iterator = action.getValues().iterator();
+
+        while ( iterator.hasNext() ) {
+            builder.append( iterator.next() );
+            if ( iterator.hasNext() ) {
+                builder.append( ", " );
+            }
+        }
+        return builder.toString();
     }
 
     @Override

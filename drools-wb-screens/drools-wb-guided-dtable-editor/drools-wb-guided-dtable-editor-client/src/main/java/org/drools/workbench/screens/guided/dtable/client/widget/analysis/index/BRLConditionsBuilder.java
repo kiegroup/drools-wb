@@ -67,6 +67,7 @@ public class BRLConditionsBuilder {
                                       final DTCellValue52 visibleCellValue ) {
 
         return new BRLConditionBuilder( index,
+                                        utils,
                                         model,
                                         conditionColumn,
                                         getRealCellValue( conditionColumn,

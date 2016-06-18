@@ -57,21 +57,20 @@ public class RuleBuilder {
     }
 
     private void resolvePatterns() {
-        for ( final Pattern52 pattern52 : model.getPatterns() ) {
-
-            final Pattern pattern = resolvePattern( rule,
-                                                    pattern52 );
-
-            new FieldConditionsBuilder( index,
-                                        model,
-                                        rule,
-                                        row,
-                                        utils,
-                                        pattern ).buildConditions( pattern52.getChildColumns() );
-        }
 
         for ( final CompositeColumn<? extends BaseColumn> column : model.getConditions() ) {
-            if ( column instanceof BRLConditionColumn ) {
+            if ( column instanceof Pattern52 ) {
+
+                final Pattern pattern = resolvePattern( rule,
+                                                        ( Pattern52 ) column );
+
+                new FieldConditionsBuilder( index,
+                                            model,
+                                            rule,
+                                            row,
+                                            utils,
+                                            pattern ).buildConditions( (( Pattern52 ) column).getChildColumns() );
+            } else if ( column instanceof BRLConditionColumn ) {
                 new BRLConditionsBuilder( index,
                                           model,
                                           rule,

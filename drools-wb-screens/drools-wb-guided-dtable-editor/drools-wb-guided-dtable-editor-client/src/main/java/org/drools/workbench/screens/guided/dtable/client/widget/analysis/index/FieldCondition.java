@@ -18,12 +18,18 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 import java.util.ArrayList;
 
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.FieldMatchers;
 import org.uberfire.commons.validation.PortablePreconditions;
 
 public class FieldCondition<T extends Comparable>
         extends Condition {
+
+    private final static KeyDefinition OPERATOR              = KeyDefinition.newKeyDefinition().withId( "operator" ).build();
+    private final static KeyDefinition FACT_TYPE__FIELD_NAME = KeyDefinition.newKeyDefinition().withId( "factType.fieldName" ).build();
+    private final static KeyDefinition FIELD                 = KeyDefinition.newKeyDefinition().withId( "field" ).build();
 
     private final Field  field;
     private final String operator;
@@ -31,20 +37,44 @@ public class FieldCondition<T extends Comparable>
     public FieldCondition( final Field field,
                            final Column column,
                            final String operator,
-                           final T value ) {
+                           final Values<T> values ) {
         super( column,
                ConditionSuperType.FIELD_CONDITION,
-               value );
+               resolveValues( PortablePreconditions.checkNotNull( "operator", operator ),
+                              PortablePreconditions.checkNotNull( "values", values ) ) );
         this.field = PortablePreconditions.checkNotNull( "field", field );
-        this.operator = PortablePreconditions.checkNotNull( "operator", operator );
+        this.operator = resolveOperator( operator );
     }
 
+    private static Values resolveValues( final String operator,
+                                         final Values values ) {
+        if ( "!= null".equals( operator ) ) {
+            return Values.nullValue();
+        } else if ( "== null".equals( operator ) ) {
+            return Values.nullValue();
+        } else {
+            return values;
+        }
+    }
+
+    private String resolveOperator( final String operator ) {
+
+        if ( "!= null".equals( operator ) ) {
+            return "!=";
+        } else if ( "== null".equals( operator ) ) {
+            return "==";
+        } else {
+            return operator;
+        }
+    }
+
+
     public static Matchers operator() {
-        return new Matchers( "operator" );
+        return new Matchers( OPERATOR );
     }
 
     public static FieldMatchers field() {
-        return new FieldMatchers( "factType.fieldName" );
+        return new FieldMatchers( FACT_TYPE__FIELD_NAME );
     }
 
     public Field getField() {
@@ -62,26 +92,26 @@ public class FieldCondition<T extends Comparable>
             keys.add( key );
         }
 
-        keys.add( new Key( "operator",
+        keys.add( new Key( OPERATOR,
                            operator ) );
-        keys.add( new Key( "field",
+        keys.add( new Key( FIELD,
                            field ) );
-        keys.add( new Key( "factType.fieldName",
+        keys.add( new Key( FACT_TYPE__FIELD_NAME,
                            field.getFactType() + "." + field.getName() ) );
 
         return keys.toArray( new Key[keys.size()] );
     }
 
-    public static String[] keyIds() {
-        final ArrayList<String> ids = new ArrayList<>();
-        for ( final String id : Condition.keyIds() ) {
-            ids.add( id );
+    public static KeyDefinition[] keyDefinitions() {
+        final ArrayList<KeyDefinition> keyDefinitions = new ArrayList<>();
+        for ( final KeyDefinition keyDefinition : Condition.keyDefinitions() ) {
+            keyDefinitions.add( keyDefinition );
         }
 
-        ids.add( "operator" );
-        ids.add( "field" );
-        ids.add( "factType.fieldName" );
+        keyDefinitions.add( OPERATOR );
+        keyDefinitions.add( FIELD );
+        keyDefinitions.add( FACT_TYPE__FIELD_NAME );
 
-        return ids.toArray( new String[ids.size()] );
+        return keyDefinitions.toArray( new KeyDefinition[keyDefinitions.size()] );
     }
 }

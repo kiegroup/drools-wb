@@ -15,13 +15,15 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
+
 public class BRLAction
         extends Action {
 
     public BRLAction( final Column column,
-                      final Comparable value ) {
+                      final Values values ) {
         super( column,
                ActionSuperType.BRL_ACTION,
-               value );
+               values );
     }
 }

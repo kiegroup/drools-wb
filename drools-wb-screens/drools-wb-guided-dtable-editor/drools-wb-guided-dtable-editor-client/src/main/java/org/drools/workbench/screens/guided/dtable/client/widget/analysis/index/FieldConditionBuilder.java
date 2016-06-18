@@ -15,10 +15,6 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
-import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
@@ -28,223 +24,30 @@ import org.uberfire.commons.validation.PortablePreconditions;
 
 public class FieldConditionBuilder {
 
-    private final ConditionCol52        conditionColumn;
-    private final ColumnUtilities       utils;
-    private final DTCellValue52         realCellValue;
-    private final Index                 index;
-    private final GuidedDecisionTable52 model;
-    private final Field field;
+    private final ConditionCol52 conditionColumn;
+    private final Field          field;
+    private final ValuesResolver valuesResolver;
+    private final      Column         column;
 
-    public FieldConditionBuilder( final Index index,
-                                  final GuidedDecisionTable52 model,
-                                  final Field field,
+    public FieldConditionBuilder( final Field field,
                                   final ColumnUtilities utils,
+                                  final Column column,
                                   final ConditionCol52 conditionColumn,
                                   final DTCellValue52 realCellValue ) {
-        this.index = PortablePreconditions.checkNotNull( "index", index );
-        this.model = PortablePreconditions.checkNotNull( "model", model );
         this.field = PortablePreconditions.checkNotNull( "field", field );
-        this.utils = PortablePreconditions.checkNotNull( "utils", utils );
+        this.column = PortablePreconditions.checkNotNull( "column", column );
         this.conditionColumn = PortablePreconditions.checkNotNull( "conditionColumn", conditionColumn );
-        this.realCellValue = PortablePreconditions.checkNotNull( "realCellValue", realCellValue );
+        valuesResolver = new ValuesResolver( PortablePreconditions.checkNotNull( "utils", utils ),
+                                             conditionColumn,
+                                             PortablePreconditions.checkNotNull( "realCellValue", realCellValue ) );
     }
 
     public Condition build() {
-        String type = utils.getType( conditionColumn );
-
-        if ( isTypeGuvnorEnum( conditionColumn ) ) {
-            // Guvnor enum
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getStringValue() );
-
-        } else if ( type == null ) {
-            // type null means the field is free-format
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getStringValue() );
-
-        } else if ( type.equals( DataType.TYPE_STRING ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getStringValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC ) || type.equals( DataType.TYPE_NUMERIC_BIGDECIMAL ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getBigDecimalValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_BIGINTEGER ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getBigIntegerValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_BYTE ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       ( Byte ) realCellValue.getNumericValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_DOUBLE ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getDoubleValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_FLOAT ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       ( Float ) realCellValue.getNumericValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_INTEGER ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getIntegerValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_LONG ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getLongValue() );
-
-        } else if ( type.equals( DataType.TYPE_NUMERIC_SHORT ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getShortValue() );
-
-        } else if ( type.equals( DataType.TYPE_BOOLEAN ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       realCellValue.getBooleanValue() );
-        } else if ( type.equals( DataType.TYPE_DATE ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       realCellValue.getDateValue() );
-        } else if ( type.equals( DataType.TYPE_COMPARABLE ) ) {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getStringValue() );
-        } else {
-            return new FieldCondition( field,
-                                       getColumn(),
-                                       conditionColumn.getOperator(),
-                                       getStringValue() );
-        }
+        return new FieldCondition( field,
+                                   column,
+                                   conditionColumn.getOperator(),
+                                   valuesResolver.getValues() );
     }
 
-    private String getStringValue() {
-        if ( realCellValue.getStringValue() == null ) {
-            return null;
-        } else if ( realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            return realCellValue.getStringValue();
-        }
-    }
-
-    private Column getColumn() {
-        return index.columns
-                .where( HasIndex.index().is( model.getExpandedColumns().indexOf( conditionColumn ) ) )
-                .select().first();
-    }
-
-    private Short getShortValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( Short ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new Short( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private Long getLongValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( Long ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new Long( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private Double getDoubleValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( Double ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new Double( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private BigInteger getBigIntegerValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( BigInteger ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new BigInteger( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private BigDecimal getBigDecimalValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( BigDecimal ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new BigDecimal( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private Integer getIntegerValue() {
-        if ( realCellValue.getNumericValue() != null ) {
-            return ( Integer ) realCellValue.getNumericValue();
-        } else if ( realCellValue.getStringValue() == null || realCellValue.getStringValue().isEmpty() ) {
-            return null;
-        } else {
-            try {
-                return new Integer( realCellValue.getStringValue() );
-            } catch ( final NumberFormatException nfe ) {
-                return null;
-            }
-        }
-    }
-
-    private boolean isTypeGuvnorEnum( final ConditionCol52 conditionColumn ) {
-        return utils.getValueList( conditionColumn ).length != 0;
-    }
 
 }

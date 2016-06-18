@@ -55,17 +55,17 @@ public class Column
 
     @Override
     public int getIndex() {
-        return ( int ) indexKey.getValue().getComparable();
+        return ( int ) indexKey.getSingleValueComparator();
     }
 
 
     @Override
     public void setIndex( final int index ) {
-        if ( indexKey.getValue().equals( index ) ) {
+        if ( indexKey.getSingleValue().equals( index ) ) {
             return;
         } else {
 
-            UpdatableKey<Column> oldKey = indexKey;
+            final UpdatableKey<Column> oldKey = indexKey;
             final UpdatableKey<Column> newKey = new UpdatableKey<>( IndexKey.INDEX_ID,
                                                                     index );
             indexKey = newKey;

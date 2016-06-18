@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasKeys;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
@@ -23,6 +24,9 @@ import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Pattern
         implements HasKeys {
+
+    private static final KeyDefinition NAME       = KeyDefinition.newKeyDefinition().withId( "name" ).build();
+    private static final KeyDefinition BOUND_NAME = KeyDefinition.newKeyDefinition().withId( "boundName" ).build();
 
     private final UUIDKey uuidKey = new UUIDKey( this );
     private final String name;
@@ -42,11 +46,11 @@ public class Pattern
     }
 
     public static Matchers boundName() {
-        return new Matchers( "boundName" );
+        return new Matchers( BOUND_NAME );
     }
 
     public static Matchers name() {
-        return new Matchers( "name" );
+        return new Matchers( NAME );
     }
 
     public String getName() {
@@ -72,18 +76,18 @@ public class Pattern
     public Key[] keys() {
         return new Key[]{
                 uuidKey,
-                new Key( "name",
+                new Key( NAME,
                          name ),
-                new Key( "boundName",
+                new Key( BOUND_NAME,
                          boundName )
         };
     }
 
-    public static String[] keyIDs() {
-        return new String[]{
+    public static KeyDefinition[] keyDefinitions() {
+        return new KeyDefinition[]{
                 UUIDKey.UNIQUE_UUID,
-                "name",
-                "boundName"
+                NAME,
+                BOUND_NAME
         };
     }
 }

@@ -17,6 +17,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasKeys;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.HumanReadable;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
@@ -27,6 +28,9 @@ public class Field
         implements Comparable<Field>,
                    HasKeys,
                    HumanReadable{
+
+    private static KeyDefinition NAME           = KeyDefinition.newKeyDefinition().withId( "name" ).build();
+    private static KeyDefinition FACT_TYPE_NAME = KeyDefinition.newKeyDefinition().withId( "factTypeName" ).build();
 
     private final UUIDKey uuidKey = new UUIDKey( this );
     private final String factType;
@@ -48,7 +52,7 @@ public class Field
     }
 
     public static Matchers name() {
-        return new Matchers( "name" );
+        return new Matchers( NAME );
     }
 
     public String getFactType() {
@@ -121,18 +125,18 @@ public class Field
     public Key[] keys() {
         return new Key[]{
                 uuidKey,
-                new Key( "factTypeName",
+                new Key( FACT_TYPE_NAME,
                          factType ),
-                new Key( "name",
+                new Key( NAME,
                          name )
         };
     }
 
-    public static String[] keyIDs() {
-        return new String[]{
+    public static KeyDefinition[] keyDefinitions() {
+        return new KeyDefinition[]{
                 UUIDKey.UNIQUE_UUID,
-                "factTypeName",
-                "name"
+                FACT_TYPE_NAME,
+                NAME
         };
     }
 

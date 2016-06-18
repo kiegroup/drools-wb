@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasIndex;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,10 +71,10 @@ public class QueryTest {
                                          "Integer",
                                          "age" );
 
-        personNameEqualsToni = new FieldCondition( rule0PersonNameField, mock( Column.class ), "==", "Toni" );
-        personAgeIs50 = new FieldCondition( rule0PersonAgeField, mock( Column.class ), "==", 50 );
+        personNameEqualsToni = new FieldCondition( rule0PersonNameField, mock( Column.class ), "==", new Values( "Toni" ) );
+        personAgeIs50 = new FieldCondition( rule0PersonAgeField, mock( Column.class ), "==", new Values( 50 ) );
         rule0PersonAgeField.getConditions().add( personAgeIs50 );
-        personAgeIsNot50 = new FieldCondition( rule1PersonAgeField, mock( Column.class ), "!=", 50 );
+        personAgeIsNot50 = new FieldCondition( rule1PersonAgeField, mock( Column.class ), "!=", new Values( 50 ) );
         rule1PersonAgeField.getConditions().add( personAgeIsNot50 );
 
         rule0PersonPattern = new Pattern( "",
@@ -115,7 +116,7 @@ public class QueryTest {
         orderAccepted = new FieldAction( orderAcceptedField,
                                          mock( Column.class ),
                                          DataType.DataTypes.BOOLEAN,
-                                         "true" );
+                                         new Values( "true" ) );
         final ArrayList<Action> actions = new ArrayList<>();
         actions.add( orderAccepted );
         index.actions = new Actions( actions );

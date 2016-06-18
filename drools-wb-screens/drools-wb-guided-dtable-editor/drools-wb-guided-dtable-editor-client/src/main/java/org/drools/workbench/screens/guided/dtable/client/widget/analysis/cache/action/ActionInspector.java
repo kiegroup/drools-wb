@@ -17,6 +17,8 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.action;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.HumanReadable;
@@ -24,6 +26,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsRedundant;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsSubsuming;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.Action;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 
 public abstract class ActionInspector
@@ -44,23 +47,55 @@ public abstract class ActionInspector
     @Override
     public boolean isRedundant( final Object other ) {
         if ( other instanceof ActionInspector ) {
-            return isValueRedundant( (( ActionInspector ) other).action.getValue() );
+            return areValuesRedundant( (( ActionInspector ) other).action.getValues() );
         } else {
             return false;
         }
     }
 
-    private boolean isValueRedundant( final Comparable other ) {
-        if ( action.getValue().equals( other ) ) {
+    private boolean areValuesRedundant( final Values<Comparable> others ) {
+
+
+        for ( final Comparable comparable : action.getValues() ) {
+            if ( !isValueRedundant( others,
+                                    comparable ) ) {
+                return false;
+            }
+        }
+
+        for ( final Comparable comparable : others ) {
+            if ( !isValueRedundant( action.getValues(),
+                                    comparable ) ) {
+                return false;
+            }
+        }
+
+        return !(action.getValues().isEmpty() && others.isEmpty());
+    }
+
+    private boolean isValueRedundant( final Values<Comparable> others,
+                                      final Comparable comparable ) {
+        for ( final Comparable other : others ) {
+            if ( isValueRedundant( comparable,
+                                   other ) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValueRedundant( final Comparable value,
+                                      final Comparable other ) {
+        if ( value.equals( other ) ) {
             return true;
-        } else if ( action.getValue() instanceof Date ) {
-            return areDatesEqual( ( Date ) action.getValue(),
+        } else if ( value instanceof Date ) {
+            return areDatesEqual( ( Date ) value,
                                   other );
         } else if ( other instanceof Date ) {
             return areDatesEqual( ( Date ) other,
-                                  action.getValue() );
+                                  value );
         } else {
-            return action.getValue().toString().equals( other.toString() );
+            return value.toString().equals( other.toString() );
         }
     }
 
@@ -81,7 +116,7 @@ public abstract class ActionInspector
     public boolean conflicts( final Object other ) {
         if ( other instanceof ActionInspector ) {
             final ActionInspector otherActionInspector = ( ActionInspector ) other;
-            return !isValueRedundant( otherActionInspector.action.getValue() );
+            return !areValuesRedundant( otherActionInspector.action.getValues() );
         } else {
             return false;
         }
@@ -95,14 +130,21 @@ public abstract class ActionInspector
     }
 
     public String toHumanReadableString() {
-        if ( action.getValue() != null ) {
-            return action.getValue().toString();
-        } else {
-            return "";
+        final StringBuilder builder = new StringBuilder();
+
+        final Iterator<Comparable> iterator = action.getValues().iterator();
+
+        while ( iterator.hasNext() ) {
+            builder.append( iterator.next() );
+            if ( iterator.hasNext() ) {
+                builder.append( ", " );
+            }
         }
+
+        return builder.toString();
     }
 
     public boolean hasValue() {
-        return action.getValue() != null;
+        return action.getValues().isEmpty();
     }
 }

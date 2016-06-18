@@ -27,6 +27,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableC
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasIndex;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.uberfire.commons.validation.PortablePreconditions;
 
@@ -75,8 +76,7 @@ public class ActionBuilder {
             final int columnIndex = model.getExpandedColumns().indexOf( brlActionVariableColumn );
 
             rule.getActions().add( new BRLAction( getColumn( brlActionVariableColumn ),
-                                                  getRealCellValue( actionCol,
-                                                                    row.get( columnIndex ) ).getBooleanValue() ) );
+                                                  getValues( row.get( columnIndex ) ) ) );
 
         }
     }
@@ -128,11 +128,21 @@ public class ActionBuilder {
 
     private Action buildAction( final Field field,
                                 final DTCellValue52 visibleCellValue ) {
+
         return new FieldAction( field,
                                 getColumn( actionCol ),
                                 visibleCellValue.getDataType(),
-                                getValue( getRealCellValue( actionCol,
-                                                            visibleCellValue ) ) );
+                                getValues( visibleCellValue ) );
+    }
+
+    private Values getValues( final DTCellValue52 visibleCellValue ) {
+        final Comparable value = getValue( getRealCellValue( actionCol,
+                                                             visibleCellValue ) );
+        if ( value == null ) {
+            return new Values<>();
+        } else {
+            return new Values( value );
+        }
     }
 
     private Column getColumn( final ActionCol52 actionCol52 ) {

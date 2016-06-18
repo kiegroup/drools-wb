@@ -15,13 +15,15 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
+
 public class BRLCondition
-        extends Condition<Boolean> {
+        extends Condition<Comparable> {
 
     public BRLCondition( final Column column,
-                         final Boolean value ) {
+                         final Values values ) {
         super( column,
                ConditionSuperType.BRL_CONDITION,
-               value );
+               values );
     }
 }

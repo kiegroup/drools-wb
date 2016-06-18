@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasKeys;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
@@ -23,6 +24,8 @@ import org.uberfire.commons.validation.PortablePreconditions;
 
 public class ObjectType
         implements HasKeys {
+
+    private final static KeyDefinition TYPE = KeyDefinition.newKeyDefinition().withId( "type" ).build();
 
     private final UUIDKey uuidKey = new UUIDKey( this );
     private final String type;
@@ -45,7 +48,7 @@ public class ObjectType
     }
 
     public static Matchers type() {
-        return new Matchers( "type" );
+        return new Matchers( TYPE );
     }
 
     public static Matchers uuid() {
@@ -56,15 +59,15 @@ public class ObjectType
     public Key[] keys() {
         return new Key[]{
                 uuidKey,
-                new Key( "type",
+                new Key( TYPE,
                          type )
         };
     }
 
-    public static String[] keyIDs() {
-        return new String[]{
+    public static KeyDefinition[] keyDefinitions() {
+        return new KeyDefinition[]{
                 UUIDKey.UNIQUE_UUID,
-                "type"
+                TYPE
         };
     }
 }

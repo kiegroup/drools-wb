@@ -55,14 +55,14 @@ public class FieldInspector
         this.field = field;
 
         updateActionInspectors( field.getActions()
-                                     .where( Action.value().isNot( null ) )
+                                     .where( Action.value().any() )
                                      .select().all() );
         updateConditionInspectors( field.getConditions()
-                                        .where( Condition.value().isNot( null ) )
+                                        .where( Condition.value().any() )
                                         .select().all() );
 
         field.getActions()
-             .where( Condition.value().isNot( null ) )
+             .where( Condition.value().any() )
              .listen().all( new AllListener<Action>() {
             @Override
             public void onAllChanged( final Collection<Action> all ) {
@@ -71,7 +71,7 @@ public class FieldInspector
         } );
 
         field.getConditions()
-             .where( Condition.value().isNot( null ) )
+             .where( Condition.value().any() )
              .listen().all( new AllListener<Condition>() {
             @Override
             public void onAllChanged( final Collection<Condition> all ) {
@@ -169,25 +169,17 @@ public class FieldInspector
 
     private ConditionInspector buildConditionInspector( final FieldCondition condition ) {
 
-        if ( condition.getValue() instanceof String ) {
-            return new StringConditionInspector( field,
-                                                 condition.getValue().toString(),
-                                                 condition.getOperator() );
+        if ( !condition.getValues().isEmpty() && condition.getValues().get( 0 ) instanceof String ) {
+            return new StringConditionInspector( condition );
 
-        } else if ( condition.getValue() instanceof Boolean ) {
-            return new BooleanConditionInspector( field,
-                                                  ( Boolean ) condition.getValue(),
-                                                  condition.getOperator() );
+        } else if ( !condition.getValues().isEmpty() && condition.getValues().get( 0 ) instanceof Boolean ) {
+            return new BooleanConditionInspector( condition );
 
-        } else if ( condition.getValue() instanceof Integer ) {
-            return new NumericIntegerConditionInspector( field,
-                                                         ( Integer ) condition.getValue(),
-                                                         condition.getOperator() );
+        } else if ( !condition.getValues().isEmpty() && condition.getValues().get( 0 ) instanceof Integer ) {
+            return new NumericIntegerConditionInspector( condition );
 
         } else {
-            return new ComparableConditionInspector<>( field,
-                                                       condition.getValue(),
-                                                       condition.getOperator() );
+            return new ComparableConditionInspector<>( condition );
         }
     }
 

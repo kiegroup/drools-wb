@@ -16,18 +16,21 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasKeys;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Value;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
 import org.uberfire.commons.validation.PortablePreconditions;
 
 public abstract class Action
         implements HasKeys {
 
-    protected static final String VALUE       = "value";
-    protected static final String SUPER_TYPE  = "superType";
-    protected static final String COLUMN_UUID = "columnUUID";
+    protected static final KeyDefinition VALUE       = KeyDefinition.newKeyDefinition().withId( "value" ).build();
+    protected static final KeyDefinition SUPER_TYPE  = KeyDefinition.newKeyDefinition().withId( "superType" ).build();
+    protected static final KeyDefinition COLUMN_UUID = KeyDefinition.newKeyDefinition().withId( "columnUUID" ).build();
 
     protected final UUIDKey uuidKey = new UUIDKey( this );
     protected final Column               column;
@@ -36,11 +39,11 @@ public abstract class Action
 
     public Action( final Column column,
                    final ActionSuperType superType,
-                   final Comparable value ) {
+                   final Values values ) {
         this.column = PortablePreconditions.checkNotNull( "column", column );
         this.superType = PortablePreconditions.checkNotNull( "superType", superType );
         this.valueKey = new UpdatableKey<>( Action.VALUE,
-                                            value );
+                                            values );
     }
 
     public UUIDKey getUuidKey() {
@@ -59,16 +62,20 @@ public abstract class Action
         return new Matchers( COLUMN_UUID );
     }
 
-    public Comparable getValue() {
-        return valueKey.getValue().getComparable();
+    public Values<Comparable> getValues() {
+        final Values result = new Values<>();
+        for ( final Value value : valueKey.getValue() ) {
+            result.add( value.getComparable() );
+        }
+        return result;
     }
 
     public static Matchers uuid() {
         return new UUIDMatchers();
     }
 
-    public static String[] keyIDs() {
-        return new String[]{
+    public static KeyDefinition[] keyDefinitions() {
+        return new KeyDefinition[]{
                 UUIDKey.UNIQUE_UUID,
                 COLUMN_UUID,
                 SUPER_TYPE,
@@ -88,14 +95,14 @@ public abstract class Action
         };
     }
 
-    public void setValue( final Comparable value ) {
-        if ( valueKey.getValue().equals( value ) ) {
+    public void setValue( final Values values ) {
+        if ( !Values.toValues( valueKey.getValue() ).isThereChanges( values ) ) {
             return;
         } else {
             final UpdatableKey<Action> oldKey = valueKey;
 
             final UpdatableKey<Action> newKey = new UpdatableKey<>( Action.VALUE,
-                                                                    value );
+                                                                    values );
             valueKey = newKey;
 
             oldKey.update( newKey,

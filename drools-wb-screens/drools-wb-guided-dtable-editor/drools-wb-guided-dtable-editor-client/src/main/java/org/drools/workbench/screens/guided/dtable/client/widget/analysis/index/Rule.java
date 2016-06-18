@@ -17,13 +17,13 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasIndex;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasKeys;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.IndexKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UUIDKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.UpdatableKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.ComparableMatchers;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.UUIDMatchers;
-import org.uberfire.commons.validation.PortablePreconditions;
 
 public class Rule
         implements Comparable<Rule>,
@@ -39,12 +39,8 @@ public class Rule
 
     private UpdatableKey<Rule> indexKey;
 
-    public final int originalIndex;
 
     public Rule( final Integer rowNumber ) {
-
-        originalIndex = PortablePreconditions.checkNotNull( "rowNumber", rowNumber );
-
         this.indexKey = new UpdatableKey<>( IndexKey.INDEX_ID,
                                             rowNumber );
     }
@@ -89,8 +85,8 @@ public class Rule
         };
     }
 
-    public static String[] keyIDs() {
-        return new String[]{
+    public static KeyDefinition[] keyDefinitions() {
+        return new KeyDefinition[]{
                 UUIDKey.UNIQUE_UUID,
                 IndexKey.INDEX_ID
         };
@@ -102,12 +98,12 @@ public class Rule
 
     @Override
     public int getIndex() {
-        return ( int ) indexKey.getValue().getComparable();
+        return ( int ) indexKey.getSingleValueComparator();
     }
 
     @Override
     public void setIndex( final int index ) {
-        if ( indexKey.getValue().equals( index ) ) {
+        if ( indexKey.getSingleValue().equals( index ) ) {
             return;
         } else {
 

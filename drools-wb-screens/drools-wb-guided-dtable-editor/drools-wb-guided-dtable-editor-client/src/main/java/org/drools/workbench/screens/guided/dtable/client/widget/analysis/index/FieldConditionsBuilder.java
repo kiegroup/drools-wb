@@ -20,6 +20,7 @@ import java.util.List;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.HasIndex;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.uberfire.commons.validation.PortablePreconditions;
 
@@ -72,22 +73,23 @@ public class FieldConditionsBuilder {
 
     private Field resolveField( final ConditionCol52 conditionCol52 ) {
         return Utils.resolveField( pattern,
-                                                conditionCol52.getFieldType(),
-                                                conditionCol52.getFactField() );
+                                   conditionCol52.getFieldType(),
+                                   conditionCol52.getFactField() );
     }
 
     private Condition buildCondition( final Field field,
                                       final ConditionCol52 conditionColumn,
                                       final DTCellValue52 visibleCellValue ) {
+        final Column column = index.columns
+                .where( HasIndex.index().is( model.getExpandedColumns().indexOf( conditionColumn ) ) )
+                .select().first();
 
-        return new FieldConditionBuilder(
-                index,
-                model,
-                field,
-                utils,
-                conditionColumn,
-                getRealCellValue( conditionColumn,
-                                  visibleCellValue )
+        return new FieldConditionBuilder( field,
+                                          utils,
+                                          column,
+                                          conditionColumn,
+                                          getRealCellValue( conditionColumn,
+                                                            visibleCellValue )
         ).build();
 
     }

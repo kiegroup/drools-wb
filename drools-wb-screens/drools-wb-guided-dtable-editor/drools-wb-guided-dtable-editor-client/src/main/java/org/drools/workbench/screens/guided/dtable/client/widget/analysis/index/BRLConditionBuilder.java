@@ -26,22 +26,25 @@ public class BRLConditionBuilder {
 
     private final Index                      index;
     private final BRLConditionVariableColumn conditionColumn;
-    private final DTCellValue52              realCellValue;
+    private final ValuesResolver valuesResolver;
     private GuidedDecisionTable52 model;
 
     public BRLConditionBuilder( final Index index,
+                                final ColumnUtilities utils,
                                 final GuidedDecisionTable52 model,
                                 final BRLConditionVariableColumn conditionColumn,
                                 final DTCellValue52 realCellValue ) {
         this.index = PortablePreconditions.checkNotNull( "index", index );
         this.model = PortablePreconditions.checkNotNull( "model", model );
         this.conditionColumn = PortablePreconditions.checkNotNull( "conditionColumn", conditionColumn );
-        this.realCellValue = PortablePreconditions.checkNotNull( "realCellValue", realCellValue );
+        valuesResolver = new ValuesResolver( PortablePreconditions.checkNotNull( "utils", utils ),
+                                             conditionColumn,
+                                             PortablePreconditions.checkNotNull( "realCellValue", realCellValue ) );
     }
 
     public BRLCondition build() {
         return new BRLCondition( getColumn(),
-                                 realCellValue.getBooleanValue() );
+                                 valuesResolver.getValues() );
     }
 
     private Column getColumn() {

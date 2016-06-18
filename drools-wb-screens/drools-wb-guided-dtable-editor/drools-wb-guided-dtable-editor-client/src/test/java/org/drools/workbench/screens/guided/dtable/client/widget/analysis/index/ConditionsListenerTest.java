@@ -15,13 +15,14 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.select.AllListener;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.*;
 
-public class ConditionsTest {
+public class ConditionsListenerTest {
 
     private Conditions  conditions;
     private AllListener allListener;
@@ -41,7 +42,7 @@ public class ConditionsTest {
         conditions.add( new FieldCondition( new Field( "Person", "String", "name" ),
                                             new Column( 1 ),
                                             "==",
-                                            10 ) );
+                                            new Values<>( 10 )) );
 
         verify( allListener ).onAllChanged( anyCollection() );
     }
@@ -51,12 +52,12 @@ public class ConditionsTest {
         final Condition condition = new FieldCondition( new Field( "Person", "String", "name" ),
                                                         new Column( 1 ),
                                                         "==",
-                                                        10 );
+                                                        new Values<>( 10 ));
         conditions.add( condition );
 
         reset( allListener );
 
-        condition.setValue( 20 );
+        condition.setValue( new Values<>( 20 ));
 
         verify( allListener ).onAllChanged( anyCollection() );
     }

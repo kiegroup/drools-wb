@@ -26,7 +26,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.s
 
 public class Actions {
 
-    private final KeyTreeMap<Action> map = new KeyTreeMap<>(Action.keyIDs());
+    private final KeyTreeMap<Action> map = new KeyTreeMap<>(Action.keyDefinitions());
 
     public Actions() {
 
@@ -53,7 +53,7 @@ public class Actions {
     }
 
     public <KeyType> MapBy<KeyType, Action> mapBy( final KeyMatcher matcher ) {
-        return new MapBy<>( map.get( matcher.getId() ) );
+        return new MapBy<>( map.get( matcher.getKeyDefinition() ) );
     }
 
     public void remove( final Column column ) {
@@ -67,7 +67,7 @@ public class Actions {
             extends Select<Action> {
 
         public ActionSelect( final Matcher matcher ) {
-            super( map.get( matcher.getId() ),
+            super( map.get( matcher.getKeyDefinition() ),
                    matcher );
         }
     }
@@ -76,7 +76,7 @@ public class Actions {
             extends Listen<Action> {
 
         public ActionListen( final Matcher matcher ) {
-            super( map.get( matcher.getId() ),
+            super( map.get( matcher.getKeyDefinition() ),
                    matcher );
         }
     }

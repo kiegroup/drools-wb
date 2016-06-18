@@ -18,15 +18,17 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.index;
 import java.util.ArrayList;
 
 import org.drools.workbench.models.datamodel.oracle.DataType;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.KeyDefinition;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Key;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.keys.Values;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.index.matchers.FieldMatchers;
 import org.uberfire.commons.validation.PortablePreconditions;
 
 public class FieldAction
         extends Action {
 
-    private static final String FIELD                 = "field";
-    private static final String FACT_TYPE__FIELD_NAME = "factType.fieldName";
+    private static final KeyDefinition FIELD                 = KeyDefinition.newKeyDefinition().withId( "field" ).build();
+    private static final KeyDefinition FACT_TYPE__FIELD_NAME = KeyDefinition.newKeyDefinition().withId( "factType.fieldName" ).build();
 
     private final Field              field;
     private final DataType.DataTypes dataType;
@@ -34,10 +36,10 @@ public class FieldAction
     public FieldAction( final Field field,
                         final Column column,
                         final DataType.DataTypes dataType,
-                        final Comparable value ) {
+                        final Values values ) {
         super( column,
                ActionSuperType.FIELD_ACTION,
-               value );
+               values );
 
         this.field = PortablePreconditions.checkNotNull( "field", field );
         this.dataType = PortablePreconditions.checkNotNull( "dataType", dataType );
@@ -55,16 +57,16 @@ public class FieldAction
         return dataType;
     }
 
-    public static String[] keyIDs() {
-        final ArrayList<String> keys = new ArrayList<>();
-        for ( final String key : Action.keyIDs() ) {
-            keys.add( key );
+    public static KeyDefinition[] keyDefinitions() {
+        final ArrayList<KeyDefinition> keyDefinitions = new ArrayList<>();
+        for ( final KeyDefinition key : Action.keyDefinitions() ) {
+            keyDefinitions.add( key );
         }
 
-        keys.add( FIELD );
-        keys.add( FACT_TYPE__FIELD_NAME );
+        keyDefinitions.add( FIELD );
+        keyDefinitions.add( FACT_TYPE__FIELD_NAME );
 
-        return keys.toArray( new String[keys.size()] );
+        return keyDefinitions.toArray( new KeyDefinition[keyDefinitions.size()] );
     }
 
     @Override
