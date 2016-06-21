@@ -35,7 +35,6 @@ import org.drools.workbench.screens.guided.dtable.client.resources.i18n.Analysis
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.Checks;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
@@ -82,7 +81,7 @@ public class DecisionTableAnalyzerFromFileTest {
 
         analyzer.onValidate( new ValidateEvent( Collections.emptyList() ) );
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        assertOnlyContains( "MissingRangeTitle", analysisReport );
     }
 
     @Test
@@ -120,7 +119,7 @@ public class DecisionTableAnalyzerFromFileTest {
 
         analyzer.onValidate( new ValidateEvent( Collections.emptyList() ) );
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        assertOnlyContains( "MissingRangeTitle", analysisReport );
     }
 
     @Test

@@ -116,4 +116,8 @@ public interface AnalysisConstants
                                    int endIndex,
                                    int amountOfChecks );
 
+    String MissingRangeTitle();
+
+    String MissingRangeP1( int rowNumber );
+
 }

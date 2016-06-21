@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.google.gwt.core.client.Scheduler;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.CancellableRepeatingCommand;
@@ -40,6 +38,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.DetectRedundantActionCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.DetectRedundantConditionsCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.DetectRedundantRowsCheck;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.RangeCheck;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
@@ -184,6 +183,7 @@ public class Checks
         checkList.add( new DetectMissingActionCheck( ruleInspector ) );
         checkList.add( new DetectMissingConditionCheck( ruleInspector ) );
         checkList.add( new DetectDeficientRowsCheck( ruleInspector ) );
+        checkList.add( new RangeCheck( ruleInspector ) );
         checkList.add( new DetectRedundantActionCheck( ruleInspector ) );
         checkList.add( new DetectRedundantConditionsCheck( ruleInspector ) );
         return checkList;
@@ -243,6 +243,14 @@ public class Checks
         //Remove the RowInspector itself
         removedChecks.addAll( allChecks.get( removedRuleInspector ) );
         allChecks.remove( removedRuleInspector );
+
+        for ( final RuleInspector ruleInspector : allChecks.keySet() ) {
+            for ( final Check check : allChecks.get( ruleInspector ) ) {
+                if ( check instanceof OneToManyCheck ) {
+                    rechecks.add( check );
+                }
+            }
+        }
 
         return removedChecks;
     }
