@@ -23,15 +23,26 @@ import static org.junit.Assert.*;
 
 public class TestUtil {
 
-    public static void assertOnlyContains( final String expected,
-                                           final AnalysisReport result ) {
+    public static void assertOnlyContains( final AnalysisReport result,
+                                           final String... expected ) {
 
         for ( final Issue issue : result.getAnalysisData() ) {
-            if ( !issue.getTitle().contains( expected ) ) {
+            if ( !contains( expected,
+                            issue.getTitle() ) ) {
                 fail( "Should not find: " + issue.getTitle() );
             }
         }
+    }
 
+    private static boolean contains( final String[] expected,
+                                     final String title ) {
+        for ( final String item : expected ) {
+            if ( title.contains( item ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void assertContains( final String expected,

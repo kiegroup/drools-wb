@@ -39,6 +39,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.DetectRedundantConditionsCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.DetectRedundantRowsCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.RangeCheck;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.SingleHitCheck;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
@@ -204,6 +205,8 @@ public class Checks
                                              final RuleInspector other ) {
         final ArrayList<Check> checkList = new ArrayList<Check>();
         if ( other.getRowIndex() != ruleInspector.getRowIndex() ) {
+            checkList.add( new SingleHitCheck( ruleInspector,
+                                                           other ) );
             checkList.add( new DetectConflictingRowsCheck( ruleInspector,
                                                            other ) );
             checkList.add( new DetectRedundantRowsCheck( ruleInspector,
