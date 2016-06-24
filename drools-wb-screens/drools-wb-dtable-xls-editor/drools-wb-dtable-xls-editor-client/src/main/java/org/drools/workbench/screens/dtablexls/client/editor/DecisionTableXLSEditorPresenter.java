@@ -65,7 +65,7 @@ import org.uberfire.workbench.model.menu.impl.BaseMenuCustom;
 import static org.uberfire.ext.widgets.common.client.common.ConcurrentChangePopup.*;
 
 @Dependent
-@WorkbenchEditor(identifier = "DecisionTableXLSEditor", supportedTypes = { DecisionTableXLSResourceType.class })
+@WorkbenchEditor(identifier = "DecisionTableXLSEditor", supportedTypes = { DecisionTableXLSResourceType.class, DecisionTableXLSXResourceType.class })
 public class DecisionTableXLSEditorPresenter
         extends KieEditor
         implements DecisionTableXLSEditorView.Presenter {
@@ -88,7 +88,7 @@ public class DecisionTableXLSEditorPresenter
     public DecisionTableXLSEditorPresenter( final DecisionTableXLSEditorView baseView,
                                             final DecisionTableXLSResourceType decisionTableXLSResourceType,
                                             final DecisionTableXLSXResourceType decisionTableXLSXResourceType,
-                                            final Caller<DecisionTableXLSService> decisionTableXLSService) {
+                                            final Caller<DecisionTableXLSService> decisionTableXLSService ) {
         super( baseView );
         view = baseView;
         this.decisionTableXLSResourceType = decisionTableXLSResourceType;
@@ -132,7 +132,7 @@ public class DecisionTableXLSEditorPresenter
                                          concurrentUpdateSessionInfo = null;
                                      }
                                  }
-            ).show();
+                               ).show();
         } else {
             view.submit( versionRecordManager.getCurrentPath() );
         }
