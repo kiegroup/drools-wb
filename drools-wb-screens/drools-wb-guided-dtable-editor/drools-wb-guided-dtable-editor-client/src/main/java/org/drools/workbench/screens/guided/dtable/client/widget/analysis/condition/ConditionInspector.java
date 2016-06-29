@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition;
 
-import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsConflicting;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsOverlapping;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsRedundant;
@@ -30,56 +29,13 @@ public abstract class ConditionInspector
 
     protected final ConditionInspectorKey key;
 
-    protected ConditionInspector( final Pattern52 pattern,
-                                  final String factField ) {
-        this.key = new ConditionInspectorKey( pattern,
-                                              factField );
+    protected ConditionInspector( final ConditionInspectorKey key ) {
+        this.key = key;
     }
 
     public ConditionInspectorKey getKey() {
         return key;
     }
 
-    public Pattern52 getPattern() {
-        return key.getPattern();
-    }
-
     public abstract boolean hasValue();
-
-    public String getFactField() {
-        return key.getFactField();
-    }
-
-    protected boolean nullSafeEquals( Object a,
-                                      Object b ) {
-        if ( a == null ) {
-            return b == null;
-        } else {
-            return a.equals( b );
-        }
-    }
-
-    public abstract String toHumanReadableString();
-
-    @Override
-    public boolean equals( Object obj ) {
-        if ( obj == null ) {
-            return false;
-        }
-        if ( this == obj ) {
-            return true;
-        }
-        if ( !obj.getClass().equals( this.getClass() ) ) {
-            return false;
-        }
-        if ( this.toHumanReadableString().equals( ( (ConditionInspector) obj ).toHumanReadableString() ) ) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return toHumanReadableString().hashCode();
-    }
 }

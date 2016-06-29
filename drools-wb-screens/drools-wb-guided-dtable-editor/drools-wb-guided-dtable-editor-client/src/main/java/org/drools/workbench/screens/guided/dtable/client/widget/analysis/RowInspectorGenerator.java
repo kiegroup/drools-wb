@@ -23,6 +23,9 @@ import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.CompositeColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTColumnConfig52;
@@ -32,9 +35,13 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.utils.GuidedDecisionTableUtils;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLFragmentActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLFragmentColumnActionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FactFieldColumnActionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FieldActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.UnrecognizedActionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.cache.RowInspectorCache;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.BRLConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspectorBuilder;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
@@ -86,9 +93,10 @@ public class RowInspectorGenerator {
     private void addActionInspector() {
         for ( ActionCol52 actionCol : model.getActionCols() ) {
 
-            //BRLActionColumns cannot be analysed
             if ( actionCol instanceof BRLActionColumn ) {
-                continue;
+                final BRLActionColumn brlActionColumn = ( BRLActionColumn ) actionCol;
+                rowInspector.addActionInspector( new BRLFragmentActionInspector( new BRLFragmentColumnActionInspectorKey( brlActionColumn ),
+                                                                                 brlActionColumn.getDefinition() ) );
             }
 
             int columnIndex = model.getExpandedColumns().indexOf( actionCol );
@@ -101,6 +109,12 @@ public class RowInspectorGenerator {
     }
 
     private void addConditionInspectors() {
+        for ( final CompositeColumn<? extends BaseColumn> column : model.getConditions() ) {
+            if ( column instanceof BRLConditionColumn ) {
+                rowInspector.addConditionInspector( new BRLConditionInspector( column ) );
+            }
+        }
+
         for ( Pattern52 pattern : model.getPatterns() ) {
             for ( ConditionCol52 conditionCol : pattern.getChildColumns() ) {
                 int columnIndex = model.getExpandedColumns().indexOf( conditionCol );
@@ -154,9 +168,9 @@ public class RowInspectorGenerator {
 
     private ActionInspector buildActionInspector( final ActionCol52 actionCol,
                                                   final DTCellValue52 visibleCellValue ) {
-        return new ActionInspector( getKey( actionCol ),
-                                    getRealCellValue( actionCol,
-                                                      visibleCellValue ) );
+        return new FieldActionInspector( getKey( actionCol ),
+                                         getRealCellValue( actionCol,
+                                                           visibleCellValue ) );
     }
 
     private ActionInspectorKey getKey( final ActionCol52 actionCol ) {

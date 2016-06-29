@@ -25,15 +25,17 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.RowInsp
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.SingleCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.FieldConditionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.FieldConditionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Issue;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Severity;
 
 public class DetectRedundantConditionsCheck
         extends SingleCheck {
 
-    private final List<ConditionInspector> conditions = new ArrayList<ConditionInspector>();
+    private final List<FieldConditionInspector> conditions = new ArrayList<FieldConditionInspector>();
 
-    private ConditionInspectorKey key;
+    private FieldConditionInspectorKey key;
 
     public DetectRedundantConditionsCheck( final RowInspector rowInspector ) {
         super( rowInspector );
@@ -42,10 +44,12 @@ public class DetectRedundantConditionsCheck
     @Override
     public void check() {
         for ( ConditionInspectorKey key : rowInspector.getConditions().keys() ) {
-            if ( inspect( rowInspector.getConditions().get( key ) ) ) {
-                this.key = key;
-                hasIssues = true;
-                return;
+            if ( key instanceof FieldConditionInspectorKey ) {
+                if ( inspect( rowInspector.getConditions().get( key ) ) ) {
+                    this.key = ( FieldConditionInspectorKey ) key;
+                    hasIssues = true;
+                    return;
+                }
             }
         }
     }
@@ -58,13 +62,13 @@ public class DetectRedundantConditionsCheck
                 rowInspector.getRowIndex() + 1 );
 
         issue.getExplanation()
-                .startNote()
-                .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsNote1P1( key.getPattern().getFactType(),
-                                                                                      key.getFactField() ) )
-                .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsNote1P2( conditions.get( 0 ).toHumanReadableString(),
-                                                                                      conditions.get( 1 ).toHumanReadableString() ) )
-                .end()
-                .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsP1() );
+             .startNote()
+             .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsNote1P1( key.getPattern().getFactType(),
+                                                                                   key.getFactField() ) )
+             .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsNote1P2( conditions.get( 0 ).toHumanReadableString(),
+                                                                                   conditions.get( 1 ).toHumanReadableString() ) )
+             .end()
+             .addParagraph( AnalysisConstants.INSTANCE.RedundantConditionsP1() );
 
         return issue;
     }
@@ -76,8 +80,8 @@ public class DetectRedundantConditionsCheck
             for ( int j = i + 1; j < conditionInspectors.size(); j++ ) {
                 if ( conditionInspectors.get( i ).isRedundant( conditionInspectors.get( j ) ) ) {
                     this.conditions.clear();
-                    this.conditions.add( conditionInspectors.get( i ) );
-                    this.conditions.add( conditionInspectors.get( j ) );
+                    this.conditions.add( ( FieldConditionInspector ) conditionInspectors.get( i ) );
+                    this.conditions.add( ( FieldConditionInspector ) conditionInspectors.get( j ) );
 
                     return true;
                 }

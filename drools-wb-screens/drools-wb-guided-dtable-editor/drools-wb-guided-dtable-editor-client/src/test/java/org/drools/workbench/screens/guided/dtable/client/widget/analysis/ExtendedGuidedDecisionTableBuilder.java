@@ -16,16 +16,23 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.drools.workbench.models.datamodel.imports.Import;
 import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
+import org.drools.workbench.models.datamodel.rule.IAction;
+import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+
+import static org.mockito.Mockito.*;
 
 public class ExtendedGuidedDecisionTableBuilder
         extends AbstractDecisionTableBuilder {
@@ -96,6 +103,18 @@ public class ExtendedGuidedDecisionTableBuilder
         return this;
     }
 
+    public ExtendedGuidedDecisionTableBuilder withConditionBRLColumn() {
+        final BRLConditionColumn column = new BRLConditionColumn();
+
+        final ArrayList<IPattern> definition = new ArrayList<IPattern>();
+        definition.add( mock( IPattern.class ) );
+        column.setDefinition( definition );
+
+        table.getConditions().add( column );
+
+        return this;
+    }
+
     public ExtendedGuidedDecisionTableBuilder withEnumColumn( String boundName,
                                                               String factType,
                                                               String field,
@@ -141,6 +160,17 @@ public class ExtendedGuidedDecisionTableBuilder
         return this;
     }
 
+    public AbstractDecisionTableBuilder withActionBRLFragment() {
+
+        final BRLActionColumn brlActionColumn = new BRLActionColumn();
+        final ArrayList<IAction> definition = new ArrayList<IAction>();
+        definition.add( mock( IAction.class ) );
+        brlActionColumn.setDefinition( definition );
+        table.getActionCols().add( brlActionColumn );
+
+        return this;
+    }
+
     public static ActionSetFieldCol52 createActionSetField( String boundName,
                                                             String factField,
                                                             String typeNumericInteger ) {
@@ -162,5 +192,4 @@ public class ExtendedGuidedDecisionTableBuilder
         column.setType( type );
         return column;
     }
-
 }

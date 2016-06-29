@@ -35,8 +35,8 @@ public class ConditionInspectorTest {
 
     private static final List<String> ALL_VALUE_LIST = Arrays.asList( "value", "val01", "val02" );
 
-    private final ConditionInspector a;
-    private final ConditionInspector b;
+    private final FieldConditionInspector a;
+    private final FieldConditionInspector b;
     private final boolean inspectorsEqual;
 
     @Test
@@ -45,8 +45,8 @@ public class ConditionInspectorTest {
         assertEquals( getDescription(), inspectorsEqual, b.equals( a ) );
     }
 
-    public ConditionInspectorTest( ConditionInspector a,
-                                   ConditionInspector b,
+    public ConditionInspectorTest( FieldConditionInspector a,
+                                   FieldConditionInspector b,
                                    boolean inspectorsEqual ) {
         this.a = a;
         this.b = b;

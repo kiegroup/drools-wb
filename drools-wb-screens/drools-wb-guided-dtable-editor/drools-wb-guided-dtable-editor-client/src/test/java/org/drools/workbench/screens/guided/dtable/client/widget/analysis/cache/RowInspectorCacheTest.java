@@ -33,6 +33,8 @@ import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTabl
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.ExtendedGuidedDecisionTableBuilder;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.RowInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.UpdateHandler;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FieldActionInspector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,9 +90,11 @@ public class RowInspectorCacheTest {
     public void testInit() throws Exception {
         for ( RowInspector rowInspector : cache.all() ) {
             if ( rowInspector.getRowIndex() == 4 ) {
-                assertFalse( rowInspector.getActions().allValues().get( 0 ).getValue().getBooleanValue() );
+                final ActionInspector actionInspector = rowInspector.getActions().allValues().get( 0 );
+                assertFalse( (( FieldActionInspector) actionInspector).getValue().getBooleanValue() );
             } else {
-                assertTrue( rowInspector.getActions().allValues().get( 0 ).getValue().getBooleanValue() );
+                final ActionInspector actionInspector = rowInspector.getActions().allValues().get( 0 );
+                assertTrue( (( FieldActionInspector) actionInspector).getValue().getBooleanValue() );
             }
         }
 

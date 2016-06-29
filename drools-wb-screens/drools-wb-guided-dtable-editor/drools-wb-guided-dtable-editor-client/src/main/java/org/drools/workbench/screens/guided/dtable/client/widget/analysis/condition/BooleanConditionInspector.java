@@ -20,7 +20,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.Operator;
 
 public class BooleanConditionInspector
-        extends ConditionInspector {
+        extends FieldConditionInspector {
 
     private final Operator operator;
     public final Boolean value;

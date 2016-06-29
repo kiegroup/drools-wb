@@ -19,7 +19,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condit
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 
 public class UnrecognizedConditionInspector
-        extends ConditionInspector {
+        extends FieldConditionInspector {
 
     private final String operator;
 

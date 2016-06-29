@@ -21,6 +21,7 @@ import java.util.List;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.RowInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FieldActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.SingleCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.Conflict;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Issue;
@@ -57,10 +58,18 @@ public class DetectMultipleValuesForOneActionCheck
 
         issue.getExplanation()
                 .startNote()
-                .addParagraph( AnalysisConstants.INSTANCE.MultipleValuesNote1P1( conflictingObjects.get( 0 ).toHumanReadableString(), conflictingObjects.get( 1 ).toHumanReadableString() ) )
+                .addParagraph( AnalysisConstants.INSTANCE.MultipleValuesNote1P1( getToHumanReadableString( conflictingObjects.get( 0 ) ), getToHumanReadableString( conflictingObjects.get( 1 ) ) ) )
                 .end()
                 .addParagraph( AnalysisConstants.INSTANCE.MultipleValuesP1() );
 
         return issue;
+    }
+
+    private String getToHumanReadableString( final ActionInspector actionInspector ) {
+        if ( actionInspector instanceof FieldActionInspector ) {
+            return (( FieldActionInspector ) actionInspector).toHumanReadableString();
+        } else {
+            return "";
+        }
     }
 }

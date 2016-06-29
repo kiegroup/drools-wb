@@ -31,7 +31,7 @@ public abstract class ActionInspectorKey {
         // Basically it's never equal to any other column but it is to the same column
         if ( this == o ) {
             return true;
-        } else if ( o instanceof ActionInspectorKey ) {
+        } else if ( o instanceof FactFieldColumnActionInspectorKey ) {
             FactFieldColumnActionInspectorKey other = (FactFieldColumnActionInspectorKey) o;
             return actionCol == other.actionCol;
         } else {

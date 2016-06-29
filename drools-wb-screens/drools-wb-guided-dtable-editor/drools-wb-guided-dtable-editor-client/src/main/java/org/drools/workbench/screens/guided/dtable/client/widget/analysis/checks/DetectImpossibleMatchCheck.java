@@ -25,15 +25,17 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.RowInsp
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.SingleCheck;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.ConditionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.FieldConditionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.condition.FieldConditionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Issue;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.reporting.Severity;
 
 public class DetectImpossibleMatchCheck
         extends SingleCheck {
 
-    private final ArrayList<ConditionInspector> conflictingConditions = new ArrayList<ConditionInspector>();
+    private final ArrayList<FieldConditionInspector> conflictingConditions = new ArrayList<FieldConditionInspector>();
 
-    private ConditionInspectorKey key;
+    private FieldConditionInspectorKey key;
 
     public DetectImpossibleMatchCheck( final RowInspector rowInspector ) {
         super( rowInspector );
@@ -42,10 +44,12 @@ public class DetectImpossibleMatchCheck
     @Override
     public void check() {
         for ( ConditionInspectorKey key : rowInspector.getConditions().keys() ) {
-            if ( inspect( rowInspector.getConditions().get( key ) ) ) {
-                this.key = key;
-                hasIssues = true;
-                return;
+            if ( key instanceof FieldConditionInspectorKey ) {
+                if ( inspect( rowInspector.getConditions().get( key ) ) ) {
+                    this.key = ( FieldConditionInspectorKey ) key;
+                    hasIssues = true;
+                    return;
+                }
             }
         }
     }
@@ -57,12 +61,12 @@ public class DetectImpossibleMatchCheck
                                  rowInspector.getRowIndex() + 1 );
 
         issue.getExplanation()
-                .startNote()
-                .addParagraph(
-                        AnalysisConstants.INSTANCE.ImpossibleMatchNote1P1( ( rowInspector.getRowIndex() + 1 ), key.getFactField(), key.getPattern().getFactType() ) )
-                .addParagraph( AnalysisConstants.INSTANCE.ImpossibleMatchNote1P2( conflictingConditions.get( 0 ).toHumanReadableString(), conflictingConditions.get( 1 ).toHumanReadableString() ) )
-                .end()
-                .addParagraph( AnalysisConstants.INSTANCE.ImpossibleMatchP1( key.getFactField() ) );
+             .startNote()
+             .addParagraph(
+                     AnalysisConstants.INSTANCE.ImpossibleMatchNote1P1( (rowInspector.getRowIndex() + 1), key.getFactField(), key.getPattern().getFactType() ) )
+             .addParagraph( AnalysisConstants.INSTANCE.ImpossibleMatchNote1P2( conflictingConditions.get( 0 ).toHumanReadableString(), conflictingConditions.get( 1 ).toHumanReadableString() ) )
+             .end()
+             .addParagraph( AnalysisConstants.INSTANCE.ImpossibleMatchP1( key.getFactField() ) );
 
         return issue;
     }
@@ -73,8 +77,8 @@ public class DetectImpossibleMatchCheck
         for ( int i = 0; i < conditionInspectors.size(); i++ ) {
             for ( int j = i + 1; j < conditionInspectors.size(); j++ ) {
                 if ( conditionInspectors.get( i ).conflicts( conditionInspectors.get( j ) ) ) {
-                    conflictingConditions.add( conditionInspectors.get( i ) );
-                    conflictingConditions.add( conditionInspectors.get( j ) );
+                    conflictingConditions.add( ( FieldConditionInspector ) conditionInspectors.get( i ) );
+                    conflictingConditions.add( ( FieldConditionInspector ) conditionInspectors.get( j ) );
                     return true;
                 }
             }

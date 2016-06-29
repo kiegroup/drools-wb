@@ -116,6 +116,24 @@ public class DecisionTableAnalyzerTest {
 
     }
 
+
+    // GUVNOR-2546: Verification & Validation: BRL fragments are ignored
+    @Test
+    public void testRuleHasNoActionBRLFragmentHasAction() throws Exception {
+        final GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
+                                                                                      new ArrayList<Import>(),
+                                                                                      "mytable" )
+                .withConditionIntegerColumn( "a", "Person", "age", ">" )
+                .withActionBRLFragment()
+                .withData( new Object[][]{{1, "description", 0, true}} )
+                .build();
+
+        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+
+        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        assertDoesNotContain( "RuleHasNoAction", analysisReport );
+    }
+
     @Test
     public void testRuleHasNoActionSet() throws Exception {
         GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
@@ -173,6 +191,28 @@ public class DecisionTableAnalyzerTest {
 
         analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
         assertContains( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1 );
+        assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2 );
+
+    }
+
+    // GUVNOR-2546: Verification & Validation: BRL fragments are ignored
+    @Test
+    public void testConditionsShouldNotBeIgnored() throws Exception {
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
+                                                                                new ArrayList<Import>(),
+                                                                                "mytable" )
+                .withConditionBRLColumn()
+                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
+                .withData( new Object[][]{
+                        { 1, "description", null, true },
+                        { 2, "description", null, null }
+                } )
+                .build();
+
+        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+
+        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1 );
         assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2 );
 
     }

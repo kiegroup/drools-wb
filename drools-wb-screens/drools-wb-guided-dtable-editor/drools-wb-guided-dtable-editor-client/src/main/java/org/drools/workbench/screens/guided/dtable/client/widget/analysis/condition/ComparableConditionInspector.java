@@ -22,7 +22,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.Operator;
 
 public class ComparableConditionInspector<T extends Comparable<T>>
-        extends ConditionInspector
+        extends FieldConditionInspector
         implements Covers<T> {
 
     protected final Operator operator;
