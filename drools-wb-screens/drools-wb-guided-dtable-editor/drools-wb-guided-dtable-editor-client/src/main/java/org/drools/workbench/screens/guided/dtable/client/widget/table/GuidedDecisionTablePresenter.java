@@ -70,7 +70,8 @@ import org.drools.workbench.screens.guided.dtable.client.GuidedDecisionTable;
 import org.drools.workbench.screens.guided.dtable.client.editor.clipboard.Clipboard;
 import org.drools.workbench.screens.guided.dtable.client.editor.clipboard.impl.DefaultClipboard;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.DecisionTableAnalyzer;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.AnalyzerController;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.DecisionTableAnalyzerProvider;
 import org.drools.workbench.screens.guided.dtable.client.widget.auditlog.AuditLog;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableColumnSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
@@ -149,6 +150,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     private final GuidedDecisionTableLockManager lockManager;
     private final GuidedDecisionTableLinkManager linkManager;
     private final Clipboard clipboard;
+    private final DecisionTableAnalyzerProvider decisionTableAnalyzerProvider;
 
     private final Access access = new Access();
 
@@ -167,7 +169,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     protected ColumnUtilities columnUtilities;
     protected DependentEnumsUtilities dependentEnumsUtilities;
 
-    protected DecisionTableAnalyzer decisionTableAnalyzer;
+    protected AnalyzerController analyzerController;
 
     private String version = null;
     private ObservablePath latestPath = null;
@@ -245,7 +247,8 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                          final SyncBeanManager beanManager,
                                          final @GuidedDecisionTable GuidedDecisionTableLockManager lockManager,
                                          final @GuidedDecisionTable GuidedDecisionTableLinkManager linkManager,
-                                         final Clipboard clipboard ) {
+                                         final Clipboard clipboard,
+                                         final DecisionTableAnalyzerProvider decisionTableAnalyzerProvider ) {
         this.identity = identity;
         this.resourceType = resourceType;
         this.ruleNameService = ruleNameService;
@@ -266,6 +269,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
         this.lockManager = lockManager;
         this.linkManager = linkManager;
         this.clipboard = clipboard;
+        this.decisionTableAnalyzerProvider = decisionTableAnalyzerProvider;
 
         CellUtilities.injectDateConvertor( getDateConverter() );
     }
@@ -474,10 +478,10 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     //Setup the Validation & Verification analyzer
     void initialiseValidationAndVerification() {
-        this.decisionTableAnalyzer = new DecisionTableAnalyzer( placeRequest,
-                                                                oracle,
-                                                                model,
-                                                                eventBus );
+        this.analyzerController = decisionTableAnalyzerProvider.newAnalyzer( placeRequest,
+                                                                             oracle,
+                                                                             model,
+                                                                             eventBus );
     }
 
     //Setup Audit Log
@@ -543,15 +547,15 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     @Override
     public void initialiseAnalysis() {
-        if ( decisionTableAnalyzer != null ) {
-            decisionTableAnalyzer.onFocus();
+        if ( analyzerController != null ) {
+            analyzerController.initialiseAnalysis();
         }
     }
 
     @Override
     public void terminateAnalysis() {
-        if ( decisionTableAnalyzer != null ) {
-            decisionTableAnalyzer.onClose();
+        if ( analyzerController != null ) {
+            analyzerController.terminateAnalysis();
         }
     }
 
