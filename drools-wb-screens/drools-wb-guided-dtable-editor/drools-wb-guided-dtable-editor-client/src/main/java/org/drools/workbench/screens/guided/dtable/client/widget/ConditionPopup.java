@@ -724,15 +724,15 @@ public class ConditionPopup extends FormStylePopup {
         }
 
         if ( selectedIndex >= 0 ) {
-            selectPattern( patterns,
-                           selectedIndex );
+            selectListBoxItem( patterns,
+                               selectedIndex );
         }
 
         return patterns;
     }
 
-    void selectPattern( final ListBox listBox,
-                        final int index ) {
+    void selectListBoxItem( final ListBox listBox,
+                            final int index ) {
         listBox.setSelectedIndex( index );
     }
 
@@ -873,8 +873,50 @@ public class ConditionPopup extends FormStylePopup {
 
     protected void showFieldChange() {
         final FormStylePopup pop = new FormStylePopup( GuidedDecisionTableConstants.INSTANCE.Field() );
-        final ListBox box = new ListBox();
+        final ListBox box = loadFields();
 
+        pop.addAttribute( new StringBuilder( GuidedDecisionTableConstants.INSTANCE.Field() ).append( GuidedDecisionTableConstants.COLON ).toString(),
+                          box );
+
+        pop.add( new ModalFooterOKCancelButtons(
+                new Command() {
+                    @Override
+                    public void execute() {
+                        editingCol.setFactField( box.getItemText( box.getSelectedIndex() ) );
+                        editingCol.setFieldType( oracle.getFieldType( editingPattern.getFactType(),
+                                                                      editingCol.getFactField() ) );
+
+                        //Clear Operator when field changes
+                        editingCol.setOperator( null );
+                        editingCol.setValueList( null );
+
+                        //Setup UI
+                        doFieldLabel();
+                        doValueList();
+                        doCalculationType();
+                        makeLimitedValueWidget();
+                        makeDefaultValueWidget();
+                        doOperatorLabel();
+                        doImageButtons();
+
+                        pop.hide();
+                        enableFooter( true );
+                    }
+                },
+                new Command() {
+                    @Override
+                    public void execute() {
+                        pop.hide();
+                        enableFooter( true );
+                    }
+                } ) );
+
+        enableFooter( false );
+        pop.show();
+    }
+
+    ListBox loadFields() {
+        final ListBox box = new ListBox();
         this.oracle.getFieldCompletions( this.editingPattern.getFactType(),
                                          FieldAccessorsAndMutators.ACCESSOR,
                                          new Callback<ModelField[]>() {
@@ -883,8 +925,17 @@ public class ConditionPopup extends FormStylePopup {
                                                  switch ( editingCol.getConstraintValueType() ) {
                                                      case BaseSingleFieldConstraint.TYPE_LITERAL:
                                                          //Literals can be on any field
+                                                         int selectedIndex = -1;
                                                          for ( int i = 0; i < fields.length; i++ ) {
+                                                             final String fieldName = fields[ i ].getName();
+                                                             if ( fieldName.equals( editingCol.getFactField() ) ) {
+                                                                 selectedIndex = i;
+                                                             }
                                                              box.addItem( fields[ i ].getName() );
+                                                         }
+                                                         if ( selectedIndex >= 0 ) {
+                                                             selectListBoxItem( box,
+                                                                                selectedIndex );
                                                          }
                                                          break;
 
@@ -906,45 +957,9 @@ public class ConditionPopup extends FormStylePopup {
 
                                                  }
                                              }
-                                         } );
-
-        pop.addAttribute( new StringBuilder( GuidedDecisionTableConstants.INSTANCE.Field() ).append( GuidedDecisionTableConstants.COLON ).toString(),
-                          box );
-
-        pop.add( new ModalFooterOKCancelButtons( new Command() {
-            @Override
-            public void execute() {
-                editingCol.setFactField( box.getItemText( box.getSelectedIndex() ) );
-                editingCol.setFieldType( oracle.getFieldType( editingPattern.getFactType(),
-                                                              editingCol.getFactField() ) );
-
-                //Clear Operator when field changes
-                editingCol.setOperator( null );
-                editingCol.setValueList( null );
-
-                //Setup UI
-                doFieldLabel();
-                doValueList();
-                doCalculationType();
-                makeLimitedValueWidget();
-                makeDefaultValueWidget();
-                doOperatorLabel();
-                doImageButtons();
-
-                pop.hide();
-                enableFooter( true );
-            }
-        }, new Command() {
-            @Override
-            public void execute() {
-                pop.hide();
-                enableFooter( true );
-            }
-        }
-        ) );
-
-        enableFooter( false );
-        pop.show();
+                                         }
+                                       );
+        return box;
     }
 
     protected void showNewPatternDialog() {
