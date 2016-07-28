@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -62,7 +61,6 @@ import org.kie.workbench.common.services.datamodeller.core.AnnotationDefinition;
 import org.kie.workbench.common.services.datamodeller.core.DataModel;
 import org.kie.workbench.common.services.datamodeller.core.DataObject;
 import org.kie.workbench.common.services.datamodeller.core.ObjectProperty;
-import org.kie.workbench.common.services.datamodeller.core.PropertyType;
 import org.kie.workbench.common.services.datamodeller.core.impl.AnnotationImpl;
 import org.kie.workbench.common.services.datamodeller.core.impl.DataModelImpl;
 import org.kie.workbench.common.services.datamodeller.core.impl.DataObjectImpl;
@@ -98,7 +96,6 @@ public class DecisionTableXLSToDecisionTableGuidedConverter implements DecisionT
     private DRLResourceTypeDefinition drlType;
     private GlobalResourceTypeDefinition globalsType;
 
-    private Map<String, String> orderedBaseTypes = new TreeMap<String, String>();
     private Map<String, AnnotationDefinition> annotationDefinitions;
 
     public DecisionTableXLSToDecisionTableGuidedConverter() {
@@ -143,13 +140,6 @@ public class DecisionTableXLSToDecisionTableGuidedConverter implements DecisionT
     }
 
     private void initialiseTypeConversionMetaData() {
-        final List<PropertyType> baseTypes = modellerService.getBasePropertyTypes();
-        if ( baseTypes != null ) {
-            for ( PropertyType type : baseTypes ) {
-                orderedBaseTypes.put( type.getName(), type.getClassName() );
-            }
-        }
-
         annotationDefinitions = modellerService.getAnnotationDefinitions();
     }
 
@@ -312,11 +302,9 @@ public class DecisionTableXLSToDecisionTableGuidedConverter implements DecisionT
                     final String fieldType = fieldMetaModel.type;
                     //Guvnor 5.5 (and earlier) does not have MultipleType
                     boolean isMultiple = false;
-                    boolean isBaseType = orderedBaseTypes.containsValue( fieldType );
                     ObjectProperty property = new ObjectPropertyImpl( fieldName,
                                                                       fieldType,
                                                                       isMultiple );
-                    property.setBaseType( isBaseType );
 
                     //field has no annotation in Guvnor 5.5 (and earlier)
                     dataObject.addProperty( property );
