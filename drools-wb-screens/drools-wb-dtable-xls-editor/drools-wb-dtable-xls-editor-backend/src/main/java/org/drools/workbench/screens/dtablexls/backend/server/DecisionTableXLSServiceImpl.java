@@ -28,6 +28,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -40,14 +41,12 @@ import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSConversion
 import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSService;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
-import org.guvnor.common.services.backend.file.JavaFileFilter;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
 import org.guvnor.common.services.backend.validation.GenericValidator;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.errai.security.shared.service.AuthenticationService;
-import org.kie.workbench.common.services.backend.file.DRLFileFilter;
 import org.kie.workbench.common.services.backend.service.KieService;
 import org.kie.workbench.common.services.shared.source.SourceGenerationFailedException;
 import org.slf4j.Logger;
@@ -73,10 +72,6 @@ public class DecisionTableXLSServiceImpl
                    ExtendedDecisionTableXLSService {
 
     private static final Logger log = LoggerFactory.getLogger( DecisionTableXLSServiceImpl.class );
-
-    private static final JavaFileFilter FILTER_JAVA = new JavaFileFilter();
-
-    private static final DRLFileFilter FILTER_DRL = new DRLFileFilter();
 
     private IOService ioService;
     private CopyService copyService;
@@ -334,13 +329,10 @@ public class DecisionTableXLSServiceImpl
     public List<ValidationMessage> validate( final Path path,
                                              final Path resource ) {
         try {
-            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ),
-                                                                      StandardOpenOption.READ );
-            return genericValidator.validate( path,
-                                              inputStream,
-                                              FILTER_DRL,
-                                              FILTER_JAVA );
+            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ), StandardOpenOption.READ );
+            final String content = IOUtils.toString( inputStream, Charsets.UTF_8.name() );
 
+            return genericValidator.validate( path, content );
         } catch ( Exception e ) {
             log.error( e.getMessage(),
                        e );
