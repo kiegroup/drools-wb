@@ -93,6 +93,25 @@ public class DecisionTableAnalyzerTest {
     }
 
     @Test
+    public void ruleHasNoActionShouldNotIgnoreRetract() throws Exception {
+        final GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
+                                                                                      new ArrayList<Import>(),
+                                                                                      "mytable" )
+                .withConditionIntegerColumn( "a", "Person", "age", ">" )
+                .withRetract()
+                .withData( DataBuilderProvider
+                                   .row( 0, "a" )
+                                   .end() )
+                .buildTable();
+
+        final DecisionTableAnalyzer analyzer = analyzerProvider.makeAnalyser( table52 );
+
+        analyzer.analyze( Collections.emptyList() );
+        assertDoesNotContain( "RuleHasNoAction", analyzerProvider.getAnalysisReport() );
+
+    }
+
+    @Test
     public void testRuleHasNoActionSet() throws Exception {
         final GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
                                                                                 new ArrayList<Import>(),

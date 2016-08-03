@@ -26,11 +26,9 @@ import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.widgets.decoratedgrid.client.widget.CellValue;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.DeleteRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.InsertRowEvent;
@@ -38,7 +36,6 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.Inser
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.ExtendedGuidedDecisionTableBuilder.*;
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class DecisionTableAnalyzerUpdateTest {
@@ -54,6 +51,30 @@ public class DecisionTableAnalyzerUpdateTest {
     @Before
     public void setUp() throws Exception {
         analyzerProvider = new AnalyzerProvider();
+    }
+
+    @Test
+    public void updateRetract() throws Exception {
+
+        final GuidedDecisionTable52 table52 = analyzerProvider.makeAnalyser()
+                                                              .withPersonAgeColumn( "==" )
+                                                              .withRetract()
+                                                              .withData( DataBuilderProvider
+                                                                                 .row( 1, null )
+                                                                                 .end() )
+                                                              .buildTable();
+
+        final DecisionTableAnalyzer analyzer = analyzerProvider.makeAnalyser( table52 );
+
+        analyzer.analyze( Collections.emptyList() );
+
+        assertContains( "RuleHasNoAction", analyzerProvider.getAnalysisReport() );
+
+        table52.getData().get( 0 ).get( 3 ).setStringValue( "a" );
+
+        analyzer.analyze( getUpdates( 0, 3 ) );
+
+        assertDoesNotContain( "RuleHasNoAction", analyzerProvider.getAnalysisReport() );
     }
 
     @Test
@@ -270,17 +291,9 @@ public class DecisionTableAnalyzerUpdateTest {
         assertContains( "ImpossibleMatch", analyzerProvider.getAnalysisReport(), 2 );
     }
 
-    private ArrayList<CellValue<? extends Comparable<?>>> getMockColumnData( int size ) {
-        ArrayList<CellValue<? extends Comparable<?>>> list = new ArrayList<CellValue<? extends Comparable<?>>>();
-        for ( int i = 0; i < size; i++ ) {
-            list.add( mock( CellValue.class ) );
-        }
-        return list;
-    }
-
     private ArrayList<Coordinate> getUpdates( final int x,
                                               final int y ) {
-        ArrayList<Coordinate> updates = new ArrayList<>();
+        final ArrayList<Coordinate> updates = new ArrayList<>();
         updates.add( new Coordinate( x, y ) );
         return updates;
     }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.drools.workbench.models.guided.dtable.backend.util.DataUtilities;
+import org.drools.workbench.models.guided.dtable.shared.model.ActionRetractFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 
@@ -62,5 +63,12 @@ public class AbstractDecisionTableBuilder {
         return table;
     }
 
+    public AbstractDecisionTableBuilder withRetract() {
 
+        final ActionRetractFactCol52 col52 = new ActionRetractFactCol52();
+        col52.setHeader( "retract header" );
+        table.getActionCols().add( col52 );
+
+        return this;
+    }
 }
