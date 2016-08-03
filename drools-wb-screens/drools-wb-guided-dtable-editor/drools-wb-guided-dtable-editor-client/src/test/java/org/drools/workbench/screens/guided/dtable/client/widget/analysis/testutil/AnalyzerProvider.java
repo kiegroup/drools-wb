@@ -42,7 +42,6 @@ public class AnalyzerProvider {
     private final AsyncPackageDataModelOracle oracle;
     private       AnalysisReport              analysisReport;
     private       Status                      status;
-    private       RuleInspectorCache          cache;
 
     public AnalyzerProvider() {
         this( mock( AsyncPackageDataModelOracle.class ) );

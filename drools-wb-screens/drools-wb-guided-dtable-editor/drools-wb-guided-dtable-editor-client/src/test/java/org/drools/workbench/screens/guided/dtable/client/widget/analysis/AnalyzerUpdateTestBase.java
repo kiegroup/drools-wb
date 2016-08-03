@@ -32,7 +32,7 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordin
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.DeleteRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.InsertRowEvent;
 
-public class AnalyzerUpdateTestBase {
+public abstract class AnalyzerUpdateTestBase {
 
     protected AnalyzerProvider      analyzerProvider;
     protected GuidedDecisionTable52 table52;
@@ -107,8 +107,20 @@ public class AnalyzerUpdateTestBase {
         analyzer.updateColumns( table52.getData().size() );
     }
 
-    protected void appendRow() {
-        table52.getData().add( new ArrayList<>() );
+    protected void appendRow( final int amountOfColumns ) {
+
+
+        final ArrayList<DTCellValue52> row = new ArrayList<>();
+
+        // Row number
+        row.add( new DTCellValue52() );
+        // Explanation
+        row.add( new DTCellValue52() );
+
+        for ( int i = 0; i < amountOfColumns; i++ ) {
+            row.add( new DTCellValue52() );
+        }
+        table52.getData().add( row );
         analyzer.appendRow();
         analyzer.updateColumns( table52.getData().size() );
     }
