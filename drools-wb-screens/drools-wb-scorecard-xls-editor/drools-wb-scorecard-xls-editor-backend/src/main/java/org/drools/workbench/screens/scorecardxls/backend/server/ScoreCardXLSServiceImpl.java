@@ -25,12 +25,12 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.drools.workbench.screens.scorecardxls.service.ScoreCardXLSContent;
 import org.drools.workbench.screens.scorecardxls.service.ScoreCardXLSService;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
-import org.guvnor.common.services.backend.file.JavaFileFilter;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
 import org.guvnor.common.services.backend.validation.GenericValidator;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -61,8 +61,6 @@ public class ScoreCardXLSServiceImpl
                    ExtendedScoreCardXLSService {
 
     private static final Logger log = LoggerFactory.getLogger( ScoreCardXLSServiceImpl.class );
-
-    private static final JavaFileFilter FILTER_JAVA = new JavaFileFilter();
 
     private IOService ioService;
     private CopyService copyService;
@@ -234,12 +232,10 @@ public class ScoreCardXLSServiceImpl
     public List<ValidationMessage> validate( final Path path,
                                              final Path resource ) {
         try {
-            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ),
-                                                                      StandardOpenOption.READ );
-            return genericValidator.validate( path,
-                                              inputStream,
-                                              FILTER_JAVA );
+            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ), StandardOpenOption.READ );
+            final String content = IOUtils.toString( inputStream, Charsets.UTF_8.name() );
 
+            return genericValidator.validate( path, content );
         } catch ( Exception e ) {
             throw ExceptionUtilities.handleException( e );
         }
@@ -249,5 +245,4 @@ public class ScoreCardXLSServiceImpl
         return new SafeSessionInfo( new SessionInfoImpl( sessionId,
                                                          authenticationService.getUser() ) );
     }
-
 }
