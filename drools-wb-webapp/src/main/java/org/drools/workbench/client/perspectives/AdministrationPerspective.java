@@ -24,6 +24,7 @@ import org.drools.workbench.client.resources.i18n.AppConstants;
 import org.guvnor.asset.management.client.editors.repository.wizard.CreateRepositoryWizard;
 import org.guvnor.common.services.shared.security.AppRoles;
 import org.guvnor.structure.client.editors.repository.clone.CloneRepositoryPresenter;
+import org.guvnor.structure.client.editors.repository.fork.ForkRepositoryPresenter;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.workbench.client.PerspectiveIds;
@@ -65,6 +66,9 @@ public class AdministrationPerspective {
     @Inject
     private CloneRepositoryPresenter cloneRepositoryPresenter;
 
+    @Inject
+    private ForkRepositoryPresenter forkRepositoryPresenter;
+
     @Perspective
     public PerspectiveDefinition buildPerspective() {
         final PerspectiveDefinition perspective = new PerspectiveDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
@@ -103,6 +107,7 @@ public class AdministrationPerspective {
 
     private List<? extends MenuItem> getRepositoriesMenuItems() {
         ArrayList<MenuItem> menuItems = new ArrayList<MenuItem>();
+
         menuItems.add( MenuFactory.newSimpleItem( AppConstants.INSTANCE.MenuListRepositories() ).respondsWith(
                 new Command() {
                     @Override
@@ -110,6 +115,7 @@ public class AdministrationPerspective {
                         placeManager.goTo( "RepositoriesEditor" );
                     }
                 } ).endMenu().build().getItems().get( 0 ) );
+
         menuItems.add( MenuFactory.newSimpleItem( AppConstants.INSTANCE.MenuCloneRepository() ).respondsWith(
                 new Command() {
 
@@ -119,6 +125,16 @@ public class AdministrationPerspective {
                     }
 
                 } ).endMenu().build().getItems().get( 0 ) );
+
+        menuItems.add( MenuFactory.newSimpleItem( AppConstants.INSTANCE.MenuForkRepository() ).respondsWith(
+                new Command() {
+                    @Override
+                    public void execute() {
+                        forkRepositoryPresenter.showForm();
+                    }
+
+                } ).endMenu().build().getItems().get( 0 ) );
+
         menuItems.add( MenuFactory.newSimpleItem( AppConstants.INSTANCE.MenuNewRepository() ).respondsWith(
                 new Command() {
                     @Override

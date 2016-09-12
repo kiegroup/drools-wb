@@ -52,6 +52,8 @@ public interface AppConstants
 
     String MenuCloneRepository();
 
+    String MenuForkRepository();
+
     String MenuNewRepository();
 
     String MenuOrganizationalUnits();
