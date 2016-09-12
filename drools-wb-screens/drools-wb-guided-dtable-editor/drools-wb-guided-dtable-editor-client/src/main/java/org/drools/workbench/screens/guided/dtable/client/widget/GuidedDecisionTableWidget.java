@@ -77,7 +77,8 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisionTableResources;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.resources.images.GuidedDecisionTableImageResources508;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.DecisionTableAnalyzer;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.AnalyzerController;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.DecisionTableAnalyzerProvider;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.VerticalDecisionTableWidget;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleAttributeWidget;
 import org.gwtbootstrap3.client.ui.CheckBox;
@@ -113,21 +114,21 @@ public class GuidedDecisionTableWidget extends Composite
         LimitedEntryBRLConditionColumnView.Presenter,
         LimitedEntryBRLActionColumnView.Presenter {
 
-    private final DecisionTableAnalyzer decisionTableAnalyzer;
-    private VerticalPanel layout;
-    private DecoratedDisclosurePanel disclosurePanel;
-    private DecoratedDisclosurePanel conditions;
-    private DecoratedDisclosurePanel actions;
-    private DecoratedDisclosurePanel options;
+    private final AnalyzerController       analyzerController;
+    private       VerticalPanel            layout;
+    private       DecoratedDisclosurePanel disclosurePanel;
+    private       DecoratedDisclosurePanel conditions;
+    private       DecoratedDisclosurePanel actions;
+    private       DecoratedDisclosurePanel options;
 
-    private PrettyFormLayout configureColumnsNote;
-    private VerticalPanel attributeConfigWidget;
-    private VerticalPanel conditionsConfigWidget;
-    private VerticalPanel actionsConfigWidget;
-    private GuidedDecisionTable52 model;
-    private AsyncPackageDataModelOracle oracle;
-    private Caller<RuleNamesService> ruleNameService;
-    private BRLRuleModel rm;
+    private PrettyFormLayout              configureColumnsNote;
+    private VerticalPanel                 attributeConfigWidget;
+    private VerticalPanel                 conditionsConfigWidget;
+    private VerticalPanel                 actionsConfigWidget;
+    private GuidedDecisionTable52         model;
+    private AsyncPackageDataModelOracle   oracle;
+    private Caller<RuleNamesService>      ruleNameService;
+    private BRLRuleModel                  rm;
 
     private Path path;
     private User identity;
@@ -185,10 +186,10 @@ public class GuidedDecisionTableWidget extends Composite
 
         this.layout = new VerticalPanel();
 
-        decisionTableAnalyzer = new DecisionTableAnalyzer( place,
-                                                           oracle,
-                                                           model,
-                                                           eventBus );
+        analyzerController = new DecisionTableAnalyzerProvider().newAnalyzer( place,
+                                                                              oracle,
+                                                                              model,
+                                                                              eventBus );
 
         setupDecisionTable();
 
@@ -1641,11 +1642,11 @@ public class GuidedDecisionTableWidget extends Composite
 
     public void onFocus() {
         dtable.onFocus();
-        decisionTableAnalyzer.onFocus();
+        analyzerController.initialiseAnalysis();
     }
 
     public void onClose() {
-        decisionTableAnalyzer.onClose();
+        analyzerController.terminateAnalysis();
     }
 
 }
