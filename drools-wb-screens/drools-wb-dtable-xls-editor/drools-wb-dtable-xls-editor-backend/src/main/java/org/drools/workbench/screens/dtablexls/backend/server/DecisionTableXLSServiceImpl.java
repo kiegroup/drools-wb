@@ -28,7 +28,6 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -329,10 +328,8 @@ public class DecisionTableXLSServiceImpl
     public List<ValidationMessage> validate( final Path path,
                                              final Path resource ) {
         try {
-            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ), StandardOpenOption.READ );
-            final String content = IOUtils.toString( inputStream, Charsets.UTF_8.name() );
+            return genericValidator.validate( path );
 
-            return genericValidator.validate( path, content );
         } catch ( Exception e ) {
             log.error( e.getMessage(),
                        e );
