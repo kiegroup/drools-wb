@@ -5,6 +5,7 @@
 
   <weld:scan>
     <weld:exclude name="org.drools.guvnor.server.files.PackageDeploymentServlet"/>
+    <weld:exclude name="org.uberfire.backend.server.security.RoleLoader"/>
   </weld:scan>
 
 </beans>
