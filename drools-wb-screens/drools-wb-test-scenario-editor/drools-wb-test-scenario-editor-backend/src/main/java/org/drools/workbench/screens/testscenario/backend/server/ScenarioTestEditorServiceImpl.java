@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.drools.workbench.models.datamodel.imports.Import;
+import org.drools.workbench.models.datamodel.imports.Imports;
 import org.drools.workbench.models.datamodel.oracle.ModelField;
 import org.drools.workbench.models.datamodel.oracle.PackageDataModelOracle;
 import org.drools.workbench.models.testscenarios.backend.util.ScenarioXMLPersistence;
@@ -225,22 +226,28 @@ public class ScenarioTestEditorServiceImpl
     @Override
     public TestScenarioResult runScenario( final Path path,
                                            final Scenario scenario ) {
-        addDependentImportsToScenario( scenario, path );
+        final Imports existingScenarioImports = new Imports( scenario.getImports().getImports() );
 
         try {
-            return scenarioRunner.run(
-                    scenario,
-                    projectService.resolveProject( path ) );
+            addDependentImportsToScenario( scenario,
+                                           path );
+            final TestScenarioResult result = scenarioRunner.run( scenario,
+                                                                  projectService.resolveProject( path ) );
+            return result;
 
         } catch ( Exception e ) {
             throw ExceptionUtilities.handleException( e );
+
+        } finally {
+            scenario.setImports( existingScenarioImports );
         }
     }
 
     void addDependentImportsToScenario( final Scenario scenario,
                                         final Path path ) {
         final PackageDataModelOracle dataModel = getDataModel( path );
-        final Set<String> usedFullyQualifiedClassNames = getUsedFullyQualifiedClassNames( scenario, dataModel );
+        final Set<String> usedFullyQualifiedClassNames = getUsedFullyQualifiedClassNames( scenario,
+                                                                                          dataModel );
 
         for ( String className : usedFullyQualifiedClassNames ) {
             final Import imp = new Import( className );
@@ -256,22 +263,26 @@ public class ScenarioTestEditorServiceImpl
         return dataModelService.getDataModel( path );
     }
 
-    private Collection<String> getFullyQualifiedClassNamesUsedByGlobals( final PackageDataModelOracle dataModelOracle ) {
-        return dataModelOracle.getPackageGlobals().values();
+    private Set<String> getUsedFullyQualifiedClassNames( final Scenario scenario,
+                                                         final PackageDataModelOracle dataModelOracle ) {
+        return new HashSet<String>() {{
+            addAll( getFullyQualifiedClassNamesUsedByModel( scenario,
+                                                            dataModelOracle ) );
+            addAll( getFullyQualifiedClassNamesUsedByGlobals( dataModelOracle ) );
+        }};
     }
 
     private Set<String> getFullyQualifiedClassNamesUsedByModel( final Scenario scenario,
                                                                 final PackageDataModelOracle dataModelOracle ) {
         final Set<String> fullyQualifiedClassNames = new HashSet<String>();
-
         for ( String fullyQualifiedClassName : getFullyQualifiedClassNameFromScenario( scenario ) ) {
             final ModelField[] modelFields = dataModelOracle.getProjectModelFields().get( fullyQualifiedClassName );
-
-            for ( ModelField modelField : modelFields ) {
-                fullyQualifiedClassNames.add( modelField.getClassName() );
+            if ( modelFields != null ) {
+                for ( ModelField modelField : modelFields ) {
+                    fullyQualifiedClassNames.add( modelField.getClassName() );
+                }
+                fullyQualifiedClassNames.add( fullyQualifiedClassName );
             }
-
-            fullyQualifiedClassNames.add( fullyQualifiedClassName );
         }
 
         return fullyQualifiedClassNames;
@@ -282,18 +293,14 @@ public class ScenarioTestEditorServiceImpl
 
         return new ArrayList<String>() {{
             addAll( testScenarioModelVisitor.visit() );
-
-            for (Import imp : scenario.getImports().getImports()) {
-                add( imp.getType() );
+            for ( Import i : scenario.getImports().getImports() ) {
+                add( i.getType() );
             }
         }};
     }
 
-    private Set<String> getUsedFullyQualifiedClassNames( final Scenario scenario,
-                                                         final PackageDataModelOracle dataModelOracle ) {
-        return new HashSet<String>() {{
-            addAll( getFullyQualifiedClassNamesUsedByModel( scenario, dataModelOracle ) );
-            addAll( getFullyQualifiedClassNamesUsedByGlobals( dataModelOracle ) );
-        }};
+    private Collection<String> getFullyQualifiedClassNamesUsedByGlobals( final PackageDataModelOracle dataModelOracle ) {
+        return dataModelOracle.getPackageGlobals().values();
     }
+
 }
