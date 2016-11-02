@@ -38,6 +38,7 @@ import org.drools.workbench.screens.testscenario.service.ScenarioTestEditorServi
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
+import org.guvnor.common.services.project.model.Package;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.jboss.errai.bus.server.annotations.Service;
@@ -45,6 +46,9 @@ import org.kie.workbench.common.services.backend.service.KieService;
 import org.kie.workbench.common.services.datamodel.backend.server.DataModelOracleUtilities;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
+import org.kie.workbench.common.services.shared.project.KieProjectService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.service.CopyService;
@@ -60,6 +64,8 @@ import org.uberfire.workbench.events.ResourceOpenedEvent;
 public class ScenarioTestEditorServiceImpl
         extends KieService<TestScenarioModelContent>
         implements ScenarioTestEditorService {
+
+    private Logger logger = LoggerFactory.getLogger( ScenarioTestEditorServiceImpl.class );
 
     @Inject
     @Named("ioStrategy")
@@ -124,13 +130,25 @@ public class ScenarioTestEditorServiceImpl
         try {
             final String content = ioService.readAllString( Paths.convert( path ) );
 
-            Scenario scenario = ScenarioXMLPersistence.getInstance().unmarshal( content );
+            final Scenario scenario = ScenarioXMLPersistence.getInstance().unmarshal( content );
             scenario.setName( path.getFileName() );
 
             return scenario;
 
-        } catch ( Exception e ) {
-            throw ExceptionUtilities.handleException( e );
+        } catch ( final Exception e ) {
+
+            logger.error( "Unable to unmarshal content. Returning an empty Test Scenario.",
+                          e );
+
+            final Package resolvedPackage = projectService.resolvePackage( path );
+            final Scenario scenario = new Scenario();
+            if ( resolvedPackage != null ) {
+                scenario.setPackageName( resolvedPackage.getPackageName() );
+            }
+
+            scenario.setImports( new Imports() );
+
+            return scenario;
         }
     }
 
