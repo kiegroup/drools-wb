@@ -23,10 +23,13 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DescriptionCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.events.SetInternalDecisionTableModelEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.header.HeaderWidget;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +39,7 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.AbstractDeco
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.DynamicColumn;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.ResourcesProvider;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.SortDirection;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.SetInternalModelEvent;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -71,6 +75,9 @@ public class VerticalDecisionTableHeaderWidgetTest {
     EventBus eventBus;
 
     @Mock
+    SetInternalModelEvent<GuidedDecisionTable52, BaseColumn> setInternalModelEvent;
+
+    @Mock
     HeaderWidget widget;
 
     @Mock
@@ -80,7 +87,10 @@ public class VerticalDecisionTableHeaderWidgetTest {
     DynamicColumn<BaseColumn> descriptionColumn;
 
     @Mock
-    DynamicColumn<BaseColumn> conditionColumn;
+    DynamicColumn<BaseColumn> conditionColumnOne;
+
+    @Mock
+    DynamicColumn<BaseColumn> conditionColumnTwo;
 
     @Mock
     DynamicColumn<BaseColumn> actionColumn;
@@ -92,7 +102,10 @@ public class VerticalDecisionTableHeaderWidgetTest {
     DescriptionCol52 description;
 
     @Mock
-    ConditionCol52 condition;
+    ConditionCol52 conditionOne;
+
+    @Mock
+    BRLConditionColumn conditionTwo;
 
     @Mock
     ActionCol52 action;
@@ -106,41 +119,47 @@ public class VerticalDecisionTableHeaderWidgetTest {
     @Captor
     ArgumentCaptor<DivElement> divCaptor;
 
-
-    List<DynamicColumn<BaseColumn>> sortableColumns;
-
     @Before
     public void setUp() throws Exception {
-        sortableColumns = new ArrayList<DynamicColumn<BaseColumn>>();
-        sortableColumns.add(rowNumberColumn);
-        sortableColumns.add(descriptionColumn);
-        sortableColumns.add(conditionColumn);
-        sortableColumns.add(actionColumn);
+        List<DynamicColumn<BaseColumn>> columns = new ArrayList<DynamicColumn<BaseColumn>>();
+        columns.add(rowNumberColumn);
+        columns.add(descriptionColumn);
+        columns.add(conditionColumnOne);
+        columns.add(conditionColumnTwo);
+        columns.add(actionColumn);
+        when(setInternalModelEvent.getColumns()).thenReturn(columns);
 
         when(rowNumberColumn.isVisible()).thenReturn(true);
         when(descriptionColumn.isVisible()).thenReturn(true);
-        when(conditionColumn.isVisible()).thenReturn(true);
+        when(conditionColumnOne.isVisible()).thenReturn(true);
+        when(conditionColumnTwo.isVisible()).thenReturn(true);
         when(actionColumn.isVisible()).thenReturn(true);
 
         when(rowNumberColumn.getModelColumn()).thenReturn(rowNumber);
         when(descriptionColumn.getModelColumn()).thenReturn(description);
-        when(conditionColumn.getModelColumn()).thenReturn(condition);
+        when(conditionColumnOne.getModelColumn()).thenReturn(conditionOne);
+        when(conditionColumnTwo.getModelColumn()).thenReturn(conditionTwo);
         when(actionColumn.getModelColumn()).thenReturn(action);
 
         when(rowNumberColumn.getSortDirection()).thenReturn(SortDirection.ASCENDING);
         when(descriptionColumn.getSortDirection()).thenReturn(SortDirection.ASCENDING);
-        when(conditionColumn.getSortDirection()).thenReturn(SortDirection.ASCENDING);
+        when(conditionColumnOne.getSortDirection()).thenReturn(SortDirection.ASCENDING);
+        when(conditionColumnTwo.getSortDirection()).thenReturn(SortDirection.ASCENDING);
         when(actionColumn.getSortDirection()).thenReturn(SortDirection.ASCENDING);
 
-        when(widget.getVisibleColumnsCount()).thenReturn(4);
+        when(widget.getVisibleColumnsCount()).thenReturn(5);
         when(widget.getVisibleColumn(0)).thenReturn(rowNumberColumn);
         when(widget.getVisibleColumn(1)).thenReturn(descriptionColumn);
-        when(widget.getVisibleColumn(2)).thenReturn(conditionColumn);
-        when(widget.getVisibleColumn(3)).thenReturn(actionColumn);
+        when(widget.getVisibleColumn(2)).thenReturn(conditionColumnOne);
+        when(widget.getVisibleColumn(3)).thenReturn(conditionColumnTwo);
+        when(widget.getVisibleColumn(4)).thenReturn(actionColumn);
 
-        when(condition.isBound()).thenReturn(true);
-        when(condition.getBinding()).thenReturn("p");
-        when(condition.getHeader()).thenReturn("Person");
+        when(conditionOne.isBound()).thenReturn(true);
+        when(conditionOne.getBinding()).thenReturn("p");
+        when(conditionOne.getHeader()).thenReturn("Person");
+
+        when(conditionTwo.isBound()).thenReturn(false);
+        when(conditionTwo.getHeader()).thenReturn("Car");
 
         when(action.getHeader()).thenReturn("print person");
 
@@ -153,14 +172,17 @@ public class VerticalDecisionTableHeaderWidgetTest {
         Map<String, String> preferences = new HashMap<String, String>();
         preferences.put( ApplicationPreferences.DATE_FORMAT, "yyyy-mm-dd" );
         ApplicationPreferences.setUp(preferences);
-        header = new TestableVerticalDecisionTableHeaderWidget(resourceProvider, false, eventBus, sortableColumns);
+        header = new TestableVerticalDecisionTableHeaderWidget(resourceProvider, false, eventBus, new ArrayList<DynamicColumn<BaseColumn>>());
         header.widget = widget;
     }
 
     @Test
-    public void testRedrawNoColumns() throws Exception {
-        sortableColumns.clear();
+    public void testSetModelEventHandlerRegistration() throws Exception {
+        verify(eventBus).addHandler(SetInternalDecisionTableModelEvent.TYPE, header);
+    }
 
+    @Test
+    public void testRedrawNoColumns() throws Exception {
         header.redraw();
 
         verify(widget, never()).addVisibleColumn(any(DynamicColumn.class));
@@ -170,16 +192,17 @@ public class VerticalDecisionTableHeaderWidgetTest {
 
     @Test
     public void testRedrawFirstRow() throws Exception {
-        header.redraw();
+        header.onSetInternalModel(setInternalModelEvent);
 
-        verify(widget).addVisibleConditionColumn(conditionColumn);
+        verify(widget).addVisibleConditionColumn(conditionColumnOne);
+        verify(widget).addVisibleConditionColumn(conditionColumnTwo);
         verify(widget).addVisibleActionColumn(actionColumn);
 
         verify(widget).replaceHeaderRow(eq(0), rowCaptor.capture());
 
         TableRowElement firstRow = rowCaptor.getValue();
-        verify(firstRow, times(4)).appendChild(cellCaptor.capture());
-        assertEquals(4, cellCaptor.getAllValues().size());
+        verify(firstRow, times(5)).appendChild(cellCaptor.capture());
+        assertEquals(5, cellCaptor.getAllValues().size());
 
         verify(cellCaptor.getAllValues().get(0)).setColSpan(1);
         verify(cellCaptor.getAllValues().get(0)).setRowSpan(4);
@@ -208,6 +231,13 @@ public class VerticalDecisionTableHeaderWidgetTest {
         verify(cellCaptor.getAllValues().get(3), never()).addClassName(HEADER_ROW_INTERMEDIATE);
         verify(cellCaptor.getAllValues().get(3)).addClassName(CELL_TABLE_COLUMN);
         verify(cellCaptor.getAllValues().get(3)).appendChild(divCaptor.capture());
+        verify(divCaptor.getValue()).setInnerText("Car");
+
+        verify(cellCaptor.getAllValues().get(4)).setColSpan(1);
+        verify(cellCaptor.getAllValues().get(4)).addClassName(HEADER_TEXT);
+        verify(cellCaptor.getAllValues().get(4), never()).addClassName(HEADER_ROW_INTERMEDIATE);
+        verify(cellCaptor.getAllValues().get(4)).addClassName(CELL_TABLE_COLUMN);
+        verify(cellCaptor.getAllValues().get(4)).appendChild(divCaptor.capture());
         verify(divCaptor.getValue()).setInnerText("print person");
 
     }
