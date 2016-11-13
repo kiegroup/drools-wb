@@ -15,15 +15,15 @@
  */
 package org.drools.workbench.client.perspectives;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
+import com.google.gwt.core.client.Scheduler;
 import org.drools.workbench.client.resources.i18n.AppConstants;
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.screens.examples.client.wizard.ExamplesWizard;
 import org.kie.workbench.common.screens.examples.service.ExamplesService;
+import org.kie.workbench.common.screens.library.api.LibraryContextSwitchEvent;
+import org.kie.workbench.common.screens.library.api.LibraryInfo;
+import org.kie.workbench.common.screens.library.api.LibraryService;
 import org.kie.workbench.common.screens.projecteditor.client.menu.ProjectMenu;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
@@ -35,8 +35,8 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPerspective;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
+import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.mvp.Command;
-import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
@@ -45,13 +45,21 @@ import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.MenuPosition;
 import org.uberfire.workbench.model.menu.Menus;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * A Perspective for Rule authors. Note the @WorkbenchPerspective has the same identifier as kie-drools-wb
  * since org.kie.workbench.common.screens.projecteditor.client.messages.ProblemsService "white-lists" a
  * set of Perspectives for which to show the Problems Panel
  */
 @ApplicationScoped
-@WorkbenchPerspective(identifier = "AuthoringPerspective", isTransient = false)
+@WorkbenchPerspective( identifier = "AuthoringPerspective", isTransient = false )
 public class AuthoringPerspective {
 
     @Inject
@@ -75,6 +83,9 @@ public class AuthoringPerspective {
     @Inject
     private ExamplesWizard wizard;
 
+    @Inject
+    Caller<LibraryService> libraryService;
+
     @PostConstruct
     public void setup() {
         docks.setup( "AuthoringPerspective", new DefaultPlaceRequest( "org.kie.guvnor.explorer" ) );
@@ -82,7 +93,8 @@ public class AuthoringPerspective {
 
     @Perspective
     public PerspectiveDefinition buildPerspective() {
-        final PerspectiveDefinitionImpl perspective = new PerspectiveDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        final PerspectiveDefinitionImpl perspective = new PerspectiveDefinitionImpl(
+                MultiListWorkbenchPanelPresenter.class.getName() );
         perspective.setName( "Author" );
 
         return perspective;
@@ -120,7 +132,8 @@ public class AuthoringPerspective {
                 .newTopLevelMenu( AppConstants.INSTANCE.Repository() )
                 .withItems( repositoryMenu.getMenuItems() )
                 .endMenu()
-                .newTopLevelMenu( AppConstants.INSTANCE.assetSearch() ).position( MenuPosition.RIGHT ).respondsWith( new Command() {
+                .newTopLevelMenu( AppConstants.INSTANCE.assetSearch() ).position( MenuPosition.RIGHT )
+                .respondsWith( new Command() {
                     @Override
                     public void execute() {
                         placeManager.goTo( "FindForm" );
@@ -144,7 +157,8 @@ public class AuthoringPerspective {
                 .newTopLevelMenu( AppConstants.INSTANCE.Repository() )
                 .withItems( repositoryMenu.getMenuItems() )
                 .endMenu()
-                .newTopLevelMenu( AppConstants.INSTANCE.assetSearch() ).position( MenuPosition.RIGHT ).respondsWith( new Command() {
+                .newTopLevelMenu( AppConstants.INSTANCE.assetSearch() ).position( MenuPosition.RIGHT )
+                .respondsWith( new Command() {
                     @Override
                     public void execute() {
                         placeManager.goTo( "FindForm" );
@@ -164,6 +178,12 @@ public class AuthoringPerspective {
                     }
                 } ).endMenu().build().getItems().get( 0 ) );
         return menuItems;
+    }
+
+    public void onLibraryContextSwitchEvent( @Observes final LibraryContextSwitchEvent event ) {
+        if ( event.isProjectFromExample() ) {
+            wizard.start();
+        }
     }
 
 }
