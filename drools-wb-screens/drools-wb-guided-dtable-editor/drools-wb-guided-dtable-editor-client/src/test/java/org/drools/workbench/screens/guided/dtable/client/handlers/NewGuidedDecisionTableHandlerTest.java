@@ -109,8 +109,7 @@ public class NewGuidedDecisionTableHandlerTest {
                                                                                          resourceType,
                                                                                          options,
                                                                                          busyIndicatorView,
-                                                                                         helper,
-                                                                                         beanManager ) {
+                                                                                         helper ) {
             {
                 this.notificationEvent = mockNotificationEvent;
                 this.newResourceSuccessEvent = newResourceSuccessEventMock;
@@ -143,6 +142,7 @@ public class NewGuidedDecisionTableHandlerTest {
         when( pkg.getPackageMainResourcesPath() ).thenReturn( resourcesPath );
         when( options.isUsingWizard() ).thenReturn( true );
         when( options.getTableFormat() ).thenReturn( TableFormat.EXTENDED_ENTRY );
+        when( options.getHitPolicy() ).thenReturn( GuidedDecisionTable52.HitPolicy.FIRST_HIT );
 
         handler.create( pkg,
                         fileName,
@@ -152,6 +152,7 @@ public class NewGuidedDecisionTableHandlerTest {
                 times( 1 ) ).setContent( pathCaptor.capture(),
                                          fileNameCaptor.capture(),
                                          eq( TableFormat.EXTENDED_ENTRY ),
+                                         eq( GuidedDecisionTable52.HitPolicy.FIRST_HIT ),
                                          any( AsyncPackageDataModelOracle.class ),
                                          any( NewGuidedDecisionTableWizard.GuidedDecisionTableWizardHandler.class ) );
     }

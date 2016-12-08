@@ -55,7 +55,6 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
     private GuidedDecisionTableOptions options;
     private BusyIndicatorView busyIndicatorView;
     private NewGuidedDecisionTableWizardHelper helper;
-    private SyncBeanManager iocManager;
 
     private NewResourcePresenter newResourcePresenter;
 
@@ -69,15 +68,13 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
                                           final GuidedDTableResourceType resourceType,
                                           final GuidedDecisionTableOptions options,
                                           final BusyIndicatorView busyIndicatorView,
-                                          final NewGuidedDecisionTableWizardHelper helper,
-                                          final SyncBeanManager iocManager ) {
+                                          final NewGuidedDecisionTableWizardHelper helper ) {
         this.placeManager = placeManager;
         this.service = service;
         this.resourceType = resourceType;
         this.options = options;
         this.busyIndicatorView = busyIndicatorView;
         this.helper = helper;
-        this.iocManager = iocManager;
     }
 
     @PostConstruct
@@ -108,20 +105,18 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
         this.newResourcePresenter = presenter;
         if ( !options.isUsingWizard() ) {
             createEmptyDecisionTable( pkg.getPackageMainResourcesPath(),
-                                      baseFileName,
-                                      options.getTableFormat() );
+                                      baseFileName );
         } else {
             createDecisionTableWithWizard( pkg.getPackageMainResourcesPath(),
-                                           baseFileName,
-                                           options.getTableFormat() );
+                                           baseFileName );
         }
     }
 
     private void createEmptyDecisionTable( final Path contextPath,
-                                           final String baseFileName,
-                                           final GuidedDecisionTable52.TableFormat tableFormat ) {
+                                           final String baseFileName ) {
         final GuidedDecisionTable52 model = new GuidedDecisionTable52();
-        model.setTableFormat( tableFormat );
+        model.setTableFormat( options.getTableFormat() );
+        model.setHitPolicy( options.getHitPolicy() );
         model.setTableName( baseFileName );
 
         final RemoteCallback<Path> onSaveSuccessCallback = getSuccessCallback( newResourcePresenter );
@@ -138,11 +133,11 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
     }
 
     private void createDecisionTableWithWizard( final Path contextPath,
-                                                final String baseFileName,
-                                                final GuidedDecisionTable52.TableFormat tableFormat ) {
+                                                final String baseFileName ) {
         helper.createNewGuidedDecisionTable( contextPath,
                                              baseFileName,
-                                             tableFormat,
+                                             options.getTableFormat(),
+                                             options.getHitPolicy(),
                                              busyIndicatorView,
                                              getSuccessCallback( newResourcePresenter ) );
     }

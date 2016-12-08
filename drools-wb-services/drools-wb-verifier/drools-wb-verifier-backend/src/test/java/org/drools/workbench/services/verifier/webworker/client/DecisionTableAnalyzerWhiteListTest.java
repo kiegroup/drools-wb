@@ -74,10 +74,10 @@ public class DecisionTableAnalyzerWhiteListTest
 
         final AnalyzerConfigurationMock analyzerConfiguration = new AnalyzerConfigurationMock();
         analyzerConfiguration.getCheckWhiteList()
-                .getAllowedCheckTypes()
+                .getCheckConfiguration()
                 .remove( CheckType.REDUNDANT_ROWS );
         analyzerConfiguration.getCheckWhiteList()
-                .getAllowedCheckTypes()
+                .getCheckConfiguration()
                 .remove( CheckType.SUBSUMPTANT_ROWS );
         analyzerProvider.setConfiguration( analyzerConfiguration );
 
@@ -95,7 +95,7 @@ public class DecisionTableAnalyzerWhiteListTest
 
         final AnalyzerConfigurationMock analyzerConfiguration = new AnalyzerConfigurationMock();
         analyzerConfiguration.getCheckWhiteList()
-                .getAllowedCheckTypes()
+                .getCheckConfiguration()
                 .remove( CheckType.EMPTY_RULE );
         analyzerProvider.setConfiguration( analyzerConfiguration );
 

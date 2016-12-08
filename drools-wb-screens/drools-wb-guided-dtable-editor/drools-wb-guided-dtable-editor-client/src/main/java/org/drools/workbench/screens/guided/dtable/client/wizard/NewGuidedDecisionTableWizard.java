@@ -104,10 +104,12 @@ public class NewGuidedDecisionTableWizard extends AbstractWizard {
     public void setContent( final Path contextPath,
                             final String baseFileName,
                             final GuidedDecisionTable52.TableFormat tableFormat,
+                            final GuidedDecisionTable52.HitPolicy hitPolicy,
                             final AsyncPackageDataModelOracle oracle,
                             final GuidedDecisionTableWizardHandler handler ) {
         this.model = new GuidedDecisionTable52();
         this.model.setTableFormat( tableFormat );
+        this.model.setHitPolicy( hitPolicy );
         this.contextPath = contextPath;
         this.oracle = oracle;
         this.handler = handler;
@@ -119,6 +121,7 @@ public class NewGuidedDecisionTableWizard extends AbstractWizard {
             dtp.setContent( contextPath,
                             baseFileName,
                             tableFormat,
+                            hitPolicy,
                             oracle,
                             model,
                             validator );
