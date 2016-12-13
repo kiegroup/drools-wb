@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Command;
@@ -129,7 +130,7 @@ public abstract class AbstractDecisionTableWidget extends Composite
     //Rows that have been copied in a copy-paste operation
     private List<List<DTCellValue52>> copiedRows = new ArrayList<List<DTCellValue52>>();
 
-    protected static final DecisionTableResourcesProvider resources = new DecisionTableResourcesProvider();
+    protected static final DecisionTableResourcesProvider resources = GWT.create( DecisionTableResourcesProvider.class );
 
     /**
      * Constructor
@@ -1275,7 +1276,8 @@ public abstract class AbstractDecisionTableWidget extends Composite
             eventBus.fireEvent( pce );
         } else {
             // Update the original pattern properties with new values.
-            origPattern.update( editPattern );
+            populateModelColumn( origPattern,
+                                 editPattern );
         }
 
         boolean bUpdateColumnData = false;
@@ -1333,6 +1335,9 @@ public abstract class AbstractDecisionTableWidget extends Composite
                                                                     origColumn,
                                                                     editColumn, diffs ) );
 
+            updateCellsForOptionValueList( editColumn,
+                                           editColumn );
+
         } else {
 
             boolean isHideUpdated = false;
@@ -1351,7 +1356,7 @@ public abstract class AbstractDecisionTableWidget extends Composite
                 isFieldTypeUpdated = BaseColumnFieldDiffImpl.hasChanged( ConditionCol52.FIELD_FIELD_TYPE, diffs );
                 isFactFieldUpdated = BaseColumnFieldDiffImpl.hasChanged( ConditionCol52.FIELD_FACT_FIELD, diffs );
                 isFactTypeUpdated = BaseColumnFieldDiffImpl.hasChanged( Pattern52.FIELD_FACT_TYPE, diffs );
-                isConstraintValueTypeUpdated = BaseColumnFieldDiffImpl.hasChanged( ConditionCol52.FIELD_VALUE_LIST, diffs );
+                isConstraintValueTypeUpdated = BaseColumnFieldDiffImpl.hasChanged( ConditionCol52.FIELD_CONSTRAINT_VALUE_TYPE, diffs );
                 isValueListUpdated = BaseColumnFieldDiffImpl.hasChanged( ConditionCol52.FIELD_VALUE_LIST, diffs );
             }
 
@@ -1741,6 +1746,16 @@ public abstract class AbstractDecisionTableWidget extends Composite
     }
 
     // Copy values from one (transient) model column into another
+    private void populateModelColumn( final Pattern52 pattern,
+                                      final Pattern52 editingPattern ) {
+        pattern.setBoundName( editingPattern.getBoundName() );
+        pattern.setEntryPointName( editingPattern.getEntryPointName() );
+        pattern.setFactType( editingPattern.getFactType() );
+        pattern.setNegated( editingPattern.isNegated() );
+        pattern.setWindow( editingPattern.getWindow() );
+    }
+
+    // Copy values from one (transient) model column into another
     private void populateModelColumn( final ConditionCol52 col,
                                       final ConditionCol52 editingCol ) {
         col.setConstraintValueType( editingCol.getConstraintValueType() );
@@ -1797,13 +1812,13 @@ public abstract class AbstractDecisionTableWidget extends Composite
 
         boolean bUpdateColumnData = false;
         int iCol = model.getExpandedColumns().indexOf( origColumn );
+        iCol = iCol < 0 ? model.getExpandedColumns().indexOf( editColumn ) : iCol;
         if ( iCol >= 0 ) {
             for ( List<DTCellValue52> row : this.model.getData() ) {
-                if ( !vals.contains( row.get( iCol ).getStringValue() ) ) {
+                final DTCellValue52 dcv = row.get( iCol );
+                if ( clearExistingValues && !vals.contains( dcv.getStringValue() ) ) {
                     bUpdateColumnData = true;
-                }
-                if ( clearExistingValues ) {
-                    row.get( iCol ).clearValues();
+                    dcv.clearValues();
                 }
             }
         }
