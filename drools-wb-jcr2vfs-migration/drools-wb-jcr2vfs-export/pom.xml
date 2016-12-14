@@ -49,11 +49,6 @@
         <artifactId>lucene-core</artifactId>
         <version>${version.org.apache.lucene.jcrGuvnor}</version>
       </dependency>
-      <dependency>
-        <groupId>org.apache.pdfbox</groupId>
-        <artifactId>pdfbox</artifactId>
-        <version>1.8.6</version>
-      </dependency>
       <!-- Use newer SLF4J and Logback with support for logging exceptions -->
       <dependency>
         <groupId>org.slf4j</groupId>
