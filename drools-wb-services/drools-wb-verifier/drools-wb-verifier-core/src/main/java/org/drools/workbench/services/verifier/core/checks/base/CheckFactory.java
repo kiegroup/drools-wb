@@ -51,7 +51,7 @@ public class CheckFactory {
         this.configuration = PortablePreconditions.checkNotNull( "configuration",
                                                                  configuration );
         checkConfiguration = PortablePreconditions.checkNotNull( "checkWhiteList",
-                                                                 configuration.getCheckWhiteList() );
+                                                                 configuration.getCheckConfiguration() );
     }
 
     protected Set<Check> makeSingleChecks( final RuleInspector ruleInspector ) {

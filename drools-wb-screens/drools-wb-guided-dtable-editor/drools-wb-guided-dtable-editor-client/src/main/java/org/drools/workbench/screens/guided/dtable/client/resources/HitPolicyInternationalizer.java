@@ -34,6 +34,8 @@ public class HitPolicyInternationalizer {
                 return GuidedDecisionTableConstants.INSTANCE.FirstHitPolicy();
             case RULE_ORDER:
                 return GuidedDecisionTableConstants.INSTANCE.RuleOrderHitPolicy();
+            case RESOLVED_HIT:
+                return GuidedDecisionTableConstants.INSTANCE.ResolvedHitPolicy();
             default:
                 return hitPolicy.name();
         }

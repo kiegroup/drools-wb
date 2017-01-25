@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisionTableResources;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
@@ -117,6 +118,14 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
         final GuidedDecisionTable52 model = new GuidedDecisionTable52();
         model.setTableFormat( options.getTableFormat() );
         model.setHitPolicy( options.getHitPolicy() );
+
+        if(GuidedDecisionTable52.HitPolicy.RESOLVED_HIT.equals( options.getHitPolicy() )) {
+            final MetadataCol52 metadataCol52 = new MetadataCol52();
+
+            metadataCol52.setMetadata( GuidedDecisionTable52.HitPolicy.RESOLVED_HIT_METADATA_NAME );
+            model.getMetadataCols().add( metadataCol52 );
+        }
+
         model.setTableName( baseFileName );
 
         final RemoteCallback<Path> onSaveSuccessCallback = getSuccessCallback( newResourcePresenter );

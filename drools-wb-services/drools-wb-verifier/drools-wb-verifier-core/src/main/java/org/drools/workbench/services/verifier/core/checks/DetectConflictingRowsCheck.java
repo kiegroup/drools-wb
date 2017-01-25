@@ -58,12 +58,6 @@ public class DetectConflictingRowsCheck
     }
 
     @Override
-    public boolean isActive( final CheckConfiguration checkConfiguration ) {
-        return checkConfiguration.getCheckConfiguration()
-                .contains( getCheckType() );
-    }
-
-    @Override
     protected Issue makeIssue( final Severity severity,
                                final CheckType checkType ) {
         final Issue issue = new Issue( severity,

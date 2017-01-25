@@ -64,9 +64,4 @@ public class SingleHitCheck
                                        Integer.toString( other.getRowIndex() + 1 ) );
     }
 
-    @Override
-    public boolean isActive( final CheckConfiguration checkConfiguration ) {
-        return checkConfiguration.getCheckConfiguration()
-                .contains( getCheckType() );
-    }
 }

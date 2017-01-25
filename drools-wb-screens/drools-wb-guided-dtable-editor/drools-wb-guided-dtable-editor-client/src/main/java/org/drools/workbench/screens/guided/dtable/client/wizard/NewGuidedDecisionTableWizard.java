@@ -27,7 +27,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.drools.workbench.screens.guided.dtable.client.handlers.NewGuidedDecisionTableHandler;
+import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.Validator;
 import org.drools.workbench.screens.guided.dtable.client.wizard.pages.AbstractGuidedDecisionTableWizardPage;
@@ -110,6 +110,16 @@ public class NewGuidedDecisionTableWizard extends AbstractWizard {
         this.model = new GuidedDecisionTable52();
         this.model.setTableFormat( tableFormat );
         this.model.setHitPolicy( hitPolicy );
+
+        if ( GuidedDecisionTable52.HitPolicy.RESOLVED_HIT.equals( hitPolicy ) ) {
+
+            final MetadataCol52 metadataCol52 = new MetadataCol52();
+
+            metadataCol52.setMetadata( GuidedDecisionTable52.HitPolicy.RESOLVED_HIT_METADATA_NAME );
+
+            this.model.getMetadataCols().add( metadataCol52 );
+        }
+
         this.contextPath = contextPath;
         this.oracle = oracle;
         this.handler = handler;

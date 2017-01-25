@@ -19,6 +19,7 @@ package org.drools.workbench.services.verifier.core.checks.base;
 import java.util.Optional;
 
 import org.drools.workbench.services.verifier.api.client.configuration.AnalyzerConfiguration;
+import org.drools.workbench.services.verifier.api.client.configuration.CheckConfiguration;
 import org.drools.workbench.services.verifier.api.client.reporting.CheckType;
 import org.drools.workbench.services.verifier.api.client.reporting.Issue;
 import org.drools.workbench.services.verifier.api.client.reporting.Severity;
@@ -54,8 +55,14 @@ abstract class CheckBase
 
     protected abstract Severity getDefaultSeverity();
 
+    @Override
+    public boolean isActive( final CheckConfiguration checkConfiguration ) {
+        return checkConfiguration.getCheckConfiguration()
+                .contains( getCheckType() );
+    }
+
     protected Severity resolveSeverity() {
-        final Optional<Severity> severityOverwrite = configuration.getCheckWhiteList()
+        final Optional<Severity> severityOverwrite = configuration.getCheckConfiguration()
                 .getSeverityOverwrite( getCheckType() );
 
         if ( severityOverwrite.isPresent() ) {

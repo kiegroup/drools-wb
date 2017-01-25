@@ -16,12 +16,11 @@
 
 package org.drools.workbench.screens.guided.dtable.client.handlers;
 
-import javax.enterprise.event.Event;
-
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat;
+import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
 import org.drools.workbench.screens.guided.dtable.client.wizard.NewGuidedDecisionTableWizard;
 import org.drools.workbench.screens.guided.dtable.client.wizard.NewGuidedDecisionTableWizardHelper;
@@ -192,4 +191,37 @@ public class NewGuidedDecisionTableHandlerTest {
                                      any( String.class ) );
     }
 
+    @Test
+    public void testResolvedHitPolicy() throws
+                                        Exception {
+
+        final Package pkg = mock( Package.class );
+        final Path resourcesPath = PathFactory.newPath( "resources",
+                                                        "default://project/src/main/resources" );
+
+        when( pkg.getPackageMainResourcesPath() ).thenReturn( resourcesPath );
+        when( options.isUsingWizard() ).thenReturn( false );
+        when( options.getHitPolicy() ).thenReturn( GuidedDecisionTable52.HitPolicy.RESOLVED_HIT );
+
+        handler.create( pkg,
+                        "fileName",
+                        newResourcePresenter );
+
+        final ArgumentCaptor<GuidedDecisionTable52> dtableArgumentCaptor = ArgumentCaptor.forClass( GuidedDecisionTable52.class );
+
+        verify( service,
+                times( 1 ) ).create( eq( resourcesPath ),
+                                     eq( "fileName." + resourceType.getSuffix() ),
+                                     dtableArgumentCaptor.capture(),
+                                     any( String.class ) );
+
+        final GuidedDecisionTable52 model = dtableArgumentCaptor.getValue();
+
+        assertEquals( 1,
+                      model.getMetadataCols()
+                              .size() );
+        final MetadataCol52 metadataCol52 = model.getMetadataCols().get( 0 );
+        assertEquals( GuidedDecisionTable52.HitPolicy.RESOLVED_HIT_METADATA_NAME,
+                      metadataCol52.getMetadata() );
+    }
 }

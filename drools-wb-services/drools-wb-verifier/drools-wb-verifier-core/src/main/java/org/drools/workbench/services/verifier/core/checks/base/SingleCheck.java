@@ -37,11 +37,6 @@ public abstract class SingleCheck
         this.checkType = checkType;
     }
 
-    @Override
-    public boolean isActive( final CheckConfiguration checkConfiguration ) {
-        return checkConfiguration.getCheckConfiguration()
-                .contains( getCheckType() );
-    }
 
     @Override
     protected CheckType getCheckType() {

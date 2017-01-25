@@ -41,7 +41,7 @@ public class AnalyzerConfiguration {
                                                                      dateTimeFormatter );
         this.uuidKeyProvider = PortablePreconditions.checkNotNull( "uuidKeyProvider",
                                                                    uuidKeyProvider );
-        this.checkConfiguration = PortablePreconditions.checkNotNull( "checkWhiteList",
+        this.checkConfiguration = PortablePreconditions.checkNotNull( "checkConfiguration",
                                                                       checkConfiguration );
         this.runnerType = PortablePreconditions.checkNotNull( "runnerType",
                                                               runnerType );
@@ -59,7 +59,7 @@ public class AnalyzerConfiguration {
         return dateTimeFormatter.format( dateValue );
     }
 
-    public CheckConfiguration getCheckWhiteList() {
+    public CheckConfiguration getCheckConfiguration() {
         return checkConfiguration;
     }
 

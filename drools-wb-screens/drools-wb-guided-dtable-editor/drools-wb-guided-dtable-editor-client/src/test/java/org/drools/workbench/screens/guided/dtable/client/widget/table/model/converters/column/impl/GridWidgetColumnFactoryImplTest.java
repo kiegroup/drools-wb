@@ -79,6 +79,8 @@ public class GridWidgetColumnFactoryImplTest extends BaseConverterTest {
         factory = new GridWidgetColumnFactoryImpl();
         factory.setConverters( getConverters() );
 
+        when( model.getHitPolicy() ).thenReturn( GuidedDecisionTable52.HitPolicy.NONE );
+
         access = new GuidedDecisionTablePresenter.Access();
     }
 
@@ -104,8 +106,6 @@ public class GridWidgetColumnFactoryImplTest extends BaseConverterTest {
     @Test
     public void columnResizingListenerSetup_RowNumberColumn() {
         final BaseColumn column = new RowNumberCol52();
-
-        when( model.getHitPolicy() ).thenReturn( GuidedDecisionTable52.HitPolicy.NONE );
 
         final GridColumn<?> uiColumn = factory.convertColumn( column,
                                                               access,
