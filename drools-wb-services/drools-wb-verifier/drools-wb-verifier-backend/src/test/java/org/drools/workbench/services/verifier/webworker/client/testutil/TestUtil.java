@@ -124,6 +124,28 @@ public class TestUtil {
 
     public static void assertContains( final String expected,
                                        final Set<Issue> result,
+                                       final int rowNumber,
+                                       final int toRowNumber) {
+
+        boolean foundOne = false;
+
+        for ( Issue issue : result ) {
+            final String title = ExplanationProvider.toTitle( issue );
+            if ( containsRowNumber( rowNumber,
+                                    issue ) && containsRowNumber( toRowNumber,
+                                                                  issue )&& title
+                    .contains( expected ) ) {
+                foundOne = true;
+                break;
+            }
+        }
+
+        assertTrue( "Could not find " + expected + " from: " + result.toString(),
+                    foundOne );
+    }
+
+    public static void assertContains( final String expected,
+                                       final Set<Issue> result,
                                        final int rowNumber ) {
 
         boolean foundOne = false;
