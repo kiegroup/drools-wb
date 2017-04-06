@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import static org.drools.workbench.services.verifier.webworker.client.testutil.TestUtil.assertContains;
 import static org.drools.workbench.services.verifier.webworker.client.testutil.TestUtil.assertOnlyContains;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class DecisionTableAnalyzerMultipleIssuesFromFileTest extends AnalyzerUpdateTestBase {
@@ -304,5 +305,12 @@ public class DecisionTableAnalyzerMultipleIssuesFromFileTest extends AnalyzerUpd
                            RULE_HAS_NO_RESTRICTIONS_AND_WILL_ALWAYS_FIRE,
                            RULE_HAS_NO_ACTION,
                            SINGLE_HIT_LOST);
+    }
+
+    @Test
+    public void testGapAnalysis() throws Exception {
+        analyze("gapAnalysis.gdst");
+
+        assertTrue( analyzerProvider.getAnalysisReport().isEmpty() );
     }
 }
