@@ -16,6 +16,7 @@
 
 package org.drools.workbench.services.verifier.webworker.client.testutil;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,27 +43,31 @@ public class AnalyzerProvider {
 
     public AnalyzerProvider() {
 
-        factTypes.add( new FactTypes.FactType( "Account",
-                                               new HashSet<FactTypes.Field>() {{
-                                                   add( new FactTypes.Field( "deposit",
-                                                                             DataType.TYPE_NUMERIC_DOUBLE ) );
-                                               }} ) );
+        factTypes.add(new FactTypes.FactType("Applicant",
+                                             Collections.singleton(new FactTypes.Field("age",
+                                                                                       DataType.TYPE_NUMERIC_INTEGER))));
 
-        factTypes.add( new FactTypes.FactType( "Person",
-                                               new HashSet<FactTypes.Field>() {{
-                                                   add( new FactTypes.Field( "age",
-                                                                             DataType.TYPE_NUMERIC_INTEGER ) );
-                                                   add( new FactTypes.Field( "name",
-                                                                             DataType.TYPE_STRING ) );
-                                                   add( new FactTypes.Field( "lastName",
-                                                                             DataType.TYPE_STRING ) );
-                                                   add( new FactTypes.Field( "description",
-                                                                             DataType.TYPE_STRING ) );
-                                                   add( new FactTypes.Field( "approved",
-                                                                             DataType.TYPE_BOOLEAN ) );
-                                                   add( new FactTypes.Field( "salary",
-                                                                             DataType.TYPE_NUMERIC_INTEGER ) );
-                                               }} ) );
+        factTypes.add(new FactTypes.FactType("Account",
+                                             new HashSet<FactTypes.Field>() {{
+                                                 add(new FactTypes.Field("deposit",
+                                                                         DataType.TYPE_NUMERIC_DOUBLE));
+                                             }}));
+
+        factTypes.add(new FactTypes.FactType("Person",
+                                             new HashSet<FactTypes.Field>() {{
+                                                 add(new FactTypes.Field("age",
+                                                                         DataType.TYPE_NUMERIC_INTEGER));
+                                                 add(new FactTypes.Field("name",
+                                                                         DataType.TYPE_STRING));
+                                                 add(new FactTypes.Field("lastName",
+                                                                         DataType.TYPE_STRING));
+                                                 add(new FactTypes.Field("description",
+                                                                         DataType.TYPE_STRING));
+                                                 add(new FactTypes.Field("approved",
+                                                                         DataType.TYPE_BOOLEAN));
+                                                 add(new FactTypes.Field("salary",
+                                                                         DataType.TYPE_NUMERIC_INTEGER));
+                                             }}));
     }
 
     public FactTypes getFactTypes() {
@@ -77,42 +82,40 @@ public class AnalyzerProvider {
         return status;
     }
 
-    public Analyzer getAnalyser( final GuidedDecisionTable52 table52 ) {
+    public Analyzer getAnalyser(final GuidedDecisionTable52 table52) {
 
         final DecisionTableAnalyzerBuilder builder = getDecisionTableAnalyzerBuilder()
-                .withFieldTypes( factTypes )
-                .withAnalyzer( analyzer )
-                .withModel( table52 );
-
+                .withFieldTypes(factTypes)
+                .withAnalyzer(analyzer)
+                .withModel(table52);
 
         return builder.build();
     }
 
-    public DTableUpdateManager getUpdateManager( final GuidedDecisionTable52 table52,
-                                                 final Analyzer analyzer ) {
+    public DTableUpdateManager getUpdateManager(final GuidedDecisionTable52 table52,
+                                                final Analyzer analyzer) {
         updateManager = getDecisionTableAnalyzerBuilder()
-                .withFieldTypes( factTypes )
-                .withModel( table52 )
-                .withAnalyzer( analyzer )
-                .withConfiguration( configuration )
+                .withFieldTypes(factTypes)
+                .withModel(table52)
+                .withAnalyzer(analyzer)
+                .withConfiguration(configuration)
                 .getUpdateManagerBuilder()
                 .buildUpdateManager();
         return updateManager;
     }
 
     private DecisionTableAnalyzerBuilder getDecisionTableAnalyzerBuilder() {
-        if ( decisionTableAnalyzerBuilder == null ) {
+        if (decisionTableAnalyzerBuilder == null) {
             decisionTableAnalyzerBuilder = new DecisionTableAnalyzerBuilder() {
                 @Override
                 protected InnerBuilder getInnerBuilder() {
-                    return new InnerBuilder( configuration ) {
+                    return new InnerBuilder(configuration) {
                         @Override
                         protected Reporter getAnalysisReporter() {
                             return AnalyzerProvider.this.getAnalysisReporter();
                         }
                     };
                 }
-
             };
         }
         return decisionTableAnalyzerBuilder;
@@ -122,26 +125,26 @@ public class AnalyzerProvider {
         return new Reporter() {
 
             @Override
-            public void sendReport( final Set<Issue> issues ) {
+            public void sendReport(final Set<Issue> issues) {
                 analysisReport = issues;
             }
 
             @Override
-            public void sendStatus( final Status _status ) {
+            public void sendStatus(final Status _status) {
                 status = _status;
             }
         };
     }
 
     public AnalyzerBuilder makeAnalyser() {
-        return new AnalyzerBuilder( this );
+        return new AnalyzerBuilder(this);
     }
 
-    public Analyzer makeAnalyser( final GuidedDecisionTable52 table52 ) {
-        return getAnalyser( table52 );
+    public Analyzer makeAnalyser(final GuidedDecisionTable52 table52) {
+        return getAnalyser(table52);
     }
 
-    public void setConfiguration( final AnalyzerConfiguration analyzerConfiguration ) {
+    public void setConfiguration(final AnalyzerConfiguration analyzerConfiguration) {
         this.configuration = analyzerConfiguration;
     }
 }
