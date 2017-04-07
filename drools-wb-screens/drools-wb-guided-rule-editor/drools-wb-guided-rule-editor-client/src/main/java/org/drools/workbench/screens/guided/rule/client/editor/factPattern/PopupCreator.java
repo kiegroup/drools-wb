@@ -27,6 +27,7 @@ import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.datamodel.oracle.FieldAccessorsAndMutators;
 import org.drools.workbench.models.datamodel.oracle.ModelField;
 import org.drools.workbench.models.datamodel.rule.CompositeFieldConstraint;
+import org.drools.workbench.models.datamodel.rule.ExpressionField;
 import org.drools.workbench.models.datamodel.rule.ExpressionFormLine;
 import org.drools.workbench.models.datamodel.rule.ExpressionUnboundFact;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
@@ -64,7 +65,7 @@ public class PopupCreator {
     /**
      * @param pattern the pattern to set
      */
-    public void setPattern( FactPattern pattern ) {
+    public void setPattern(FactPattern pattern) {
         this.pattern = pattern;
     }
 
@@ -78,7 +79,7 @@ public class PopupCreator {
     /**
      * @param oracle the oracle to set
      */
-    public void setDataModelOracle( AsyncPackageDataModelOracle oracle ) {
+    public void setDataModelOracle(AsyncPackageDataModelOracle oracle) {
         this.oracle = oracle;
     }
 
@@ -92,7 +93,7 @@ public class PopupCreator {
     /**
      * @param modeller the modeller to set
      */
-    public void setModeller( RuleModeller modeller ) {
+    public void setModeller(RuleModeller modeller) {
         this.modeller = modeller;
     }
 
@@ -106,71 +107,71 @@ public class PopupCreator {
     /**
      * @param bindable the bindable to set
      */
-    public void setBindable( boolean bindable ) {
+    public void setBindable(boolean bindable) {
         this.bindable = bindable;
     }
 
     /**
      * Display a little editor for field bindings.
      */
-    public void showBindFieldPopup( final FactPattern fp,
-                                    final SingleFieldConstraint con,
-                                    final ModelField[] fields,
-                                    final PopupCreator popupCreator ) {
-        final FormStylePopup popup = new FormStylePopup( GuidedRuleEditorResources.CONSTANTS.AddAField() );
+    public void showBindFieldPopup(final FactPattern fp,
+                                   final SingleFieldConstraint con,
+                                   final ModelField[] fields,
+                                   final PopupCreator popupCreator) {
+        final FormStylePopup popup = new FormStylePopup(GuidedRuleEditorResources.CONSTANTS.AddAField());
 //        popup.setWidth( 500 + "px" );
 //        popup.setHeight( 100 + "px" );
         final HorizontalPanel vn = new HorizontalPanel();
         final TextBox varName = new BindingTextBox();
-        if ( con.getFieldBinding() != null ) {
-            varName.setText( con.getFieldBinding() );
+        if (con.getFieldBinding() != null) {
+            varName.setText(con.getFieldBinding());
         }
-        final Button ok = new Button( HumanReadableConstants.INSTANCE.Set() );
-        vn.add( varName );
-        vn.add( ok );
+        final Button ok = new Button(HumanReadableConstants.INSTANCE.Set());
+        vn.add(varName);
+        vn.add(ok);
 
-        ok.addClickHandler( new ClickHandler() {
-            public void onClick( ClickEvent event ) {
+        ok.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 String var = varName.getText();
-                if ( modeller.isVariableNameUsed( var ) ) {
-                    Window.alert( GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken( var ) );
+                if (modeller.isVariableNameUsed(var)) {
+                    Window.alert(GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken(var));
                     return;
                 }
-                con.setFieldBinding( var );
+                con.setFieldBinding(var);
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.BindTheFieldCalled0ToAVariable( con.getFieldName() ),
-                            vn );
+        });
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.BindTheFieldCalled0ToAVariable(con.getFieldName()),
+                           vn);
 
         //Show the sub-field selector is there are applicable sub-fields
-        if ( hasApplicableFields( fields ) ) {
-            Button sub = new Button( GuidedRuleEditorResources.CONSTANTS.ShowSubFields() );
-            popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.ApplyAConstraintToASubFieldOf0( con.getFieldName() ),
-                                sub );
-            sub.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent event ) {
+        if (hasApplicableFields(fields)) {
+            Button sub = new Button(GuidedRuleEditorResources.CONSTANTS.ShowSubFields());
+            popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.ApplyAConstraintToASubFieldOf0(con.getFieldName()),
+                               sub);
+            sub.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     popup.hide();
-                    popupCreator.showPatternPopup( fp,
-                                                   con,
-                                                   true );
+                    popupCreator.showPatternPopup(fp,
+                                                  con
+                    );
                 }
-            } );
+            });
         }
 
         popup.show();
     }
 
     //Check if there are any fields other than "this"
-    private boolean hasApplicableFields( final ModelField[] fields ) {
-        if ( fields == null || fields.length == 0 ) {
+    private boolean hasApplicableFields(final ModelField[] fields) {
+        if (fields == null || fields.length == 0) {
             return false;
         }
-        if ( fields.length > 1 ) {
+        if (fields.length > 1) {
             return true;
         }
-        if ( DataType.TYPE_THIS.equals( fields[ 0 ].getName() ) ) {
+        if (DataType.TYPE_THIS.equals(fields[0].getName())) {
             return false;
         }
         return true;
@@ -179,234 +180,277 @@ public class PopupCreator {
     /**
      * This shows a popup for adding fields to a composite
      */
-    public void showPatternPopupForComposite( final HasConstraints hasConstraints ) {
-        final FormStylePopup popup = new FormStylePopup( GuidedRuleEditorImages508.INSTANCE.Wizard(),
-                                                         GuidedRuleEditorResources.CONSTANTS.AddFieldsToThisConstraint() );
+    public void showPatternPopupForComposite(final HasConstraints hasConstraints) {
+        final FormStylePopup popup = new FormStylePopup(GuidedRuleEditorImages508.INSTANCE.Wizard(),
+                                                        GuidedRuleEditorResources.CONSTANTS.AddFieldsToThisConstraint());
 
         final ListBox box = new ListBox();
-        box.addItem( "..." );
-        this.oracle.getFieldCompletions( this.pattern.getFactType(),
-                                         new Callback<ModelField[]>() {
+        box.addItem("...");
+        this.oracle.getFieldCompletions(this.pattern.getFactType(),
+                                        new Callback<ModelField[]>() {
 
-                                             @Override
-                                             public void callback( final ModelField[] fields ) {
-                                                 for ( int i = 0; i < fields.length; i++ ) {
-                                                     final String fieldName = fields[ i ].getName();
-                                                     box.addItem( fieldName );
-                                                 }
-                                             }
-                                         } );
+                                            @Override
+                                            public void callback(final ModelField[] fields) {
+                                                for (int i = 0; i < fields.length; i++) {
+                                                    final String fieldName = fields[i].getName();
+                                                    box.addItem(fieldName);
+                                                }
+                                            }
+                                        });
 
-        box.setSelectedIndex( 0 );
+        box.setSelectedIndex(0);
 
-        box.addChangeHandler( new ChangeHandler() {
-            public void onChange( ChangeEvent event ) {
+        box.addChangeHandler(new ChangeHandler() {
+            public void onChange(ChangeEvent event) {
                 String factType = pattern.getFactType();
-                String fieldName = box.getItemText( box.getSelectedIndex() );
-                String fieldType = getDataModelOracle().getFieldType( factType,
-                                                                      fieldName );
-                hasConstraints.addConstraint( new SingleFieldConstraint( factType,
-                                                                         fieldName,
-                                                                         fieldType,
-                                                                         null ) );
+                String fieldName = box.getItemText(box.getSelectedIndex());
+                String fieldType = getDataModelOracle().getFieldType(factType,
+                                                                     fieldName);
+                hasConstraints.addConstraint(new SingleFieldConstraint(factType,
+                                                                       fieldName,
+                                                                       fieldType,
+                                                                       null));
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.AddARestrictionOnAField(),
-                            box );
+        });
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.AddARestrictionOnAField(),
+                           box);
 
         final ListBox composites = new ListBox();
-        composites.addItem( "..." ); //NON-NLS
-        composites.addItem( GuidedRuleEditorResources.CONSTANTS.AllOfAnd(),
-                            CompositeFieldConstraint.COMPOSITE_TYPE_AND );
-        composites.addItem( GuidedRuleEditorResources.CONSTANTS.AnyOfOr(),
-                            CompositeFieldConstraint.COMPOSITE_TYPE_OR );
-        composites.setSelectedIndex( 0 );
+        composites.addItem("..."); //NON-NLS
+        composites.addItem(GuidedRuleEditorResources.CONSTANTS.AllOfAnd(),
+                           CompositeFieldConstraint.COMPOSITE_TYPE_AND);
+        composites.addItem(GuidedRuleEditorResources.CONSTANTS.AnyOfOr(),
+                           CompositeFieldConstraint.COMPOSITE_TYPE_OR);
+        composites.setSelectedIndex(0);
 
-        composites.addChangeHandler( new ChangeHandler() {
-            public void onChange( ChangeEvent event ) {
+        composites.addChangeHandler(new ChangeHandler() {
+            public void onChange(ChangeEvent event) {
                 CompositeFieldConstraint comp = new CompositeFieldConstraint();
-                comp.setCompositeJunctionType( composites.getValue( composites.getSelectedIndex() ) );
-                hasConstraints.addConstraint( comp );
+                comp.setCompositeJunctionType(composites.getValue(composites.getSelectedIndex()));
+                hasConstraints.addConstraint(comp);
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
+        });
 
-        InfoPopup infoComp = new InfoPopup( GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraints(),
-                                            GuidedRuleEditorResources.CONSTANTS.MultipleConstraintsTip() );
+        InfoPopup infoComp = new InfoPopup(GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraints(),
+                                           GuidedRuleEditorResources.CONSTANTS.MultipleConstraintsTip());
 
         HorizontalPanel horiz = new HorizontalPanel();
-        horiz.add( composites );
-        horiz.add( infoComp );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraint(),
-                            horiz );
+        horiz.add(composites);
+        horiz.add(infoComp);
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraint(),
+                           horiz);
 
         //Include Expression Editor
-        popup.addRow( new SmallLabel( "<i>" + GuidedRuleEditorResources.CONSTANTS.AdvancedOptionsColon() + "</i>" ) );
+        popup.addRow(new SmallLabel("<i>" + GuidedRuleEditorResources.CONSTANTS.AdvancedOptionsColon() + "</i>"));
 
-        Button predicate = new Button( GuidedRuleEditorResources.CONSTANTS.NewFormula() );
-        predicate.addClickHandler( new ClickHandler() {
-            public void onClick( ClickEvent event ) {
+        Button predicate = new Button(GuidedRuleEditorResources.CONSTANTS.NewFormula());
+        predicate.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 SingleFieldConstraint con = new SingleFieldConstraint();
-                con.setConstraintValueType( SingleFieldConstraint.TYPE_PREDICATE );
-                hasConstraints.addConstraint( con );
+                con.setConstraintValueType(SingleFieldConstraint.TYPE_PREDICATE);
+                hasConstraints.addConstraint(con);
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.AddANewFormulaStyleExpression(),
-                            predicate );
+        });
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.AddANewFormulaStyleExpression(),
+                           predicate);
 
-        Button ebBtn = new Button( GuidedRuleEditorResources.CONSTANTS.ExpressionEditor() );
+        Button ebBtn = new Button(GuidedRuleEditorResources.CONSTANTS.ExpressionEditor());
 
-        ebBtn.addClickHandler( new ClickHandler() {
-            public void onClick( ClickEvent event ) {
+        ebBtn.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent event) {
                 SingleFieldConstraintEBLeftSide con = new SingleFieldConstraintEBLeftSide();
-                con.setConstraintValueType( SingleFieldConstraint.TYPE_UNDEFINED );
-                con.setExpressionLeftSide( new ExpressionFormLine( new ExpressionUnboundFact( pattern.getFactType() ) ) );
-                hasConstraints.addConstraint( con );
+                con.setConstraintValueType(SingleFieldConstraint.TYPE_UNDEFINED);
+                con.setExpressionLeftSide(new ExpressionFormLine(new ExpressionUnboundFact(pattern.getFactType())));
+                hasConstraints.addConstraint(con);
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.ExpressionEditor(),
-                            ebBtn );
+        });
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.ExpressionEditor(),
+                           ebBtn);
 
         popup.show();
-
     }
 
     /**
      * This shows a popup allowing you to add field constraints to a pattern
      * (its a popup).
      */
-    public void showPatternPopup( final FactPattern fp,
-                                  final SingleFieldConstraint con,
-                                  final boolean isNested ) {
+    public void showPatternPopup(final FactPattern factPattern,
+                                 final SingleFieldConstraint fieldConstraint) {
 
-        final String factType = getFactType( fp,
-                                             con );
-
-        String title = ( con == null ) ? GuidedRuleEditorResources.CONSTANTS.ModifyConstraintsFor0( fp.getFactType() ) : GuidedRuleEditorResources.CONSTANTS.AddSubFieldConstraint();
-        final FormStylePopup popup = new FormStylePopup( GuidedRuleEditorImages508.INSTANCE.Wizard(),
-                                                         title );
+        final boolean isNested = fieldConstraint != null;
+        final String title = isNested ? GuidedRuleEditorResources.CONSTANTS.ModifyConstraintsFor0(factPattern.getFactType()) : GuidedRuleEditorResources.CONSTANTS.AddSubFieldConstraint();
+        final String factType = getFactType(factPattern,
+                                            fieldConstraint);
+        final FormStylePopup popup = new FormStylePopup(GuidedRuleEditorImages508.INSTANCE.Wizard(),
+                                                        title);
 
         final ListBox box = new ListBox();
-        box.addItem( "..." );
-        this.oracle.getFieldCompletions( factType,
-                                         FieldAccessorsAndMutators.ACCESSOR,
-                                         new Callback<ModelField[]>() {
-                                             @Override
-                                             public void callback( final ModelField[] fields ) {
-                                                 for ( int i = 0; i < fields.length; i++ ) {
-                                                     //You can't use "this" in a nested accessor
-                                                     final String fieldName = fields[ i ].getName();
-                                                     if ( !isNested || !fieldName.equals( DataType.TYPE_THIS ) ) {
-                                                         box.addItem( fieldName );
-                                                     }
-                                                 }
-                                             }
-                                         } );
+        box.addItem("...");
+        this.oracle.getFieldCompletions(factType,
+                                        FieldAccessorsAndMutators.ACCESSOR,
+                                        new Callback<ModelField[]>() {
+                                            @Override
+                                            public void callback(final ModelField[] fields) {
+                                                for (int i = 0; i < fields.length; i++) {
+                                                    //You can't use "this" in a nested accessor
+                                                    final String fieldName = fields[i].getName();
+                                                    if (!isNested || !fieldName.equals(DataType.TYPE_THIS)) {
+                                                        box.addItem(fieldName);
+                                                    }
+                                                }
+                                            }
+                                        });
 
-        box.setSelectedIndex( 0 );
+        box.setSelectedIndex(0);
 
-        box.addChangeHandler( new ChangeHandler() {
-            public void onChange( ChangeEvent event ) {
-                String fieldName = box.getItemText( box.getSelectedIndex() );
-                if ( "...".equals( fieldName ) ) {
+        box.addChangeHandler(new ChangeHandler() {
+            @Override
+            public void onChange(final ChangeEvent event) {
+                final String fieldName = box.getItemText(box.getSelectedIndex());
+
+                if ("...".equals(fieldName)) {
                     return;
                 }
-                String fieldType = oracle.getFieldType( factType,
-                                                        fieldName );
-                fp.addConstraint( new SingleFieldConstraint( factType,
-                                                             fieldName,
-                                                             fieldType,
-                                                             con ) );
+
+                factPattern.addConstraint(makeFieldConstraint(fieldName,
+                                                              factType,
+                                                              fieldConstraint));
+
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
-        popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.AddARestrictionOnAField(),
-                            box );
+        });
+        popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.AddARestrictionOnAField(),
+                           box);
 
         final ListBox composites = new ListBox();
-        composites.addItem( "..." );
-        composites.addItem( GuidedRuleEditorResources.CONSTANTS.AllOfAnd(),
-                            CompositeFieldConstraint.COMPOSITE_TYPE_AND );
-        composites.addItem( GuidedRuleEditorResources.CONSTANTS.AnyOfOr(),
-                            CompositeFieldConstraint.COMPOSITE_TYPE_OR );
-        composites.setSelectedIndex( 0 );
+        composites.addItem("...");
+        composites.addItem(GuidedRuleEditorResources.CONSTANTS.AllOfAnd(),
+                           CompositeFieldConstraint.COMPOSITE_TYPE_AND);
+        composites.addItem(GuidedRuleEditorResources.CONSTANTS.AnyOfOr(),
+                           CompositeFieldConstraint.COMPOSITE_TYPE_OR);
+        composites.setSelectedIndex(0);
 
-        composites.addChangeHandler( new ChangeHandler() {
-            public void onChange( ChangeEvent event ) {
+        composites.addChangeHandler(new ChangeHandler() {
+            public void onChange(ChangeEvent event) {
                 CompositeFieldConstraint comp = new CompositeFieldConstraint();
-                comp.setCompositeJunctionType( composites.getValue( composites.getSelectedIndex() ) );
-                fp.addConstraint( comp );
+                comp.setCompositeJunctionType(composites.getValue(composites.getSelectedIndex()));
+                factPattern.addConstraint(comp);
                 modeller.refreshWidget();
                 popup.hide();
             }
-        } );
+        });
 
-        InfoPopup infoComp = new InfoPopup( GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraints(),
-                                            GuidedRuleEditorResources.CONSTANTS.MultipleConstraintsTip1() );
+        InfoPopup infoComp = new InfoPopup(GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraints(),
+                                           GuidedRuleEditorResources.CONSTANTS.MultipleConstraintsTip1());
 
         HorizontalPanel horiz = new HorizontalPanel();
 
-        horiz.add( composites );
-        horiz.add( infoComp );
-        if ( con == null ) {
-            popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraint(),
-                                horiz );
+        horiz.add(composites);
+        horiz.add(infoComp);
+        if (fieldConstraint == null) {
+            popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.MultipleFieldConstraint(),
+                               horiz);
         }
 
-        if ( con == null ) {
-            popup.addRow( new SmallLabel( "<i>" + GuidedRuleEditorResources.CONSTANTS.AdvancedOptionsColon() + "</i>" ) ); //NON-NLS
-            Button predicate = new Button( GuidedRuleEditorResources.CONSTANTS.NewFormula() );
-            predicate.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent event ) {
+        if (fieldConstraint == null) {
+            popup.addRow(new SmallLabel("<i>" + GuidedRuleEditorResources.CONSTANTS.AdvancedOptionsColon() + "</i>")); //NON-NLS
+            Button predicate = new Button(GuidedRuleEditorResources.CONSTANTS.NewFormula());
+            predicate.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     SingleFieldConstraint con = new SingleFieldConstraint();
-                    con.setConstraintValueType( SingleFieldConstraint.TYPE_PREDICATE );
-                    fp.addConstraint( con );
+                    con.setConstraintValueType(SingleFieldConstraint.TYPE_PREDICATE);
+                    factPattern.addConstraint(con);
                     modeller.refreshWidget();
                     popup.hide();
                 }
-            } );
-            popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.AddANewFormulaStyleExpression(),
-                                predicate );
+            });
+            popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.AddANewFormulaStyleExpression(),
+                               predicate);
 
-            Button ebBtn = new Button( GuidedRuleEditorResources.CONSTANTS.ExpressionEditor() );
+            Button ebBtn = new Button(GuidedRuleEditorResources.CONSTANTS.ExpressionEditor());
 
-            ebBtn.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent event ) {
+            ebBtn.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     SingleFieldConstraintEBLeftSide con = new SingleFieldConstraintEBLeftSide();
-                    con.setConstraintValueType( SingleFieldConstraint.TYPE_UNDEFINED );
-                    fp.addConstraint( con );
-                    con.setExpressionLeftSide( new ExpressionFormLine( new ExpressionUnboundFact( pattern.getFactType() ) ) );
+                    con.setConstraintValueType(SingleFieldConstraint.TYPE_UNDEFINED);
+                    factPattern.addConstraint(con);
+                    con.setExpressionLeftSide(new ExpressionFormLine(new ExpressionUnboundFact(pattern.getFactType())));
                     modeller.refreshWidget();
                     popup.hide();
                 }
-            } );
-            popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.ExpressionEditor(),
-                                ebBtn );
+            });
+            popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.ExpressionEditor(),
+                               ebBtn);
 
-            doBindingEditor( popup );
+            doBindingEditor(popup);
         }
 
         popup.show();
     }
 
-    private String getFactType( FactPattern fp,
-                                SingleFieldConstraint sfc ) {
+    SingleFieldConstraint makeFieldConstraint(final String fieldName,
+                                              final String factType,
+                                              final SingleFieldConstraint parentFieldConstraint) {
+
+        final String fieldType = getDataModelOracle().getFieldType(factType,
+                                                                   fieldName);
+
+        if (parentFieldConstraint == null) {
+            return new SingleFieldConstraint(factType,
+                                             fieldName,
+                                             fieldType,
+                                             null);
+        }
+
+        final SingleFieldConstraintEBLeftSide fieldConstraint = new SingleFieldConstraintEBLeftSide(factType,
+                                                                                                    fieldName,
+                                                                                                    fieldType,
+                                                                                                    parentFieldConstraint);
+
+        fieldConstraint.setExpressionLeftSide(makeLeftSideExpression(fieldName,
+                                                                     factType,
+                                                                     fieldType,
+                                                                     parentFieldConstraint));
+
+        return fieldConstraint;
+    }
+
+    ExpressionFormLine makeLeftSideExpression(final String fieldName,
+                                              final String factType,
+                                              final String fieldType,
+                                              final SingleFieldConstraint parentFieldConstraint) {
+        final ExpressionField fieldExpression = new ExpressionField(parentFieldConstraint.getFieldName(),
+                                                                    factType,
+                                                                    fieldType);
+        final ExpressionField subFieldExpression = new ExpressionField(fieldName,
+                                                                       fieldType,
+                                                                       fieldType);
+        final ExpressionFormLine expression = new ExpressionFormLine(fieldExpression);
+
+        expression.appendPart(subFieldExpression);
+
+        return expression;
+    }
+
+    private String getFactType(FactPattern fp,
+                               SingleFieldConstraint sfc) {
         String factType;
-        if ( sfc == null ) {
+        if (sfc == null) {
             factType = fp.getFactType();
         } else {
             factType = sfc.getFieldType();
             //If field name is "this" use parent FactPattern type otherwise we can use the Constraint's field type
             String fieldName = sfc.getFieldName();
-            if ( DataType.TYPE_THIS.equals( fieldName ) ) {
+            if (DataType.TYPE_THIS.equals(fieldName)) {
                 factType = fp.getFactType();
             }
         }
@@ -418,37 +462,36 @@ public class PopupCreator {
      * name. If its a bindable pattern, it will show the editor, if it is
      * already bound, and the name is used, it should not be editable.
      */
-    private void doBindingEditor( final FormStylePopup popup ) {
-        if ( bindable || !( modeller.getModel().isBoundFactUsed( pattern.getBoundName() ) ) ) {
+    private void doBindingEditor(final FormStylePopup popup) {
+        if (bindable || !(modeller.getModel().isBoundFactUsed(pattern.getBoundName()))) {
             HorizontalPanel varName = new HorizontalPanel();
             final TextBox varTxt = new BindingTextBox();
-            if ( pattern.getBoundName() == null ) {
-                varTxt.setText( "" );
+            if (pattern.getBoundName() == null) {
+                varTxt.setText("");
             } else {
-                varTxt.setText( pattern.getBoundName() );
+                varTxt.setText(pattern.getBoundName());
             }
 
-            ( (InputElement) varTxt.getElement().cast() ).setSize( 6 );
-            varName.add( varTxt );
+            ((InputElement) varTxt.getElement().cast()).setSize(6);
+            varName.add(varTxt);
 
-            Button bindVar = new Button( HumanReadableConstants.INSTANCE.Set() );
-            bindVar.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent event ) {
+            Button bindVar = new Button(HumanReadableConstants.INSTANCE.Set());
+            bindVar.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
                     String var = varTxt.getText();
-                    if ( modeller.isVariableNameUsed( var ) ) {
-                        Window.alert( GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken( var ) );
+                    if (modeller.isVariableNameUsed(var)) {
+                        Window.alert(GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken(var));
                         return;
                     }
-                    pattern.setBoundName( varTxt.getText() );
+                    pattern.setBoundName(varTxt.getText());
                     modeller.refreshWidget();
                     popup.hide();
                 }
-            } );
+            });
 
-            varName.add( bindVar );
-            popup.addAttribute( GuidedRuleEditorResources.CONSTANTS.VariableName(),
-                                varName );
-
+            varName.add(bindVar);
+            popup.addAttribute(GuidedRuleEditorResources.CONSTANTS.VariableName(),
+                               varName);
         }
     }
 }
