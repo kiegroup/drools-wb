@@ -27,6 +27,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
+
 import static org.drools.workbench.services.verifier.webworker.client.testutil.TestUtil.assertContains;
 import static org.drools.workbench.services.verifier.webworker.client.testutil.TestUtil.assertOnlyContains;
 
@@ -51,6 +53,15 @@ public class DecisionTableAnalyzerMultipleIssuesFromFileTest extends AnalyzerUpd
                                                                        add(new FactTypes.Field("approved",
                                                                                                DataType.TYPE_BOOLEAN));
                                                                    }}));
+    }
+
+    @Ignore
+    @Test
+    public void testGapAnalysis() throws Exception {
+        analyze("gapAnalysis.gdst");
+
+        assertTrue("Report is not empty",
+                   analyzerProvider.getAnalysisReport().isEmpty());
     }
 
     @Test
