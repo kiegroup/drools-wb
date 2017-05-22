@@ -139,8 +139,9 @@ public class DTCellValueUtilities {
             case NUMERIC:
                 BigDecimal numericValue = null;
                 try {
-                    if ( !( text == null || text.isEmpty() ) ) {
-                        numericValue = new BigDecimal( text );
+                    if (!(text == null || text.isEmpty())) {
+                        numericValue = new BigDecimal(stripTrailing(text,
+                                                                    "B"));
                     }
                 } catch ( Exception e ) {
                     callback.onConversionError( text,
@@ -151,8 +152,9 @@ public class DTCellValueUtilities {
             case NUMERIC_BIGDECIMAL:
                 BigDecimal bigDecimalValue = null;
                 try {
-                    if ( !( text == null || text.isEmpty() ) ) {
-                        bigDecimalValue = new BigDecimal( text );
+                    if (!(text == null || text.isEmpty())) {
+                        bigDecimalValue = new BigDecimal(stripTrailing(text,
+                                                                       "B"));
                     }
                 } catch ( Exception e ) {
                     callback.onConversionError( text,
@@ -163,8 +165,9 @@ public class DTCellValueUtilities {
             case NUMERIC_BIGINTEGER:
                 BigInteger bigIntegerValue = null;
                 try {
-                    if ( !( text == null || text.isEmpty() ) ) {
-                        bigIntegerValue = new BigInteger( text );
+                    if (!(text == null || text.isEmpty())) {
+                        bigIntegerValue = new BigInteger(stripTrailing(text,
+                                                                       "I"));
                     }
                 } catch ( Exception e ) {
                     callback.onConversionError( text,
@@ -246,6 +249,18 @@ public class DTCellValueUtilities {
                 break;
         }
 
+    }
+
+    static String stripTrailing(String text,
+                                String suffix) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+        if (text.endsWith(suffix)) {
+            return text.substring(0,
+                                  text.length() - 1);
+        }
+        return text;
     }
 
     //If the Decision Table model was pre-5.4 Numeric data-types were always stored as 
