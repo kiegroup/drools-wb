@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.services.shared.project.KieProjectService;
+import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
@@ -37,12 +37,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(MockitoJUnitRunner.class)
 public class DRLTextEditorServiceImplTest {
 
     private IOService ioService = mock(IOService.class);
-    private KieProjectService projectService = mock(KieProjectService.class);
+    private KieModuleService moduleService = mock(KieModuleService.class);
 
     @InjectMocks
     private DRLTextEditorServiceImpl drlService = new DRLTextEditorServiceImpl();
