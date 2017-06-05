@@ -24,9 +24,9 @@ import org.drools.workbench.screens.globals.model.Global;
 import org.drools.workbench.screens.globals.model.GlobalsEditorContent;
 import org.drools.workbench.screens.globals.model.GlobalsModel;
 import org.drools.workbench.screens.globals.service.GlobalsEditorService;
+import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.project.client.security.ProjectController;
-import org.guvnor.common.services.project.context.ProjectContext;
-import org.guvnor.common.services.project.model.Project;
+import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
@@ -54,10 +54,10 @@ import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyListOf;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -105,7 +105,7 @@ public class GlobalsEditorPresenterTest {
     private ProjectController projectController;
 
     @Mock
-    private ProjectContext workbenchContext;
+    private WorkspaceProjectContext workbenchContext;
 
     @Mock
     private AssetUpdateValidator assetUpdateValidator;
@@ -222,7 +222,7 @@ public class GlobalsEditorPresenterTest {
 
     @Test
     public void testMakeMenuBar() {
-        doReturn(mock(Project.class)).when(workbenchContext).getActiveProject();
+        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(true).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();
@@ -237,7 +237,7 @@ public class GlobalsEditorPresenterTest {
 
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
-        doReturn(mock(Project.class)).when(workbenchContext).getActiveProject();
+        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();

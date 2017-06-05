@@ -31,9 +31,9 @@ import org.drools.workbench.screens.testscenario.client.type.TestScenarioResourc
 import org.drools.workbench.screens.testscenario.model.TestScenarioModelContent;
 import org.drools.workbench.screens.testscenario.model.TestScenarioResult;
 import org.drools.workbench.screens.testscenario.service.ScenarioTestEditorService;
+import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.project.client.security.ProjectController;
-import org.guvnor.common.services.project.context.ProjectContext;
-import org.guvnor.common.services.project.model.Project;
+import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.test.TestService;
@@ -131,7 +131,7 @@ public class ScenarioEditorPresenterTest {
     private ProjectController projectController;
 
     @Mock
-    private ProjectContext workbenchContext;
+    private WorkspaceProjectContext workbenchContext;
 
     @Mock
     private SettingsPage settingsPage;
@@ -338,7 +338,7 @@ public class ScenarioEditorPresenterTest {
 
     @Test
     public void testMakeMenuBar() {
-        doReturn(mock(Project.class)).when(workbenchContext).getActiveProject();
+        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(true).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();
@@ -354,7 +354,7 @@ public class ScenarioEditorPresenterTest {
 
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
-        doReturn(mock(Project.class)).when(workbenchContext).getActiveProject();
+        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();

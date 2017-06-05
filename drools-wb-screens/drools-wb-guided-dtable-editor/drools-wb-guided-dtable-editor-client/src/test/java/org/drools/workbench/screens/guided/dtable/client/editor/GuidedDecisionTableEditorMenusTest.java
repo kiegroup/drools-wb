@@ -34,7 +34,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.NewGuidedDecisionTableColumnWizard;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTablePopoverUtils;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
-import org.guvnor.common.services.project.context.ProjectContext;
+import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -49,8 +49,8 @@ import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieMultipleDocumentEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.menu.RegisteredDocumentsMenuBuilder;
-import org.kie.workbench.common.widgets.metadata.client.menu.RegisteredDocumentsMenuView;
 import org.kie.workbench.common.widgets.metadata.client.menu.RegisteredDocumentsMenuView.DocumentMenuItem;
+import org.kie.workbench.common.widgets.metadata.client.menu.RegisteredDocumentsMenuView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -91,7 +91,7 @@ import org.uberfire.workbench.model.menu.Menus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.any;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -187,7 +187,7 @@ public class GuidedDecisionTableEditorMenusTest {
     protected EventSourceMock<ChangeTitleWidgetEvent> changeTitleEvent;
 
     @Mock
-    protected ProjectContext workbenchContext;
+    protected WorkspaceProjectContext workbenchContext;
 
     @Mock
     protected VersionRecordManager versionRecordManager;
