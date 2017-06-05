@@ -193,7 +193,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
             editingCol().setOperator(null);
         }
 
-        if (constraintValue() != BaseSingleFieldConstraint.TYPE_LITERAL) {
+        if (!isBindable()) {
             editingCol().setBinding(null);
         }
     }
@@ -325,6 +325,11 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     @Override
     public boolean doesOperatorNeedValue() {
         return validator().doesOperatorNeedValue(editingCol());
+    }
+
+    @Override
+    public boolean isBindable() {
+        return tableFormat() == GuidedDecisionTable52.TableFormat.LIMITED_ENTRY || constraintValue() == BaseSingleFieldConstraint.TYPE_LITERAL;
     }
 
     public int constraintValue() {
