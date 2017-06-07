@@ -29,9 +29,9 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.drools.core.process.core.ParameterDefinition;
-import org.drools.core.process.core.WorkDefinition;
-import org.drools.core.process.core.datatype.DataType;
+import org.jbpm.process.core.ParameterDefinition;
+import org.jbpm.process.core.WorkDefinition;
+import org.jbpm.process.core.datatype.DataType;
 import org.jbpm.process.core.datatype.impl.type.BooleanDataType;
 import org.jbpm.process.core.datatype.impl.type.FloatDataType;
 import org.jbpm.process.core.datatype.impl.type.IntegerDataType;
