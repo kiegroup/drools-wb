@@ -600,8 +600,8 @@ public class FactPatternWidget extends RuleModellerWidget {
 
             public void onClick( ClickEvent event ) {
                 popupCreator.showPatternPopup( fp,
-                                               null,
-                                               false );
+                                               null
+                );
             }
         };
 
