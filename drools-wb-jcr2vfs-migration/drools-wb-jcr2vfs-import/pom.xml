@@ -180,6 +180,11 @@
       <artifactId>zip4j</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-testing-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
 
   </dependencies>
 
