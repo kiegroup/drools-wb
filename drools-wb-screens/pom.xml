@@ -16,6 +16,7 @@
   <description>Drools Workbench - Screens</description>
 
   <modules>
+    <module>drools-wb-appformer-extensions-editor</module>
     <module>drools-wb-drl-text-editor</module>
     <module>drools-wb-dsl-text-editor</module>
     <module>drools-wb-dtable-xls-editor</module>

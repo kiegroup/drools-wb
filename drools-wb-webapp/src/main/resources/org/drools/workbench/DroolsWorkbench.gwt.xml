@@ -53,6 +53,8 @@
   <inherits name="org.drools.workbench.models.commons.DroolsWorkbenchModelsCommon"/>
 
   <!-- Drools Workbench Screens -->
+  <inherits name="org.drools.workbench.screens.appformer.extensions.AppformerExtensionsEditorClient"/>
+  <inherits name="org.drools.workbench.screens.appformer.extensions.AppformerExtensionsEditorAPI"/>
   <inherits name="org.drools.workbench.screens.drltext.DroolsWorkbenchDRLTextEditorClient"/>
   <inherits name="org.drools.workbench.screens.enums.DroolsWorkbenchEnumEditorClient"/>
   <inherits name="org.drools.workbench.screens.factmodel.DroolsWorkbenchFactModelEditorAPI"/>
