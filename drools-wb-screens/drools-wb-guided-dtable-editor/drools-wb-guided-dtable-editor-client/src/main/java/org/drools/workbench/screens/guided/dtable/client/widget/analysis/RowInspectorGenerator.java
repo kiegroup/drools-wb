@@ -24,6 +24,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCo
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.CompositeColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
@@ -54,12 +55,12 @@ public class RowInspectorGenerator {
     private RowInspector rowInspector;
     private List<DTCellValue52> row;
 
-    public RowInspectorGenerator( AsyncPackageDataModelOracle oracle,
-                                  GuidedDecisionTable52 model,
-                                  RowInspectorCache cache ) {
+    public RowInspectorGenerator(AsyncPackageDataModelOracle oracle,
+                                 GuidedDecisionTable52 model,
+                                 RowInspectorCache cache) {
         this.cache = cache;
-        this.utils = new GuidedDecisionTableUtils( model,
-                                                   oracle );
+        this.utils = new GuidedDecisionTableUtils(model,
+                                                  oracle);
         this.model = model;
     }
 
@@ -67,22 +68,22 @@ public class RowInspectorGenerator {
         ArrayList<RowInspector> rowInspectors = new ArrayList<RowInspector>();
 
         int index = 0;
-        for ( List<DTCellValue52> row : model.getData() ) {
-            rowInspectors.add( generate( index,
-                                         row ) );
+        for (List<DTCellValue52> row : model.getData()) {
+            rowInspectors.add(generate(index,
+                                       row));
             index++;
         }
 
         return rowInspectors;
     }
 
-    public RowInspector generate( final int index,
-                                  final List<DTCellValue52> row ) {
+    public RowInspector generate(final int index,
+                                 final List<DTCellValue52> row) {
         this.row = row;
 
-        rowInspector = new RowInspector( index,
-                                         model.getTableFormat(),
-                                         cache );
+        rowInspector = new RowInspector(index,
+                                        model.getTableFormat(),
+                                        cache);
 
         addConditionInspectors();
         addActionInspector();
@@ -91,110 +92,116 @@ public class RowInspectorGenerator {
     }
 
     private void addActionInspector() {
-        for ( ActionCol52 actionCol : model.getActionCols() ) {
+        for (ActionCol52 actionCol : model.getActionCols()) {
 
-            if ( actionCol instanceof BRLActionColumn ) {
-                final BRLActionColumn brlActionColumn = ( BRLActionColumn ) actionCol;
-                rowInspector.addActionInspector( new BRLFragmentActionInspector( new BRLFragmentColumnActionInspectorKey( brlActionColumn ),
-                                                                                 brlActionColumn.getDefinition() ) );
+            if (actionCol instanceof BRLActionColumn) {
+                final BRLActionColumn brlActionColumn = (BRLActionColumn) actionCol;
+                rowInspector.addActionInspector(new BRLFragmentActionInspector(new BRLFragmentColumnActionInspectorKey(brlActionColumn),
+                                                                               brlActionColumn.getDefinition()));
             }
 
-            int columnIndex = model.getExpandedColumns().indexOf( actionCol );
-            if ( rowHasIndex( columnIndex ) ) {
-                addActionInspector( actionCol,
-                                    row.get( columnIndex ) );
+            int columnIndex = model.getExpandedColumns().indexOf(actionCol);
+            if (rowHasIndex(columnIndex)) {
+                addActionInspector(actionCol,
+                                   row.get(columnIndex));
             }
-
         }
     }
 
     private void addConditionInspectors() {
-        for ( final CompositeColumn<? extends BaseColumn> column : model.getConditions() ) {
-            if ( column instanceof BRLConditionColumn ) {
-                rowInspector.addConditionInspector( new BRLConditionInspector( column ) );
+        for (final CompositeColumn<? extends BaseColumn> column : model.getConditions()) {
+            if (column instanceof BRLConditionColumn) {
+                for (final BRLConditionVariableColumn baseColumn : ((BRLConditionColumn) column).getChildColumns()) {
+                    final int columnIndex = model.getExpandedColumns().indexOf(baseColumn);
+                    final DTCellValue52 realCellValue = getRealCellValue(baseColumn,
+                                                                         row.get(columnIndex));
+                    rowInspector.addConditionInspector(new BRLConditionInspector(column,
+                                                                                 Util.getValueAsString(realCellValue)));
+                }
             }
         }
 
-        for ( Pattern52 pattern : model.getPatterns() ) {
-            for ( ConditionCol52 conditionCol : pattern.getChildColumns() ) {
-                int columnIndex = model.getExpandedColumns().indexOf( conditionCol );
+        for (Pattern52 pattern : model.getPatterns()) {
+            for (ConditionCol52 conditionCol : pattern.getChildColumns()) {
+                int columnIndex = model.getExpandedColumns().indexOf(conditionCol);
 
-                if ( rowHasIndex( columnIndex ) ) {
-                    addConditionInspector( pattern, conditionCol, row.get( columnIndex ) );
+                if (rowHasIndex(columnIndex)) {
+                    addConditionInspector(pattern,
+                                          conditionCol,
+                                          row.get(columnIndex));
                 }
             }
         }
     }
 
-    private boolean rowHasIndex( final int columnIndex ) {
+    private boolean rowHasIndex(final int columnIndex) {
         return columnIndex > 0 && columnIndex < row.size();
     }
 
-    private void addActionInspector( final ActionCol52 actionCol,
-                                     final DTCellValue52 visibleCellValue ) {
+    private void addActionInspector(final ActionCol52 actionCol,
+                                    final DTCellValue52 visibleCellValue) {
         // Blank cells are ignored
-        if ( isCellNotBlank( actionCol,
-                             visibleCellValue ) ) {
-            rowInspector.addActionInspector( buildActionInspector( actionCol,
-                                                                   visibleCellValue ) );
+        if (isCellNotBlank(actionCol,
+                           visibleCellValue)) {
+            rowInspector.addActionInspector(buildActionInspector(actionCol,
+                                                                 visibleCellValue));
         }
     }
 
-    private void addConditionInspector( final Pattern52 pattern,
-                                        final ConditionCol52 conditionColumn,
-                                        final DTCellValue52 visibleCellValue ) {
+    private void addConditionInspector(final Pattern52 pattern,
+                                       final ConditionCol52 conditionColumn,
+                                       final DTCellValue52 visibleCellValue) {
         // Blank cells are ignored
-        if ( isCellNotBlank( conditionColumn,
-                             visibleCellValue ) ) {
-            rowInspector.addConditionInspector( buildConditionInspector( pattern,
-                                                                         conditionColumn,
-                                                                         visibleCellValue ) );
+        if (isCellNotBlank(conditionColumn,
+                           visibleCellValue)) {
+            rowInspector.addConditionInspector(buildConditionInspector(pattern,
+                                                                       conditionColumn,
+                                                                       visibleCellValue));
         }
     }
 
-    private ConditionInspector buildConditionInspector( final Pattern52 pattern,
-                                                        final ConditionCol52 conditionColumn,
-                                                        final DTCellValue52 visibleCellValue ) {
+    private ConditionInspector buildConditionInspector(final Pattern52 pattern,
+                                                       final ConditionCol52 conditionColumn,
+                                                       final DTCellValue52 visibleCellValue) {
 
         return new ConditionInspectorBuilder(
                 utils,
                 pattern,
                 conditionColumn,
-                getRealCellValue( conditionColumn,
-                                  visibleCellValue )
+                getRealCellValue(conditionColumn,
+                                 visibleCellValue)
         ).buildConditionInspector();
-
     }
 
-    private ActionInspector buildActionInspector( final ActionCol52 actionCol,
-                                                  final DTCellValue52 visibleCellValue ) {
-        return new FieldActionInspector( getKey( actionCol ),
-                                         getRealCellValue( actionCol,
-                                                           visibleCellValue ) );
+    private ActionInspector buildActionInspector(final ActionCol52 actionCol,
+                                                 final DTCellValue52 visibleCellValue) {
+        return new FieldActionInspector(getKey(actionCol),
+                                        getRealCellValue(actionCol,
+                                                         visibleCellValue));
     }
 
-    private ActionInspectorKey getKey( final ActionCol52 actionCol ) {
-        if ( actionCol instanceof ActionSetFieldCol52 ) {
-            return new FactFieldColumnActionInspectorKey( (ActionSetFieldCol52) actionCol );
-        } else if ( actionCol instanceof ActionInsertFactCol52 ) {
-            return new FactFieldColumnActionInspectorKey( (ActionInsertFactCol52) actionCol );
+    private ActionInspectorKey getKey(final ActionCol52 actionCol) {
+        if (actionCol instanceof ActionSetFieldCol52) {
+            return new FactFieldColumnActionInspectorKey((ActionSetFieldCol52) actionCol);
+        } else if (actionCol instanceof ActionInsertFactCol52) {
+            return new FactFieldColumnActionInspectorKey((ActionInsertFactCol52) actionCol);
         } else {
-            return new UnrecognizedActionInspectorKey( actionCol );
+            return new UnrecognizedActionInspectorKey(actionCol);
         }
     }
 
-    private DTCellValue52 getRealCellValue( final DTColumnConfig52 config52,
-                                            final DTCellValue52 visibleCellValue ) {
-        if ( config52 instanceof LimitedEntryCol ) {
-            return ( (LimitedEntryCol) config52 ).getValue();
+    private DTCellValue52 getRealCellValue(final DTColumnConfig52 config52,
+                                           final DTCellValue52 visibleCellValue) {
+        if (config52 instanceof LimitedEntryCol) {
+            return ((LimitedEntryCol) config52).getValue();
         } else {
             return visibleCellValue;
         }
     }
 
-    private boolean isCellNotBlank( final DTColumnConfig52 config52,
-                                    final DTCellValue52 visibleCellValue ) {
-        if ( config52 instanceof LimitedEntryCol ) {
+    private boolean isCellNotBlank(final DTColumnConfig52 config52,
+                                   final DTCellValue52 visibleCellValue) {
+        if (config52 instanceof LimitedEntryCol) {
             return visibleCellValue.getBooleanValue();
         } else {
             return visibleCellValue.hasValue();

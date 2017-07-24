@@ -21,37 +21,48 @@ import org.drools.workbench.models.guided.dtable.shared.model.CompositeColumn;
 public class BRLConditionInspector
         extends ConditionInspector {
 
-    public BRLConditionInspector( final CompositeColumn<? extends BaseColumn> column ) {
-        super( new BRLConditionInspectorKey( column ) );
+    private String valueAsString;
+
+    public BRLConditionInspector(final CompositeColumn<? extends BaseColumn> column,
+                                 final String valueAsString) {
+        super(new BRLConditionInspectorKey(column));
+        this.valueAsString = valueAsString;
     }
 
     @Override
-    public boolean conflicts( final Object other ) {
+    public boolean conflicts(final Object other) {
+        if (other instanceof BRLConditionInspector) {
+            final String otherValue = ((BRLConditionInspector) other).valueAsString;
+            if (otherValue != null) {
+                return !otherValue.equals(valueAsString);
+            }
+        }
+
         return false;
     }
 
     @Override
-    public boolean overlaps( final Object other ) {
-        if ( other instanceof BRLConditionInspector ) {
-            return key.equals( (( BRLConditionInspector ) other).key );
+    public boolean overlaps(final Object other) {
+        if (other instanceof BRLConditionInspector) {
+            return key.equals(((BRLConditionInspector) other).key);
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean isRedundant( final Object other ) {
-        if ( other instanceof BRLConditionInspector ) {
-            return key.equals( (( BRLConditionInspector ) other).key );
+    public boolean isRedundant(final Object other) {
+        if (other instanceof BRLConditionInspector) {
+            return key.equals(((BRLConditionInspector) other).key);
         } else {
             return false;
         }
     }
 
     @Override
-    public boolean subsumes( final Object other ) {
-        if ( other instanceof BRLConditionInspector ) {
-            return key.equals( (( BRLConditionInspector ) other).key );
+    public boolean subsumes(final Object other) {
+        if (other instanceof BRLConditionInspector) {
+            return key.equals(((BRLConditionInspector) other).key);
         } else {
             return false;
         }
