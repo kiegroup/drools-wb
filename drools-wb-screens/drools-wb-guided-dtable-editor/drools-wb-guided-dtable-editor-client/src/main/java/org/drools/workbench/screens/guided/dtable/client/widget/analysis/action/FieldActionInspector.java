@@ -20,19 +20,19 @@ import java.util.Date;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.Util;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 
 public class FieldActionInspector
         extends ActionInspector {
 
+    private static final String DATE_FORMAT = ApplicationPreferences.getDroolsDateFormat();
+    private static final DateTimeFormat DATE_FORMATTER = DateTimeFormat.getFormat(DATE_FORMAT);
     private final DTCellValue52 value;
 
-    private static final String         DATE_FORMAT    = ApplicationPreferences.getDroolsDateFormat();
-    private static final DateTimeFormat DATE_FORMATTER = DateTimeFormat.getFormat( DATE_FORMAT );
-
-    public FieldActionInspector( final ActionInspectorKey key,
-                                 final DTCellValue52 value ) {
-        super( key );
+    public FieldActionInspector(final ActionInspectorKey key,
+                                final DTCellValue52 value) {
+        super(key);
         this.value = value;
     }
 
@@ -45,38 +45,38 @@ public class FieldActionInspector
     }
 
     @Override
-    public boolean isRedundant( final Object other ) {
-        if ( other instanceof FieldActionInspector ) {
-            return key.equals( (( FieldActionInspector ) other).key )
-                    && isValueRedundant( (( FieldActionInspector ) other).value );
+    public boolean isRedundant(final Object other) {
+        if (other instanceof FieldActionInspector) {
+            return key.equals(((FieldActionInspector) other).key)
+                    && isValueRedundant(((FieldActionInspector) other).value);
         } else {
             return false;
         }
     }
 
-    private boolean isValueRedundant( final DTCellValue52 other ) {
-        if ( value.equals( other ) ) {
+    private boolean isValueRedundant(final DTCellValue52 other) {
+        if (value.equals(other)) {
             return true;
-        } else if ( isDataTypeString( value ) && !isDataTypeString( other ) ) {
-            return isStringValueEqualTo( value.getStringValue(),
-                                         other );
-        } else if ( !isDataTypeString( value ) && isDataTypeString( other ) ) {
-            return isStringValueEqualTo( other.getStringValue(),
-                                         value );
+        } else if (isDataTypeString(value) && !isDataTypeString(other)) {
+            return isStringValueEqualTo(value.getStringValue(),
+                                        other);
+        } else if (!isDataTypeString(value) && isDataTypeString(other)) {
+            return isStringValueEqualTo(other.getStringValue(),
+                                        value);
         } else {
             return false;
         }
     }
 
-    private boolean isDataTypeString( final DTCellValue52 value ) {
-        return value.getDataType().equals( DataType.DataTypes.STRING );
+    private boolean isDataTypeString(final DTCellValue52 value) {
+        return value.getDataType().equals(DataType.DataTypes.STRING);
     }
 
-    private boolean isStringValueEqualTo( final String stringValue,
-                                          final DTCellValue52 dtCellValue52 ) {
-        switch ( dtCellValue52.getDataType() ) {
+    private boolean isStringValueEqualTo(final String stringValue,
+                                         final DTCellValue52 dtCellValue52) {
+        switch (dtCellValue52.getDataType()) {
             case STRING:
-                return stringValue.equals( dtCellValue52.getStringValue() );
+                return stringValue.equals(dtCellValue52.getStringValue());
             case NUMERIC:
             case NUMERIC_BIGDECIMAL:
             case NUMERIC_BIGINTEGER:
@@ -86,41 +86,41 @@ public class FieldActionInspector
             case NUMERIC_INTEGER:
             case NUMERIC_LONG:
             case NUMERIC_SHORT:
-                return stringValue.equals( dtCellValue52.getNumericValue().toString() );
+                return stringValue.equals(dtCellValue52.getNumericValue().toString());
             case DATE:
-                return stringValue.equals( format( dtCellValue52.getDateValue() ) );
+                return stringValue.equals(format(dtCellValue52.getDateValue()));
             case BOOLEAN:
-                return stringValue.equals( dtCellValue52.getBooleanValue().toString() );
+                return stringValue.equals(dtCellValue52.getBooleanValue().toString());
             default:
                 return false;
         }
     }
 
-    protected String format( final Date dateValue ) {
-        return DATE_FORMATTER.format( dateValue );
+    protected String format(final Date dateValue) {
+        return DATE_FORMATTER.format(dateValue);
     }
 
     @Override
-    public boolean conflicts( final Object other ) {
-        if ( other instanceof FieldActionInspector ) {
-            if ( key.equals( (( FieldActionInspector ) other).key )
+    public boolean conflicts(final Object other) {
+        if (other instanceof FieldActionInspector) {
+            if (key.equals(((FieldActionInspector) other).key)
                     && hasValue()
-                    && (( FieldActionInspector ) other).hasValue() ) {
-                return !isRedundant( other );
+                    && ((FieldActionInspector) other).hasValue()) {
+                return !isRedundant(other);
             }
         }
         return false;
     }
 
     @Override
-    public boolean subsumes( final Object other ) {
+    public boolean subsumes(final Object other) {
         // At the moment we are not smart enough to figure out subsumption in the RHS.
         // So redundancy == subsumption in this case.
-        return isRedundant( other );
+        return isRedundant(other);
     }
 
     public boolean hasValue() {
-        switch ( value.getDataType() ) {
+        switch (value.getDataType()) {
             case NUMERIC:
             case NUMERIC_BIGDECIMAL:
             case NUMERIC_BIGINTEGER:
@@ -139,26 +139,10 @@ public class FieldActionInspector
     }
 
     public String getValueAsString() {
-        switch ( value.getDataType() ) {
-            case NUMERIC:
-            case NUMERIC_BIGDECIMAL:
-            case NUMERIC_BIGINTEGER:
-            case NUMERIC_BYTE:
-            case NUMERIC_DOUBLE:
-            case NUMERIC_FLOAT:
-            case NUMERIC_INTEGER:
-            case NUMERIC_LONG:
-            case NUMERIC_SHORT:
-                return value.getNumericValue().toString();
-            case BOOLEAN:
-                return value.getBooleanValue().toString();
-            default:
-                return value.getStringValue();
-        }
+        return Util.getValueAsString(value);
     }
 
     public String toHumanReadableString() {
         return key.toHumanReadableString() + " = " + getValueAsString();
     }
-
 }
