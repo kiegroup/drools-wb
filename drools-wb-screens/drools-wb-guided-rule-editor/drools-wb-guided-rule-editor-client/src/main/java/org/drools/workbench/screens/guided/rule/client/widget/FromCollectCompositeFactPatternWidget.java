@@ -19,6 +19,7 @@ package org.drools.workbench.screens.guided.rule.client.widget;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -28,7 +29,6 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
-import org.drools.workbench.models.datamodel.imports.Import;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.FreeFormLine;
 import org.drools.workbench.models.datamodel.rule.FromAccumulateCompositeFactPattern;
@@ -71,27 +71,10 @@ public class FromCollectCompositeFactPatternWidget extends FromCompositeFactPatt
 
     private void initExtraLeftSidePatternFactTypes() {
         extraLeftSidePatternFactTypes = new HashMap<String, String>();
-        if ( modelImportsClass( "java.util.Collection" ) ) {
-            extraLeftSidePatternFactTypes.put( "Collection",
-                                               "Collection" );
-        }
-        if ( modelImportsClass( "java.util.List" ) ) {
-            extraLeftSidePatternFactTypes.put( "List",
-                                               "List" );
-        }
-        if ( modelImportsClass( "java.util.Set" ) ) {
-            extraLeftSidePatternFactTypes.put( "Set",
-                                               "Set" );
-        }
-    }
-
-    private boolean modelImportsClass( final String fullyQualifiedClassName ) {
-        for ( Import i : modeller.getModel().getImports().getImports() ) {
-            if ( i.getType().equals( fullyQualifiedClassName ) ) {
-                return true;
-            }
-        }
-        return false;
+        modeller.getDataModelOracle()
+                .getAvailableCollectionTypes()
+                .forEach(collectionType -> extraLeftSidePatternFactTypes.put(collectionType,
+                                                                             collectionType));
     }
 
     @Override
@@ -99,8 +82,7 @@ public class FromCollectCompositeFactPatternWidget extends FromCompositeFactPatt
         ClickHandler leftPatternclick = new ClickHandler() {
 
             public void onClick( ClickEvent event ) {
-                Widget w = (Widget) event.getSource();
-                showFactTypeSelector( w );
+                showFactTypeSelector();
 
             }
         };
@@ -206,12 +188,12 @@ public class FromCollectCompositeFactPatternWidget extends FromCompositeFactPatt
     }
 
     @Override
-    protected void showFactTypeSelector( final Widget w ) {
+    protected void showFactTypeSelector() {
 
         final FormStylePopup popup = new FormStylePopup( GuidedRuleEditorResources.CONSTANTS.NewFactPattern() );
         popup.setTitle( GuidedRuleEditorResources.CONSTANTS.NewFactPattern() );
 
-        final ListBox box = new ListBox();
+        final ListBox box = GWT.create(ListBox.class);
 
         box.addItem( GuidedRuleEditorResources.CONSTANTS.Choose() );
 
@@ -219,10 +201,6 @@ public class FromCollectCompositeFactPatternWidget extends FromCompositeFactPatt
             box.addItem( entry.getKey(),
                          entry.getValue() );
         }
-
-        //TODO: Add Facts that extends Collection
-        //        box.addItem("...");
-        //        box.addItem("...");
 
         box.setSelectedIndex( 0 );
         box.addChangeHandler( new ChangeHandler() {

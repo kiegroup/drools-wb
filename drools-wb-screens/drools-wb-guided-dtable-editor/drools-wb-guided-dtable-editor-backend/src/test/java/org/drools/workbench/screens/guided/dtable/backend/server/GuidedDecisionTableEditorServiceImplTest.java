@@ -19,6 +19,7 @@ package org.drools.workbench.screens.guided.dtable.backend.server;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +211,12 @@ public class GuidedDecisionTableEditorServiceImplTest {
         final Path path = mock( Path.class );
         final Overview overview = mock( Overview.class );
         final PackageDataModelOracle oracle = mock( PackageDataModelOracle.class );
+        when(oracle.getProjectCollectionTypes()).thenReturn(new HashMap<String, Boolean>() {{
+            put("java.util.List", true);
+            put("java.util.Set", true);
+            put("java.util.Collection", true);
+            put("java.util.UnknownCollection", false);
+        }});
         final Set<PortableWorkDefinition> workItemDefinitions = new HashSet<>();
         when( path.toURI() ).thenReturn( "default://project/src/main/resources/mypackage/dtable.gdst" );
         when( dataModelService.getDataModel( eq( path ) ) ).thenReturn( oracle );
@@ -226,6 +233,10 @@ public class GuidedDecisionTableEditorServiceImplTest {
         assertNotNull( content.getWorkItemDefinitions() );
         assertEquals( overview,
                       content.getOverview() );
+        assertEquals(3, content.getDataModel().getCollectionTypes().size());
+        assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.Collection"));
+        assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.List"));
+        assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.Set"));
     }
 
     @Test

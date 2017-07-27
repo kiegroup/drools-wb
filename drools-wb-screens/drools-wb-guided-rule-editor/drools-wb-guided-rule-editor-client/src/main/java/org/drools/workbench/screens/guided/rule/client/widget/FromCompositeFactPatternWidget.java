@@ -146,8 +146,7 @@ public class FromCompositeFactPatternWidget extends RuleModellerWidget {
         ClickHandler click = new ClickHandler() {
 
             public void onClick( ClickEvent event ) {
-                Widget w = (Widget) event.getSource();
-                showFactTypeSelector( w );
+                showFactTypeSelector();
 
             }
         };
@@ -188,7 +187,7 @@ public class FromCompositeFactPatternWidget extends RuleModellerWidget {
     /**
      * Pops up the fact selector.
      */
-    protected void showFactTypeSelector( final Widget w ) {
+    protected void showFactTypeSelector() {
         AsyncPackageDataModelOracle oracle = this.getModeller().getDataModelOracle();
         final ListBox box = new ListBox();
         String[] facts = oracle.getFactTypes();

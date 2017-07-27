@@ -75,8 +75,7 @@ public class FromAccumulateCompositeFactPatternWidget extends FromCompositeFactP
         ClickHandler leftPatternclick = new ClickHandler() {
 
             public void onClick( ClickEvent event ) {
-                Widget w = (Widget) event.getSource();
-                showFactTypeSelector( w );
+                showFactTypeSelector();
             }
         };
         ClickHandler sourcePatternClick = new ClickHandler() {
@@ -342,7 +341,7 @@ public class FromAccumulateCompositeFactPatternWidget extends FromCompositeFactP
      * Pops up the fact selector.
      */
     @Override
-    protected void showFactTypeSelector( final Widget w ) {
+    protected void showFactTypeSelector() {
         final ListBox box = new ListBox();
         AsyncPackageDataModelOracle oracle = this.getModeller().getDataModelOracle();
         String[] facts = oracle.getFactTypes();

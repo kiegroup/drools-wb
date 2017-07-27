@@ -59,8 +59,7 @@ public class FromEntryPointFactPatternWidget extends FromCompositeFactPatternWid
         ClickHandler click = new ClickHandler() {
 
             public void onClick( ClickEvent event ) {
-                Widget w = (Widget) event.getSource();
-                showFactTypeSelector( w );
+                showFactTypeSelector();
 
             }
         };
