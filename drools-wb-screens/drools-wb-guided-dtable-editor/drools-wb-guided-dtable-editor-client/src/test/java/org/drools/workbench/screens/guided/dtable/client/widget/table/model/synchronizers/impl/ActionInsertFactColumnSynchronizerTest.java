@@ -140,7 +140,7 @@ public class ActionInsertFactColumnSynchronizerTest extends BaseSynchronizerTest
                      uiModel.getColumns().size());
         assertTrue(uiModel.getColumns().get(2) instanceof StringUiColumn);
         assertEquals("updated",
-                     uiModel.getColumns().get(2).getHeaderMetaData().get(0).getTitle());
+                     uiModel.getColumns().get(2).getHeaderMetaData().get(1).getTitle());
         assertEquals(false,
                      uiModel.getColumns().get(2).isVisible());
     }

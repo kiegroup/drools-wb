@@ -186,7 +186,7 @@ public class ActionSetFieldColumnSynchronizerTest extends BaseSynchronizerTest {
                      uiModel.getColumns().size());
         assertTrue(uiModel.getColumns().get(3) instanceof StringUiColumn);
         assertEquals("updated",
-                     uiModel.getColumns().get(3).getHeaderMetaData().get(0).getTitle());
+                     uiModel.getColumns().get(3).getHeaderMetaData().get(1).getTitle());
         assertEquals(false,
                      uiModel.getColumns().get(3).isVisible());
     }
