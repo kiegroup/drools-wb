@@ -63,13 +63,16 @@ public class FromCollectCompositeFactPatternWidgetTest {
 
     @Before
     public void setUp() throws Exception {
-        fromCollectWidget = new FromCollectCompositeFactPatternWidget(ruleModeller, eventBus, pattern);
+        fromCollectWidget = new FromCollectCompositeFactPatternWidget(ruleModeller,
+                                                                      eventBus,
+                                                                      pattern);
 
-        GwtMockito.useProviderForType(ListBox.class, new ListBoxFakeProvider());
+        GwtMockito.useProviderForType(ListBox.class,
+                                      new ListBoxFakeProvider());
 
         collectionTypes = new ArrayList<String>() {{
-           add("ArrayList");
-           add("HashSet");
+            add("ArrayList");
+            add("HashSet");
         }};
 
         when(ruleModeller.getDataModelOracle()).thenReturn(oracle);
@@ -80,8 +83,10 @@ public class FromCollectCompositeFactPatternWidgetTest {
     public void testShowFactTypeSelector() throws Exception {
         fromCollectWidget.showFactTypeSelector();
 
-        verify(listBox).addItem("ArrayList", "ArrayList");
-        verify(listBox).addItem("HashSet", "HashSet");
+        verify(listBox).addItem("ArrayList",
+                                "ArrayList");
+        verify(listBox).addItem("HashSet",
+                                "HashSet");
     }
 
     private class ListBoxFakeProvider implements FakeProvider<ListBox> {
@@ -91,5 +96,4 @@ public class FromCollectCompositeFactPatternWidgetTest {
             return listBox;
         }
     }
-
 }

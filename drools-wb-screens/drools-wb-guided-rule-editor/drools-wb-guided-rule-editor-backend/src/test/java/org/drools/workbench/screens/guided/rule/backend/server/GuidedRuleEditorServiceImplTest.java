@@ -62,28 +62,33 @@ public class GuidedRuleEditorServiceImplTest {
     private IOService ioService;
 
     @InjectMocks
-    GuidedRuleEditorServiceImpl service = new GuidedRuleEditorServiceImpl(sessionInfo, mock(Instance.class));
+    GuidedRuleEditorServiceImpl service = new GuidedRuleEditorServiceImpl(sessionInfo,
+                                                                          mock(Instance.class));
 
     @Test
     public void checkConstructContentPopulateProjectCollectionTypes() {
         final Path path = mock(Path.class);
-        final Overview overview = mock(Overview.class );
-        final PackageDataModelOracle oracle = mock(PackageDataModelOracle.class );
+        final Overview overview = mock(Overview.class);
+        final PackageDataModelOracle oracle = mock(PackageDataModelOracle.class);
         when(path.toURI()).thenReturn("default://project/src/main/resources/mypackage/rule.rdrl");
         when(dataModelService.getDataModel(any())).thenReturn(oracle);
         when(oracle.getProjectCollectionTypes()).thenReturn(new HashMap<String, Boolean>() {{
-            put("java.util.List", true);
-            put("java.util.Set", true);
-            put("java.util.Collection", true);
-            put("java.util.UnknownCollection", false);
+            put("java.util.List",
+                true);
+            put("java.util.Set",
+                true);
+            put("java.util.Collection",
+                true);
+            put("java.util.UnknownCollection",
+                false);
         }});
 
         final GuidedEditorContent content = service.constructContent(path,
-                                                                     overview );
-        assertEquals(3, content.getDataModel().getCollectionTypes().size());
+                                                                     overview);
+        assertEquals(3,
+                     content.getDataModel().getCollectionTypes().size());
         assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.Collection"));
         assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.List"));
         assertTrue(content.getDataModel().getCollectionTypes().containsKey("java.util.Set"));
     }
-
 }

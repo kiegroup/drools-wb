@@ -195,11 +195,11 @@ public class GuidedRuleEditorServiceImpl
         //Get FQCN's of collections defined in project settings
         //they can be used in From Collect expressions
         consumedFQCNs.addAll(oracle.getProjectCollectionTypes()
-                                   .entrySet()
-                                   .stream()
-                                   .filter(entry -> entry.getValue())
-                                   .map(entry -> entry.getKey())
-                                   .collect(Collectors.toSet()));
+                                     .entrySet()
+                                     .stream()
+                                     .filter(entry -> entry.getValue())
+                                     .map(entry -> entry.getKey())
+                                     .collect(Collectors.toSet()));
 
         DataModelOracleUtilities.populateDataModel(oracle,
                                                    dataModel,
