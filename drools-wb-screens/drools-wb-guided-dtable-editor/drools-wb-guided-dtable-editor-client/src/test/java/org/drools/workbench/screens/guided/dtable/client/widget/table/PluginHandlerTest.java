@@ -368,7 +368,7 @@ public class PluginHandlerTest {
         doReturn(wizard).when(wizardManagedInstance).get();
         doReturn(plugin).when(conditionColumnPlugin).get();
 
-        doReturn(new Pattern52()).when(plugin).editingPattern();
+        doReturn(new Pattern52()).when(plugin).getEditingPattern();
 
         pluginHandler.edit(originalPattern,
                            originalColumn);
