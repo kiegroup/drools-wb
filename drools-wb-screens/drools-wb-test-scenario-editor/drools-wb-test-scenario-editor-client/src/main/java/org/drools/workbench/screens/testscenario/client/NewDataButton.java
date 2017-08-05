@@ -33,8 +33,8 @@ import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 
 /**
@@ -45,17 +45,18 @@ public class NewDataButton extends TestScenarioButton {
 
     private final ExecutionTrace currentEx;
 
-    public NewDataButton( final ExecutionTrace previousEx,
+    public NewDataButton( final String buttonText,
+                          final ExecutionTrace previousEx,
                           final Scenario scenario,
                           final ExecutionTrace currentEx,
                           final ScenarioParentWidget scenarioWidget,
                           final AsyncPackageDataModelOracle oracle ) {
-        super( ItemAltedImages.INSTANCE.NewItem(),
-               TestScenarioConstants.INSTANCE.AddANewDataInputToThisScenario(),
-               previousEx,
-               scenario,
-               scenarioWidget,
-               oracle );
+        super(IconType.PLUS,
+              buttonText,
+              previousEx,
+              scenario,
+              scenarioWidget,
+              oracle );
 
         this.currentEx = currentEx;
     }

@@ -98,13 +98,11 @@ public class ScenarioWidgetComponentCreator {
                                this.scenarioWidget);
     }
 
-    protected HorizontalPanel createHorizontalPanel() {
-        HorizontalPanel h = new HorizontalPanel();
-        h.add(new GlobalButton(getScenario(),
+    protected GlobalButton createGlobalButton() {
+
+        return new GlobalButton(getScenario(),
                                this.scenarioWidget,
-                               oracle));
-        h.add(new SmallLabel(TestScenarioConstants.INSTANCE.globals()));
-        return h;
+                               oracle);
     }
 
     protected SmallLabel createSmallLabel() {
