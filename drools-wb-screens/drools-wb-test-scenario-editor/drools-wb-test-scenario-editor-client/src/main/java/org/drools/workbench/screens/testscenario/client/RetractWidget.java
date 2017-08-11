@@ -16,21 +16,24 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FlexTable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.RetractFact;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
-import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
-import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 
-public class RetractWidget extends FlexTable {
+public class RetractWidget extends CellTable<RetractFact> {
 
     protected final FixtureList retractList;
     protected final Scenario scenario;
@@ -39,63 +42,77 @@ public class RetractWidget extends FlexTable {
     public RetractWidget( final FixtureList retractList,
                           final Scenario scenario,
                           final ScenarioParentWidget parent ) {
+        super(Integer.MAX_VALUE);
 
         this.retractList = retractList;
         this.scenario = scenario;
         this.parent = parent;
 
+        setStriped( true );
+        setCondensed( true );
+        setBordered( true );
+//        setEmptyTableWidget( new Label(EnumEditorConstants.INSTANCE.noEnumsDefined() ) );
+        setWidth( "400px" );
+
+        final TextCell nameCell = new TextCell();
+        Column<RetractFact, String> nameColumn = new Column<RetractFact, String>(nameCell) {
+            @Override
+            public String getValue( RetractFact model ) {
+                return model.getName();
+            }
+        };
+        addColumn( nameColumn,
+                            "Fact to retract" );
+        setColumnWidth(nameColumn,
+                       80,
+                       com.google.gwt.dom.client.Style.Unit.PCT);
+
+
+        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER, IconType.TRASH );
+        final Column<RetractFact, String> deleteColumn = new Column<RetractFact, String>(deleteCell) {
+            @Override
+            public String getValue( RetractFact model ) {
+                return "";
+            }
+        };
+
+        deleteColumn.setFieldUpdater( new FieldUpdater<RetractFact, String>() {
+            @Override
+            public void update( int index,
+                                RetractFact model,
+                                String value ) {
+                retractList.remove( model );
+                scenario.getFixtures().remove( model );
+                parent.renderEditor();
+            }
+        } );
+
+        deleteColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER );
+
+        addColumn(deleteColumn,
+                           CommonConstants.INSTANCE.Delete() );
+
         render();
     }
 
     private void render() {
+        final List<RetractFact> facts = new ArrayList<>();
 
-        clear();
-
-        getCellFormatter().setStyleName( 0,
-                                         0,
-                                         "modeller-fact-TypeHeader" );
-        getCellFormatter().setAlignment( 0,
-                                         0,
-                                         HasHorizontalAlignment.ALIGN_CENTER,
-                                         HasVerticalAlignment.ALIGN_MIDDLE );
-        setStyleName( "modeller-fact-pattern-Widget" );
-        setWidget( 0,
-                   0,
-                   new SmallLabel( TestScenarioConstants.INSTANCE.DeleteFacts() ) );
-        getFlexCellFormatter().setColSpan( 0,
-                                           0,
-                                           2 );
-
-        int row = 1;
         for ( Fixture fixture : retractList ) {
             if ( fixture instanceof RetractFact ) {
                 final RetractFact retractFact = (RetractFact) fixture;
-                setWidget( row,
-                           0,
-                           new SmallLabel( retractFact.getName() ) );
-
-                setWidget( row,
-                           1,
-                           new DeleteButton( retractFact ) );
-
-                row++;
+                facts.add(retractFact);
             }
         }
-    }
 
-    class DeleteButton extends Button {
-
-        public DeleteButton( final RetractFact retractFact ) {
-            setIcon(IconType.MINUS);
-            setTitle(TestScenarioConstants.INSTANCE.RemoveThisDeleteStatement());
-
-            addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent event ) {
-                    retractList.remove( retractFact );
-                    scenario.getFixtures().remove( retractFact );
-                    parent.renderEditor();
-                }
-            } );
-        }
+        setRowData(facts);
+//        for ( Fixture fixture : retractList ) {
+//            if ( fixture instanceof RetractFact ) {
+//                final RetractFact retractFact = (RetractFact) fixture;
+//                Row htmlRow = new Row();
+//                htmlRow.add( new Label(retractFact.getName() ) );
+//                htmlRow.add(new DeleteButton( retractFact ) );
+//            }
+//        }
     }
 }
