@@ -20,7 +20,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 public class Util {
 
     public static String getValueAsString(final DTCellValue52 value) {
-        switch ( value.getDataType() ) {
+        switch (value.getDataType()) {
             case NUMERIC:
             case NUMERIC_BIGDECIMAL:
             case NUMERIC_BIGINTEGER:
@@ -30,9 +30,11 @@ public class Util {
             case NUMERIC_INTEGER:
             case NUMERIC_LONG:
             case NUMERIC_SHORT:
-                return value.getNumericValue().toString();
+                final Number n = value.getNumericValue();
+                return n == null ? null : n.toString();
             case BOOLEAN:
-                return value.getBooleanValue().toString();
+                final Boolean b = value.getBooleanValue();
+                return b == null ? null : b.toString();
             default:
                 return value.getStringValue();
         }
