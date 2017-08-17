@@ -18,7 +18,6 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -31,6 +30,7 @@ import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 class GlobalButton extends Button {
 
@@ -117,7 +117,7 @@ class GlobalButton extends Button {
                     public void onClick( ClickEvent event ) {
                         String text = factTypes.getItemText( factTypes.getSelectedIndex() );
                         if ( scenario.isFactNameReserved( text ) ) {
-                            Window.alert( TestScenarioConstants.INSTANCE.TheName0IsAlreadyInUsePleaseChooseAnotherName( text ) );
+                            ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.TheName0IsAlreadyInUsePleaseChooseAnotherName(text ) );
                         } else {
                             FactData factData = new FactData( oracle.getGlobalVariable( text ),
                                                               text,

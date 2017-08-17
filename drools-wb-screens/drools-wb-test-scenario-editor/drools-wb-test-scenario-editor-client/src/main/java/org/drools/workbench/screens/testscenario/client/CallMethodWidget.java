@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -46,6 +45,7 @@ import org.kie.workbench.common.widgets.client.resources.HumanReadable;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class CallMethodWidget extends Composite {
 
@@ -254,10 +254,16 @@ public class CallMethodWidget extends Composite {
     }
 
     protected void onDelete() {
-        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureToRemoveCallMethod() ) ) {
-            scenario.removeFixture( mCall );
-            parent.renderEditor();
-        }
+        YesNoCancelPopup.newYesNoCancelPopup("title",
+                                             TestScenarioConstants.INSTANCE.AreYouSureToRemoveCallMethod(),
+                                             () -> {
+                                                 scenario.removeFixture( mCall );
+                                                 parent.renderEditor();
+                                             },
+                                             null,
+                                             () -> {
+
+                                             }).show();
     }
 
     class DeleteButton extends Button {

@@ -18,7 +18,6 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
@@ -28,6 +27,8 @@ import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScena
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.mvp.Command;
 
 public abstract class FactWidget extends HorizontalPanel {
 
@@ -57,12 +58,24 @@ public abstract class FactWidget extends HorizontalPanel {
     }
 
     protected void onDelete() {
-        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisBlockOfData() ) ) {
-            for ( Fixture f : definitionList ) {
-                scenario.removeFixture( f );
-            }
-            parent.renderEditor();
-        }
+        YesNoCancelPopup.newYesNoCancelPopup("Remove this",
+                                             TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisBlockOfData(),
+                                             new Command() {
+                                                 @Override
+                                                 public void execute() {
+                                                     for ( Fixture f : definitionList ) {
+                                                         scenario.removeFixture( f );
+                                                     }
+                                                     parent.renderEditor();
+                                                 }
+                                             },
+                                             null,
+                                             new Command() {
+                                                 @Override
+                                                 public void execute() {
+                                                 // do nothing if cancel
+                                                 }
+                                             }).show();
     }
 
     class DeleteButton

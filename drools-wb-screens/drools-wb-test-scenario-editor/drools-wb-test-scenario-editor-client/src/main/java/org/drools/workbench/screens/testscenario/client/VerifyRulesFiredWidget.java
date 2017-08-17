@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
@@ -42,6 +41,7 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
 import org.kie.workbench.common.widgets.client.resources.CommonImages;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class VerifyRulesFiredWidget extends Composite {
 
@@ -169,14 +169,20 @@ public class VerifyRulesFiredWidget extends Composite {
             del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisRuleExpectation() );
             del.addClickHandler( new ClickHandler() {
                 public void onClick( ClickEvent w ) {
-                    if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation() ) ) {
-                        rfl.remove( v );
-                        sc.removeFixture( v );
-                        outer.setWidget( 1,
-                                         0,
-                                         render( rfl,
-                                                 sc ) );
-                    }
+                    YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
+                                                         () -> {
+                                                             rfl.remove( v );
+                                                             sc.removeFixture( v );
+                                                             outer.setWidget( 1,
+                                                                              0,
+                                                                              render( rfl,
+                                                                                      sc ) );
+                                                         },
+                                                         null,
+                                                         () -> {
+
+                                                         }).show();
                 }
             } );
 

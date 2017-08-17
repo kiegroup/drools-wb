@@ -21,7 +21,6 @@ import java.util.List;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import org.drools.workbench.models.testscenarios.shared.ActivateRuleFlowGroup;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.FactData;
@@ -36,6 +35,7 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 /**
  * This button gives a choice of modifying data, based on the positional
@@ -152,10 +152,10 @@ public class NewDataButton extends TestScenarioButton {
                     public void onClick( ClickEvent event ) {
                         String factName = ( "" + factNameTextBox.getText() ).trim();
                         if ( factName.equals( "" ) || factNameTextBox.getText().indexOf( ' ' ) > -1 ) {
-                            Window.alert( TestScenarioConstants.INSTANCE.YouMustEnterAValidFactName() );
+                            ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.YouMustEnterAValidFactName() );
                         } else {
                             if ( scenario.isFactNameReserved( factName ) ) {
-                                Window.alert( TestScenarioConstants.INSTANCE.TheFactName0IsAlreadyInUsePleaseChooseAnotherName( factName ) );
+                                ErrorPopup.showMessage( TestScenarioConstants.INSTANCE.TheFactName0IsAlreadyInUsePleaseChooseAnotherName( factName ) );
                             } else {
                                 scenario.insertBetween( previousEx,
                                                         getFixture() );

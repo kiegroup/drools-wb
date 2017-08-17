@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -35,6 +34,7 @@ import org.gwtbootstrap3.client.ui.ListBox;
 import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
 import org.kie.workbench.common.widgets.metadata.client.resources.Images;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public class ConfigWidget extends Composite {
 
@@ -69,7 +69,7 @@ public class ConfigWidget extends Composite {
         remove.addClickHandler( new ClickHandler() {
             public void onClick( ClickEvent event ) {
                 if ( box.getSelectedIndex() == -1 ) {
-                    Window.alert( TestScenarioConstants.INSTANCE.PleaseChooseARuleToRemove() );
+                    ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.PleaseChooseARuleToRemove() );
                 } else {
                     String r = box.getItemText( box.getSelectedIndex() );
                     sc.getRules().remove( r );

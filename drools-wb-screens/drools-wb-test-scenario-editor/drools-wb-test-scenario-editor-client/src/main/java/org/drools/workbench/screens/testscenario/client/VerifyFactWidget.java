@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
@@ -51,6 +50,7 @@ import org.uberfire.ext.widgets.common.client.common.ClickableLabel;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.ValueChanged;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 import org.uberfire.ext.widgets.common.client.common.popups.footers.ModalFooterOKCancelButtons;
 
 public class VerifyFactWidget extends Composite {
@@ -217,14 +217,22 @@ public class VerifyFactWidget extends Composite {
             del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisFieldExpectation() );
             del.addClickHandler( new ClickHandler() {
                 public void onClick( ClickEvent w ) {
-                    if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisFieldExpectation(
-                            fld.getFieldName() ) ) ) {
-                        vf.getFieldValues().remove( fld );
-                        FlexTable data = render( vf );
-                        outer.setWidget( 1,
-                                         0,
-                                         data );
-                    }
+
+                    YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisFieldExpectation(fld.getFieldName()),
+                                                         () -> {
+                                                             vf.getFieldValues().remove( fld );
+                                                             FlexTable data = render( vf );
+                                                             outer.setWidget( 1,
+                                                                              0,
+                                                                              data );
+                                                         },
+                                                         null,
+                                                         () -> {
+
+                                                         }).show();
+
+
                 }
             } );
             data.setWidget( i,

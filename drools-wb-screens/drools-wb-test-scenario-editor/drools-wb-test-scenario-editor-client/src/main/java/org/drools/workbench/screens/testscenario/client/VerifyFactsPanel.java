@@ -18,7 +18,6 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
@@ -30,6 +29,7 @@ import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScena
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class VerifyFactsPanel extends VerticalPanel {
 
@@ -74,10 +74,16 @@ public class VerifyFactsPanel extends VerticalPanel {
             addClickHandler( new ClickHandler() {
 
                 public void onClick( ClickEvent event ) {
-                    if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisExpectation() ) ) {
-                        scenario.removeFixture( verifyFact );
-                        parent.renderEditor();
-                    }
+                    YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisExpectation(),
+                                                         () -> {
+                                                             scenario.removeFixture( verifyFact );
+                                                             parent.renderEditor();
+                                                         },
+                                                         null,
+                                                         () -> {
+
+                                                         }).show();
                 }
             } );
         }
