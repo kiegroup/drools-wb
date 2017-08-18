@@ -124,7 +124,7 @@ public class VerifyFieldConstraintEditor extends Composite {
                                                          field.getFieldName(),
                                                          currentValueMap );
             if ( dropDownData != null ) {
-                //GUVNOR-1324: Java enums are of type TYPE_COMPARABLE whereas Guvnor enums are not.
+                //GUVNOR-1324: Java enums are of factType TYPE_COMPARABLE whereas Guvnor enums are not.
                 //The distinction here controls whether the EXPECTED value is handled as a true
                 //Java enum or a literal with a selection list (i.e. Guvnor enum)
                 String dataType = oracle.getFieldType( factType, field.getFieldName() );

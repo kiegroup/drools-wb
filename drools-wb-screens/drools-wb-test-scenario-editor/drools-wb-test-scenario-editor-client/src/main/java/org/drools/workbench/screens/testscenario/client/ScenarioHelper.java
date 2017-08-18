@@ -47,7 +47,7 @@ public class ScenarioHelper {
      * Called lumpy map - as this takes a flat list of fixtures, and groups
      * things together. It will return a list - of which each element will
      * either be a list - or a map. If its a map - then its a map of FactData to
-     * the fact type. If its a list, then it will be expectations or
+     * the fact factType. If its a list, then it will be expectations or
      * retractions.
      * <p/>
      * Man, this will be so much nicer with generics.
@@ -131,7 +131,7 @@ public class ScenarioHelper {
     }
 
     /**
-     * Group the globals together by fact type.
+     * Group the globals together by fact factType.
      */
     public Map<String, FixtureList> lumpyMapGlobals( final List<FactData> globals ) {
         Map<String, FixtureList> map = new HashMap<String, FixtureList>();

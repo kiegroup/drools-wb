@@ -186,8 +186,8 @@ public class NewDataButton extends TestScenarioButton {
                         factNameTextBox.getText(),
                         false );
 
-                //Create new Field objects for new Fixture based upon the first existing of the same data-type
-                //Only the "first" existing of the same data-type is checked as second, third etc should have been
+                //Create new Field objects for new Fixture based upon the first existing of the same data-factType
+                //Only the "first" existing of the same data-factType is checked as second, third etc should have been
                 //based upon the first if they were all created after this fix for GUVNOR-1139 was implemented.
                 List<FactData> existingFactData = scenario.getFactTypesToFactData().get( factType );
                 if ( existingFactData != null && existingFactData.size() > 0 ) {

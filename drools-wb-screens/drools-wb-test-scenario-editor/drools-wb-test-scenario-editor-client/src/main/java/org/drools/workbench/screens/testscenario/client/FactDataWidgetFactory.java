@@ -216,7 +216,7 @@ public class FactDataWidgetFactory {
                     parent );
         }
 
-        throw new IllegalArgumentException( "Unknown field type: " + field.getClass() );
+        throw new IllegalArgumentException( "Unknown field factType: " + field.getClass() );
     }
 
     private IsWidget createFieldNameWidget( final String fieldName ) {

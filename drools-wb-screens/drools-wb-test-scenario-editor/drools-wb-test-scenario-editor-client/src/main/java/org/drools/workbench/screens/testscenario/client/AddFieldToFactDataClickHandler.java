@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import org.appformer.project.datamodel.oracle.MethodInfo;
 import org.appformer.project.datamodel.oracle.ModelField;
 import org.drools.workbench.models.testscenarios.shared.FactData;
+import org.drools.workbench.models.testscenarios.shared.FieldData;
 import org.drools.workbench.models.testscenarios.shared.FieldPlaceHolder;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
@@ -45,7 +46,7 @@ class AddFieldToFactDataClickHandler
         for (Fixture fixture : definitionList) {
             if (fixture instanceof FactData) {
                 ((FactData) fixture).getFieldData().add(
-                        new FieldPlaceHolder(stringSelectionEvent.getSelectedItem()));
+                        new FieldData(stringSelectionEvent.getSelectedItem(), ""));
             }
         }
     }

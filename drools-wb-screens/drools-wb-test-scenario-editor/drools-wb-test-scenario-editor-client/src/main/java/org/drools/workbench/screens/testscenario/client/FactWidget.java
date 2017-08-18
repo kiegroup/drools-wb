@@ -25,6 +25,7 @@ import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
@@ -35,6 +36,7 @@ public abstract class FactWidget extends HorizontalPanel {
     protected final ScenarioParentWidget parent;
     protected final Scenario scenario;
     protected final FixtureList definitionList;
+    protected final AsyncPackageDataModelOracle oracle;
 
     public FactWidget( final String factType,
                        final FixtureList definitionList,
@@ -46,6 +48,7 @@ public abstract class FactWidget extends HorizontalPanel {
         this.parent = parent;
         this.scenario = scenario;
         this.definitionList = definitionList;
+        this.oracle = oracle;
 
         add( new DataInputWidget( factType,
                                   definitionList,
@@ -54,6 +57,9 @@ public abstract class FactWidget extends HorizontalPanel {
                                   parent,
                                   executionTrace,
                                   headerText ) );
+
+        add(new AddFieldButton());
+
         add( new DeleteButton() );
     }
 
@@ -78,11 +84,26 @@ public abstract class FactWidget extends HorizontalPanel {
                                              }).show();
     }
 
+    class AddFieldButton extends Button {
+
+        public AddFieldButton() {
+            setIcon(IconType.PLUS);
+            setText("Add field");
+
+            addClickHandler(new AddFieldToFactDataClickHandler(
+                                    definitionList,
+                                    oracle,
+                                    parent ) );
+        }
+    }
+
+
     class DeleteButton
             extends Button {
 
         public DeleteButton() {
-            setIcon(IconType.MINUS);
+            setIcon(IconType.TRASH);
+            setType(ButtonType.DANGER);
             setTitle(TestScenarioConstants.INSTANCE.RemoveThisBlockOfData());
 
             addClickHandler( new ClickHandler() {

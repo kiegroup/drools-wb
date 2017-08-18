@@ -125,8 +125,8 @@ public class MethodParameterCallValueEditor extends Composite {
 
     private ListBox boundVariable( final FieldNature c ) {
         /*
-         * If there is a bound variable that is the same type of the current
-         * variable type, then propose a list
+         * If there is a bound variable that is the same factType of the current
+         * variable factType, then propose a list
          */
         final ListBox listVariable = new ListBox();
         List<String> vars = model.getFactNamesInScope( ex,
@@ -235,8 +235,8 @@ public class MethodParameterCallValueEditor extends Composite {
         form.addRow( new SmallLabel( TestScenarioConstants.INSTANCE.AdvancedSection() ) );
 
         /*
-         * If there is a bound variable that is the same type of the current
-         * variable type, then show a button
+         * If there is a bound variable that is the same factType of the current
+         * variable factType, then show a button
          */
 
         List<String> vars = model.getFactNamesInScope( ex,
