@@ -18,7 +18,6 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table;
 
 import com.ait.lienzo.client.core.types.Transform;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -34,116 +33,135 @@ public class BoundaryTransformMediatorTest {
     @Mock
     private GuidedDecisionTableModellerView view;
 
+    private Bounds visibleBounds = new BaseBounds(0,
+                                                  0,
+                                                  1000,
+                                                  1000);
+
     private BoundaryTransformMediator restriction;
 
-    private final Bounds bounds = new BaseBounds( -1000,
-                                                  -1000,
-                                                  2000,
-                                                  2000 );
+    private void setBounds(final double x,
+                           final double y,
+                           final double width,
+                           final double height) {
+        when(view.getBounds()).thenReturn(new BaseBounds(x,
+                                                         y,
+                                                         width,
+                                                         height));
+        restriction = new BoundaryTransformMediator(view);
+    }
 
-    @Before
-    public void setup() {
-        when( view.getBounds() ).thenReturn( bounds );
-        this.restriction = new BoundaryTransformMediator( view );
+    private void testTransformation(final double txActual,
+                                    final double tyActual,
+                                    final double txExpected,
+                                    final double tyExpected) {
+        final Transform test = new Transform().translate(txActual,
+                                                         tyActual);
+        final Transform result = restriction.adjust(test,
+                                                    visibleBounds);
 
-        verify( view,
-                times( 1 ) ).getBounds();
+        assertNotNull(result);
+        assertEquals(txExpected,
+                     result.getTranslateX(),
+                     0.0);
+        assertEquals(tyExpected,
+                     result.getTranslateY(),
+                     0.0);
     }
 
     @Test
-    public void testLeftEdge() {
-        final Bounds visibleBounds = new BaseBounds( -500,
-                                                     -500,
-                                                     1000,
-                                                     1000 );
-        final Transform test = new Transform().translate( 1200.0,
-                                                          0.0 );
-        final Transform result = restriction.adjust( test,
-                                                     visibleBounds );
-
-        assertNotNull( result );
-        assertEquals( 1000.0,
-                      result.getTranslateX(),
-                      0.0 );
-        assertEquals( 0.0,
-                      result.getTranslateY(),
-                      0.0 );
-
-        //View.getBounds() is called once in BoundaryTransformMediator's constructor and once in it's adjust method.
-        verify( view,
-                times( 2 ) ).getBounds();
+    public void testLeftEdgeWhenGridIsSmallerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  500,
+                  500);
+        testTransformation(1200,
+                           0,
+                           0,
+                           0);
     }
 
     @Test
-    public void testRightEdge() {
-        final Bounds visibleBounds = new BaseBounds( -500,
-                                                     -500,
-                                                     1000,
-                                                     1000 );
-        final Transform test = new Transform().translate( -200.0,
-                                                          0.0 );
-        final Transform result = restriction.adjust( test,
-                                                     visibleBounds );
-
-        assertNotNull( result );
-        assertEquals( 0.0,
-                      result.getTranslateX(),
-                      0.0 );
-        assertEquals( 0.0,
-                      result.getTranslateY(),
-                      0.0 );
-
-        //View.getBounds() is called once in BoundaryTransformMediator's constructor and once in it's adjust method.
-        verify( view,
-                times( 2 ) ).getBounds();
+    public void testRightEdgeWhenGridIsSmallerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  500,
+                  500);
+        testTransformation(-200,
+                           0,
+                           0,
+                           0);
     }
 
     @Test
-    public void testTopEdge() {
-        final Bounds visibleBounds = new BaseBounds( -500,
-                                                     -500,
-                                                     1000,
-                                                     1000 );
-        final Transform test = new Transform().translate( 0.0,
-                                                          1200.0 );
-        final Transform result = restriction.adjust( test,
-                                                     visibleBounds );
-
-        assertNotNull( result );
-        assertEquals( 0.0,
-                      result.getTranslateX(),
-                      0.0 );
-        assertEquals( 1000.0,
-                      result.getTranslateY(),
-                      0.0 );
-
-        //View.getBounds() is called once in BoundaryTransformMediator's constructor and once in it's adjust method.
-        verify( view,
-                times( 2 ) ).getBounds();
+    public void testTopEdgeWhenGridIsSmallerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  500,
+                  500);
+        testTransformation(0,
+                           1200,
+                           0,
+                           0);
     }
 
     @Test
-    public void testBottomEdge() {
-        final Bounds visibleBounds = new BaseBounds( -500,
-                                                     -500,
-                                                     1000,
-                                                     1000 );
-        final Transform test = new Transform().translate( 0.0,
-                                                          -200.0 );
-        final Transform result = restriction.adjust( test,
-                                                     visibleBounds );
-
-        assertNotNull( result );
-        assertEquals( 0.0,
-                      result.getTranslateX(),
-                      0.0 );
-        assertEquals( 0.0,
-                      result.getTranslateY(),
-                      0.0 );
-
-        //View.getBounds() is called once in BoundaryTransformMediator's constructor and once in it's adjust method.
-        verify( view,
-                times( 2 ) ).getBounds();
+    public void testBottomEdgeWhenGridIsSmallerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  500,
+                  500);
+        testTransformation(0,
+                           -200,
+                           0,
+                           0);
     }
 
+    @Test
+    public void testLeftEdgeWhenGridIsLargerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  5000,
+                  5000);
+        testTransformation(1200,
+                           0,
+                           0,
+                           0);
+    }
+
+    @Test
+    public void testRightEdgeWhenGridIsLargerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  5000,
+                  5000);
+        testTransformation(-200,
+                           0,
+                           -200,
+                           0);
+    }
+
+    @Test
+    public void testTopEdgeWhenGridIsLargerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  5000,
+                  5000);
+        testTransformation(0,
+                           1200,
+                           0,
+                           0);
+    }
+
+    @Test
+    public void testBottomEdgeWhenGridIsLargerThanVisibleBounds() {
+        setBounds(0,
+                  0,
+                  5000,
+                  5000);
+        testTransformation(0,
+                           -200,
+                           0,
+                           -200);
+    }
 }
