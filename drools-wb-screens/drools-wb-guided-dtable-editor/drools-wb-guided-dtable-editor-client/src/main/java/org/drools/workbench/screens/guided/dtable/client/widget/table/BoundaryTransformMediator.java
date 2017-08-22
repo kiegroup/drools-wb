@@ -36,9 +36,9 @@ public class BoundaryTransformMediator implements TransformMediator {
 
     private final GuidedDecisionTableModellerView view;
 
-    public BoundaryTransformMediator( final GuidedDecisionTableModellerView view ) {
-        this.view = PortablePreconditions.checkNotNull( "view",
-                                                        view );
+    public BoundaryTransformMediator(final GuidedDecisionTableModellerView view) {
+        this.view = PortablePreconditions.checkNotNull("view",
+                                                       view);
         updateBounds();
     }
 
@@ -51,8 +51,8 @@ public class BoundaryTransformMediator implements TransformMediator {
     }
 
     @Override
-    public Transform adjust( final Transform transform,
-                             final Bounds visibleBounds ) {
+    public Transform adjust(final Transform transform,
+                            final Bounds visibleBounds) {
         updateBounds();
 
         Transform newTransform = transform.copy();
@@ -63,29 +63,26 @@ public class BoundaryTransformMediator implements TransformMediator {
         final double translateY = newTransform.getTranslateY();
         final double scaledTranslateX = translateX / scaleX;
         final double scaledTranslateY = translateY / scaleY;
-        final double visibleBoundsWidth = visibleBounds.getWidth();
-        final double visibleBoundsHeight = visibleBounds.getHeight();
+        final double visibleBoundsWidth = maxX > visibleBounds.getWidth() ? visibleBounds.getWidth() : maxX;
+        final double visibleBoundsHeight = maxY > visibleBounds.getHeight() ? visibleBounds.getHeight() : maxY;
 
-        if ( -scaledTranslateX < minX ) {
-            newTransform = newTransform.translate( -scaledTranslateX - minX,
-                                                   0 );
+        if (-scaledTranslateX < minX) {
+            newTransform = newTransform.translate(-scaledTranslateX - minX,
+                                                  0);
         }
-        if ( -scaledTranslateY < minY ) {
-            newTransform = newTransform.translate( 0,
-                                                   -scaledTranslateY - minY );
+        if (-scaledTranslateY < minY) {
+            newTransform = newTransform.translate(0,
+                                                  -scaledTranslateY - minY);
         }
-        if ( -scaledTranslateX + visibleBoundsWidth > maxX ) {
-            newTransform = newTransform.translate( -scaledTranslateX + visibleBoundsWidth - maxX,
-                                                   0 );
-
+        if (-scaledTranslateX + visibleBoundsWidth > maxX) {
+            newTransform = newTransform.translate(-scaledTranslateX + visibleBoundsWidth - maxX,
+                                                  0);
         }
-        if ( -scaledTranslateY + visibleBoundsHeight > maxY ) {
-            newTransform = newTransform.translate( 0,
-                                                   -scaledTranslateY + visibleBoundsHeight - maxY );
-
+        if (-scaledTranslateY + visibleBoundsHeight > maxY) {
+            newTransform = newTransform.translate(0,
+                                                  -scaledTranslateY + visibleBoundsHeight - maxY);
         }
 
         return newTransform;
     }
-
 }
