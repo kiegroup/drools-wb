@@ -30,7 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.appformer.project.datamodel.oracle.DataType;
@@ -48,8 +47,8 @@ import org.drools.workbench.screens.testscenario.client.resources.images.TestSce
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
 import org.kie.workbench.common.widgets.client.widget.TextBoxFactory;
 import org.uberfire.ext.widgets.common.client.common.DropDownValueChanged;
 import org.uberfire.ext.widgets.common.client.common.InfoPopup;
@@ -203,7 +202,8 @@ public class MethodParameterCallValueEditor extends Composite {
     }
 
     private Widget choice() {
-        Image clickme = CommonAltedImages.INSTANCE.Edit();
+        Button clickme = new Button();
+        clickme.setIcon(IconType.PENCIL);
         clickme.addClickHandler( new ClickHandler() {
 
             public void onClick( ClickEvent event ) {

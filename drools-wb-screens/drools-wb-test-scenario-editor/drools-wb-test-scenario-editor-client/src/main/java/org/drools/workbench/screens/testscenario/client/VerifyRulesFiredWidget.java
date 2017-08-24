@@ -16,6 +16,11 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
@@ -23,6 +28,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
@@ -31,21 +37,26 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import org.drools.workbench.models.testscenarios.shared.FactData;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.models.testscenarios.shared.VerifyRuleFired;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioImages;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.TextBox;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.kie.workbench.common.widgets.client.resources.CommonImages;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
-public class VerifyRulesFiredWidget extends Composite {
+public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
 
-    private Grid outer;
+//    private Grid outer;
     private boolean showResults;
 
     /**
@@ -55,150 +66,200 @@ public class VerifyRulesFiredWidget extends Composite {
     public VerifyRulesFiredWidget( final FixtureList rfl,
                                    final Scenario scenario,
                                    final boolean showResults ) {
-        outer = new Grid( 2,
-                          1 );
+        setStriped( true );
+        setCondensed( true );
+        setBordered( true );
+        setWidth( "100%" );
+
+        final TextCell nameCell = new TextCell();
+        Column<VerifyRuleFired, String> nameColumn = new Column<VerifyRuleFired, String>(nameCell) {
+            @Override
+            public String getValue( VerifyRuleFired model ) {
+                return model.getRuleName();
+            }
+        };
+
+        addColumn( nameColumn,
+                   "Expected rule that was fired" );
+
+        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER, IconType.TRASH );
+        final Column<VerifyRuleFired, String> deleteColumn = new Column<VerifyRuleFired, String>(deleteCell) {
+            @Override
+            public String getValue( VerifyRuleFired model ) {
+                return "";
+            }
+        };
+
+        deleteColumn.setFieldUpdater(new FieldUpdater<VerifyRuleFired, String>() {
+            @Override
+            public void update(int i,
+                               VerifyRuleFired verifyRuleFired,
+                               String s) {
+                YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                     TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
+                                                     () -> {
+                                                         rfl.remove( verifyRuleFired );
+                                                         scenario.removeFixture( verifyRuleFired );
+                                                         render( rfl, scenario );
+                                                     },
+                                                     null,
+                                                     () -> {
+
+                                                     }).show();
+            }
+        });
+
+        addColumn(deleteColumn, "");
+
+//        outer = new Grid( 2,
+//                          1 );
         this.showResults = showResults;
-        outer.getCellFormatter().setStyleName( 0,
-                                               0,
-                                               "modeller-fact-TypeHeader" ); //NON-NLS
-        outer.getCellFormatter().setAlignment( 0,
-                                               0,
-                                               HasHorizontalAlignment.ALIGN_CENTER,
-                                               HasVerticalAlignment.ALIGN_MIDDLE );
-        outer.setStyleName( "modeller-fact-pattern-Widget" ); //NON-NLS
+//        outer.getCellFormatter().setStyleName( 0,
+//                                               0,
+//                                               "modeller-fact-TypeHeader" ); //NON-NLS
+//        outer.getCellFormatter().setAlignment( 0,
+//                                               0,
+//                                               HasHorizontalAlignment.ALIGN_CENTER,
+//                                               HasVerticalAlignment.ALIGN_MIDDLE );
+//        outer.setStyleName( "modeller-fact-pattern-Widget" ); //NON-NLS
 
-        outer.setWidget( 0,
-                         0,
-                         new SmallLabel( TestScenarioConstants.INSTANCE.ExpectRules() ) );
-        initWidget( outer );
+//        outer.setWidget( 0,
+//                         0,
+//                         new SmallLabel( TestScenarioConstants.INSTANCE.ExpectRules() ) );
+//        initWidget( outer );
 
-        FlexTable data = render( rfl,
+        render( rfl,
                                  scenario );
-        outer.setWidget( 1,
-                         0,
-                         data );
+//        outer.setWidget( 1,
+//                         0,
+//                         data );
     }
 
-    private FlexTable render( final FixtureList rfl,
+    private void render( final FixtureList rfl,
                               final Scenario sc ) {
-        FlexTable data = new FlexTable();
+
+//        FlexTable data = new FlexTable();
+        List<VerifyRuleFired> rules = new ArrayList<>();
 
         for ( int i = 0; i < rfl.size(); i++ ) {
             final VerifyRuleFired v = (VerifyRuleFired) rfl.get( i );
+            rules.add(v);
 
             if ( showResults && v.getSuccessResult() != null ) {
-                if ( !v.getSuccessResult().booleanValue() ) {
-                    data.setWidget( i,
-                                    0,
-                                    new Image( CommonImages.INSTANCE.warning() ) );
-                    data.setWidget( i,
-                                    4,
-                                    new HTML( TestScenarioConstants.INSTANCE.ActualResult( v.getActualResult().toString() ) ) );
-
-                    data.getCellFormatter().addStyleName( i,
-                                                          4,
-                                                          "testErrorValue" ); //NON-NLS
-
-                } else {
-                    data.setWidget( i,
-                                    0,
-                                    new Image( TestScenarioImages.INSTANCE.testPassed() ) );
-                }
+//                if ( !v.getSuccessResult().booleanValue() ) {
+//                    data.setWidget( i,
+//                                    0,
+//                                    new Image( CommonImages.INSTANCE.warning() ) );
+//                    data.setWidget( i,
+//                                    4,
+//                                    new HTML( TestScenarioConstants.INSTANCE.ActualResult( v.getActualResult().toString() ) ) );
+//
+//                    data.getCellFormatter().addStyleName( i,
+//                                                          4,
+//                                                          "testErrorValue" ); //NON-NLS
+//
+//                } else {
+//                    data.setWidget( i,
+//                                    0,
+//                                    new Image( TestScenarioImages.INSTANCE.testPassed() ) );
+//                }
 
             }
-            data.setWidget( i,
-                            1,
-                            new SmallLabel( v.getRuleName() + ":" ) );
-            data.getFlexCellFormatter().setAlignment( i,
-                                                      1,
-                                                      HasHorizontalAlignment.ALIGN_RIGHT,
-                                                      HasVerticalAlignment.ALIGN_MIDDLE );
+//            data.setWidget( i,
+//                            1,
+//                            new SmallLabel( v.getRuleName() + ":" ) );
+//            data.getFlexCellFormatter().setAlignment( i,
+//                                                      1,
+//                                                      HasHorizontalAlignment.ALIGN_RIGHT,
+//                                                      HasVerticalAlignment.ALIGN_MIDDLE );
 
-            final ListBox b = new ListBox();
-            b.addItem( TestScenarioConstants.INSTANCE.firedAtLeastOnce(),
-                       "y" );
-            b.addItem( TestScenarioConstants.INSTANCE.didNotFire(),
-                       "n" );
-            b.addItem( TestScenarioConstants.INSTANCE.firedThisManyTimes(),
-                       "e" );
-            final TextBox num = new TextBox();
-            ( (InputElement) num.getElement().cast() ).setSize( 5 );
+//            final ListBox b = new ListBox();
+//            b.addItem( TestScenarioConstants.INSTANCE.firedAtLeastOnce(),
+//                       "y" );
+//            b.addItem( TestScenarioConstants.INSTANCE.didNotFire(),
+//                       "n" );
+//            b.addItem( TestScenarioConstants.INSTANCE.firedThisManyTimes(),
+//                       "e" );
+//            final TextBox num = new TextBox();
+//            ( (InputElement) num.getElement().cast() ).setSize( 5 );
+//
+//            if ( v.getExpectedFire() != null ) {
+//                b.setSelectedIndex( ( v.getExpectedFire().booleanValue() ) ? 0 : 1 );
+//                num.setVisible( false );
+//            } else {
+//                b.setSelectedIndex( 2 );
+//                String xc = ( v.getExpectedCount() != null ) ? "" + v.getExpectedCount().intValue() : "0";
+//                num.setText( xc );
+//            }
+//
+//            b.addChangeHandler( new ChangeHandler() {
+//                public void onChange( ChangeEvent event ) {
+//                    String s = b.getValue( b.getSelectedIndex() );
+//                    if ( s.equals( "y" ) || s.equals( "n" ) ) {
+//                        num.setVisible( false );
+//                        v.setExpectedFire( ( s.equals( "y" ) ) ? Boolean.TRUE : Boolean.FALSE );
+//                        v.setExpectedCount( null );
+//                    } else {
+//                        num.setVisible( true );
+//                        v.setExpectedFire( null );
+//                        num.setText( "1" );
+//                        v.setExpectedCount( Integer.valueOf( 1 ) );
+//                    }
+//                }
+//            } );
+//
+//            b.addItem( TestScenarioConstants.INSTANCE.ChooseDotDotDot() );
+//
+//            num.addChangeHandler( new ChangeHandler() {
+//                public void onChange( ChangeEvent event ) {
+//                    v.setExpectedCount( Integer.valueOf( num.getText() ) );
+//                }
+//            } );
 
-            if ( v.getExpectedFire() != null ) {
-                b.setSelectedIndex( ( v.getExpectedFire().booleanValue() ) ? 0 : 1 );
-                num.setVisible( false );
-            } else {
-                b.setSelectedIndex( 2 );
-                String xc = ( v.getExpectedCount() != null ) ? "" + v.getExpectedCount().intValue() : "0";
-                num.setText( xc );
-            }
+//            HorizontalPanel h = new HorizontalPanel();
+//            h.add( b );
+//            h.add( num );
+//            data.setWidget( i,
+//                            2,
+//                            h );
 
-            b.addChangeHandler( new ChangeHandler() {
-                public void onChange( ChangeEvent event ) {
-                    String s = b.getValue( b.getSelectedIndex() );
-                    if ( s.equals( "y" ) || s.equals( "n" ) ) {
-                        num.setVisible( false );
-                        v.setExpectedFire( ( s.equals( "y" ) ) ? Boolean.TRUE : Boolean.FALSE );
-                        v.setExpectedCount( null );
-                    } else {
-                        num.setVisible( true );
-                        v.setExpectedFire( null );
-                        num.setText( "1" );
-                        v.setExpectedCount( Integer.valueOf( 1 ) );
-                    }
-                }
-            } );
+//            Button del = new Button();
+//            del.setType(ButtonType.DANGER);
+//            del.setIcon(IconType.TRASH);
+//            del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisRuleExpectation() );
+//            del.addClickHandler( new ClickHandler() {
+//                public void onClick( ClickEvent w ) {
+//                    YesNoCancelPopup.newYesNoCancelPopup("title",
+//                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
+//                                                         () -> {
+//                                                             rfl.remove( v );
+//                                                             sc.removeFixture( v );
+//                                                             outer.setWidget( 1,
+//                                                                              0,
+//                                                                              render( rfl,
+//                                                                                      sc ) );
+//                                                         },
+//                                                         null,
+//                                                         () -> {
+//
+//                                                         }).show();
+//                }
+//            } );
 
-            b.addItem( TestScenarioConstants.INSTANCE.ChooseDotDotDot() );
-
-            num.addChangeHandler( new ChangeHandler() {
-                public void onChange( ChangeEvent event ) {
-                    v.setExpectedCount( Integer.valueOf( num.getText() ) );
-                }
-            } );
-
-            HorizontalPanel h = new HorizontalPanel();
-            h.add( b );
-            h.add( num );
-            data.setWidget( i,
-                            2,
-                            h );
-
-            Image del = CommonAltedImages.INSTANCE.DeleteItemSmall();
-            del.setAltText( TestScenarioConstants.INSTANCE.RemoveThisRuleExpectation() );
-            del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisRuleExpectation() );
-            del.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent w ) {
-                    YesNoCancelPopup.newYesNoCancelPopup("title",
-                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
-                                                         () -> {
-                                                             rfl.remove( v );
-                                                             sc.removeFixture( v );
-                                                             outer.setWidget( 1,
-                                                                              0,
-                                                                              render( rfl,
-                                                                                      sc ) );
-                                                         },
-                                                         null,
-                                                         () -> {
-
-                                                         }).show();
-                }
-            } );
-
-            data.setWidget( i,
-                            3,
-                            del );
-
-            //we only want numbers here...
-            num.addKeyPressHandler( new KeyPressHandler() {
-                public void onKeyPress( KeyPressEvent event ) {
-                    if ( Character.isLetter( event.getCharCode() ) ) {
-                        ( (TextBox) event.getSource() ).cancelKey();
-                    }
-                }
-            } );
+//            data.setWidget( i,
+//                            3,
+//                            del );
+//
+//            //we only want numbers here...
+//            num.addKeyPressHandler( new KeyPressHandler() {
+//                public void onKeyPress( KeyPressEvent event ) {
+//                    if ( Character.isLetter( event.getCharCode() ) ) {
+//                        ( (TextBox) event.getSource() ).cancelKey();
+//                    }
+//                }
+//            } );
         }
-        return data;
+        setRowData(rules);
+//        return data;
     }
 }

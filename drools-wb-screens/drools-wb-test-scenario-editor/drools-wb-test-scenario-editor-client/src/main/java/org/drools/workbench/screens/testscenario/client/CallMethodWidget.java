@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.appformer.project.datamodel.oracle.DropDownData;
 import org.appformer.project.datamodel.oracle.MethodInfo;
@@ -39,6 +38,7 @@ import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScena
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.resources.HumanReadable;
@@ -156,13 +156,14 @@ public class CallMethodWidget extends Composite {
         HorizontalPanel horiz = new HorizontalPanel();
 
         if ( mCall.getState() == ActionCallMethod.TYPE_UNDEFINED ) {
-            Image edit = TestScenarioAltedImages.INSTANCE.AddFieldToFact();
+            Button edit = new Button();
+            edit.setIcon(IconType.PLUS);
             edit.setTitle( TestScenarioConstants.INSTANCE.AddAnotherFieldToThisSoYouCanSetItsValue() );
 
             edit.addClickHandler( new ClickHandler() {
 
                 public void onClick( ClickEvent event ) {
-                    Image w = (Image) event.getSource();
+                    Button w = (Button) event.getSource();
                     showAddFieldPopup( w );
 
                 }
@@ -269,7 +270,8 @@ public class CallMethodWidget extends Composite {
     class DeleteButton extends Button {
 
         public DeleteButton() {
-            setIcon(IconType.MINUS);
+            setType(ButtonType.DANGER);
+            setIcon(IconType.TRASH);
             setTitle(TestScenarioConstants.INSTANCE.RemoveCallMethod());
 
             addClickHandler( new ClickHandler() {

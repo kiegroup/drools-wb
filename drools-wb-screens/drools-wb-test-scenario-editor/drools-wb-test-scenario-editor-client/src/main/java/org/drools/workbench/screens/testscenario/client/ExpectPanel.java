@@ -23,9 +23,9 @@ import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class ExpectPanel extends HorizontalPanel {
@@ -54,8 +54,9 @@ public class ExpectPanel extends HorizontalPanel {
     class DeleteButton extends Button {
 
         public DeleteButton() {
-            setIcon(IconType.MINUS);
-            setTitle(CommonConstants.INSTANCE.DeleteItem());
+            setIcon(IconType.TRASH);
+            setType(ButtonType.DANGER);
+            setText("Remove this part of scenario");
             addClickHandler( new ClickHandler() {
 
                 public void onClick( ClickEvent event ) {

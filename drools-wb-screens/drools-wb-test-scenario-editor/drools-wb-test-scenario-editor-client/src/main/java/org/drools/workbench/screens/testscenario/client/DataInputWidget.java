@@ -35,8 +35,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.cellview.client.Column;
-import org.drools.workbench.models.datamodel.oracle.DataType;
-import org.drools.workbench.models.datamodel.oracle.DropDownData;
+import org.appformer.project.datamodel.oracle.DataType;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.FactData;
 import org.drools.workbench.models.testscenarios.shared.Field;
@@ -152,6 +151,17 @@ public class DataInputWidget
                             if(fieldType == DataType.TYPE_BOOLEAN) {
                                 fieldCell = new SelectionCell(Arrays.asList("true",
                                                                             "false"));
+                            } else if(helper.getEnums() != null){
+                                fieldCell = new SelectionCell(Arrays.asList(helper.getEnums().getFixedList()));
+                            } else if(helper.isThereABoundVariableToSet()) {
+                                List<String> vars = new ArrayList<>();
+                                for ( String var : helper.getFactNamesInScope() ) {
+                                    if ( helper.getFactTypeByVariableName( var ).getType().equals( helper.resolveFieldType() ) ) {
+                                        vars.add(var);
+                                    }
+                                }
+
+                                fieldCell = new SelectionCell(vars);
                             } else {
                                 fieldCell = new EditTextCell();
                             }
