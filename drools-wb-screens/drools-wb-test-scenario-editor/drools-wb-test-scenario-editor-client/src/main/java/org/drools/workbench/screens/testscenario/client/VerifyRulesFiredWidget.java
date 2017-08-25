@@ -17,75 +17,199 @@
 package org.drools.workbench.screens.testscenario.client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.google.gwt.cell.client.AbstractCell;
+import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
-import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.BrowserEvents;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import org.drools.workbench.models.testscenarios.shared.FactData;
+import com.google.gwt.user.client.Command;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.models.testscenarios.shared.VerifyRuleFired;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
-import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioImages;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
-import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
-import org.kie.workbench.common.widgets.client.resources.CommonImages;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.NumericTextBox;
+import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.ext.widgets.common.client.common.popups.footers.ModalFooterOKButton;
 
 public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
 
-//    private Grid outer;
+    //    private Grid outer;
     private boolean showResults;
 
     /**
      * @param rfl List<VeryfyRuleFired>
      * @param scenario = the scenario to add/remove from
      */
-    public VerifyRulesFiredWidget( final FixtureList rfl,
-                                   final Scenario scenario,
-                                   final boolean showResults ) {
-        setStriped( true );
-        setCondensed( true );
-        setBordered( true );
-        setWidth( "100%" );
+    public VerifyRulesFiredWidget(final FixtureList rfl,
+                                  final Scenario scenario,
+                                  final boolean showResults) {
+        setStriped(true);
+        setCondensed(true);
+        setBordered(true);
+        setWidth("100%");
 
         final TextCell nameCell = new TextCell();
         Column<VerifyRuleFired, String> nameColumn = new Column<VerifyRuleFired, String>(nameCell) {
             @Override
-            public String getValue( VerifyRuleFired model ) {
+            public String getValue(VerifyRuleFired model) {
                 return model.getRuleName();
             }
         };
 
-        addColumn( nameColumn,
-                   "Expected rule that was fired" );
+        addColumn(nameColumn,
+                  "Expected rule that was fired");
 
-        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER, IconType.TRASH );
+        final TextCell howManyTimesCell = new TextCell() {
+            @Override
+            public Set<String> getConsumedEvents() {
+                return new HashSet<String>() {{
+                    add(BrowserEvents.CLICK);
+                }};
+            }
+        };
+
+        final Column<VerifyRuleFired, String> howManyTimesColumn = new Column<VerifyRuleFired, String>(howManyTimesCell) {
+            @Override
+            public String getValue(VerifyRuleFired verifyRuleFired) {
+                if (verifyRuleFired.getExpectedFire() != null) {
+                    return verifyRuleFired.getExpectedFire() ? TestScenarioConstants.INSTANCE.firedAtLeastOnce() : TestScenarioConstants.INSTANCE.didNotFire();
+                } else if (verifyRuleFired.getExpectedCount() != null) {
+                    return TestScenarioConstants.INSTANCE.firedThisManyTimes() + "; " + verifyRuleFired.getExpectedCount();
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public void onBrowserEvent(Cell.Context context,
+                                       Element elem,
+                                       VerifyRuleFired verifyRuleFired,
+                                       NativeEvent event) {
+                super.onBrowserEvent(context,
+                                     elem,
+                                     verifyRuleFired,
+                                     event);
+                if (event.getType() != null && BrowserEvents.CLICK.compareTo(event.getType()) == 0) {
+                    final NumericTextBox specifyExactNumber = new NumericTextBox(false);
+                    if (verifyRuleFired.getExpectedCount() != null) {
+                        specifyExactNumber.setValue(verifyRuleFired.getExpectedCount().toString());
+                    }
+
+                    final ListBox occurrence = new ListBox();
+                    occurrence.addItem(TestScenarioConstants.INSTANCE.firedAtLeastOnce());
+                    occurrence.addItem(TestScenarioConstants.INSTANCE.didNotFire());
+                    occurrence.addItem(TestScenarioConstants.INSTANCE.firedThisManyTimes());
+
+                    final FormStylePopup wasFiredTimesPopup = new FormStylePopup("The rule was fired times");
+
+                    if (verifyRuleFired.getExpectedFire() != null) {
+                        if (verifyRuleFired.getExpectedFire()) {
+                            occurrence.setSelectedIndex(0);
+                        } else {
+                            occurrence.setSelectedIndex(1);
+                        }
+                        wasFiredTimesPopup.setAttributeVisibility(1, false);
+                    } else {
+                        occurrence.setSelectedIndex(2);
+                        wasFiredTimesPopup.setAttributeVisibility(1, true);
+                    }
+
+                    wasFiredTimesPopup.addAttribute("How many times the rule was fired",
+                                                    occurrence);
+                    wasFiredTimesPopup.addAttribute("Specify exact number",
+                                                    specifyExactNumber,
+                                                    false);
+                    occurrence.addChangeHandler(new ChangeHandler() {
+                        @Override
+                        public void onChange(ChangeEvent changeEvent) {
+                            String newValue = occurrence.getSelectedItemText();
+
+                            if (TestScenarioConstants.INSTANCE.firedAtLeastOnce().compareTo(newValue) == 0) {
+                                wasFiredTimesPopup.setAttributeVisibility(1,
+                                                                          false);
+                            } else if (TestScenarioConstants.INSTANCE.didNotFire().compareTo(newValue) == 0) {
+                                wasFiredTimesPopup.setAttributeVisibility(1,
+                                                                          false);
+                            } else {
+                                wasFiredTimesPopup.setAttributeVisibility(1,
+                                                                          true);
+                            }
+                        }
+                    });
+
+                    wasFiredTimesPopup.add(new ModalFooterOKButton(new Command() {
+                        @Override
+                        public void execute() {
+                            String newValue = occurrence.getSelectedItemText();
+
+                            if (TestScenarioConstants.INSTANCE.firedAtLeastOnce().compareTo(newValue) == 0) {
+                                verifyRuleFired.setExpectedFire(true);
+                                verifyRuleFired.setExpectedCount(null);
+                            } else if (TestScenarioConstants.INSTANCE.didNotFire().compareTo(newValue) == 0) {
+                                verifyRuleFired.setExpectedFire(false);
+                                verifyRuleFired.setExpectedCount(null);
+                            } else {
+                                verifyRuleFired.setExpectedFire(null);
+                                verifyRuleFired.setExpectedCount(Integer.valueOf(specifyExactNumber.getValue()));
+                            }
+                            wasFiredTimesPopup.hide();
+                            VerifyRulesFiredWidget.this.redraw();
+                        }
+                    }));
+
+                    wasFiredTimesPopup.show();
+                }
+            }
+        };
+
+        addColumn(howManyTimesColumn,
+                  "How many times the rule was fired");
+
+        if (showResults) {
+            final Cell<Boolean> runResultCell = new AbstractCell<Boolean>() {
+                @Override
+                public void render(Context context,
+                                   Boolean ruleFired,
+                                   SafeHtmlBuilder safeHtmlBuilder) {
+                    if (ruleFired != null && ruleFired) {
+                        safeHtmlBuilder.appendEscaped("passed");
+                    } else {
+                        safeHtmlBuilder.appendEscaped("failed");
+                    }
+                }
+            };
+            Column<VerifyRuleFired, Boolean> runResultColumn = new Column<VerifyRuleFired, Boolean>(runResultCell) {
+                @Override
+                public Boolean getValue(VerifyRuleFired model) {
+                    return model.getSuccessResult();
+                }
+            };
+
+            addColumn(runResultColumn,
+                      "Run result");
+        }
+
+        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER,
+                                                     IconType.TRASH);
         final Column<VerifyRuleFired, String> deleteColumn = new Column<VerifyRuleFired, String>(deleteCell) {
             @Override
-            public String getValue( VerifyRuleFired model ) {
+            public String getValue(VerifyRuleFired model) {
                 return "";
             }
         };
@@ -98,9 +222,9 @@ public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
                 YesNoCancelPopup.newYesNoCancelPopup("title",
                                                      TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
                                                      () -> {
-                                                         rfl.remove( verifyRuleFired );
-                                                         scenario.removeFixture( verifyRuleFired );
-                                                         render( rfl, scenario );
+                                                         rfl.remove(verifyRuleFired);
+                                                         scenario.removeFixture(verifyRuleFired);
+                                                         render(rfl);
                                                      },
                                                      null,
                                                      () -> {
@@ -109,157 +233,21 @@ public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
             }
         });
 
-        addColumn(deleteColumn, "");
+        addColumn(deleteColumn,
+                  "");
 
-//        outer = new Grid( 2,
-//                          1 );
         this.showResults = showResults;
-//        outer.getCellFormatter().setStyleName( 0,
-//                                               0,
-//                                               "modeller-fact-TypeHeader" ); //NON-NLS
-//        outer.getCellFormatter().setAlignment( 0,
-//                                               0,
-//                                               HasHorizontalAlignment.ALIGN_CENTER,
-//                                               HasVerticalAlignment.ALIGN_MIDDLE );
-//        outer.setStyleName( "modeller-fact-pattern-Widget" ); //NON-NLS
-
-//        outer.setWidget( 0,
-//                         0,
-//                         new SmallLabel( TestScenarioConstants.INSTANCE.ExpectRules() ) );
-//        initWidget( outer );
-
-        render( rfl,
-                                 scenario );
-//        outer.setWidget( 1,
-//                         0,
-//                         data );
+        render(rfl);
     }
 
-    private void render( final FixtureList rfl,
-                              final Scenario sc ) {
+    private void render(final FixtureList rfl) {
 
-//        FlexTable data = new FlexTable();
         List<VerifyRuleFired> rules = new ArrayList<>();
 
-        for ( int i = 0; i < rfl.size(); i++ ) {
-            final VerifyRuleFired v = (VerifyRuleFired) rfl.get( i );
+        for (int i = 0; i < rfl.size(); i++) {
+            final VerifyRuleFired v = (VerifyRuleFired) rfl.get(i);
             rules.add(v);
-
-            if ( showResults && v.getSuccessResult() != null ) {
-//                if ( !v.getSuccessResult().booleanValue() ) {
-//                    data.setWidget( i,
-//                                    0,
-//                                    new Image( CommonImages.INSTANCE.warning() ) );
-//                    data.setWidget( i,
-//                                    4,
-//                                    new HTML( TestScenarioConstants.INSTANCE.ActualResult( v.getActualResult().toString() ) ) );
-//
-//                    data.getCellFormatter().addStyleName( i,
-//                                                          4,
-//                                                          "testErrorValue" ); //NON-NLS
-//
-//                } else {
-//                    data.setWidget( i,
-//                                    0,
-//                                    new Image( TestScenarioImages.INSTANCE.testPassed() ) );
-//                }
-
-            }
-//            data.setWidget( i,
-//                            1,
-//                            new SmallLabel( v.getRuleName() + ":" ) );
-//            data.getFlexCellFormatter().setAlignment( i,
-//                                                      1,
-//                                                      HasHorizontalAlignment.ALIGN_RIGHT,
-//                                                      HasVerticalAlignment.ALIGN_MIDDLE );
-
-//            final ListBox b = new ListBox();
-//            b.addItem( TestScenarioConstants.INSTANCE.firedAtLeastOnce(),
-//                       "y" );
-//            b.addItem( TestScenarioConstants.INSTANCE.didNotFire(),
-//                       "n" );
-//            b.addItem( TestScenarioConstants.INSTANCE.firedThisManyTimes(),
-//                       "e" );
-//            final TextBox num = new TextBox();
-//            ( (InputElement) num.getElement().cast() ).setSize( 5 );
-//
-//            if ( v.getExpectedFire() != null ) {
-//                b.setSelectedIndex( ( v.getExpectedFire().booleanValue() ) ? 0 : 1 );
-//                num.setVisible( false );
-//            } else {
-//                b.setSelectedIndex( 2 );
-//                String xc = ( v.getExpectedCount() != null ) ? "" + v.getExpectedCount().intValue() : "0";
-//                num.setText( xc );
-//            }
-//
-//            b.addChangeHandler( new ChangeHandler() {
-//                public void onChange( ChangeEvent event ) {
-//                    String s = b.getValue( b.getSelectedIndex() );
-//                    if ( s.equals( "y" ) || s.equals( "n" ) ) {
-//                        num.setVisible( false );
-//                        v.setExpectedFire( ( s.equals( "y" ) ) ? Boolean.TRUE : Boolean.FALSE );
-//                        v.setExpectedCount( null );
-//                    } else {
-//                        num.setVisible( true );
-//                        v.setExpectedFire( null );
-//                        num.setText( "1" );
-//                        v.setExpectedCount( Integer.valueOf( 1 ) );
-//                    }
-//                }
-//            } );
-//
-//            b.addItem( TestScenarioConstants.INSTANCE.ChooseDotDotDot() );
-//
-//            num.addChangeHandler( new ChangeHandler() {
-//                public void onChange( ChangeEvent event ) {
-//                    v.setExpectedCount( Integer.valueOf( num.getText() ) );
-//                }
-//            } );
-
-//            HorizontalPanel h = new HorizontalPanel();
-//            h.add( b );
-//            h.add( num );
-//            data.setWidget( i,
-//                            2,
-//                            h );
-
-//            Button del = new Button();
-//            del.setType(ButtonType.DANGER);
-//            del.setIcon(IconType.TRASH);
-//            del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisRuleExpectation() );
-//            del.addClickHandler( new ClickHandler() {
-//                public void onClick( ClickEvent w ) {
-//                    YesNoCancelPopup.newYesNoCancelPopup("title",
-//                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisRuleExpectation(),
-//                                                         () -> {
-//                                                             rfl.remove( v );
-//                                                             sc.removeFixture( v );
-//                                                             outer.setWidget( 1,
-//                                                                              0,
-//                                                                              render( rfl,
-//                                                                                      sc ) );
-//                                                         },
-//                                                         null,
-//                                                         () -> {
-//
-//                                                         }).show();
-//                }
-//            } );
-
-//            data.setWidget( i,
-//                            3,
-//                            del );
-//
-//            //we only want numbers here...
-//            num.addKeyPressHandler( new KeyPressHandler() {
-//                public void onKeyPress( KeyPressEvent event ) {
-//                    if ( Character.isLetter( event.getCharCode() ) ) {
-//                        ( (TextBox) event.getSource() ).cancelKey();
-//                    }
-//                }
-//            } );
         }
         setRowData(rules);
-//        return data;
     }
 }

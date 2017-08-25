@@ -27,6 +27,7 @@ import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.models.testscenarios.shared.VerifyFact;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
@@ -68,8 +69,9 @@ public class VerifyFactsPanel extends VerticalPanel {
     class DeleteButton extends Button {
 
         public DeleteButton( final VerifyFact verifyFact ) {
-            setIcon(IconType.MINUS);
-           setTitle(TestScenarioConstants.INSTANCE.DeleteTheExpectationForThisFact());
+            setIcon(IconType.TRASH);
+            setType(ButtonType.DANGER);
+            setTitle(TestScenarioConstants.INSTANCE.DeleteTheExpectationForThisFact());
 
             addClickHandler( new ClickHandler() {
 
