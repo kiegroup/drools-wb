@@ -38,10 +38,8 @@ import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.bus.server.annotations.Service;
-import org.kie.api.builder.KieModule;
-import org.kie.scanner.KieModuleMetaData;
 import org.kie.soup.project.datamodel.commons.util.MVELEvaluator;
-import org.kie.workbench.common.services.backend.builder.service.BuildInfoService;
+import org.kie.workbench.common.services.backend.project.ProjectClassLoaderHelper;
 import org.kie.workbench.common.services.backend.service.KieService;
 import org.kie.workbench.common.services.datamodel.backend.server.builder.util.DataEnumLoader;
 import org.kie.workbench.common.services.shared.project.KieProject;
@@ -87,13 +85,12 @@ public class EnumServiceImpl
     private EnumResourceTypeDefinition resourceTypeDefinition;
 
     @Inject
-    private BuildInfoService buildInfoService;
-
-    @Inject
     private CommentedOptionFactory commentedOptionFactory;
 
     @Inject
     private MVELEvaluator evaluator;
+
+    private ProjectClassLoaderHelper projectClassLoaderHelper;
 
     private SafeSessionInfo safeSessionInfo;
 
@@ -257,13 +254,11 @@ public class EnumServiceImpl
                                                  final String content,
                                                  final MVELEvaluator evaluator) {
         try {
-            final KieProject project = projectService.resolveProject(path);
-            final KieModule module = buildInfoService.getBuildInfo(project).getKieModuleIgnoringErrors();
-            final ClassLoader classLoader = KieModuleMetaData.Factory.newKieModuleMetaData(module).getClassLoader();
-            final DataEnumLoader loader = new DataEnumLoader(content,
-                                                             classLoader,
-                                                             evaluator);
-            if (!loader.hasErrors()) {
+            final KieProject project = projectService.resolveProject( path );
+            final ClassLoader classLoader = projectClassLoaderHelper.getProjectClassLoader(project);
+            final DataEnumLoader loader = new DataEnumLoader( content,
+                                                              classLoader );
+            if ( !loader.hasErrors() ) {
                 return Collections.emptyList();
             } else {
                 final List<ValidationMessage> validationMessages = new ArrayList<>();
