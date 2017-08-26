@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -30,7 +29,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.Command;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
@@ -42,6 +40,7 @@ import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.ColorType;
 import org.uberfire.ext.widgets.common.client.common.NumericTextBox;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
@@ -181,30 +180,6 @@ public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
         addColumn(howManyTimesColumn,
                   "How many times the rule was fired");
 
-        if (showResults) {
-            final Cell<Boolean> runResultCell = new AbstractCell<Boolean>() {
-                @Override
-                public void render(Context context,
-                                   Boolean ruleFired,
-                                   SafeHtmlBuilder safeHtmlBuilder) {
-                    if (ruleFired != null && ruleFired) {
-                        safeHtmlBuilder.appendEscaped("passed");
-                    } else {
-                        safeHtmlBuilder.appendEscaped("failed");
-                    }
-                }
-            };
-            Column<VerifyRuleFired, Boolean> runResultColumn = new Column<VerifyRuleFired, Boolean>(runResultCell) {
-                @Override
-                public Boolean getValue(VerifyRuleFired model) {
-                    return model.getSuccessResult();
-                }
-            };
-
-            addColumn(runResultColumn,
-                      "Run result");
-        }
-
         final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER,
                                                      IconType.TRASH);
         final Column<VerifyRuleFired, String> deleteColumn = new Column<VerifyRuleFired, String>(deleteCell) {
@@ -249,5 +224,16 @@ public class VerifyRulesFiredWidget extends CellTable<VerifyRuleFired> {
             rules.add(v);
         }
         setRowData(rules);
+
+        if (showResults) {
+            for (int i = 0; i < rules.size(); i++) {
+                final VerifyRuleFired rule = rules.get(i);
+                if(rule.wasSuccessful()) {
+                    getRowElement(i).addClassName(ColorType.SUCCESS.getType());
+                } else {
+                    getRowElement(i).addClassName(ColorType.DANGER.getType());
+                }
+            }
+        }
     }
 }
