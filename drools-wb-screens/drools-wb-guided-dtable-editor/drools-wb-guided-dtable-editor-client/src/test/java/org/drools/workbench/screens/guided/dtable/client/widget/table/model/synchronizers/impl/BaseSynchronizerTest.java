@@ -99,7 +99,7 @@ public abstract class BaseSynchronizerTest {
     public void setup() {
         //Setup model related classes
         model = new GuidedDecisionTable52();
-        uiModel = new GuidedDecisionTableUiModel(modelSynchronizer);
+        uiModel = spy(new GuidedDecisionTableUiModel(modelSynchronizer));
         incrementalDataModelServiceCaller = new CallerMock<>(incrementalDataModelService);
 
         final BRLRuleModel rm = new BRLRuleModel(model);
