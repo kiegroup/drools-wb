@@ -27,11 +27,8 @@ import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.appformer.project.datamodel.oracle.MethodInfo;
 import org.appformer.project.datamodel.oracle.ModelField;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
@@ -42,7 +39,6 @@ import org.drools.workbench.models.testscenarios.shared.VerifyFact;
 import org.drools.workbench.models.testscenarios.shared.VerifyField;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -53,7 +49,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
-import org.uberfire.ext.widgets.common.client.common.popups.footers.ModalFooterOKButton;
+import org.uberfire.ext.widgets.common.client.common.popups.footers.GenericModalFooter;
 import org.uberfire.ext.widgets.common.client.common.popups.footers.ModalFooterOKCancelButtons;
 
 public class VerifyFactsPanel extends CellTable<VerifyFact> {
@@ -116,25 +112,93 @@ public class VerifyFactsPanel extends CellTable<VerifyFact> {
             @Override
             public void onBrowserEvent(Cell.Context context,
                                        Element elem,
-                                       VerifyFact object,
+                                       VerifyFact verifyFact,
                                        NativeEvent event) {
                 super.onBrowserEvent(context,
                                      elem,
-                                     object,
+                                     verifyFact,
                                      event);
+
+                final VerifyFactWidget factFields = new VerifyFactWidget(verifyFact,
+                                                                         scenario,
+                                                                         oracle,
+                                                                         executionTrace,
+                                                                         showResults);
+
                 final FormStylePopup fieldsDetails = new FormStylePopup("Expected field values");
-                fieldsDetails.addAttribute("Field values", new VerifyFactWidget(object,
-                                                       scenario,
-                                                       oracle,
-                                                       executionTrace,
-                                                       showResults));
-                fieldsDetails.add(new ModalFooterOKButton(new Command() {
-                    @Override
-                    public void execute() {
-                        fieldsDetails.hide();
-                    }
-                }));
-                fieldsDetails.setWidth("600px");
+                fieldsDetails.addAttribute("Field values", factFields);
+                final GenericModalFooter footer = new GenericModalFooter();
+                footer.addButton("OK",
+                                 new org.uberfire.mvp.Command() {
+                                     @Override
+                                     public void execute() {
+                                         fieldsDetails.hide();
+                                     }
+                                 },
+                                 ButtonType.PRIMARY);
+
+                footer.addButton("Add Field",
+                                 new org.uberfire.mvp.Command() {
+                                     @Override
+                                     public void execute() {
+                                         final ListBox fieldsListBox = new ListBox();
+                                         final String type = verifyFact.anonymous ? verifyFact.getName() : (String) scenario.getVariableTypes().get(verifyFact.getName());
+                                         oracle.getFieldCompletions(type,
+                                                                    new Callback<ModelField[]>() {
+                                                                        @Override
+                                                                        public void callback(final ModelField[] fields) {
+
+                                                                            // Add fields
+                                                                            for (int i = 0; i < fields.length; i++) {
+                                                                                fieldsListBox.addItem(fields[i].getName());
+                                                                            }
+
+                                                                            // Add methods
+                                                                            oracle.getMethodInfos(type,
+                                                                                                  new Callback<List<MethodInfo>>() {
+                                                                                                      @Override
+                                                                                                      public void callback(List<MethodInfo> result) {
+                                                                                                          for (MethodInfo info : result) {
+                                                                                                              if (info.getParams().isEmpty() && !"void".equals(info.getReturnClassType())) {
+                                                                                                                  fieldsListBox.addItem(info.getName());
+                                                                                                              }
+                                                                                                          }
+                                                                                                      }
+                                                                                                  });
+                                                                        }
+                                                                    });
+
+                                         final FormStylePopup pop = new FormStylePopup(TestScenarioAltedImages.INSTANCE.RuleAsset(),
+                                                                                       TestScenarioConstants.INSTANCE.ChooseAFieldToAdd());
+                                         pop.addRow(fieldsListBox);
+                                         pop.add(new ModalFooterOKCancelButtons(new Command() {
+                                             @Override
+                                             public void execute() {
+                                                 String f = fieldsListBox.getItemText(fieldsListBox.getSelectedIndex());
+                                                 verifyFact.getFieldValues().add(new VerifyField(f,
+                                                                                                 "",
+                                                                                                 "=="));
+                                                 factFields.redraw();
+
+                                                 pop.hide();
+                                             }
+                                         },
+                                                                                new Command() {
+                                                                                    @Override
+                                                                                    public void execute() {
+                                                                                        pop.hide();
+                                                                                    }
+                                                                                }
+                                         ));
+
+                                         pop.show();
+                                     }
+                                 },
+                                 IconType.PLUS,
+                                 ButtonType.DEFAULT);
+
+                fieldsDetails.add(footer);
+                fieldsDetails.setWidth("1000px");
                 fieldsDetails.show();
             }
         };

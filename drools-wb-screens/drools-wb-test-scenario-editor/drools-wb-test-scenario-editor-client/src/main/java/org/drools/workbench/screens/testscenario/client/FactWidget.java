@@ -58,8 +58,6 @@ public abstract class FactWidget extends HorizontalPanel {
                                   executionTrace,
                                   headerText ) );
 
-        add(new AddFieldButton());
-
         add( new DeleteButton() );
     }
 
@@ -82,19 +80,6 @@ public abstract class FactWidget extends HorizontalPanel {
                                                  // do nothing if cancel
                                                  }
                                              }).show();
-    }
-
-    class AddFieldButton extends Button {
-
-        public AddFieldButton() {
-            setIcon(IconType.PLUS);
-            setText("Add field");
-
-            addClickHandler(new AddFieldToFactDataClickHandler(
-                                    definitionList,
-                                    oracle,
-                                    parent ) );
-        }
     }
 
 

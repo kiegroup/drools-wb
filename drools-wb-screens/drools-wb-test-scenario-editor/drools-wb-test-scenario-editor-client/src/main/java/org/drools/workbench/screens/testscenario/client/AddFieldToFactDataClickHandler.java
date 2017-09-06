@@ -15,14 +15,10 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
-import java.util.List;
-
 import com.google.gwt.event.logical.shared.SelectionEvent;
-import org.appformer.project.datamodel.oracle.MethodInfo;
 import org.appformer.project.datamodel.oracle.ModelField;
 import org.drools.workbench.models.testscenarios.shared.FactData;
 import org.drools.workbench.models.testscenarios.shared.FieldData;
-import org.drools.workbench.models.testscenarios.shared.FieldPlaceHolder;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
@@ -32,6 +28,7 @@ class AddFieldToFactDataClickHandler
         extends AddFieldClickHandler {
 
     private final FixtureList definitionList;
+    private FieldDataValues fieldDataValues;
 
     AddFieldToFactDataClickHandler(final FixtureList definitionList,
                                    final AsyncPackageDataModelOracle oracle,
@@ -41,13 +38,28 @@ class AddFieldToFactDataClickHandler
         this.definitionList = definitionList;
     }
 
+    AddFieldToFactDataClickHandler(final FixtureList definitionList,
+                                   final AsyncPackageDataModelOracle oracle,
+                                   final ScenarioParentWidget parent,
+                                   final FieldDataValues fieldDataValues) {
+        super(oracle,
+              parent);
+        this.definitionList = definitionList;
+        this.fieldDataValues = fieldDataValues;
+    }
+
     @Override
     public void onSelection(final SelectionEvent<String> stringSelectionEvent) {
         for (Fixture fixture : definitionList) {
             if (fixture instanceof FactData) {
                 ((FactData) fixture).getFieldData().add(
-                        new FieldData(stringSelectionEvent.getSelectedItem(), ""));
+                        new FieldData(stringSelectionEvent.getSelectedItem(),
+                                      ""));
             }
+        }
+
+        if (fieldDataValues != null) {
+            fieldDataValues.render();
         }
     }
 
