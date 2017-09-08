@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import org.appformer.project.datamodel.oracle.DataType;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
 import org.drools.workbench.models.datamodel.rule.ActionInsertFact;
-import org.drools.workbench.models.datamodel.rule.ActionSetField;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
@@ -167,16 +166,15 @@ public class DefaultGuidedDecisionTableLinkManagerTest {
         //Columns: Row#[0], Description[1], Action[2]
         final GuidedDecisionTable52 dt1 = new GuidedDecisionTable52();
         final BRLActionColumn brl = new BRLActionColumn();
-        final ActionSetField asf = new ActionSetField();
-        asf.setVariable("$f");
-        asf.addFieldValue(new ActionFieldValue() {{
+        final ActionInsertFact aif = new ActionInsertFact("Fact");
+        aif.addFieldValue(new ActionFieldValue() {{
             setField("field");
             setValue("10");
             setType(DataType.TYPE_STRING);
-            setNature(FieldNatureType.TYPE_LITERAL);
+            setNature(FieldNatureType.TYPE_TEMPLATE);
         }});
         brl.setDefinition(new ArrayList<IAction>() {{
-            add(asf);
+            add(aif);
         }});
         brl.getChildColumns().add(new BRLActionVariableColumn("$f",
                                                               DataType.TYPE_STRING,

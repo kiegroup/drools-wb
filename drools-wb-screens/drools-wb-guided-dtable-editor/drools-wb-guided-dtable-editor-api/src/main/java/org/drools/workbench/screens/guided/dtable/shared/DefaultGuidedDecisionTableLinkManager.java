@@ -173,26 +173,14 @@ public class DefaultGuidedDecisionTableLinkManager implements GuidedDecisionTabl
                 final BRLActionColumn fragment = (BRLActionColumn) ac;
 
                 if (hasTemplateKeys(fragment)) {
-                    //If the fragment has Template Keys we can attempt to link child columns
-                    for (BRLActionVariableColumn var : fragment.getChildColumns()) {
-                        if (factType.equals(var.getFactType()) && fieldName.equals(var.getFactField())) {
-                            return var;
-                        }
-                    }
+                    return getLinkedTemplateKeyColumn(fragment,
+                                                      factType,
+                                                      fieldName);
                 } else {
-                    // If the fragment has no Template Keys we need to ascertain whether the
-                    // fragment itself references the Fact and Field used by the Constraint
-                    final Map<String, List<String>> rhsTypeFields = rhsTypeFieldsExtractor.extract(model,
-                                                                                                   fragment.getDefinition());
-                    if (rhsTypeFields.containsKey(factType)) {
-                        for (String field : rhsTypeFields.get(factType)) {
-                            if (field.equals(fieldName)) {
-                                // It is safe to get the zero'th column here as we know there are
-                                // no variables and hence they'll be a single boolean column
-                                return fragment.getChildColumns().get(0);
-                            }
-                        }
-                    }
+                    return getLinkedDefinitionColumn(model,
+                                                     fragment,
+                                                     factType,
+                                                     fieldName);
                 }
             }
         }
@@ -207,5 +195,32 @@ public class DefaultGuidedDecisionTableLinkManager implements GuidedDecisionTabl
         final RuleModelVisitor rmv = new RuleModelVisitor(ivs);
         rmv.visit(rm);
         return ivs.size() > 0;
+    }
+
+    private ActionCol52 getLinkedTemplateKeyColumn(final BRLActionColumn fragment,
+                                                   final String factType,
+                                                   final String fieldName) {
+        for (BRLActionVariableColumn var : fragment.getChildColumns()) {
+            if (factType.equals(var.getFactType()) && fieldName.equals(var.getFactField())) {
+                return var;
+            }
+        }
+        return null;
+    }
+
+    private ActionCol52 getLinkedDefinitionColumn(final GuidedDecisionTable52 model,
+                                                  final BRLActionColumn fragment,
+                                                  final String factType,
+                                                  final String fieldName) {
+        final Map<String, List<String>> rhsTypeFields = rhsTypeFieldsExtractor.extract(model,
+                                                                                       fragment.getDefinition());
+        if (rhsTypeFields.containsKey(factType)) {
+            for (String field : rhsTypeFields.get(factType)) {
+                if (field.equals(fieldName)) {
+                    return fragment.getChildColumns().get(0);
+                }
+            }
+        }
+        return null;
     }
 }
