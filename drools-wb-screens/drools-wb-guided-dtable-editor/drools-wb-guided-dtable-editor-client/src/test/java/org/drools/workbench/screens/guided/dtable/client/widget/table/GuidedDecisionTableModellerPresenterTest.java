@@ -61,6 +61,7 @@ import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseBounds;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.ParameterizedCommand;
@@ -138,6 +139,7 @@ public class GuidedDecisionTableModellerPresenterTest {
 
         when(dtablePresenterProvider.get()).thenReturn(dtablePresenter);
         when(dtablePresenter.getView()).thenReturn(dtableView);
+        when(dtableView.getModel()).thenReturn(new BaseGridData());
     }
 
     private GuidedDecisionTableView.Presenter makeDecisionTable() {
@@ -147,6 +149,7 @@ public class GuidedDecisionTableModellerPresenterTest {
         when(dtPresenter.getView()).thenReturn(dtView);
         when(dtPresenter.getAccess()).thenReturn(mock(GuidedDecisionTablePresenter.Access.class));
         when(dtPresenter.getModel()).thenReturn(mock(GuidedDecisionTable52.class));
+        when(dtView.getModel()).thenReturn(new BaseGridData());
 
         return dtPresenter;
     }
@@ -287,6 +290,8 @@ public class GuidedDecisionTableModellerPresenterTest {
                times(1)).refreshColumnsNote(eq(false));
         verify(dtPresenter,
                times(1)).onClose();
+        verify(presenter,
+               times(1)).updateLinks();
     }
 
     @Test
@@ -763,5 +768,27 @@ public class GuidedDecisionTableModellerPresenterTest {
                times(1)).link(eq(availableDecisionTables));
         verify(gridLayer,
                times(1)).refreshGridWidgetConnectors();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void updateLinksClearsExistingLinks() {
+        final GuidedDecisionTableView.Presenter dtPresenter = makeDecisionTable();
+        final Set<GuidedDecisionTableView.Presenter> availableDecisionTables = new HashSet<GuidedDecisionTableView.Presenter>() {{
+            add(dtPresenter);
+        }};
+
+        final GridColumn uiColumn1 = mock(GridColumn.class);
+        final GridColumn uiColumn2 = mock(GridColumn.class);
+        dtPresenter.getView().getModel().appendColumn(uiColumn1);
+        dtPresenter.getView().getModel().appendColumn(uiColumn2);
+
+        when(presenter.isDecisionTableAvailable(eq(dtPresenter))).thenReturn(true);
+        when(presenter.getAvailableDecisionTables()).thenReturn(availableDecisionTables);
+
+        presenter.updateLinks();
+
+        verify(uiColumn1).setLink(eq(null));
+        verify(uiColumn2).setLink(eq(null));
     }
 }

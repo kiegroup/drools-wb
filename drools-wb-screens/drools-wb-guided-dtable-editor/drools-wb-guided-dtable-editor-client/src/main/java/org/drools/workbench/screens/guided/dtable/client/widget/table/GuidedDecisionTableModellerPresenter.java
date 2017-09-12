@@ -241,6 +241,8 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
                 activeDecisionTable = null;
             }
             dtPresenter.onClose();
+
+            updateLinks();
         };
         view.removeDecisionTable(dtPresenter.getView(),
                                  afterRemovalCommand);
@@ -479,6 +481,7 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
     @Override
     public void updateLinks() {
         for (GuidedDecisionTableView.Presenter dtPresenter : getAvailableDecisionTables()) {
+            dtPresenter.getView().getModel().getColumns().forEach(c -> c.setLink(null));
             dtPresenter.link(getAvailableDecisionTables());
         }
         getView().getGridLayerView().refreshGridWidgetConnectors();
