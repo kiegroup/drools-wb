@@ -63,31 +63,27 @@ public class DefaultGuidedDecisionTableLinkManager implements GuidedDecisionTabl
             return typeFields;
         }
 
-        private void extract(final RuleModel rm,
-                             final ActionFieldList afl) {
-            final Optional<String> type = getType(rm,
-                                                  afl);
+        private void extract(final RuleModel ruleModel,
+                             final ActionFieldList actionFieldList) {
+            final Optional<String> type = getType(ruleModel,
+                                                  actionFieldList);
             type.ifPresent(t -> {
-                final ActionFieldValue[] afvs = afl.getFieldValues();
-                for (ActionFieldValue afv : afvs) {
-                    List<String> fields = typeFields.get(t);
-                    if (fields == null) {
-                        fields = new ArrayList<>();
-                        typeFields.put(t,
-                                       fields);
-                    }
-                    fields.add(afv.getField());
+                final ActionFieldValue[] actionFieldValues = actionFieldList.getFieldValues();
+                for (ActionFieldValue actionFieldValue : actionFieldValues) {
+                    final List<String> fields = typeFields.computeIfAbsent(t,
+                                                                           s -> new ArrayList<>());
+                    fields.add(actionFieldValue.getField());
                 }
             });
         }
 
-        private Optional<String> getType(final RuleModel rm,
-                                         final ActionFieldList afl) {
-            if (afl instanceof ActionInsertFact) {
-                return Optional.of(((ActionInsertFact) afl).getFactType());
-            } else if (afl instanceof ActionSetField) {
-                final String var = ((ActionSetField) afl).getVariable();
-                return Optional.ofNullable(rm.getLHSBindingType(var));
+        private Optional<String> getType(final RuleModel ruleModel,
+                                         final ActionFieldList actionFieldList) {
+            if (actionFieldList instanceof ActionInsertFact) {
+                return Optional.of(((ActionInsertFact) actionFieldList).getFactType());
+            } else if (actionFieldList instanceof ActionSetField) {
+                final String var = ((ActionSetField) actionFieldList).getVariable();
+                return Optional.ofNullable(ruleModel.getLHSBindingType(var));
             }
             return Optional.empty();
         }
