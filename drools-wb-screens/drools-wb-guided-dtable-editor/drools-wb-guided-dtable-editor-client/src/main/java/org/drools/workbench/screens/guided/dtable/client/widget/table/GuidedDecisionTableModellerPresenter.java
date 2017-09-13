@@ -57,6 +57,7 @@ import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEdito
 import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationEditCell;
@@ -242,10 +243,21 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
             }
             dtPresenter.onClose();
 
-            updateLinks();
+            removeLinksForDecisionTable(dtPresenter);
         };
         view.removeDecisionTable(dtPresenter.getView(),
                                  afterRemovalCommand);
+    }
+
+    void removeLinksForDecisionTable(final GuidedDecisionTableView.Presenter dtPresenter) {
+        getAvailableDecisionTables()
+                .stream()
+                .map(other -> other.getView().getModel().getColumns())
+                .forEach(columns -> columns
+                        .stream()
+                        .filter(GridColumn::isLinked)
+                        .filter(column -> dtPresenter.getView().getModel().getColumns().contains(column.getLink()))
+                        .forEach(column -> column.setLink(null)));
     }
 
     @Override
@@ -481,7 +493,6 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
     @Override
     public void updateLinks() {
         for (GuidedDecisionTableView.Presenter dtPresenter : getAvailableDecisionTables()) {
-            dtPresenter.getView().getModel().getColumns().forEach(c -> c.setLink(null));
             dtPresenter.link(getAvailableDecisionTables());
         }
         getView().getGridLayerView().refreshGridWidgetConnectors();

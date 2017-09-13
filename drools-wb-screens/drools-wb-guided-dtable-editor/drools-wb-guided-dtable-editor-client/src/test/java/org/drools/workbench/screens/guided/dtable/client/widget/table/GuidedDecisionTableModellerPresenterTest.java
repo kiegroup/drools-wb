@@ -60,8 +60,11 @@ import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseBounds;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.GridColumnRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.ParameterizedCommand;
@@ -145,11 +148,12 @@ public class GuidedDecisionTableModellerPresenterTest {
     private GuidedDecisionTableView.Presenter makeDecisionTable() {
         final GuidedDecisionTableView.Presenter dtPresenter = mock(GuidedDecisionTableView.Presenter.class);
         final GuidedDecisionTableView dtView = mock(GuidedDecisionTableView.class);
+        final GridData dtData = new BaseGridData();
 
         when(dtPresenter.getView()).thenReturn(dtView);
         when(dtPresenter.getAccess()).thenReturn(mock(GuidedDecisionTablePresenter.Access.class));
         when(dtPresenter.getModel()).thenReturn(mock(GuidedDecisionTable52.class));
-        when(dtView.getModel()).thenReturn(new BaseGridData());
+        when(dtView.getModel()).thenReturn(dtData);
 
         return dtPresenter;
     }
@@ -165,6 +169,13 @@ public class GuidedDecisionTableModellerPresenterTest {
                                                                                                 overview,
                                                                                                 dmoBaseline);
         return dtContent;
+    }
+
+    @SuppressWarnings("unchecked")
+    private GridColumn makeUiColumn() {
+        return spy(new BaseGridColumn(mock(GridColumn.HeaderMetaData.class),
+                                      mock(GridColumnRenderer.class),
+                                      100.0));
     }
 
     @Test
@@ -291,7 +302,7 @@ public class GuidedDecisionTableModellerPresenterTest {
         verify(dtPresenter,
                times(1)).onClose();
         verify(presenter,
-               times(1)).updateLinks();
+               times(1)).removeLinksForDecisionTable(eq(dtPresenter));
     }
 
     @Test
@@ -772,23 +783,49 @@ public class GuidedDecisionTableModellerPresenterTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void updateLinksClearsExistingLinks() {
-        final GuidedDecisionTableView.Presenter dtPresenter = makeDecisionTable();
+    public void checkRemoveLinksPreservesOtherTables() {
+        final GuidedDecisionTableView.Presenter dtPresenter1 = makeDecisionTable();
+        final GuidedDecisionTableView.Presenter dtPresenter2 = makeDecisionTable();
         final Set<GuidedDecisionTableView.Presenter> availableDecisionTables = new HashSet<GuidedDecisionTableView.Presenter>() {{
-            add(dtPresenter);
+            add(dtPresenter2);
         }};
 
-        final GridColumn uiColumn1 = mock(GridColumn.class);
-        final GridColumn uiColumn2 = mock(GridColumn.class);
-        dtPresenter.getView().getModel().appendColumn(uiColumn1);
-        dtPresenter.getView().getModel().appendColumn(uiColumn2);
+        final GridColumn dtPresenter1Column1 = makeUiColumn();
+        final GridColumn dtPresenter1Column2 = makeUiColumn();
+        final GridColumn dtPresenter2Column1 = makeUiColumn();
+        final GridColumn dtPresenter2Column2 = makeUiColumn();
+        dtPresenter1.getView().getModel().appendColumn(dtPresenter1Column1);
+        dtPresenter1.getView().getModel().appendColumn(dtPresenter1Column2);
+        dtPresenter2.getView().getModel().appendColumn(dtPresenter2Column1);
+        dtPresenter2.getView().getModel().appendColumn(dtPresenter2Column2);
 
-        when(presenter.isDecisionTableAvailable(eq(dtPresenter))).thenReturn(true);
+        dtPresenter1Column2.setLink(dtPresenter2Column2);
+        dtPresenter2Column1.setLink(dtPresenter1Column1);
+
         when(presenter.getAvailableDecisionTables()).thenReturn(availableDecisionTables);
 
-        presenter.updateLinks();
+        //Check setup
+        verify(dtPresenter1Column2,
+               times(1)).setLink(eq(dtPresenter2Column2));
+        verify(dtPresenter2Column1,
+               times(1)).setLink(eq(dtPresenter1Column1));
 
-        verify(uiColumn1).setLink(eq(null));
-        verify(uiColumn2).setLink(eq(null));
+        reset(dtPresenter1Column1,
+              dtPresenter1Column2,
+              dtPresenter2Column1,
+              dtPresenter2Column2);
+
+        //Check links after removal
+        presenter.removeLinksForDecisionTable(dtPresenter1);
+
+        verify(dtPresenter1Column1,
+               never()).setLink(any());
+        verify(dtPresenter1Column2,
+               never()).setLink(any());
+
+        verify(dtPresenter2Column1,
+               times(1)).setLink(eq(null));
+        verify(dtPresenter2Column2,
+               never()).setLink(any());
     }
 }
