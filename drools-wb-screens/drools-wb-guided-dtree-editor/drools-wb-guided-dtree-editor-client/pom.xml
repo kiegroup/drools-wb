@@ -161,6 +161,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Test scope dependencies -->
+    <dependency>
+      <groupId>com.google.gwt.gwtmockito</groupId>
+      <artifactId>gwtmockito</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>
