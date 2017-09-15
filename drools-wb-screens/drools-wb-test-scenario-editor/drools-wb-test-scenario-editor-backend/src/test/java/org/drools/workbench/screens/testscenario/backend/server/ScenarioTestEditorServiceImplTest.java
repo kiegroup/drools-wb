@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.appformer.project.datamodel.imports.Import;
 import org.appformer.project.datamodel.imports.Imports;
@@ -314,6 +315,41 @@ public class ScenarioTestEditorServiceImplTest {
     }
 
     @Test
+    public void testRunScenarioDependentImportsAndFactData() throws Exception {
+        final ArrayList<Fixture> fixtures = new ArrayList<>();
+        final Imports imports = new Imports() {{
+            addImport(new Import("java.sql.ClientInfoStatus"));
+            addImport(new Import("Integer"));
+            addImport(new Import("org.kie.Person"));
+        }};
+
+        final Map<String, ModelField[]> modelFields = new HashMap() {{
+            put("java.sql.ClientInfoStatus",
+                toModelFields("java.sql.JDBCType"));
+            put("org.kie.Person",
+                toModelFields("org.kie.Address"));
+            put("org.kie.Address",
+                toModelFields("org.kie.City",
+                              "org.kie.Street"));
+        }};
+
+        // ClientInfoStatus, Integer, Person, JDBCType, Address, City, Street
+        final int usedDataTypesCount = 7;
+
+        when(scenario.getFixtures()).thenReturn(fixtures);
+        when(dataModelService.getDataModel(path)).thenReturn(modelOracle);
+        when(modelOracle.getProjectModelFields()).thenReturn(modelFields);
+        when(scenario.getImports()).thenReturn(imports);
+
+        testEditorService.runScenario("userName",
+                                      path,
+                                      scenario);
+
+        assertEquals(usedDataTypesCount,
+                     scenario.getImports().getImports().size());
+    }
+
+    @Test
     public void runScenarioWithoutDependentImports() throws Exception {
         when(dataModelService.getDataModel(path)).thenReturn(modelOracle);
         when(scenario.getImports()).thenReturn(new Imports());
@@ -331,9 +367,9 @@ public class ScenarioTestEditorServiceImplTest {
             add(factData("java.sql.ClientInfoStatus"));
         }};
 
-        final Map<String, ModelField[]> modelFields = new HashMap<String, ModelField[]>() {{
+        final Map<String, ModelField[]> modelFields = new HashMap() {{
             put("java.sql.ClientInfoStatus",
-                new ModelField[]{modelField("java.sql.JDBCType")});
+                toModelFields("java.sql.JDBCType"));
         }};
 
         when(scenario.getFixtures()).thenReturn(fixtures);
@@ -355,9 +391,9 @@ public class ScenarioTestEditorServiceImplTest {
             addImport(new Import("java.sql.ClientInfoStatus"));
         }};
 
-        final Map<String, ModelField[]> modelFields = new HashMap<String, ModelField[]>() {{
+        final Map<String, ModelField[]> modelFields = new HashMap() {{
             put("java.sql.ClientInfoStatus",
-                new ModelField[]{modelField("java.sql.JDBCType")});
+                toModelFields("java.sql.JDBCType"));
         }};
 
         when(scenario.getFixtures()).thenReturn(fixtures);
@@ -379,9 +415,9 @@ public class ScenarioTestEditorServiceImplTest {
             addImport(new Import("int"));
         }};
 
-        final Map<String, ModelField[]> modelFields = new HashMap<String, ModelField[]>() {{
+        final Map<String, ModelField[]> modelFields = new HashMap() {{
             put("java.sql.ClientInfoStatus",
-                new ModelField[]{modelField("java.sql.JDBCType")});
+                toModelFields("java.sql.JDBCType"));
         }};
 
         when(scenario.getFixtures()).thenReturn(fixtures);
@@ -406,9 +442,9 @@ public class ScenarioTestEditorServiceImplTest {
             addImport(new Import("java.sql.ClientInfoStatus"));
         }};
 
-        final Map<String, ModelField[]> modelFields = new HashMap<String, ModelField[]>() {{
+        final Map<String, ModelField[]> modelFields = new HashMap() {{
             put("java.sql.ClientInfoStatus",
-                new ModelField[]{modelField("java.sql.JDBCType")});
+                toModelFields("java.sql.JDBCType"));
         }};
 
         when(scenario.getFixtures()).thenReturn(fixtures);
@@ -526,7 +562,7 @@ public class ScenarioTestEditorServiceImplTest {
                             true);
     }
 
-    private ModelField modelField(final String className) {
+    private static ModelField modelField(final String className) {
         return new ModelField(null,
                               className,
                               null,
@@ -539,5 +575,9 @@ public class ScenarioTestEditorServiceImplTest {
         final URL scenarioResource = getClass().getResource(EMPTY_SCENARIO_FILENAME);
         return PathFactory.newPath(scenarioResource.getFile(),
                                    scenarioResource.toURI().toString());
+    }
+
+    private static ModelField[] toModelFields(String... fields) {
+        return Stream.of(fields).map(field -> modelField(field)).toArray(ModelField[]::new);
     }
 }
