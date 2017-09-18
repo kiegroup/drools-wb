@@ -9,13 +9,38 @@
     </encoder>
   </appender>
 
-  <logger name="org.kie" level="info"/>
+  <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <!-- in the absence of the class attribute, it is assumed that the
+         desired discriminator type is ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
+    <discriminator>
+      <key>compileid</key>
+      <defaultValue>unknown</defaultValue>
+    </discriminator>
+    <sift>
+      <appender name="FILE-${userid}" class="ch.qos.logback.core.FileAppender">
+        <file>${compileid}.log</file>
+        <append>false</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+          <pattern>%d [%thread] %level %mdc %logger{35} - %msg%n</pattern>
+        </layout>
+      </appender>
+    </sift>
+  </appender>
+
+
+  <!--<logger name="org.kie" level="info"/>-->
   <logger name="org.drools" level="info"/>
   <logger name="org.guvnor" level="info"/>
-  <logger name="org.kie.workbench.common.services.backend.compiler" level="info"/>
-  <logger name="org.apache.maven" level="info"/>
 
-  <logger name="org.uberfire.backend" level="debug"/>
+  <logger name="org.kie.workbench.common.services.backend.compiler" level="info">
+    <appender-ref ref="SIFT" />
+  </logger>
+
+  <logger name="org.apache.maven" level="info">
+    <appender-ref ref="SIFT" />
+  </logger>
+
+  <logger name="org.uberfire.backend" level="debug" />
 
   <root level="error">
     <appender-ref ref="consoleAppender" />
