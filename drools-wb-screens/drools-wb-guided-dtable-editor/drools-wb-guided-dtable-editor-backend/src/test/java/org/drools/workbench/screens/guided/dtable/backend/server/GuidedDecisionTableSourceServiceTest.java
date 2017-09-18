@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.enterprise.inject.Instance;
 
-import org.drools.workbench.models.commons.backend.rule.RuleModelIActionPersistenceExtension;
 import org.drools.workbench.models.datamodel.imports.Import;
 import org.drools.workbench.models.datamodel.imports.Imports;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
@@ -42,7 +41,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.io.IOService;
@@ -51,7 +49,6 @@ import org.uberfire.java.nio.file.Path;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -84,9 +81,6 @@ public class GuidedDecisionTableSourceServiceTest {
     @Mock
     FileDiscoveryService fileDiscoveryService;
 
-    @Mock
-    Instance<RuleModelIActionPersistenceExtension> persistenceExtensionInstance;
-
     GuidedDecisionTable52 model;
 
     GuidedDecisionTableSourceService service;
@@ -99,15 +93,11 @@ public class GuidedDecisionTableSourceServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        Instance<RuleModelIActionPersistenceExtension> persistenceExtensionInstance = mock(Instance.class);
-        when(persistenceExtensionInstance.iterator()).thenReturn(new ArrayList<RuleModelIActionPersistenceExtension>().iterator());
-
         service = new GuidedDecisionTableSourceService(resourceTypeDefinition,
                                                        guidedDecisionTableEditorService,
                                                        ioService,
                                                        fileDiscoveryService,
-                                                       projectService,
-                                                       persistenceExtensionInstance);
+                                                       projectService);
 
 
         // Simulates that no DSL files are present
