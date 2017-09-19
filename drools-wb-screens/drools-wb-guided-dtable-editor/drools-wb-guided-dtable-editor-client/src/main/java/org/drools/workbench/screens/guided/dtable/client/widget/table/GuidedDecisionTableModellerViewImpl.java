@@ -344,11 +344,11 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
         }
         final Command remove = () -> {
             gridLayer.remove(gridWidget);
-            gridLayer.batch();
-
-            disableButtonMenu();
 
             afterRemovalCommand.execute();
+            disableButtonMenu();
+
+            gridLayer.batch();
         };
         if (gridLayer.isGridPinned()) {
             final GridPinnedModeManager.PinnedContext context = gridLayer.getPinnedContext();

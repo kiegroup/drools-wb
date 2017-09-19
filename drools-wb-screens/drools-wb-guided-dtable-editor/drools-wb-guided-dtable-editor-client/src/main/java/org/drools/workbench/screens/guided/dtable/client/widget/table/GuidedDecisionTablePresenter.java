@@ -341,8 +341,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                         parent.getView().asWidget(),
                                         placeRequest,
                                         () -> currentPath.getFileName() + " - " + resourceType.getDescription(),
-                                        () -> {
-                                            /*nothing*/}),
+                                        () -> {/*Nothing*/}),
                          parent);
     }
 
@@ -385,7 +384,6 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             @Override
             public Range deleteCell(int rowIndex,
                                     int columnIndex) {
-
                 Range cellRange = super.deleteCell(rowIndex,
                                                    columnIndex);
                 decisionTableSelectionsChangedEvent.fire(new DecisionTableSelectionsChangedEvent(GuidedDecisionTablePresenter.this));
