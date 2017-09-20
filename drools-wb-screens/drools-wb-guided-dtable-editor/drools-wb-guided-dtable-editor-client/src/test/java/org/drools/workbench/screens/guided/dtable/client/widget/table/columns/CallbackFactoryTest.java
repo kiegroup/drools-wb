@@ -71,6 +71,9 @@ public class CallbackFactoryTest {
         callback.callback(multiValueDOMElement);
 
         verifyMultipleSelectTest(CallbackFactory.MAX_VISIBLE_ROWS);
+
+        verify(multiValueWidget,
+               never()).setVisibleItemCount(anyInt());
     }
 
     @Test
@@ -85,6 +88,8 @@ public class CallbackFactoryTest {
         callback.callback(multiValueDOMElement);
 
         verifyMultipleSelectTest(CallbackFactory.MAX_VISIBLE_ROWS);
+
+        verify(multiValueWidget).setVisibleItemCount(eq(CallbackFactory.MAX_VISIBLE_ROWS));
     }
 
     @Test
@@ -104,9 +109,9 @@ public class CallbackFactoryTest {
 
     private void setupMultipleSelectTest(final int enumLookupSize,
                                          final boolean isMultipleSelect) {
-        IntStream.range(1,
-                        enumLookupSize).forEach(i -> enumLookups.put(KEY + i,
-                                                                     VALUE + i));
+        IntStream.rangeClosed(1,
+                              enumLookupSize).forEach(i -> enumLookups.put(KEY + i,
+                                                                           VALUE + i));
         when(multiValueWidget.isMultipleSelect()).thenReturn(isMultipleSelect);
     }
 
