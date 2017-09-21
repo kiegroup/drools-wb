@@ -28,7 +28,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -50,6 +49,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.co
 import org.drools.workbench.screens.guided.dtable.client.widget.table.accordion.GuidedDecisionTableAccordion;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.accordion.GuidedDecisionTableAccordionItem;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.AttributeColumnConfigRow;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.DeleteColumnManagementAnchorWidget;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTableColumnViewUtils;
 import org.gwtbootstrap3.client.ui.Button;
@@ -58,7 +58,6 @@ import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.kie.workbench.common.widgets.client.ruleselector.RuleSelector;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -458,12 +457,9 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
             hp.add(chkHideColumn);
 
             if (isEditable) {
-                hp.add(deleteAnchor((e) -> {
-                    String ms = GuidedDecisionTableConstants.INSTANCE.DeleteActionColumnWarning(metaDataColumn.getMetadata());
-                    if (Window.confirm(ms)) {
-                        presenter.getActiveDecisionTable().deleteColumn(metaDataColumn);
-                    }
-                }));
+                hp.add(new DeleteColumnManagementAnchorWidget(metaDataColumn.getMetadata(),
+                                                              () -> presenter.getActiveDecisionTable().deleteColumn(metaDataColumn))
+                );
             }
 
             metaDataConfigWidget.add(hp);

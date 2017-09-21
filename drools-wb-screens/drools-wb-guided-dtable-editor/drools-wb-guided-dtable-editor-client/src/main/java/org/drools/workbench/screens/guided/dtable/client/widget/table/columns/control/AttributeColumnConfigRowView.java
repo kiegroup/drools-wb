@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control;
 
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -30,18 +30,19 @@ import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 
 public class AttributeColumnConfigRowView extends HorizontalPanel {
 
-    public void addRemoveAttributeButton(final ClickHandler clickHandler,
-                                         final boolean isEditable) {
-        final Anchor anchor = new Anchor();
+    private String attributeName;
 
-        anchor.setText(GuidedDecisionTableConstants.INSTANCE.Delete());
-        anchor.addClickHandler(clickHandler);
+    public void addRemoveAttributeButton(final Command clickHandler,
+                                         final boolean isEditable) {
+        final Anchor anchor = new DeleteColumnManagementAnchorWidget(attributeName,
+                                                                     clickHandler);
         anchor.setEnabled(isEditable);
 
         add(anchor);
     }
 
     public void addColumnLabel(AttributeCol52 attributeColumn) {
+        attributeName = attributeColumn.getAttribute();
         final ColumnLabelWidget label = new ColumnLabelWidget(attributeColumn.getAttribute());
         ColumnUtilities.setColumnLabelStyleWhenHidden(label,
                                                       attributeColumn.isHideColumn());
@@ -91,13 +92,5 @@ public class AttributeColumnConfigRowView extends HorizontalPanel {
         chkHideColumn.addClickHandler(clickHandler);
         add(chkHideColumn);
         return chkHideColumn;
-    }
-
-    /**
-     * @param dialogueText
-     * @return Returns true if the dialogue with 'dialogueText' was confirmed
-     */
-    public boolean confirmDeleteColumnActionDialogue(String dialogueText) {
-        return Window.confirm(dialogueText);
     }
 }
