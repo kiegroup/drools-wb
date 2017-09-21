@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" debug="true" packagingData="true">
+  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
 
   <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -9,15 +10,22 @@
     </encoder>
   </appender>
 
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>/tmp/util.logback.log</file>
+    <append>true</append>
+    <encoder>
+     <!-- <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>-->
+      <pattern>%d [%t] %-5p %m%n</pattern>
+    </encoder>
+  </appender>
+
   <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
-    <!-- in the absence of the class attribute, it is assumed that the
-         desired discriminator type is ch.qos.logback.classic.sift.MDCBasedDiscriminator -->
     <discriminator>
       <key>compileid</key>
-      <defaultValue>unknown</defaultValue>
+      <defaultValue>/tmp/maven/</defaultValue>
     </discriminator>
     <sift>
-      <appender name="FILE-${userid}" class="ch.qos.logback.core.FileAppender">
+      <appender name="FILE-${compileid}" class="ch.qos.logback.core.FileAppender">
         <file>${compileid}.log</file>
         <append>false</append>
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -27,22 +35,32 @@
     </sift>
   </appender>
 
-
-  <!--<logger name="org.kie" level="info"/>-->
+  <logger name="org.slf4j" level="info"/>
+  <logger name="org.log4j" level="info"/>
+  <logger name="org.kie" level="info"/>
   <logger name="org.drools" level="info"/>
   <logger name="org.guvnor" level="info"/>
-
-  <logger name="org.kie.workbench.common.services.backend.compiler" level="info">
-    <appender-ref ref="SIFT" />
-  </logger>
-
-  <logger name="org.apache.maven" level="info">
-    <appender-ref ref="SIFT" />
-  </logger>
-
   <logger name="org.uberfire.backend" level="debug" />
 
-  <root level="error">
+  <logger name="org.apache.maven" level="info" additivity="true">
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="FILE" />
+    <appender-ref ref="SIFT" />
+  </logger>
+
+  <logger name="org.kie.workbench.common.services.backend.compiler" level="info" additivity="true">
+  <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="FILE" />
+   <appender-ref ref="SIFT" />
+  </logger>
+
+
+
+  <!--<root level="error">
+    <appender-ref ref="consoleAppender" />
+  </root>-->
+  <root level="INFO">
+    <appender-ref ref="FILE" />
     <appender-ref ref="consoleAppender" />
   </root>
 
