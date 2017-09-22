@@ -938,12 +938,12 @@ public class FactPatternWidget extends RuleModellerWidget {
         return DRLConstraintValueBuilder.DEFAULT_DIALECT;
     }
 
-    public Connectives getConnectives() {
+    Connectives getConnectives() {
         return connectives;
     }
 
-    public CEPOperatorsDropdown getNewOperatorDropdown(String[] operators,
-                                                       SingleFieldConstraint constraint) {
+    CEPOperatorsDropdown getNewOperatorDropdown(String[] operators,
+                                                SingleFieldConstraint constraint) {
         return new CEPOperatorsDropdown(operators,
                                         constraint);
     }

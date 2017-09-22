@@ -147,7 +147,7 @@ public class Connectives {
     }
 
     CEPOperatorsDropdown getDropdown(String[] operators,
-                                             ConnectiveConstraint connectiveConstraint) {
+                                     ConnectiveConstraint connectiveConstraint) {
         return new CEPOperatorsDropdown(operators,
                                         connectiveConstraint);
     }

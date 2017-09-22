@@ -23,7 +23,6 @@ import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.datamodel.oracle.FieldAccessorsAndMutators;
 import org.drools.workbench.models.datamodel.oracle.ModelField;
 import org.drools.workbench.models.datamodel.oracle.ProjectDataModelOracle;
-import org.drools.workbench.screens.globals.backend.server.indexing.GlobalsFileIndexer;
 import org.drools.workbench.screens.globals.type.GlobalResourceTypeDefinition;
 import org.kie.workbench.common.services.refactoring.backend.server.TestIndexer;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
