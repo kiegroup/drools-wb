@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -27,15 +30,16 @@ import org.drools.workbench.screens.guided.rule.client.editor.RuleAttributeWidge
 import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.html.Span;
 
+@Dependent
 public class AttributeColumnConfigRow {
 
+    @Inject
     protected AttributeColumnConfigRowView view;
     private CheckBox useRowNumberCheckBox;
     private CheckBox reverseOrderCheckBox;
     private CheckBox hideColumnCheckBox;
 
     public AttributeColumnConfigRow() {
-        view = new AttributeColumnConfigRowView();
     }
 
     public void init(AttributeCol52 attributeColumn,

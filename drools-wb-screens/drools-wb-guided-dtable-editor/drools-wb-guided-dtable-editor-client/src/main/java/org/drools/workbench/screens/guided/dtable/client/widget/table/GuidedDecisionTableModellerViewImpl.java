@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
@@ -132,9 +132,17 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
 
     private final RestrictedMousePanMediator mousePanMediator = restrictedMousePanMediator();
 
+    @Inject
     private ColumnManagementView actionsPanel;
 
+    @Inject
     private ColumnManagementView conditionsPanel;
+
+    @Inject
+    private Instance<AttributeColumnConfigRow> attributeColumnConfigRows;
+
+    @Inject
+    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     public GuidedDecisionTableModellerViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -192,6 +200,8 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
     public void init(final GuidedDecisionTableModellerView.Presenter presenter) {
         this.presenter = presenter;
 
+        getActionsPanel().init(presenter);
+        getConditionsPanel().init(presenter);
         setupAccordion(presenter);
     }
 
@@ -415,7 +425,7 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
         }
 
         for (AttributeCol52 attributeColumn : attributeColumns) {
-            AttributeColumnConfigRow attributeColumnConfigRow = new AttributeColumnConfigRow();
+            AttributeColumnConfigRow attributeColumnConfigRow = getAttributeColumnConfigRows().get();
             attributeColumnConfigRow.init(attributeColumn,
                                           getPresenter());
             getAttributeConfigWidget().add(attributeColumnConfigRow.getView());
@@ -457,9 +467,10 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
             hp.add(chkHideColumn);
 
             if (isEditable) {
-                hp.add(new DeleteColumnManagementAnchorWidget(metaDataColumn.getMetadata(),
-                                                              () -> presenter.getActiveDecisionTable().deleteColumn(metaDataColumn))
-                );
+                final DeleteColumnManagementAnchorWidget deleteWidget = deleteColumnManagementAnchorWidgets.get();
+                deleteWidget.init(metaDataColumn.getMetadata(),
+                                  () -> presenter.getActiveDecisionTable().deleteColumn(metaDataColumn));
+                hp.add(deleteWidget);
             }
 
             metaDataConfigWidget.add(hp);
@@ -687,13 +698,15 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
     }
 
     ColumnManagementView getActionsPanel() {
-        actionsPanel = Optional.ofNullable(actionsPanel).orElse(new ColumnManagementView(getPresenter()));
         return actionsPanel;
     }
 
     ColumnManagementView getConditionsPanel() {
-        conditionsPanel = Optional.ofNullable(conditionsPanel).orElse(new ColumnManagementView(getPresenter()));
         return conditionsPanel;
+    }
+
+    Instance<AttributeColumnConfigRow> getAttributeColumnConfigRows() {
+        return attributeColumnConfigRows;
     }
 
     interface GuidedDecisionTableModellerViewImplUiBinder extends UiBinder<Widget, GuidedDecisionTableModellerViewImpl> {

@@ -16,9 +16,11 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.drools.workbench.models.guided.dtable.shared.model.AttributeCol52;
@@ -28,21 +30,31 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.
 import org.gwtbootstrap3.client.ui.CheckBox;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 
+@Dependent
 public class AttributeColumnConfigRowView extends HorizontalPanel {
 
-    private String attributeName;
+    private String attribute;
+    private DeleteColumnManagementAnchorWidget deleteColumnManagementAnchorWidget;
+
+    public AttributeColumnConfigRowView() {
+    }
+
+    @Inject
+    public AttributeColumnConfigRowView(final DeleteColumnManagementAnchorWidget deleteColumnManagementAnchorWidget) {
+        this.deleteColumnManagementAnchorWidget = deleteColumnManagementAnchorWidget;
+    }
 
     public void addRemoveAttributeButton(final Command clickHandler,
                                          final boolean isEditable) {
-        final Anchor anchor = new DeleteColumnManagementAnchorWidget(attributeName,
-                                                                     clickHandler);
-        anchor.setEnabled(isEditable);
+        deleteColumnManagementAnchorWidget.init(attribute,
+                                                clickHandler);
+        deleteColumnManagementAnchorWidget.setEnabled(isEditable);
 
-        add(anchor);
+        add(deleteColumnManagementAnchorWidget);
     }
 
     public void addColumnLabel(AttributeCol52 attributeColumn) {
-        attributeName = attributeColumn.getAttribute();
+        attribute = attributeColumn.getAttribute();
         final ColumnLabelWidget label = new ColumnLabelWidget(attributeColumn.getAttribute());
         ColumnUtilities.setColumnLabelStyleWhenHidden(label,
                                                       attributeColumn.isHideColumn());

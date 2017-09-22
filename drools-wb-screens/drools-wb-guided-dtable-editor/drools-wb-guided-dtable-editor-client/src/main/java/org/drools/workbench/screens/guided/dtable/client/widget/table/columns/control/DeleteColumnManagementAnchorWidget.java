@@ -16,25 +16,37 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Anchor;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
-import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.ext.editor.commons.client.file.popups.DeletePopUpPresenter;
 
+@Dependent
 public class DeleteColumnManagementAnchorWidget extends Anchor {
 
-    public DeleteColumnManagementAnchorWidget(final String columnHeader,
-                                              final Command afterDeleteConfirmedCommand) {
+    private String columnHeader;
+    private Command afterDeleteConfirmedCommand;
+
+    @Inject
+    private DeletePopUpPresenter deletePopUpPresenter;
+
+    public DeleteColumnManagementAnchorWidget() {
         super();
         setText(GuidedDecisionTableConstants.INSTANCE.Delete());
         setTitle(GuidedDecisionTableConstants.INSTANCE.DeleteThisColumn());
         addClickHandler((clickEvent) -> {
-            final String confirmMessage = GuidedDecisionTableConstants.INSTANCE.DeleteColumnWarning(columnHeader);
-            YesNoCancelPopup.newYesNoCancelPopup(GuidedDecisionTableConstants.INSTANCE.Delete(),
-                                                 confirmMessage,
-                                                 () -> afterDeleteConfirmedCommand.execute(),
-                                                 null,
-                                                 null).show();
+            deletePopUpPresenter.setPrompt(GuidedDecisionTableConstants.INSTANCE.DeleteColumnWarning(columnHeader));
+            deletePopUpPresenter.setCommentIsHidden(true);
+            deletePopUpPresenter.show((comment) -> afterDeleteConfirmedCommand.execute());
         });
+    }
+
+    public void init(final String columnHeader,
+                     final Command afterDeleteConfirmedCommand) {
+        this.columnHeader = columnHeader;
+        this.afterDeleteConfirmedCommand = afterDeleteConfirmedCommand;
     }
 }

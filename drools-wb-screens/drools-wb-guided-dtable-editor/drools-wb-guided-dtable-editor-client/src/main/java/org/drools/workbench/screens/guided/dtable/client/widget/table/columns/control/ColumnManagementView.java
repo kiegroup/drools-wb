@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
+
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -37,11 +41,22 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDeci
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
+@Dependent
 public class ColumnManagementView extends VerticalPanel {
+
+    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     private GuidedDecisionTableModellerView.Presenter presenter;
 
-    public ColumnManagementView(GuidedDecisionTableModellerView.Presenter presenter) {
+    public ColumnManagementView() {
+    }
+
+    @Inject
+    public ColumnManagementView(final Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets) {
+        this.deleteColumnManagementAnchorWidgets = deleteColumnManagementAnchorWidgets;
+    }
+
+    public void init(final GuidedDecisionTableModellerView.Presenter presenter) {
         this.presenter = presenter;
     }
 
@@ -183,7 +198,9 @@ public class ColumnManagementView extends VerticalPanel {
 
     DeleteColumnManagementAnchorWidget deleteAnchor(final String columnHeader,
                                                     final Command command) {
-        return new DeleteColumnManagementAnchorWidget(columnHeader,
-                                                      command);
+        final DeleteColumnManagementAnchorWidget widget = deleteColumnManagementAnchorWidgets.get();
+        widget.init(columnHeader,
+                    command);
+        return widget;
     }
 }

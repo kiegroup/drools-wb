@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import javax.enterprise.inject.Instance;
+
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -48,6 +50,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.uberfire.mocks.MockInstanceImpl;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -65,19 +68,32 @@ import static org.mockito.Mockito.verify;
 public class ColumnManagementViewTest {
 
     @Mock
-    GuidedDecisionTableModellerView.Presenter presenter;
+    private GuidedDecisionTableModellerView.Presenter presenter;
 
     @Mock
-    GuidedDecisionTableView.Presenter decisionTablePresenter;
+    private GuidedDecisionTableView.Presenter decisionTablePresenter;
 
     @Mock
-    HorizontalPanel horizontalPanel;
+    private HorizontalPanel horizontalPanel;
+
+    @Mock
+    private DeleteColumnManagementAnchorWidget deleteWidget;
+
+    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     private ColumnManagementView view;
 
     @Before
     public void setUp() throws Exception {
-        view = spy(new ColumnManagementView(presenter));
+        deleteColumnManagementAnchorWidgets = new MockInstanceImpl() {
+            @Override
+            public Object get() {
+                return deleteWidget;
+            }
+        };
+
+        view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets));
+        view.init(presenter);
 
         doReturn(horizontalPanel).when(view).newHorizontalPanel();
     }
