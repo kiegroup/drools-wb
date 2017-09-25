@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -39,12 +38,13 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 @Dependent
 public class ColumnManagementView extends VerticalPanel {
 
-    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
+    private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     private GuidedDecisionTableModellerView.Presenter presenter;
 
@@ -52,7 +52,7 @@ public class ColumnManagementView extends VerticalPanel {
     }
 
     @Inject
-    public ColumnManagementView(final Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets) {
+    public ColumnManagementView(final ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets) {
         this.deleteColumnManagementAnchorWidgets = deleteColumnManagementAnchorWidgets;
     }
 

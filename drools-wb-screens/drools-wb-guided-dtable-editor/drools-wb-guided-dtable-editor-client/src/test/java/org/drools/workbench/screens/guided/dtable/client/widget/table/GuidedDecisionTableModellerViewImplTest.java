@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.enterprise.inject.Instance;
-
 import com.ait.lienzo.client.core.mediator.Mediators;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.types.Transform;
@@ -67,6 +65,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.accordion.
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.AttributeColumnConfigRowView;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Icon;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -140,6 +139,9 @@ public class GuidedDecisionTableModellerViewImplTest {
 
     @Captor
     private ArgumentCaptor<Map<String, List<BaseColumn>>> capturedGroups;
+
+    @Mock
+    private ManagedInstance<AttributeColumnConfigRow> attributeColumnConfigRows;
 
     private GuidedDecisionTableModellerViewImpl view;
 
@@ -712,6 +714,7 @@ public class GuidedDecisionTableModellerViewImplTest {
         public GuidedDecisionTableModellerViewImplFake() {
             this.gridPanel = mockGridPanel;
             this.pinnedModeIndicator = GuidedDecisionTableModellerViewImplTest.this.pinnedModeIndicator;
+            doReturn(mock(AttributeColumnConfigRow.class)).when(attributeColumnConfigRows).get();
         }
 
         DefaultGridLayer defaultGridLayer() {
@@ -758,13 +761,8 @@ public class GuidedDecisionTableModellerViewImplTest {
         }
 
         @Override
-        Instance<AttributeColumnConfigRow> getAttributeColumnConfigRows() {
-            return new MockInstanceImpl<AttributeColumnConfigRow>() {
-                @Override
-                public AttributeColumnConfigRow get() {
-                    return mock(AttributeColumnConfigRow.class);
-                }
-            };
+        ManagedInstance<AttributeColumnConfigRow> getAttributeColumnConfigRows() {
+            return attributeColumnConfigRows;
         }
     }
 }

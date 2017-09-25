@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import javax.enterprise.inject.Instance;
-
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -45,12 +43,12 @@ import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisio
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.uberfire.mocks.MockInstanceImpl;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -79,18 +77,14 @@ public class ColumnManagementViewTest {
     @Mock
     private DeleteColumnManagementAnchorWidget deleteWidget;
 
-    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
+    @Mock
+    private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     private ColumnManagementView view;
 
     @Before
     public void setUp() throws Exception {
-        deleteColumnManagementAnchorWidgets = new MockInstanceImpl() {
-            @Override
-            public Object get() {
-                return deleteWidget;
-            }
-        };
+        doReturn(deleteWidget).when(deleteColumnManagementAnchorWidgets).get();
 
         view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets));
         view.init(presenter);

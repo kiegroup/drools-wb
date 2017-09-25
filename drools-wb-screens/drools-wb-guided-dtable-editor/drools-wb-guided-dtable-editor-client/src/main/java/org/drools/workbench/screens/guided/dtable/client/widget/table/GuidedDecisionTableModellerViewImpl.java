@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
@@ -57,6 +56,7 @@ import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.kie.workbench.common.widgets.client.ruleselector.RuleSelector;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -139,10 +139,10 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
     private ColumnManagementView conditionsPanel;
 
     @Inject
-    private Instance<AttributeColumnConfigRow> attributeColumnConfigRows;
+    private ManagedInstance<AttributeColumnConfigRow> attributeColumnConfigRows;
 
     @Inject
-    private Instance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
+    private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
     public GuidedDecisionTableModellerViewImpl() {
         initWidget(uiBinder.createAndBindUi(this));
@@ -705,7 +705,7 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
         return conditionsPanel;
     }
 
-    Instance<AttributeColumnConfigRow> getAttributeColumnConfigRows() {
+    ManagedInstance<AttributeColumnConfigRow> getAttributeColumnConfigRows() {
         return attributeColumnConfigRows;
     }
 

@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -29,12 +30,18 @@ public class DeleteColumnManagementAnchorWidget extends Anchor {
 
     private String columnHeader;
     private Command afterDeleteConfirmedCommand;
-
-    @Inject
     private DeletePopUpPresenter deletePopUpPresenter;
 
     public DeleteColumnManagementAnchorWidget() {
-        super();
+    }
+
+    @Inject
+    public DeleteColumnManagementAnchorWidget(final DeletePopUpPresenter deletePopUpPresenter) {
+        this.deletePopUpPresenter = deletePopUpPresenter;
+    }
+
+    @PostConstruct
+    public void setupWidget() {
         setText(GuidedDecisionTableConstants.INSTANCE.Delete());
         setTitle(GuidedDecisionTableConstants.INSTANCE.DeleteThisColumn());
         addClickHandler((clickEvent) -> {
