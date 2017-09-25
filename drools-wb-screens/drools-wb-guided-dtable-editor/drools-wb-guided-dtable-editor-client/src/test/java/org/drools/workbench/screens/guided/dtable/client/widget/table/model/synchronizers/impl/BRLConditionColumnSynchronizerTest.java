@@ -379,17 +379,17 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
                      model.getExpandedColumns().size());
         assertEquals(1,
                      model.getConditions().size());
-
         assertEquals(4,
                      uiModel.getColumns().size());
 
         modelSynchronizer.deleteColumn(column);
 
+        verify(uiModel).reindexColumns();
+
         assertEquals(2,
                      model.getExpandedColumns().size());
         assertEquals(0,
                      model.getConditions().size());
-
         assertEquals(2,
                      uiModel.getColumns().size());
     }

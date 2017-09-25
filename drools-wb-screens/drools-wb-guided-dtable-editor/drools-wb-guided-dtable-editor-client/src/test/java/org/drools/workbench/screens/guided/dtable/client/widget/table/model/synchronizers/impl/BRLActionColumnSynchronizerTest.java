@@ -362,17 +362,17 @@ public class BRLActionColumnSynchronizerTest extends BaseSynchronizerTest {
                      model.getExpandedColumns().size());
         assertEquals(1,
                      model.getActionCols().size());
-
         assertEquals(4,
                      uiModel.getColumns().size());
 
         modelSynchronizer.deleteColumn(column);
 
+        verify(uiModel).reindexColumns();
+
         assertEquals(2,
                      model.getExpandedColumns().size());
         assertEquals(0,
                      model.getActionCols().size());
-
         assertEquals(2,
                      uiModel.getColumns().size());
     }
