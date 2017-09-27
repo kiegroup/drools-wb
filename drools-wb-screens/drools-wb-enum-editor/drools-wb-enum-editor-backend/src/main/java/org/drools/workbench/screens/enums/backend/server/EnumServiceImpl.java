@@ -256,8 +256,10 @@ public class EnumServiceImpl
         try {
             final KieProject project = projectService.resolveProject( path );
             final ClassLoader classLoader = projectClassLoaderHelper.getProjectClassLoader(project);
-            final DataEnumLoader loader = new DataEnumLoader( content,
-                                                              classLoader );
+            if(classLoader == null){
+                throw new RuntimeException("Classloader not available for project:" + project);
+            }
+            final DataEnumLoader loader = new DataEnumLoader( content, classLoader );
             if ( !loader.hasErrors() ) {
                 return Collections.emptyList();
             } else {

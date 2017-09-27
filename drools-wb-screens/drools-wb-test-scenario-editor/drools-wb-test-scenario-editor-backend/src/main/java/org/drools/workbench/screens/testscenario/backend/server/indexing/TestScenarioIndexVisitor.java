@@ -151,14 +151,16 @@ public class TestScenarioIndexVisitor extends ResourceReferenceCollector {
         return (!(packageName == null || packageName.isEmpty()) ? packageName + "." + typeName : typeName);
     }
 
-    private String getFieldFullyQualifiedClassName(final String fullyQualifiedClassName,
-                                                   final String fieldName) {
-        final ModelField[] mfs = dmo.getProjectModelFields().get(fullyQualifiedClassName);
-        for (ModelField mf : mfs) {
-            if (mf.getName().equals(fieldName)) {
-                return mf.getClassName();
+    private String getFieldFullyQualifiedClassName( final String fullyQualifiedClassName,
+                                                    final String fieldName ) {
+        final ModelField[] mfs = dmo.getProjectModelFields().get( fullyQualifiedClassName );
+        //if(mfs != null){
+            for ( ModelField mf : mfs ) {
+                if ( mf.getName().equals( fieldName ) ) {
+                    return mf.getClassName();
+                }
             }
-        }
+        //}
         return DataType.TYPE_OBJECT;
     }
 }
