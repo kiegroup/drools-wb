@@ -27,8 +27,8 @@ import org.drools.workbench.models.testscenarios.shared.VerifyField;
 import org.drools.workbench.models.testscenarios.shared.VerifyRuleFired;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
 
 public class ExpectationButton
         extends TestScenarioButton {
@@ -40,8 +40,8 @@ public class ExpectationButton
                               final ScenarioParentWidget scenarioWidget,
                               final ScenarioWidgetComponentCreator scenarioWidgetComponentCreator,
                               final AsyncPackageDataModelOracle dmo ) {
-        super( ItemAltedImages.INSTANCE.NewItem(),
-               TestScenarioConstants.INSTANCE.AddANewExpectation(),
+        super(IconType.PLUS,
+              TestScenarioConstants.INSTANCE.EXPECT(),
                previousEx,
                scenario,
                scenarioWidget,

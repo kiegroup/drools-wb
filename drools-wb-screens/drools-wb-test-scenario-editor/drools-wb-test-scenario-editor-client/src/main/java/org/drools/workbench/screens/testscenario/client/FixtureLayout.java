@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.drools.workbench.models.testscenarios.shared.CallFixtureMap;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
@@ -174,10 +173,10 @@ public class FixtureLayout
         layoutRow++;
 
         // global section
-        HorizontalPanel horizontalPanel = scenarioWidgetComponentCreator.createHorizontalPanel();
+        GlobalButton globalButton = scenarioWidgetComponentCreator.createGlobalButton();
         setWidget(layoutRow,
                   0,
-                  horizontalPanel);
+                  globalButton);
 
         setWidget(layoutRow,
                   1,

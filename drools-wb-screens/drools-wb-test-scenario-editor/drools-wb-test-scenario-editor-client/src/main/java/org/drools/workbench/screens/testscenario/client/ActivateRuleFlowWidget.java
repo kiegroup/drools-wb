@@ -16,84 +16,92 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Image;
 import org.drools.workbench.models.testscenarios.shared.ActivateRuleFlowGroup;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
-import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 
 public class ActivateRuleFlowWidget
-        extends Composite {
+        extends CellTable<ActivateRuleFlowGroup> {
 
     private final ScenarioParentWidget parent;
 
-    public ActivateRuleFlowWidget( final FixtureList retList,
-                                   final Scenario sc,
+    public ActivateRuleFlowWidget( final FixtureList ruleflowGroups,
+                                   final Scenario scenario,
                                    final ScenarioParentWidget parent ) {
-        FlexTable outer = new FlexTable();
-        render( retList,
-                outer,
-                sc );
-
+        super(Integer.MAX_VALUE);
         this.parent = parent;
 
-        initWidget( outer );
+        setStriped( true );
+        setCondensed( true );
+        setBordered( true );
+//        setEmptyTableWidget( new Label(EnumEditorConstants.INSTANCE.noEnumsDefined() ) );
+        setWidth( "400px" );
+
+        final TextCell nameCell = new TextCell();
+        Column<ActivateRuleFlowGroup, String> nameColumn = new Column<ActivateRuleFlowGroup, String>(nameCell) {
+            @Override
+            public String getValue( ActivateRuleFlowGroup model ) {
+                return model.getName();
+            }
+        };
+        addColumn( nameColumn,
+                            "Activate ruleflow group" );
+        setColumnWidth(nameColumn,
+                       80,
+                       com.google.gwt.dom.client.Style.Unit.PCT );
+
+
+        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER, IconType.TRASH );
+        final Column<ActivateRuleFlowGroup, String> deleteColumn = new Column<ActivateRuleFlowGroup, String>(deleteCell) {
+            @Override
+            public String getValue( ActivateRuleFlowGroup model ) {
+                return "";
+            }
+        };
+
+        deleteColumn.setFieldUpdater( new FieldUpdater<ActivateRuleFlowGroup, String>() {
+            @Override
+            public void update( int index,
+                                ActivateRuleFlowGroup model,
+                                String value ) {
+                ruleflowGroups.remove( model );
+                scenario.getFixtures().remove( model );
+                parent.renderEditor();
+            }
+        } );
+
+        deleteColumn.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER );
+
+        addColumn(deleteColumn,
+                           CommonConstants.INSTANCE.Delete() );
+
+        render( ruleflowGroups );
     }
 
-    private void render( final FixtureList retList,
-                         final FlexTable outer,
-                         final Scenario sc ) {
-        outer.clear();
-        outer.getCellFormatter().setStyleName( 0,
-                                               0,
-                                               "modeller-fact-TypeHeader" );
-        outer.getCellFormatter().setAlignment( 0,
-                                               0,
-                                               HasHorizontalAlignment.ALIGN_CENTER,
-                                               HasVerticalAlignment.ALIGN_MIDDLE );
-        outer.setStyleName( "modeller-fact-pattern-Widget" );
-        outer.setWidget( 0,
-                         0,
-                         new SmallLabel( TestScenarioConstants.INSTANCE.ActivateRuleFlowGroup() ) );
-        outer.getFlexCellFormatter().setColSpan( 0,
-                                                 0,
-                                                 2 );
+    private void render( final FixtureList ruleflowGroups) {
 
-        int row = 1;
-        for ( Fixture fixture : retList ) {
-            final ActivateRuleFlowGroup acticateRuleFlowGroup = (ActivateRuleFlowGroup) fixture;
-            outer.setWidget( row,
-                             0,
-                             new SmallLabel( acticateRuleFlowGroup.getName() ) );
-            Image image = CommonAltedImages.INSTANCE.DeleteItemSmall();
-            image.setAltText( TestScenarioConstants.INSTANCE.RemoveThisRuleFlowActivation() );
-            ImageButton del = new ImageButton( image,
-                                               TestScenarioConstants.INSTANCE.RemoveThisRuleFlowActivation(),
-                                               new ClickHandler() {
-                                                   public void onClick( ClickEvent w ) {
-                                                       retList.remove( acticateRuleFlowGroup );
-                                                       sc.getFixtures().remove( acticateRuleFlowGroup );
-                                                       render( retList,
-                                                               outer,
-                                                               sc );
-                                                       parent.renderEditor();
-                                                   }
-                                               } );
-            outer.setWidget( row,
-                             1,
-                             del );
+        final List<ActivateRuleFlowGroup> groups = new ArrayList<>();
 
-            row++;
+        for ( Fixture fixture : ruleflowGroups ) {
+            if ( fixture instanceof ActivateRuleFlowGroup ) {
+                final ActivateRuleFlowGroup group = (ActivateRuleFlowGroup) fixture;
+                groups.add(group);
+            }
         }
+
+        setRowData(groups);
     }
 }

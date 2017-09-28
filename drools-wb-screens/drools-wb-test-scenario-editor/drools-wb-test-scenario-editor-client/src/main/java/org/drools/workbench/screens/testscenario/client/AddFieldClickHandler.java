@@ -39,6 +39,7 @@ abstract class AddFieldClickHandler
         this.parent = parent;
     }
 
+
     @Override
     public void onClick( final ClickEvent event ) {
         final FormStylePopup pop = new FormStylePopup( TestScenarioConstants.INSTANCE.ChooseAFieldToAdd() );

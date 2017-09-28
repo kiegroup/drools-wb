@@ -18,22 +18,25 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.mvp.Command;
 
 public abstract class FactWidget extends HorizontalPanel {
 
     protected final ScenarioParentWidget parent;
     protected final Scenario scenario;
     protected final FixtureList definitionList;
+    protected final AsyncPackageDataModelOracle oracle;
 
     public FactWidget( final String factType,
                        final FixtureList definitionList,
@@ -45,6 +48,7 @@ public abstract class FactWidget extends HorizontalPanel {
         this.parent = parent;
         this.scenario = scenario;
         this.definitionList = definitionList;
+        this.oracle = oracle;
 
         add( new DataInputWidget( factType,
                                   definitionList,
@@ -53,24 +57,39 @@ public abstract class FactWidget extends HorizontalPanel {
                                   parent,
                                   executionTrace,
                                   headerText ) );
-        add( new DeleteButton( definitionList ) );
+
+        add( new DeleteButton() );
     }
 
     protected void onDelete() {
-        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisBlockOfData() ) ) {
-            for ( Fixture f : definitionList ) {
-                scenario.removeFixture( f );
-            }
-            parent.renderEditor();
-        }
+        YesNoCancelPopup.newYesNoCancelPopup("Remove this",
+                                             TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisBlockOfData(),
+                                             new Command() {
+                                                 @Override
+                                                 public void execute() {
+                                                     for ( Fixture f : definitionList ) {
+                                                         scenario.removeFixture( f );
+                                                     }
+                                                     parent.renderEditor();
+                                                 }
+                                             },
+                                             null,
+                                             new Command() {
+                                                 @Override
+                                                 public void execute() {
+                                                 // do nothing if cancel
+                                                 }
+                                             }).show();
     }
 
-    class DeleteButton
-            extends ImageButton {
 
-        public DeleteButton( final FixtureList definitionList ) {
-            super( CommonAltedImages.INSTANCE.DeleteItemSmall(),
-                   TestScenarioConstants.INSTANCE.RemoveThisBlockOfData() );
+    class DeleteButton
+            extends Button {
+
+        public DeleteButton() {
+            setIcon(IconType.TRASH);
+            setType(ButtonType.DANGER);
+            setTitle(TestScenarioConstants.INSTANCE.RemoveThisBlockOfData());
 
             addClickHandler( new ClickHandler() {
 

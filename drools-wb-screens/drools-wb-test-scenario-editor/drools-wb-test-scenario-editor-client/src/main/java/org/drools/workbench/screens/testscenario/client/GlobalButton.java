@@ -18,7 +18,6 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -28,13 +27,12 @@ import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScena
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
-class GlobalButton
-        extends ImageButton {
+class GlobalButton extends Button {
 
     private final Scenario scenario;
     private final ScenarioParentWidget parent;
@@ -44,9 +42,8 @@ class GlobalButton
     public GlobalButton( final Scenario scenario,
                          final ScenarioParentWidget parent,
                          final AsyncPackageDataModelOracle oracle ) {
-        super( ItemAltedImages.INSTANCE.NewItem(),
-               TestScenarioConstants.INSTANCE.AddANewGlobalToThisScenario() );
-
+        setIcon(IconType.PLUS);
+        setText(TestScenarioConstants.INSTANCE.globals());
         this.scenario = scenario;
         this.parent = parent;
         this.oracle = oracle;
@@ -120,7 +117,7 @@ class GlobalButton
                     public void onClick( ClickEvent event ) {
                         String text = factTypes.getItemText( factTypes.getSelectedIndex() );
                         if ( scenario.isFactNameReserved( text ) ) {
-                            Window.alert( TestScenarioConstants.INSTANCE.TheName0IsAlreadyInUsePleaseChooseAnotherName( text ) );
+                            ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.TheName0IsAlreadyInUsePleaseChooseAnotherName(text ) );
                         } else {
                             FactData factData = new FactData( oracle.getGlobalVariable( text ),
                                                               text,

@@ -21,7 +21,6 @@ import java.util.List;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import org.drools.workbench.models.testscenarios.shared.ActivateRuleFlowGroup;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.FactData;
@@ -33,9 +32,10 @@ import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 /**
  * This button gives a choice of modifying data, based on the positional
@@ -45,17 +45,18 @@ public class NewDataButton extends TestScenarioButton {
 
     private final ExecutionTrace currentEx;
 
-    public NewDataButton( final ExecutionTrace previousEx,
+    public NewDataButton( final String buttonText,
+                          final ExecutionTrace previousEx,
                           final Scenario scenario,
                           final ExecutionTrace currentEx,
                           final ScenarioParentWidget scenarioWidget,
                           final AsyncPackageDataModelOracle oracle ) {
-        super( ItemAltedImages.INSTANCE.NewItem(),
-               TestScenarioConstants.INSTANCE.AddANewDataInputToThisScenario(),
-               previousEx,
-               scenario,
-               scenarioWidget,
-               oracle );
+        super(IconType.PLUS,
+              buttonText,
+              previousEx,
+              scenario,
+              scenarioWidget,
+              oracle );
 
         this.currentEx = currentEx;
     }
@@ -151,10 +152,10 @@ public class NewDataButton extends TestScenarioButton {
                     public void onClick( ClickEvent event ) {
                         String factName = ( "" + factNameTextBox.getText() ).trim();
                         if ( factName.equals( "" ) || factNameTextBox.getText().indexOf( ' ' ) > -1 ) {
-                            Window.alert( TestScenarioConstants.INSTANCE.YouMustEnterAValidFactName() );
+                            ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.YouMustEnterAValidFactName() );
                         } else {
                             if ( scenario.isFactNameReserved( factName ) ) {
-                                Window.alert( TestScenarioConstants.INSTANCE.TheFactName0IsAlreadyInUsePleaseChooseAnotherName( factName ) );
+                                ErrorPopup.showMessage( TestScenarioConstants.INSTANCE.TheFactName0IsAlreadyInUsePleaseChooseAnotherName( factName ) );
                             } else {
                                 scenario.insertBetween( previousEx,
                                                         getFixture() );
@@ -185,8 +186,8 @@ public class NewDataButton extends TestScenarioButton {
                         factNameTextBox.getText(),
                         false );
 
-                //Create new Field objects for new Fixture based upon the first existing of the same data-type
-                //Only the "first" existing of the same data-type is checked as second, third etc should have been
+                //Create new Field objects for new Fixture based upon the first existing of the same data-factType
+                //Only the "first" existing of the same data-factType is checked as second, third etc should have been
                 //based upon the first if they were all created after this fix for GUVNOR-1139 was implemented.
                 List<FactData> existingFactData = scenario.getFactTypesToFactData().get( factType );
                 if ( existingFactData != null && existingFactData.size() > 0 ) {

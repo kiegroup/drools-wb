@@ -20,14 +20,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.models.testscenarios.shared.CollectionFieldData;
 import org.drools.workbench.models.testscenarios.shared.FactAssignmentField;
 import org.drools.workbench.models.testscenarios.shared.Field;
 import org.drools.workbench.models.testscenarios.shared.FieldData;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 public class FieldSelectorWidget
         implements IsWidget,
@@ -36,7 +36,7 @@ public class FieldSelectorWidget
     private final Field field;
     private final FieldConstraintHelper helper;
     private final ScenarioParentWidget parent;
-    private final Image clickMe;
+    private final Button clickMe;
 
     public FieldSelectorWidget( final Field field,
                                 final FieldConstraintHelper helper,
@@ -44,7 +44,8 @@ public class FieldSelectorWidget
         this.field = field;
         this.helper = helper;
         this.parent = parent;
-        this.clickMe = CommonAltedImages.INSTANCE.Edit();
+        this.clickMe = new Button();
+        this.clickMe.setIcon(IconType.PENCIL);
         this.clickMe.addClickHandler( this );
     }
 

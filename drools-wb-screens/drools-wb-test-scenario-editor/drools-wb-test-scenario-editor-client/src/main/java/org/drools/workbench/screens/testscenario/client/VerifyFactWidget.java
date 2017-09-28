@@ -16,243 +16,193 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
-import java.util.List;
+import java.util.Arrays;
 
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-import org.appformer.project.datamodel.oracle.MethodInfo;
-import org.appformer.project.datamodel.oracle.ModelField;
+import com.google.gwt.cell.client.EditTextCell;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SelectionCell;
+import com.google.gwt.cell.client.TextCell;
+import com.google.gwt.user.cellview.client.Column;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.models.testscenarios.shared.VerifyFact;
 import org.drools.workbench.models.testscenarios.shared.VerifyField;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
-import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
-import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioImages;
-import org.gwtbootstrap3.client.ui.ListBox;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import org.gwtbootstrap3.extras.toggleswitch.client.ui.base.constants.ColorType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
-import org.kie.workbench.common.widgets.client.resources.CommonImages;
-import org.uberfire.client.callbacks.Callback;
-import org.uberfire.ext.widgets.common.client.common.ClickableLabel;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
-import org.uberfire.ext.widgets.common.client.common.ValueChanged;
-import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
-import org.uberfire.ext.widgets.common.client.common.popups.footers.ModalFooterOKCancelButtons;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
-public class VerifyFactWidget extends Composite {
+public class VerifyFactWidget extends CellTable<VerifyField> {
 
-    private Grid outer;
     private boolean showResults;
-    private String type;
     private AsyncPackageDataModelOracle oracle;
     private Scenario scenario;
     private ExecutionTrace executionTrace;
 
-    public VerifyFactWidget( final VerifyFact vf,
-                             final Scenario sc,
-                             final AsyncPackageDataModelOracle oracle,
-                             final ExecutionTrace executionTrace,
-                             final boolean showResults ) {
-        outer = new Grid( 2,
-                          1 );
-        outer.getCellFormatter().setStyleName( 0,
-                                               0,
-                                               "modeller-fact-TypeHeader" ); //NON-NLS
-        outer.getCellFormatter().setAlignment( 0,
-                                               0,
-                                               HasHorizontalAlignment.ALIGN_CENTER,
-                                               HasVerticalAlignment.ALIGN_MIDDLE );
-        outer.setStyleName( "modeller-fact-pattern-Widget" ); //NON-NLS
+    public VerifyFactWidget(final VerifyFact verifyFact,
+                            final Scenario sc,
+                            final AsyncPackageDataModelOracle oracle,
+                            final ExecutionTrace executionTrace,
+                            final boolean showResults) {
+
+        this.showResults = showResults;
         this.oracle = oracle;
         this.scenario = sc;
         this.executionTrace = executionTrace;
-        HorizontalPanel ab = new HorizontalPanel();
-        ClickableLabel label = null;
 
-        final ClickHandler handler = new ClickHandler() {
-            public void onClick( ClickEvent w ) {
+        setStriped(true);
+        setCondensed(true);
+        setBordered(true);
+        setWidth("100%");
 
-                final ListBox fieldsListBox = new ListBox();
-                VerifyFactWidget.this.oracle.getFieldCompletions( type,
-                                                                  new Callback<ModelField[]>() {
-                                                                      @Override
-                                                                      public void callback( final ModelField[] fields ) {
-
-                                                                          // Add fields
-                                                                          for ( int i = 0; i < fields.length; i++ ) {
-                                                                              fieldsListBox.addItem(fields[i].getName());
-                                                                          }
-
-                                                                          // Add methods
-                                                                          oracle.getMethodInfos(type,
-                                                                                                new Callback<List<MethodInfo>>() {
-                                                                                                    @Override
-                                                                                                    public void callback(List<MethodInfo> result) {
-                                                                                                        for (MethodInfo info : result) {
-                                                                                                            if (info.getParams().isEmpty() && !"void".equals(info.getReturnClassType())) {
-                                                                                                                fieldsListBox.addItem(info.getName());
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                });
-                                                                      }
-                                                                  } );
-
-                final FormStylePopup pop = new FormStylePopup( TestScenarioAltedImages.INSTANCE.RuleAsset(),
-                                                               TestScenarioConstants.INSTANCE.ChooseAFieldToAdd() );
-                pop.addRow( fieldsListBox );
-                pop.add( new ModalFooterOKCancelButtons( new Command() {
-                    @Override
-                    public void execute() {
-                        String f = fieldsListBox.getItemText( fieldsListBox.getSelectedIndex() );
-                        vf.getFieldValues().add( new VerifyField( f,
-                                                                  "",
-                                                                  "==" ) );
-                        FlexTable data = render( vf );
-                        outer.setWidget( 1,
-                                         0,
-                                         data );
-                        pop.hide();
-                    }
-                }, new Command() {
-                    @Override
-                    public void execute() {
-                        pop.hide();
-                    }
-                }
-                ) );
-
-                pop.show();
-
+        final TextCell nameCell = new TextCell();
+        Column<VerifyField, String> nameColumn = new Column<VerifyField, String>(nameCell) {
+            @Override
+            public String getValue(VerifyField model) {
+                return model.getFieldName();
             }
         };
 
-        if ( !vf.anonymous ) {
-            type = (String) sc.getVariableTypes().get( vf.getName() );
-            label = new ClickableLabel( TestScenarioConstants.INSTANCE.scenarioFactTypeHasValues( type,
-                                                                                                  vf.getName() ),
-                                        handler );
-        } else {
-            type = vf.getName();
-            label = new ClickableLabel( TestScenarioConstants.INSTANCE.AFactOfType0HasValues( vf.getName() ),
-                                        handler );
-        }
-        ab.add( label );
-        this.showResults = showResults;
+        addColumn(nameColumn,
+                  "Fields of the fact: " + verifyFact.getName());
 
-        outer.setWidget( 0,
-                         0,
-                         ab );
-        initWidget( outer );
-
-        FlexTable data = render( vf );
-        outer.setWidget( 1,
-                         0,
-                         data );
-
-    }
-
-    private FlexTable render( final VerifyFact vf ) {
-        FlexTable data = new FlexTable();
-        for ( int i = 0; i < vf.getFieldValues().size(); i++ ) {
-            final VerifyField fld = (VerifyField) vf.getFieldValues().get( i );
-            data.setWidget( i,
-                            1,
-                            new SmallLabel( fld.getFieldName() + ":" ) );
-            data.getFlexCellFormatter().setHorizontalAlignment( i,
-                                                                1,
-                                                                HasHorizontalAlignment.ALIGN_RIGHT );
-
-            final ListBox opr = new ListBox();
-            opr.addItem( TestScenarioConstants.INSTANCE.equalsScenario(),
-                         "==" );
-            opr.addItem( TestScenarioConstants.INSTANCE.doesNotEqualScenario(),
-                         "!=" );
-            if ( fld.getOperator().equals( "==" ) ) {
-                opr.setSelectedIndex( 0 );
-            } else {
-                opr.setSelectedIndex( 1 );
-            }
-            opr.addChangeHandler( new ChangeHandler() {
-                public void onChange( ChangeEvent event ) {
-                    fld.setOperator( opr.getValue( opr.getSelectedIndex() ) );
+        SelectionCell operatorCell = new SelectionCell(Arrays.asList(TestScenarioConstants.INSTANCE.equalsScenario(),
+                                                                     TestScenarioConstants.INSTANCE.doesNotEqualScenario()));
+        Column<VerifyField, String> operatorColumn = new Column<VerifyField, String>(operatorCell) {
+            @Override
+            public String getValue(VerifyField verifyField) {
+                if ("==".compareTo(verifyField.getOperator()) == 0) {
+                    return TestScenarioConstants.INSTANCE.equalsScenario();
+                } else if ("!=".compareTo(verifyField.getOperator()) == 0) {
+                    return TestScenarioConstants.INSTANCE.doesNotEqualScenario();
+                } else {
+                    return "";
                 }
-            } );
+            }
+        };
 
-            data.setWidget( i,
-                            2,
-                            opr );
-            Widget cellEditor = new VerifyFieldConstraintEditor( type,
-                                                                 new ValueChanged() {
-                                                                     public void valueChanged( String newValue ) {
-                                                                         fld.setExpected( newValue );
-                                                                     }
+        operatorColumn.setFieldUpdater(new FieldUpdater<VerifyField, String>() {
+            @Override
+            public void update(int i,
+                               VerifyField verifyField,
+                               String s) {
+                if (TestScenarioConstants.INSTANCE.equalsScenario().compareTo(s) == 0) {
+                    verifyField.setOperator("==");
+                } else if (TestScenarioConstants.INSTANCE.doesNotEqualScenario().compareTo(s) == 0) {
+                    verifyField.setOperator("!=");
+                } else {
+                    verifyField.setOperator(null);
+                }
+            }
+        });
 
-                                                                 },
-                                                                 fld,
-                                                                 oracle,
-                                                                 this.scenario,
-                                                                 this.executionTrace );
+        addColumn(operatorColumn,
+                  "Expect that field");
 
-            data.setWidget( i,
-                            3,
-                            cellEditor );
+        EditTextCell expectedValueCell = new EditTextCell();
+        Column<VerifyField, String> expectedValueColumn = new Column<VerifyField, String>(expectedValueCell) {
+            @Override
+            public String getValue(VerifyField verifyField) {
+                return  verifyField.getExpected();
+            }
+        };
 
-            Image del = CommonAltedImages.INSTANCE.DeleteItemSmall();
-            del.setAltText( TestScenarioConstants.INSTANCE.RemoveThisFieldExpectation() );
-            del.setTitle( TestScenarioConstants.INSTANCE.RemoveThisFieldExpectation() );
-            del.addClickHandler( new ClickHandler() {
-                public void onClick( ClickEvent w ) {
-                    if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisFieldExpectation(
-                            fld.getFieldName() ) ) ) {
-                        vf.getFieldValues().remove( fld );
-                        FlexTable data = render( vf );
-                        outer.setWidget( 1,
-                                         0,
-                                         data );
+        expectedValueColumn.setFieldUpdater(new FieldUpdater<VerifyField, String>() {
+            @Override
+            public void update(int i,
+                               VerifyField verifyField,
+                               String s) {
+                verifyField.setExpected(s);
+            }
+        });
+
+        addColumn(expectedValueColumn,
+                  "Has a value");
+
+        if (showResults) {
+            TextCell actualValueCell = new TextCell();
+            Column<VerifyField, String> actualValueColumn = new Column<VerifyField, String>(actualValueCell) {
+                @Override
+                public String getValue(VerifyField verifyField) {
+                    if (verifyField.getSuccessResult() != null && verifyField.getSuccessResult().booleanValue()) {
+                        return  verifyField.getExpected();
+                    } else {
+                        return  verifyField.getActualResult();
                     }
                 }
-            } );
-            data.setWidget( i,
-                            4,
-                            del );
+            };
 
-            if ( showResults && fld.getSuccessResult() != null ) {
-                if ( !fld.getSuccessResult().booleanValue() ) {
-                    data.setWidget( i,
-                                    0,
-                                    new Image( CommonImages.INSTANCE.warning() ) );
-                    data.setWidget( i,
-                                    5,
-                                    new HTML( TestScenarioConstants.INSTANCE.ActualResult( fld.getActualResult() ) ) );
+            addColumn(actualValueColumn,
+                      "Actual value");
+        }
 
-                    data.getCellFormatter().addStyleName( i,
-                                                          5,
-                                                          "testErrorValue" ); //NON-NLS
+        final ButtonCell deleteCell = new ButtonCell(ButtonType.DANGER,
+                                                     IconType.TRASH);
+        final Column<VerifyField, String> deleteColumn = new Column<VerifyField, String>(deleteCell) {
+            @Override
+            public String getValue(VerifyField model) {
+                return "";
+            }
+        };
 
-                } else {
-                    data.setWidget( i,
-                                    0,
-                                    new Image( TestScenarioImages.INSTANCE.testPassed() ) );
+        deleteColumn.setFieldUpdater(new FieldUpdater<VerifyField, String>() {
+            @Override
+            public void update(int i,
+                               VerifyField verifyField,
+                               String s) {
+                YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                     TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisFieldExpectation(verifyField.getFieldName()),
+                                                     () -> {
+                                                         if (verifyFact != null && verifyFact.getFieldValues() != null) {
+                                                             verifyFact.getFieldValues().remove(verifyField);
+                                                             render(verifyFact);
+                                                         }
+                                                     },
+                                                     null,
+                                                     () -> {
+
+                                                     }).show();
+            }
+        });
+
+        addColumn(deleteColumn,
+                  "");
+
+        render(verifyFact);
+    }
+
+    private void render(VerifyFact verifyFact) {
+
+        if (verifyFact != null && verifyFact.getFieldValues() != null) {
+            setRowData(verifyFact.getFieldValues());
+
+            if (showResults) {
+                for(int i = 0; i < verifyFact.getFieldValues().size(); i++) {
+                    final VerifyField field = verifyFact.getFieldValues().get(i);
+                    if (field.getSuccessResult() == null || !field.getSuccessResult().booleanValue()) {
+                        getRowElement(i).addClassName(ColorType.DANGER.getType());
+                    } else {
+                        getRowElement(i).addClassName(ColorType.SUCCESS.getType());
+                    }
                 }
             }
 
+//            Widget cellEditor = new VerifyFieldConstraintEditor( type,
+//                                                                 new ValueChanged() {
+//                                                                     public void valueChanged( String newValue ) {
+//                                                                         fld.setExpected( newValue );
+//                                                                     }
+//
+//                                                                 },
+//                                                                 fld,
+//                                                                 oracle,
+//                                                                 this.scenario,
+//                                                                 this.executionTrace );
+//
         }
-        return data;
     }
-
 }

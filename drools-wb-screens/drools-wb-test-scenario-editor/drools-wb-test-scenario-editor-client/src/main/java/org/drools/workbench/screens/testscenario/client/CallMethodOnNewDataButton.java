@@ -24,8 +24,8 @@ import org.drools.workbench.models.testscenarios.shared.Fixture;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.ItemAltedImages;
 
 /**
  * This button gives a choice of modifying data, based on the positional
@@ -35,17 +35,17 @@ public class CallMethodOnNewDataButton extends TestScenarioButton {
 
     private final ExecutionTrace currentEx;
 
-    public CallMethodOnNewDataButton( final ExecutionTrace previousEx,
-                                      final Scenario scenario,
-                                      final ExecutionTrace currentEx,
-                                      final ScenarioParentWidget scenarioWidget,
-                                      final AsyncPackageDataModelOracle oracle ) {
-        super( ItemAltedImages.INSTANCE.NewItem(),
-               TestScenarioConstants.INSTANCE.AddANewDataInputToThisScenario(),
-               previousEx,
-               scenario,
-               scenarioWidget,
-               oracle );
+    public CallMethodOnNewDataButton(final ExecutionTrace previousEx,
+                                     final Scenario scenario,
+                                     final ExecutionTrace currentEx,
+                                     final ScenarioParentWidget scenarioWidget,
+                                     final AsyncPackageDataModelOracle oracle) {
+        super(IconType.PLUS,
+              TestScenarioConstants.INSTANCE.CALL(),
+              previousEx,
+              scenario,
+              scenarioWidget,
+              oracle);
 
         this.currentEx = currentEx;
     }
@@ -58,30 +58,28 @@ public class CallMethodOnNewDataButton extends TestScenarioButton {
     class NewInputPopup extends TestScenarioButtonPopup {
 
         public NewInputPopup() {
-            super( TestScenarioAltedImages.INSTANCE.RuleAsset(),
-                   TestScenarioConstants.INSTANCE.NewInput() );
-            List<String> varsInScope = scenario.getFactNamesInScope( currentEx,
-                                                                     false );
+            super(TestScenarioAltedImages.INSTANCE.RuleAsset(),
+                  TestScenarioConstants.INSTANCE.NewInput());
+            List<String> varsInScope = scenario.getFactNamesInScope(currentEx,
+                                                                    false);
             // now we do modifies & retracts
-            if ( varsInScope.size() > 0 ) {
-                addAttribute( TestScenarioConstants.INSTANCE.CallAMethodOnAFactScenario(),
-                              new CallMethodFactPanel( varsInScope ) );
+            if (varsInScope.size() > 0) {
+                addAttribute(TestScenarioConstants.INSTANCE.CallAMethodOnAFactScenario(),
+                             new CallMethodFactPanel(varsInScope));
             }
         }
 
         class CallMethodFactPanel extends ListBoxBasePanel {
 
-            public CallMethodFactPanel( List<String> listItems ) {
-                super( listItems );
+            public CallMethodFactPanel(List<String> listItems) {
+                super(listItems);
             }
 
             @Override
             public Fixture getFixture() {
-                String factName = valueWidget.getItemText( valueWidget.getSelectedIndex() );
-                return new CallMethod( factName );
+                String factName = valueWidget.getItemText(valueWidget.getSelectedIndex());
+                return new CallMethod(factName);
             }
         }
-
     }
-
 }

@@ -23,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.testscenarios.shared.CollectionFieldData;
@@ -37,12 +36,14 @@ import org.drools.workbench.models.testscenarios.shared.FieldPlaceHolder;
 import org.drools.workbench.models.testscenarios.shared.FixtureList;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
 import org.uberfire.ext.widgets.common.client.common.ClickableLabel;
 import com.google.gwt.user.client.ui.FlexTable;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public class FactDataWidgetFactory {
 
@@ -215,7 +216,7 @@ public class FactDataWidgetFactory {
                     parent );
         }
 
-        throw new IllegalArgumentException( "Unknown field type: " + field.getClass() );
+        throw new IllegalArgumentException( "Unknown field factType: " + field.getClass() );
     }
 
     private IsWidget createFieldNameWidget( final String fieldName ) {
@@ -226,45 +227,65 @@ public class FactDataWidgetFactory {
         return rowIndexByFieldName.amountOrRows();
     }
 
-    class DeleteFactColumnButton extends ImageButton {
+    class DeleteFactColumnButton extends Button {
 
         public DeleteFactColumnButton( final FactData fact ) {
-            super( CommonAltedImages.INSTANCE.DeleteItemSmall(),
-                   TestScenarioConstants.INSTANCE.RemoveTheColumnForScenario( fact.getName() ) );
+            setIcon(IconType.TRASH);
+            setTitle(TestScenarioConstants.INSTANCE.RemoveTheColumnForScenario( fact.getName() ));
 
             addClickHandler( new ClickHandler() {
                 public void onClick( ClickEvent event ) {
                     if ( scenario.isFactDataReferenced( fact ) ) {
-                        Window.alert( TestScenarioConstants.INSTANCE.CanTRemoveThisColumnAsTheName0IsBeingUsed( fact.getName() ) );
-                    } else if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveColumn0( fact.getName() ) ) ) {
-                        scenario.removeFixture( fact );
-                        definitionList.remove( fact );
+                        ErrorPopup.showMessage(TestScenarioConstants.INSTANCE.CanTRemoveThisColumnAsTheName0IsBeingUsed(fact.getName() ) );
+                    } else {
+                        YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                             TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveColumn0(fact.getName()),
+                                                             () -> {
+                                                                 scenario.removeFixture(fact);
+                                                                 definitionList.remove( fact );
 
-                        parent.renderEditor();
+                                                                 parent.renderEditor();
+                                                             },
+                                                             null,
+                                                             () -> {
+
+                                                             }).show();
                     }
                 }
             } );
         }
     }
 
-    class DeleteFieldRowButton extends ImageButton {
+    class DeleteFieldRowButton extends Button {
 
         public DeleteFieldRowButton( final Fact fact,
                                      final String fieldName ) {
-            super( CommonAltedImages.INSTANCE.DeleteItemSmall(),
-                   TestScenarioConstants.INSTANCE.RemoveThisRow() );
+            setIcon(IconType.MINUS);
+            setTitle(TestScenarioConstants.INSTANCE.RemoveThisRow());
 
             addClickHandler( new ClickHandler() {
                 public void onClick( ClickEvent event ) {
                     if ( fact instanceof FactData ) {
-                        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveRow0( fieldName ) ) ) {
-                            ScenarioHelper.removeFields( definitionList,
-                                                         fieldName );
-                        }
+                        YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                             TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveRow0( fieldName ),
+                                                             () -> {
+                                                                 ScenarioHelper.removeFields( definitionList,
+                                                                                              fieldName );
+                                                             },
+                                                             null,
+                                                             () -> {
+
+                                                             }).show();
                     } else if ( fact instanceof Fact ) {
-                        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveRow0( fieldName ) ) ) {
-                            fact.removeField( fieldName );
-                        }
+                        YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                             TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveRow0( fieldName ),
+                                                             () -> {
+                                                                 fact.removeField( fieldName );
+                                                             },
+                                                             null,
+                                                             () -> {
+
+                                                             }).show();
                     }
 
                     parent.renderEditor();

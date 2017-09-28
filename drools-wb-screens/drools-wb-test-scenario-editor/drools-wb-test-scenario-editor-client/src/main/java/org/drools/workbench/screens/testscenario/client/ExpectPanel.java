@@ -18,16 +18,15 @@ package org.drools.workbench.screens.testscenario.client;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class ExpectPanel extends HorizontalPanel {
 
@@ -49,23 +48,28 @@ public class ExpectPanel extends HorizontalPanel {
                                     parent,
                                     scenarioWidgetComponentCreator,
                                     oracle ) );
-        add( new SmallLabel( TestScenarioConstants.INSTANCE.EXPECT() ) );
         add( new DeleteButton() );
     }
 
-    class DeleteButton
-            extends ImageButton {
+    class DeleteButton extends Button {
 
         public DeleteButton() {
-            super( CommonAltedImages.INSTANCE.DeleteItemSmall(),
-                   CommonConstants.INSTANCE.DeleteItem() );
+            setIcon(IconType.TRASH);
+            setType(ButtonType.DANGER);
+            setText("Remove this part of scenario");
             addClickHandler( new ClickHandler() {
 
                 public void onClick( ClickEvent event ) {
-                    if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisItem() ) ) {
-                        scenario.removeExecutionTrace( previousEx );
-                        parent.renderEditor();
-                    }
+                    YesNoCancelPopup.newYesNoCancelPopup("title",
+                                                         TestScenarioConstants.INSTANCE.AreYouSureYouWantToRemoveThisItem() ,
+                                                         () -> {
+                                                             scenario.removeExecutionTrace( previousEx );
+                                                             parent.renderEditor();
+                                                         },
+                                                         null,
+                                                         () -> {
+
+                                                         }).show();
                 }
             } );
         }

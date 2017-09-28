@@ -22,11 +22,9 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import org.appformer.project.datamodel.oracle.DropDownData;
 import org.appformer.project.datamodel.oracle.MethodInfo;
@@ -38,14 +36,16 @@ import org.drools.workbench.models.testscenarios.shared.FactData;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.resources.images.TestScenarioAltedImages;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.resources.CommonAltedImages;
 import org.kie.workbench.common.widgets.client.resources.HumanReadable;
 import org.uberfire.client.callbacks.Callback;
-import org.uberfire.ext.widgets.common.client.common.ImageButton;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 
 public class CallMethodWidget extends Composite {
 
@@ -156,13 +156,14 @@ public class CallMethodWidget extends Composite {
         HorizontalPanel horiz = new HorizontalPanel();
 
         if ( mCall.getState() == ActionCallMethod.TYPE_UNDEFINED ) {
-            Image edit = TestScenarioAltedImages.INSTANCE.AddFieldToFact();
+            Button edit = new Button();
+            edit.setIcon(IconType.PLUS);
             edit.setTitle( TestScenarioConstants.INSTANCE.AddAnotherFieldToThisSoYouCanSetItsValue() );
 
             edit.addClickHandler( new ClickHandler() {
 
                 public void onClick( ClickEvent event ) {
-                    Image w = (Image) event.getSource();
+                    Button w = (Button) event.getSource();
                     showAddFieldPopup( w );
 
                 }
@@ -254,17 +255,24 @@ public class CallMethodWidget extends Composite {
     }
 
     protected void onDelete() {
-        if ( Window.confirm( TestScenarioConstants.INSTANCE.AreYouSureToRemoveCallMethod() ) ) {
-            scenario.removeFixture( mCall );
-            parent.renderEditor();
-        }
+        YesNoCancelPopup.newYesNoCancelPopup("title",
+                                             TestScenarioConstants.INSTANCE.AreYouSureToRemoveCallMethod(),
+                                             () -> {
+                                                 scenario.removeFixture( mCall );
+                                                 parent.renderEditor();
+                                             },
+                                             null,
+                                             () -> {
+
+                                             }).show();
     }
 
-    class DeleteButton extends ImageButton {
+    class DeleteButton extends Button {
 
         public DeleteButton() {
-            super( CommonAltedImages.INSTANCE.DeleteItemSmall(),
-                   TestScenarioConstants.INSTANCE.RemoveCallMethod() );
+            setType(ButtonType.DANGER);
+            setIcon(IconType.TRASH);
+            setTitle(TestScenarioConstants.INSTANCE.RemoveCallMethod());
 
             addClickHandler( new ClickHandler() {
 
