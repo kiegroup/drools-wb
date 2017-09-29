@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" debug="true" packagingData="true">
-  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+  <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />-->
 
   <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -11,15 +11,15 @@
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>/tmp/util.logback.log</file>
+    <file>/tmp/maven/logback.log</file>
     <append>true</append>
     <encoder>
-     <!-- <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>-->
+      <!-- <pattern>%-5relative %-5level %logger{35} - %msg%n</pattern>-->
       <pattern>%d [%t] %-5p %m%n</pattern>
     </encoder>
   </appender>
 
-  <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+  <!--<appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
     <discriminator>
       <key>compileid</key>
       <defaultValue>/tmp/maven/</defaultValue>
@@ -33,7 +33,7 @@
         </layout>
       </appender>
     </sift>
-  </appender>
+  </appender>-->
 
   <logger name="org.slf4j" level="info"/>
   <logger name="org.log4j" level="info"/>
@@ -42,16 +42,16 @@
   <logger name="org.guvnor" level="info"/>
   <logger name="org.uberfire.backend" level="debug" />
 
-  <logger name="org.apache.maven" level="info" additivity="true">
+  <logger name="org.apache.maven" level="info" additivity="false">
     <appender-ref ref="consoleAppender"/>
     <appender-ref ref="FILE" />
-    <appender-ref ref="SIFT" />
+    <!--<appender-ref ref="SIFT" />-->
   </logger>
 
   <logger name="org.kie.workbench.common.services.backend.compiler" level="info" additivity="true">
-  <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="consoleAppender"/>
     <appender-ref ref="FILE" />
-   <appender-ref ref="SIFT" />
+    <!--<appender-ref ref="SIFT" />-->
   </logger>
 
 
