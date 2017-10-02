@@ -57,12 +57,12 @@ import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisionTableResources;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
-import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.AttributeColumnConfigRow;
-import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnLabelWidget;
-import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnManagementView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.accordion.GuidedDecisionTableAccordion;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.accordion.GuidedDecisionTableAccordionItem;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.AttributeColumnConfigRow;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.AttributeColumnConfigRowView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnLabelWidget;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnManagementView;
 import org.gwtbootstrap3.client.ui.Button;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.junit.Before;
@@ -248,14 +248,16 @@ public class GuidedDecisionTableModellerViewImplTest {
 
         view.setupSubMenu();
 
-        verify(view).disableButtonMenu();
+        verify(view).disableColumnOperationsMenu();
         verify(addColumn).addClickHandler(any());
         verify(editColumns).addClickHandler(any());
     }
 
     @Test
-    public void testAddColumn() throws Exception {
+    public void testAddColumnWhenColumnCreationIsEnabled() throws Exception {
+
         doReturn(presenter).when(view).getPresenter();
+        doReturn(true).when(presenter).isColumnCreationEnabledToActiveDecisionTable();
 
         view.addColumn();
 
@@ -263,22 +265,48 @@ public class GuidedDecisionTableModellerViewImplTest {
     }
 
     @Test
-    public void testEditColumns() throws Exception {
+    public void testAddColumnWhenColumnCreationIsNotEnabled() throws Exception {
+
+        doReturn(presenter).when(view).getPresenter();
+        doReturn(false).when(presenter).isColumnCreationEnabledToActiveDecisionTable();
+
+        view.addColumn();
+
+        verify(presenter, never()).openNewGuidedDecisionTableColumnWizard();
+    }
+
+    @Test
+    public void testEditColumnsWhenColumnCreationIsEnabled() throws Exception {
         final FlowPanel accordionContainer = mock(FlowPanel.class);
         final Button editColumns = mock(Button.class);
 
         doReturn(presenter).when(view).getPresenter();
         doReturn(accordionContainer).when(view).getAccordionContainer();
         doReturn(editColumns).when(view).getEditColumns();
-        doNothing().when(view).toggleClassName(any(),
-                                               any());
+        doNothing().when(view).toggleClassName(any(), any());
+        doReturn(true).when(presenter).isColumnCreationEnabledToActiveDecisionTable();
 
         view.editColumns();
 
-        verify(view).toggleClassName(accordionContainer,
-                                     GuidedDecisionTableResources.INSTANCE.css().openedAccordion());
-        verify(view).toggleClassName(editColumns,
-                                     "active");
+        verify(view).toggleClassName(accordionContainer, GuidedDecisionTableResources.INSTANCE.css().openedAccordion());
+        verify(view).toggleClassName(editColumns, "active");
+    }
+
+    @Test
+    public void testEditColumnsWhenColumnCreationIsNotEnabled() throws Exception {
+        final FlowPanel accordionContainer = mock(FlowPanel.class);
+        final Button editColumns = mock(Button.class);
+
+        doReturn(presenter).when(view).getPresenter();
+        doReturn(accordionContainer).when(view).getAccordionContainer();
+        doReturn(editColumns).when(view).getEditColumns();
+        doNothing().when(view).toggleClassName(any(), any());
+        doReturn(false).when(presenter).isColumnCreationEnabledToActiveDecisionTable();
+
+        view.editColumns();
+
+        verify(view, never()).toggleClassName(accordionContainer, GuidedDecisionTableResources.INSTANCE.css().openedAccordion());
+        verify(view, never()).toggleClassName(editColumns, "active");
     }
 
     @Test
@@ -353,28 +381,28 @@ public class GuidedDecisionTableModellerViewImplTest {
     }
 
     @Test
-    public void testEnableButtonMenu() {
+    public void testEnableColumnOperationsMenu() {
         final Button addColumn = mock(Button.class);
         final Button editColumns = mock(Button.class);
 
         doReturn(addColumn).when(view).getAddColumn();
         doReturn(editColumns).when(view).getEditColumns();
 
-        view.enableButtonMenu();
+        view.enableColumnOperationsMenu();
 
         verify(addColumn).setEnabled(true);
         verify(editColumns).setEnabled(true);
     }
 
     @Test
-    public void testDisableButtonMenu() {
+    public void testDisableColumnOperationsMenu() {
         final Button addColumn = mock(Button.class);
         final Button editColumns = mock(Button.class);
 
         doReturn(addColumn).when(view).getAddColumn();
         doReturn(editColumns).when(view).getEditColumns();
 
-        view.disableButtonMenu();
+        view.disableColumnOperationsMenu();
 
         verify(addColumn).setEnabled(false);
         verify(editColumns).setEnabled(false);
@@ -391,7 +419,6 @@ public class GuidedDecisionTableModellerViewImplTest {
 
         view.select(gridWidget);
 
-        verify(view).enableButtonMenu();
         verify(ruleSelector).setEnabled(true);
         verify(gridLayer).select(gridWidget);
     }
@@ -517,7 +544,7 @@ public class GuidedDecisionTableModellerViewImplTest {
         verify(callback,
                times(1)).execute();
         verify(view,
-               times(1)).disableButtonMenu();
+               times(1)).disableColumnOperationsMenu();
         verify(defaultGridLayer,
                times(1)).batch();
     }
@@ -532,7 +559,7 @@ public class GuidedDecisionTableModellerViewImplTest {
         verify(callback,
                times(1)).execute();
         verify(view,
-               times(1)).disableButtonMenu();
+               times(1)).disableColumnOperationsMenu();
     }
 
     @Test
