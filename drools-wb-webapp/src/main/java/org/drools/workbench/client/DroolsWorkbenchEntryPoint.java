@@ -95,7 +95,6 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
     }
 
     public void setupAdminPage() {
-        //Window.alert("Ciao !");
         adminPage.addScreen("root",
                             AppConstants.INSTANCE.Settings());
         adminPage.setDefaultScreen("root");

@@ -40,7 +40,6 @@
     <exclude name="org.kie.workbench.common.screens.projecteditor.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.client.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
@@ -63,6 +62,7 @@
     <exclude name="org.kie.workbench.common.forms.adf.engine.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.core.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.core.validation.canvas.**"/>
     <exclude name="org.kie.workbench.common.stunner.client.**"/>
@@ -76,13 +76,16 @@
     <exclude name="org.kie.workbench.common.stunner.bpmn.project.**"/>
     <exclude name="org.kie.workbench.common.stunner.project.**"/>
     <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -94,12 +97,13 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.core.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.core.validation.canvas.**"/>
     <exclude name="org.kie.workbench.common.stunner.client.**"/>
@@ -112,14 +116,16 @@
     <exclude name="org.kie.workbench.common.stunner.standalone.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.bpmn.project.**"/>
     <exclude name="org.kie.workbench.common.stunner.project.**"/>
-    <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -131,12 +137,13 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.core.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.core.validation.canvas.**"/>
     <exclude name="org.kie.workbench.common.stunner.client.**"/>
@@ -148,14 +155,16 @@
     <exclude name="org.kie.workbench.common.stunner.bpmn.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.bpmn.project.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.project.client.**"/>
-    <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -167,12 +176,13 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.core.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.core.validation.canvas.**"/>
     <exclude name="org.kie.workbench.common.stunner.client.**"/>
@@ -184,14 +194,16 @@
     <exclude name="org.kie.workbench.common.stunner.bpmn.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.bpmn.project.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.project.client.**"/>
-    <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -203,12 +215,13 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.basicset.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.basicset.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.basicset.client.**"/>
@@ -247,16 +260,19 @@
     <exclude name="org.kie.workbench.common.stunner.shapes.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.svg.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.basicset.client.**"/>
+
     <exclude name="org.kie.workbench.common.dmn.client.**"/>
     <exclude name="org.kie.workbench.common.dmn.showcase.client.**"/>
-    <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -268,12 +284,13 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
+
     <exclude name="org.kie.workbench.common.stunner.core.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.core.validation.canvas.**"/>
     <exclude name="org.kie.workbench.common.stunner.client.**"/>
@@ -282,16 +299,19 @@
     <exclude name="org.kie.workbench.common.stunner.shapes.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.svg.client.**"/>
     <exclude name="org.kie.workbench.common.stunner.basicset.client.**"/>
+
     <exclude name="org.kie.workbench.common.dmn.client.**"/>
     <exclude name="org.kie.workbench.common.dmn.showcase.client.**"/>
-    <exclude name="com.ait.lienzo.**"/>
+
     <exclude name="org.kie.workbench.common.forms.client.**"/>
     <exclude name="org.kie.workbench.common.forms.common.client.**"/>
     <exclude name="org.kie.workbench.common.forms.dynamic.client.**"/>
     <exclude name="org.kie.workbench.common.forms.crud.client.**"/>
     <exclude name="org.kie.workbench.common.forms.processing.engine.handling.**"/>
     <exclude name="org.kie.workbench.common.forms.common.rendering.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
@@ -303,51 +323,33 @@
     <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
-    <exclude name="org.kie.workbench.common.dmn.client.**"/>
+
     <exclude name="org.kie.workbench.common.dmn.client.**"/>
     <exclude name="org.kie.workbench.common.dmn.project.client.**"/>
-    <exclude name="org.kie.workbench.common.dmn.project.client.**"/>
-    <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
+
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
-    <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>
-    <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
-    <exclude name="org.kie.workbench.common.widgets.metadata.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.explorer.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.home.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.home.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.server.management.client.**"/>
     <exclude name="org.kie.workbench.common.screens.server.management.client.**"/>
     <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.contributors.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
     <exclude name="org.kie.workbench.common.screens.projecteditor.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.projecteditor.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.defaulteditor.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.defaulteditor.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.javaeditor.client.**"/>
     <exclude name="org.kie.workbench.common.screens.javaeditor.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.datasource.management.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.datamodeller.client.**"/>
     <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
+
     <exclude name="org.kie.workbench.common.workbench.client.**"/>
-    <exclude name="org.kie.workbench.common.workbench.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.examples.client.**"/>
+
     <exclude name="org.kie.workbench.common.screens.examples.client.**"/>
 
   </scan>
