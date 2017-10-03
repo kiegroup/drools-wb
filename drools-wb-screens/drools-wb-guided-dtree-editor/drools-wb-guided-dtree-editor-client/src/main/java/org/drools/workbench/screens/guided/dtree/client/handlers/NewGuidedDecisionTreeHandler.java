@@ -32,6 +32,8 @@ import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
+import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.authz.AuthorizationManager;
 import org.uberfire.workbench.type.ResourceTypeDefinition;
 
 /**
@@ -40,14 +42,30 @@ import org.uberfire.workbench.type.ResourceTypeDefinition;
 @ApplicationScoped
 public class NewGuidedDecisionTreeHandler extends DefaultNewResourceHandler {
 
-    @Inject
+    static final String PERMISSION = "editor.read.GuidedDecisionTreeEditorPresenter";
+
     private Caller<GuidedDecisionTreeEditorService> service;
-
-    @Inject
     private GuidedDTreeResourceType resourceType;
+    private BusyIndicatorView busyIndicatorView;
+    private AuthorizationManager authorizationManager;
+    private SessionInfo sessionInfo;
+
+    public NewGuidedDecisionTreeHandler() {
+        //CDI proxy
+    }
 
     @Inject
-    private BusyIndicatorView busyIndicatorView;
+    public NewGuidedDecisionTreeHandler(final Caller<GuidedDecisionTreeEditorService> service,
+                                        final GuidedDTreeResourceType resourceType,
+                                        final BusyIndicatorView busyIndicatorView,
+                                        final AuthorizationManager authorizationManager,
+                                        final SessionInfo sessionInfo) {
+        this.service = service;
+        this.resourceType = resourceType;
+        this.busyIndicatorView = busyIndicatorView;
+        this.authorizationManager = authorizationManager;
+        this.sessionInfo = sessionInfo;
+    }
 
     @Override
     public String getDescription() {
@@ -56,7 +74,7 @@ public class NewGuidedDecisionTreeHandler extends DefaultNewResourceHandler {
 
     @Override
     public IsWidget getIcon() {
-        return new Image( GuidedDecisionTreeResources.INSTANCE.images().typeGuidedDecisionTree() );
+        return new Image(GuidedDecisionTreeResources.INSTANCE.images().typeGuidedDecisionTree());
     }
 
     @Override
@@ -65,18 +83,23 @@ public class NewGuidedDecisionTreeHandler extends DefaultNewResourceHandler {
     }
 
     @Override
-    public void create( final Package pkg,
-                        final String baseFileName,
-                        final NewResourcePresenter presenter ) {
-        final GuidedDecisionTree model = new GuidedDecisionTree();
-        model.setTreeName( baseFileName );
-        busyIndicatorView.showBusyIndicator( CommonConstants.INSTANCE.Saving() );
-        service.call( getSuccessCallback( presenter ),
-                      new HasBusyIndicatorDefaultErrorCallback( busyIndicatorView ) ).create( pkg.getPackageMainResourcesPath(),
-                                                                                              buildFileName( baseFileName,
-                                                                                                             resourceType ),
-                                                                                              model,
-                                                                                              "" );
+    public boolean canCreate() {
+        return authorizationManager.authorize(PERMISSION,
+                                              sessionInfo.getIdentity());
     }
 
+    @Override
+    public void create(final Package pkg,
+                       final String baseFileName,
+                       final NewResourcePresenter presenter) {
+        final GuidedDecisionTree model = new GuidedDecisionTree();
+        model.setTreeName(baseFileName);
+        busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
+        service.call(getSuccessCallback(presenter),
+                     new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageMainResourcesPath(),
+                                                                                         buildFileName(baseFileName,
+                                                                                                       resourceType),
+                                                                                         model,
+                                                                                         "");
+    }
 }
