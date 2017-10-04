@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
@@ -53,6 +54,7 @@ import org.drools.workbench.screens.guided.dtable.client.wizard.column.plugins.c
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModellerConfiguration;
 import org.drools.workbench.screens.guided.rule.client.editor.events.TemplateVariablesChangedEvent;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.uberfire.ext.widgets.core.client.wizards.WizardPage;
 import org.uberfire.ext.widgets.core.client.wizards.WizardPageStatusChangeEvent;
@@ -65,6 +67,8 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     private RuleModellerPage ruleModellerPage;
 
     private Collection<RuleModellerActionPlugin> actionPlugins = new ArrayList<>();
+
+    private Collection<PatternBindingValidator> patternBindingValidators = new ArrayList<>();
 
     private AdditionalInfoPage<BRLActionColumnPlugin> additionalInfoPage;
 
@@ -79,6 +83,7 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     @Inject
     public BRLActionColumnPlugin(final RuleModellerPage ruleModellerPage,
                                  final Instance<RuleModellerActionPlugin> actionPluginInstance,
+                                 final Instance<PatternBindingValidator> patternBindingValidatorInstance,
                                  final AdditionalInfoPage<BRLActionColumnPlugin> additionalInfoPage,
                                  final Event<WizardPageStatusChangeEvent> changeEvent,
                                  final TranslationService translationService) {
@@ -87,6 +92,8 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
 
         this.ruleModellerPage = ruleModellerPage;
         actionPluginInstance.iterator().forEachRemaining(actionPlugins::add);
+        patternBindingValidatorInstance.iterator().forEachRemaining(patternBindingValidators::add);
+
         this.additionalInfoPage = additionalInfoPage;
     }
 
@@ -272,6 +279,11 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     @Override
     public Collection<RuleModellerActionPlugin> getRuleModellerActionPlugins() {
         return actionPlugins;
+    }
+
+    @Override
+    public Collection<PatternBindingValidator> getPatternBindingValidators() {
+        return patternBindingValidators;
     }
 
     private RuleModel newRuleModel() {

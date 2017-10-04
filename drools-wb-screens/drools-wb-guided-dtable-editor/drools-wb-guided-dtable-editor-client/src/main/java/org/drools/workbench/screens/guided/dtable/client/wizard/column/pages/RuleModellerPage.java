@@ -32,6 +32,7 @@ import org.drools.workbench.screens.guided.rule.client.editor.RuleModeller;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModellerConfiguration;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModellerWidgetFactory;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.drools.workbench.screens.guided.template.client.editor.TemplateModellerWidgetFactory;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
@@ -91,6 +92,7 @@ public class RuleModellerPage<T extends HasRuleModellerPage & DecisionTableColum
     private RuleModeller newRuleModeller() {
         final RuleModeller ruleModeller = new RuleModeller(ruleModel(),
                                                            actionPlugins(),
+                                                           patternBindingValidators(),
                                                            oracle(),
                                                            widgetFactory(),
                                                            configuration(),
@@ -120,6 +122,10 @@ public class RuleModellerPage<T extends HasRuleModellerPage & DecisionTableColum
 
     private Collection<RuleModellerActionPlugin> actionPlugins() {
         return plugin().getRuleModellerActionPlugins();
+    }
+
+    private Collection<PatternBindingValidator> patternBindingValidators() {
+        return plugin().getPatternBindingValidators();
     }
 
     RuleModellerConfiguration configuration() {

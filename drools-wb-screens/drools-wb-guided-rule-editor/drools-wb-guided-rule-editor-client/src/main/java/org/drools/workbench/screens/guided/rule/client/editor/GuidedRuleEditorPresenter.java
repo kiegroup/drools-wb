@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
 import org.drools.workbench.screens.guided.rule.client.editor.validator.GuidedRuleEditorValidator;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.drools.workbench.screens.guided.rule.client.type.GuidedRuleDRLResourceType;
 import org.drools.workbench.screens.guided.rule.client.type.GuidedRuleDSLRResourceType;
@@ -99,6 +100,9 @@ public class GuidedRuleEditorPresenter
     @Inject
     private ManagedInstance<RuleModellerActionPlugin> actionPluginInstance;
 
+    @Inject
+    private ManagedInstance<PatternBindingValidator> patternBindingValidatorInstance;
+
     private boolean isDSLEnabled;
 
     private RuleModel model;
@@ -160,11 +164,14 @@ public class GuidedRuleEditorPresenter
                 addImportsTab(importsWidget);
 
                 List<RuleModellerActionPlugin> actionPlugins = new ArrayList<>();
-
                 actionPluginInstance.forEach(actionPlugins::add);
+
+                List<PatternBindingValidator> patternBindingValidators = new ArrayList<>();
+                patternBindingValidatorInstance.forEach(patternBindingValidators::add);
 
                 view.setContent(model,
                                 actionPlugins,
+                                patternBindingValidators,
                                 oracle,
                                 ruleNamesService,
                                 isReadOnly,

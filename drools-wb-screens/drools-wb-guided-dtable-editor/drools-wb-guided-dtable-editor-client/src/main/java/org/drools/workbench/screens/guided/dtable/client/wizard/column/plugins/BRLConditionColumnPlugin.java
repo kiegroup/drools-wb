@@ -27,8 +27,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -59,11 +61,12 @@ import org.drools.workbench.screens.guided.dtable.client.wizard.column.plugins.c
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModellerConfiguration;
 import org.drools.workbench.screens.guided.rule.client.editor.events.TemplateVariablesChangedEvent;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.uberfire.ext.widgets.core.client.wizards.WizardPage;
 import org.uberfire.ext.widgets.core.client.wizards.WizardPageStatusChangeEvent;
 
-import static org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat.*;
+import static org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat.LIMITED_ENTRY;
 
 @Dependent
 public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin implements HasRuleModellerPage,
@@ -82,16 +85,20 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
 
     private RuleModel ruleModel = null;
 
+    private Collection<PatternBindingValidator> patternBindingValidators = new ArrayList<>();
+
     @Inject
     public BRLConditionColumnPlugin(final RuleModellerPage ruleModellerPage,
                                     final AdditionalInfoPage additionalInfoPage,
                                     final Event<WizardPageStatusChangeEvent> changeEvent,
-                                    final TranslationService translationService) {
+                                    final TranslationService translationService,
+                                    final Instance<PatternBindingValidator> patternBindingValidatorInstance) {
         super(changeEvent,
               translationService);
 
         this.ruleModellerPage = ruleModellerPage;
         this.additionalInfoPage = additionalInfoPage;
+        patternBindingValidatorInstance.iterator().forEachRemaining(patternBindingValidators::add);
     }
 
     @Override
@@ -272,6 +279,11 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
     @Override
     public Collection<RuleModellerActionPlugin> getRuleModellerActionPlugins() {
         return Collections.emptyList();
+    }
+
+    @Override
+    public Collection<PatternBindingValidator> getPatternBindingValidators() {
+        return patternBindingValidators;
     }
 
     private RuleModel newRuleModel() {

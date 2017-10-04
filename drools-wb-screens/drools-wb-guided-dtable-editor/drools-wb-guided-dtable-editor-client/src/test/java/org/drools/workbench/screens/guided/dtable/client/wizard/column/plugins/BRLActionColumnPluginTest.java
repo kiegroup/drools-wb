@@ -81,6 +81,7 @@ public class BRLActionColumnPluginTest {
     @InjectMocks
     private BRLActionColumnPlugin plugin = spy(new BRLActionColumnPlugin(ruleModellerPage,
                                                                          new MockInstanceImpl<>(new ArrayList<>()),
+                                                                         new MockInstanceImpl<>(new ArrayList<>()),
                                                                          additionalInfoPage,
                                                                          changeEvent,
                                                                          translationService));

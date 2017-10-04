@@ -44,6 +44,7 @@ import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.screens.guided.rule.client.editor.ActionValueEditor;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModeller;
 import org.drools.workbench.screens.guided.rule.client.editor.events.TemplateVariablesChangedEvent;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidatorUtils;
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
 import org.drools.workbench.screens.guided.rule.client.util.ModelFieldUtil;
@@ -275,6 +276,12 @@ public class ActionInsertFactWidget extends RuleModellerWidget {
                 String var = varName.getText();
                 if (getModeller().isVariableNameUsed(var) && ((model.getBoundName() != null && model.getBoundName().equals(var) == false) || model.getBoundName() == null)) {
                     Window.alert(GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken(var));
+                    return;
+                }
+                String validationTextToDisplay = PatternBindingValidatorUtils.getValidationTextToDisplay(getModeller().getPatternBindingValidators(),
+                                                                                                         var);
+                if (!validationTextToDisplay.isEmpty()) {
+                    Window.alert(validationTextToDisplay);
                     return;
                 }
                 model.setBoundName(var);

@@ -21,6 +21,7 @@ import java.util.Collection;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.jboss.errai.common.client.api.Caller;
 import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
@@ -33,6 +34,7 @@ public interface GuidedRuleEditorView
 
     void setContent(final RuleModel model,
                     final Collection<RuleModellerActionPlugin> actionPlugins,
+                    final Collection<PatternBindingValidator> patternBindingValidators,
                     final AsyncPackageDataModelOracle dataModel,
                     final Caller<RuleNamesService> ruleNamesService,
                     final boolean isReadOnly,

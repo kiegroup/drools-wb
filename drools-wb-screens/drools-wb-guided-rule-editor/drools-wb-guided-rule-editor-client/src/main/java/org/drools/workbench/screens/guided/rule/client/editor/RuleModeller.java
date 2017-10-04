@@ -43,6 +43,7 @@ import org.drools.workbench.models.datamodel.rule.RuleMetadata;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
 import org.drools.workbench.screens.guided.rule.client.editor.events.TemplateVariablesChangedEvent;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
 import org.drools.workbench.screens.guided.rule.client.widget.FactTypeKnownValueChangeEvent;
@@ -68,6 +69,7 @@ public class RuleModeller extends Composite
     private FlexTable layout;
     private RuleModel model;
     private Collection<RuleModellerActionPlugin> actionPlugins;
+    private Collection<PatternBindingValidator> patternBindingValidators;
     private AsyncPackageDataModelOracle oracle;
     private RuleModellerConfiguration configuration;
     private Map<String, Object> serviceInvocationCache = new HashMap<>();
@@ -95,6 +97,7 @@ public class RuleModeller extends Composite
     //used by Guided Rule (DRL + DSLR)
     public RuleModeller(final RuleModel model,
                         final Collection<RuleModellerActionPlugin> actionPlugins,
+                        final Collection<PatternBindingValidator> patternBindingValidators,
                         final AsyncPackageDataModelOracle oracle,
                         final ModellerWidgetFactory widgetFactory,
                         final EventBus eventBus,
@@ -102,6 +105,7 @@ public class RuleModeller extends Composite
                         final boolean isDSLEnabled) {
         this(model,
              actionPlugins,
+             patternBindingValidators,
              oracle,
              widgetFactory,
              RuleModellerConfiguration.getDefault(),
@@ -118,6 +122,7 @@ public class RuleModeller extends Composite
                         final boolean isReadOnly) {
         this(model,
              Collections.emptyList(),
+             Collections.emptyList(),
              oracle,
              widgetFactory,
              eventBus,
@@ -128,6 +133,7 @@ public class RuleModeller extends Composite
     //used by Guided Decision BRL Fragments
     public RuleModeller(final RuleModel model,
                         final Collection<RuleModellerActionPlugin> actionPlugins,
+                        final Collection<PatternBindingValidator> patternBindingValidators,
                         final AsyncPackageDataModelOracle oracle,
                         final ModellerWidgetFactory widgetFactory,
                         final RuleModellerConfiguration configuration,
@@ -135,6 +141,7 @@ public class RuleModeller extends Composite
                         final boolean isReadOnly) {
         this.model = model;
         this.actionPlugins = actionPlugins;
+        this.patternBindingValidators = patternBindingValidators;
         this.oracle = oracle;
         this.widgetFactory = widgetFactory;
         this.configuration = configuration;
@@ -791,6 +798,10 @@ public class RuleModeller extends Composite
 
     public Collection<RuleModellerActionPlugin> getActionPlugins() {
         return actionPlugins;
+    }
+
+    public Collection<PatternBindingValidator> getPatternBindingValidators() {
+        return patternBindingValidators;
     }
 
     /**

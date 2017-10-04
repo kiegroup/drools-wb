@@ -22,12 +22,15 @@ import org.drools.workbench.models.datamodel.rule.RuleModel;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModellerConfiguration;
 import org.drools.workbench.screens.guided.rule.client.editor.plugin.RuleModellerActionPlugin;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidator;
 
 public interface HasRuleModellerPage {
 
     RuleModel getRuleModel();
 
     Collection<RuleModellerActionPlugin> getRuleModellerActionPlugins();
+
+    Collection<PatternBindingValidator> getPatternBindingValidators();
 
     RuleModellerConfiguration getRuleModellerConfiguration();
 

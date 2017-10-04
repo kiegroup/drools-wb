@@ -55,6 +55,7 @@ import org.drools.workbench.screens.guided.rule.client.editor.ExpressionTypeChan
 import org.drools.workbench.screens.guided.rule.client.editor.HasExpressionChangeHandlers;
 import org.drools.workbench.screens.guided.rule.client.editor.HasExpressionTypeChangeHandlers;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModeller;
+import org.drools.workbench.screens.guided.rule.client.editor.validator.PatternBindingValidatorUtils;
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.InputGroup;
@@ -497,6 +498,12 @@ public class ExpressionBuilder extends RuleModellerWidget
                             String var = varName.getText();
                             if ( getModeller().isVariableNameUsed( var ) ) {
                                 Window.alert( GuidedRuleEditorResources.CONSTANTS.TheVariableName0IsAlreadyTaken( var ) );
+                                return;
+                            }
+                            String validationTextToDisplay = PatternBindingValidatorUtils.getValidationTextToDisplay(getModeller().getPatternBindingValidators(),
+                                                                                                                     var);
+                            if (!validationTextToDisplay.isEmpty()) {
+                                Window.alert(validationTextToDisplay);
                                 return;
                             }
                             expression.setBinding( var );
