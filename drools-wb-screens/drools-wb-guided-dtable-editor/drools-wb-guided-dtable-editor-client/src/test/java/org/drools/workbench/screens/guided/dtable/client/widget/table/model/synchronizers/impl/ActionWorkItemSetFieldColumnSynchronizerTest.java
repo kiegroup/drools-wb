@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.impl;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
 import org.appformer.project.datamodel.oracle.DataType;
@@ -37,9 +37,11 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 import static org.drools.workbench.screens.guided.rule.client.util.ModelFieldUtil.modelField;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class ActionWorkItemSetFieldColumnSynchronizerTest extends BaseSynchronizerTest {
 
@@ -59,20 +61,15 @@ public class ActionWorkItemSetFieldColumnSynchronizerTest extends BaseSynchroniz
     @Override
     protected AsyncPackageDataModelOracle getOracle() {
         final AsyncPackageDataModelOracle oracle = super.getOracle();
-        oracle.addModelFields(new HashMap<String, ModelField[]>() {
-                                  {
-                                      put("Applicant",
-                                          new ModelField[]{
-                                                  modelField("this",
-                                                             "Applicant"),
-                                                  modelField("age",
-                                                             DataType.TYPE_NUMERIC_INTEGER),
-                                                  modelField("name",
-                                                             DataType.TYPE_STRING)});
-                                  }
-                              }
+        oracle.addModelFields(Collections.singletonMap("Applicant",
+                                                       new ModelField[]{
+                                                               modelField("this",
+                                                                          "Applicant"),
+                                                               modelField("age",
+                                                                          DataType.TYPE_NUMERIC_INTEGER),
+                                                               modelField("name",
+                                                                          DataType.TYPE_STRING)}));
 
-        );
         return oracle;
     }
 

@@ -16,11 +16,9 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.impl;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 
-import org.appformer.project.datamodel.oracle.DataType;
-import org.appformer.project.datamodel.oracle.FieldAccessorsAndMutators;
 import org.appformer.project.datamodel.oracle.ModelField;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionWorkItemCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumnFieldDiff;
@@ -32,34 +30,24 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.drools.workbench.screens.guided.rule.client.util.ModelFieldUtil.modelField;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 public class ActionWorkItemExecuteColumnSynchronizerTest extends BaseSynchronizerTest {
 
     @Override
     protected AsyncPackageDataModelOracle getOracle() {
         final AsyncPackageDataModelOracle oracle = super.getOracle();
-        oracle.addModelFields(new HashMap<String, ModelField[]>() {
-                                  {
-                                      put("Applicant",
-                                          new ModelField[]{
-                                                  new ModelField("this",
-                                                                 "Applicant",
-                                                                 ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
-                                                                 ModelField.FIELD_ORIGIN.SELF,
-                                                                 FieldAccessorsAndMutators.ACCESSOR,
-                                                                 "Applicant"),
-                                                  new ModelField("age",
-                                                                 Integer.class.getName(),
-                                                                 ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
-                                                                 ModelField.FIELD_ORIGIN.SELF,
-                                                                 FieldAccessorsAndMutators.ACCESSOR,
-                                                                 DataType.TYPE_NUMERIC_INTEGER)});
-                                  }
-                              }
+        oracle.addModelFields(Collections.singletonMap("Applicant",
+                                                       new ModelField[]{
+                                                               modelField("this",
+                                                                          "Applicant"),
+                                                               modelField("age",
+                                                                          Integer.class.getName())}));
 
-        );
         return oracle;
     }
 

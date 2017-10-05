@@ -19,8 +19,8 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table.model.syn
 import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
@@ -168,18 +168,13 @@ public class ActionInsertFactColumnSynchronizer extends ActionColumnSynchronizer
         final List<BaseColumn> modelColumns = model.getExpandedColumns();
 
         //Cannot move "Insert and Set field" to before the Facts creation by WID
-        final AtomicBoolean result = new AtomicBoolean(true);
-        model.getActionCols().stream()
+        return model.getActionCols().stream()
                 .filter(c -> !columnsToMove.contains(c))
                 .filter(c -> c instanceof ActionWorkItemInsertFactCol52)
                 .map(c -> (ActionWorkItemInsertFactCol52) c)
                 .filter(c -> c.getBoundName().equals(binding))
                 .map(modelColumns::indexOf)
-                .filter(i -> i >= tgtIndex)
-                .findFirst()
-                .ifPresent(i -> result.set(false));
-
-        return result.get();
+                .noneMatch(i -> i >= tgtIndex);
     }
 
     private boolean isActionInsertFactFragment(final List<? extends MetaData> metaData) {
@@ -189,11 +184,12 @@ public class ActionInsertFactColumnSynchronizer extends ActionColumnSynchronizer
         if (!metaData.stream().map(c -> (MoveColumnToMetaData) c).allMatch(c -> c.getColumn() instanceof ActionInsertFactCol52)) {
             return false;
         }
+        final int lastMetaDataIndex = metaData.size() - 1;
         final BaseColumn firstColumnInFragment = ((MoveColumnToMetaData) metaData.get(0)).getColumn();
-        final BaseColumn lastColumnInFragment = ((MoveColumnToMetaData) metaData.get(metaData.size() - 1)).getColumn();
+        final BaseColumn lastColumnInFragment = ((MoveColumnToMetaData) metaData.get(lastMetaDataIndex)).getColumn();
         final int firstColumnIndex = model.getExpandedColumns().indexOf(firstColumnInFragment);
         final int lastColumnIndex = model.getExpandedColumns().indexOf(lastColumnInFragment);
-        return lastColumnIndex - firstColumnIndex == metaData.size() - 1;
+        return lastColumnIndex - firstColumnIndex == lastMetaDataIndex;
     }
 
     @Override
