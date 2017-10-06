@@ -58,6 +58,10 @@ public interface GuidedDecisionTableModellerView extends UberView<GuidedDecision
                                                          ViewMenuBuilder.SupportsZoom,
                                                          InsertMenuBuilder.SupportsInsertColumn {
 
+    void enableColumnOperationsMenu();
+
+    void disableColumnOperationsMenu();
+
     void clear();
 
     void addDecisionTable(final GuidedDecisionTableView gridWidget);
@@ -146,5 +150,7 @@ public interface GuidedDecisionTableModellerView extends UberView<GuidedDecision
         void updateLinks();
 
         void openNewGuidedDecisionTableColumnWizard();
+
+        boolean isColumnCreationEnabledToActiveDecisionTable();
     }
 }
