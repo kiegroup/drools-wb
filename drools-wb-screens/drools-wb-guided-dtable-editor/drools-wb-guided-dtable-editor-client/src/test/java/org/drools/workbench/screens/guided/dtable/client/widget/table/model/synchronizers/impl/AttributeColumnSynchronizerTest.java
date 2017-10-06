@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,8 +35,13 @@ import org.junit.Test;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AttributeColumnSynchronizerTest extends BaseSynchronizerTest {
 
@@ -576,10 +582,8 @@ public class AttributeColumnSynchronizerTest extends BaseSynchronizerTest {
         when(md0.getColumn()).thenReturn(mock(AttributeCol52.class));
         when(md1.getColumn()).thenReturn(mock(AttributeCol52.class));
 
-        assertFalse(synchronizer.handlesMoveColumnsTo(new ArrayList<MoveColumnToMetaData>() {{
-            add(md0);
-            add(md1);
-        }}));
+        assertFalse(synchronizer.handlesMoveColumnsTo(Arrays.asList(md0,
+                                                                    md1)));
     }
 
     @Test

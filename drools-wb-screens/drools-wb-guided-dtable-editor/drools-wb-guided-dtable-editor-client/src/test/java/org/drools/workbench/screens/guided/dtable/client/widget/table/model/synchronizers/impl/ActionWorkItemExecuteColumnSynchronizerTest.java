@@ -19,6 +19,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table.model.syn
 import java.util.Collections;
 import java.util.List;
 
+import org.appformer.project.datamodel.oracle.DataType;
 import org.appformer.project.datamodel.oracle.ModelField;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionWorkItemCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumnFieldDiff;
@@ -46,7 +47,7 @@ public class ActionWorkItemExecuteColumnSynchronizerTest extends BaseSynchronize
                                                                modelField("this",
                                                                           "Applicant"),
                                                                modelField("age",
-                                                                          Integer.class.getName())}));
+                                                                          DataType.TYPE_NUMERIC_INTEGER)}));
 
         return oracle;
     }
