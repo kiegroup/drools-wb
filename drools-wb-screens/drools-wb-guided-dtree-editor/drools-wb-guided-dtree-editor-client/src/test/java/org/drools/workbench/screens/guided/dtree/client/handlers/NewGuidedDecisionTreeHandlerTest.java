@@ -23,15 +23,24 @@ import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.workbench.client.EditorIds;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.ResourceAction;
+import org.uberfire.security.ResourceRef;
 import org.uberfire.security.authz.AuthorizationManager;
+import org.uberfire.workbench.model.ActivityResourceType;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -53,6 +62,9 @@ public class NewGuidedDecisionTreeHandlerTest {
     @Mock
     private User user;
 
+    @Captor
+    private ArgumentCaptor<ResourceRef> refArgumentCaptor;
+
     private GuidedDTreeResourceType resourceType = new GuidedDTreeResourceType();
 
     private NewGuidedDecisionTreeHandler handler;
@@ -70,15 +82,31 @@ public class NewGuidedDecisionTreeHandlerTest {
 
     @Test
     public void checkCanCreateWhenFeatureDisabled() {
-        when(authorizationManager.authorize(eq(NewGuidedDecisionTreeHandler.PERMISSION),
+        when(authorizationManager.authorize(any(ResourceRef.class),
+                                            eq(ResourceAction.READ),
                                             eq(user))).thenReturn(false);
+
         assertFalse(handler.canCreate());
+        assertResourceRef();
     }
 
     @Test
     public void checkCanCreateWhenFeatureEnabled() {
-        when(authorizationManager.authorize(eq(NewGuidedDecisionTreeHandler.PERMISSION),
+        when(authorizationManager.authorize(any(ResourceRef.class),
+                                            eq(ResourceAction.READ),
                                             eq(user))).thenReturn(true);
+
         assertTrue(handler.canCreate());
+        assertResourceRef();
+    }
+
+    private void assertResourceRef() {
+        verify(authorizationManager).authorize(refArgumentCaptor.capture(),
+                                               eq(ResourceAction.READ),
+                                               eq(user));
+        assertEquals(EditorIds.GUIDED_DECISION_TREE,
+                     refArgumentCaptor.getValue().getIdentifier());
+        assertEquals(ActivityResourceType.EDITOR,
+                     refArgumentCaptor.getValue().getResourceType());
     }
 }

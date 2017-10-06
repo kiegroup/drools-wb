@@ -35,13 +35,17 @@ import org.kie.workbench.common.widgets.client.handlers.DefaultNewResourceHandle
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.handlers.NewResourceSuccessEvent;
 import org.kie.workbench.common.widgets.client.widget.AttachmentFileWidget;
+import org.kie.workbench.common.workbench.client.EditorIds;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.commons.data.Pair;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
 import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.ResourceAction;
+import org.uberfire.security.ResourceRef;
 import org.uberfire.security.authz.AuthorizationManager;
+import org.uberfire.workbench.model.ActivityResourceType;
 import org.uberfire.workbench.type.ResourceTypeDefinition;
 
 /**
@@ -49,8 +53,6 @@ import org.uberfire.workbench.type.ResourceTypeDefinition;
  */
 @ApplicationScoped
 public class NewScoreCardXLSHandler extends DefaultNewResourceHandler {
-
-    static final String PERMISSION = "editor.read.ScoreCardXLSEditor";
 
     private PlaceManager placeManager;
     private ScoreCardXLSResourceType resourceType;
@@ -113,7 +115,9 @@ public class NewScoreCardXLSHandler extends DefaultNewResourceHandler {
 
     @Override
     public boolean canCreate() {
-        return authorizationManager.authorize(PERMISSION,
+        return authorizationManager.authorize(new ResourceRef(EditorIds.XLS_SCORE_CARD,
+                                                              ActivityResourceType.EDITOR),
+                                              ResourceAction.READ,
                                               sessionInfo.getIdentity());
     }
 

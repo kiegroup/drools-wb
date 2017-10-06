@@ -30,10 +30,14 @@ import org.jboss.errai.common.client.api.Caller;
 import org.kie.workbench.common.widgets.client.handlers.DefaultNewResourceHandler;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
+import org.kie.workbench.common.workbench.client.EditorIds;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
 import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.ResourceAction;
+import org.uberfire.security.ResourceRef;
 import org.uberfire.security.authz.AuthorizationManager;
+import org.uberfire.workbench.model.ActivityResourceType;
 import org.uberfire.workbench.type.ResourceTypeDefinition;
 
 /**
@@ -41,8 +45,6 @@ import org.uberfire.workbench.type.ResourceTypeDefinition;
  */
 @ApplicationScoped
 public class NewGuidedScoreCardHandler extends DefaultNewResourceHandler {
-
-    static final String PERMISSION = "editor.read.GuidedScoreCardEditor";
 
     private Caller<GuidedScoreCardEditorService> scoreCardService;
     private GuidedScoreCardResourceType resourceType;
@@ -84,7 +86,9 @@ public class NewGuidedScoreCardHandler extends DefaultNewResourceHandler {
 
     @Override
     public boolean canCreate() {
-        return authorizationManager.authorize(PERMISSION,
+        return authorizationManager.authorize(new ResourceRef(EditorIds.GUIDED_SCORE_CARD,
+                                                              ActivityResourceType.EDITOR),
+                                              ResourceAction.READ,
                                               sessionInfo.getIdentity());
     }
 

@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.handlers.NewResourceSuccessEvent;
 import org.kie.workbench.common.widgets.client.widget.AttachmentFileWidget;
+import org.kie.workbench.common.workbench.client.EditorIds;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -41,8 +42,11 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.ResourceAction;
+import org.uberfire.security.ResourceRef;
 import org.uberfire.security.authz.AuthorizationManager;
 import org.uberfire.workbench.events.NotificationEvent;
+import org.uberfire.workbench.model.ActivityResourceType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -95,6 +99,9 @@ public class NewScoreCardXLSHandlerTest {
 
     @Captor
     private ArgumentCaptor<Path> newPathCaptor;
+
+    @Captor
+    private ArgumentCaptor<ResourceRef> refArgumentCaptor;
 
     private ScoreCardXLSResourceType resourceType = new ScoreCardXLSResourceType();
 
@@ -282,16 +289,22 @@ public class NewScoreCardXLSHandlerTest {
 
     @Test
     public void checkCanCreateWhenFeatureDisabled() {
-        when(authorizationManager.authorize(eq(NewScoreCardXLSHandler.PERMISSION),
+        when(authorizationManager.authorize(any(ResourceRef.class),
+                                            eq(ResourceAction.READ),
                                             eq(user))).thenReturn(false);
+
         assertFalse(handler.canCreate());
+        assertResourceRef();
     }
 
     @Test
     public void checkCanCreateWhenFeatureEnabled() {
-        when(authorizationManager.authorize(eq(NewScoreCardXLSHandler.PERMISSION),
+        when(authorizationManager.authorize(any(ResourceRef.class),
+                                            eq(ResourceAction.READ),
                                             eq(user))).thenReturn(true);
+
         assertTrue(handler.canCreate());
+        assertResourceRef();
     }
 
     private String encode(final String s) {
@@ -301,5 +314,15 @@ public class NewScoreCardXLSHandlerTest {
             fail(uee.getMessage());
         }
         return "";
+    }
+
+    private void assertResourceRef() {
+        verify(authorizationManager).authorize(refArgumentCaptor.capture(),
+                                               eq(ResourceAction.READ),
+                                               eq(user));
+        assertEquals(EditorIds.XLS_SCORE_CARD,
+                     refArgumentCaptor.getValue().getIdentifier());
+        assertEquals(ActivityResourceType.EDITOR,
+                     refArgumentCaptor.getValue().getResourceType());
     }
 }
