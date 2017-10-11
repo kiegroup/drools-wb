@@ -230,7 +230,7 @@ public class ActionSetFactPlugin extends BaseDecisionTableColumnPlugin implement
         if (isNewColumn() || !isNewFactPattern()) {
             final BRLRuleModel brlRuleModel = new BRLRuleModel(presenter.getModel());
             final List<String> variables = brlRuleModel.getLHSPatternVariables();
-            variables.stream().forEach(var -> {
+            variables.forEach(var -> {
                 final String factType = brlRuleModel.getLHSBoundFact(var).getFactType();
                 final boolean isNegated = brlRuleModel.getLHSBoundFact(var).isNegated();
                 patterns.add(new PatternWrapper(factType,
@@ -242,7 +242,7 @@ public class ActionSetFactPlugin extends BaseDecisionTableColumnPlugin implement
         if (isNewColumn() || isNewFactPattern()) {
             final BRLRuleModel brlRuleModel = new BRLRuleModel(presenter.getModel());
             final List<String> variables = brlRuleModel.getRHSBoundFacts();
-            variables.stream().forEach(var -> {
+            variables.forEach(var -> {
                 final String factType = brlRuleModel.getRHSBoundFact(var).getFactType();
                 patterns.add(new PatternWrapper(factType,
                                                 var));

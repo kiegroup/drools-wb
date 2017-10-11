@@ -266,7 +266,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         final Set<PatternWrapper> patterns = new HashSet<>();
         final BRLRuleModel brlRuleModel = new BRLRuleModel(presenter.getModel());
         final List<String> variables = brlRuleModel.getLHSPatternVariables();
-        variables.stream().forEach(var -> {
+        variables.forEach(var -> {
             final String factType = brlRuleModel.getLHSBoundFact(var).getFactType();
             final boolean isNegated = brlRuleModel.getLHSBoundFact(var).isNegated();
             patterns.add(new PatternWrapper(factType,
