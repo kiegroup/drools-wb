@@ -36,6 +36,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectionsChangedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.GuidedDecisionTableUiModel;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTablePopoverUtils;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -52,8 +53,15 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.GridColumnRenderer;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class EditMenuBuilderTest {
@@ -89,6 +97,9 @@ public class EditMenuBuilderTest {
     @Mock
     private GuidedDecisionTableView dtPresenterView;
 
+    @Mock
+    private DecisionTablePopoverUtils popoverUtils;
+
     @Before
     public void setup() {
         model = new GuidedDecisionTable52();
@@ -112,8 +123,18 @@ public class EditMenuBuilderTest {
         uiModel.appendColumn(new BaseGridColumn<>(headerMetaData, gridColumnRenderer, 100));
         uiModel.appendRow(new BaseGridRow());
 
-        builder = new EditMenuBuilder(clipboard, ts, menuItemFactory);
+        builder = new EditMenuBuilder(clipboard,
+                                      ts,
+                                      menuItemFactory,
+                                      popoverUtils);
         builder.setup();
+    }
+
+    @Test
+    public void testPopoverSetup() {
+        verify(popoverUtils).setupPopover(any(HTMLElement.class),
+                                          anyString(),
+                                          eq(false));
     }
 
     @Test

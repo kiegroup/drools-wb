@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
-import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTableColumnViewUtils;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTablePopoverUtils;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.Input;
@@ -83,13 +83,17 @@ public class AdditionalInfoPageView implements IsElement,
 
     private TranslationService translationService;
 
+    private DecisionTablePopoverUtils popoverUtils;
+
     public AdditionalInfoPageView() {
         //CDI proxy
     }
 
     @Inject
-    public AdditionalInfoPageView(final TranslationService translationService) {
+    public AdditionalInfoPageView(final TranslationService translationService,
+                                  final DecisionTablePopoverUtils popoverUtils) {
         this.translationService = translationService;
+        this.popoverUtils = popoverUtils;
     }
 
     @PostConstruct
@@ -107,12 +111,15 @@ public class AdditionalInfoPageView implements IsElement,
         updateEngineWithChanges.setAttribute("data-toggle",
                                              "popover");
 
-        DecisionTableColumnViewUtils.setupPopover(hideColumn,
-                                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HideColumnDescription));
-        DecisionTableColumnViewUtils.setupPopover(logicallyInsert,
-                                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_LogicalInsertDescription));
-        DecisionTableColumnViewUtils.setupPopover(updateEngineWithChanges,
-                                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_UpdateEngineDescription));
+        popoverUtils.setupPopover(hideColumn,
+                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HideColumnDescription),
+                                  true);
+        popoverUtils.setupPopover(logicallyInsert,
+                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_LogicalInsertDescription),
+                                  true);
+        popoverUtils.setupPopover(updateEngineWithChanges,
+                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_UpdateEngineDescription),
+                                  true);
     }
 
     @EventHandler("header")

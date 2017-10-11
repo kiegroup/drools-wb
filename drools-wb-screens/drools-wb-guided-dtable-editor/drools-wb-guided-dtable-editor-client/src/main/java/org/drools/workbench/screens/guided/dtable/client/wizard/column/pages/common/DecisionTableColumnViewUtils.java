@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +38,9 @@ import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.HTMLElement;
 
 public class DecisionTableColumnViewUtils {
+
+    private static final List<Element> popoverElementRegistrations = new ArrayList<>();
+    private static final List<HTMLElement> popoverHTMLElementRegistrations = new ArrayList<>();
 
     public static int getCurrentIndexFromList(final String currentValue,
                                               final ListBox list) {
@@ -122,61 +127,4 @@ public class DecisionTableColumnViewUtils {
     private static void clean(final Div container) {
         DOMUtil.removeAllChildren(container);
     }
-
-    public static void setupPopover(final Element e,
-                                    final String content) {
-        doSetupPopover(e,
-                       content);
-    }
-
-    private static native void doSetupPopover(final Element e,
-                                              final String content) /*-{
-        $wnd.jQuery(e).popover({
-            container: 'body',
-            placement: 'bottom',
-            content: content,
-            html: true,
-            trigger: 'hover'
-        }).on("show.bs.popover",
-                function () {
-                    $wnd.jQuery(e).data("bs.popover").tip().css("max-width", "600px");
-                });
-    }-*/;
-
-    public static void setupPopover(final HTMLElement e,
-                                    final String content) {
-        doSetupPopover(e,
-                       content);
-    }
-
-    private static native void doSetupPopover(final HTMLElement e,
-                                              final String content) /*-{
-        $wnd.jQuery(e).popover({
-            container: 'body',
-            placement: 'bottom',
-            content: content,
-            html: true,
-            trigger: 'hover'
-        }).on("show.bs.popover",
-                function () {
-                    $wnd.jQuery(e).data("bs.popover").tip().css("max-width", "600px");
-                });
-    }-*/;
-
-    public static void enableOtherwisePopover(final HTMLElement e,
-                                              final boolean enabled) {
-        if (enabled) {
-            doEnablePopover(e);
-        } else {
-            doDisablePopover(e);
-        }
-    }
-
-    private static native void doEnablePopover(final HTMLElement e) /*-{
-        $wnd.jQuery(e).popover('enable');
-    }-*/;
-
-    private static native void doDisablePopover(final HTMLElement e) /*-{
-        $wnd.jQuery(e).popover('disable');
-    }-*/;
 }
