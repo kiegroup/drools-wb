@@ -182,6 +182,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         }
     }
 
+    @Override
     public Pattern52 editingPattern() {
         return wrappedPattern();
     }
@@ -383,6 +384,8 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     @Override
     public void setBinding(final String binding) {
         editingCol().setBinding(binding);
+
+        fireChangeEvent(valueOptionsPage);
     }
 
     @Override
@@ -395,6 +398,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         return tableFormat() == LIMITED_ENTRY || constraintValue() == BaseSingleFieldConstraint.TYPE_LITERAL;
     }
 
+    @Override
     public int constraintValue() {
         final boolean factHasEnums = presenter.getDataModelOracle().hasEnums(getFactType(),
                                                                              getFactField());
@@ -426,6 +430,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         return editingCol().getValueList();
     }
 
+    @Override
     public void setValueList(final String valueList) {
         editingCol().setValueList(valueList);
 
@@ -463,6 +468,7 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         fireChangeEvent(operatorPage);
     }
 
+    @Override
     public void setValueOptionsPageAsCompleted() {
         if (!isValueOptionsPageCompleted()) {
             setValueOptionsPageCompleted();
@@ -471,8 +477,26 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
         }
     }
 
+    @Override
     public Boolean isValueOptionsPageCompleted() {
         return valueOptionsPageCompleted;
+    }
+
+    @Override
+    public Boolean isFieldBindingValid() {
+        if (!isBindable()) {
+            return Boolean.TRUE;
+        }
+
+        if (!isNewColumn()) {
+            final String binding = getBinding();
+            if (binding.equals(originalCondition().getBinding())) {
+                return Boolean.TRUE;
+            }
+        }
+
+        final BRLRuleModel brlRuleModel = new BRLRuleModel(getPresenter().getModel());
+        return !brlRuleModel.isVariableNameUsed(getBinding());
     }
 
     public String getFactType() {

@@ -58,6 +58,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -740,6 +741,82 @@ public class ConditionColumnPluginTest {
         assertTrue(patterns.contains(new PatternWrapper("AnotherFact",
                                                         "$another",
                                                         false)));
+    }
+
+    @Test
+    public void testSetBinding() {
+        plugin.setBinding("$a");
+
+        verify(plugin).fireChangeEvent(eq(valueOptionsPage));
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenNotBindable() {
+        doReturn(false).when(plugin).isBindable();
+
+        assertTrue(plugin.isFieldBindingValid());
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenBindableNewColumnNoExistingBindings() {
+        doReturn(true).when(plugin).isBindable();
+        doReturn(true).when(plugin).isNewColumn();
+
+        assertTrue(plugin.isFieldBindingValid());
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenBindableNewColumnWithExistingBindingsNoClash() {
+        doReturn(true).when(plugin).isBindable();
+        doReturn(true).when(plugin).isNewColumn();
+        doReturn("$n").when(plugin).getBinding();
+
+        doReturn(Collections.singletonList(mockFactPattern("$a"))).when(model).getConditions();
+
+        assertTrue(plugin.isFieldBindingValid());
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenBindableNewColumnWithExistingBindingsWithClash() {
+        doReturn(true).when(plugin).isBindable();
+        doReturn(true).when(plugin).isNewColumn();
+        doReturn("$n").when(plugin).getBinding();
+
+        doReturn(Collections.singletonList(mockFactPattern("$n"))).when(model).getConditions();
+
+        assertFalse(plugin.isFieldBindingValid());
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenBindableEditColumnWithExistingBindingsNoClash() {
+        final ConditionCol52 originalColumn = mock(ConditionCol52.class);
+        doReturn(originalColumn).when(plugin).originalCondition();
+        doReturn(true).when(plugin).isBindable();
+        doReturn(false).when(plugin).isNewColumn();
+        doReturn("$n").when(plugin).getBinding();
+        doReturn("$n").when(originalColumn).getBinding();
+
+        assertTrue(plugin.isFieldBindingValid());
+    }
+
+    @Test
+    public void testIsFieldBindingValidWhenBindableEditColumnWithExistingBindingsWithClash() {
+        final ConditionCol52 originalColumn = mock(ConditionCol52.class);
+        doReturn(originalColumn).when(plugin).originalCondition();
+        doReturn(true).when(plugin).isBindable();
+        doReturn(false).when(plugin).isNewColumn();
+        doReturn("$a").when(plugin).getBinding();
+        doReturn("$n").when(originalColumn).getBinding();
+
+        doReturn(Collections.singletonList(mockFactPattern("$a"))).when(model).getConditions();
+
+        assertFalse(plugin.isFieldBindingValid());
+    }
+
+    private Pattern52 mockFactPattern(final String binding) {
+        final Pattern52 p = new Pattern52();
+        p.setBoundName(binding);
+        return p;
     }
 
     private ConditionCol52 makeConditionCol52(final int constraintValueType,

@@ -199,6 +199,11 @@ public class ActionSetFactPlugin extends BaseDecisionTableColumnPlugin implement
     }
 
     @Override
+    public Boolean isFieldBindingValid() {
+        return Boolean.TRUE;
+    }
+
+    @Override
     public PatternWrapper patternWrapper() {
         return Optional.ofNullable(patternWrapper).orElse(new PatternWrapper());
     }
