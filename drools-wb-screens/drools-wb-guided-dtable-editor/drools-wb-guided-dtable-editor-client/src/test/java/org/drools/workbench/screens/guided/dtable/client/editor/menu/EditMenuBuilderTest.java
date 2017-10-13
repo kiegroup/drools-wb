@@ -86,6 +86,9 @@ public class EditMenuBuilderTest {
     private MenuItemWithIconView menuItemWithIconView;
 
     @Mock
+    private HTMLElement menuItemHTMLElement;
+
+    @Mock
     private GuidedDecisionTableView.Presenter dtPresenter;
 
     @Mock
@@ -116,7 +119,7 @@ public class EditMenuBuilderTest {
         when(ts.getTranslation(any(String.class))).thenReturn("i18n");
         when(menuItemViewProducer.select(any(Annotation.class))).thenReturn(menuItemViewProducer);
         when(menuItemViewProducer.get()).thenReturn(menuItemWithIconView);
-        when(menuItemWithIconView.getElement()).thenReturn(mock(HTMLElement.class));
+        when(menuItemWithIconView.getElement()).thenReturn(menuItemHTMLElement);
 
         uiModel.appendColumn(new BaseGridColumn<>(headerMetaData, gridColumnRenderer, 100));
         uiModel.appendColumn(new BaseGridColumn<>(headerMetaData, gridColumnRenderer, 100));
@@ -132,9 +135,8 @@ public class EditMenuBuilderTest {
 
     @Test
     public void testPopoverSetup() {
-        verify(popoverUtils).setupPopover(any(HTMLElement.class),
-                                          anyString(),
-                                          eq(false));
+        verify(popoverUtils).setupPopover(eq(menuItemHTMLElement),
+                                          anyString());
     }
 
     @Test

@@ -16,12 +16,9 @@
 
 package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.ListBox;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
@@ -35,12 +32,8 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.jboss.errai.common.client.dom.DOMUtil;
 import org.jboss.errai.common.client.dom.Div;
-import org.jboss.errai.common.client.dom.HTMLElement;
 
 public class DecisionTableColumnViewUtils {
-
-    private static final List<Element> popoverElementRegistrations = new ArrayList<>();
-    private static final List<HTMLElement> popoverHTMLElementRegistrations = new ArrayList<>();
 
     public static int getCurrentIndexFromList(final String currentValue,
                                               final ListBox list) {

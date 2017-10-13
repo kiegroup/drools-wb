@@ -111,15 +111,12 @@ public class AdditionalInfoPageView implements IsElement,
         updateEngineWithChanges.setAttribute("data-toggle",
                                              "popover");
 
-        popoverUtils.setupPopover(hideColumn,
-                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HideColumnDescription),
-                                  true);
-        popoverUtils.setupPopover(logicallyInsert,
-                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_LogicalInsertDescription),
-                                  true);
-        popoverUtils.setupPopover(updateEngineWithChanges,
-                                  translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_UpdateEngineDescription),
-                                  true);
+        popoverUtils.setupAndRegisterPopover(hideColumn,
+                                             translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HideColumnDescription));
+        popoverUtils.setupAndRegisterPopover(logicallyInsert,
+                                             translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_LogicalInsertDescription));
+        popoverUtils.setupAndRegisterPopover(updateEngineWithChanges,
+                                             translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_UpdateEngineDescription));
     }
 
     @EventHandler("header")

@@ -46,14 +46,12 @@ public class DecisionTablePopoverUtilsTest {
     @Test
     public void checkElementRegistration() {
         popoverUtils.setupPopover(element,
-                                  "hello",
-                                  false);
+                                  "hello");
 
         assertTrue(popoverUtils.getPopoverElementRegistrations().isEmpty());
 
-        popoverUtils.setupPopover(element,
-                                  "hello",
-                                  true);
+        popoverUtils.setupAndRegisterPopover(element,
+                                             "hello");
 
         assertFalse(popoverUtils.getPopoverElementRegistrations().isEmpty());
         assertEquals(1,
@@ -67,14 +65,12 @@ public class DecisionTablePopoverUtilsTest {
     @Test
     public void checkHTMLElementRegistration() {
         popoverUtils.setupPopover(htmlElement,
-                                  "hello",
-                                  false);
+                                  "hello");
 
         assertTrue(popoverUtils.getPopoverHTMLElementRegistrations().isEmpty());
 
-        popoverUtils.setupPopover(htmlElement,
-                                  "hello",
-                                  true);
+        popoverUtils.setupAndRegisterPopover(htmlElement,
+                                             "hello");
 
         assertFalse(popoverUtils.getPopoverHTMLElementRegistrations().isEmpty());
         assertEquals(1,

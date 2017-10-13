@@ -82,9 +82,8 @@ public class PatternPageView implements IsElement,
 
     @PostConstruct
     public void initPopovers() {
-        popoverUtils.setupPopover(entryPointName.getElement(),
-                                  translate(GuidedDecisionTableErraiConstants.PatternPageView_EntryPointDescription),
-                                  true);
+        popoverUtils.setupAndRegisterPopover(entryPointName.getElement(),
+                                             translate(GuidedDecisionTableErraiConstants.PatternPageView_EntryPointDescription));
     }
 
     @Override

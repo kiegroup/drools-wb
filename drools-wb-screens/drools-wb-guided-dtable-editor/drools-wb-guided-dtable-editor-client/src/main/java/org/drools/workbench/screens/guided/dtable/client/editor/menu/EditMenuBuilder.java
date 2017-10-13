@@ -111,8 +111,7 @@ public class EditMenuBuilder extends BaseMenu implements MenuFactory.CustomMenuB
         miOtherwiseCell.getMenuItemView().getElement().setAttribute("data-toggle",
                                                                     "popover");
         popoverUtils.setupPopover(miOtherwiseCell.getMenuItemView().getElement(),
-                                  ts.getTranslation(GuidedDecisionTableErraiConstants.EditMenu_otherwiseDescription),
-                                  false);
+                                  ts.getTranslation(GuidedDecisionTableErraiConstants.EditMenu_otherwiseDescription));
     }
 
     @Override

@@ -32,13 +32,16 @@ public class DecisionTablePopoverUtils {
     private final List<HTMLElement> popoverHTMLElementRegistrations = new ArrayList<>();
 
     public void setupPopover(final Element e,
-                             final String content,
-                             final boolean register) {
+                             final String content) {
         doSetupPopover(e,
                        content);
-        if (register) {
-            popoverElementRegistrations.add(e);
-        }
+    }
+
+    public void setupAndRegisterPopover(final Element e,
+                                        final String content) {
+        setupPopover(e,
+                     content);
+        popoverElementRegistrations.add(e);
     }
 
     private native void doSetupPopover(final Element e,
@@ -56,14 +59,16 @@ public class DecisionTablePopoverUtils {
     }-*/;
 
     public void setupPopover(final HTMLElement e,
-                             final String content,
-                             final boolean register) {
+                             final String content) {
         doSetupPopover(e,
                        content);
+    }
 
-        if (register) {
-            popoverHTMLElementRegistrations.add(e);
-        }
+    public void setupAndRegisterPopover(final HTMLElement e,
+                                        final String content) {
+        setupPopover(e,
+                     content);
+        popoverHTMLElementRegistrations.add(e);
     }
 
     private native void doSetupPopover(final HTMLElement e,

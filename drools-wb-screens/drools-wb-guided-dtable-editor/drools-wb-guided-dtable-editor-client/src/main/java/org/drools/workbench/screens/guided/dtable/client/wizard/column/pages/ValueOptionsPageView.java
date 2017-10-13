@@ -104,15 +104,12 @@ public class ValueOptionsPageView implements IsElement,
 
     @PostConstruct
     public void initPopovers() {
-        popoverUtils.setupPopover(cepWindowOperatorsContainer,
-                                  translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_CEPWindowDescription),
-                                  true);
-        popoverUtils.setupPopover(defaultValueContainer,
-                                  translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_DefaultValueDescription),
-                                  true);
-        popoverUtils.setupPopover(bindingContainer,
-                                  translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_BindingDescription),
-                                  true);
+        popoverUtils.setupAndRegisterPopover(cepWindowOperatorsContainer,
+                                             translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_CEPWindowDescription));
+        popoverUtils.setupAndRegisterPopover(defaultValueContainer,
+                                             translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_DefaultValueDescription));
+        popoverUtils.setupAndRegisterPopover(bindingContainer,
+                                             translate(GuidedDecisionTableErraiConstants.ValueOptionsPage_BindingDescription));
     }
 
     @Override
