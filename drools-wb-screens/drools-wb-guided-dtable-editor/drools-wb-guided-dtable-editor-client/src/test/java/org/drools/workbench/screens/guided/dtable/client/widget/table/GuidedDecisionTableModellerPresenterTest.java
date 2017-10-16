@@ -574,7 +574,6 @@ public class GuidedDecisionTableModellerPresenterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void onDecisionTableSelectedNoneSelected() {
         final DecisionTableSelectedEvent event = DecisionTableSelectedEvent.NONE;
 
@@ -587,7 +586,6 @@ public class GuidedDecisionTableModellerPresenterTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void onDecisionTableSelectedNotAvailable() {
         final GuidedDecisionTableView.Presenter dtPresenter1 = makeDecisionTable();
         final GuidedDecisionTableView.Presenter dtPresenter2 = makeDecisionTable();
