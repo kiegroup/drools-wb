@@ -43,18 +43,24 @@ import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisio
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoDeletePatternInUseException;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
+import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -80,13 +86,17 @@ public class ColumnManagementViewTest {
     @Mock
     private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
+    @Mock
+    private TranslationService translationService;
+
     private ColumnManagementView view;
 
     @Before
     public void setUp() throws Exception {
         doReturn(deleteWidget).when(deleteColumnManagementAnchorWidgets).get();
 
-        view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets));
+        view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets,
+                                            translationService));
         view.init(presenter);
 
         doReturn(horizontalPanel).when(view).newHorizontalPanel();
@@ -364,12 +374,11 @@ public class ColumnManagementViewTest {
     public void testRemoveCondition() throws Exception {
         Stream.of(ConditionCol52.class,
                   BRLConditionColumn.class)
-                .map(classToMock -> mock(classToMock))
+                .map(Mockito::mock)
                 .forEach(column -> {
                     final String columnHeader = "column header";
                     final ArgumentCaptor<Command> commandCaptor = ArgumentCaptor.forClass(Command.class);
 
-                    doReturn(true).when(decisionTablePresenter).canConditionBeDeleted(column);
                     doReturn(decisionTablePresenter).when(presenter).getActiveDecisionTable();
                     doReturn(columnHeader).when(column).getHeader();
 
@@ -380,7 +389,11 @@ public class ColumnManagementViewTest {
 
                     commandCaptor.getValue().execute();
 
-                    verify(decisionTablePresenter).deleteColumn(column);
+                    try {
+                        verify(decisionTablePresenter).deleteColumn(column);
+                    } catch (VetoException veto) {
+                        fail("Deletion should have succeeded.");
+                    }
                     reset(view);
                 });
     }
@@ -389,25 +402,28 @@ public class ColumnManagementViewTest {
     public void testRemoveConditionCanNotBeDeleted() throws Exception {
         Stream.of(ConditionCol52.class,
                   BRLConditionColumn.class)
-                .map(classToMock -> mock(classToMock))
+                .map(Mockito::mock)
                 .forEach(column -> {
                     final String columnHeader = "column header";
                     final ArgumentCaptor<Command> commandCaptor = ArgumentCaptor.forClass(Command.class);
 
-                    doReturn(false).when(decisionTablePresenter).canConditionBeDeleted(column);
                     doReturn(decisionTablePresenter).when(presenter).getActiveDecisionTable();
                     doReturn(columnHeader).when(column).getHeader();
                     doNothing().when(view).showUnableToDeleteColumnMessage(column);
 
-                    view.removeCondition(column);
+                    try {
+                        doThrow(VetoDeletePatternInUseException.class).when(decisionTablePresenter).deleteColumn(eq(column));
 
-                    verify(view).deleteAnchor(eq("column header"),
-                                              commandCaptor.capture());
+                        view.removeCondition(column);
 
-                    commandCaptor.getValue().execute();
+                        verify(view).deleteAnchor(eq("column header"),
+                                                  commandCaptor.capture());
 
-                    verify(decisionTablePresenter,
-                           never()).deleteColumn(column);
+                        commandCaptor.getValue().execute();
+
+                        verify(view).showUnableToDeleteColumnMessage(eq(column));
+                    } catch (VetoException veto) {
+                    }
                     reset(view);
                 });
     }

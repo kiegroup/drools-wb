@@ -35,10 +35,13 @@ import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
-import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
+import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoDeletePatternInUseException;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
+import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 @Dependent
@@ -46,14 +49,18 @@ public class ColumnManagementView extends VerticalPanel {
 
     private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
+    private TranslationService translationService;
+
     private GuidedDecisionTableModellerView.Presenter presenter;
 
     public ColumnManagementView() {
     }
 
     @Inject
-    public ColumnManagementView(final ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets) {
+    public ColumnManagementView(final ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets,
+                                final TranslationService translationService) {
         this.deleteColumnManagementAnchorWidgets = deleteColumnManagementAnchorWidgets;
+        this.translationService = translationService;
     }
 
     public void init(final GuidedDecisionTableModellerView.Presenter presenter) {
@@ -95,7 +102,15 @@ public class ColumnManagementView extends VerticalPanel {
 
             if (presenter.isActiveDecisionTableEditable()) {
                 add(deleteAnchor(actionColumn.getHeader(),
-                                 () -> presenter.getActiveDecisionTable().deleteColumn(actionColumn)));
+                                 () -> {
+                                     try {
+                                         presenter.getActiveDecisionTable().deleteColumn(actionColumn);
+                                     } catch (VetoDeletePatternInUseException veto) {
+                                         showUnableToDeleteColumnMessage(actionColumn);
+                                     } catch (VetoException veto) {
+                                         showGenericVetoMessage();
+                                     }
+                                 }));
             }
         }};
 
@@ -176,16 +191,28 @@ public class ColumnManagementView extends VerticalPanel {
     Widget removeCondition(final ConditionCol52 column) {
         return deleteAnchor(column.getHeader(),
                             () -> {
-                                if (!presenter.getActiveDecisionTable().canConditionBeDeleted(column)) {
-                                    showUnableToDeleteColumnMessage(column);
-                                } else {
+                                try {
                                     presenter.getActiveDecisionTable().deleteColumn(column);
+                                } catch (VetoDeletePatternInUseException veto) {
+                                    showUnableToDeleteColumnMessage(column);
+                                } catch (VetoException veto) {
+                                    showGenericVetoMessage();
                                 }
                             });
     }
 
+    void showGenericVetoMessage() {
+        ErrorPopup.showMessage(translate(GuidedDecisionTableErraiConstants.NewGuidedDecisionTableColumnWizard_GenericVetoError));
+    }
+
     void showUnableToDeleteColumnMessage(final ConditionCol52 column) {
-        ErrorPopup.showMessage(GuidedDecisionTableConstants.INSTANCE.UnableToDeleteConditionColumn0(column.getHeader()));
+        ErrorPopup.showMessage(translate(GuidedDecisionTableErraiConstants.NewGuidedDecisionTableColumnWizard_DeletePatternInUseVetoError0,
+                                         column.getHeader()));
+    }
+
+    void showUnableToDeleteColumnMessage(final ActionCol52 column) {
+        ErrorPopup.showMessage(translate(GuidedDecisionTableErraiConstants.NewGuidedDecisionTableColumnWizard_DeletePatternInUseVetoError0,
+                                         column.getHeader()));
     }
 
     HorizontalPanel newHorizontalPanel() {
@@ -202,5 +229,11 @@ public class ColumnManagementView extends VerticalPanel {
         widget.init(columnHeader,
                     command);
         return widget;
+    }
+
+    private String translate(final String key,
+                             final Object... args) {
+        return translationService.format(key,
+                                         args);
     }
 }

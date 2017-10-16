@@ -49,6 +49,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.co
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnLabelWidget;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnManagementView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.DeleteColumnManagementAnchorWidget;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.ColumnUtilities;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTableColumnViewUtils;
 import org.gwtbootstrap3.client.ui.Button;
@@ -461,8 +462,12 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
                 public void onClick(final ClickEvent event) {
                     final MetadataCol52 editedColumn = originalColumn.cloneColumn();
                     editedColumn.setHideColumn(chkHideColumn.getValue());
-                    presenter.getActiveDecisionTable().updateColumn(originalColumn,
-                                                                    editedColumn);
+                    try {
+                        presenter.getActiveDecisionTable().updateColumn(originalColumn,
+                                                                        editedColumn);
+                    } catch (VetoException veto) {
+                        //Swallow
+                    }
                 }
             });
 
@@ -471,7 +476,13 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
             if (isEditable) {
                 final DeleteColumnManagementAnchorWidget deleteWidget = deleteColumnManagementAnchorWidgets.get();
                 deleteWidget.init(metaDataColumn.getMetadata(),
-                                  () -> presenter.getActiveDecisionTable().deleteColumn(metaDataColumn));
+                                  () -> {
+                                      try {
+                                          presenter.getActiveDecisionTable().deleteColumn(metaDataColumn);
+                                      } catch (VetoException veto) {
+                                          //Swallow
+                                      }
+                                  });
                 hp.add(deleteWidget);
             }
 

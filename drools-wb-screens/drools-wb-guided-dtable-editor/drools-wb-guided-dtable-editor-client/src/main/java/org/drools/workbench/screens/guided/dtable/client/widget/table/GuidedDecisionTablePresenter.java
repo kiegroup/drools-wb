@@ -32,8 +32,7 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
-import org.drools.workbench.models.datamodel.rule.FactPattern;
-import org.drools.workbench.models.datamodel.rule.IPattern;
+import com.google.gwt.user.client.Window;
 import org.drools.workbench.models.datamodel.workitems.PortableWorkDefinition;
 import org.drools.workbench.models.guided.dtable.shared.auditlog.DeleteColumnAuditLogEntry;
 import org.drools.workbench.models.guided.dtable.shared.auditlog.DeleteRowAuditLogEntry;
@@ -78,6 +77,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.model.conv
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.converters.column.BaseColumnConverter;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.converters.column.GridWidgetColumnFactory;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.Synchronizer;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.themes.GuidedDecisionTableRenderer;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.CellUtilities;
@@ -761,43 +761,6 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     @Override
-    public boolean canConditionBeDeleted(final ConditionCol52 col) {
-        if (col instanceof BRLConditionColumn) {
-            return doCanConditionBeDeleted((BRLConditionColumn) col);
-        }
-        return doCanConditionBeDeleted(col);
-    }
-
-    private boolean doCanConditionBeDeleted(final BRLConditionColumn col) {
-        for (IPattern p : col.getDefinition()) {
-            if (p instanceof FactPattern) {
-                FactPattern fp = (FactPattern) p;
-                if (fp.isBound()) {
-                    if (isBindingUsed(fp.getBoundName())) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-    private boolean doCanConditionBeDeleted(final ConditionCol52 col) {
-        Pattern52 pattern = model.getPattern(col);
-        if (pattern.getChildColumns().size() > 1) {
-            return true;
-        }
-        if (isBindingUsed(pattern.getBoundName())) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isBindingUsed(final String binding) {
-        return rm.isBoundFactUsed(binding);
-    }
-
-    @Override
     public Map<String, String> getValueListLookups(final BaseColumn column) {
         final String[] dropDownItems = columnUtilities.getValueList(column);
         return enumLoaderUtilities.convertDropDownData(dropDownItems);
@@ -906,7 +869,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     private void doAppendColumn(final BaseColumn column,
-                                final VetoableCommand append,
+                                final VetoableColumnCommand append,
                                 final Command callback) {
         if (isReadOnly()) {
             return;
@@ -920,7 +883,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             model.getAuditLog().add(new InsertColumnAuditLogEntry(identity.getIdentifier(),
                                                                   column));
             callback.execute();
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
+        } catch (VetoException e) {
             //Swallow. The VetoException signals that the column could not be appended.
         }
     }
@@ -938,7 +901,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             //Log insertion of row
             model.getAuditLog().add(new InsertRowAuditLogEntry(identity.getIdentifier(),
                                                                model.getData().size() - 1));
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
+        } catch (VetoException e) {
             //Swallow
         }
     }
@@ -951,55 +914,51 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     @Override
-    public void deleteColumn(final AttributeCol52 column) {
+    public void deleteColumn(final AttributeCol52 column) throws VetoException {
         doDeleteColumn(column,
                        () -> refreshAttributesPanelEvent.fire(new RefreshAttributesPanelEvent(this,
                                                                                               model.getAttributeCols())));
     }
 
     @Override
-    public void deleteColumn(final MetadataCol52 column) {
+    public void deleteColumn(final MetadataCol52 column) throws VetoException {
         doDeleteColumn(column,
                        () -> refreshMetaDataPanelEvent.fire(new RefreshMetaDataPanelEvent(this,
                                                                                           model.getMetadataCols())));
     }
 
     @Override
-    public void deleteColumn(final ConditionCol52 column) {
+    public void deleteColumn(final ConditionCol52 column) throws VetoException {
         doDeleteColumn(column,
                        () -> refreshConditionsPanelEvent.fire(new RefreshConditionsPanelEvent(this,
                                                                                               model.getConditions())));
     }
 
     @Override
-    public void deleteColumn(final ActionCol52 column) {
+    public void deleteColumn(final ActionCol52 column) throws VetoException {
         doDeleteColumn(column,
                        () -> refreshActionsPanelEvent.fire(new RefreshActionsPanelEvent(this,
                                                                                         model.getActionCols())));
     }
 
     private void doDeleteColumn(final BaseColumn column,
-                                final Command callback) {
+                                final Command callback) throws VetoException {
         if (isReadOnly()) {
             return;
         }
-        try {
-            synchronizer.deleteColumn(column);
+        synchronizer.deleteColumn(column);
 
-            refreshView();
+        refreshView();
 
-            //Log deletion of column
-            model.getAuditLog().add(new DeleteColumnAuditLogEntry(identity.getIdentifier(),
-                                                                  column));
-            callback.execute();
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
-            //Swallow. The VetoException signals that the column could not be deleted.
-        }
+        //Log deletion of column
+        model.getAuditLog().add(new DeleteColumnAuditLogEntry(identity.getIdentifier(),
+                                                              column));
+        callback.execute();
     }
 
     @Override
     public void updateColumn(final AttributeCol52 originalColumn,
-                             final AttributeCol52 editedColumn) {
+                             final AttributeCol52 editedColumn) throws VetoException {
         doUpdateColumn(originalColumn,
                        editedColumn,
                        () -> synchronizer.updateColumn(originalColumn,
@@ -1010,7 +969,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     @Override
     public void updateColumn(final MetadataCol52 originalColumn,
-                             final MetadataCol52 editedColumn) {
+                             final MetadataCol52 editedColumn) throws VetoException {
         doUpdateColumn(originalColumn,
                        editedColumn,
                        () -> synchronizer.updateColumn(originalColumn,
@@ -1023,7 +982,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     public void updateColumn(final Pattern52 originalPattern,
                              final ConditionCol52 originalColumn,
                              final Pattern52 editedPattern,
-                             final ConditionCol52 editedColumn) {
+                             final ConditionCol52 editedColumn) throws VetoException {
         doUpdateColumn(originalColumn,
                        editedColumn,
                        () -> synchronizer.updateColumn(originalPattern,
@@ -1036,7 +995,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     @Override
     public void updateColumn(final ConditionCol52 originalColumn,
-                             final ConditionCol52 editedColumn) {
+                             final ConditionCol52 editedColumn) throws VetoException {
         doUpdateColumn(originalColumn,
                        editedColumn,
                        () -> synchronizer.updateColumn(originalColumn,
@@ -1047,7 +1006,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     @Override
     public void updateColumn(final ActionCol52 originalColumn,
-                             final ActionCol52 editedColumn) {
+                             final ActionCol52 editedColumn) throws VetoException {
         doUpdateColumn(originalColumn,
                        editedColumn,
                        () -> synchronizer.updateColumn(originalColumn,
@@ -1058,27 +1017,23 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     private void doUpdateColumn(final BaseColumn originalColumn,
                                 final BaseColumn editedColumn,
-                                final VetoableUpdateCommand update,
-                                final Command callback) {
+                                final VetoableUpdateColumnCommand update,
+                                final Command callback) throws VetoException {
         if (isReadOnly()) {
             return;
         }
-        try {
-            final List<BaseColumnFieldDiff> diffs = update.execute();
+        final List<BaseColumnFieldDiff> diffs = update.execute();
 
-            parent.updateLinks();
+        parent.updateLinks();
 
-            //Log change to column definition
-            if (!(diffs == null || diffs.isEmpty())) {
-                view.getLayer().draw();
-                model.getAuditLog().add(new UpdateColumnAuditLogEntry(identity.getIdentifier(),
-                                                                      originalColumn,
-                                                                      editedColumn,
-                                                                      diffs));
-                callback.execute();
-            }
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
-            //Swallow. The VetoException signals that the column could not be updated.
+        //Log change to column definition
+        if (!(diffs == null || diffs.isEmpty())) {
+            view.getLayer().draw();
+            model.getAuditLog().add(new UpdateColumnAuditLogEntry(identity.getIdentifier(),
+                                                                  originalColumn,
+                                                                  editedColumn,
+                                                                  diffs));
+            callback.execute();
         }
     }
 
@@ -1273,14 +1228,18 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             }
         }
         for (BaseColumn columnToDelete : columnsToDelete) {
-            if (columnToDelete instanceof AttributeCol52) {
-                deleteColumn((AttributeCol52) columnToDelete);
-            } else if (columnToDelete instanceof MetadataCol52) {
-                deleteColumn((MetadataCol52) columnToDelete);
-            } else if (columnToDelete instanceof ConditionCol52) {
-                deleteColumn((ConditionCol52) columnToDelete);
-            } else if (columnToDelete instanceof ActionCol52) {
-                deleteColumn((ActionCol52) columnToDelete);
+            try {
+                if (columnToDelete instanceof AttributeCol52) {
+                    deleteColumn((AttributeCol52) columnToDelete);
+                } else if (columnToDelete instanceof MetadataCol52) {
+                    deleteColumn((MetadataCol52) columnToDelete);
+                } else if (columnToDelete instanceof ConditionCol52) {
+                    deleteColumn((ConditionCol52) columnToDelete);
+                } else if (columnToDelete instanceof ActionCol52) {
+                    deleteColumn((ActionCol52) columnToDelete);
+                }
+            } catch (VetoException veto) {
+                Window.alert("Could not delete!");
             }
         }
     }
@@ -1325,7 +1284,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             //Log deletion of column
             model.getAuditLog().add(new DeleteRowAuditLogEntry(identity.getIdentifier(),
                                                                rowIndex));
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
+        } catch (VetoException e) {
             //Swallow
         }
     }
@@ -1384,7 +1343,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             //Log insertion of row
             model.getAuditLog().add(new InsertRowAuditLogEntry(identity.getIdentifier(),
                                                                rowIndex));
-        } catch (ModelSynchronizer.MoveColumnVetoException e) {
+        } catch (VetoException e) {
             //Swallow
         }
     }
@@ -1475,14 +1434,14 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
         this.concurrentUpdateSessionInfo = concurrentUpdateSessionInfo;
     }
 
-    private interface VetoableCommand {
+    private interface VetoableColumnCommand {
 
-        void execute() throws ModelSynchronizer.MoveColumnVetoException;
+        void execute() throws VetoException;
     }
 
-    private interface VetoableUpdateCommand {
+    private interface VetoableUpdateColumnCommand {
 
-        List<BaseColumnFieldDiff> execute() throws ModelSynchronizer.MoveColumnVetoException;
+        List<BaseColumnFieldDiff> execute() throws VetoException;
     }
 
     public static class Access {
