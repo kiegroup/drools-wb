@@ -488,15 +488,19 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
             return Boolean.TRUE;
         }
 
+        final String binding = getBinding();
+        if ((binding == null || binding.isEmpty())) {
+            return Boolean.TRUE;
+        }
+
         if (!isNewColumn()) {
-            final String binding = getBinding();
             if (binding.equals(originalCondition().getBinding())) {
                 return Boolean.TRUE;
             }
         }
 
         final BRLRuleModel brlRuleModel = new BRLRuleModel(getPresenter().getModel());
-        return !brlRuleModel.isVariableNameUsed(getBinding());
+        return !brlRuleModel.isVariableNameUsed(binding);
     }
 
     public String getFactType() {

@@ -813,6 +813,14 @@ public class ConditionColumnPluginTest {
         assertFalse(plugin.isFieldBindingValid());
     }
 
+    @Test
+    public void testIsFieldBindingValidWhenNullBinding() {
+        doReturn(true).when(plugin).isBindable();
+        doReturn(null).when(plugin).getBinding();
+
+        assertTrue(plugin.isFieldBindingValid());
+    }
+
     private Pattern52 mockFactPattern(final String binding) {
         final Pattern52 p = new Pattern52();
         p.setBoundName(binding);
