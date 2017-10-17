@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.drltext.backend.server.indexing;
 
 import java.util.HashMap;
-
 import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.workbench.screens.drltext.type.DRLResourceTypeDefinition;

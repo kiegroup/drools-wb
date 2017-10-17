@@ -19,6 +19,8 @@ package org.drools.workbench.screens.dtablexls.backend.server.indexing;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -34,13 +36,11 @@ import org.kie.workbench.common.services.refactoring.model.index.terms.valueterm
 import org.kie.workbench.common.services.refactoring.service.PartType;
 import org.mockito.ArgumentMatcher;
 import org.slf4j.LoggerFactory;
-import org.uberfire.ext.metadata.engine.Index;
+import org.uberfire.ext.metadata.io.KObjectUtil;
 import org.uberfire.java.nio.file.Path;
 
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class IndexDecisionTableXLSInvalidDrlTest extends BaseIndexingTest<DecisionTableXLSResourceTypeDefinition> {
 
@@ -58,7 +58,7 @@ public class IndexDecisionTableXLSInvalidDrlTest extends BaseIndexingTest<Decisi
 
         Thread.sleep( 5000 ); //wait for events to be consumed from jgit -> (notify changes -> watcher -> index) -> lucene index
 
-        final Index index = getConfig().getIndexManager().get( org.uberfire.ext.metadata.io.KObjectUtil.toKCluster( basePath.getFileSystem() ) );
+        List<String> index = Arrays.asList(KObjectUtil.toKCluster(basePath.getFileSystem()).getClusterId());
 
         {
             final Query query = new SingleTermQueryBuilder( new ValueSharedPartIndexTerm( "myRuleFlowGroup", PartType.RULEFLOW_GROUP ) )
