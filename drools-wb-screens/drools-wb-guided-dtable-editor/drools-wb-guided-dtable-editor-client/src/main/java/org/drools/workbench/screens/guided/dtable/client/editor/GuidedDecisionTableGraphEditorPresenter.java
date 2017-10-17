@@ -366,10 +366,11 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
             fileMenuBuilder
                     .addSave(getSaveMenuItem())
                     .addCopy(versionRecordManager::getCurrentPath,
-                             fileNameValidator)
+                             assetUpdateValidator)
                     .addRename(versionRecordManager::getPathToLatest,
-                               fileNameValidator)
-                    .addDelete(versionRecordManager::getPathToLatest);
+                               assetUpdateValidator)
+                    .addDelete(versionRecordManager::getPathToLatest,
+                               assetUpdateValidator);
         }
 
         this.menus = fileMenuBuilder
