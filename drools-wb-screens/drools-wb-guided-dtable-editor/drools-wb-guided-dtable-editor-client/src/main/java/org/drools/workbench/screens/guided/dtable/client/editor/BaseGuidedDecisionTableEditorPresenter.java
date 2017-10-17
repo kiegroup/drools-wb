@@ -48,6 +48,7 @@ import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
 import org.kie.workbench.common.widgets.metadata.client.KieMultipleDocumentEditor;
 import org.kie.workbench.common.widgets.metadata.client.KieMultipleDocumentEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.menu.RegisteredDocumentsMenuBuilder;
+import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.mvp.PlaceManager;
@@ -77,7 +78,6 @@ public abstract class BaseGuidedDecisionTableEditorPresenter extends KieMultiple
 
     protected View view;
     protected Caller<GuidedDecisionTableEditorService> service;
-    protected Event<NotificationEvent> notification;
     protected Event<DecisionTableSelectedEvent> decisionTableSelectedEvent;
     protected ValidationPopup validationPopup;
     protected ClientResourceType resourceType;
@@ -197,6 +197,12 @@ public abstract class BaseGuidedDecisionTableEditorPresenter extends KieMultiple
     //Delegated to expose package-protected setter for Unit Tests
     protected void setFileNameValidator(final DefaultFileNameValidator fileNameValidator) {
         super.setFileNameValidator(fileNameValidator);
+    }
+
+    @Override
+    //Delegated to expose package-protected setter for Unit Tests
+    protected void setAssetUpdateValidator(final AssetUpdateValidator assetUpdateValidator) {
+        super.setAssetUpdateValidator(assetUpdateValidator);
     }
 
     protected void init() {

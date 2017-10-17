@@ -307,12 +307,13 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                times(1)).addSave(any(MenuItem.class));
         verify(fileMenuBuilder,
                times(1)).addCopy(any(BasicFileMenuBuilder.PathProvider.class),
-                                 eq(fileNameValidator));
+                                 eq(assetUpdateValidator));
         verify(fileMenuBuilder,
                times(1)).addRename(any(BasicFileMenuBuilder.PathProvider.class),
-                                   eq(fileNameValidator));
+                                   eq(assetUpdateValidator));
         verify(fileMenuBuilder,
-               times(1)).addDelete(any(BasicFileMenuBuilder.PathProvider.class));
+               times(1)).addDelete(any(BasicFileMenuBuilder.PathProvider.class),
+                                   eq(assetUpdateValidator));
         verify(fileMenuBuilder,
                times(1)).addValidate(any(Command.class));
         verify(fileMenuBuilder,
@@ -341,12 +342,13 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                never()).addSave(any(MenuItem.class));
         verify(fileMenuBuilder,
                never()).addCopy(any(BasicFileMenuBuilder.PathProvider.class),
-                                eq(fileNameValidator));
+                                eq(assetUpdateValidator));
         verify(fileMenuBuilder,
                never()).addRename(any(BasicFileMenuBuilder.PathProvider.class),
-                                  eq(fileNameValidator));
+                                  eq(assetUpdateValidator));
         verify(fileMenuBuilder,
-               never()).addDelete(any(BasicFileMenuBuilder.PathProvider.class));
+               never()).addDelete(any(BasicFileMenuBuilder.PathProvider.class),
+                                  eq(assetUpdateValidator));
     }
 
     @Test
