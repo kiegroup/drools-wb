@@ -30,6 +30,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.drools.workbench.models.guided.dtable.shared.model.adaptors.FactPatternPattern52Adaptor;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.NewGuidedDecisionTableColumnWizard;
@@ -723,23 +724,42 @@ public class ConditionColumnPluginTest {
             setFactType("FactType");
             setBoundName("$fact");
         }};
-        final BRLConditionColumn brlColumn = new BRLConditionColumn();
-        brlColumn.setDefinition(Collections.singletonList(new FactPattern("AnotherFact") {{
-            setBoundName("$another");
-        }}));
 
-        doReturn(Arrays.asList(pattern,
-                               brlColumn)).when(model).getConditions();
+        doReturn(Collections.singletonList(pattern)).when(model).getConditions();
+        doReturn(pattern).when(model).getConditionPattern(eq("$fact"));
 
         final Set<PatternWrapper> patterns = plugin.getPatterns();
 
-        assertEquals(2,
+        assertEquals(1,
                      patterns.size());
         assertTrue(patterns.contains(new PatternWrapper("FactType",
                                                         "$fact",
                                                         false)));
-        assertTrue(patterns.contains(new PatternWrapper("AnotherFact",
-                                                        "$another",
+    }
+
+    @Test
+    public void testGetPatternsWithBRLCondition() throws Exception {
+        final Pattern52 pattern = new Pattern52() {{
+            setFactType("FactType");
+            setBoundName("$fact");
+        }};
+        final BRLConditionColumn brlColumn = new BRLConditionColumn();
+        final FactPattern fp = new FactPattern("AnotherFact") {{
+            setBoundName("$another");
+        }};
+        brlColumn.setDefinition(Collections.singletonList(fp));
+
+        doReturn(Arrays.asList(pattern,
+                               brlColumn)).when(model).getConditions();
+        doReturn(pattern).when(model).getConditionPattern(eq("$fact"));
+        doReturn(new FactPatternPattern52Adaptor(fp)).when(model).getConditionPattern(eq("$another"));
+
+        final Set<PatternWrapper> patterns = plugin.getPatterns();
+
+        assertEquals(1,
+                     patterns.size());
+        assertTrue(patterns.contains(new PatternWrapper("FactType",
+                                                        "$fact",
                                                         false)));
     }
 

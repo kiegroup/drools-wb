@@ -35,11 +35,12 @@ import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.CompositeColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
-import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat;
 import org.drools.workbench.models.guided.dtable.shared.model.LimitedEntryCol;
 import org.drools.workbench.models.guided.dtable.shared.model.LimitedEntryConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.drools.workbench.models.guided.dtable.shared.model.adaptors.FactPatternPattern52Adaptor;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.Validator;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.CellUtilities;
@@ -265,14 +266,17 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     @Override
     public Set<PatternWrapper> getPatterns() {
         final Set<PatternWrapper> patterns = new HashSet<>();
-        final BRLRuleModel brlRuleModel = new BRLRuleModel(presenter.getModel());
+        final BRLRuleModel brlRuleModel = new BRLRuleModel(getPresenter().getModel());
         final List<String> variables = brlRuleModel.getLHSPatternVariables();
         variables.forEach(var -> {
-            final String factType = brlRuleModel.getLHSBoundFact(var).getFactType();
-            final boolean isNegated = brlRuleModel.getLHSBoundFact(var).isNegated();
-            patterns.add(new PatternWrapper(factType,
-                                            var,
-                                            isNegated));
+            final Pattern52 pattern = getPresenter().getModel().getConditionPattern(var);
+            if (!(pattern instanceof FactPatternPattern52Adaptor)) {
+                final String factType = brlRuleModel.getLHSBoundFact(var).getFactType();
+                final boolean isNegated = brlRuleModel.getLHSBoundFact(var).isNegated();
+                patterns.add(new PatternWrapper(factType,
+                                                var,
+                                                isNegated));
+            }
         });
 
         return patterns;
