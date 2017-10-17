@@ -225,6 +225,11 @@ public class ActionSetFactPlugin extends BaseDecisionTableColumnPlugin implement
     }
 
     @Override
+    public String getPatternPageDescription() {
+        return translate(GuidedDecisionTableErraiConstants.PatternPageView_PatternPageDescriptionActions);
+    }
+
+    @Override
     public void setEntryPointName(final String entryPointName) {
     }
 

@@ -259,6 +259,11 @@ public class ConditionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
     }
 
     @Override
+    public String getPatternPageDescription() {
+        return translate(GuidedDecisionTableErraiConstants.PatternPageView_PatternPageDescriptionConditions);
+    }
+
+    @Override
     public void setEntryPointName(final String entryPointName) {
         patternWrapper().setEntryPointName(entryPointName);
     }
