@@ -52,7 +52,7 @@ public class GuidedRuleDrlFileIndexer extends AbstractDrlFileIndexer {
      * @see org.kie.workbench.common.services.refactoring.backend.server.indexing.drools.AbstractDrlFileIndexer#getProjectDataModelOracle(org.uberfire.java.nio.file.Path)
      */
     @Override
-    protected ProjectDataModelOracle getProjectDataModelOracle(final Path path) {
-        return dataModelService.getProjectDataModel(Paths.convert(path));
+    protected ProjectDataModelOracle getProjectDataModelOracle( final Path path ) {
+        return dataModelService.getProjectDataModel( Paths.convert( path ), Boolean.TRUE );
     }
 }

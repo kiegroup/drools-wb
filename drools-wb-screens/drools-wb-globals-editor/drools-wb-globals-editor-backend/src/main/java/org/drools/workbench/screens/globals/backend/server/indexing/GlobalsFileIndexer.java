@@ -53,6 +53,6 @@ public class GlobalsFileIndexer extends AbstractDrlFileIndexer {
      */
     @Override
     protected ProjectDataModelOracle getProjectDataModelOracle(final Path path) {
-        return dataModelService.getProjectDataModel(Paths.convert(path));
+        return dataModelService.getProjectDataModel(Paths.convert(path), Boolean.TRUE);
     }
 }
