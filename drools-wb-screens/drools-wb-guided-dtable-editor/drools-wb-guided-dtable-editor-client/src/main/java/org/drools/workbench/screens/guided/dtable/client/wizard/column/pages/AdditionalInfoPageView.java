@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.common.DecisionTablePopoverUtils;
-import org.gwtbootstrap3.client.ui.TextBox;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.Input;
 import org.jboss.errai.common.client.dom.Span;
@@ -65,7 +64,7 @@ public class AdditionalInfoPageView implements IsElement,
 
     @Inject
     @DataField("header")
-    private TextBox header;
+    private Input header;
 
     @Inject
     @DataField("hideColumn")
@@ -98,6 +97,10 @@ public class AdditionalInfoPageView implements IsElement,
 
     @PostConstruct
     public void initPopovers() {
+        header.setAttribute("type",
+                            "textbox");
+        header.setAttribute("data-toggle",
+                            "popover");
         hideColumn.setAttribute("type",
                                 "checkbox");
         hideColumn.setAttribute("data-toggle",
@@ -111,6 +114,8 @@ public class AdditionalInfoPageView implements IsElement,
         updateEngineWithChanges.setAttribute("data-toggle",
                                              "popover");
 
+        popoverUtils.setupAndRegisterPopover(header,
+                                             translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HeaderColumnDescription));
         popoverUtils.setupAndRegisterPopover(hideColumn,
                                              translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HideColumnDescription));
         popoverUtils.setupAndRegisterPopover(logicallyInsert,
@@ -121,7 +126,7 @@ public class AdditionalInfoPageView implements IsElement,
 
     @EventHandler("header")
     public void onSelectHeader(final KeyUpEvent event) {
-        page.setHeader(header.getText());
+        page.setHeader(header.getValue());
     }
 
     @EventHandler("hideColumn")
@@ -153,7 +158,7 @@ public class AdditionalInfoPageView implements IsElement,
 
     @Override
     public void showHeader() {
-        header.setText(page.getHeader());
+        header.setValue(page.getHeader());
 
         headerFormItem.setHidden(false);
     }
