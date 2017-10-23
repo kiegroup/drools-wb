@@ -62,19 +62,15 @@ public class AdditionalInfoPageView implements IsElement,
     @DataField("logicallyInsertFormItem")
     private Div logicallyInsertFormItem;
 
-    @Inject
     @DataField("header")
     private Input header;
 
-    @Inject
     @DataField("hideColumn")
     private Input hideColumn;
 
-    @Inject
     @DataField("updateEngineWithChanges")
     private Input updateEngineWithChanges;
 
-    @Inject
     @DataField("logicallyInsert")
     private Input logicallyInsert;
 
@@ -90,9 +86,17 @@ public class AdditionalInfoPageView implements IsElement,
 
     @Inject
     public AdditionalInfoPageView(final TranslationService translationService,
-                                  final DecisionTablePopoverUtils popoverUtils) {
+                                  final DecisionTablePopoverUtils popoverUtils,
+                                  final Input header,
+                                  final Input hideColumn,
+                                  final Input updateEngineWithChanges,
+                                  final Input logicallyInsert) {
         this.translationService = translationService;
         this.popoverUtils = popoverUtils;
+        this.header = header;
+        this.hideColumn = hideColumn;
+        this.updateEngineWithChanges = updateEngineWithChanges;
+        this.logicallyInsert = logicallyInsert;
     }
 
     @PostConstruct
