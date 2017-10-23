@@ -21,8 +21,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
+import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumnFieldDiff;
@@ -400,6 +404,77 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
     }
 
     @Test
+    public void checkBRLFragmentConditionCannotBeUpdatedWhenFieldBindingIsUsedInAction() throws VetoException {
+        final BRLConditionColumn column = new BRLConditionColumn();
+        column.setDefinition(Collections.singletonList(new FactPattern("Applicant") {{
+            setBoundName("$a");
+            addConstraint(new SingleFieldConstraint("age") {{
+                setBoundName("$age");
+            }});
+        }}));
+
+        final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
+                                                                                   DataType.TYPE_NUMERIC_INTEGER,
+                                                                                   "Applicant",
+                                                                                   "age");
+        column.getChildColumns().add(columnV0);
+        column.setHeader("col1");
+        columnV0.setHeader("col1v0");
+
+        modelSynchronizer.appendColumn(column);
+
+        final BRLActionColumn action = new BRLActionColumn();
+        action.setDefinition(Collections.singletonList(new ActionCallMethod() {{
+            setVariable("$age");
+            setMethodName("toString()");
+        }}));
+        final BRLActionVariableColumn columnV1 = new BRLActionVariableColumn("$age",
+                                                                             DataType.TYPE_NUMERIC_INTEGER,
+                                                                             "Applicant",
+                                                                             "age");
+        action.getChildColumns().add(columnV1);
+        action.setHeader("col2");
+        columnV1.setHeader("col2v0");
+
+        modelSynchronizer.appendColumn(action);
+
+        try {
+            final BRLConditionColumn editedColumn = new BRLConditionColumn();
+            editedColumn.setDefinition(Collections.singletonList(new FactPattern("Applicant") {{
+                setBoundName("$a");
+                addConstraint(new SingleFieldConstraint("age") {{
+                    setBoundName("$age2");
+                }});
+            }}));
+            final BRLConditionVariableColumn editedColumnV0 = new BRLConditionVariableColumn("$age",
+                                                                                             DataType.TYPE_NUMERIC_INTEGER,
+                                                                                             "Applicant",
+                                                                                             "age");
+            editedColumn.getChildColumns().add(editedColumnV0);
+            editedColumn.setHeader("col1");
+            editedColumnV0.setHeader("col1v0");
+
+            modelSynchronizer.updateColumn(column,
+                                           editedColumn);
+
+            fail("Deletion of the column should have been vetoed.");
+        } catch (VetoUpdatePatternInUseException veto) {
+            //This is expected
+        } catch (VetoException veto) {
+            fail("VetoUpdatePatternInUseException was expected.");
+        }
+
+        assertEquals(4,
+                     model.getExpandedColumns().size());
+        assertTrue(model.getExpandedColumns().get(0) instanceof RowNumberCol52);
+        assertTrue(model.getExpandedColumns().get(1) instanceof DescriptionCol52);
+        assertEquals(columnV0,
+                     model.getExpandedColumns().get(2));
+        assertEquals(action.getChildColumns().get(0),
+                     model.getExpandedColumns().get(3));
+    }
+
+    @Test
     public void testDelete() throws VetoException {
         final BRLConditionColumn column = new BRLConditionColumn();
         final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
@@ -478,6 +553,61 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
         assertEquals(columnV0,
                      model.getExpandedColumns().get(2));
         assertEquals(action,
+                     model.getExpandedColumns().get(3));
+    }
+
+    @Test
+    public void checkBRLFragmentConditionCannotBeDeletedWhenFieldBindingIsUsedInAction() throws VetoException {
+        final BRLConditionColumn column = new BRLConditionColumn();
+        column.setDefinition(Collections.singletonList(new FactPattern("Applicant") {{
+            setBoundName("$a");
+            addConstraint(new SingleFieldConstraint("age") {{
+                setBoundName("$age");
+            }});
+        }}));
+
+        final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
+                                                                                   DataType.TYPE_NUMERIC_INTEGER,
+                                                                                   "Applicant",
+                                                                                   "age");
+        column.getChildColumns().add(columnV0);
+        column.setHeader("col1");
+        columnV0.setHeader("col1v0");
+
+        modelSynchronizer.appendColumn(column);
+
+        final BRLActionColumn action = new BRLActionColumn();
+        action.setDefinition(Collections.singletonList(new ActionCallMethod() {{
+            setVariable("$age");
+            setMethodName("toString()");
+        }}));
+        final BRLActionVariableColumn columnV1 = new BRLActionVariableColumn("$age",
+                                                                             DataType.TYPE_NUMERIC_INTEGER,
+                                                                             "Applicant",
+                                                                             "age");
+        action.getChildColumns().add(columnV1);
+        action.setHeader("col2");
+        columnV1.setHeader("col2v0");
+
+        modelSynchronizer.appendColumn(action);
+
+        try {
+            modelSynchronizer.deleteColumn(column);
+
+            fail("Deletion of the column should have been vetoed.");
+        } catch (VetoDeletePatternInUseException veto) {
+            //This is expected
+        } catch (VetoException veto) {
+            fail("VetoDeletePatternInUseException was expected.");
+        }
+
+        assertEquals(4,
+                     model.getExpandedColumns().size());
+        assertTrue(model.getExpandedColumns().get(0) instanceof RowNumberCol52);
+        assertTrue(model.getExpandedColumns().get(1) instanceof DescriptionCol52);
+        assertEquals(columnV0,
+                     model.getExpandedColumns().get(2));
+        assertEquals(action.getChildColumns().get(0),
                      model.getExpandedColumns().get(3));
     }
 

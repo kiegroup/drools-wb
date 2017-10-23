@@ -32,7 +32,6 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import org.drools.workbench.models.datamodel.workitems.PortableWorkDefinition;
 import org.drools.workbench.models.guided.dtable.shared.auditlog.DeleteColumnAuditLogEntry;
 import org.drools.workbench.models.guided.dtable.shared.auditlog.DeleteRowAuditLogEntry;
@@ -884,7 +883,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                                                   column));
             callback.execute();
         } catch (VetoException e) {
-            //Swallow. The VetoException signals that the column could not be appended.
+            getModellerPresenter().getView().showGenericVetoMessage();
         }
     }
 
@@ -902,7 +901,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             model.getAuditLog().add(new InsertRowAuditLogEntry(identity.getIdentifier(),
                                                                model.getData().size() - 1));
         } catch (VetoException e) {
-            //Swallow
+            getModellerPresenter().getView().showGenericVetoMessage();
         }
     }
 
@@ -1228,18 +1227,30 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             }
         }
         for (BaseColumn columnToDelete : columnsToDelete) {
-            try {
-                if (columnToDelete instanceof AttributeCol52) {
+            if (columnToDelete instanceof AttributeCol52) {
+                try {
                     deleteColumn((AttributeCol52) columnToDelete);
-                } else if (columnToDelete instanceof MetadataCol52) {
-                    deleteColumn((MetadataCol52) columnToDelete);
-                } else if (columnToDelete instanceof ConditionCol52) {
-                    deleteColumn((ConditionCol52) columnToDelete);
-                } else if (columnToDelete instanceof ActionCol52) {
-                    deleteColumn((ActionCol52) columnToDelete);
+                } catch (VetoException veto) {
+                    getModellerPresenter().getView().showGenericVetoMessage();
                 }
-            } catch (VetoException veto) {
-                Window.alert("Could not delete!");
+            } else if (columnToDelete instanceof MetadataCol52) {
+                try {
+                    deleteColumn((MetadataCol52) columnToDelete);
+                } catch (VetoException veto) {
+                    getModellerPresenter().getView().showGenericVetoMessage();
+                }
+            } else if (columnToDelete instanceof ConditionCol52) {
+                try {
+                    deleteColumn((ConditionCol52) columnToDelete);
+                } catch (VetoException veto) {
+                    getModellerPresenter().getView().showUnableToDeleteColumnMessage((ConditionCol52) columnsToDelete);
+                }
+            } else if (columnToDelete instanceof ActionCol52) {
+                try {
+                    deleteColumn((ActionCol52) columnToDelete);
+                } catch (VetoException veto) {
+                    getModellerPresenter().getView().showUnableToDeleteColumnMessage((ActionCol52) columnsToDelete);
+                }
             }
         }
     }
@@ -1285,7 +1296,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             model.getAuditLog().add(new DeleteRowAuditLogEntry(identity.getIdentifier(),
                                                                rowIndex));
         } catch (VetoException e) {
-            //Swallow
+            getModellerPresenter().getView().showGenericVetoMessage();
         }
     }
 
@@ -1344,7 +1355,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             model.getAuditLog().add(new InsertRowAuditLogEntry(identity.getIdentifier(),
                                                                rowIndex));
         } catch (VetoException e) {
-            //Swallow
+            getModellerPresenter().getView().showGenericVetoMessage();
         }
     }
 

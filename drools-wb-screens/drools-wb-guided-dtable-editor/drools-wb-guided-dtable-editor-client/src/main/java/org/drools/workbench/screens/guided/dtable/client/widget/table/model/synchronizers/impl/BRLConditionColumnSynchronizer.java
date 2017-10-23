@@ -26,7 +26,6 @@ import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
@@ -153,15 +152,10 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         final BRLConditionColumn column = (BRLConditionColumn) metaData.getColumn();
 
         //If Pattern has been updated and there was only one child column then original Pattern will be deleted
-        for (IPattern p : column.getDefinition()) {
-            if (p instanceof FactPattern) {
-                final FactPattern fp = (FactPattern) p;
-                if (fp.isBound()) {
-                    final String binding = fp.getBoundName();
-                    if (rm.isBoundFactUsed(binding)) {
-                        throw new VetoDeletePatternInUseException();
-                    }
-                }
+        final Set<String> bindings = getPatternBindings(column);
+        for (String binding : bindings) {
+            if (rm.isBoundFactUsed(binding)) {
+                throw new VetoDeletePatternInUseException();
             }
         }
 
@@ -244,7 +238,7 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         final List<IPattern> definition = column.getDefinition();
         final RuleModel rm = new RuleModel();
         rm.lhs = definition.toArray(new IPattern[definition.size()]);
-        bindings.addAll(rm.getLHSVariables(true, false));
+        bindings.addAll(rm.getLHSVariables(true, true));
         return bindings;
     }
 }

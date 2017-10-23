@@ -126,8 +126,15 @@ public class ConditionColumnSynchronizer extends BaseColumnSynchronizer<PatternC
         final boolean isNewPattern = isNewPattern(editedPattern);
         final boolean isUpdatedPattern = BaseColumnFieldDiffImpl.hasChanged(Pattern52.FIELD_BOUND_NAME,
                                                                             diffs);
+        final boolean isUpdatedCondition = BaseColumnFieldDiffImpl.hasChanged(ConditionCol52.FIELD_BINDING,
+                                                                              diffs);
 
         //Check if pattern change can be applied to model
+        if (isUpdatedCondition) {
+            if (!isPotentialConditionDeletionSafe(originalColumn)) {
+                throw new VetoUpdatePatternInUseException();
+            }
+        }
         if (isUpdatedPattern) {
             if (!isPotentialPatternDeletionSafe(originalPattern)) {
                 throw new VetoUpdatePatternInUseException();
@@ -203,6 +210,9 @@ public class ConditionColumnSynchronizer extends BaseColumnSynchronizer<PatternC
         final Pattern52 pattern = model.getPattern(column);
 
         //Check if pattern change can be applied to model
+        if (!isPotentialConditionDeletionSafe(column)) {
+            throw new VetoDeletePatternInUseException();
+        }
         if (!isPotentialPatternDeletionSafe(pattern)) {
             throw new VetoDeletePatternInUseException();
         }
@@ -465,6 +475,14 @@ public class ConditionColumnSynchronizer extends BaseColumnSynchronizer<PatternC
         if (originalColumn instanceof LimitedEntryCol && editedColumn instanceof LimitedEntryCol) {
             ((LimitedEntryCol) originalColumn).setValue(((LimitedEntryCol) editedColumn).getValue());
         }
+    }
+
+    private boolean isPotentialConditionDeletionSafe(final ConditionCol52 condition) {
+        final String binding = condition.getBinding();
+        if (!(binding == null || binding.isEmpty())) {
+            return !rm.isBoundFactUsed(binding);
+        }
+        return true;
     }
 
     private boolean isPotentialPatternDeletionSafe(final Pattern52 pattern) {

@@ -46,7 +46,6 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDeci
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoDeletePatternInUseException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
-import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -72,7 +71,10 @@ import static org.mockito.Mockito.verify;
 public class ColumnManagementViewTest {
 
     @Mock
-    private GuidedDecisionTableModellerView.Presenter presenter;
+    private GuidedDecisionTableModellerView modellerView;
+
+    @Mock
+    private GuidedDecisionTableModellerView.Presenter modellerPresenter;
 
     @Mock
     private GuidedDecisionTableView.Presenter decisionTablePresenter;
@@ -86,19 +88,16 @@ public class ColumnManagementViewTest {
     @Mock
     private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
-    @Mock
-    private TranslationService translationService;
-
     private ColumnManagementView view;
 
     @Before
     public void setUp() throws Exception {
         doReturn(deleteWidget).when(deleteColumnManagementAnchorWidgets).get();
 
-        view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets,
-                                            translationService));
-        view.init(presenter);
+        view = spy(new ColumnManagementView(deleteColumnManagementAnchorWidgets));
+        view.init(modellerPresenter);
 
+        doReturn(modellerView).when(modellerPresenter).getView();
         doReturn(horizontalPanel).when(view).newHorizontalPanel();
     }
 
@@ -136,7 +135,7 @@ public class ColumnManagementViewTest {
         final ColumnLabelWidget columnLabel = mockColumnLabelWidget();
 
         doReturn(columnLabel).when(view).newColumnLabelWidget(anyString());
-        doReturn(true).when(presenter).isActiveDecisionTableEditable();
+        doReturn(true).when(modellerPresenter).isActiveDecisionTableEditable();
 
         view.renderColumns(columnGroups);
 
@@ -205,7 +204,7 @@ public class ColumnManagementViewTest {
         final ColumnLabelWidget columnLabel = mockColumnLabelWidget();
 
         doReturn(columnLabel).when(view).newColumnLabelWidget(anyString());
-        doReturn(true).when(presenter).isActiveDecisionTableEditable();
+        doReturn(true).when(modellerPresenter).isActiveDecisionTableEditable();
         doReturn("brl one").when(conditionColumnOne).getHeader();
         doReturn("brl two").when(conditionColumnTwo).getHeader();
 
@@ -274,7 +273,7 @@ public class ColumnManagementViewTest {
         final ColumnLabelWidget columnLabel = mockColumnLabelWidget();
 
         doReturn(columnLabel).when(view).newColumnLabelWidget(anyString());
-        doReturn(true).when(presenter).isActiveDecisionTableEditable();
+        doReturn(true).when(modellerPresenter).isActiveDecisionTableEditable();
         doReturn("one").when(brlActionColumn).getHeader();
         doReturn("two").when(actionInsertFactColumn).getHeader();
         doReturn("three").when(retractFactColumn).getHeader();
@@ -379,7 +378,7 @@ public class ColumnManagementViewTest {
                     final String columnHeader = "column header";
                     final ArgumentCaptor<Command> commandCaptor = ArgumentCaptor.forClass(Command.class);
 
-                    doReturn(decisionTablePresenter).when(presenter).getActiveDecisionTable();
+                    doReturn(decisionTablePresenter).when(modellerPresenter).getActiveDecisionTable();
                     doReturn(columnHeader).when(column).getHeader();
 
                     view.removeCondition(column);
@@ -407,9 +406,9 @@ public class ColumnManagementViewTest {
                     final String columnHeader = "column header";
                     final ArgumentCaptor<Command> commandCaptor = ArgumentCaptor.forClass(Command.class);
 
-                    doReturn(decisionTablePresenter).when(presenter).getActiveDecisionTable();
+                    doReturn(decisionTablePresenter).when(modellerPresenter).getActiveDecisionTable();
                     doReturn(columnHeader).when(column).getHeader();
-                    doNothing().when(view).showUnableToDeleteColumnMessage(column);
+                    doNothing().when(modellerView).showUnableToDeleteColumnMessage(column);
 
                     try {
                         doThrow(VetoDeletePatternInUseException.class).when(decisionTablePresenter).deleteColumn(eq(column));
@@ -421,7 +420,7 @@ public class ColumnManagementViewTest {
 
                         commandCaptor.getValue().execute();
 
-                        verify(view).showUnableToDeleteColumnMessage(eq(column));
+                        verify(modellerView).showUnableToDeleteColumnMessage(eq(column));
                     } catch (VetoException veto) {
                     }
                     reset(view);
