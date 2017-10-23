@@ -116,9 +116,6 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
         }
     };
 
-    @Inject
-    private GuidedDecisionTableAccordion guidedDecisionTableAccordion;
-
     private VerticalPanel attributeConfigWidget = makeDefaultPanel();
 
     private VerticalPanel metaDataConfigWidget = makeDefaultPanel();
@@ -145,6 +142,8 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
 
     private ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets;
 
+    private GuidedDecisionTableAccordion guidedDecisionTableAccordion;
+
     private TranslationService translationService;
 
     public GuidedDecisionTableModellerViewImpl() {
@@ -156,11 +155,13 @@ public class GuidedDecisionTableModellerViewImpl extends Composite implements Gu
                                                final ColumnManagementView conditionsPanel,
                                                final ManagedInstance<AttributeColumnConfigRow> attributeColumnConfigRows,
                                                final ManagedInstance<DeleteColumnManagementAnchorWidget> deleteColumnManagementAnchorWidgets,
+                                               final GuidedDecisionTableAccordion guidedDecisionTableAccordion,
                                                final TranslationService translationService) {
         this.actionsPanel = actionsPanel;
         this.conditionsPanel = conditionsPanel;
         this.attributeColumnConfigRows = attributeColumnConfigRows;
         this.deleteColumnManagementAnchorWidgets = deleteColumnManagementAnchorWidgets;
+        this.guidedDecisionTableAccordion = guidedDecisionTableAccordion;
         this.translationService = translationService;
 
         initWidget(uiBinder.createAndBindUi(this));
