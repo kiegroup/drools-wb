@@ -77,7 +77,8 @@ public class AdditionalInfoPageViewTest {
     public void testInitPopovers() throws Exception {
         view.initPopovers();
 
-        verify(input).setAttribute("type", "textbox");
+        verify(input, times(1)).setAttribute("type", "textbox");
+        verify(input, times(4)).setAttribute("class", "form-control");
         verify(input, times(3)).setAttribute("type", "checkbox");
         verify(input, times(4)).setAttribute("data-toggle", "popover");
         verify(popoverUtils).setupAndRegisterPopover(eq(input), eq(HEADER_TRANSLATION));

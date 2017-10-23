@@ -105,18 +105,26 @@ public class AdditionalInfoPageView implements IsElement,
                             "textbox");
         header.setAttribute("data-toggle",
                             "popover");
+        header.setAttribute("class",
+                            "form-control");
         hideColumn.setAttribute("type",
                                 "checkbox");
         hideColumn.setAttribute("data-toggle",
                                 "popover");
+        hideColumn.setAttribute("class",
+                                "form-control");
         logicallyInsert.setAttribute("type",
                                      "checkbox");
         logicallyInsert.setAttribute("data-toggle",
                                      "popover");
+        logicallyInsert.setAttribute("class",
+                                     "form-control");
         updateEngineWithChanges.setAttribute("type",
                                              "checkbox");
         updateEngineWithChanges.setAttribute("data-toggle",
                                              "popover");
+        updateEngineWithChanges.setAttribute("class",
+                                             "form-control");
 
         popoverUtils.setupAndRegisterPopover(header,
                                              translate(GuidedDecisionTableErraiConstants.AdditionalInfoPage_HeaderColumnDescription));
