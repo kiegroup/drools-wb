@@ -39,7 +39,6 @@ import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.kie.soup.project.datamodel.commons.util.MVELEvaluator;
-import org.kie.workbench.common.services.backend.builder.core.LRUProjectDependenciesClassLoaderCache;
 import org.kie.workbench.common.services.backend.project.ProjectClassLoaderHelper;
 import org.kie.workbench.common.services.backend.service.KieService;
 import org.kie.workbench.common.services.datamodel.backend.server.builder.util.DataEnumLoader;
@@ -89,9 +88,10 @@ public class EnumServiceImpl
     private CommentedOptionFactory commentedOptionFactory;
 
     @Inject
-    private MVELEvaluator evaluator;
-
     private ProjectClassLoaderHelper projectClassLoaderHelper;
+
+    @Inject
+    private MVELEvaluator evaluator;
 
     private SafeSessionInfo safeSessionInfo;
 
@@ -255,13 +255,13 @@ public class EnumServiceImpl
                                                  final String content,
                                                  final MVELEvaluator evaluator) {
         try {
-            final KieProject project = projectService.resolveProject( path );
+            final KieProject project = projectService.resolveProject(path);
             final ClassLoader classLoader = projectClassLoaderHelper.getProjectClassLoader(project);
-            if(classLoader == null){
+            if (classLoader == null) {
                 throw new RuntimeException("Classloader not available for project:" + project);
             }
-            final DataEnumLoader loader = new DataEnumLoader( content, classLoader );
-            if ( !loader.hasErrors() ) {
+            final DataEnumLoader loader = new DataEnumLoader(content, classLoader, evaluator);
+            if (!loader.hasErrors()) {
                 return Collections.emptyList();
             } else {
                 final List<ValidationMessage> validationMessages = new ArrayList<>();
