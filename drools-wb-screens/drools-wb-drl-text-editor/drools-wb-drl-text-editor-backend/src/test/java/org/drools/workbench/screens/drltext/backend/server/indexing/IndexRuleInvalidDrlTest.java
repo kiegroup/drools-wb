@@ -25,6 +25,7 @@ import java.util.Map;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.search.Query;
 import org.drools.workbench.screens.drltext.type.DRLResourceTypeDefinition;

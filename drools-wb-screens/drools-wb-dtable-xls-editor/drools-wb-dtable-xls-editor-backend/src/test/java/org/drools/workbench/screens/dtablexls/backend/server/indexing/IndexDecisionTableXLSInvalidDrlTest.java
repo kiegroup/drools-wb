@@ -25,6 +25,7 @@ import java.util.List;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.search.Query;
 import org.drools.workbench.screens.dtablexls.type.DecisionTableXLSResourceTypeDefinition;
@@ -40,7 +41,9 @@ import org.uberfire.ext.metadata.io.KObjectUtil;
 import org.uberfire.java.nio.file.Path;
 
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class IndexDecisionTableXLSInvalidDrlTest extends BaseIndexingTest<DecisionTableXLSResourceTypeDefinition> {
 

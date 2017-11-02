@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.dtablexls.backend.server.indexing;
 
 import java.util.HashMap;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.workbench.screens.dtablexls.type.DecisionTableXLSResourceTypeDefinition;
