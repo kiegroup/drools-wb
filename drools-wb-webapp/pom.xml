@@ -156,8 +156,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-maven-support</artifactId>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-maven-support</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -450,6 +450,10 @@
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-datamodel-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-drl-extension-server</artifactId>
     </dependency>
 
     <dependency>
@@ -993,8 +997,8 @@
     <!-- Dashbuilder -->
 
     <dependency>
-      <groupId>org.dashbuilder</groupId>
-      <artifactId>dashbuilder-json</artifactId>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-json</artifactId>
     </dependency>
 
     <dependency>
@@ -1003,8 +1007,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.dashbuilder</groupId>
-      <artifactId>dashbuilder-dataset-api</artifactId>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-dataset-api</artifactId>
     </dependency>
 
     <dependency>
@@ -1222,7 +1226,7 @@
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
 
             <!-- UberFire -->
-            <compileSourcesArtifact>org.uberfire:uberfire-maven-support</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.soup:kie-soup-maven-support</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-nio2-model</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-api</compileSourcesArtifact>
@@ -1239,13 +1243,13 @@
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>
 
             <!-- Dashbuilder -->
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-json</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.soup:kie-soup-json</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-validations</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-common-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-services-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-shared</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-shared</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-client</compileSourcesArtifact>

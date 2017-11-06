@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -132,7 +132,7 @@ public class AuditLogger {
 
             @Override
             public void beforeMatchFired(BeforeMatchFiredEvent beforeMatchFiredEvent) {
-//                log(beforeMatchFiredEvent);
+                log(beforeMatchFiredEvent);
             }
 
             @Override
@@ -179,7 +179,7 @@ public class AuditLogger {
                 Object object = objectInsertedEvent.getObject();
                 Rule rule = objectInsertedEvent.getRule();
                 if (rule == null) {
-                    logs.add("Fact " + object.getClass().getName() + " inserted.");
+                    logs.add("Fact " + object.getClass().getName() + " inserted. Fact[ " + object.toString() + " ].");
                 } else {
                     logs.add("Fact " + object.getClass().getName() + " inserted in rule " + rule.getName() + ". Fact[ " + object.toString() + " ].");
                 }

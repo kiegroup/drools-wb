@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -124,10 +124,9 @@ public class ConditionColumnSynchronizer extends BaseColumnSynchronizer<PatternC
 
         //Changes to the Pattern create the new column and remove the old column
         final boolean isNewPattern = isNewPattern(editedPattern);
-        final boolean isUpdatedPattern = BaseColumnFieldDiffImpl.hasChanged(Pattern52.FIELD_BOUND_NAME,
-                                                                            diffs);
-        final boolean isUpdatedCondition = BaseColumnFieldDiffImpl.hasChanged(ConditionCol52.FIELD_BINDING,
-                                                                              diffs);
+        final boolean isBoundNameUpdated = BaseColumnFieldDiffImpl.hasChanged(Pattern52.FIELD_BOUND_NAME, diffs);
+        final boolean isEntryPointNameUpdated = BaseColumnFieldDiffImpl.hasChanged(Pattern52.FIELD_ENTRY_POINT_NAME, diffs);
+        final boolean isUpdatedCondition = BaseColumnFieldDiffImpl.hasChanged(ConditionCol52.FIELD_BINDING, diffs);
 
         //Check if pattern change can be applied to model
         if (isUpdatedCondition) {
@@ -135,20 +134,24 @@ public class ConditionColumnSynchronizer extends BaseColumnSynchronizer<PatternC
                 throw new VetoUpdatePatternInUseException();
             }
         }
-        if (isUpdatedPattern) {
+        if (isBoundNameUpdated) {
             if (!isPotentialPatternDeletionSafe(originalPattern)) {
                 throw new VetoUpdatePatternInUseException();
             }
         }
 
         //Perform update
-        if (isNewPattern || isUpdatedPattern) {
+        if (isNewPattern || isBoundNameUpdated) {
             append(editedMetaData);
             copyColumnData(originalColumn,
                            editedColumn,
                            diffs);
             delete(originalMetaData);
             return diffs;
+        }
+
+        if (isEntryPointNameUpdated) {
+            originalPattern.setEntryPointName(editedPattern.getEntryPointName());
         }
 
         //Changes to the Condition, but Pattern remains unchanged

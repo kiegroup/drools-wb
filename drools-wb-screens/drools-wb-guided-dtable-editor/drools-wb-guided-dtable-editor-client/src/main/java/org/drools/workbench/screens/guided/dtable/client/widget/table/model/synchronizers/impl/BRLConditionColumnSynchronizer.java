@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -125,7 +125,7 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         }
 
         //Delete columns for the original definition
-        delete(originalMetaData);
+        doDelete(originalColumn);
 
         //Signal patterns changed event to Decision Table Widget
         final BoundFactsChangedEvent pce = new BoundFactsChangedEvent(rm.getLHSBoundFacts());
@@ -159,6 +159,10 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
             }
         }
 
+        doDelete(column);
+    }
+
+    private void doDelete(final BRLConditionColumn column) throws VetoException {
         if (column.getChildColumns().size() > 0) {
             final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column.getChildColumns().get(0));
             for (int iColumnIndex = 0; iColumnIndex < column.getChildColumns().size(); iColumnIndex++) {
