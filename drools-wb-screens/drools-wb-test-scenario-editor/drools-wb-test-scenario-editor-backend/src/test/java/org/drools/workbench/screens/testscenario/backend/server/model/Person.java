@@ -36,6 +36,8 @@ public class Person implements java.io.Serializable {
 
     private Date bornDate;
 
+    private boolean isGithubContributor;
+
     public Person() {
     }
 
@@ -85,6 +87,14 @@ public class Person implements java.io.Serializable {
 
     public void setBornDate(Date bornDate) {
         this.bornDate = bornDate;
+    }
+
+    public boolean isGithubContributor() {
+        return isGithubContributor;
+    }
+
+    public void setIsGithubContributor(boolean githubContributor) {
+        isGithubContributor = githubContributor;
     }
 
     @Override
