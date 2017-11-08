@@ -19,6 +19,7 @@ package org.drools.workbench.screens.testscenario.backend.server;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.enterprise.event.Event;
 
@@ -26,6 +27,7 @@ import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.model.TestScenarioResult;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.structure.server.config.ConfigurationService;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +59,6 @@ import org.uberfire.io.impl.IOServiceDotFileImpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -87,6 +88,9 @@ public class ScenarioRunnerServiceTest {
 
     private TestResultMessageEventMock defaultTestResultMessageEvent;
 
+    private KieSession kieSession;
+    private KieContainer kieContainer;
+
     @Before
     public void setUp() throws Exception {
         final ConfigurationService configurationService = mock(ConfigurationService.class);
@@ -99,36 +103,22 @@ public class ScenarioRunnerServiceTest {
                                             sessionService,
                                             projectService,
                                             scenarioLoader);
+    }
 
-        final KieServices kieServices = KieServices.Factory.get();
-        final KieModuleModel kieModuleModel = kieServices.newKieModuleModel();
-        final KieBaseModel kieBaseModel = kieModuleModel.newKieBaseModel("defaultKieBase")
-                .setDefault(true)
-                .setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
-                .setEventProcessingMode(EventProcessingOption.STREAM);
-
-        kieBaseModel.newKieSessionModel("defaultKieSession")
-                .setDefault(true)
-                .setType(KieSessionModel.KieSessionType.STATEFUL)
-                .setClockType(ClockTypeOption.get("pseudo"));
-
-        final KieFileSystem kfs = kieServices.newKieFileSystem();
-        kfs.writeKModuleXML(kieModuleModel.toXML());
-        kfs.write(ResourceFactory.newUrlResource(this.getClass()
-                                                     .getResource("HelloEveryOne.gdst")
-                                                     .toString()));
-
-        kieServices.newKieBuilder(kfs).buildAll();
-
-        final KieContainer kieContainer = kieServices
-                .newKieContainer(kieServices.getRepository().getDefaultReleaseId());
-        final KieSession kieSession = kieContainer.newKieSession();
-
-        doReturn(kieSession).when(sessionService).newDefaultKieSessionWithPseudoClock(any(KieProject.class));
+    @After
+    public void tearDown() throws Exception {
+        if (Objects.nonNull(kieSession)) {
+            kieSession.dispose();
+            kieSession.destroy();
+        }
+        if (Objects.nonNull(kieContainer)) {
+            kieContainer.dispose();
+        }
     }
 
     @Test
     public void testRunEmptyScenario() throws Exception {
+        initKieSession();
         TestScenarioResult result = service.run("userName",
                                                 makeScenario("test.scenario"),
                                                 new KieProject());
@@ -143,29 +133,63 @@ public class ScenarioRunnerServiceTest {
 
     @Test
     public void testGreetings() throws Exception {
-        final KieProject project = mock(KieProject.class);
+        initKieSession("HelloEveryOne.gdst");
+        testScenario("greetings.scenario", true);
+    }
 
-        final URL scenarioResource = getClass().getResource("greetings.scenario");
-        final Path scenarioPath = PathFactory.newPath(scenarioResource.getFile(),
-                                                      scenarioResource.toURI().toString());
+    /**
+     * DROOLS-2107
+     * Focus on rule inheritance
+     */
+    @Test
+    public void testHighAndSmall() throws Exception {
+        initKieSession("thereIsHighPerson.rdrl", "thereAreBothHighAndSmallPerson.rdrl");
+        testScenario("highAndSmall.scenario", true);
+    }
 
-        final Scenario scenario = testEditorService.load(scenarioPath);
-        assertFalse(scenario.wasSuccessful());
+    /**
+     * DROOLS-2104
+     * Use XLS table
+     */
+    @Test
+    public void testCouples() throws Exception {
+        initKieSession("couplesWithSameEyes.xls");
+        testScenario("testCouples.scenario", true);
+    }
 
-        TestScenarioResult result = service.run("userName", scenario, project);
+    @Test
+    public void testCouplesNegative() throws Exception {
+        initKieSession("couplesWithSameEyes.xls");
+        testScenario("testCouplesNegative.scenario", false);
+    }
 
-        assertTrue(scenario.wasSuccessful());
-        assertTrue(result.getScenario().wasSuccessful());
+    @Test
+    public void testSimilarPerson() throws Exception {
+        initKieSession("mostSimilarPerson.gdst");
+        testScenario("testSimilarPerson.scenario", true);
+    }
 
-        verify(defaultTestResultMessageEvent).fire(testResultMessageCaptor.capture());
-        final TestResultMessage resultMessage = testResultMessageCaptor.getValue();
-        assertEquals(0, resultMessage.getFailures().size());
-        assertTrue(resultMessage.wasSuccessful());
+    @Test
+    public void testSimilarPersonNegative() throws Exception {
+        initKieSession("mostSimilarPerson.gdst");
+        testScenario("testSimilarPersonNegative.scenario", false);
+    }
+
+    @Test
+    public void testMergeMolecules() throws Exception {
+        initKieSession("mergeMolecules.gdst");
+        testScenario("testMergedMolecules.scenario", true);
+    }
+
+    @Test
+    public void testMergeMoleculesNegative() throws Exception {
+        initKieSession("mergeMolecules.gdst");
+        testScenario("testMergedMoleculesNegative.scenario", false);
     }
 
     @Test
     public void testRunSeveralScenarios() throws Exception {
-
+        initKieSession();
         Path path = mock(Path.class);
 
         ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
@@ -183,10 +207,59 @@ public class ScenarioRunnerServiceTest {
                      argumentCaptor.getValue().getIdentifier());
     }
 
+    private void testScenario(String scenarioName, boolean isExpectedSuccess) throws Exception {
+        final KieProject project = mock(KieProject.class);
+
+        final URL scenarioResource = getClass().getResource(scenarioName);
+        final Path scenarioPath = PathFactory.newPath(scenarioResource.getFile(),
+                                                      scenarioResource.toURI().toString());
+
+        final Scenario scenario = testEditorService.load(scenarioPath);
+        assertFalse(scenario.wasSuccessful());
+
+        final TestScenarioResult result = service.run("userName", scenario, project);
+
+        assertEquals(isExpectedSuccess, scenario.wasSuccessful());
+        assertEquals(isExpectedSuccess, result.getScenario().wasSuccessful());
+
+        verify(defaultTestResultMessageEvent).fire(testResultMessageCaptor.capture());
+        final TestResultMessage resultMessage = testResultMessageCaptor.getValue();
+        assertEquals(isExpectedSuccess, resultMessage.getFailures().size() == 0);
+        assertEquals(isExpectedSuccess, resultMessage.wasSuccessful());
+    }
+
     private Scenario makeScenario(String name) {
         Scenario scenario = new Scenario();
         scenario.setName(name);
         return scenario;
+    }
+
+    private void initKieSession(String... resourceNames) {
+        final KieServices kieServices = KieServices.Factory.get();
+        final KieModuleModel kieModuleModel = kieServices.newKieModuleModel();
+        final KieBaseModel kieBaseModel = kieModuleModel.newKieBaseModel("defaultKieBase")
+                .setDefault(true)
+                .setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
+                .setEventProcessingMode(EventProcessingOption.STREAM);
+
+        kieBaseModel.newKieSessionModel("defaultKieSession")
+                .setDefault(true)
+                .setType(KieSessionModel.KieSessionType.STATEFUL)
+                .setClockType(ClockTypeOption.get("pseudo"));
+
+        final KieFileSystem kfs = kieServices.newKieFileSystem();
+        kfs.writeKModuleXML(kieModuleModel.toXML());
+        for (String resource : resourceNames) {
+            kfs.write(ResourceFactory.newUrlResource(this.getClass()
+                                                             .getResource(resource)
+                                                             .toString()));
+        }
+
+        kieServices.newKieBuilder(kfs).buildAll();
+
+        kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+        kieSession = kieContainer.newKieSession();
+        doReturn(kieSession).when(sessionService).newDefaultKieSessionWithPseudoClock(any(KieProject.class));
     }
 
     class TestResultMessageEventMock
