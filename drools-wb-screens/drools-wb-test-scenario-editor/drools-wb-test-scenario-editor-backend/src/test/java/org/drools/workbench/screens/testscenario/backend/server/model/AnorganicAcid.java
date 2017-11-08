@@ -16,11 +16,12 @@
 
 package org.drools.workbench.screens.testscenario.backend.server.model;
 
-public class AnorganicAcid extends OrganicAcid implements java.io.Serializable {
+import java.io.Serializable;
 
-	static final long serialVersionUID = 1L;
+public class AnorganicAcid extends OrganicAcid implements Serializable {
 
-	public AnorganicAcid() {
-	}
+    static final long serialVersionUID = 1L;
 
+    public AnorganicAcid() {
+    }
 }

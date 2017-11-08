@@ -16,39 +16,38 @@
 
 package org.drools.workbench.screens.testscenario.backend.server.model;
 
+import java.io.Serializable;
+import java.util.List;
 
-public class Acid implements java.io.Serializable {
+public class Acid implements Serializable {
 
-	static final long serialVersionUID = 1L;
+    static final long serialVersionUID = 1L;
 
-	private java.lang.String name;
-	private java.util.List<org.drools.workbench.screens.testscenario.backend.server.model.Molecule> molecules;
+    private String name;
+    private List<Molecule> molecules;
 
-	public Acid() {
-	}
+    public Acid() {
+    }
 
-	public java.lang.String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public void setName(java.lang.String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public java.util.List<org.drools.workbench.screens.testscenario.backend.server.model.Molecule> getMolecules() {
-		return this.molecules;
-	}
+    public List<Molecule> getMolecules() {
+        return this.molecules;
+    }
 
-	public void setMolecules(
-			java.util.List<org.drools.workbench.screens.testscenario.backend.server.model.Molecule> molecules) {
-		this.molecules = molecules;
-	}
+    public void setMolecules(List<Molecule> molecules) {
+        this.molecules = molecules;
+    }
 
-	public Acid(
-			java.lang.String name,
-			java.util.List<org.drools.workbench.screens.testscenario.backend.server.model.Molecule> molecules) {
-		this.name = name;
-		this.molecules = molecules;
-	}
-
+    public Acid(String name,
+                List<Molecule> molecules) {
+        this.name = name;
+        this.molecules = molecules;
+    }
 }
