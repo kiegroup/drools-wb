@@ -34,7 +34,7 @@
       </appender>
     </sift>
   </appender>-->
-
+  <logger name="org.jboss.resteasy" level="info"/>
   <logger name="org.slf4j" level="info"/>
   <logger name="org.log4j" level="info"/>
   <logger name="org.kie" level="info"/>
