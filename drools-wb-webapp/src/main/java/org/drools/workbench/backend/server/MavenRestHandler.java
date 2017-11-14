@@ -34,10 +34,14 @@ import org.kie.workbench.common.services.backend.builder.af.KieAFBuilder;
 import org.kie.workbench.common.services.backend.builder.af.impl.DefaultKieAFBuilder;
 
 import org.kie.workbench.common.services.backend.compiler.impl.kie.KieCompilationResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Path("/maven/3.3.9/")
 @RequestScoped
 public class MavenRestHandler {
+
+    private static Logger logger = LoggerFactory.getLogger(MavenRestHandler.class);
 
     public MavenRestHandler(){}
 
@@ -66,7 +70,7 @@ public class MavenRestHandler {
             }
             returnArray = b.toByteArray();
         }catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getLocalizedMessage());
         }
         return  returnArray;
     }
