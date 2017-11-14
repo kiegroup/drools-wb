@@ -15,6 +15,10 @@
  */
 package org.drools.workbench.backend.server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -23,10 +27,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.kie.workbench.common.services.backend.builder.af.KieAFBuilder;
 
 import org.kie.workbench.common.services.backend.builder.af.impl.DefaultKieAFBuilder;
+
 import org.kie.workbench.common.services.backend.compiler.impl.kie.KieCompilationResponse;
 
 @Path("/maven/3.3.9/")
@@ -35,31 +41,34 @@ public class MavenRestHandler {
 
     public MavenRestHandler(){}
 
-    private static int count = 0;
+    private static String  mvn = "Apache Maven 3.3.9";
 
     @POST
-    @Produces("multipart/mixed")
-    @Consumes("text/plain")
-    public String post(@HeaderParam("project") String projectRepo, @HeaderParam("mavenrepo") String mavenRepo) throws Exception {
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public byte[] post(@HeaderParam("project") String projectRepo, @HeaderParam("mavenrepo") String mavenRepo) throws Exception {
         KieAFBuilder builder = new DefaultKieAFBuilder(projectRepo, mavenRepo);
         KieCompilationResponse response = builder.build();
-        /*MultipartFormDataOutput output = new MultipartFormDataOutput();
-        output.addPart(response, MediaType.MULTIPART_FORM_DATA_TYPE);
-        return output;*/
-        return "Hello";
+        return serialize(response);
     }
 
     @GET
     @Produces("text/plain")
     public String get() {
-        return Integer.toString(count);
+        return mvn;
     }
 
-    @PUT
-    @Consumes("text/plain")
-    public void put(String content) throws Exception {
-        System.out.println("IN PUT!!!!");
-        System.out.println("******* countdown complete ****");
-        count++;
+
+    public static byte[] serialize(Object obj) throws IOException {
+        byte[] returnArray = null;
+        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
+            try(ObjectOutputStream o = new ObjectOutputStream(b)){
+                o.writeObject(obj);
+            }
+            returnArray = b.toByteArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  returnArray;
     }
+
 }
