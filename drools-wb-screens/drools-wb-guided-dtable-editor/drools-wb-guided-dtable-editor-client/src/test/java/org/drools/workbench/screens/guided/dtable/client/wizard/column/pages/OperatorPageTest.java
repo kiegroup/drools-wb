@@ -311,11 +311,7 @@ public class OperatorPageTest {
 
         final String[] result = page.filterOptionsForConstraintTypeLiteral(OperatorsOracle.EXPLICIT_LIST_OPERATORS);
         final List<String> operators = Arrays.asList(result);
-
-        assertFalse(operators.contains("in"));
-        assertFalse(operators.contains("not in"));
-        assertEquals(0,
-                     operators.size());
+        assertEquals(0, operators.size());
     }
 
     @Test
@@ -324,11 +320,7 @@ public class OperatorPageTest {
 
         final String[] result = page.filterOptionsForConstraintTypeLiteral(OperatorsOracle.EXPLICIT_LIST_OPERATORS);
         final List<String> operators = Arrays.asList(result);
-
-        assertFalse(operators.contains("in"));
-        assertFalse(operators.contains("not in"));
-        assertEquals(0,
-                     operators.size());
+        assertEquals(0, operators.size());
     }
 
     @Test
