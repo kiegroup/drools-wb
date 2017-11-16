@@ -306,8 +306,21 @@ public class OperatorPageTest {
     }
 
     @Test
-    public void testFilterOptionsForConstraintTypeLiteralWhenConstraintValueIsNotLiteral() {
+    public void testFilterOptionsForConstraintTypeLiteralWhenConstraintValueIsPredicate() {
         when(plugin.constraintValue()).thenReturn(BaseSingleFieldConstraint.TYPE_PREDICATE);
+
+        final String[] result = page.filterOptionsForConstraintTypeLiteral(OperatorsOracle.EXPLICIT_LIST_OPERATORS);
+        final List<String> operators = Arrays.asList(result);
+
+        assertFalse(operators.contains("in"));
+        assertFalse(operators.contains("not in"));
+        assertEquals(0,
+                     operators.size());
+    }
+
+    @Test
+    public void testFilterOptionsForConstraintTypeLiteralWhenConstraintValueIsFormula() {
+        when(plugin.constraintValue()).thenReturn(BaseSingleFieldConstraint.TYPE_RET_VALUE);
 
         final String[] result = page.filterOptionsForConstraintTypeLiteral(OperatorsOracle.EXPLICIT_LIST_OPERATORS);
         final List<String> operators = Arrays.asList(result);
