@@ -905,6 +905,11 @@
       <artifactId>uberfire-metadata-backend-lucene</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-metadata-backend-elasticsearch</artifactId>
+    </dependency>
+
     <!-- UberFire -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -1043,7 +1048,6 @@
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-server-all</artifactId>
     </dependency>
-
 
     <dependency>
       <groupId>org.owasp.encoder</groupId>
