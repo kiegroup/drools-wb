@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
@@ -72,7 +72,6 @@ public class CellContextMenuTest {
         clipboard = new DefaultClipboard();
 
         when( dtPresenter.getView() ).thenReturn( dtPresenterView );
-        when( dtPresenter.getModel() ).thenReturn( model );
         when( dtPresenter.getAccess() ).thenReturn( access );
         when( dtPresenterView.getModel() ).thenReturn( uiModel );
 

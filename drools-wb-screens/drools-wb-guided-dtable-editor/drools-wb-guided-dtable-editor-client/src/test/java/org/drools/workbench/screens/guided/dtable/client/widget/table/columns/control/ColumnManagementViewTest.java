@@ -54,6 +54,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -311,7 +312,7 @@ public class ColumnManagementViewTest {
 
         final ColumnLabelWidget columnLabel = mockColumnLabelWidget();
 
-        doReturn(columnLabel).when(view).newColumnLabelWidget(anyString());
+        doReturn(columnLabel).when(view).newColumnLabelWidget(nullable(String.class));
 
         view.renderColumns(columnGroups);
 

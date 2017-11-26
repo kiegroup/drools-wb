@@ -36,6 +36,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.Grid
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
 
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
@@ -195,7 +196,7 @@ public class ColumnHeaderPopOverHandlerTest {
         handler.onNodeMouseMove( event );
 
         verify( columnPopOverPresenter,
-                times( 1 ) ).show( any( GuidedDecisionTableModellerView.class ),
+                times( 1 ) ).show( nullable( GuidedDecisionTableModellerView.class ),
                                    eq( dtPresenter1 ),
                                    eq( 0 ) );
     }
@@ -216,7 +217,7 @@ public class ColumnHeaderPopOverHandlerTest {
         handler.onNodeMouseMove( event );
 
         verify( columnPopOverPresenter,
-                times( 1 ) ).show( any( GuidedDecisionTableModellerView.class ),
+                times( 1 ) ).show( nullable( GuidedDecisionTableModellerView.class ),
                                    eq( dtPresenter1 ),
                                    eq( 0 ) );
 
@@ -225,7 +226,7 @@ public class ColumnHeaderPopOverHandlerTest {
         handler.onNodeMouseMove( event );
 
         verify( columnPopOverPresenter,
-                times( 1 ) ).show( any( GuidedDecisionTableModellerView.class ),
+                times( 1 ) ).show( nullable( GuidedDecisionTableModellerView.class ),
                                    eq( dtPresenter2 ),
                                    eq( 0 ) );
     }

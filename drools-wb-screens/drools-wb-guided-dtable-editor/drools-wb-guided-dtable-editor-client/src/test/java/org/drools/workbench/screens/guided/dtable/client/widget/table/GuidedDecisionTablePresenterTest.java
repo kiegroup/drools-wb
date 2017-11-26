@@ -87,6 +87,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.atLeast;
@@ -220,7 +221,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         verify(renderer,
                never()).clearHighlights();
         verify(renderer,
-               times(1)).highlightRows(any(Severity.class),
+               times(1)).highlightRows(nullable(Severity.class),
                                        any(Set.class));
         verify(view,
                times(1)).draw();
@@ -773,8 +774,8 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
         final ParameterizedCommand<Collection<String>> parentRuleNamesCommand = mock(ParameterizedCommand.class);
 
-        when(ruleNameService.getRuleNames(any(ObservablePath.class),
-                                          any(String.class))).thenReturn(parentRuleNames);
+        when(ruleNameService.getRuleNames(nullable(ObservablePath.class),
+                                          nullable(String.class))).thenReturn(parentRuleNames);
 
         dtPresenter.getPackageParentRuleNames(parentRuleNamesCommand);
 

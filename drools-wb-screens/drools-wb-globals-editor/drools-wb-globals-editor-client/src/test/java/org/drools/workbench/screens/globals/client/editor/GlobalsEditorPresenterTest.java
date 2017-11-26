@@ -53,6 +53,7 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyListOf;
@@ -140,7 +141,7 @@ public class GlobalsEditorPresenterTest {
         verify(view,
                times(1)).showLoading();
         verify(globalsEditorService,
-               times(1)).loadContent(any(Path.class));
+               times(1)).loadContent(nullable(Path.class));
 
         when(versionRecordManager.getCurrentPath()).thenReturn(mock(ObservablePath.class));
 
@@ -170,23 +171,23 @@ public class GlobalsEditorPresenterTest {
         presenter.save();
 
         verify(validationService,
-               times(1)).validateForSave(any(Path.class),
-                                         any(GlobalsModel.class));
+               times(1)).validateForSave(nullable(Path.class),
+                                         nullable(GlobalsModel.class));
         verify(savePopUpPresenter,
-               times(1)).show(any(Path.class),
+               times(1)).show(nullable(Path.class),
                               any(ParameterizedCommand.class));
     }
 
     @Test
     public void saveValidationErrors() {
-        when(validationService.validateForSave(any(Path.class),
-                                               any(GlobalsModel.class))).thenReturn(Arrays.asList(new ValidationMessage()));
+        when(validationService.validateForSave(nullable(Path.class),
+                                               nullable(GlobalsModel.class))).thenReturn(Arrays.asList(new ValidationMessage()));
 
         presenter.save();
 
         verify(validationService,
-               times(1)).validateForSave(any(Path.class),
-                                         any(GlobalsModel.class));
+               times(1)).validateForSave(nullable(Path.class),
+                                         nullable(GlobalsModel.class));
         verify(validationPopup,
                times(1)).showSaveValidationMessages(any(Command.class),
                                                     any(Command.class),
@@ -200,7 +201,7 @@ public class GlobalsEditorPresenterTest {
         presenter.onDelete();
 
         verify(validationService,
-               times(1)).validateForDelete(any(Path.class));
+               times(1)).validateForDelete(nullable(Path.class));
         verify(deletePopUpPresenter,
                times(1)).show(eq(assetUpdateValidator),
                               any(ParameterizedCommand.class));
@@ -208,12 +209,12 @@ public class GlobalsEditorPresenterTest {
 
     @Test
     public void deleteValidationErrors() {
-        when(validationService.validateForDelete(any(Path.class))).thenReturn(Arrays.asList(new ValidationMessage()));
+        when(validationService.validateForDelete(nullable(Path.class))).thenReturn(Arrays.asList(new ValidationMessage()));
 
         presenter.onDelete();
 
         verify(validationService,
-               times(1)).validateForDelete(any(Path.class));
+               times(1)).validateForDelete(nullable(Path.class));
         verify(validationPopup,
                times(1)).showDeleteValidationMessages(any(Command.class),
                                                       any(Command.class),
@@ -227,10 +228,10 @@ public class GlobalsEditorPresenterTest {
 
         presenter.makeMenuBar();
 
-        verify(fileMenuBuilder).addSave(any(MenuItem.class));
-        verify(fileMenuBuilder).addCopy(any(Path.class),
+        verify(fileMenuBuilder).addSave(nullable(MenuItem.class));
+        verify(fileMenuBuilder).addCopy(nullable(Path.class),
                                         any(AssetUpdateValidator.class));
-        verify(fileMenuBuilder).addRename(any(Path.class),
+        verify(fileMenuBuilder).addRename(nullable(Path.class),
                                           any(AssetUpdateValidator.class));
         verify(fileMenuBuilder).addDelete(any(Command.class));
     }

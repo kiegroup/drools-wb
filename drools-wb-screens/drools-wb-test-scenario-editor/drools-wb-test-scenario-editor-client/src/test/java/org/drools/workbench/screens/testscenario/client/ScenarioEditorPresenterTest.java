@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.testscenario.client;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 
 import javax.enterprise.event.Event;
@@ -66,6 +67,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anySet;
@@ -217,7 +219,7 @@ public class ScenarioEditorPresenterTest {
 
         verify(service).save(any(Path.class),
                              scenarioArgumentCaptor.capture(),
-                             any(Metadata.class),
+                             nullable(Metadata.class),
                              anyString());
 
         assertEquals(scenarioRunResult,
@@ -272,16 +274,16 @@ public class ScenarioEditorPresenterTest {
 
         doReturn(true)
                 .when(callback)
-                .error(any(Message.class),
-                       any(RuntimeException.class));
+                .error(nullable(Message.class),
+                       nullable(RuntimeException.class));
         doReturn(callback).when(editor).getTestRunFailedCallback();
-        doThrow(new RuntimeException("some problem")).when(service).runScenario(anyString(),
-                                                                                any(Path.class),
-                                                                                any(Scenario.class));
+        doThrow(new RuntimeException("some problem")).when(service).runScenario(nullable(String.class),
+                                                                                nullable(Path.class),
+                                                                                nullable(Scenario.class));
         editor.onRunScenario();
 
-        verify(callback).error(any(Message.class),
-                               any(RuntimeException.class));
+        verify(callback).error(nullable(Message.class),
+                               any(InvocationTargetException.class));
         verify(view).showBusyIndicator(TestScenarioConstants.INSTANCE.BuildingAndRunningScenario());
     }
 
@@ -304,15 +306,15 @@ public class ScenarioEditorPresenterTest {
 
         doReturn(true)
                 .when(callback)
-                .error(any(Message.class),
-                       any(RuntimeException.class));
+                .error(nullable(Message.class),
+                       nullable(RuntimeException.class));
         doReturn(callback).when(editor).getTestRunFailedCallback();
-        doThrow(new RuntimeException("some problem")).when(testService).runAllTests(anyString(),
-                                                                                    any(Path.class));
+        doThrow(new RuntimeException("some problem")).when(testService).runAllTests(nullable(String.class),
+                                                                                    nullable(Path.class));
         editor.onRunAllScenarios();
 
-        verify(callback).error(any(Message.class),
-                               any(RuntimeException.class));
+        verify(callback).error(nullable(Message.class),
+                               any(InvocationTargetException.class));
         verify(view).showBusyIndicator(TestScenarioConstants.INSTANCE.BuildingAndRunningScenarios());
     }
 
@@ -324,12 +326,12 @@ public class ScenarioEditorPresenterTest {
         editor.makeMenuBar();
 
         verify(fileMenuBuilder).addSave(any(Command.class));
-        verify(fileMenuBuilder).addCopy(any(Path.class),
-                                        any(AssetUpdateValidator.class));
-        verify(fileMenuBuilder).addRename(any(Path.class),
-                                          any(AssetUpdateValidator.class));
-        verify(fileMenuBuilder).addDelete(any(Path.class),
-                                          any(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addCopy(nullable(Path.class),
+                                        nullable(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addRename(nullable(Path.class),
+                                          nullable(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addDelete(nullable(Path.class),
+                                          nullable(AssetUpdateValidator.class));
     }
 
     @Test

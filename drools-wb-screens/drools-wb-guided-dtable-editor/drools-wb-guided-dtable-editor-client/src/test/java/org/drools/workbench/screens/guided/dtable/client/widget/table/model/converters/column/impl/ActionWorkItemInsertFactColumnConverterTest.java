@@ -19,7 +19,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.ActionWorkItemInse
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.converters.column.BaseColumnConverter;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ActionWorkItemInsertFactColumnConverterTest extends BaseActionWorkItemConverterTest {

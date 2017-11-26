@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.workbench.common.services.shared.enums.EnumDropdownService;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.mocks.CallerMock;
@@ -36,6 +36,7 @@ import org.uberfire.mvp.Command;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -157,9 +158,9 @@ public class EnumLoaderUtilitiesTest {
         final DropDownData enumDefinition = DropDownData.create("expression",
                                                                 valuePairs);
 
-        when(enumDropdownService.loadDropDownExpression(any(Path.class),
-                                                        any(String[].class),
-                                                        any(String.class))).thenReturn(fixedList);
+        when(enumDropdownService.loadDropDownExpression(nullable(Path.class),
+                                                        nullable(String[].class),
+                                                        nullable(String.class))).thenReturn(fixedList);
 
         //Call twice to check caching
         enumLoaderUtilities.getEnums(enumDefinition,
@@ -174,7 +175,7 @@ public class EnumLoaderUtilitiesTest {
                                      onFetchCompleteCommand);
 
         verify(enumDropdownService,
-               times(1)).loadDropDownExpression(any(Path.class),
+               times(1)).loadDropDownExpression(nullable(Path.class),
                                                 any(String[].class),
                                                 any(String.class));
         verify(onFetchCommand,

@@ -67,6 +67,7 @@ import org.uberfire.rpc.SessionInfo;
 import org.uberfire.security.authz.AuthorizationManager;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -204,8 +205,8 @@ public class GuidedDecisionTablePresenter_AuditLogTest {
                                                          overview,
                                                          dmoBaseline);
 
-        when(oracleFactory.makeAsyncPackageDataModelOracle(any(Path.class),
-                                                           any(GuidedDecisionTable52.class),
+        when(oracleFactory.makeAsyncPackageDataModelOracle(nullable(Path.class),
+                                                           nullable(GuidedDecisionTable52.class),
                                                            eq(dmoBaseline))).thenReturn(dmo);
 
         dtPresenter.setContent(null,

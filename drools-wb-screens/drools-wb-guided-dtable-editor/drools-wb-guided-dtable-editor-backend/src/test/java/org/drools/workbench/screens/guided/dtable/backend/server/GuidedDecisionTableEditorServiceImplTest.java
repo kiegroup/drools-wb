@@ -50,7 +50,7 @@ import org.kie.workbench.common.services.backend.source.SourceServices;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.ext.editor.commons.backend.version.VersionRecordService;
@@ -71,6 +71,7 @@ import org.uberfire.workbench.events.ResourceOpenedEvent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -167,13 +168,6 @@ public class GuidedDecisionTableEditorServiceImplTest {
 
         when(projectService.resolvePackage(any(Path.class))).thenReturn(pkg);
         when(pkg.getPackageName()).thenReturn("mypackage");
-        when(pkg.getPackageMainResourcesPath()).thenReturn(PathFactory.newPath("mypackage",
-                                                                               "default://project/src/main/resources"));
-
-        when(fileSystem.provider()).thenReturn(fileSystemProvider);
-        when(fileSystemProvider.readAttributes(any(org.uberfire.java.nio.file.Path.class),
-                                               any(Class.class))).thenReturn(basicFileAttributes);
-        when(basicFileAttributes.isRegularFile()).thenReturn(true);
     }
 
     @Test
@@ -193,7 +187,7 @@ public class GuidedDecisionTableEditorServiceImplTest {
         verify(ioService,
                times(1)).write(any(org.uberfire.java.nio.file.Path.class),
                                any(String.class),
-                               any(CommentedOption.class));
+                               nullable(CommentedOption.class));
 
         assertTrue(p.toURI().contains("src/main/resources/mypackage/filename." + dtType.getSuffix()));
         assertEquals("mypackage",
@@ -270,7 +264,7 @@ public class GuidedDecisionTableEditorServiceImplTest {
                times(1)).write(any(org.uberfire.java.nio.file.Path.class),
                                any(String.class),
                                any(Map.class),
-                               any(CommentedOption.class));
+                               nullable(CommentedOption.class));
 
         assertEquals("mypackage",
                      model.getPackageName());
@@ -330,7 +324,7 @@ public class GuidedDecisionTableEditorServiceImplTest {
                times(1)).write(any(org.uberfire.java.nio.file.Path.class),
                                any(String.class),
                                any(Map.class),
-                               any(CommentedOption.class));
+                               nullable(CommentedOption.class));
 
         verify(ioService,
                times(1)).endBatch();

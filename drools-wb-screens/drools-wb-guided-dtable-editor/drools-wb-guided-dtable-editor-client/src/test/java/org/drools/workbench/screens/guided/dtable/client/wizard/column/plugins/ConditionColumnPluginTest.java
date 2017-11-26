@@ -61,6 +61,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -429,8 +430,8 @@ public class ConditionColumnPluginTest {
     @Test
     public void testConstraintValueWhenItHasEnums() throws Exception {
         doReturn(oracle).when(presenter).getDataModelOracle();
-        doReturn(true).when(oracle).hasEnums(anyString(),
-                                             anyString());
+        doReturn(true).when(oracle).hasEnums(nullable(String.class),
+                                             nullable(String.class));
 
         final int constraintValue = plugin.constraintValue();
 

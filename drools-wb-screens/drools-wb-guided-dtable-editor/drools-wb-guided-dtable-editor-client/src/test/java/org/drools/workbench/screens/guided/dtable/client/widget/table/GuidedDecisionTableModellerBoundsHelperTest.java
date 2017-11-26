@@ -21,7 +21,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerBoundsHelper.BOUNDS_MAX_X;

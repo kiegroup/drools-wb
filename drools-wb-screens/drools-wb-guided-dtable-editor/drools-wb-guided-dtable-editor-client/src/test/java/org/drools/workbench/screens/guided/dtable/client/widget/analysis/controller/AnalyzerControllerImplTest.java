@@ -31,7 +31,7 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.Delet
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.InsertRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.UpdateColumnDataEvent;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.client.mvp.PlaceManager;
 
 import static org.mockito.Mockito.mock;

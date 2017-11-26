@@ -65,6 +65,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
@@ -129,11 +130,11 @@ public class GuidedDecisionTableModellerPresenterTest {
 
     @Before
     public void setup() {
-        when(gridLayer.addNodeMouseMoveHandler(any(NodeMouseMoveHandler.class))).thenReturn(mock(HandlerRegistration.class));
-        when(gridLayer.addNodeMouseOutHandler(any(NodeMouseOutHandler.class))).thenReturn(mock(HandlerRegistration.class));
-        when(view.addKeyDownHandler(any(KeyDownHandler.class))).thenReturn(mock(HandlerRegistration.class));
-        when(view.addContextMenuHandler(any(ContextMenuHandler.class))).thenReturn(mock(HandlerRegistration.class));
-        when(view.addMouseDownHandler(any(MouseDownHandler.class))).thenReturn(mock(HandlerRegistration.class));
+        when(gridLayer.addNodeMouseMoveHandler(nullable(NodeMouseMoveHandler.class))).thenReturn(mock(HandlerRegistration.class));
+        when(gridLayer.addNodeMouseOutHandler(nullable(NodeMouseOutHandler.class))).thenReturn(mock(HandlerRegistration.class));
+        when(view.addKeyDownHandler(nullable(KeyDownHandler.class))).thenReturn(mock(HandlerRegistration.class));
+        when(view.addContextMenuHandler(nullable(ContextMenuHandler.class))).thenReturn(mock(HandlerRegistration.class));
+        when(view.addMouseDownHandler(nullable(MouseDownHandler.class))).thenReturn(mock(HandlerRegistration.class));
         when(view.getGridLayerView()).thenReturn(gridLayer);
         when(view.getBounds()).thenReturn(bounds);
 

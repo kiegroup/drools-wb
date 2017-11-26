@@ -77,8 +77,8 @@ public class IndexRuleInvalidDrlTest extends BaseIndexingTest<DRLResourceTypeDef
             verify( mockAppender ).doAppend( argThat( new ArgumentMatcher<ILoggingEvent>() {
 
                 @Override
-                public boolean matches( final Object argument ) {
-                    return ( (ILoggingEvent) argument ).getMessage().startsWith( "Unable to parse DRL" );
+                public boolean matches( final ILoggingEvent argument ) {
+                    return argument.getMessage().startsWith( "Unable to parse DRL" );
                 }
 
             } ) );
