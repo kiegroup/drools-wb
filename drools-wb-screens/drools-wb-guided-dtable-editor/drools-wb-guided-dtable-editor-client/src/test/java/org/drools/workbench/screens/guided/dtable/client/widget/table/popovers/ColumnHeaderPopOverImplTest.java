@@ -62,6 +62,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.mocks.CallerMock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -141,8 +142,8 @@ public class ColumnHeaderPopOverImplTest {
         uiModel.appendColumn( uiColumn2 );
 
         serviceCaller = new CallerMock<>( service );
-        when( service.toSource( any( Path.class ),
-                                any( GuidedDecisionTable52.class ) ) ).thenReturn( "source" );
+        when( service.toSource( nullable( Path.class ),
+                                nullable( GuidedDecisionTable52.class ) ) ).thenReturn( "source" );
 
         final Instance<ColumnDefinitionBuilder> buildersInstance = makeBuildersInstance();
         final ColumnDefinitionFactory columnDefinitionFactory = new ColumnDefinitionFactory( buildersInstance );
@@ -341,7 +342,7 @@ public class ColumnHeaderPopOverImplTest {
                                     }
                                   );
         verify( service,
-                times( 1 ) ).toSource( any( Path.class ),
+                times( 1 ) ).toSource( nullable( Path.class ),
                                        any( GuidedDecisionTable52.class ) );
     }
 

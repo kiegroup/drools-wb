@@ -83,6 +83,7 @@ import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -293,9 +294,9 @@ public abstract class BaseGuidedDecisionTablePresenterTest<P extends BaseGuidedD
         when(modeller.addDecisionTable(eq(path),
                                        eq(placeRequest),
                                        eq(content),
-                                       any(Boolean.class),
-                                       any(Double.class),
-                                       any(Double.class))).thenReturn(dtPresenter);
+                                       nullable(Boolean.class),
+                                       nullable(Double.class),
+                                       nullable(Double.class))).thenReturn(dtPresenter);
         when(path.getOriginal()).thenReturn(originalPath);
         when(dtPresenter.getLatestPath()).thenReturn(path);
         when(dtPresenter.getCurrentPath()).thenReturn(path);

@@ -193,7 +193,7 @@ public class NewGuidedDecisionTableColumnWizardTest {
         List<WizardPage> wizardPages = Arrays.asList(patternPage,
                                                      operatorPage,
                                                      additionalInfoPage);
-
+        doNothing().when(wizard).initPages(any());
         when(plugin.getPages()).thenReturn(wizardPages);
 
         wizard.start(plugin);

@@ -68,6 +68,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
@@ -318,8 +319,8 @@ public class ActionWorkItemSetFieldPluginTest {
     @Test
     public void testGenerateColumnWhenColumnIsNotNewAndVetoed() throws Exception {
         doReturn(false).when(plugin).isNewColumn();
-        doThrow(VetoException.class).when(presenter).updateColumn(any(ActionCol52.class),
-                                                                  any(ActionCol52.class));
+        doThrow(VetoException.class).when(presenter).updateColumn(nullable(ActionCol52.class),
+                                                                  nullable(ActionCol52.class));
 
         assertFalse(plugin.generateColumn());
 

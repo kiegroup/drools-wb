@@ -19,7 +19,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDeci
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
@@ -29,9 +29,10 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.Gr
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public abstract class BaseKeyboardTest {
 
     @Mock
@@ -49,9 +50,6 @@ public abstract class BaseKeyboardTest {
     @Mock
     private GridColumnRenderer<?> columnRenderer;
 
-    @Mock
-    private BaseGridRendererHelper rendererHelper;
-
     protected GridData uiModel = new BaseGridData();
 
     @Before
@@ -65,7 +63,7 @@ public abstract class BaseKeyboardTest {
 
         when(gridWidget.getModel()).thenReturn(uiModel);
         when(gridWidget.getPresenter()).thenReturn(dtPresenter);
-        when(gridWidget.getRendererHelper()).thenReturn(rendererHelper);
+        when(gridWidget.getRendererHelper()).thenReturn(mock(BaseGridRendererHelper.class));
     }
 }
 

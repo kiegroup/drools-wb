@@ -28,7 +28,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.DataType;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -107,10 +107,5 @@ public class BRLConditionColumnDefinitionBuilderTest extends BaseColumnDefinitio
         brl.getChildColumns().add(new BRLConditionVariableColumn("f2",
                                                                  DataType.TYPE_STRING));
         model.getConditions().add(brl);
-
-        when(dmo.getFieldType(eq("Person"),
-                              eq("name"))).thenReturn(DataType.TYPE_STRING);
-        when(dmo.getFieldType(eq("Smurf"),
-                              eq("colour"))).thenReturn(DataType.TYPE_STRING);
     }
 }

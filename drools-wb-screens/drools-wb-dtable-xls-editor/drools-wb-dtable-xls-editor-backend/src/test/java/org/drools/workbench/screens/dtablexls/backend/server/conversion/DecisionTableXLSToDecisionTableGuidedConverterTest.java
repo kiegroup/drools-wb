@@ -50,13 +50,14 @@ import org.kie.workbench.common.services.shared.project.KieProjectService;
 import org.kie.workbench.common.services.shared.project.ProjectImportsService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.io.IOService;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
@@ -219,7 +220,7 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
         verify(importsService,
                times(1)).save(projectImportsPathArgumentCaptor.capture(),
                               projectImportsArgumentCaptor.capture(),
-                              any(Metadata.class),
+                              nullable(Metadata.class),
                               any(String.class));
         assertNotNull(projectImportsPathArgumentCaptor.getValue());
         final Path actualProjectImportsPath = projectImportsPathArgumentCaptor.getValue();

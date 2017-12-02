@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
@@ -43,6 +43,7 @@ import org.uberfire.java.nio.file.spi.FileSystemProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -123,7 +124,6 @@ public class GuidedDecisionTableEditorGraphRenameHelperTest {
 
     @Test
     public void checkUpdateReferencesNoFiles() {
-        when( source.getFileName() ).thenReturn( "dtable.gdst" );
         when( source.toURI() ).thenReturn( "default://test/dtable.gdst" );
 
         helper.postProcess( source,
@@ -143,9 +143,7 @@ public class GuidedDecisionTableEditorGraphRenameHelperTest {
         when( dtGraphPath.getFileSystem() ).thenReturn( fileSystem );
         paths.add( dtGraphPath );
 
-        when( source.getFileName() ).thenReturn( "dtable.gdst" );
         when( source.toURI() ).thenReturn( "default://test/dtable.gdst" );
-        when( destination.getFileName() ).thenReturn( "dtable-renamed.gdst" );
         when( destination.toURI() ).thenReturn( "default://test/dtable-renamed.gdst" );
 
         final GuidedDecisionTableEditorGraphModel model = new GuidedDecisionTableEditorGraphModel();
@@ -167,7 +165,7 @@ public class GuidedDecisionTableEditorGraphRenameHelperTest {
         verify( ioService,
                 times( 1 ) ).write( dtGraphPathCaptor.capture(),
                                     modelXmlCaptor.capture(),
-                                    any( CommentedOption.class ) );
+                                    nullable( CommentedOption.class ) );
 
         final org.uberfire.java.nio.file.Path dtGraphPath2 = dtGraphPathCaptor.getValue();
         assertEquals( dtGraphPath.toUri().getPath(),
@@ -189,7 +187,6 @@ public class GuidedDecisionTableEditorGraphRenameHelperTest {
         when( dtPath.getFileSystem() ).thenReturn( fileSystem );
         paths.add( dtPath );
 
-        when( source.getFileName() ).thenReturn( "dtable.gdst" );
         when( source.toURI() ).thenReturn( "default://test/dtable.gdst" );
 
         helper.postProcess( source,

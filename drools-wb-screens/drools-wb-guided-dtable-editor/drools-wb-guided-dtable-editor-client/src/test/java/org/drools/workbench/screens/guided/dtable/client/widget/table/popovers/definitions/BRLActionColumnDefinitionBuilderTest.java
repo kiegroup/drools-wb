@@ -28,7 +28,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.DataType;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -102,10 +102,5 @@ public class BRLActionColumnDefinitionBuilderTest extends BaseColumnDefinitionBu
         brl.getChildColumns().add(new BRLActionVariableColumn("f2",
                                                               DataType.TYPE_NUMERIC_INTEGER));
         model.getActionCols().add(brl);
-
-        when(dmo.getFieldType(eq("Person"),
-                              eq("name"))).thenReturn(DataType.TYPE_STRING);
-        when(dmo.getFieldType(eq("Person"),
-                              eq("age"))).thenReturn(DataType.TYPE_NUMERIC_INTEGER);
     }
 }

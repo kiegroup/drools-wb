@@ -39,6 +39,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertTrue;
 import static org.kie.workbench.common.services.shared.preferences.ApplicationPreferences.DATE_FORMAT;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -77,8 +78,8 @@ public class ConstraintValueEditorTest {
         ApplicationPreferences.setUp(map);
 
         when(ruleModeller.getDataModelOracle()).thenReturn(oracle);
-        when(oracle.getFieldType(anyString(),
-                                 anyString())).thenReturn(DataType.TYPE_STRING);
+        when(oracle.getFieldType(nullable(String.class),
+                                 nullable(String.class))).thenReturn(DataType.TYPE_STRING);
         when(constraint.getConstraintValueType()).thenReturn(SingleFieldConstraint.TYPE_LITERAL);
     }
 
@@ -113,7 +114,7 @@ public class ConstraintValueEditorTest {
         editor.getNewTextBox(DataType.TYPE_STRING);
 
         inOrder.verify(editor).setUpTextBoxStyleAndHandlers(eq(defaultTextBox),
-                                                            any(Command.class));
+                                                            nullable(Command.class));
         verify(defaultTextBox,
                times(1)).setText(any(String.class));
         inOrder.verify(editor).attachDisplayLengthHandler(eq(defaultTextBox));
@@ -128,7 +129,7 @@ public class ConstraintValueEditorTest {
         editor.templateKeyEditor();
 
         inOrder.verify(editor).setUpTextBoxStyleAndHandlers(eq(templateKeyTextBox),
-                                                            any(Command.class));
+                                                            nullable(Command.class));
         verify(templateKeyTextBox,
                times(1)).setValue(any(String.class),
                                   any(Boolean.class));

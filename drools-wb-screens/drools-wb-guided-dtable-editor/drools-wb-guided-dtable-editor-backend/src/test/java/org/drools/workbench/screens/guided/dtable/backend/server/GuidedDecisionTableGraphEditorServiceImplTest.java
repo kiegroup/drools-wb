@@ -44,7 +44,7 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.ext.editor.commons.backend.version.VersionRecordService;
@@ -61,6 +61,7 @@ import org.uberfire.workbench.events.ResourceOpenedEvent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -172,7 +173,7 @@ public class GuidedDecisionTableGraphEditorServiceImplTest {
         verify(ioService,
                times(1)).write(any(org.uberfire.java.nio.file.Path.class),
                                any(String.class),
-                               any(CommentedOption.class));
+                               nullable(CommentedOption.class));
 
         assertTrue(p.toURI().contains("src/main/resources/mypackage/filename." + dtGraphResourceType.getSuffix()));
     }
@@ -226,7 +227,7 @@ public class GuidedDecisionTableGraphEditorServiceImplTest {
                times(1)).write(any(org.uberfire.java.nio.file.Path.class),
                                any(String.class),
                                any(Map.class),
-                               any(CommentedOption.class));
+                               nullable(CommentedOption.class));
     }
 
     @Test
@@ -296,7 +297,6 @@ public class GuidedDecisionTableGraphEditorServiceImplTest {
     @Test
     public void testListDecisionTablesInPackage() {
         final Path path = mock(Path.class);
-        when(path.toURI()).thenReturn("default://project/src/main/resources/dtable1.gdst");
 
         resolvedPaths.add(makeNioPath("default://project/src/main/resources/dtable1.gdst"));
         resolvedPaths.add(makeNioPath("default://project/src/main/resources/dtable2.gdst"));
@@ -319,7 +319,6 @@ public class GuidedDecisionTableGraphEditorServiceImplTest {
     @Test
     public void testListDecisionTablesInPackageExcludesDotFiles() {
         final Path path = mock(Path.class);
-        when(path.toURI()).thenReturn("default://project/src/main/resources/dtable1.gdst");
 
         resolvedPaths.add(makeNioPath("default://project/src/main/resources/dtable1.gdst"));
         resolvedPaths.add(makeNioPath("default://project/src/main/resources/.dtable1.gdst"));

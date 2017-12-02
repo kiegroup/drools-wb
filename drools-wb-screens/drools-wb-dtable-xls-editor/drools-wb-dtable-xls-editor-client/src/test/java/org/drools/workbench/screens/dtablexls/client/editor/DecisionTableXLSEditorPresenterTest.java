@@ -60,6 +60,7 @@ import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -170,7 +171,7 @@ public class DecisionTableXLSEditorPresenterTest {
 
         verify(view).init(presenter);
         verify(view).setupUploadWidget(decisionTableXLSResourceType);
-        verify(view).setPath(any(Path.class));
+        verify(view).setPath(nullable(Path.class));
         verify(view).setReadOnly(false);
     }
 
@@ -181,7 +182,7 @@ public class DecisionTableXLSEditorPresenterTest {
 
         verify(view).init(presenter);
         verify(view).setupUploadWidget(decisionTableXLSXResourceType);
-        verify(view).setPath(any(Path.class));
+        verify(view).setPath(nullable(Path.class));
         verify(view).setReadOnly(false);
     }
 
@@ -237,12 +238,12 @@ public class DecisionTableXLSEditorPresenterTest {
 
         presenter.makeMenuBar();
 
-        verify(fileMenuBuilder).addCopy(any(Path.class),
-                                        any(AssetUpdateValidator.class));
-        verify(fileMenuBuilder).addRename(any(Path.class),
-                                          any(AssetUpdateValidator.class));
-        verify(fileMenuBuilder).addDelete(any(Path.class),
-                                          any(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addCopy(nullable(Path.class),
+                                        nullable(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addRename(nullable(Path.class),
+                                          nullable(AssetUpdateValidator.class));
+        verify(fileMenuBuilder).addDelete(nullable(Path.class),
+                                          nullable(AssetUpdateValidator.class));
     }
 
     @Test

@@ -39,6 +39,7 @@ import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.mocks.CallerMock;
 
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -94,8 +95,8 @@ public class ScenarioWidgetComponentCreatorTest {
         this.ruleNamesServiceCaller = new CallerMock<>(ruleNamesService);
         this.creator = spy(new ScenarioWidgetComponentCreator(ruleNamesServiceCaller));
 
-        when(ruleNamesService.getRuleNames(any(Path.class),
-                                           anyString())).thenReturn(ruleNames);
+        when(ruleNamesService.getRuleNames(nullable(Path.class),
+                                           nullable(String.class))).thenReturn(ruleNames);
         doReturn(button).when(creator).newOkButton();
         doNothing().when(creator).showSelectRuleNameWarning();
         GwtMockito.useProviderForType(HorizontalPanel.class, fakeProvider -> horizontalPanel);

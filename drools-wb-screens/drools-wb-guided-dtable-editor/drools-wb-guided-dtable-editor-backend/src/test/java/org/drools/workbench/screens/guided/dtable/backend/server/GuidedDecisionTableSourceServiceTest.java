@@ -41,7 +41,7 @@ import org.kie.soup.project.datamodel.imports.Import;
 import org.kie.soup.project.datamodel.imports.Imports;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.file.FileSystem;
 import org.uberfire.java.nio.file.Path;
@@ -100,8 +100,6 @@ public class GuidedDecisionTableSourceServiceTest {
 
         // Simulates that no DSL files are present
         when(projectService.resolvePackage(any())).thenReturn(packageMock);
-        when(discoveryService.discoverFiles(any(),
-                                            any())).thenReturn(new ArrayList<Path>());
         when(fileSystem.supportedFileAttributeViews()).thenReturn(new HashSet<String>());
         when(path.getFileSystem()).thenReturn(fileSystem);
         when(path.toString()).thenReturn("/");

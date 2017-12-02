@@ -48,6 +48,7 @@ import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -159,7 +160,7 @@ public class NewGuidedDecisionTableHandlerTest {
                                     fileNameCaptor.capture(),
                                     eq(TableFormat.EXTENDED_ENTRY),
                                     eq(GuidedDecisionTable52.HitPolicy.FIRST_HIT),
-                                    any(AsyncPackageDataModelOracle.class),
+                                    nullable(AsyncPackageDataModelOracle.class),
                                     any(NewGuidedDecisionTableWizard.GuidedDecisionTableWizardHandler.class));
     }
 

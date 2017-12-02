@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
@@ -43,6 +43,7 @@ import org.uberfire.java.nio.file.spi.FileSystemProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -120,7 +121,6 @@ public class GuidedDecisionTableEditorGraphDeleteHelperTest {
 
     @Test
     public void checkRemoveReferencesNoFiles() {
-        when( path.getFileName() ).thenReturn( "dtable.gdst" );
         when( path.toURI() ).thenReturn( "default://test/dtable.gdst" );
 
         helper.postProcess( path );
@@ -138,7 +138,6 @@ public class GuidedDecisionTableEditorGraphDeleteHelperTest {
         when( dtGraphPath.getFileSystem() ).thenReturn( fileSystem );
         paths.add( dtGraphPath );
 
-        when( path.getFileName() ).thenReturn( "dtable.gdst" );
         when( path.toURI() ).thenReturn( "default://test/dtable.gdst" );
 
         final GuidedDecisionTableEditorGraphModel model = new GuidedDecisionTableEditorGraphModel();
@@ -158,7 +157,7 @@ public class GuidedDecisionTableEditorGraphDeleteHelperTest {
         verify( ioService,
                 times( 1 ) ).write( dtGraphPathCaptor.capture(),
                                     modelXmlCaptor.capture(),
-                                    any( CommentedOption.class ) );
+                                    nullable( CommentedOption.class ) );
 
         final org.uberfire.java.nio.file.Path dtGraphPath2 = dtGraphPathCaptor.getValue();
         assertEquals( dtGraphPath.toUri().getPath(),
@@ -178,7 +177,6 @@ public class GuidedDecisionTableEditorGraphDeleteHelperTest {
         when( dtPath.getFileSystem() ).thenReturn( fileSystem );
         paths.add( dtPath );
 
-        when( path.getFileName() ).thenReturn( "dtable.gdst" );
         when( path.toURI() ).thenReturn( "default://test/dtable.gdst" );
 
         helper.postProcess( path );

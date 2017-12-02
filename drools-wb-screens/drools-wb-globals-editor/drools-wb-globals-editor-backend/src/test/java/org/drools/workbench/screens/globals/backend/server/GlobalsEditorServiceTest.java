@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.project.KieProjectService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.io.IOService;
@@ -40,6 +40,7 @@ import org.uberfire.java.nio.base.options.CommentedOption;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.anyMapOf;
@@ -93,7 +94,7 @@ public class GlobalsEditorServiceTest {
         verify( ioService,
                 times( 1 ) ).write( any( org.uberfire.java.nio.file.Path.class ),
                                     anyString(),
-                                    any( CommentedOption.class ) );
+                                    nullable( CommentedOption.class ) );
     }
 
     @Test
@@ -125,7 +126,7 @@ public class GlobalsEditorServiceTest {
                 times( 1 ) ).write( any( org.uberfire.java.nio.file.Path.class ),
                                     anyString(),
                                     mapArgumentCaptor.capture(),
-                                    any( CommentedOption.class ) );
+                                    nullable( CommentedOption.class ) );
 
         Map capturedMap = mapArgumentCaptor.getValue();
         assertEquals( metadataMap,

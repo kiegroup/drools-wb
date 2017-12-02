@@ -39,11 +39,12 @@ import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.mocks.CallerMock;
 
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
@@ -86,10 +87,10 @@ public class ColumnDefinitionFactoryTest {
 
         when(dtPresenter.getModel()).thenReturn(model);
         when(dtPresenter.getDataModelOracle()).thenReturn(dmo);
-        when(service.toSource(any(Path.class),
-                              any(GuidedDecisionTable52.class))).thenReturn("source");
-        when(dmo.getFieldType(any(String.class),
-                              any(String.class))).thenReturn(DataType.TYPE_STRING);
+        when(service.toSource(nullable(Path.class),
+                              nullable(GuidedDecisionTable52.class))).thenReturn("source");
+        when(dmo.getFieldType(nullable(String.class),
+                              nullable(String.class))).thenReturn(DataType.TYPE_STRING);
 
         final Instance<ColumnDefinitionBuilder> buildersInstance = makeBuildersInstance();
         this.columnDefinitionFactory = new ColumnDefinitionFactory(buildersInstance);

@@ -33,6 +33,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.mocks.CallerMock;
 
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.spy;
@@ -61,8 +62,8 @@ public abstract class BaseColumnDefinitionBuilderTest {
         final ColumnDefinitionBuilder wrapped = getBuilder();
         this.builder = spy(wrapped);
 
-        when(service.toSource(any(Path.class),
-                              any(GuidedDecisionTable52.class))).thenAnswer((InvocationOnMock invocation) -> {
+        when(service.toSource(nullable(Path.class),
+                              nullable(GuidedDecisionTable52.class))).thenAnswer((InvocationOnMock invocation) -> {
             final GuidedDecisionTable52 model = (GuidedDecisionTable52) invocation.getArguments()[1];
             return GuidedDTDRLPersistence.getInstance().marshal(model);
         });
@@ -82,9 +83,6 @@ public abstract class BaseColumnDefinitionBuilderTest {
         cc.setFieldType(DataType.TYPE_STRING);
         p.getChildColumns().add(cc);
         model.getConditions().add(p);
-
-        when(dmo.getFieldType(eq("Person"),
-                              eq("name"))).thenReturn(DataType.TYPE_STRING);
     }
 
     protected void setupLimitedEntryPatternAndCondition() {
@@ -98,8 +96,5 @@ public abstract class BaseColumnDefinitionBuilderTest {
         cc.setValue(new DTCellValue52("Michael"));
         p.getChildColumns().add(cc);
         model.getConditions().add(p);
-
-        when(dmo.getFieldType(eq("Person"),
-                              eq("name"))).thenReturn(DataType.TYPE_STRING);
     }
 }
