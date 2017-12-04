@@ -171,11 +171,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-data-modeller-backend</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-decisiontables</artifactId>
       <exclusions>
@@ -203,23 +198,6 @@
     </dependency>
 
     <!-- Test dependencies -->
-    <dependency>
-      <groupId>org.jboss.weld.se</groupId>
-      <artifactId>weld-se-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-nio2-fs</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-nio2-jgit</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -255,11 +233,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>simple-jndi</groupId>
-      <artifactId>simple-jndi</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 
