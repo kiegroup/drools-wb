@@ -37,7 +37,6 @@ import org.jboss.errai.common.client.api.Caller;
 import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.backend.vfs.Path;
-import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public class ScenarioWidgetComponentCreator {
@@ -61,7 +60,7 @@ public class ScenarioWidgetComponentCreator {
         this.ruleNamesService = ruleNamesService;
     }
 
-    protected void reset(final ScenarioParentWidget scenarioWidget,
+    public void reset(final ScenarioParentWidget scenarioWidget,
                          final Path path,
                          final AsyncPackageDataModelOracle oracle,
                          final Scenario scenario) {
@@ -105,15 +104,6 @@ public class ScenarioWidgetComponentCreator {
                                oracle);
     }
 
-    protected SmallLabel createSmallLabel() {
-        return new SmallLabel(TestScenarioConstants.INSTANCE.configuration());
-    }
-
-    protected ConfigWidget createConfigWidget() {
-        return new ConfigWidget(getScenario(),
-                                this);
-    }
-
     protected AddExecuteButton createAddExecuteButton() {
         return new AddExecuteButton(getScenario(),
                                     this.scenarioWidget);
@@ -154,11 +144,6 @@ public class ScenarioWidgetComponentCreator {
                                listExecutionTrace.get(executionTraceLine),
                                this.scenarioWidget,
                                oracle);
-    }
-
-    protected ExecutionWidget createExecutionWidget(final ExecutionTrace currentExecutionTrace) {
-        return new ExecutionWidget(currentExecutionTrace,
-                                   isShowResults());
     }
 
     protected ExpectPanel createExpectPanel(final ExecutionTrace currentExecutionTrace) {

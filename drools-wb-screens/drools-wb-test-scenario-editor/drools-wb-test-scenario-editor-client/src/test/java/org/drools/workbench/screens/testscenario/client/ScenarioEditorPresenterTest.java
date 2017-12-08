@@ -23,6 +23,8 @@ import javax.enterprise.event.Event;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
+import org.drools.workbench.screens.testscenario.client.page.audit.AuditPage;
+import org.drools.workbench.screens.testscenario.client.page.configuration.KiePage;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.type.TestScenarioResourceType;
 import org.drools.workbench.screens.testscenario.model.TestScenarioModelContent;
@@ -130,6 +132,12 @@ public class ScenarioEditorPresenterTest {
     @Mock
     private ProjectContext workbenchContext;
 
+    @Mock
+    private KiePage kiePage;
+
+    @Mock
+    private AuditPage auditPage;
+
     private ScenarioEditorPresenter editor;
     private Scenario scenario;
     private Overview overview;
@@ -146,7 +154,9 @@ public class ScenarioEditorPresenterTest {
                                                  new CallerMock<>(service),
                                                  new CallerMock<>(testService),
                                                  new TestScenarioResourceType(),
-                                                 modelOracleFactory) {
+                                                 modelOracleFactory,
+                                                 kiePage,
+                                                 auditPage) {
             {
                 kieView = ScenarioEditorPresenterTest.this.kieView;
                 versionRecordManager = ScenarioEditorPresenterTest.this.versionRecordManager;
@@ -207,8 +217,6 @@ public class ScenarioEditorPresenterTest {
         editor.onRunScenario();
 
         // Make sure imports are updated
-        verify(view).initKSessionSelector(path,
-                                          scenarioRunResult);
         verify(importsWidget).setContent(any(AsyncPackageDataModelOracle.class),
                                          eq(scenarioRunResult.getImports()),
                                          anyBoolean());
@@ -250,9 +258,6 @@ public class ScenarioEditorPresenterTest {
         editor.onStartup(path,
                          placeRequest);
 
-        verify(view).initKSessionSelector(eq(path),
-                                          any(Scenario.class));
-
         reset(view);
 
         editor.onRunScenario();
@@ -260,10 +265,7 @@ public class ScenarioEditorPresenterTest {
         InOrder inOrder = inOrder(view);
         inOrder.verify(view).showBusyIndicator(TestScenarioConstants.INSTANCE.BuildingAndRunningScenario());
         inOrder.verify(view).showResults();
-        inOrder.verify(view).showAuditView(anySet());
         inOrder.verify(view).hideBusyIndicator();
-        inOrder.verify(view).initKSessionSelector(eq(path),
-                                                  any(Scenario.class));
     }
 
     @Test

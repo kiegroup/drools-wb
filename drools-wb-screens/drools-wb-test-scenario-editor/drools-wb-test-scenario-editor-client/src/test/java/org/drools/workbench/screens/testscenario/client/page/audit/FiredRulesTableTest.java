@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.firedrules;
+package org.drools.workbench.screens.testscenario.client.page.audit;
 
 import java.util.Arrays;
 
@@ -41,24 +41,19 @@ public class FiredRulesTableTest {
 
     @Before
     public void setUp() throws Exception {
-        table = spy(new FiredRulesTable(trace));
+        table = spy(new FiredRulesTable());
     }
 
     @Test
-    public void testInit() throws Exception {
+    public void testRedrawFiredRules() throws Exception {
         final String[] firedRules = new String[]{"rule1", "rule2"};
 
         doReturn(firedRules).when(trace).getRulesFired();
+        doReturn(2l).when(trace).getNumberOfRulesFired();
+        doReturn(10l).when(trace).getExecutionTimeResult();
 
-        table.init();
-
-        verify(table).setStriped(true);
-        verify(table).setCondensed(true);
-        verify(table).setBordered(true);
-        verify(table).setBordered(true);
-        verify(table).setVisible(false);
-        verify(table).setWidth(FiredRulesTable.MAX_WIDTH);
-        verify(table).addColumn(any(),anyString());
+        table.redrawFiredRules(trace);
+        verify(table).setTitle("property0RulesFiredIn1Ms(2, 10)");
         verify(table).setRowData(Arrays.asList(firedRules));
     }
 }

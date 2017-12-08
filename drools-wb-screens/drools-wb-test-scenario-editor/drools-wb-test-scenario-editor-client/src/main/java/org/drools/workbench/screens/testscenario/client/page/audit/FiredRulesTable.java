@@ -13,15 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.testscenario.client.firedrules;
+package org.drools.workbench.screens.testscenario.client.page.audit;
 
 import java.util.Arrays;
+import java.util.Collections;
+
+import javax.enterprise.context.Dependent;
 
 import com.google.gwt.user.cellview.client.TextColumn;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 
+@Dependent
 public class FiredRulesTable extends CellTable<String> {
 
     static final String MAX_WIDTH = "100%";
@@ -32,26 +36,21 @@ public class FiredRulesTable extends CellTable<String> {
         }
     };
 
-    private ExecutionTrace executionTrace;
-
-    public FiredRulesTable(final ExecutionTrace executionTrace) {
-        this.executionTrace = executionTrace;
-    }
-
-    public void init() {
+    public FiredRulesTable() {
+        setRowData(Collections.emptyList());
         setStriped(true);
         setCondensed(true);
         setBordered(true);
-        setVisible(false);
         setWidth(MAX_WIDTH);
+        addColumn(firedRuleColumn, TestScenarioConstants.INSTANCE.FiredRules());
+    }
 
-        addColumn(firedRuleColumn,
-                  TestScenarioConstants.INSTANCE.property0RulesFiredIn1Ms(
-                          executionTrace.getNumberOfRulesFired(),
-                          executionTrace.getExecutionTimeResult()));
+    public void redrawFiredRules(final ExecutionTrace executionTrace) {
+
+        setTitle(TestScenarioConstants.INSTANCE.property0RulesFiredIn1Ms(
+                executionTrace.getNumberOfRulesFired(),
+                executionTrace.getExecutionTimeResult()));
 
         setRowData(Arrays.asList(executionTrace.getRulesFired()));
     }
-
-
 }

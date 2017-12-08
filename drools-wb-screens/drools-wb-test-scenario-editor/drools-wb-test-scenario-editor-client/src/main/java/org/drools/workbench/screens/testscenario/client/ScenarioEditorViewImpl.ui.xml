@@ -20,21 +20,11 @@
              xmlns:kie='urn:import:org.drools.workbench.screens.testscenario.client'>
   <ui:style>
     .padding {
-      padding: 5px 0 5px 0;
+    padding: 5px 0 5px 0;
     }
   </ui:style>
 
   <b:Container fluid="true">
-    <b:Row>
-      <b:Column size="MD_12">
-        <kie:AuditLog ui:field="auditLog" visible="false"/>
-      </b:Column>
-    </b:Row>
-    <b:Row>
-      <b:Column size="MD_12" addStyleNames='{style.padding}'>
-        <kie:ScenarioKSessionSelector ui:field="scenarioKSessionSelector"/>
-      </b:Column>
-    </b:Row>
     <b:Row>
       <b:Column size="MD_12">
         <kie:FixtureLayout ui:field="fixtureLayout"/>

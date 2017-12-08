@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2017 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,20 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client;
+package org.drools.workbench.screens.testscenario.client.page.audit;
 
-public interface RuleSelectionEvent {
-    void ruleSelected(String name);
+import java.util.Set;
+
+import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
+import org.uberfire.client.mvp.UberElemental;
+
+public interface AuditPageView extends UberElemental<AuditPage> {
+
+    void showFiredRules(final ExecutionTrace executionTrace);
+
+    void showAuditLog(final Set<String> auditLogMessages);
+
+    interface Presenter {
+
+    }
 }
-
