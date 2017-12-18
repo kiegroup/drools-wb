@@ -22,18 +22,19 @@ public abstract class ActionInspectorKey {
 
     protected final ActionCol52 actionCol;
 
-    protected ActionInspectorKey( final ActionCol52 actionCol ) {
+    protected ActionInspectorKey(final ActionCol52 actionCol) {
         this.actionCol = actionCol;
     }
 
     @Override
-    public boolean equals( final Object o ) {
+    public boolean equals(final Object o) {
         // Basically it's never equal to any other column but it is to the same column
-        if ( this == o ) {
+        if (this == o) {
             return true;
-        } else if ( o instanceof FactFieldColumnActionInspectorKey ) {
-            FactFieldColumnActionInspectorKey other = (FactFieldColumnActionInspectorKey) o;
-            return actionCol == other.actionCol;
+        } else if (o instanceof ActionInspectorKey) {
+            final ActionInspectorKey other = (ActionInspectorKey) o;
+            boolean equals = actionCol.equals(other.actionCol);
+            return equals;
         } else {
             return false;
         }
@@ -41,9 +42,8 @@ public abstract class ActionInspectorKey {
 
     @Override
     public int hashCode() {
-        return System.identityHashCode( actionCol );
+        return System.identityHashCode(actionCol);
     }
 
     public abstract String toHumanReadableString();
-
 }

@@ -47,6 +47,7 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
 
+import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertContains;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -67,97 +68,110 @@ public class DecisionTableAnalyzerFromFileTest {
     @Before
     public void setUp() throws Exception {
         Map<String, String> preferences = new HashMap<String, String>();
-        preferences.put( ApplicationPreferences.DATE_FORMAT, "dd-MMM-yyyy" );
-        ApplicationPreferences.setUp( preferences );
+        preferences.put(ApplicationPreferences.DATE_FORMAT, "dd-MMM-yyyy");
+        ApplicationPreferences.setUp(preferences);
+    }
+
+    @Test
+    public void testTestTable() throws Exception {
+        final String xml = loadResource("test table.gdst");
+
+        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
+        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
+
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+
+        assertContains("RedundantRows", analysisReport, 1);
+        assertContains("RedundantRows", analysisReport, 2);
     }
 
     @Test
     public void testFile1() throws Exception {
-        String xml = loadResource( "Pricing loans.gdst" );
+        String xml = loadResource("Pricing loans.gdst");
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( GuidedDTXMLPersistence.getInstance().unmarshal( xml ) );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(GuidedDTXMLPersistence.getInstance().unmarshal(xml));
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        assertTrue(analysisReport.getAnalysisData().isEmpty());
     }
 
     @Test
-    public void testFile2() throws Exception {
-        String xml = loadResource( "Large file.gdst" );
+    public void testLargeTestFile() throws Exception {
+        String xml = loadResource("Large file.gdst");
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( GuidedDTXMLPersistence.getInstance().unmarshal( xml ) );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(GuidedDTXMLPersistence.getInstance().unmarshal(xml));
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        assertContains("RedundantRows", analysisReport);
     }
 
     @Test
     public void testFile3() throws Exception {
-        String xml = loadResource( "Score Achievements.gdst" );
+        String xml = loadResource("Score Achievements.gdst");
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( GuidedDTXMLPersistence.getInstance().unmarshal( xml ) );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(GuidedDTXMLPersistence.getInstance().unmarshal(xml));
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        assertTrue(analysisReport.getAnalysisData().isEmpty());
     }
 
     @Test
     public void testFile2WithUpdate() throws Exception {
         long baseline = System.currentTimeMillis();
-        String xml = loadResource( "Large file.gdst" );
-        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal( xml );
+        String xml = loadResource("Large file.gdst");
+        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
         long now = System.currentTimeMillis();
-        System.out.println( "Loading of model took.. " + ( now - baseline ) + " ms" );
+        System.out.println("Loading of model took.. " + (now - baseline) + " ms");
         baseline = now;
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RedundantRows", analysisReport);
         now = System.currentTimeMillis();
-        System.out.println( "Initial analysis took.. " + ( now - baseline ) + " ms" );
+        System.out.println("Initial analysis took.. " + (now - baseline) + " ms");
         baseline = now;
 
-        table52.getData().get( 2 ).get( 6 ).clearValues();
+        table52.getData().get(2).get(6).clearValues();
         HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>> updates = new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>();
-        updates.put( new Coordinate( 2,
-                                     6 ),
-                     new ArrayList<List<CellValue<? extends Comparable<?>>>>() );
-        analyzer.onValidate( new ValidateEvent( updates ) );
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        updates.put(new Coordinate(2,
+                                   6),
+                    new ArrayList<List<CellValue<? extends Comparable<?>>>>());
+        analyzer.onValidate(new ValidateEvent(updates));
+        assertContains("RedundantRows", analysisReport);
         now = System.currentTimeMillis();
-        System.out.println( "Partial analysis took.. " + ( now - baseline ) + " ms" );
+        System.out.println("Partial analysis took.. " + (now - baseline) + " ms");
     }
 
     @Test
     public void testFile2WithDeletes() throws Exception {
-        String xml = loadResource( "Large file.gdst" );
-        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal( xml );
+        String xml = loadResource("Large file.gdst");
+        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RedundantRows", analysisReport);
 
-        for ( int iterations = 0; iterations < 10; iterations++ ) {
-            analyzer.onDeleteRow( new DeleteRowEvent( 100 ) );
-            table52.getData().remove( 100 );
-            analyzer.onUpdateColumnData( new UpdateColumnDataEvent( 0,
-                                                                    new ArrayList<CellValue<? extends Comparable<?>>>() ) );
-            assertTrue( analysisReport.getAnalysisData().isEmpty() );
+        for (int iterations = 0; iterations < 10; iterations++) {
+            analyzer.onDeleteRow(new DeleteRowEvent(100));
+            table52.getData().remove(100);
+            analyzer.onUpdateColumnData(new UpdateColumnDataEvent(0,
+                                                                  new ArrayList<CellValue<? extends Comparable<?>>>()));
+            assertContains("RedundantRows", analysisReport);
         }
     }
 
-    private DecisionTableAnalyzer getDecisionTableAnalyzer( GuidedDecisionTable52 table52 ) {
-        return new DecisionTableAnalyzer( mock( PlaceRequest.class ),
-                                          oracle,
-                                          table52,
-                                          mock( EventBus.class ) ) {
+    private DecisionTableAnalyzer getDecisionTableAnalyzer(GuidedDecisionTable52 table52) {
+        return new DecisionTableAnalyzer(mock(PlaceRequest.class),
+                                         oracle,
+                                         table52,
+                                         mock(EventBus.class)) {
             @Override
-            protected void sendReport( AnalysisReport report ) {
+            protected void sendReport(AnalysisReport report) {
                 analysisReport = report;
             }
 
@@ -165,8 +179,8 @@ public class DecisionTableAnalyzerFromFileTest {
             protected Checks getChecks() {
                 return new Checks() {
                     @Override
-                    protected void doRun( final CancellableRepeatingCommand command ) {
-                        while ( command.execute() ) {
+                    protected void doRun(final CancellableRepeatingCommand command) {
+                        while (command.execute()) {
                             //loop
                         }
                     }
@@ -183,26 +197,24 @@ public class DecisionTableAnalyzerFromFileTest {
                 return new Command() {
                     @Override
                     public void execute() {
-                        sendReport( makeAnalysisReport() );
+                        sendReport(makeAnalysisReport());
                     }
                 };
             }
-
         };
     }
 
-    public static String loadResource( final String name ) throws Exception {
-        final InputStream in = DecisionTableAnalyzerFromFileTest.class.getResourceAsStream( name );
-        final Reader reader = new InputStreamReader( in );
+    public static String loadResource(final String name) throws Exception {
+        final InputStream in = DecisionTableAnalyzerFromFileTest.class.getResourceAsStream(name);
+        final Reader reader = new InputStreamReader(in);
         final StringBuilder text = new StringBuilder();
-        final char[] buf = new char[ 1024 ];
+        final char[] buf = new char[1024];
         int len = 0;
-        while ( ( len = reader.read( buf ) ) >= 0 ) {
-            text.append( buf,
-                         0,
-                         len );
+        while ((len = reader.read(buf)) >= 0) {
+            text.append(buf,
+                        0,
+                        len);
         }
         return text.toString();
     }
-
 }

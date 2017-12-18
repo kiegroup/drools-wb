@@ -23,6 +23,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
@@ -36,8 +37,8 @@ import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.utils.GuidedDecisionTableUtils;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.ActionInspectorKey;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLFragmentActionInspector;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLFragmentColumnActionInspectorKey;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLActionInspector;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.BRLColumnActionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FactFieldColumnActionInspectorKey;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.FieldActionInspector;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.action.UnrecognizedActionInspectorKey;
@@ -95,9 +96,16 @@ public class RowInspectorGenerator {
         for (ActionCol52 actionCol : model.getActionCols()) {
 
             if (actionCol instanceof BRLActionColumn) {
-                final BRLActionColumn brlActionColumn = (BRLActionColumn) actionCol;
-                rowInspector.addActionInspector(new BRLFragmentActionInspector(new BRLFragmentColumnActionInspectorKey(brlActionColumn),
-                                                                               brlActionColumn.getDefinition()));
+
+                for (final BRLActionVariableColumn baseColumn : ((BRLActionColumn) actionCol).getChildColumns()) {
+                    final int columnIndex = model.getExpandedColumns().indexOf(baseColumn);
+                    final DTCellValue52 realCellValue = getRealCellValue(baseColumn,
+                                                                         row.get(columnIndex));
+
+                    rowInspector.addActionInspector(new BRLActionInspector(new BRLColumnActionInspectorKey((BRLActionColumn) actionCol),
+                                                                           Util.getValueAsString(realCellValue)));
+
+                }
             }
 
             int columnIndex = model.getExpandedColumns().indexOf(actionCol);
