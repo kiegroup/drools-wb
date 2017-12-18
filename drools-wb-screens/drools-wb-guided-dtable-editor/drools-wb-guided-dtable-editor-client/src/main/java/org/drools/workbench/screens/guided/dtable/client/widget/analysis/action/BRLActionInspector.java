@@ -15,46 +15,42 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.action;
 
-import java.util.List;
-
-import org.drools.workbench.models.datamodel.rule.IAction;
-
-public class BRLFragmentActionInspector
+public class BRLActionInspector
         extends ActionInspector {
 
-    private List<IAction> definition;
+    private final String value;
 
-    public BRLFragmentActionInspector( final ActionInspectorKey key,
-                                       final List<IAction> definition ) {
-        super( key );
-        this.definition = definition;
+    public BRLActionInspector(final ActionInspectorKey key,
+                              final String value) {
+        super(key);
+        this.value = value;
     }
 
     @Override
-    public boolean conflicts( final Object other ) {
+    public boolean conflicts(final Object other) {
         return false;
     }
 
     @Override
-    public boolean isRedundant( final Object other ) {
-        if ( other instanceof BRLFragmentActionInspector ) {
-            return !key.equals( (( BRLFragmentActionInspector ) other).getKey() );
+    public boolean isRedundant(final Object other) {
+        if (other instanceof BRLActionInspector && hasValue() && ((BRLActionInspector) other).hasValue()) {
+            return value.equals(((BRLActionInspector) other).value);
         } else {
-            return true;
+            return false;
         }
     }
 
     @Override
-    public boolean subsumes( final Object other ) {
-        if ( other instanceof BRLFragmentActionInspector ) {
-            return !key.equals( (( BRLFragmentActionInspector ) other).getKey() );
+    public boolean subsumes(final Object other) {
+        if (other instanceof BRLActionInspector && hasValue() && ((BRLActionInspector) other).hasValue()) {
+            return value.equals(((BRLActionInspector) other).value);
         } else {
-            return true;
+            return false;
         }
     }
 
     @Override
     public boolean hasValue() {
-        return !definition.isEmpty();
+        return value != null;
     }
 }

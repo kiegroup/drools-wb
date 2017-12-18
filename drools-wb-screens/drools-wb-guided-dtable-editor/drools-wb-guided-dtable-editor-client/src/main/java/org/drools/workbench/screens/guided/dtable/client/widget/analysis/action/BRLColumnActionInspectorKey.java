@@ -20,10 +20,10 @@ import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCo
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
 
-public class BRLFragmentColumnActionInspectorKey
+public class BRLColumnActionInspectorKey
         extends ActionInspectorKey {
 
-    public BRLFragmentColumnActionInspectorKey( final BRLActionColumn actionCol ) {
+    public BRLColumnActionInspectorKey(final BRLActionColumn actionCol ) {
         super( actionCol );
     }
 

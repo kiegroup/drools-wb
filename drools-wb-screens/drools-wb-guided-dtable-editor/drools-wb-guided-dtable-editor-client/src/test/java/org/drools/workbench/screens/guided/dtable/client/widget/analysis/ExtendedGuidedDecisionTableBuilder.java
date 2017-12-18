@@ -27,6 +27,7 @@ import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
@@ -166,6 +167,9 @@ public class ExtendedGuidedDecisionTableBuilder
         final ArrayList<IAction> definition = new ArrayList<IAction>();
         definition.add( mock( IAction.class ) );
         brlActionColumn.setDefinition( definition );
+        final ArrayList<BRLActionVariableColumn> childColumns = new ArrayList<>();
+        childColumns.add(new BRLActionVariableColumn());
+        brlActionColumn.setChildColumns(childColumns);
         table.getActionCols().add( brlActionColumn );
 
         return this;
