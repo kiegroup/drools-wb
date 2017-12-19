@@ -45,4 +45,12 @@ public class AnalysisReport {
     public List<Issue> getAnalysisData() {
         return new ArrayList<Issue>( issues );
     }
+
+    @Override
+    public String toString() {
+        return "AnalysisReport{" +
+                "issues=" + issues +
+                ", place=" + place +
+                '}';
+    }
 }

@@ -20,6 +20,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
@@ -65,6 +66,7 @@ public class AnalysisReportScreen {
     }
 
     public void showReport( final AnalysisReport report ) {
+
         currentReport = report;
 
         if ( !report.getAnalysisData().isEmpty() ) {
