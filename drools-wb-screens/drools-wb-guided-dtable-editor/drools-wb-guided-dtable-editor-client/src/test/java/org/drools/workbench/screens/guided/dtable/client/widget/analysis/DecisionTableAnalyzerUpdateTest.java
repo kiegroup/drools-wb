@@ -103,11 +103,69 @@ public class DecisionTableAnalyzerUpdateTest {
 
         table52.getData().get( 1 ).get( 2 ).setNumericValue( 0 );
 
-        HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>> updates = new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>();
-        updates.put( new Coordinate( 1, 2 ), new ArrayList<List<CellValue<? extends Comparable<?>>>>() );
-        analyzer.onValidate( new ValidateEvent( updates ) );
+        update(analyzer, new Coordinate(1, 2));
 
         assertColumnValuesAreEmpty( analysisReport );
+    }
+
+    @Test
+    public void testRowValueChange2() throws Exception {
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
+                                                                                new ArrayList<Import>(),
+                                                                                "mytable" )
+                .withConditionIntegerColumn( "a", "Person", "age", "==" )
+                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
+                .withData( new Object[][]{
+                        { 1, "description", 1, true },
+                        { 2, "description", 1, true } } )
+                .build();
+
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+
+        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+
+        assertContains( "RedundantRows", analysisReport, 1 );
+        assertContains( "RedundantRows", analysisReport, 2 );
+        assertDoesNotContain( "ConflictingRows", analysisReport, 1 );
+        assertDoesNotContain( "ConflictingRows", analysisReport, 2 );
+
+        // Change first row
+        table52.getData().get( 0 ).get( 3 ).setBooleanValue( false );
+
+        update(analyzer, new Coordinate(0, 3));
+
+        assertContains( "ConflictingRows", analysisReport, 1 );
+        assertContains( "ConflictingRows", analysisReport, 2 );
+        assertDoesNotContain( "RedundantRows", analysisReport, 1 );
+        assertDoesNotContain( "RedundantRows", analysisReport, 2 );
+
+        // Change second row
+
+        table52.getData().get( 1 ).get( 3 ).setBooleanValue( false );
+
+        update(analyzer, new Coordinate(1, 3));
+
+        assertContains( "RedundantRows", analysisReport, 1 );
+        assertContains( "RedundantRows", analysisReport, 2 );
+        assertDoesNotContain( "ConflictingRows", analysisReport, 1 );
+        assertDoesNotContain( "ConflictingRows", analysisReport, 2 );
+
+        // Change second back
+        table52.getData().get( 1 ).get( 3 ).setBooleanValue( true );
+
+        update(analyzer, new Coordinate(1, 3));
+
+        assertContains( "ConflictingRows", analysisReport, 1 );
+        assertContains( "ConflictingRows", analysisReport, 2 );
+        assertDoesNotContain( "RedundantRows", analysisReport, 1 );
+        assertDoesNotContain( "RedundantRows", analysisReport, 2 );
+    }
+
+    private void update(final DecisionTableAnalyzer analyzer,
+                        final Coordinate coordinate) {
+        HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>> updates = new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>();
+        updates.put(coordinate, new ArrayList<List<CellValue<? extends Comparable<?>>>>() );
+        analyzer.onValidate( new ValidateEvent(updates ) );
     }
 
     @Test
