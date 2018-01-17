@@ -73,7 +73,7 @@ public class ExecutionWidgetTest {
 
     @Test()
     public void testShowTimePickerUsedBefore() throws Exception {
-        final Date date= new Date();
+        final Date date = new Date();
         when(executionTrace.getScenarioSimulatedDate()).thenReturn(date);
 
         executionWidget.show(executionTrace);

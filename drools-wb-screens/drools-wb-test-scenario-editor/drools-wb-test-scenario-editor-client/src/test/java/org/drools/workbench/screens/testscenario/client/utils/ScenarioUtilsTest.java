@@ -26,7 +26,7 @@ public class ScenarioUtilsTest {
     @Test
     public void testFindExecutionTrace() throws Exception {
         final Scenario scenario = new Scenario();
-        final ExecutionTrace executionTrace =  new ExecutionTrace();
+        final ExecutionTrace executionTrace = new ExecutionTrace();
         scenario.getFixtures().add(executionTrace);
 
         Assert.assertEquals(executionTrace, ScenarioUtils.findExecutionTrace(scenario));

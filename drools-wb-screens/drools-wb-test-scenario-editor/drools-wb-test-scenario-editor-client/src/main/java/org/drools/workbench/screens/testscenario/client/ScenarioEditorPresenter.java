@@ -258,7 +258,6 @@ public class ScenarioEditorPresenter
     private void ifFixturesSizeZeroThenAddExecutionTrace() {
         if (scenario.getFixtures().size() == 0) {
             scenario.getFixtures().add(new ExecutionTrace());
-
         }
     }
 
@@ -278,6 +277,4 @@ public class ScenarioEditorPresenter
                 .orElse(new TestRunFailedErrorCallback(view));
         return testRunFailedErrorCallback;
     }
-
-
 }

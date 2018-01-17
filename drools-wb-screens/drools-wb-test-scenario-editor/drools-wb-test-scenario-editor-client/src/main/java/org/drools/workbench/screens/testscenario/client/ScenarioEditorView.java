@@ -26,7 +26,7 @@ import org.uberfire.workbench.model.menu.MenuItem;
 public interface ScenarioEditorView
         extends IsWidget,
                 KieEditorView,
-                ScenarioParentWidget{
+                ScenarioParentWidget {
 
     interface Presenter {
 

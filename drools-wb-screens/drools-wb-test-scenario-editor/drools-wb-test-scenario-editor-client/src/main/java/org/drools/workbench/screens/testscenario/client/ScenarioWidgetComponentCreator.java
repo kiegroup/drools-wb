@@ -61,9 +61,9 @@ public class ScenarioWidgetComponentCreator {
     }
 
     public void reset(final ScenarioParentWidget scenarioWidget,
-                         final Path path,
-                         final AsyncPackageDataModelOracle oracle,
-                         final Scenario scenario) {
+                      final Path path,
+                      final AsyncPackageDataModelOracle oracle,
+                      final Scenario scenario) {
         this.scenarioWidget = scenarioWidget;
         this.oracle = oracle;
         this.scenario = scenario;
@@ -100,8 +100,8 @@ public class ScenarioWidgetComponentCreator {
 
     protected GlobalButton createGlobalButton() {
         return new GlobalButton(getScenario(),
-                               this.scenarioWidget,
-                               oracle);
+                                this.scenarioWidget,
+                                oracle);
     }
 
     protected AddExecuteButton createAddExecuteButton() {
@@ -127,13 +127,13 @@ public class ScenarioWidgetComponentCreator {
     }
 
     protected CallMethodOnNewDataButton createCallMethodLabelButton(final List<ExecutionTrace> listExecutionTrace,
-                                                                final int executionTraceLine,
-                                                                final ExecutionTrace previousExecutionTrace) {
+                                                                    final int executionTraceLine,
+                                                                    final ExecutionTrace previousExecutionTrace) {
         return new CallMethodOnNewDataButton(previousExecutionTrace,
-                                         getScenario(),
-                                         listExecutionTrace.get(executionTraceLine),
-                                         this.scenarioWidget,
-                                         oracle);
+                                             getScenario(),
+                                             listExecutionTrace.get(executionTraceLine),
+                                             this.scenarioWidget,
+                                             oracle);
     }
 
     protected GivenButton createGivenLabelButton(final List<ExecutionTrace> listExecutionTrace,
