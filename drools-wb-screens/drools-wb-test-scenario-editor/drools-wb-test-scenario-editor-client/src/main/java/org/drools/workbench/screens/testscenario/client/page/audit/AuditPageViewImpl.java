@@ -30,7 +30,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Templated
 @Dependent
-public class AuditPageViewImpl implements AuditPageView {
+public class AuditPageViewImpl implements AuditPage.AuditPageView {
 
     @DataField("root")
     private HTMLDivElement root;
@@ -64,7 +64,7 @@ public class AuditPageViewImpl implements AuditPageView {
         this.auditLogTable = auditLogTable;
 
         this.elemental2DomUtil.appendWidgetToElement(firedRulesDiv, firedRulesTable.asWidget());
-        this.elemental2DomUtil.appendWidgetToElement(auditLogDiv, auditLogTable.asWidget());
+        this.auditLogDiv.appendChild(auditLogTable.getElement());
     }
 
     @Override

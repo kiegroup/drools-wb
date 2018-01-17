@@ -24,10 +24,16 @@ import org.drools.workbench.screens.testscenario.client.ScenarioParentWidget;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.client.mvp.UberElemental;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 
 @Dependent
-public class KiePage extends PageImpl implements KiePageView.Presenter {
+public class KiePage extends PageImpl {
+
+    public interface KiePageView extends UberElemental<KiePage> {
+
+        void refresh(final ScenarioParentWidget scenarioParentWidget, final Path path, final Scenario scenario);
+    }
 
     private KiePageView kiePageView;
 

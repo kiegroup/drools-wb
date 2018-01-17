@@ -17,31 +17,45 @@
 package org.drools.workbench.screens.testscenario.client.page.audit;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.assertj.core.api.Assertions;
+import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLTableElement;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.mockito.Mock;
 
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class AuditLogTableTest {
 
-    private AuditLogTable table;
+    @Mock
+    private HTMLElement itemElement;
 
-    @Captor
-    private ArgumentCaptor<List<String>> stringsCaptor;
+    @Mock
+    private AuditLogTableItem item;
+
+    @Mock
+    private ManagedInstance<AuditLogTableItem> items;
+
+    @Mock
+    private HTMLTableElement itemsContainer;
+
+    private AuditLogTable table;
 
     @Before
     public void setUp() throws Exception {
-        table = spy(new AuditLogTable());
+        table = spy(new AuditLogTable(itemsContainer, items));
+
+        when(items.get()).thenReturn(item);
+        when(item.getElement()).thenReturn(itemElement);
     }
 
     @Test
@@ -52,9 +66,6 @@ public class AuditLogTableTest {
         }};
 
         table.redrawFiredRules(log);
-        verify(table).setRowData(stringsCaptor.capture());
-
-        Assertions.assertThat(stringsCaptor.getValue().size()).isEqualTo(log.size());
-        Assertions.assertThat(stringsCaptor.getValue()).containsAll(log);
+        verify(itemsContainer, times(2)).appendChild(itemElement);
     }
 }

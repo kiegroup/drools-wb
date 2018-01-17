@@ -24,10 +24,18 @@ import javax.inject.Inject;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
+import org.uberfire.client.mvp.UberElemental;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 
 @Dependent
-public class AuditPage extends PageImpl implements AuditPageView.Presenter {
+public class AuditPage extends PageImpl {
+
+    public interface AuditPageView extends UberElemental<AuditPage> {
+
+        void showFiredRules(final ExecutionTrace executionTrace);
+
+        void showAuditLog(final Set<String> auditLogMessages);
+    }
 
     private AuditPageView auditPageView;
 

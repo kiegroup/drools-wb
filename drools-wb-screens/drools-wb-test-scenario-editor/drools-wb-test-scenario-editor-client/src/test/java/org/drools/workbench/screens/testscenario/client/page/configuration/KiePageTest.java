@@ -35,7 +35,7 @@ import static org.mockito.Mockito.verify;
 public class KiePageTest {
 
     @Mock
-    private KiePageView kiePageView;
+    private KiePage.KiePageView kiePageView;
 
     private KiePage kiePage;
 

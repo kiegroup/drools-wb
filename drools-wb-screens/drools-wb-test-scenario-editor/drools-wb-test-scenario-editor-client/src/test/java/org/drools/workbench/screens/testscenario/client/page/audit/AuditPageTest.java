@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verify;
 public class AuditPageTest {
 
     @Mock
-    private AuditPageView auditPageView;
+    private AuditPage.AuditPageView auditPageView;
 
     private AuditPage auditPage;
 

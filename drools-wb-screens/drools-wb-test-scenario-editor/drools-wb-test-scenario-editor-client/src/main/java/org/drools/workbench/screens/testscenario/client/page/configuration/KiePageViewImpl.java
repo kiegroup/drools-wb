@@ -31,7 +31,7 @@ import org.uberfire.backend.vfs.Path;
 
 @Templated
 @Dependent
-public class KiePageViewImpl implements KiePageView {
+public class KiePageViewImpl implements KiePage.KiePageView {
 
     private Elemental2DomUtil elemental2DomUtil;
 

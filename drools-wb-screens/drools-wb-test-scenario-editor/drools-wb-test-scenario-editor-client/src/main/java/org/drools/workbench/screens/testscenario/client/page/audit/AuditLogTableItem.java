@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,27 @@
 
 package org.drools.workbench.screens.testscenario.client.page.audit;
 
-import java.util.Set;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import elemental2.dom.HTMLTableElement;
-import org.jboss.errai.ioc.client.api.ManagedInstance;
+import elemental2.dom.HTMLLIElement;
 import org.jboss.errai.ui.client.local.api.elemental2.IsElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Templated
 @Dependent
-public class AuditLogTable implements IsElement {
+public class AuditLogTableItem implements IsElement {
 
-    @DataField("items")
-    private HTMLTableElement itemsContainer;
-
-    private ManagedInstance<AuditLogTableItem> items;
+    @DataField("content")
+    private HTMLLIElement content;
 
     @Inject
-    public AuditLogTable(final HTMLTableElement itemsContainer,
-                         final ManagedInstance<AuditLogTableItem> items) {
-        this.itemsContainer = itemsContainer;
-        this.items = items;
+    public AuditLogTableItem(final HTMLLIElement content) {
+        this.content = content;
     }
 
-    public void redrawFiredRules(final Set<String> log) {
-        log.stream()
-                .forEach(logMessage -> {
-                    final AuditLogTableItem newItem = items.get();
-                    newItem.setText(logMessage);
-                    itemsContainer.appendChild(newItem.getElement());
-                });
+    public void setText(final String text) {
+        content.textContent = text;
     }
 }
