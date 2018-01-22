@@ -19,11 +19,11 @@ package org.drools.workbench.screens.enums.client.editor;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.ListDataProvider;
@@ -37,11 +37,21 @@ import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorViewImpl;
 
+@Dependent
 public class EnumEditorViewImpl
         extends KieEditorViewImpl
         implements EnumEditorView {
 
-    private final ListDataProvider<EnumRow> dataProvider = new ListDataProvider<EnumRow>();
+    private final ListDataProvider<EnumRow> dataProvider;
+
+    private final Button addButton;
+
+    @Inject
+    public EnumEditorViewImpl(final ListDataProvider<EnumRow> dataProvider,
+                              final Button addButton) {
+        this.dataProvider = dataProvider;
+        this.addButton = addButton;
+    }
 
     @PostConstruct
     public void init() {
@@ -143,13 +153,11 @@ public class EnumEditorViewImpl
         // Connect the table to the data provider.
         dataProvider.addDataDisplay( cellTable );
 
-        final Button addButton = new Button( EnumEditorConstants.INSTANCE.AddEnum(),
-                                             new ClickHandler() {
-                                                 public void onClick( ClickEvent clickEvent ) {
-                                                     final EnumRow enumRow = new EnumRow();
-                                                     dataProvider.getList().add( enumRow );
-                                                 }
-                                             } );
+        addButton.setText(EnumEditorConstants.INSTANCE.AddEnum());
+        addButton.addClickHandler(clickEvent -> {
+            final EnumRow enumRow = new EnumRow();
+            dataProvider.getList().add(enumRow);
+        });
 
         panel.add( addButton );
         panel.add( cellTable );
