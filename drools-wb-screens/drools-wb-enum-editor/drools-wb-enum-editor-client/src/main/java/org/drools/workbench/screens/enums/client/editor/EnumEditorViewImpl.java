@@ -55,39 +55,39 @@ public class EnumEditorViewImpl
 
     @PostConstruct
     public void init() {
-        final CellTable<EnumRow> cellTable = new CellTable<EnumRow>( Integer.MAX_VALUE );
-        cellTable.setStriped( true );
-        cellTable.setCondensed( true );
-        cellTable.setBordered( true );
-        cellTable.setEmptyTableWidget( new Label( EnumEditorConstants.INSTANCE.noEnumsDefined() ) );
-        cellTable.setWidth( "100%" );
+        final CellTable<EnumRow> cellTable = new CellTable<EnumRow>(Integer.MAX_VALUE);
+        cellTable.setStriped(true);
+        cellTable.setCondensed(true);
+        cellTable.setBordered(true);
+        cellTable.setEmptyTableWidget(new Label(EnumEditorConstants.INSTANCE.noEnumsDefined()));
+        cellTable.setWidth("100%");
 
         final VerticalPanel panel = new VerticalPanel();
-        panel.setWidth( "100%" );
+        panel.setWidth("100%");
 
         //Column definitions
-        final Column<EnumRow, String> factNameColumn = new Column<EnumRow, String>( new EnumEditTextCell() ) {
+        final Column<EnumRow, String> factNameColumn = new Column<EnumRow, String>(new EnumEditTextCell()) {
             @Override
-            public String getValue( final EnumRow enumRow ) {
-                if ( enumRow.isValid() ) {
+            public String getValue(final EnumRow enumRow) {
+                if (enumRow.isValid()) {
                     return enumRow.getFactName();
                 }
                 return enumRow.getRaw();
             }
         };
-        final Column<EnumRow, String> fieldNameColumn = new Column<EnumRow, String>( new EnumEditTextCell() ) {
+        final Column<EnumRow, String> fieldNameColumn = new Column<EnumRow, String>(new EnumEditTextCell()) {
             @Override
-            public String getValue( final EnumRow enumRow ) {
-                if ( enumRow.isValid() ) {
+            public String getValue(final EnumRow enumRow) {
+                if (enumRow.isValid()) {
                     return enumRow.getFieldName();
                 }
                 return "";
             }
         };
-        final Column<EnumRow, String> contextColumn = new Column<EnumRow, String>( new EnumEditTextCell() ) {
+        final Column<EnumRow, String> contextColumn = new Column<EnumRow, String>(new EnumEditTextCell()) {
             @Override
-            public String getValue( final EnumRow enumRow ) {
-                if ( enumRow.isValid() ) {
+            public String getValue(final EnumRow enumRow) {
+                if (enumRow.isValid()) {
                     return enumRow.getContext();
                 }
                 return "";
@@ -97,61 +97,61 @@ public class EnumEditorViewImpl
         //See https://bugzilla.redhat.com/show_bug.cgi?id=1167360
         //Replaced image-based ButtonCell with a button due to IE10 interpreting it as a form-submit button and hence responding to ENTER key presses.
         //See http://stackoverflow.com/questions/12325066/button-click-event-fires-when-pressing-enter-key-in-different-input-no-forms
-        final ButtonCell deleteEnumButton = new ButtonCell( IconType.MINUS, ButtonType.DANGER, ButtonSize.SMALL );
-        final Column<EnumRow, String> deleteEnumColumn = new Column<EnumRow, String>( deleteEnumButton ) {
+        final ButtonCell deleteEnumButton = new ButtonCell(IconType.MINUS, ButtonType.DANGER, ButtonSize.SMALL);
+        final Column<EnumRow, String> deleteEnumColumn = new Column<EnumRow, String>(deleteEnumButton) {
             @Override
-            public String getValue( final EnumRow global ) {
+            public String getValue(final EnumRow global) {
                 return EnumEditorConstants.INSTANCE.remove();
             }
         };
 
         //Write updates back to the model
-        factNameColumn.setFieldUpdater( new FieldUpdater<EnumRow, String>() {
+        factNameColumn.setFieldUpdater(new FieldUpdater<EnumRow, String>() {
             @Override
-            public void update( final int index,
-                                final EnumRow enumRow,
-                                final String value ) {
-                enumRow.setFactName( value );
+            public void update(final int index,
+                               final EnumRow enumRow,
+                               final String value) {
+                enumRow.setFactName(value);
             }
-        } );
-        fieldNameColumn.setFieldUpdater( new FieldUpdater<EnumRow, String>() {
+        });
+        fieldNameColumn.setFieldUpdater(new FieldUpdater<EnumRow, String>() {
             @Override
-            public void update( final int index,
-                                final EnumRow enumRow,
-                                final String value ) {
-                enumRow.setFieldName( value );
+            public void update(final int index,
+                               final EnumRow enumRow,
+                               final String value) {
+                enumRow.setFieldName(value);
             }
-        } );
-        contextColumn.setFieldUpdater( new FieldUpdater<EnumRow, String>() {
+        });
+        contextColumn.setFieldUpdater(new FieldUpdater<EnumRow, String>() {
             @Override
-            public void update( final int index,
-                                final EnumRow enumRow,
-                                final String value ) {
-                enumRow.setContext( value );
+            public void update(final int index,
+                               final EnumRow enumRow,
+                               final String value) {
+                enumRow.setContext(value);
             }
-        } );
-        deleteEnumColumn.setFieldUpdater( new FieldUpdater<EnumRow, String>() {
+        });
+        deleteEnumColumn.setFieldUpdater(new FieldUpdater<EnumRow, String>() {
             @Override
-            public void update( final int index,
-                                final EnumRow enumRow,
-                                final String value ) {
-                dataProvider.getList().remove( index );
+            public void update(final int index,
+                               final EnumRow enumRow,
+                               final String value) {
+                dataProvider.getList().remove(index);
             }
-        } );
+        });
 
-        cellTable.addColumn( factNameColumn,
-                             EnumEditorConstants.INSTANCE.FactColumnHeader() );
-        cellTable.addColumn( fieldNameColumn,
-                             EnumEditorConstants.INSTANCE.FieldColumnHeader() );
-        cellTable.addColumn( contextColumn,
-                             EnumEditorConstants.INSTANCE.ContextColumnHeader() );
-        cellTable.addColumn( deleteEnumColumn );
-        cellTable.setColumnWidth( deleteEnumColumn,
-                                  100.0,
-                                  Style.Unit.PX );
+        cellTable.addColumn(factNameColumn,
+                            EnumEditorConstants.INSTANCE.FactColumnHeader());
+        cellTable.addColumn(fieldNameColumn,
+                            EnumEditorConstants.INSTANCE.FieldColumnHeader());
+        cellTable.addColumn(contextColumn,
+                            EnumEditorConstants.INSTANCE.ContextColumnHeader());
+        cellTable.addColumn(deleteEnumColumn);
+        cellTable.setColumnWidth(deleteEnumColumn,
+                                 100.0,
+                                 Style.Unit.PX);
 
         // Connect the table to the data provider.
-        dataProvider.addDataDisplay( cellTable );
+        dataProvider.addDataDisplay(cellTable);
 
         addButton.setText(EnumEditorConstants.INSTANCE.AddEnum());
         addButton.addClickHandler(clickEvent -> {
@@ -159,20 +159,19 @@ public class EnumEditorViewImpl
             dataProvider.getList().add(enumRow);
         });
 
-        panel.add( addButton );
-        panel.add( cellTable );
+        panel.add(addButton);
+        panel.add(cellTable);
 
-        initWidget( panel );
+        initWidget(panel);
     }
 
     @Override
-    public void setContent( final List<EnumRow> content ) {
-        dataProvider.setList( content );
+    public void setContent(final List<EnumRow> content) {
+        dataProvider.setList(content);
     }
 
     @Override
     public List<EnumRow> getContent() {
         return dataProvider.getList();
     }
-
 }
