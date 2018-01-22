@@ -22,10 +22,10 @@ public class FieldConditionInspectorKey
         extends ConditionInspectorKey {
 
     private final Pattern52 pattern;
-    private final String    factField;
+    private final String factField;
 
-    public FieldConditionInspectorKey( final Pattern52 pattern,
-                                       final String factField ) {
+    public FieldConditionInspectorKey(final Pattern52 pattern,
+                                      final String factField) {
         this.pattern = pattern;
         this.factField = factField;
     }
@@ -39,21 +39,28 @@ public class FieldConditionInspectorKey
     }
 
     @Override
-    public boolean equals( Object o ) {
-        if ( this == o ) {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
-        } else if ( o instanceof FieldConditionInspectorKey ) {
-            FieldConditionInspectorKey other = ( FieldConditionInspectorKey ) o;
-            return pattern.equals( other.pattern ) && factField.equals( other.factField );
-        } else {
+        }
+        if (!(o instanceof FieldConditionInspectorKey)) {
             return false;
         }
+
+        FieldConditionInspectorKey that = (FieldConditionInspectorKey) o;
+
+        if (!pattern.equals(that.pattern)) {
+            return false;
+        }
+        return factField != null ? factField.equals(that.factField) : that.factField == null;
     }
 
     @Override
     public int hashCode() {
-        final int result = 37 * pattern.hashCode() + factField.hashCode();
-        return ~~result;
+        int result = pattern.hashCode();
+        result = ~~result;
+        result = 31 * result + (factField != null ? factField.hashCode() : 0);
+        result = ~~result;
+        return result;
     }
-
 }
