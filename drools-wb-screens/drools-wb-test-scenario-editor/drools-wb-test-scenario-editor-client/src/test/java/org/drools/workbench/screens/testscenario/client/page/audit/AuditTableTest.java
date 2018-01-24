@@ -21,41 +21,46 @@ import java.util.Set;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import elemental2.dom.HTMLElement;
-import elemental2.dom.HTMLTableElement;
+import elemental2.dom.HTMLUListElement;
+import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AuditLogTableTest {
+public class AuditTableTest {
 
     @Mock
     private HTMLElement itemElement;
 
     @Mock
-    private AuditLogTableItem item;
+    private AuditTableItem item;
 
     @Mock
-    private ManagedInstance<AuditLogTableItem> items;
+    private ManagedInstance<AuditTableItem> items;
 
     @Mock
-    private HTMLTableElement itemsContainer;
+    private HTMLUListElement itemsContainer;
 
-    private AuditLogTable table;
+    @Mock
+    private Elemental2DomUtil elemental2DomUtil;
+
+    private AuditTable table;
 
     @Before
     public void setUp() throws Exception {
-        table = spy(new AuditLogTable(itemsContainer, items));
+        doReturn(item).when(items).get();
+        doReturn(itemElement).when(item).getElement();
 
-        when(items.get()).thenReturn(item);
-        when(item.getElement()).thenReturn(itemElement);
+        table = spy(new AuditTable(itemsContainer, items, elemental2DomUtil));
     }
 
     @Test
@@ -65,7 +70,10 @@ public class AuditLogTableTest {
             add("Rule 2 fired");
         }};
 
-        table.redrawFiredRules(log);
-        verify(itemsContainer, times(2)).appendChild(itemElement);
+        reset(itemsContainer);
+
+        table.showItems(log);
+        // title and two fired rules
+        verify(itemsContainer, times(3)).appendChild(itemElement);
     }
 }

@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.testscenario.client.page.audit;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import javax.enterprise.context.Dependent;
@@ -24,7 +25,7 @@ import javax.inject.Inject;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
-import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
+import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
@@ -41,30 +42,29 @@ public class AuditPageViewImpl implements AuditPage.AuditPageView {
     @DataField("fired-rules")
     private HTMLDivElement firedRulesDiv;
 
-    private Elemental2DomUtil elemental2DomUtil;
-
     private AuditPage presenter;
 
-    private FiredRulesTable firedRulesTable;
+    private AuditTable firedRulesTable;
 
-    private AuditLogTable auditLogTable;
+    private AuditTable auditLogTable;
 
     @Inject
     public AuditPageViewImpl(final HTMLDivElement root,
                              final HTMLDivElement auditLogDiv,
                              final HTMLDivElement firedRulesDiv,
-                             final Elemental2DomUtil elemental2DomUtil,
-                             final FiredRulesTable firedRulesTable,
-                             final AuditLogTable auditLogTable) {
+                             final AuditTable firedRulesTable,
+                             final AuditTable auditLogTable) {
         this.root = root;
         this.auditLogDiv = auditLogDiv;
         this.firedRulesDiv = firedRulesDiv;
-        this.elemental2DomUtil = elemental2DomUtil;
         this.firedRulesTable = firedRulesTable;
         this.auditLogTable = auditLogTable;
 
-        this.elemental2DomUtil.appendWidgetToElement(firedRulesDiv, firedRulesTable.asWidget());
+        this.firedRulesDiv.appendChild(firedRulesTable.getElement());
         this.auditLogDiv.appendChild(auditLogTable.getElement());
+
+        this.auditLogTable.setTitle(TestScenarioConstants.INSTANCE.AuditLog());
+        this.firedRulesTable.setTitle(TestScenarioConstants.INSTANCE.FiredRules());
     }
 
     @Override
@@ -79,11 +79,11 @@ public class AuditPageViewImpl implements AuditPage.AuditPageView {
 
     @Override
     public void showFiredRules(final ExecutionTrace executionTrace) {
-        firedRulesTable.redrawFiredRules(executionTrace);
+        firedRulesTable.showItems(Arrays.asList(executionTrace.getRulesFired()));
     }
 
     @Override
     public void showAuditLog(final Set<String> auditLogMessages) {
-        auditLogTable.redrawFiredRules(auditLogMessages);
+        auditLogTable.showItems(auditLogMessages);
     }
 }
