@@ -30,7 +30,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -60,7 +59,7 @@ public class AuditTableTest {
         doReturn(item).when(items).get();
         doReturn(itemElement).when(item).getElement();
 
-        table = spy(new AuditTable(itemsContainer, items, elemental2DomUtil));
+        table = spy(new AuditTable(itemsContainer, item, items, elemental2DomUtil));
     }
 
     @Test
@@ -70,10 +69,9 @@ public class AuditTableTest {
             add("Rule 2 fired");
         }};
 
-        reset(itemsContainer);
-
         table.showItems(log);
-        // title and two fired rules
-        verify(itemsContainer, times(3)).appendChild(itemElement);
+
+        // two fired rules
+        verify(itemsContainer, times(2)).appendChild(itemElement);
     }
 }

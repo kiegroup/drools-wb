@@ -32,6 +32,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @Dependent
 public class AuditTable implements IsElement {
 
+    @DataField("title")
     private AuditTableItem title;
 
     @DataField("items")
@@ -43,15 +44,15 @@ public class AuditTable implements IsElement {
 
     @Inject
     public AuditTable(final HTMLUListElement itemsContainer,
+                      final AuditTableItem title,
                       final ManagedInstance<AuditTableItem> items,
                       final Elemental2DomUtil elemental2DomUtil) {
         this.itemsContainer = itemsContainer;
         this.items = items;
+        this.title = title;
         this.elemental2DomUtil = elemental2DomUtil;
 
-        this.title = items.get();
         this.title.getElement().id = "header";
-        this.itemsContainer.appendChild(this.title.getElement());
     }
 
     public void setTitle(final String tableTitle) {
@@ -60,7 +61,7 @@ public class AuditTable implements IsElement {
 
     public void showItems(final Collection<String> textItems) {
         elemental2DomUtil.removeAllElementChildren(itemsContainer);
-        itemsContainer.appendChild(title.getElement());
+
         textItems.stream()
                 .forEach(logMessage -> {
                     final AuditTableItem newItem = items.get();

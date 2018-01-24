@@ -40,12 +40,6 @@ public class AuditPageViewImplTest {
     private HTMLDivElement root;
 
     @Mock
-    private HTMLDivElement auditLogDiv;
-
-    @Mock
-    private HTMLDivElement firedRulesDiv;
-
-    @Mock
     private AuditTable firedRulesTable;
 
     @Mock
@@ -58,7 +52,7 @@ public class AuditPageViewImplTest {
 
     @Before
     public void setUp() throws Exception {
-        testedView = new AuditPageViewImpl(root, auditLogDiv, firedRulesDiv, firedRulesTable, auditLogTable);
+        testedView = new AuditPageViewImpl(root, firedRulesTable, auditLogTable);
     }
 
     @Test

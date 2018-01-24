@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.page.configuration;
+package org.drools.workbench.screens.testscenario.client.page.settings;
 
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -32,16 +32,16 @@ import static org.mockito.Mockito.verify;
 
 @WithClassesToStub(RootPanel.class)
 @RunWith(GwtMockitoTestRunner.class)
-public class KiePageTest {
+public class SettingsPageTest {
 
     @Mock
-    private KiePage.KiePageView kiePageView;
+    private SettingsPage.SettingsPageView settingsPageView;
 
-    private KiePage kiePage;
+    private SettingsPage settingsPage;
 
     @Before
     public void setUp() throws Exception {
-        kiePage = new KiePage(kiePageView);
+        settingsPage = new SettingsPage(settingsPageView);
     }
 
     @Test
@@ -50,8 +50,8 @@ public class KiePageTest {
         final Path path = mock(Path.class);
         final Scenario scenario = mock(Scenario.class);
 
-        kiePage.refresh(parentWidget, path, scenario);
+        settingsPage.refresh(parentWidget, path, scenario);
 
-        verify(kiePageView).refresh(parentWidget, path, scenario);
+        verify(settingsPageView).refresh(parentWidget, path, scenario);
     }
 }

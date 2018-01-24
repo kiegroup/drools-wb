@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.page.configuration;
+package org.drools.workbench.screens.testscenario.client.page.settings;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

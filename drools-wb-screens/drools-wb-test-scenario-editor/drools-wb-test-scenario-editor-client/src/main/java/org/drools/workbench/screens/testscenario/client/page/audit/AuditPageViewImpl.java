@@ -36,32 +36,21 @@ public class AuditPageViewImpl implements AuditPage.AuditPageView {
     @DataField("root")
     private HTMLDivElement root;
 
-    @DataField("audit-log")
-    private HTMLDivElement auditLogDiv;
-
-    @DataField("fired-rules")
-    private HTMLDivElement firedRulesDiv;
-
     private AuditPage presenter;
 
+    @DataField("fired-rules-table")
     private AuditTable firedRulesTable;
 
+    @DataField("audit-log-table")
     private AuditTable auditLogTable;
 
     @Inject
     public AuditPageViewImpl(final HTMLDivElement root,
-                             final HTMLDivElement auditLogDiv,
-                             final HTMLDivElement firedRulesDiv,
                              final AuditTable firedRulesTable,
                              final AuditTable auditLogTable) {
         this.root = root;
-        this.auditLogDiv = auditLogDiv;
-        this.firedRulesDiv = firedRulesDiv;
         this.firedRulesTable = firedRulesTable;
         this.auditLogTable = auditLogTable;
-
-        this.firedRulesDiv.appendChild(firedRulesTable.getElement());
-        this.auditLogDiv.appendChild(auditLogTable.getElement());
 
         this.auditLogTable.setTitle(TestScenarioConstants.INSTANCE.AuditLog());
         this.firedRulesTable.setTitle(TestScenarioConstants.INSTANCE.FiredRules());

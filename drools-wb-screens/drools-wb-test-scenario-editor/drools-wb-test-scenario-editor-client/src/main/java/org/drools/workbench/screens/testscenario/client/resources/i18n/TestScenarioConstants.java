@@ -49,7 +49,7 @@ public interface
 
     String globals();
 
-    String Configuration();
+    String Settings();
 
     String AddInputDataAndExpectationsHere();
 

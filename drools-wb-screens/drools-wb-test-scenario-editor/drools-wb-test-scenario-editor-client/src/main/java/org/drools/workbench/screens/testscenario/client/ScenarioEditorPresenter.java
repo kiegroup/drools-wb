@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.page.audit.AuditPage;
-import org.drools.workbench.screens.testscenario.client.page.configuration.KiePage;
+import org.drools.workbench.screens.testscenario.client.page.settings.SettingsPage;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.type.TestScenarioResourceType;
 import org.drools.workbench.screens.testscenario.client.utils.ScenarioUtils;
@@ -65,7 +65,7 @@ public class ScenarioEditorPresenter
     private final Caller<TestService> testService;
     private final ImportsWidgetPresenter importsWidget;
     private User user;
-    private final KiePage kiePage;
+    private final SettingsPage settingsPage;
     private final AuditPage auditPage;
     private Scenario scenario;
     private AsyncPackageDataModelOracle dmo;
@@ -80,7 +80,7 @@ public class ScenarioEditorPresenter
                                    final Caller<TestService> testService,
                                    final TestScenarioResourceType type,
                                    final AsyncPackageDataModelOracleFactory oracleFactory,
-                                   final KiePage kiePage,
+                                   final SettingsPage settingsPage,
                                    final AuditPage auditPage) {
         super(view);
         this.view = view;
@@ -90,7 +90,7 @@ public class ScenarioEditorPresenter
         this.testService = testService;
         this.type = type;
         this.oracleFactory = oracleFactory;
-        this.kiePage = kiePage;
+        this.settingsPage = settingsPage;
         this.auditPage = auditPage;
 
         view.setPresenter(this);
@@ -135,7 +135,7 @@ public class ScenarioEditorPresenter
 
                 addImportsTab(importsWidget);
 
-                addPage(kiePage);
+                addPage(settingsPage);
 
                 addPage(auditPage);
 
@@ -173,9 +173,9 @@ public class ScenarioEditorPresenter
 
     private void redraw() {
         renderFixtures();
-        kiePage.refresh(view,
-                        versionRecordManager.getCurrentPath(),
-                        scenario);
+        settingsPage.refresh(view,
+                             versionRecordManager.getCurrentPath(),
+                             scenario);
         importsWidget.setContent(dmo,
                                  scenario.getImports(),
                                  isReadOnly);

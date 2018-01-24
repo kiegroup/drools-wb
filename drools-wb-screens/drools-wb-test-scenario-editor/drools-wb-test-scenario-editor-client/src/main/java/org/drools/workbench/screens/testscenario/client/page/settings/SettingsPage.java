@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.page.configuration;
+package org.drools.workbench.screens.testscenario.client.page.settings;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -28,22 +28,22 @@ import org.uberfire.client.mvp.UberElemental;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 
 @Dependent
-public class KiePage extends PageImpl {
+public class SettingsPage extends PageImpl {
 
-    public interface KiePageView extends UberElemental<KiePage> {
+    public interface SettingsPageView extends UberElemental<SettingsPage> {
 
         void refresh(final ScenarioParentWidget scenarioParentWidget, final Path path, final Scenario scenario);
     }
 
-    private KiePageView kiePageView;
+    private SettingsPageView settingsPageView;
 
     @Inject
-    public KiePage(final KiePageView kiePageView) {
-        super(ElementWrapperWidget.getWidget(kiePageView.getElement()), TestScenarioConstants.INSTANCE.Configuration());
-        this.kiePageView = kiePageView;
+    public SettingsPage(final SettingsPageView settingsPageView) {
+        super(ElementWrapperWidget.getWidget(settingsPageView.getElement()), TestScenarioConstants.INSTANCE.Settings());
+        this.settingsPageView = settingsPageView;
     }
 
     public void refresh(final ScenarioParentWidget scenarioParentWidget, final Path path, final Scenario scenario) {
-        kiePageView.refresh(scenarioParentWidget, path, scenario);
+        settingsPageView.refresh(scenarioParentWidget, path, scenario);
     }
 }

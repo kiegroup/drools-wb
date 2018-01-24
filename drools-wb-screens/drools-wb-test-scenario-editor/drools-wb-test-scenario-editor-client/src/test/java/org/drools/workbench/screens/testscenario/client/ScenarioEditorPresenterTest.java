@@ -25,10 +25,9 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.drools.workbench.screens.testscenario.client.page.audit.AuditPage;
-import org.drools.workbench.screens.testscenario.client.page.configuration.KiePage;
+import org.drools.workbench.screens.testscenario.client.page.settings.SettingsPage;
 import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
 import org.drools.workbench.screens.testscenario.client.type.TestScenarioResourceType;
-import org.drools.workbench.screens.testscenario.client.utils.ScenarioUtils;
 import org.drools.workbench.screens.testscenario.model.TestScenarioModelContent;
 import org.drools.workbench.screens.testscenario.model.TestScenarioResult;
 import org.drools.workbench.screens.testscenario.service.ScenarioTestEditorService;
@@ -70,7 +69,6 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anySet;
 import static org.mockito.Matchers.notNull;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
@@ -136,7 +134,7 @@ public class ScenarioEditorPresenterTest {
     private ProjectContext workbenchContext;
 
     @Mock
-    private KiePage kiePage;
+    private SettingsPage settingsPage;
 
     @Mock
     private AuditPage auditPage;
@@ -158,7 +156,7 @@ public class ScenarioEditorPresenterTest {
                                                  new CallerMock<>(testService),
                                                  new TestScenarioResourceType(),
                                                  modelOracleFactory,
-                                                 kiePage,
+                                                 settingsPage,
                                                  auditPage) {
             {
                 kieView = ScenarioEditorPresenterTest.this.kieView;
@@ -258,9 +256,9 @@ public class ScenarioEditorPresenterTest {
 
         editor.loadContent();
 
-        verify(kieView).addPage(kiePage);
+        verify(kieView).addPage(settingsPage);
         verify(kieView).addPage(auditPage);
-        verify(kiePage).refresh(view, path, scenario);
+        verify(settingsPage).refresh(view, path, scenario);
     }
 
     @Test
@@ -282,7 +280,7 @@ public class ScenarioEditorPresenterTest {
         inOrder.verify(view).showResults();
         inOrder.verify(view).hideBusyIndicator();
 
-        verify(kiePage).refresh(view, path, scenario);
+        verify(settingsPage).refresh(view, path, scenario);
 
         verify(auditPage).showFiredRulesAuditLog(Collections.emptySet());
         verify(auditPage).showFiredRules(notNull(ExecutionTrace.class));

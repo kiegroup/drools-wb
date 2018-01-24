@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.page.configuration;
+package org.drools.workbench.screens.testscenario.client.page.settings;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -31,15 +31,15 @@ import org.uberfire.backend.vfs.Path;
 
 @Templated
 @Dependent
-public class KiePageViewImpl implements KiePage.KiePageView {
+public class SettingsPageViewImpl implements SettingsPage.SettingsPageView {
 
     private Elemental2DomUtil elemental2DomUtil;
 
     @DataField("root")
     private HTMLDivElement root;
 
-    @DataField("kie-configuration")
-    private HTMLDivElement kieConfigurationDiv;
+    @DataField("session-configuration")
+    private HTMLDivElement sessionConfigurationDiv;
 
     @DataField("allowed-rules-configuration")
     private HTMLDivElement allowedRulesConfigurationDiv;
@@ -47,7 +47,7 @@ public class KiePageViewImpl implements KiePage.KiePageView {
     @DataField("globals-configuration")
     private HTMLDivElement globalsConfigurationDiv;
 
-    private KiePage presenter;
+    private SettingsPage presenter;
 
     private ScenarioKSessionSelector scenarioKSessionSelector;
 
@@ -56,16 +56,16 @@ public class KiePageViewImpl implements KiePage.KiePageView {
     private ExecutionWidget executionWidget;
 
     @Inject
-    public KiePageViewImpl(final HTMLDivElement root,
-                           final HTMLDivElement kieConfigurationDiv,
-                           final HTMLDivElement allowedRulesConfigurationDiv,
-                           final HTMLDivElement globalsConfigurationDiv,
-                           final Elemental2DomUtil elemental2DomUtil,
-                           final ScenarioKSessionSelector scenarioKSessionSelector,
-                           final ConfigWidget configWidget,
-                           final ExecutionWidget executionWidget) {
+    public SettingsPageViewImpl(final HTMLDivElement root,
+                                final HTMLDivElement sessionConfigurationDiv,
+                                final HTMLDivElement allowedRulesConfigurationDiv,
+                                final HTMLDivElement globalsConfigurationDiv,
+                                final Elemental2DomUtil elemental2DomUtil,
+                                final ScenarioKSessionSelector scenarioKSessionSelector,
+                                final ConfigWidget configWidget,
+                                final ExecutionWidget executionWidget) {
         this.root = root;
-        this.kieConfigurationDiv = kieConfigurationDiv;
+        this.sessionConfigurationDiv = sessionConfigurationDiv;
         this.allowedRulesConfigurationDiv = allowedRulesConfigurationDiv;
         this.globalsConfigurationDiv = globalsConfigurationDiv;
         this.elemental2DomUtil = elemental2DomUtil;
@@ -73,7 +73,7 @@ public class KiePageViewImpl implements KiePage.KiePageView {
         this.configWidget = configWidget;
         this.executionWidget = executionWidget;
 
-        this.elemental2DomUtil.appendWidgetToElement(kieConfigurationDiv, scenarioKSessionSelector.asWidget());
+        this.elemental2DomUtil.appendWidgetToElement(sessionConfigurationDiv, scenarioKSessionSelector.asWidget());
         this.elemental2DomUtil.appendWidgetToElement(allowedRulesConfigurationDiv, configWidget.asWidget());
         this.elemental2DomUtil.appendWidgetToElement(globalsConfigurationDiv, executionWidget.asWidget());
     }
@@ -84,7 +84,7 @@ public class KiePageViewImpl implements KiePage.KiePageView {
     }
 
     @Override
-    public void init(KiePage presenter) {
+    public void init(SettingsPage presenter) {
         this.presenter = presenter;
     }
 

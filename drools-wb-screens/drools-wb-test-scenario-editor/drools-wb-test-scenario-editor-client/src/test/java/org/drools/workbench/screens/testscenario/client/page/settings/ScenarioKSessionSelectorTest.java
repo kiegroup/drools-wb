@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.testscenario.client.page.configuration;
+package org.drools.workbench.screens.testscenario.client.page.settings;
 
 import org.drools.workbench.models.testscenarios.shared.Scenario;
 import org.junit.Before;
