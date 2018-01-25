@@ -45,8 +45,10 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleImpl;
 import org.uberfire.backend.vfs.Path;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 public class GuidedDecisionTableTest {
 
@@ -568,6 +570,48 @@ public class GuidedDecisionTableTest {
                       utils.getValueList( c1 ).length );
         assertEquals( 3,
                       utils.getValueList( c2 ).length );
+    }
+
+    @Test
+    public void testCommaInList() {
+        final GuidedDecisionTable52 model = new GuidedDecisionTable52();
+        final PackageDataModelOracle loader = PackageDataModelOracleBuilder.newPackageOracleBuilder()
+                .addEnum("Driver",
+                         "name",
+                         new String[]{"bob", "michael"})
+                .build();
+
+        //Emulate server-to-client conversions
+        final AsyncPackageDataModelOracle oracle = new AsyncPackageDataModelOracleImpl();
+        final PackageDataModelOracleBaselinePayload dataModel = new PackageDataModelOracleBaselinePayload();
+        dataModel.setModelFields(loader.getProjectModelFields());
+        populateDataModelOracle(mock(Path.class),
+                                model,
+                                oracle,
+                                dataModel);
+        final GuidedDecisionTableUtils utils = new GuidedDecisionTableUtils(model,
+                                                                            oracle);
+
+        // add cols for LHS
+        final Pattern52 p1 = new Pattern52();
+        p1.setBoundName("c1");
+        p1.setFactType("Driver");
+        model.getConditions().add(p1);
+
+        final ConditionCol52 c2 = new ConditionCol52();
+        final Pattern52 p2 = new Pattern52();
+        p2.setBoundName("c2");
+        p2.setFactType("Driver");
+        c2.setConstraintValueType(BaseSingleFieldConstraint.TYPE_LITERAL);
+        c2.setValueList("'a','b,c'");
+        p2.getChildColumns().add(c2);
+        model.getConditions().add(p1);
+
+        String[] valueList = utils.getValueList(c2);
+        assertEquals(2,
+                     valueList.length);
+        assertEquals("a", valueList[0]);
+        assertEquals("b,c", valueList[1]);
     }
 
     @SuppressWarnings("serial")

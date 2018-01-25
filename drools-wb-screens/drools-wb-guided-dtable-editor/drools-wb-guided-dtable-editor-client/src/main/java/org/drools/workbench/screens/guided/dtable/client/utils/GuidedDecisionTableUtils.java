@@ -22,6 +22,7 @@ import org.drools.workbench.models.datamodel.rule.DSLSentence;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.datamodel.rule.IPattern;
+import org.drools.workbench.models.datamodel.util.ListSplitter;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
@@ -309,23 +310,28 @@ public class GuidedDecisionTableUtils {
 
     private String[] getValueList( final ConditionCol52 col ) {
         if ( col.getValueList() != null && !"".equals( col.getValueList() ) ) {
-            return col.getValueList().split( "," );
+            return getSplit(col.getValueList());
         }
         return new String[ 0 ];
     }
 
+
     private String[] getValueList( final ActionSetFieldCol52 col ) {
         if ( col.getValueList() != null && !"".equals( col.getValueList() ) ) {
-            return col.getValueList().split( "," );
+            return getSplit(col.getValueList());
         }
         return new String[ 0 ];
     }
 
     private String[] getValueList( final ActionInsertFactCol52 col ) {
         if ( col.getValueList() != null && !"".equals( col.getValueList() ) ) {
-            return col.getValueList().split( "," );
+            return getSplit(col.getValueList());
         }
         return new String[ 0 ];
+    }
+
+    private String[] getSplit(final String valueList) {
+        return ListSplitter.split(valueList);
     }
 
     public boolean hasValueList( final AttributeCol52 col ) {
