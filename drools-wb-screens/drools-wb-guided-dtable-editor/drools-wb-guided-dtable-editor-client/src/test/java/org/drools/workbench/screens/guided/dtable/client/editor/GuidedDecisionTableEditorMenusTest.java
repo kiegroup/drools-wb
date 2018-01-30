@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.client.editor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -340,6 +341,9 @@ public class GuidedDecisionTableEditorMenusTest {
         wrapped.setFileNameValidator(fileNameValidator);
 
         this.presenter = spy(wrapped);
+
+        when(workbenchContext.getActiveOrganizationalUnit()).thenReturn(Optional.empty());
+        when(workbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
 
         presenter.init();
         presenter.setupMenuBar();

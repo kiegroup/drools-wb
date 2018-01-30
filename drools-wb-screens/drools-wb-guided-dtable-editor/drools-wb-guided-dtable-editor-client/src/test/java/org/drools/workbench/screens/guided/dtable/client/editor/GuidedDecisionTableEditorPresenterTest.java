@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.guided.dtable.client.editor;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -105,7 +106,7 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
         reset(fileMenuBuilder);
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();

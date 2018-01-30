@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.client.editor;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.enterprise.event.Event;
 
@@ -273,6 +274,9 @@ public abstract class BaseGuidedDecisionTablePresenterTest<P extends BaseGuidedD
         when(radarMenuBuilder.build()).thenReturn(radarMenuItem);
         when(registeredDocumentsMenuBuilder.build()).thenReturn(registeredDocumentsMenuItem);
         when(presenter.getKieEditorWrapperMultiPage()).thenReturn(multiPageEditor);
+
+        when(workbenchContext.getActiveOrganizationalUnit()).thenReturn(Optional.empty());
+        when(workbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
 
         presenter.init();
         presenter.setupMenuBar();

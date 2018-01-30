@@ -172,6 +172,7 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
 
     private GuidedDTableGraphResourceType dtGraphResourceType = new GuidedDTableGraphResourceType();
 
+    @Override
     @Before
     public void setup() {
         this.dtGraphServiceCaller = new CallerMock<>(dtGraphService);
@@ -352,7 +353,7 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
         reset(fileMenuBuilder);
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();

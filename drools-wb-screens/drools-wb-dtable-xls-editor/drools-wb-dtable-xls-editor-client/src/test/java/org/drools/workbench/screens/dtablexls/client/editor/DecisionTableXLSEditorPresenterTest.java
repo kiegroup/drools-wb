@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.dtablexls.client.editor;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -162,6 +163,8 @@ public class DecisionTableXLSEditorPresenterTest {
         });
 
         doReturn(mock(MenuItem.class)).when(presenter).getConvertMenu();
+        when(workbenchContext.getActiveOrganizationalUnit()).thenReturn(Optional.empty());
+        when(workbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
     }
 
     @Test
@@ -233,7 +236,7 @@ public class DecisionTableXLSEditorPresenterTest {
 
     @Test
     public void testMakeMenuBar() {
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(true).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();
@@ -248,7 +251,7 @@ public class DecisionTableXLSEditorPresenterTest {
 
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();

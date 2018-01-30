@@ -18,6 +18,7 @@ package org.drools.workbench.screens.testscenario.client;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.enterprise.event.Event;
 
@@ -175,6 +176,9 @@ public class ScenarioEditorPresenterTest {
         overview = new Overview();
 
         when(user.getIdentifier()).thenReturn("userName");
+
+        when(workbenchContext.getActiveOrganizationalUnit()).thenReturn(Optional.empty());
+        when(workbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
 
         final TestScenarioModelContent testScenarioModelContent = new TestScenarioModelContent(scenario,
                                                                                                overview,
@@ -338,7 +342,7 @@ public class ScenarioEditorPresenterTest {
 
     @Test
     public void testMakeMenuBar() {
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(true).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();
@@ -354,7 +358,7 @@ public class ScenarioEditorPresenterTest {
 
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
-        doReturn(mock(WorkspaceProject.class)).when(workbenchContext).getActiveWorkspaceProject();
+        doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
         doReturn(false).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();
