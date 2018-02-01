@@ -57,25 +57,6 @@ public class TemplateDropDownManager
         this.oracle = oracle;
     }
 
-    public TemplateDropDownManager( final TemplateModel model,
-                                    final AsyncPackageDataModelOracle oracle,
-                                    final DynamicData data ) {
-        if ( model == null ) {
-            throw new IllegalArgumentException( "model cannot be null" );
-        }
-        if ( data == null ) {
-            throw new IllegalArgumentException( "data cannot be null" );
-        }
-        if ( oracle == null ) {
-            throw new IllegalArgumentException( "oracle cannot be null" );
-        }
-        this.cellValueFactory = new TemplateDataCellValueFactory( model,
-                                                                  oracle );
-        this.model = model;
-        this.oracle = oracle;
-        this.data = data;
-    }
-
     @Override
     public void setData( DynamicData data ) {
         if ( data == null ) {

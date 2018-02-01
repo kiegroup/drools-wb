@@ -250,9 +250,12 @@ public class DSLSentenceWidget extends RuleModellerWidget {
                                    DSLVariableValue value) {
         final boolean multipleSelect = isMultipleSelect(variableDef,
                                                         sentence);
-        DSLDropDown resultWidget = new DSLDropDown(variableDef,
+        DSLDropDown resultWidget = new DSLDropDown(modeller,
+                                                   variableDef,
+                                                   sentence,
                                                    value,
-                                                   multipleSelect);
+                                                   multipleSelect,
+                                                   dslDropDwon -> updateEnumDropDowns(dslDropDwon));
         dropDownWidgets.add(resultWidget);
         return resultWidget;
     }
@@ -457,84 +460,6 @@ public class DSLSentenceWidget extends RuleModellerWidget {
                                                    box.getText());
             }
             return new DSLVariableValue(box.getText());
-        }
-    }
-
-    class DSLDropDown extends Composite
-            implements
-            DSLVariableEditor {
-
-        final AsyncPackageDataModelOracle oracle = getModeller().getDataModelOracle();
-        EnumDropDown resultWidget = null;
-        String factType;
-        String factField;
-        DSLVariableValue selectedValue;
-
-        public DSLDropDown(final String variableDef,
-                           final DSLVariableValue value,
-                           final boolean multipleSelect) {
-
-            //Parse Fact Type and Field for retrieving DropDown data from Suggestion Completion Engine
-            //Format for the drop-down definition within a DSLSentence is <varName>:<type>:<Fact.field>
-            int lastIndex = variableDef.lastIndexOf(":");
-            String factAndField = variableDef.substring(lastIndex + 1,
-                                                        variableDef.length());
-            int dotIndex = factAndField.indexOf(".");
-            factType = factAndField.substring(0,
-                                              dotIndex);
-            factField = factAndField.substring(dotIndex + 1,
-                                               factAndField.length());
-            selectedValue = value;
-
-            //ChangeHandler for drop-down; not called when initialising the drop-down
-            DropDownValueChanged handler = new DropDownValueChanged() {
-
-                public void valueChanged(String newText,
-                                         String newValue) {
-                    if (selectedValue.getValue().equals(newValue)) {
-                        return;
-                    }
-
-                    selectedValue = new DSLVariableValue(newValue);
-
-                    //When the value changes we need to reset the content of *ALL* DSLSentenceWidget drop-downs.
-                    //An improvement would be to determine the chain of dependent drop-downs and only update
-                    //children of the one whose value changes. However in reality DSLSentences only contain
-                    //a couple of drop-downs so it's quicker to simply update them all.
-                    updateEnumDropDowns(DSLDropDown.this);
-                }
-            };
-
-            DropDownData dropDownData = getDropDownData();
-            resultWidget = new EnumDropDown(value.getValue(),
-                                            handler,
-                                            dropDownData,
-                                            multipleSelect,
-                                            modeller.getPath());
-
-            //Wrap widget within a HorizontalPanel to add a space before and after the Widget
-            HorizontalPanel hp = new HorizontalPanel();
-            hp.add(new HTML("&nbsp;"));
-            hp.add(resultWidget);
-            hp.add(new HTML("&nbsp;"));
-
-            initWidget(hp);
-        }
-
-        public DSLVariableValue getSelectedValue() {
-            return selectedValue;
-        }
-
-        public void refreshDropDownData() {
-            resultWidget.setDropDownData(selectedValue.getValue(),
-                                         getDropDownData());
-        }
-
-        private DropDownData getDropDownData() {
-            DropDownData dropDownData = oracle.getEnums(factType,
-                                                        factField,
-                                                        sentence.getEnumFieldValueMap());
-            return dropDownData;
         }
     }
 

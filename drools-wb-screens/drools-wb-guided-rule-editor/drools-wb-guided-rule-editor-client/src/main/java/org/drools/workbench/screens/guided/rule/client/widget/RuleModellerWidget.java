@@ -18,11 +18,15 @@ package org.drools.workbench.screens.guided.rule.client.widget;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
+import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
+import org.drools.workbench.models.datamodel.rule.FieldNatureType;
+import org.drools.workbench.screens.guided.rule.client.editor.ActionValueEditor;
 import org.drools.workbench.screens.guided.rule.client.editor.RuleModeller;
 
 /**
@@ -96,4 +100,16 @@ public abstract class RuleModellerWidget
         }
     }
 
+    ActionValueEditor actionValueEditor(final String factType,
+                                        final ActionFieldValue actionFieldValue,
+                                        final ActionFieldValue[] fieldValues,
+                                        final boolean readOnly) {
+        return new ActionValueEditor(factType,
+                                     actionFieldValue,
+                                     fieldValues,
+                                     this.getModeller(),
+                                     this.getEventBus(),
+                                     actionFieldValue.getType(),
+                                     readOnly);
+    }
 }
