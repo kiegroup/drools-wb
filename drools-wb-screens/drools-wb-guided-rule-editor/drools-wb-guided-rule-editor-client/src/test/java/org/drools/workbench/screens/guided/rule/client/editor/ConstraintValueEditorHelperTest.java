@@ -348,14 +348,14 @@ public class ConstraintValueEditorHelperTest {
     @Test
     public void isEnumEquivalentDifferentContent() throws Exception {
         final DropDownData dropDownData = mock(DropDownData.class);
-        doReturn(new String[] {"a"}).when(dropDownData).getFixedList();
-        Assertions.assertThat(ConstraintValueEditorHelper.isEnumEquivalent(new String[] {"b"}, dropDownData)).isFalse();
+        doReturn(new String[]{"a"}).when(dropDownData).getFixedList();
+        Assertions.assertThat(ConstraintValueEditorHelper.isEnumEquivalent(new String[]{"b"}, dropDownData)).isFalse();
     }
 
     @Test
     public void isEnumEquivalentSameContent() throws Exception {
         final DropDownData dropDownData = mock(DropDownData.class);
-        doReturn(new String[] {"a", "b", "c"}).when(dropDownData).getFixedList();
-        Assertions.assertThat(ConstraintValueEditorHelper.isEnumEquivalent(new String[] {"a", "b", "c"}, dropDownData)).isTrue();
+        doReturn(new String[]{"a", "b", "c"}).when(dropDownData).getFixedList();
+        Assertions.assertThat(ConstraintValueEditorHelper.isEnumEquivalent(new String[]{"a", "b", "c"}, dropDownData)).isTrue();
     }
 }

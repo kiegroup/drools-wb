@@ -348,7 +348,6 @@ public class ActionValueEditor extends Composite {
 
     /**
      * An editor for formula
-     *
      * @return
      */
     private Widget formulaEditor() {

@@ -49,12 +49,9 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListBox;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.jboss.errai.ioc.client.container.IOC;
-import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.soup.project.datamodel.oracle.OperatorsOracle;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.ext.widgets.common.client.common.DatePicker;
-import org.uberfire.ext.widgets.common.client.common.DropDownValueChanged;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 
 /**
@@ -312,7 +309,6 @@ public class DSLSentenceWidget extends RuleModellerWidget {
      * result of
      * {@link #getBox(DSLVariableValue, String) }
      * is returned.
-     *
      * @param variableDef
      * @param value
      * @return
