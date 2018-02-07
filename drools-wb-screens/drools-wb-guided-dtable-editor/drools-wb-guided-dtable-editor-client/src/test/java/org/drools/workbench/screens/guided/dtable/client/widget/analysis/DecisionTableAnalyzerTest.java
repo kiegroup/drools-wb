@@ -49,17 +49,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DecisionTableAnalyzerTest {
+public class DecisionTableAnalyzerTest extends BaseDecisionTableAnalyzerTest{
 
     @GwtMock
     AnalysisConstants analysisConstants;
     @GwtMock
     DateTimeFormat dateTimeFormat;
-
-    @Mock
-    AsyncPackageDataModelOracle oracle;
-
-    private AnalysisReport analysisReport;
 
     @Before
     public void setUp() throws Exception {
@@ -275,45 +270,5 @@ public class DecisionTableAnalyzerTest {
         analyzer.onFocus();
 
         assertNotNull( analysisReport );
-    }
-
-    private DecisionTableAnalyzer getDecisionTableAnalyzer( GuidedDecisionTable52 table52 ) {
-        return new DecisionTableAnalyzer( mock( PlaceRequest.class ),
-                                          oracle,
-                                          table52,
-                                          mock( EventBus.class ) ) {
-            @Override
-            protected void sendReport( AnalysisReport report ) {
-                analysisReport = report;
-            }
-
-            @Override
-            protected Checks getChecks() {
-                return new Checks() {
-                    @Override
-                    protected void doRun( final CancellableRepeatingCommand command ) {
-                        while ( command.execute() ) {
-                            //loop
-                        }
-                    }
-                };
-            }
-
-            @Override
-            protected ParameterizedCommand<Status> getOnStatusCommand() {
-                return null;
-            }
-
-            @Override
-            protected Command getOnCompletionCommand() {
-                return new Command() {
-                    @Override
-                    public void execute() {
-                        sendReport( makeAnalysisReport() );
-                    }
-                };
-            }
-
-        };
     }
 }

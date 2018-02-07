@@ -24,37 +24,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.Checks;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.CellValue;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
-import org.mockito.Mock;
-import org.uberfire.mvp.Command;
-import org.uberfire.mvp.ParameterizedCommand;
-import org.uberfire.mvp.PlaceRequest;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertContains;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DecisionTableAnalyzerFromFileUpdateTest {
-
-    @Mock
-    AsyncPackageDataModelOracle oracle;
-
-    private AnalysisReport analysisReport;
+public class DecisionTableAnalyzerFromFileUpdateTest extends BaseDecisionTableAnalyzerTest {
 
     @Before
     public void setUp() throws Exception {
@@ -88,45 +74,6 @@ public class DecisionTableAnalyzerFromFileUpdateTest {
 
         assertContains("RedundantRows", analysisReport);
         assertEquals(1, analysisReport.getAnalysisData().size());
-    }
-
-    private DecisionTableAnalyzer getDecisionTableAnalyzer(GuidedDecisionTable52 table52) {
-        return new DecisionTableAnalyzer(mock(PlaceRequest.class),
-                                         oracle,
-                                         table52,
-                                         mock(EventBus.class)) {
-            @Override
-            protected void sendReport(AnalysisReport report) {
-                analysisReport = report;
-            }
-
-            @Override
-            protected Checks getChecks() {
-                return new Checks() {
-                    @Override
-                    protected void doRun(final CancellableRepeatingCommand command) {
-                        while (command.execute()) {
-                            //loop
-                        }
-                    }
-                };
-            }
-
-            @Override
-            protected ParameterizedCommand<Status> getOnStatusCommand() {
-                return null;
-            }
-
-            @Override
-            protected Command getOnCompletionCommand() {
-                return new Command() {
-                    @Override
-                    public void execute() {
-                        sendReport(makeAnalysisReport());
-                    }
-                };
-            }
-        };
     }
 
     public static String loadResource(final String name) throws Exception {
