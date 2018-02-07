@@ -138,18 +138,15 @@ public class Checks {
 
                 this.reciprocalRowInspectors.get(otherRowInspector).get(rowInspector).add(check);
 
-
                 List<Check> collection = makePairRowChecks(otherRowInspector,
                                                            rowInspector);
                 if (set.containsKey(otherRowInspector)) {
                     set.get(otherRowInspector).addAll(collection);
                 }
 
-
                 reciprocalRowInspectors.get(rowInspector).get(otherRowInspector).addAll(collection);
             }
         }
-
     }
 
     private void addIfMissing(final RowInspector rowInspector,
@@ -239,11 +236,19 @@ public class Checks {
             if (set.containsKey(reciprocalRowInspector)) {
                 set.get(reciprocalRowInspector).removeAll(reciprocalChecks);
             }
+            if (rechecks.containsKey(reciprocalRowInspector)) {
+                rechecks.get(reciprocalRowInspector).removeAll(reciprocalChecks);
+            }
+            if (this.reciprocalRowInspectors.containsKey(reciprocalRowInspector)) {
+                this.reciprocalRowInspectors.get(reciprocalRowInspector).remove(removedRowInspector);
+            }
         }
 
         //Remove the RowInspector itself
         removedChecks.addAll(set.get(removedRowInspector));
         set.remove(removedRowInspector);
+
+        rechecks.remove(removedRowInspector);
 
         return removedChecks;
     }
