@@ -252,7 +252,7 @@ public class DSLSentenceWidget extends RuleModellerWidget {
                                                    sentence,
                                                    value,
                                                    multipleSelect,
-                                                   dslDropDwon -> updateEnumDropDowns(dslDropDwon));
+                                                   dslDropDown -> updateEnumDropDowns(dslDropDown));
         dropDownWidgets.add(resultWidget);
         return resultWidget;
     }

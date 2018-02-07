@@ -61,7 +61,7 @@ public class TemplateDataCellFactoryTest {
     public void testGetCell() throws Exception {
         final String factType = "org.kiegroup.Car";
         final String factField = "color";
-        final String dataType = DataType.DataTypes.NUMERIC.name();
+        final String dataType = DataType.DataTypes.STRING.name();
 
         doReturn(factType).when(column).getFactType();
         doReturn(factField).when(column).getFactField();
@@ -76,7 +76,7 @@ public class TemplateDataCellFactoryTest {
     public void testGetCellWhenEnumPresent() throws Exception {
         final String factType = "org.kiegroup.Car";
         final String factField = "color";
-        final String dataType = DataType.DataTypes.NUMERIC.name();
+        final String dataType = DataType.DataTypes.STRING.name();
 
         doReturn(true).when(oracle).hasEnums(factType, factField);
         doReturn(factType).when(column).getFactType();
