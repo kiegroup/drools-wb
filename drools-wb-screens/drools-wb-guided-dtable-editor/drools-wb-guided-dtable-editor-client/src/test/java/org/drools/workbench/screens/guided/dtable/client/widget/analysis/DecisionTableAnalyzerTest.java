@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -30,26 +29,21 @@ import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.Checks;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.CellValue;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
-import org.mockito.Mock;
-import org.uberfire.mvp.Command;
-import org.uberfire.mvp.ParameterizedCommand;
-import org.uberfire.mvp.PlaceRequest;
 
-import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertContains;
+import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertDoesNotContain;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DecisionTableAnalyzerTest extends BaseDecisionTableAnalyzerTest{
+public class DecisionTableAnalyzerTest extends BaseDecisionTableAnalyzerTest {
 
     @GwtMock
     AnalysisConstants analysisConstants;
@@ -59,216 +53,206 @@ public class DecisionTableAnalyzerTest extends BaseDecisionTableAnalyzerTest{
     @Before
     public void setUp() throws Exception {
 
-        when( oracle.getFieldType( "Person", "age" ) ).thenReturn( DataType.TYPE_NUMERIC_INTEGER );
-        when( oracle.getFieldType( "Person", "approved" ) ).thenReturn( DataType.TYPE_BOOLEAN );
-        when( oracle.getFieldType( "Person", "name" ) ).thenReturn( DataType.TYPE_STRING );
+        when(oracle.getFieldType("Person", "age")).thenReturn(DataType.TYPE_NUMERIC_INTEGER);
+        when(oracle.getFieldType("Person", "approved")).thenReturn(DataType.TYPE_BOOLEAN);
+        when(oracle.getFieldType("Person", "name")).thenReturn(DataType.TYPE_STRING);
 
         Map<String, String> preferences = new HashMap<String, String>();
-        preferences.put( ApplicationPreferences.DATE_FORMAT, "dd-MMM-yyyy" );
-        ApplicationPreferences.setUp( preferences );
+        preferences.put(ApplicationPreferences.DATE_FORMAT, "dd-MMM-yyyy");
+        ApplicationPreferences.setUp(preferences);
     }
 
     @Test
     public void testEmpty() throws Exception {
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( new GuidedDecisionTable52() );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(new GuidedDecisionTable52());
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
-
+        assertTrue(analysisReport.getAnalysisData().isEmpty());
     }
 
     @Test
     public void testEmptyRow() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
-                .withData( new Object[][]{ { 1, "description", "" } } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
+                .withData(new Object[][]{{1, "description", ""}})
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertTrue( analysisReport.getAnalysisData().isEmpty() );
-
+        assertTrue(analysisReport.getAnalysisData().isEmpty());
     }
 
     @Test
     public void testRuleHasNoAction() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
-                .withData( new Object[][]{ { 1, "description", 0 } } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
+                .withData(new Object[][]{{1, "description", 0}})
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertContains( "RuleHasNoAction", analysisReport );
-
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RuleHasNoAction", analysisReport);
     }
-
 
     // GUVNOR-2546: Verification & Validation: BRL fragments are ignored
     @Test
     public void testRuleHasNoActionBRLFragmentHasAction() throws Exception {
-        final GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                      new ArrayList<Import>(),
-                                                                                      "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
+        final GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                                     new ArrayList<Import>(),
+                                                                                     "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
                 .withActionBRLFragment()
-                .withData( new Object[][]{{1, "description", 0, true}} )
+                .withData(new Object[][]{{1, "description", 0, true}})
                 .build();
 
-        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertDoesNotContain( "RuleHasNoAction", analysisReport );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertDoesNotContain("RuleHasNoAction", analysisReport);
     }
 
     @Test
     public void testRuleHasNoActionSet() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
-                .withActionSetField( "a", "age", DataType.TYPE_NUMERIC_INTEGER )
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withActionSetField( "a", "name", DataType.TYPE_STRING )
-                .withData( new Object[][]{
-                        { 1, "description", 0, null, null, "" },
-                        { 2, "description", null, null, null, null }
-                } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
+                .withActionSetField("a", "age", DataType.TYPE_NUMERIC_INTEGER)
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withActionSetField("a", "name", DataType.TYPE_STRING)
+                .withData(new Object[][]{
+                        {1, "description", 0, null, null, ""},
+                        {2, "description", null, null, null, null}
+                })
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertContains( "RuleHasNoAction", analysisReport, 1 );
-        assertDoesNotContain( "RuleHasNoAction", analysisReport, 2 );
-
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RuleHasNoAction", analysisReport, 1);
+        assertDoesNotContain("RuleHasNoAction", analysisReport, 2);
     }
 
     @Test
     public void testRuleHasNoRestrictions() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withData( new Object[][]{ { 1, "description", true } } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withData(new Object[][]{{1, "description", true}})
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertContains( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport );
-
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport);
     }
 
     @Test
     public void testRuleHasNoRestrictionsSet() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
-                .withStringColumn( "a", "Person", "name", "==" )
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withData( new Object[][]{
-                        { 1, "description", null, "", true },
-                        { 2, "description", null, null, null }
-                } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
+                .withStringColumn("a", "Person", "name", "==")
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withData(new Object[][]{
+                        {1, "description", null, "", true},
+                        {2, "description", null, null, null}
+                })
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertContains( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1 );
-        assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2 );
-
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertContains("RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1);
+        assertDoesNotContain("RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2);
     }
 
     // GUVNOR-2546: Verification & Validation: BRL fragments are ignored
     @Test
     public void testConditionsShouldNotBeIgnored() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
                 .withConditionBRLColumn()
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withData( new Object[][]{
-                        { 1, "description", null, true },
-                        { 2, "description", null, null }
-                } )
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withData(new Object[][]{
+                        {1, "description", null, true},
+                        {2, "description", null, null}
+                })
                 .build();
 
-        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        final DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
-        assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1 );
-        assertDoesNotContain( "RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2 );
-
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertDoesNotContain("RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 1);
+        assertDoesNotContain("RuleHasNoRestrictionsAndWillAlwaysFire", analysisReport, 2);
     }
 
     @Test
     public void testMultipleValuesForOneAction() throws Exception {
-        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder( "org.test",
-                                                                                new ArrayList<Import>(),
-                                                                                "mytable" )
-                .withConditionIntegerColumn( "a", "Person", "age", ">" )
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withActionSetField( "a", "approved", DataType.TYPE_BOOLEAN )
-                .withData( new Object[][]{ { 1, "description", 100, true, false } } )
+        GuidedDecisionTable52 table52 = new ExtendedGuidedDecisionTableBuilder("org.test",
+                                                                               new ArrayList<Import>(),
+                                                                               "mytable")
+                .withConditionIntegerColumn("a", "Person", "age", ">")
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withActionSetField("a", "approved", DataType.TYPE_BOOLEAN)
+                .withData(new Object[][]{{1, "description", 100, true, false}})
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
         analyzer.onFocus();
 
-        assertContains( "MultipleValuesForOneAction", analysisReport );
-
+        assertContains("MultipleValuesForOneAction", analysisReport);
     }
 
     @Test
     public void testRedundancy() throws Exception {
-        GuidedDecisionTable52 table52 = new LimitedGuidedDecisionTableBuilder( "org.test",
-                                                                               new ArrayList<Import>(),
-                                                                               "mytable" )
-                .withIntegerColumn( "a", "Person", "age", "==", 0 )
-                .withAction( "a", "Person", "approved", new DTCellValue52() {
+        GuidedDecisionTable52 table52 = new LimitedGuidedDecisionTableBuilder("org.test",
+                                                                              new ArrayList<Import>(),
+                                                                              "mytable")
+                .withIntegerColumn("a", "Person", "age", "==", 0)
+                .withAction("a", "Person", "approved", new DTCellValue52() {
                     {
-                        setBooleanValue( true );
+                        setBooleanValue(true);
                     }
-                } ).withAction( "a", "Person", "approved", new DTCellValue52() {
+                }).withAction("a", "Person", "approved", new DTCellValue52() {
                     {
-                        setBooleanValue( true );
+                        setBooleanValue(true);
                     }
-                } )
-                .withData( new Object[][]{
-                        { 1, "description", true, true, false },
-                        { 2, "description", true, false, true } } )
+                })
+                .withData(new Object[][]{
+                        {1, "description", true, true, false},
+                        {2, "description", true, false, true}})
                 .build();
 
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( table52 );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
 
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
-        assertContains( "RedundantRows", analysisReport, 1 );
-        assertContains( "RedundantRows", analysisReport, 2 );
-
+        assertContains("RedundantRows", analysisReport, 1);
+        assertContains("RedundantRows", analysisReport, 2);
     }
 
     @Test
     public void testOnFocus() throws Exception {
-        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer( new GuidedDecisionTable52() );
-        analyzer.onValidate( new ValidateEvent( new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>() ) );
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(new GuidedDecisionTable52());
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
 
         analysisReport = null;
 
         analyzer.onFocus();
 
-        assertNotNull( analysisReport );
+        assertNotNull(analysisReport);
     }
 }

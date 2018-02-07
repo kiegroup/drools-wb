@@ -24,32 +24,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.base.Checks;
-import org.drools.workbench.screens.guided.dtable.client.widget.analysis.panel.AnalysisReport;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.CellValue;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.data.Coordinate;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.DeleteRowEvent;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.UpdateColumnDataEvent;
-import org.mockito.Mock;
-import org.uberfire.mvp.Command;
-import org.uberfire.mvp.ParameterizedCommand;
-import org.uberfire.mvp.PlaceRequest;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertContains;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class DecisionTableAnalyzerFromFileTest extends BaseDecisionTableAnalyzerTest {
