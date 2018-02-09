@@ -15,6 +15,18 @@
   <name>Drools Workbench - Guided Rule Editor - Backend</name>
   <description>Drools Workbench - Guided Rule Editor - Backend</description>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.optaplanner</groupId>
+        <artifactId>optaplanner-bom</artifactId>
+        <version>${version.org.kie}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <properties>
     <java.module.name>org.drools.wb.guided.rule.editor.backend</java.module.name>
   </properties>
@@ -201,6 +213,12 @@
       <groupId>org.jboss.spec.javax.servlet</groupId>
       <artifactId>jboss-servlet-api_3.1_spec</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.optaplanner</groupId>
+      <artifactId>optaplanner-core</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

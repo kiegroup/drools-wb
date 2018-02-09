@@ -1,0 +1,3 @@
+package com.myteam.scoreholdertest;
+
+global org.optaplanner.core.api.score.buildin.hardsoftdouble.HardSoftDoubleScoreHolder scoreHolder;
