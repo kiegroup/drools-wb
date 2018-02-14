@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.action;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.drools.workbench.models.datamodel.oracle.DataType;
@@ -55,7 +56,8 @@ public class FieldActionInspector
     }
 
     private boolean isValueRedundant(final DTCellValue52 other) {
-        if (value.equals(other)) {
+
+        if (valuesAreEqual(value, other)) {
             return true;
         } else if (isDataTypeString(value) && !isDataTypeString(other)) {
             return isStringValueEqualTo(value.getStringValue(),
@@ -68,6 +70,31 @@ public class FieldActionInspector
         }
     }
 
+    private boolean valuesAreEqual(DTCellValue52 value, DTCellValue52 that) {
+
+        switch (value.getDataType()) {
+
+            case STRING:
+                return Objects.equals(value.getStringValue(), that.getStringValue());
+            case NUMERIC:
+            case NUMERIC_BIGDECIMAL:
+            case NUMERIC_BIGINTEGER:
+            case NUMERIC_DOUBLE:
+            case NUMERIC_FLOAT:
+            case NUMERIC_INTEGER:
+            case NUMERIC_SHORT:
+            case NUMERIC_BYTE:
+            case NUMERIC_LONG:
+                return Objects.equals(value.getNumericValue(), that.getNumericValue());
+            case DATE:
+                return Objects.equals(value.getDateValue(), that.getDateValue());
+            case BOOLEAN:
+                return Objects.equals(value.getBooleanValue(), that.getBooleanValue());
+            default:
+                return false;
+        }
+    }
+
     private boolean isDataTypeString(final DTCellValue52 value) {
         return value.getDataType().equals(DataType.DataTypes.STRING);
     }
@@ -76,7 +103,7 @@ public class FieldActionInspector
                                          final DTCellValue52 dtCellValue52) {
         switch (dtCellValue52.getDataType()) {
             case STRING:
-                return stringValue.equals(dtCellValue52.getStringValue());
+                return Objects.equals(stringValue, dtCellValue52.getStringValue());
             case NUMERIC:
             case NUMERIC_BIGDECIMAL:
             case NUMERIC_BIGINTEGER:
@@ -86,11 +113,11 @@ public class FieldActionInspector
             case NUMERIC_INTEGER:
             case NUMERIC_LONG:
             case NUMERIC_SHORT:
-                return stringValue.equals(dtCellValue52.getNumericValue().toString());
+                return Objects.equals(stringValue, dtCellValue52.getNumericValue().toString());
             case DATE:
-                return stringValue.equals(format(dtCellValue52.getDateValue()));
+                return Objects.equals(stringValue, format(dtCellValue52.getDateValue()));
             case BOOLEAN:
-                return stringValue.equals(dtCellValue52.getBooleanValue().toString());
+                return Objects.equals(stringValue, dtCellValue52.getBooleanValue().toString());
             default:
                 return false;
         }
