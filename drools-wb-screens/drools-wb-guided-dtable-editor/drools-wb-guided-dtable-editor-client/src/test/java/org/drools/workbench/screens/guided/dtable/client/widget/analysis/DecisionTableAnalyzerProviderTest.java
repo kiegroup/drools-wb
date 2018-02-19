@@ -30,53 +30,51 @@ import org.kie.workbench.common.services.shared.preferences.ApplicationPreferenc
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.uberfire.mvp.PlaceRequest;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
-@RunWith( GwtMockitoTestRunner.class )
+@RunWith(GwtMockitoTestRunner.class)
 public class DecisionTableAnalyzerProviderTest {
 
     @Test
     public void defaultAnalyserSetting() throws Exception {
 
-        ApplicationPreferences.setUp( Collections.EMPTY_MAP );
+        ApplicationPreferences.setUp(Collections.EMPTY_MAP);
 
-        assertTrue( new DecisionTableAnalyzerProvider().newAnalyzer( mock( PlaceRequest.class ),
-                                                                     mock( AsyncPackageDataModelOracle.class ),
-                                                                     mock( GuidedDecisionTable52.class ),
-                                                                     mock( EventBus.class ) ) instanceof AnalyzerControllerImpl );
-
+        assertTrue(new DecisionTableAnalyzerProvider().newAnalyzer(mock(PlaceRequest.class),
+                                                                   mock(AsyncPackageDataModelOracle.class),
+                                                                   mock(GuidedDecisionTable52.class),
+                                                                   mock(EventBus.class)) instanceof AnalyzerControllerImpl);
     }
 
     @Test
     public void settingFalse() throws Exception {
         final Map<String, String> preferences = new HashMap<String, String>() {{
-            put( GuidedDecisionTableEditorService.DTABLE_VERIFICATION_DISABLED,
-                 "true" );
+            put(GuidedDecisionTableEditorService.DTABLE_VERIFICATION_DISABLED,
+                "true");
         }};
 
-        ApplicationPreferences.setUp( preferences );
+        ApplicationPreferences.setUp(preferences);
 
-        assertFalse( new DecisionTableAnalyzerProvider().newAnalyzer( mock( PlaceRequest.class ),
-                                                                      mock( AsyncPackageDataModelOracle.class ),
-                                                                      mock( GuidedDecisionTable52.class ),
-                                                                      mock( EventBus.class ) ) instanceof AnalyzerControllerImpl );
-
+        assertFalse(new DecisionTableAnalyzerProvider().newAnalyzer(mock(PlaceRequest.class),
+                                                                    mock(AsyncPackageDataModelOracle.class),
+                                                                    mock(GuidedDecisionTable52.class),
+                                                                    mock(EventBus.class)) instanceof AnalyzerControllerImpl);
     }
 
     @Test
     public void settingTrue() throws Exception {
         final Map<String, String> preferences = new HashMap<String, String>() {{
-            put( GuidedDecisionTableEditorService.DTABLE_VERIFICATION_DISABLED,
-                 "false" );
+            put(GuidedDecisionTableEditorService.DTABLE_VERIFICATION_DISABLED,
+                "false");
         }};
 
-        ApplicationPreferences.setUp( preferences );
+        ApplicationPreferences.setUp(preferences);
 
-        assertTrue( new DecisionTableAnalyzerProvider().newAnalyzer( mock( PlaceRequest.class ),
-                                                                     mock( AsyncPackageDataModelOracle.class ),
-                                                                     mock( GuidedDecisionTable52.class ),
-                                                                     mock( EventBus.class ) ) instanceof AnalyzerControllerImpl );
-
+        assertTrue(new DecisionTableAnalyzerProvider().newAnalyzer(mock(PlaceRequest.class),
+                                                                   mock(AsyncPackageDataModelOracle.class),
+                                                                   mock(GuidedDecisionTable52.class),
+                                                                   mock(EventBus.class)) instanceof AnalyzerControllerImpl);
     }
 }
