@@ -164,10 +164,8 @@ public class GuidedDecisionTableViewImpl extends BaseGridWidget implements Guide
     }
 
     @Override
-    protected void drawHeader(final BaseGridRendererHelper.RenderingInformation renderingInformation,
-                              final boolean isSelectionLayer) {
-        super.drawHeader(renderingInformation,
-                         isSelectionLayer);
+    protected void drawHeader(final BaseGridRendererHelper.RenderingInformation renderingInformation) {
+        super.drawHeader(renderingInformation);
 
         headerCaption = makeHeaderCaption();
         headerCaption.setY(header == null ? 0.0 : header.getY());
