@@ -49,6 +49,7 @@ public class GuidedDecisionTableEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testFunctionFromDrl() throws Exception {
         final Path path = getPath("rhba370/src/main/resources/com/sample/dtissuesampleproject/UseFunctionFromDrl.gdst");
         final List<ValidationMessage> validationMessages = testedService.validate(path, testedService.load(path));
