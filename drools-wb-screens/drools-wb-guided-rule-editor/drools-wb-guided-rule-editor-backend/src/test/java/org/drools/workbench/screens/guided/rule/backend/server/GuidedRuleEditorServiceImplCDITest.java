@@ -32,6 +32,7 @@ import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.guvnor.test.CDITestSetup;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
@@ -56,6 +57,7 @@ public class GuidedRuleEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testValidateRuleThatInherit() throws Exception {
         final String resourcePath = RULES_ROOT + "sendElectionInvitation.rdrl";
         final List<ValidationMessage> messages = validateResource(resourcePath);
@@ -71,6 +73,7 @@ public class GuidedRuleEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testAbbreviatedCondition() throws Exception {
         final String resourcePath = RULES_ROOT + "matchPeopleAbbreviatedCondition.rdrl";
         final GuidedEditorContent content = guidedRuleService.loadContent(getPath(resourcePath));

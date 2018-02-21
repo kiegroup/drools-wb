@@ -27,6 +27,7 @@ import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.guvnor.test.CDITestSetup;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
@@ -66,6 +67,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testValidDSRLFile() throws Exception {
         validateResource(UNEMPLOY);
 
@@ -73,6 +75,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDSLCompinedWithPureDRL() throws Exception {
         validateResource(UNEMPLOY_REPLACE);
 
@@ -80,6 +83,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testInvalidDSRLFile() throws Exception {
         validateResource(UNEMPLOY_BROKEN);
 
@@ -90,6 +94,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testValidDRLFile() throws Exception {
         validateResource(CAR_DRIVING_LICENSE);
 
@@ -97,6 +102,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDRLFileWithGlobalVariable() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_GLOBAL);
 
@@ -104,6 +110,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDRLFileWithUnknownGlobalVariable() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_GLOBAL_BROKEN);
 
@@ -114,6 +121,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDRLFileWithExplicitImport() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_IMPORT);
 
@@ -121,6 +129,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDRLFileWithExplicitNonExistingImport() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_IMPORT_BROKEN);
 
@@ -131,6 +140,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testValidDRLFileWithTwoRules() throws Exception {
         validateResource(CAR_BUS_DRIVING_LICENSE);
 
@@ -138,6 +148,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     }
 
     @Test
+    @Ignore("DROOLS-2341")
     public void testDRLFileWrongConstructor() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_BROKEN);
 
