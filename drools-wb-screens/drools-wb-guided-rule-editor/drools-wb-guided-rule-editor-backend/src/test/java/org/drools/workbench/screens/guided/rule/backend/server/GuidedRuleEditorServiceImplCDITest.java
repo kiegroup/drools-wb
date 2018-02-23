@@ -39,6 +39,7 @@ import org.uberfire.backend.vfs.Path;
 public class GuidedRuleEditorServiceImplCDITest extends CDITestSetup {
 
     private static final String RULES_ROOT = "rules/src/main/resources/guvnor/feature/rules/";
+    private static final String SCORE_HOLDER_ROOT = "score-holder/src/main/resources/com/myteam/scoreholdertest/";
     private static final String NON_EXISTING_PARENT = "Unable to resolve parent rule, please check that both rules are in the same package";
 
     private GuidedRuleEditorService guidedRuleService;
@@ -96,6 +97,13 @@ public class GuidedRuleEditorServiceImplCDITest extends CDITestSetup {
 
         final List<ValidationMessage> messages = validateResource(resourcePath);
         Assertions.assertThat(messages).isEmpty();
+    }
+
+    @Test
+    public void testValidateRuleWithScoreHolderInside() throws Exception {
+        final String resourcePath = SCORE_HOLDER_ROOT + "modifyScore-rule.rdrl";
+        final List<ValidationMessage> messages = validateResource(resourcePath);
+        Assertions.assertThat(messages).hasSize(0);
     }
 
     private List<ValidationMessage> validateResource(final String resource) throws Exception {

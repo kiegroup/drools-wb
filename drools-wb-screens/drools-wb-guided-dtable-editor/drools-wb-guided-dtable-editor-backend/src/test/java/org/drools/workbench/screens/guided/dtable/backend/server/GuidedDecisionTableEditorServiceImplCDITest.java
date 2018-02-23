@@ -33,6 +33,9 @@ import org.uberfire.backend.vfs.Path;
 
 public class GuidedDecisionTableEditorServiceImplCDITest extends CDITestSetup {
 
+    private static final String RHBA_370_ROOT = "rhba370/src/main/resources/com/sample/dtissuesampleproject/";
+    private static final String SCORE_HOLDER_ROOT = "score-holder/src/main/resources/com/myteam/scoreholdertest/";
+
     private GuidedDecisionTableEditorService testedService;
 
     @Override
@@ -50,7 +53,7 @@ public class GuidedDecisionTableEditorServiceImplCDITest extends CDITestSetup {
 
     @Test
     public void testFunctionFromDrl() throws Exception {
-        final Path path = getPath("rhba370/src/main/resources/com/sample/dtissuesampleproject/UseFunctionFromDrl.gdst");
+        final Path path = getPath(RHBA_370_ROOT + "UseFunctionFromDrl.gdst");
         final List<ValidationMessage> validationMessages = testedService.validate(path, testedService.load(path));
         Assertions.assertThat(validationMessages).isEmpty();
     }
@@ -58,12 +61,19 @@ public class GuidedDecisionTableEditorServiceImplCDITest extends CDITestSetup {
     @Test
     @Ignore("RHDM-329")
     public void testUndeclaredFunction() throws Exception {
-        final Path path = getPath("rhba370/src/main/resources/com/sample/dtissuesampleproject/UseUndeclaredFunction.gdst");
+        final Path path = getPath(RHBA_370_ROOT + "UseUndeclaredFunction.gdst");
         final List<ValidationMessage> validationMessages = testedService.validate(path, testedService.load(path));
         Assertions.assertThat(validationMessages).hasSize(1);
         Assertions.assertThat(validationMessages)
                 .extracting("text", String.class)
                 .allMatch(text -> text.contains("[KBase: defaultKieBase]: Unable to Analyse Expression  isNotEmptyUndeclaredFunction(userCode)"));
+    }
+
+    @Test
+    public void testScoreHolderModification() throws Exception {
+        final Path path = getPath(SCORE_HOLDER_ROOT + "modifyScore-table.gdst");
+        final List<ValidationMessage> validationMessages = testedService.validate(path, testedService.load(path));
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     private Path getPath(String resource) throws URISyntaxException {

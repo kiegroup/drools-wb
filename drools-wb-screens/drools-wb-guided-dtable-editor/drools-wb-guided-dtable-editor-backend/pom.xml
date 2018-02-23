@@ -14,6 +14,18 @@
   <name>Drools Workbench - Guided Decision Table Editor - Backend</name>
   <description>Drools Workbench - Guided Decision Table Editor - Backend</description>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.optaplanner</groupId>
+        <artifactId>optaplanner-bom</artifactId>
+        <version>${version.org.kie}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <properties>
     <java.module.name>org.drools.wb.guided.dtable.editor.backend</java.module.name>
   </properties>
@@ -221,6 +233,18 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-workitems-editor-backend</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.optaplanner</groupId>
+      <artifactId>optaplanner-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.optaplanner</groupId>
+      <artifactId>optaplanner-workbench-models-datamodel-api</artifactId>
       <scope>test</scope>
     </dependency>
 
