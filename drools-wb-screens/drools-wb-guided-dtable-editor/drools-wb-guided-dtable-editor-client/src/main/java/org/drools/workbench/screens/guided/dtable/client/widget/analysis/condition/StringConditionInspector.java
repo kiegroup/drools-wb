@@ -19,6 +19,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.analysis.condit
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util.IsSubsuming;
@@ -40,7 +41,7 @@ public class StringConditionInspector
                operator );
 
 
-        if ( operator.equals( "== null" ) || operator.equals( "!= null" ) ) {
+        if (Objects.equals(operator,"== null" ) || Objects.equals(operator, "!= null" )) {
             values.add( "null" );
         } else {
             switch (this.operator) {

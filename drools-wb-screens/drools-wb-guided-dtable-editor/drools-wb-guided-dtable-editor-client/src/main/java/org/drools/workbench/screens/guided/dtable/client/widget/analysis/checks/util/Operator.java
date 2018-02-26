@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.dtable.client.widget.analysis.checks.util;
 
+import java.util.Objects;
+
 public enum Operator {
 
     NONE( "" ),
@@ -66,13 +68,13 @@ public enum Operator {
     }
 
     public static Operator resolve( final String operator ) {
-        if ( operator.equals( "== null" ) ) {
+        if (Objects.equals(operator,"== null")) {
             return EQUALS;
-        } else if ( operator.equals( "!= null" ) ) {
+        } else if (Objects.equals(operator, "!= null")) {
             return NOT_EQUALS;
         } else {
             for (Operator enumOperator : Operator.values()) {
-                if ( enumOperator.operator.equals( operator ) ) {
+                if (Objects.equals(enumOperator.operator, operator)) {
                     return enumOperator;
                 }
             }
