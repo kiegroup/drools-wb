@@ -27,6 +27,7 @@ import java.util.Map;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.models.datamodel.oracle.DataType;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.AnalysisConstants;
@@ -40,7 +41,9 @@ import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.Delet
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.events.UpdateColumnDataEvent;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.analysis.TestUtil.assertContains;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class DecisionTableAnalyzerFromFileTest extends BaseDecisionTableAnalyzerTest {
@@ -149,6 +152,17 @@ public class DecisionTableAnalyzerFromFileTest extends BaseDecisionTableAnalyzer
                                                                   new ArrayList<CellValue<? extends Comparable<?>>>()));
             assertContains("RedundantRows", analysisReport);
         }
+    }
+
+    @Test
+    public void testEvalCustomFunction() throws Exception {
+        String xml = loadResource("Set_Status_Copy.gdst");
+        final GuidedDecisionTable52 table52 = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
+
+        DecisionTableAnalyzer analyzer = getDecisionTableAnalyzer(table52);
+
+        analyzer.onValidate(new ValidateEvent(new HashMap<Coordinate, List<List<CellValue<? extends Comparable<?>>>>>()));
+        assertEquals(0, analysisReport.getAnalysisData().size());
     }
 
     public static String loadResource(final String name) throws Exception {
