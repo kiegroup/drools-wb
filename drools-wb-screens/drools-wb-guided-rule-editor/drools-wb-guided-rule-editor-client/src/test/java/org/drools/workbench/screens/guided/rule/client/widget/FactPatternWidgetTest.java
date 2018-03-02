@@ -16,12 +16,13 @@
 
 package org.drools.workbench.screens.guided.rule.client.widget;
 
-import java.util.Collections;
 import java.util.stream.Stream;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwtmockito.GwtMockito;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
@@ -31,14 +32,16 @@ import org.drools.workbench.screens.guided.rule.client.OperatorsBaseTest;
 import org.drools.workbench.screens.guided.rule.client.editor.CEPOperatorsDropdown;
 import org.drools.workbench.screens.guided.rule.client.editor.ConstraintValueEditor;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
+import org.drools.workbench.screens.guided.rule.client.widget.operator.SingleFieldConstraintOperatorSelectorBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.soup.project.datamodel.oracle.OperatorsOracle;
-import org.kie.workbench.common.widgets.client.datamodel.OracleUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -48,6 +51,9 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class FactPatternWidgetTest extends OperatorsBaseTest {
 
+    @Mock
+    private SingleFieldConstraintOperatorSelectorBuilder operatorSelectorBuilder;
+
     private FactPatternWidget factPatternWidget;
 
     @Captor
@@ -56,6 +62,8 @@ public class FactPatternWidgetTest extends OperatorsBaseTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
+        GwtMockito.useProviderForType(SingleFieldConstraintOperatorSelectorBuilder.class,
+                                      (aClass) -> operatorSelectorBuilder);
 
         doReturn(Stream.of(singleFieldConstraint).toArray(FieldConstraint[]::new)).when(pattern).getFieldConstraints();
 
@@ -69,29 +77,13 @@ public class FactPatternWidgetTest extends OperatorsBaseTest {
     }
 
     @Test
-    public void testOperatorCompletionsString() throws Exception {
-        doReturn("org.Address").when(singleFieldConstraint).getFactType();
-        doReturn("street").when(singleFieldConstraint).getFieldName();
-
-        factPatternWidget.drawConstraints(Collections.singletonList(singleFieldConstraint),
-                                          pattern);
-
-        verify(factPatternWidget).getNewOperatorDropdown(OracleUtils.joinArrays(OperatorsOracle.STRING_OPERATORS,
-                                                                                OperatorsOracle.EXPLICIT_LIST_OPERATORS),
-                                                         singleFieldConstraint);
-    }
-
-    @Test
-    public void testOperatorCompletionsInteger() throws Exception {
-        doReturn("org.Address").when(singleFieldConstraint).getFactType();
-        doReturn("number").when(singleFieldConstraint).getFieldName();
-
-        factPatternWidget.drawConstraints(Collections.singletonList(singleFieldConstraint),
-                                          pattern);
-
-        verify(factPatternWidget).getNewOperatorDropdown(OracleUtils.joinArrays(OperatorsOracle.COMPARABLE_OPERATORS,
-                                                                                OperatorsOracle.EXPLICIT_LIST_OPERATORS),
-                                                         singleFieldConstraint);
+    public void testSingleFieldConstraintOperatorSelectorBuilderCalled() throws Exception {
+        verify(operatorSelectorBuilder).hasConstraint(singleFieldConstraint);
+        verify(operatorSelectorBuilder).hasParentWidgetWidget(any(FactPatternWidget.class));
+        verify(operatorSelectorBuilder).hasAsyncPackageDataModel(oracle);
+        verify(operatorSelectorBuilder).hasPlaceholderForOperatorsDropdown(any(HorizontalPanel.class));
+        verify(operatorSelectorBuilder).hasConstraintValueEditorInWrapperAtPosition(any(FlexTable.class), anyInt(), anyInt());
+        verify(operatorSelectorBuilder).build();
     }
 
     @Test
