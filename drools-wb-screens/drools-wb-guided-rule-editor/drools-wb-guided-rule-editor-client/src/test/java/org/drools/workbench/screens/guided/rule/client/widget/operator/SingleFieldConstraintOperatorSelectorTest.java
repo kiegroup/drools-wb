@@ -53,7 +53,7 @@ import static org.mockito.Mockito.when;
 
 @WithClassesToStub({CEPOperatorsDropdown.class, DateTimeFormat.class})
 @RunWith(GwtMockitoTestRunner.class)
-public class SingleFieldConstraintOperatorSelectorBuilderTest {
+public class SingleFieldConstraintOperatorSelectorTest {
 
     @Mock
     private SingleFieldConstraint constraint;
@@ -95,18 +95,11 @@ public class SingleFieldConstraintOperatorSelectorBuilderTest {
     @Mock
     private ValueChangeEvent<OperatorSelection> operatorValueChangeEvent;
 
-    private SingleFieldConstraintOperatorSelectorBuilder testedBuilder;
+    private SingleFieldConstraintOperatorSelector testedSelector;
 
     @Before
     public void setUp() throws Exception {
-        testedBuilder = spy(new SingleFieldConstraintOperatorSelectorBuilder());
-        testedBuilder.hasConstraint(constraint);
-        testedBuilder.hasConstraintValueEditor(() -> constraintValueEditor);
-        testedBuilder.hasConstraintValueEditorInWrapperAtPosition(wrapper, rowIndex, columnIndex);
-        testedBuilder.hasParentWidgetWidget(parent);
-        testedBuilder.hasPlaceholderForOperatorsDropdown(placeholderForDropdown);
-        testedBuilder.hasAsyncPackageDataModel(oracle);
-        testedBuilder.hasConstraintValueEditorProducer(constraintValueEditorProducer);
+        testedSelector = spy(new SingleFieldConstraintOperatorSelector());
     }
 
     @Test
@@ -183,14 +176,22 @@ public class SingleFieldConstraintOperatorSelectorBuilderTest {
         when(constraint.getFieldName()).thenReturn(fieldName);
         when(constraint.getOperator()).thenReturn(originalOperator);
         when(constraint.getValue()).thenReturn(constraintValue);
-        when(testedBuilder.getNewOperatorDropdown(OperatorsOracle.STANDARD_OPERATORS, constraint))
+        when(testedSelector.getNewOperatorDropdown(OperatorsOracle.STANDARD_OPERATORS, constraint))
                 .thenReturn(operatorsDropdown);
         when(operatorValueChangeEvent.getValue()).thenReturn(operatorSelection);
         when(operatorSelection.getValue()).thenReturn(selectedOperator);
         when(operatorSelection.getDisplayText()).thenReturn(selectedOperatorDisplayText);
         when(wrapper.getWidget(rowIndex, columnIndex)).thenReturn(constraintValueEditor);
 
-        testedBuilder.build();
+        testedSelector.configure(constraint,
+                                 () -> constraintValueEditor,
+                                 constraintValueEditorProducer,
+                                 parent,
+                                 placeholderForDropdown,
+                                 wrapper,
+                                 rowIndex,
+                                 columnIndex,
+                                 oracle);
 
         // test operators are loaded
         verify(oracle).getOperatorCompletions(eq(factType),
@@ -211,52 +212,52 @@ public class SingleFieldConstraintOperatorSelectorBuilderTest {
     @Test
     public void testIsWidgetForValueNeededIsNull() throws Exception {
         final String operator = HumanReadableConstants.INSTANCE.isEqualToNull();
-        Assertions.assertThat(testedBuilder.isWidgetForValueNeeded(operator)).isFalse();
+        Assertions.assertThat(testedSelector.isWidgetForValueNeeded(operator)).isFalse();
     }
 
     @Test
     public void testIsWidgetForValueNeededIsNotNull() throws Exception {
         final String operator = HumanReadableConstants.INSTANCE.isNotEqualToNull();
-        Assertions.assertThat(testedBuilder.isWidgetForValueNeeded(operator)).isFalse();
+        Assertions.assertThat(testedSelector.isWidgetForValueNeeded(operator)).isFalse();
     }
 
     @Test
     public void testIsWidgetForValueNeededEmpty() throws Exception {
         final String operator = "";
-        Assertions.assertThat(testedBuilder.isWidgetForValueNeeded(operator)).isFalse();
+        Assertions.assertThat(testedSelector.isWidgetForValueNeeded(operator)).isFalse();
     }
 
     @Test
     public void testIsWidgetForValueNeededIsEqualtTo() throws Exception {
         final String operator = HumanReadableConstants.INSTANCE.isEqualTo();
-        Assertions.assertThat(testedBuilder.isWidgetForValueNeeded(operator)).isTrue();
+        Assertions.assertThat(testedSelector.isWidgetForValueNeeded(operator)).isTrue();
     }
 
     @Test
     public void testIsValueMissingOne() throws Exception {
         final String operator = "==";
         final String value = "";
-        Assertions.assertThat(testedBuilder.isValueMissing(operator, value)).isTrue();
+        Assertions.assertThat(testedSelector.isValueMissing(operator, value)).isTrue();
     }
 
     @Test
     public void testIsValueMissingTwo() throws Exception {
         final String operator = "==";
         final String value = "123";
-        Assertions.assertThat(testedBuilder.isValueMissing(operator, value)).isFalse();
+        Assertions.assertThat(testedSelector.isValueMissing(operator, value)).isFalse();
     }
 
     @Test
     public void testIsValueMissingThree() throws Exception {
         final String operator = "== null";
         final String value = "";
-        Assertions.assertThat(testedBuilder.isValueMissing(operator, value)).isFalse();
+        Assertions.assertThat(testedSelector.isValueMissing(operator, value)).isFalse();
     }
 
     @Test
     public void testIsValueMissingFour() throws Exception {
         final String operator = "== null";
         final String value = "123";
-        Assertions.assertThat(testedBuilder.isValueMissing(operator, value)).isFalse();
+        Assertions.assertThat(testedSelector.isValueMissing(operator, value)).isFalse();
     }
 }

@@ -64,7 +64,7 @@ import org.drools.workbench.screens.guided.rule.client.editor.factPattern.PopupC
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
 import org.drools.workbench.screens.guided.rule.client.util.RefreshUtil;
-import org.drools.workbench.screens.guided.rule.client.widget.operator.SingleFieldConstraintOperatorSelectorBuilder;
+import org.drools.workbench.screens.guided.rule.client.widget.operator.SingleFieldConstraintOperatorSelector;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.ModelField;
@@ -665,16 +665,17 @@ public class FactPatternWidget extends RuleModellerWidget {
         final HorizontalPanel dropdownContainer = new HorizontalPanel();
         if (!this.readOnly) {
 
-            final SingleFieldConstraintOperatorSelectorBuilder operatorSelectorBuilder =
-                    GWT.create(SingleFieldConstraintOperatorSelectorBuilder.class);
-            operatorSelectorBuilder.hasConstraint(constraint);
-            operatorSelectorBuilder.hasConstraintValueEditor(() -> constraintValueEditor);
-            operatorSelectorBuilder.hasConstraintValueEditorProducer(this::createValueEditor);
-            operatorSelectorBuilder.hasParentWidgetWidget(this);
-            operatorSelectorBuilder.hasAsyncPackageDataModel(getConnectives().getDataModelOracle());
-            operatorSelectorBuilder.hasPlaceholderForOperatorsDropdown(dropdownContainer);
-            operatorSelectorBuilder.hasConstraintValueEditorInWrapperAtPosition(inner, rowIndex, colIndex);
-            operatorSelectorBuilder.build();
+            final SingleFieldConstraintOperatorSelector operatorSelectorBuilder =
+                    GWT.create(SingleFieldConstraintOperatorSelector.class);
+            operatorSelectorBuilder.configure(constraint,
+                                              () -> constraintValueEditor,
+                                              this::createValueEditor,
+                                              this,
+                                              dropdownContainer,
+                                              inner,
+                                              rowIndex,
+                                              colIndex,
+                                              getConnectives().getDataModelOracle());
         } else {
             final SmallLabel sl = new SmallLabel("<b>" + (constraint.getOperator() == null ? GuidedRuleEditorResources.CONSTANTS.pleaseChoose() : HumanReadable.getOperatorDisplayName(constraint.getOperator())) + "</b>");
             dropdownContainer.add(sl);

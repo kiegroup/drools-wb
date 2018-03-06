@@ -34,17 +34,17 @@ import org.kie.soup.project.datamodel.oracle.OperatorsOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.resources.i18n.HumanReadableConstants;
 
-public class SingleFieldConstraintOperatorSelectorBuilder {
+public class SingleFieldConstraintOperatorSelector {
 
     private SingleFieldConstraint constraint;
 
     private Supplier<ConstraintValueEditor> constraintValueEditor;
 
-    private FlexTable wrapper;
+    private FlexTable constraintValueEditorWrapper;
 
-    private int rowIndex;
+    private int constraintValueEditorRowIndex;
 
-    private int columnIndex;
+    private int constraintValueEditorColumnIndex;
 
     private FactPatternWidget parent;
 
@@ -54,37 +54,25 @@ public class SingleFieldConstraintOperatorSelectorBuilder {
 
     private Function<SingleFieldConstraint, ConstraintValueEditor> constraintValueEditorProducer;
 
-    public void hasConstraint(final SingleFieldConstraint constraint) {
+    public void configure(final SingleFieldConstraint constraint,
+                          final Supplier<ConstraintValueEditor> constraintValueEditor,
+                          final Function<SingleFieldConstraint, ConstraintValueEditor> constraintValueEditorProducer,
+                          final FactPatternWidget parent,
+                          final HorizontalPanel placeholderForDropdown,
+                          final FlexTable constraintValueEditorWrapper,
+                          final int constraintValueEditorRowIndex,
+                          final int constraintValueEditorColumnIndex,
+                          final AsyncPackageDataModelOracle oracle) {
+
         this.constraint = constraint;
-    }
-
-    public void hasConstraintValueEditor(final Supplier<ConstraintValueEditor> constraintValueEditor) {
         this.constraintValueEditor = constraintValueEditor;
-    }
-
-    public void hasConstraintValueEditorProducer(final Function<SingleFieldConstraint, ConstraintValueEditor> constraintValueEditorProducer) {
         this.constraintValueEditorProducer = constraintValueEditorProducer;
-    }
-
-    public void hasParentWidgetWidget(final FactPatternWidget parent) {
         this.parent = parent;
-    }
-
-    public void hasAsyncPackageDataModel(final AsyncPackageDataModelOracle oracle) {
-        this.oracle = oracle;
-    }
-
-    public void hasPlaceholderForOperatorsDropdown(final HorizontalPanel placeholderForDropdown) {
         this.placeholderForDropdown = placeholderForDropdown;
-    }
-
-    public void hasConstraintValueEditorInWrapperAtPosition(final FlexTable wrapper, final int rowIndex, final int columnIndex) {
-        this.wrapper = wrapper;
-        this.rowIndex = rowIndex;
-        this.columnIndex = columnIndex;
-    }
-
-    public void build() {
+        this.constraintValueEditorWrapper = constraintValueEditorWrapper;
+        this.constraintValueEditorRowIndex = constraintValueEditorRowIndex;
+        this.constraintValueEditorColumnIndex = constraintValueEditorColumnIndex;
+        this.oracle = oracle;
 
         String fieldName;
         String factType;
@@ -140,13 +128,13 @@ public class SingleFieldConstraintOperatorSelectorBuilder {
             constraintValueEditor.get().hideError();
         }
 
-        if (wrapper != null) {
+        if (constraintValueEditorWrapper != null) {
             if (isWidgetForValueNeeded(selectedText)) {
-                wrapper.getWidget(rowIndex,
-                                  columnIndex).setVisible(true);
+                constraintValueEditorWrapper.getWidget(constraintValueEditorRowIndex,
+                                                       constraintValueEditorColumnIndex).setVisible(true);
             } else {
-                wrapper.getWidget(rowIndex,
-                                  columnIndex).setVisible(false);
+                constraintValueEditorWrapper.getWidget(constraintValueEditorRowIndex,
+                                                       constraintValueEditorColumnIndex).setVisible(false);
             }
         }
 
@@ -161,9 +149,9 @@ public class SingleFieldConstraintOperatorSelectorBuilder {
             }
 
             //Redraw ConstraintValueEditor
-            wrapper.setWidget(rowIndex,
-                              columnIndex,
-                              constraintValueEditorProducer.apply(constraint));
+            constraintValueEditorWrapper.setWidget(constraintValueEditorRowIndex,
+                                                   constraintValueEditorColumnIndex,
+                                                   constraintValueEditorProducer.apply(constraint));
         }
     }
 

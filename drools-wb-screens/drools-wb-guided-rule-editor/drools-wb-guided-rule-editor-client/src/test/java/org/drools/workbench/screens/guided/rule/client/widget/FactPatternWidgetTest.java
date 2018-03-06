@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.rule.client.widget;
 
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -32,7 +34,7 @@ import org.drools.workbench.screens.guided.rule.client.OperatorsBaseTest;
 import org.drools.workbench.screens.guided.rule.client.editor.CEPOperatorsDropdown;
 import org.drools.workbench.screens.guided.rule.client.editor.ConstraintValueEditor;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
-import org.drools.workbench.screens.guided.rule.client.widget.operator.SingleFieldConstraintOperatorSelectorBuilder;
+import org.drools.workbench.screens.guided.rule.client.widget.operator.SingleFieldConstraintOperatorSelector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +44,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -52,7 +55,7 @@ import static org.mockito.Mockito.verify;
 public class FactPatternWidgetTest extends OperatorsBaseTest {
 
     @Mock
-    private SingleFieldConstraintOperatorSelectorBuilder operatorSelectorBuilder;
+    private SingleFieldConstraintOperatorSelector operatorSelector;
 
     private FactPatternWidget factPatternWidget;
 
@@ -62,8 +65,8 @@ public class FactPatternWidgetTest extends OperatorsBaseTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        GwtMockito.useProviderForType(SingleFieldConstraintOperatorSelectorBuilder.class,
-                                      (aClass) -> operatorSelectorBuilder);
+        GwtMockito.useProviderForType(SingleFieldConstraintOperatorSelector.class,
+                                      (aClass) -> operatorSelector);
 
         doReturn(Stream.of(singleFieldConstraint).toArray(FieldConstraint[]::new)).when(pattern).getFieldConstraints();
 
@@ -78,12 +81,15 @@ public class FactPatternWidgetTest extends OperatorsBaseTest {
 
     @Test
     public void testSingleFieldConstraintOperatorSelectorBuilderCalled() throws Exception {
-        verify(operatorSelectorBuilder).hasConstraint(singleFieldConstraint);
-        verify(operatorSelectorBuilder).hasParentWidgetWidget(any(FactPatternWidget.class));
-        verify(operatorSelectorBuilder).hasAsyncPackageDataModel(oracle);
-        verify(operatorSelectorBuilder).hasPlaceholderForOperatorsDropdown(any(HorizontalPanel.class));
-        verify(operatorSelectorBuilder).hasConstraintValueEditorInWrapperAtPosition(any(FlexTable.class), anyInt(), anyInt());
-        verify(operatorSelectorBuilder).build();
+        verify(operatorSelector).configure(eq(singleFieldConstraint),
+                                           any(Supplier.class),
+                                           any(Function.class),
+                                           any(FactPatternWidget.class),
+                                           any(HorizontalPanel.class),
+                                           any(FlexTable.class),
+                                           anyInt(),
+                                           anyInt(),
+                                           eq(oracle));
     }
 
     @Test
