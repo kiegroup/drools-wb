@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.guided.template.client.editor;
 
 import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -50,7 +51,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
-import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -61,7 +62,7 @@ import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
-@WorkbenchEditor(identifier = "GuidedRuleTemplateEditor", supportedTypes = { GuidedRuleTemplateResourceType.class })
+@WorkbenchEditor(identifier = "GuidedRuleTemplateEditor", supportedTypes = {GuidedRuleTemplateResourceType.class})
 public class GuidedRuleTemplateEditorPresenter
         extends KieEditor {
 
@@ -74,7 +75,7 @@ public class GuidedRuleTemplateEditorPresenter
     private ImportsWidgetPresenter importsWidget;
 
     @Inject
-    private Caller<GuidedRuleTemplateEditorService> service;
+    protected Caller<GuidedRuleTemplateEditorService> service;
 
     @Inject
     private Event<NotificationEvent> notification;
@@ -94,141 +95,142 @@ public class GuidedRuleTemplateEditorPresenter
     private Caller<RuleNamesService> ruleNamesService;
 
     @Inject
-    public GuidedRuleTemplateEditorPresenter( final GuidedRuleTemplateEditorView baseView ) {
-        super( baseView );
+    public GuidedRuleTemplateEditorPresenter(final GuidedRuleTemplateEditorView baseView) {
+        super(baseView);
         view = baseView;
     }
 
     @OnStartup
-    public void onStartup( final ObservablePath path,
-                           final PlaceRequest place ) {
-        super.init( path,
-                    place,
-                    type );
+    public void onStartup(final ObservablePath path,
+                          final PlaceRequest place) {
+        super.init(path,
+                   place,
+                   type);
     }
 
     protected void loadContent() {
         view.showLoading();
-        service.call( getModelSuccessCallback(),
-                      getNoSuchFileExceptionErrorCallback() ).loadContent( versionRecordManager.getCurrentPath() );
+        service.call(getModelSuccessCallback(),
+                     getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
     private RemoteCallback<GuidedTemplateEditorContent> getModelSuccessCallback() {
         return new RemoteCallback<GuidedTemplateEditorContent>() {
 
             @Override
-            public void callback( final GuidedTemplateEditorContent content ) {
+            public void callback(final GuidedTemplateEditorContent content) {
                 //Path is set to null when the Editor is closed (which can happen before async calls complete).
-                if ( versionRecordManager.getCurrentPath() == null ) {
+                if (versionRecordManager.getCurrentPath() == null) {
                     return;
                 }
 
-                resetEditorPages( content.getOverview() );
+                resetEditorPages(content.getOverview());
                 addSourcePage();
 
-                addPage( new PageImpl( dataView,
-                                       GuidedTemplateEditorConstants.INSTANCE.Data() ) {
+                addPage(new PageImpl(dataView,
+                                     GuidedTemplateEditorConstants.INSTANCE.Data()) {
 
                     @Override
                     public void onFocus() {
-                        dataView.setContent( model,
-                                             oracle,
-                                             eventBus,
-                                             isReadOnly );
+                        dataView.setContent(model,
+                                            oracle,
+                                            eventBus,
+                                            isReadOnly);
                     }
 
                     @Override
                     public void onLostFocus() {
                         // Nothing to do here
                     }
-                } );
+                });
 
-                addImportsTab( importsWidget );
+                addImportsTab(importsWidget);
 
                 model = content.getModel();
                 final PackageDataModelOracleBaselinePayload dataModel = content.getDataModel();
-                oracle = oracleFactory.makeAsyncPackageDataModelOracle( versionRecordManager.getCurrentPath(),
-                                                                        model,
-                                                                        dataModel );
+                oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
+                                                                       model,
+                                                                       dataModel);
 
-                view.setContent( versionRecordManager.getCurrentPath(),
-                                 model,
-                                 oracle,
-                                 ruleNamesService,
-                                 eventBus,
-                                 isReadOnly );
-                importsWidget.setContent( oracle,
-                                          model.getImports(),
-                                          isReadOnly );
+                view.setContent(versionRecordManager.getCurrentPath(),
+                                model,
+                                oracle,
+                                ruleNamesService,
+                                eventBus,
+                                isReadOnly);
+                importsWidget.setContent(oracle,
+                                         model.getImports(),
+                                         isReadOnly);
 
-                createOriginalHash( model );
+                createOriginalHash(model);
                 view.hideBusyIndicator();
             }
         };
     }
 
-    public void handleImportAddedEvent( @Observes ImportAddedEvent event ) {
-        if ( !event.getDataModelOracle().equals( this.oracle ) ) {
+    public void handleImportAddedEvent(@Observes ImportAddedEvent event) {
+        if (!event.getDataModelOracle().equals(this.oracle)) {
             return;
         }
         view.refresh();
     }
 
-    public void handleImportRemovedEvent( @Observes ImportRemovedEvent event ) {
-        if ( !event.getDataModelOracle().equals( this.oracle ) ) {
+    public void handleImportRemovedEvent(@Observes ImportRemovedEvent event) {
+        if (!event.getDataModelOracle().equals(this.oracle)) {
             return;
         }
         view.refresh();
-    }
-
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                service.call( new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback( final List<ValidationMessage> results ) {
-                        if ( results == null || results.isEmpty() ) {
-                            notification.fire( new NotificationEvent( CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                      NotificationEvent.NotificationType.SUCCESS ) );
-                        } else {
-                            ValidationPopup.showMessages( results );
-                        }
-                    }
-                }, new DefaultErrorCallback() ).validate( versionRecordManager.getCurrentPath(),
-                                                          view.getContent() );
-            }
-        };
     }
 
     @Override
-    protected void save( String commitMessage ) {
-        service.call( getSaveSuccessCallback( model.hashCode() ),
-                      new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
-                                                                               view.getContent(),
-                                                                               metadata,
-                                                                               commitMessage );
+    protected void onValidate(final Command callFinished) {
+        service.call(new RemoteCallback<List<ValidationMessage>>() {
+            @Override
+            public void callback(final List<ValidationMessage> results) {
+                if (results == null || results.isEmpty()) {
+                    notifyValidationSuccess();
+                } else {
+                    ValidationPopup.showMessages(results);
+                }
+                callFinished.execute();
+            }
+        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
+                                                            view.getContent());
+    }
+
+    protected void notifyValidationSuccess() {
+        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
+                                                NotificationEvent.NotificationType.SUCCESS));
+    }
+
+    @Override
+    protected void save(String commitMessage) {
+        service.call(getSaveSuccessCallback(model.hashCode()),
+                     new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
+                                                                          view.getContent(),
+                                                                          metadata,
+                                                                          commitMessage);
     }
 
     @Override
     public void onSourceTabSelected() {
-        service.call( new RemoteCallback<String>() {
+        service.call(new RemoteCallback<String>() {
             @Override
-            public void callback( String source ) {
-                updateSource( source );
+            public void callback(String source) {
+                updateSource(source);
             }
-        } ).toSource( versionRecordManager.getCurrentPath(), model );
+        }).toSource(versionRecordManager.getCurrentPath(), model);
     }
 
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
-        this.oracleFactory.destroy( oracle );
+        this.oracleFactory.destroy(oracle);
     }
 
     @OnMayClose
     public boolean mayClose() {
-        return super.mayClose( view.getContent() );
+        return super.mayClose(view.getContent());
     }
 
     @WorkbenchPartTitle
@@ -250,5 +252,4 @@ public class GuidedRuleTemplateEditorPresenter
     public Menus getMenus() {
         return menus;
     }
-
 }
