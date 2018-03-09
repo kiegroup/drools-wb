@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.guided.rule.client.editor;
 
 import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -51,7 +52,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.workbench.type.ClientResourceType;
-import org.uberfire.ext.editor.commons.client.file.SaveOperationService;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
@@ -78,7 +79,7 @@ public class GuidedRuleEditorPresenter
     private ViewSourceView viewSource;
 
     @Inject
-    private Caller<GuidedRuleEditorService> service;
+    protected Caller<GuidedRuleEditorService> service;
 
     @Inject
     private Caller<RuleNamesService> ruleNamesService;
@@ -105,18 +106,18 @@ public class GuidedRuleEditorPresenter
 
     @OnStartup
     public void onStartup(final ObservablePath path,
-            final PlaceRequest place) {
+                          final PlaceRequest place) {
 
         super.init(path,
-                place,
-                getResourceType(path));
+                   place,
+                   getResourceType(path));
         this.isDSLEnabled = resourceTypeDSL.accept(path);
     }
 
     protected void loadContent() {
         view.showLoading();
         service.call(getModelSuccessCallback(),
-                getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
+                     getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
     @Override
@@ -127,7 +128,7 @@ public class GuidedRuleEditorPresenter
                 updateSource(source);
             }
         }).toSource(versionRecordManager.getCurrentPath(),
-                model);
+                    model);
     }
 
     private RemoteCallback<GuidedEditorContent> getModelSuccessCallback() {
@@ -143,8 +144,8 @@ public class GuidedRuleEditorPresenter
                 GuidedRuleEditorPresenter.this.model = content.getModel();
                 final PackageDataModelOracleBaselinePayload dataModel = content.getDataModel();
                 oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getPathToLatest(),
-                        model,
-                        dataModel);
+                                                                       model,
+                                                                       dataModel);
 
                 resetEditorPages(content.getOverview());
 
@@ -153,14 +154,14 @@ public class GuidedRuleEditorPresenter
                 addImportsTab(importsWidget);
 
                 view.setContent(versionRecordManager.getCurrentPath(),
-                        model,
-                        oracle,
-                        ruleNamesService,
-                        isReadOnly,
-                        isDSLEnabled);
+                                model,
+                                oracle,
+                                ruleNamesService,
+                                isReadOnly,
+                                isDSLEnabled);
                 importsWidget.setContent(oracle,
-                        model.getImports(),
-                        isReadOnly);
+                                         model.getImports(),
+                                         isReadOnly);
 
                 view.hideBusyIndicator();
 
@@ -183,24 +184,25 @@ public class GuidedRuleEditorPresenter
         view.refresh();
     }
 
-    protected Command onValidate() {
-        return new Command() {
+    @Override
+    protected void onValidate(final Command callFinished) {
+        service.call(new RemoteCallback<List<ValidationMessage>>() {
             @Override
-            public void execute() {
-                service.call(new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback(final List<ValidationMessage> results) {
-                        if (results == null || results.isEmpty()) {
-                            notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                    NotificationEvent.NotificationType.SUCCESS));
-                        } else {
-                            ValidationPopup.showMessages(results);
-                        }
-                    }
-                }, new DefaultErrorCallback()).validate(versionRecordManager.getCurrentPath(),
-                        view.getContent());
+            public void callback(final List<ValidationMessage> results) {
+                if (results == null || results.isEmpty()) {
+                    notifyValidationSuccess();
+                } else {
+                    ValidationPopup.showMessages(results);
+                }
+                callFinished.execute();
             }
-        };
+        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
+                                                view.getContent());
+    }
+
+    protected void notifyValidationSuccess() {
+        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
+                                                NotificationEvent.NotificationType.SUCCESS));
     }
 
     protected void save() {
@@ -270,5 +272,4 @@ public class GuidedRuleEditorPresenter
     public Menus getMenus() {
         return menus;
     }
-
 }

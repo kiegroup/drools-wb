@@ -18,17 +18,21 @@ package org.drools.workbench.screens.enums.client.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.enterprise.event.Event;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.gwtmockito.WithClassesToStub;
 import org.drools.workbench.screens.enums.client.type.EnumResourceType;
 import org.drools.workbench.screens.enums.model.EnumModel;
 import org.drools.workbench.screens.enums.model.EnumModelContent;
 import org.drools.workbench.screens.enums.service.EnumService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
+import org.guvnor.common.services.shared.validation.model.ValidationMessage;
+import org.gwtbootstrap3.client.ui.Modal;
 import org.jboss.errai.common.client.api.Caller;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +45,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
+import org.uberfire.java.nio.IOException;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
@@ -50,10 +56,20 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
+@WithClassesToStub({Modal.class})
 public class EnumEditorPresenterTests {
 
     @Mock
@@ -98,7 +114,7 @@ public class EnumEditorPresenterTests {
 
     private Event<NotificationEvent> mockNotification = new EventSourceMock<NotificationEvent>() {
         @Override
-        public void fire( final NotificationEvent event ) {
+        public void fire(final NotificationEvent event) {
             //Do nothing. Default implementation throws a RuntimeException
         }
     };
@@ -113,38 +129,38 @@ public class EnumEditorPresenterTests {
     @Before
     public void setup() {
         //Mock EnumResourceType
-        this.type = GWT.create( EnumResourceType.class );
+        this.type = GWT.create(EnumResourceType.class);
 
         //Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
-        when( mockFileMenuBuilder.addSave( any( MenuItem.class ) ) ).thenReturn( mockFileMenuBuilder );
-        when( mockFileMenuBuilder.addCopy( any( ObservablePath.class ),
-                                           eq( mockFileNameValidator ) ) ).thenReturn( mockFileMenuBuilder );
-        when( mockFileMenuBuilder.addRename( any( ObservablePath.class ),
-                                             eq( mockFileNameValidator ) ) ).thenReturn( mockFileMenuBuilder );
-        when( mockFileMenuBuilder.addDelete( any( ObservablePath.class ) ) ).thenReturn( mockFileMenuBuilder );
-        when( mockFileMenuBuilder.addValidate( any( Command.class ) ) ).thenReturn( mockFileMenuBuilder );
-        when( mockFileMenuBuilder.addNewTopLevelMenu( any( MenuItem.class ) ) ).thenReturn( mockFileMenuBuilder );
+        when(mockFileMenuBuilder.addSave(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
+        when(mockFileMenuBuilder.addCopy(any(ObservablePath.class),
+                                         eq(mockFileNameValidator))).thenReturn(mockFileMenuBuilder);
+        when(mockFileMenuBuilder.addRename(any(ObservablePath.class),
+                                           eq(mockFileNameValidator))).thenReturn(mockFileMenuBuilder);
+        when(mockFileMenuBuilder.addDelete(any(ObservablePath.class))).thenReturn(mockFileMenuBuilder);
+        when(mockFileMenuBuilder.addValidate(any(Command.class))).thenReturn(mockFileMenuBuilder);
+        when(mockFileMenuBuilder.addNewTopLevelMenu(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
 
-        when( mockVersionRecordManager.getCurrentPath() ).thenReturn( path );
-        when( mockVersionRecordManager.getPathToLatest() ).thenReturn( path );
+        when(mockVersionRecordManager.getCurrentPath()).thenReturn(path);
+        when(mockVersionRecordManager.getPathToLatest()).thenReturn(path);
 
-        this.model = new EnumModel( "'Fact.field' : ['a', 'b']" );
-        this.content = new EnumModelContent( model,
-                                             overview );
+        this.model = new EnumModel("'Fact.field' : ['a', 'b']");
+        this.content = new EnumModelContent(model,
+                                            overview);
 
-        when( enumService.loadContent( path ) ).thenReturn( content );
+        when(enumService.loadContent(path)).thenReturn(content);
 
-        when( view.getContent() ).thenReturn( new ArrayList<EnumRow>() {{
-            add( new EnumRow( "Fact",
-                              "field",
-                              "['a', 'b']" ) );
-        }} );
+        when(view.getContent()).thenReturn(new ArrayList<EnumRow>() {{
+            add(new EnumRow("Fact",
+                            "field",
+                            "['a', 'b']"));
+        }});
 
-        this.enumServiceCaller = new CallerMock<EnumService>( enumService );
+        this.enumServiceCaller = new CallerMock<EnumService>(enumService);
 
-        this.presenter = new EnumEditorPresenter( view,
-                                                  enumServiceCaller,
-                                                  type ) {
+        this.presenter = new EnumEditorPresenter(view,
+                                                 enumServiceCaller,
+                                                 type) {
             {
                 //Yuck, yuck, yuck... the class hierarchy is really a mess
                 this.kieView = mockKieView;
@@ -154,64 +170,83 @@ public class EnumEditorPresenterTests {
                 this.versionRecordManager = mockVersionRecordManager;
                 this.notification = mockNotification;
             }
-
         };
     }
 
     @Test
     public void testOnStartup() {
-        presenter.onStartup( path,
-                             place );
-        verify( enumService,
-                times( 1 ) ).loadContent( path );
+        presenter.onStartup(path,
+                            place);
+        verify(enumService,
+               times(1)).loadContent(path);
 
-        verify( view,
-                times( 1 ) ).setContent( enumsArgumentCaptor.capture() );
-        verify( view,
-                times( 1 ) ).hideBusyIndicator();
+        verify(view,
+               times(1)).setContent(enumsArgumentCaptor.capture());
+        verify(view,
+               times(1)).hideBusyIndicator();
 
         final List<EnumRow> enums = enumsArgumentCaptor.getValue();
-        assertNotNull( enums );
-        assertEquals( 1,
-                      enums.size() );
-        final EnumRow enumRow = enums.get( 0 );
-        assertNotNull( enumRow );
-        assertEquals( "Fact",
-                      enumRow.getFactName() );
-        assertEquals( "field",
-                      enumRow.getFieldName() );
-        assertEquals( "['a', 'b']",
-                      enumRow.getContext() );
+        assertNotNull(enums);
+        assertEquals(1,
+                     enums.size());
+        final EnumRow enumRow = enums.get(0);
+        assertNotNull(enumRow);
+        assertEquals("Fact",
+                     enumRow.getFactName());
+        assertEquals("field",
+                     enumRow.getFieldName());
+        assertEquals("['a', 'b']",
+                     enumRow.getContext());
     }
 
     @Test
     public void testOnSave() {
-        presenter.onStartup( path,
-                             place );
-        presenter.save( "message" );
+        presenter.onStartup(path,
+                            place);
+        presenter.save("message");
 
-        verify( view,
-                times( 1 ) ).getContent();
-        verify( enumService,
-                times( 1 ) ).save( eq( path ),
-                                   enumStringArgumentCaptor.capture(),
-                                   any( Metadata.class ),
-                                   eq( "message" ) );
+        verify(view,
+               times(1)).getContent();
+        verify(enumService,
+               times(1)).save(eq(path),
+                              enumStringArgumentCaptor.capture(),
+                              any(Metadata.class),
+                              eq("message"));
         final String enumString = enumStringArgumentCaptor.getValue();
-        assertNotNull( enumString );
-        assertEquals( enumString,
-                      "'Fact.field' : ['a', 'b']\n" );
+        assertNotNull(enumString);
+        assertEquals(enumString,
+                     "'Fact.field' : ['a', 'b']\n");
     }
 
     @Test
     public void testOnSourceTabSelected() {
-        presenter.onStartup( path,
-                             place );
+        presenter.onStartup(path,
+                            place);
         presenter.onSourceTabSelected();
 
-        verify( view,
-                times( 1 ) ).getContent();
-
+        verify(view,
+               times(1)).getContent();
     }
 
+    @Test
+    public void commandIsCalled() throws Exception {
+
+        doReturn(new ArrayList<ValidationMessage>()).when(enumService).validate(any(Path.class),
+                                                                                anyString());
+
+        final Command afterValidation = mock(Command.class);
+        presenter.onValidate(afterValidation);
+        verify(afterValidation).execute();
+    }
+
+    @Test
+    public void callFailsAndCommandIsCalled() throws Exception {
+
+        doThrow(new IOException()).when(enumService).validate(any(Path.class),
+                                                              anyString());
+
+        final Command afterValidation = mock(Command.class);
+        presenter.onValidate(afterValidation);
+        verify(afterValidation).execute();
+    }
 }

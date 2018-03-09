@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.drltext.client.editor;
 
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -43,7 +44,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.workbench.type.ClientResourceType;
-import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -57,12 +58,12 @@ import org.uberfire.workbench.model.menu.Menus;
  * This is the default rule editor widget (just text editor based).
  */
 @Dependent
-@WorkbenchEditor(identifier = "DRLEditor", supportedTypes = { DRLResourceType.class, DSLRResourceType.class })
+@WorkbenchEditor(identifier = "DRLEditor", supportedTypes = {DRLResourceType.class, DSLRResourceType.class})
 public class DRLEditorPresenter
         extends KieEditor {
 
     @Inject
-    private Caller<DRLTextEditorService> drlTextEditorService;
+    protected Caller<DRLTextEditorService> drlTextEditorService;
 
     @Inject
     private Event<NotificationEvent> notification;
@@ -78,118 +79,117 @@ public class DRLEditorPresenter
     private boolean isDSLR;
 
     @Inject
-    public DRLEditorPresenter( final DRLEditorView view ) {
-        super( view );
+    public DRLEditorPresenter(final DRLEditorView view) {
+        super(view);
         this.view = view;
     }
 
     @PostConstruct
     public void init() {
-        view.init( this );
+        view.init(this);
     }
 
     @OnStartup
-    public void onStartup( final ObservablePath path,
-                           final PlaceRequest place ) {
-        super.init( path,
-                    place,
-                    getResourceType( path ) );
-        this.isDSLR = resourceTypeDSLR.accept( path );
+    public void onStartup(final ObservablePath path,
+                          final PlaceRequest place) {
+        super.init(path,
+                   place,
+                   getResourceType(path));
+        this.isDSLR = resourceTypeDSLR.accept(path);
     }
 
     protected void loadContent() {
         view.showLoading();
-        drlTextEditorService.call( getLoadContentSuccessCallback(),
-                                   getNoSuchFileExceptionErrorCallback() ).loadContent( versionRecordManager.getCurrentPath() );
+        drlTextEditorService.call(getLoadContentSuccessCallback(),
+                                  getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
     private RemoteCallback<DrlModelContent> getLoadContentSuccessCallback() {
         return new RemoteCallback<DrlModelContent>() {
 
             @Override
-            public void callback( final DrlModelContent content ) {
+            public void callback(final DrlModelContent content) {
                 //Path is set to null when the Editor is closed (which can happen before async calls complete).
-                if ( versionRecordManager.getCurrentPath() == null ) {
+                if (versionRecordManager.getCurrentPath() == null) {
                     return;
                 }
 
-                resetEditorPages( content.getOverview() );
+                resetEditorPages(content.getOverview());
 
-                final String drl = assertContent( content.getDrl() );
+                final String drl = assertContent(content.getDrl());
                 final List<String> fullyQualifiedClassNames = content.getFullyQualifiedClassNames();
                 final List<DSLSentence> dslConditions = content.getDslConditions();
                 final List<DSLSentence> dslActions = content.getDslActions();
 
                 //Populate view
-                if ( isDSLR ) {
-                    view.setContent( drl,
-                                     fullyQualifiedClassNames,
-                                     dslConditions,
-                                     dslActions );
+                if (isDSLR) {
+                    view.setContent(drl,
+                                    fullyQualifiedClassNames,
+                                    dslConditions,
+                                    dslActions);
                 } else {
-                    view.setContent( drl,
-                                     fullyQualifiedClassNames );
+                    view.setContent(drl,
+                                    fullyQualifiedClassNames);
                 }
-                view.setReadOnly( isReadOnly );
+                view.setReadOnly(isReadOnly);
                 view.hideBusyIndicator();
-                createOriginalHash( view.getContent() );
+                createOriginalHash(view.getContent());
             }
 
-            private String assertContent( final String drl ) {
-                if ( drl == null || drl.isEmpty() ) {
+            private String assertContent(final String drl) {
+                if (drl == null || drl.isEmpty()) {
                     return "";
                 }
                 return drl;
             }
-
         };
     }
 
-    public void loadClassFields( final String fullyQualifiedClassName,
-                                 final Callback<List<String>> callback ) {
-        drlTextEditorService.call( getLoadClassFieldsSuccessCallback( callback ),
-                                   new HasBusyIndicatorDefaultErrorCallback( view ) ).loadClassFields( versionRecordManager.getCurrentPath(),
-                                                                                                       fullyQualifiedClassName );
-
+    public void loadClassFields(final String fullyQualifiedClassName,
+                                final Callback<List<String>> callback) {
+        drlTextEditorService.call(getLoadClassFieldsSuccessCallback(callback),
+                                  new HasBusyIndicatorDefaultErrorCallback(view)).loadClassFields(versionRecordManager.getCurrentPath(),
+                                                                                                  fullyQualifiedClassName);
     }
 
-    private RemoteCallback<List<String>> getLoadClassFieldsSuccessCallback( final Callback<List<String>> callback ) {
+    private RemoteCallback<List<String>> getLoadClassFieldsSuccessCallback(final Callback<List<String>> callback) {
         return new RemoteCallback<List<String>>() {
 
             @Override
-            public void callback( final List<String> fields ) {
-                callback.callback( fields );
-            }
-        };
-    }
-
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                drlTextEditorService.call( new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback( final List<ValidationMessage> results ) {
-                        if ( results == null || results.isEmpty() ) {
-                            notification.fire( new NotificationEvent( CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                      NotificationEvent.NotificationType.SUCCESS ) );
-                        } else {
-                            ValidationPopup.showMessages( results );
-                        }
-                    }
-                }, new DefaultErrorCallback() ).validate( versionRecordManager.getCurrentPath(),
-                                                          view.getContent() );
+            public void callback(final List<String> fields) {
+                callback.callback(fields);
             }
         };
     }
 
     @Override
-    protected void save( String commitMessage ) {
-        drlTextEditorService.call( getSaveSuccessCallback( view.getContent().hashCode() ),
-                                   new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
-                                                                                            view.getContent(),
-                                                                                            metadata,
-                                                                                            commitMessage );
+    protected void onValidate(final Command callFinished) {
+        drlTextEditorService.call(new RemoteCallback<List<ValidationMessage>>() {
+            @Override
+            public void callback(final List<ValidationMessage> results) {
+                if (results == null || results.isEmpty()) {
+                    notifyValidationSuccess();
+                } else {
+                    ValidationPopup.showMessages(results);
+                }
+                callFinished.execute();
+            }
+        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
+                                                            view.getContent());
+    }
+
+    protected void notifyValidationSuccess() {
+        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
+                                                NotificationEvent.NotificationType.SUCCESS));
+    }
+
+    @Override
+    protected void save(String commitMessage) {
+        drlTextEditorService.call(getSaveSuccessCallback(view.getContent().hashCode()),
+                                  new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
+                                                                                       view.getContent(),
+                                                                                       metadata,
+                                                                                       commitMessage);
     }
 
     @OnClose
@@ -199,7 +199,7 @@ public class DRLEditorPresenter
 
     @OnMayClose
     public boolean mayClose() {
-        return super.mayClose( view.getContent() );
+        return super.mayClose(view.getContent());
     }
 
     @WorkbenchPartTitleDecoration
@@ -212,8 +212,8 @@ public class DRLEditorPresenter
         return super.getTitleText();
     }
 
-    private ClientResourceType getResourceType( Path path ) {
-        if ( resourceTypeDRL.accept( path ) ) {
+    private ClientResourceType getResourceType(Path path) {
+        if (resourceTypeDRL.accept(path)) {
             return resourceTypeDRL;
         } else {
             return resourceTypeDSLR;
@@ -229,5 +229,4 @@ public class DRLEditorPresenter
     public Menus getMenus() {
         return menus;
     }
-
 }

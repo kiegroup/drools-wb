@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.enums.client.editor;
 
 import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -36,7 +37,7 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
-import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -50,7 +51,7 @@ import org.uberfire.workbench.model.menu.Menus;
  * Enum Editor Presenter
  */
 @Dependent
-@WorkbenchEditor(identifier = "EnumEditor", supportedTypes = { EnumResourceType.class })
+@WorkbenchEditor(identifier = "EnumEditor", supportedTypes = {EnumResourceType.class})
 public class EnumEditorPresenter
         extends KieEditor {
 
@@ -65,84 +66,81 @@ public class EnumEditorPresenter
     }
 
     @Inject
-    public EnumEditorPresenter( final EnumEditorView baseView,
-                                final Caller<EnumService> enumService,
-                                final EnumResourceType type ) {
-        super( baseView );
+    public EnumEditorPresenter(final EnumEditorView baseView,
+                               final Caller<EnumService> enumService,
+                               final EnumResourceType type) {
+        super(baseView);
         this.view = baseView;
         this.enumService = enumService;
         this.type = type;
     }
 
     @OnStartup
-    public void onStartup( final ObservablePath path,
-                           final PlaceRequest place ) {
-        super.init( path,
-                    place,
-                    type );
+    public void onStartup(final ObservablePath path,
+                          final PlaceRequest place) {
+        super.init(path,
+                   place,
+                   type);
     }
 
     protected void loadContent() {
         view.showLoading();
-        enumService.call( getModelSuccessCallback(),
-                          getNoSuchFileExceptionErrorCallback() ).loadContent( versionRecordManager.getCurrentPath() );
+        enumService.call(getModelSuccessCallback(),
+                         getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
     private RemoteCallback<EnumModelContent> getModelSuccessCallback() {
         return new RemoteCallback<EnumModelContent>() {
 
             @Override
-            public void callback( final EnumModelContent content ) {
+            public void callback(final EnumModelContent content) {
                 //Path is set to null when the Editor is closed (which can happen before async calls complete).
-                if ( versionRecordManager.getCurrentPath() == null ) {
+                if (versionRecordManager.getCurrentPath() == null) {
                     return;
                 }
 
-                resetEditorPages( content.getOverview() );
+                resetEditorPages(content.getOverview());
                 addSourcePage();
 
-                final List<EnumRow> enumDefinitions = EnumParser.fromString( content.getModel().getEnumDefinitions() );
-                view.setContent( enumDefinitions );
+                final List<EnumRow> enumDefinitions = EnumParser.fromString(content.getModel().getEnumDefinitions());
+                view.setContent(enumDefinitions);
                 view.hideBusyIndicator();
 
-                createOriginalHash( enumDefinitions );
-            }
-        };
-    }
-
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                enumService.call( new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback( final List<ValidationMessage> results ) {
-                        if ( results == null || results.isEmpty() ) {
-                            notification.fire( new NotificationEvent( CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                      NotificationEvent.NotificationType.SUCCESS ) );
-                        } else {
-                            ValidationPopup.showMessages( results );
-                        }
-                    }
-                }, new DefaultErrorCallback() ).validate( versionRecordManager.getCurrentPath(),
-                                                          EnumParser.toString( view.getContent() ) );
+                createOriginalHash(enumDefinitions);
             }
         };
     }
 
     @Override
-    protected void save( final String commitMessage ) {
+    protected void onValidate(final Command callFinished) {
+        enumService.call(new RemoteCallback<List<ValidationMessage>>() {
+            @Override
+            public void callback(final List<ValidationMessage> results) {
+                if (results == null || results.isEmpty()) {
+                    notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
+                                                            NotificationEvent.NotificationType.SUCCESS));
+                } else {
+                    ValidationPopup.showMessages(results);
+                }
+                callFinished.execute();
+            }
+        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
+                                                            EnumParser.toString(view.getContent()));
+    }
+
+    @Override
+    protected void save(final String commitMessage) {
         final List<EnumRow> content = view.getContent();
-        enumService.call( getSaveSuccessCallback( content.hashCode() ),
-                          new HasBusyIndicatorDefaultErrorCallback( view ) ).save( versionRecordManager.getCurrentPath(),
-                                                                                   EnumParser.toString( content ),
-                                                                                   metadata,
-                                                                                   commitMessage );
+        enumService.call(getSaveSuccessCallback(content.hashCode()),
+                         new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
+                                                                              EnumParser.toString(content),
+                                                                              metadata,
+                                                                              commitMessage);
     }
 
     @Override
     public void onSourceTabSelected() {
-        updateSource( EnumParser.toString( view.getContent() ) );
+        updateSource(EnumParser.toString(view.getContent()));
     }
 
     @OnClose
@@ -152,7 +150,7 @@ public class EnumEditorPresenter
 
     @OnMayClose
     public boolean mayClose() {
-        return super.mayClose( view.getContent() );
+        return super.mayClose(view.getContent());
     }
 
     @WorkbenchPartTitle
@@ -174,5 +172,4 @@ public class EnumEditorPresenter
     public Menus getMenus() {
         return menus;
     }
-
 }
