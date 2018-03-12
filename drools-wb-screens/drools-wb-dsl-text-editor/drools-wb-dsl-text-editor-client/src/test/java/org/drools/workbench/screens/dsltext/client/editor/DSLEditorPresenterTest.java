@@ -56,11 +56,6 @@ public class DSLEditorPresenterTest {
                 dslTextEditorService = new CallerMock<>(DSLEditorPresenterTest.this.dslTextEditorService);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

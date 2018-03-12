@@ -59,11 +59,6 @@ public class GuidedDecisionTableEditorPresenterTest {
                 service = new CallerMock<>(GuidedDecisionTableEditorPresenterTest.this.service);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

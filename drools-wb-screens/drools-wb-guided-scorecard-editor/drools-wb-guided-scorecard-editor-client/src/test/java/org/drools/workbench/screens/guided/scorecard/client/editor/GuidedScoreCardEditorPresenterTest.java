@@ -59,11 +59,6 @@ public class GuidedScoreCardEditorPresenterTest {
                 scoreCardEditorService = new CallerMock<>(GuidedScoreCardEditorPresenterTest.this.scoreCardEditorService);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 
