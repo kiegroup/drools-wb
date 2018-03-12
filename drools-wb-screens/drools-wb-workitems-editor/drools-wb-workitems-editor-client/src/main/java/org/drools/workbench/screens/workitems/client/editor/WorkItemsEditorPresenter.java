@@ -27,11 +27,9 @@ import org.drools.workbench.screens.workitems.client.type.WorkItemsResourceType;
 import org.drools.workbench.screens.workitems.model.WorkItemsModelContent;
 import org.drools.workbench.screens.workitems.service.WorkItemsEditorService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
+import org.kie.workbench.common.widgets.client.callbacks.AssetValidatedCallback;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -129,23 +127,10 @@ public class WorkItemsEditorPresenter
 
     @Override
     protected void onValidate(final Command callFinished) {
-        workItemsService.call(new RemoteCallback<List<ValidationMessage>>() {
-            @Override
-            public void callback(final List<ValidationMessage> results) {
-                if (results == null || results.isEmpty()) {
-                    notifyValidationSuccess();
-                } else {
-                    ValidationPopup.showMessages(results);
-                }
-                callFinished.execute();
-            }
-        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
-                                                            view.getContent());
-    }
-
-    protected void notifyValidationSuccess() {
-        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                NotificationEvent.NotificationType.SUCCESS));
+        workItemsService.call(new AssetValidatedCallback(callFinished, notification),
+                              new CommandErrorCallback(callFinished))
+                .validate(versionRecordManager.getCurrentPath(),
+                          view.getContent());
     }
 
     @Override

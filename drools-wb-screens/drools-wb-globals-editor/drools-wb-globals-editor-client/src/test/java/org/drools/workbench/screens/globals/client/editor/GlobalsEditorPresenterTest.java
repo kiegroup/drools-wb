@@ -58,11 +58,6 @@ public class GlobalsEditorPresenterTest {
                 globalsEditorService = new CallerMock<>(GlobalsEditorPresenterTest.this.globalsEditorService);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

@@ -58,11 +58,6 @@ public class ScoreCardXLSEditorPresenterTest {
                 scoreCardXLSService = new CallerMock<>(ScoreCardXLSEditorPresenterTest.this.scoreCardXLSService);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 
