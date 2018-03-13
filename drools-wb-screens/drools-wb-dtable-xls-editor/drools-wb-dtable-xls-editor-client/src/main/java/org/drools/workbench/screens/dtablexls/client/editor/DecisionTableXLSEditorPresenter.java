@@ -18,7 +18,6 @@ package org.drools.workbench.screens.dtablexls.client.editor;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -36,13 +35,11 @@ import org.drools.workbench.screens.dtablexls.client.widgets.ConversionMessageWi
 import org.drools.workbench.screens.dtablexls.client.widgets.PopupListWidget;
 import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSContent;
 import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSService;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
+import org.kie.workbench.common.widgets.client.callbacks.AssetValidatedCallback;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -196,27 +193,10 @@ public class DecisionTableXLSEditorPresenter
 
     @Override
     protected void onValidate(final Command callFinished) {
-        decisionTableXLSService.call(new RemoteCallback<List<ValidationMessage>>() {
-            @Override
-            public void callback(final List<ValidationMessage> results) {
-
-                baseView.hideBusyIndicator();
-                isValidationRunning = false;
-
-                if (results == null || results.isEmpty()) {
-                    notifyValidationSuccess();
-                } else {
-                    ValidationPopup.showMessages(results);
-                }
-                callFinished.execute();
-            }
-        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
-                                                            versionRecordManager.getCurrentPath());
-    }
-
-    protected void notifyValidationSuccess() {
-        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                NotificationEvent.NotificationType.SUCCESS));
+        decisionTableXLSService.call(new AssetValidatedCallback(callFinished, notification),
+                                     new CommandErrorCallback(callFinished))
+                .validate(versionRecordManager.getCurrentPath(),
+                          versionRecordManager.getCurrentPath());
     }
 
     @Override

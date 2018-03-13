@@ -59,11 +59,6 @@ public class WorkItemsEditorPresenterTest {
                 workItemsService = new CallerMock<>(WorkItemsEditorPresenterTest.this.workItemsService);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

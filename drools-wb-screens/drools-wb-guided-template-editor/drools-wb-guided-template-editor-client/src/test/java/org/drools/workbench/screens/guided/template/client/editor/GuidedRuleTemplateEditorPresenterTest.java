@@ -58,11 +58,6 @@ public class GuidedRuleTemplateEditorPresenterTest {
                 service = new CallerMock<>(GuidedRuleTemplateEditorPresenterTest.this.service);
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

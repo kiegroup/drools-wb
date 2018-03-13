@@ -26,7 +26,6 @@ import org.gwtbootstrap3.client.ui.Modal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
@@ -56,11 +55,6 @@ public class DRLEditorPresenterTest {
             {
                 drlTextEditorService = new CallerMock<>(DRLEditorPresenterTest.this.drlTextEditorService);
                 versionRecordManager = mock(VersionRecordManager.class);
-            }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
             }
         };
     }

@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scorecardxls.client.editor;
 
-import java.util.List;
-
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -26,11 +24,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scorecardxls.client.type.ScoreCardXLSResourceType;
 import org.drools.workbench.screens.scorecardxls.service.ScoreCardXLSContent;
 import org.drools.workbench.screens.scorecardxls.service.ScoreCardXLSService;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
+import org.kie.workbench.common.widgets.client.callbacks.AssetValidatedCallback;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -102,23 +98,10 @@ public class ScoreCardXLSEditorPresenter
 
     @Override
     protected void onValidate(final Command callFinished) {
-        scoreCardXLSService.call(new RemoteCallback<List<ValidationMessage>>() {
-            @Override
-            public void callback(final List<ValidationMessage> results) {
-                if (results == null || results.isEmpty()) {
-                    notifyValidationSuccess();
-                } else {
-                    ValidationPopup.showMessages(results);
-                }
-                callFinished.execute();
-            }
-        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
-                                                            versionRecordManager.getCurrentPath());
-    }
-
-    protected void notifyValidationSuccess() {
-        notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                NotificationEvent.NotificationType.SUCCESS));
+        scoreCardXLSService.call(new AssetValidatedCallback(callFinished, notification),
+                                 new CommandErrorCallback(callFinished))
+                .validate(versionRecordManager.getCurrentPath(),
+                          versionRecordManager.getCurrentPath());
     }
 
     @OnClose

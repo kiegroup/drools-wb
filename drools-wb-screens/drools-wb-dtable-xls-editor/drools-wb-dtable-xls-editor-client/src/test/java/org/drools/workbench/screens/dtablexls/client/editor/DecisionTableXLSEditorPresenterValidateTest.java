@@ -62,11 +62,6 @@ public class DecisionTableXLSEditorPresenterValidateTest {
             {
                 versionRecordManager = mock(VersionRecordManager.class);
             }
-
-            @Override
-            protected void notifyValidationSuccess() {
-
-            }
         };
     }
 

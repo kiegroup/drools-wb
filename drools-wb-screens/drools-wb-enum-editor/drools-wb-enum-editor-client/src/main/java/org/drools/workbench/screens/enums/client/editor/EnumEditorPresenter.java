@@ -25,11 +25,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.enums.client.type.EnumResourceType;
 import org.drools.workbench.screens.enums.model.EnumModelContent;
 import org.drools.workbench.screens.enums.service.EnumService;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
+import org.kie.workbench.common.widgets.client.callbacks.AssetValidatedCallback;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -44,7 +42,6 @@ import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
 /**
@@ -113,19 +110,11 @@ public class EnumEditorPresenter
 
     @Override
     protected void onValidate(final Command callFinished) {
-        enumService.call(new RemoteCallback<List<ValidationMessage>>() {
-            @Override
-            public void callback(final List<ValidationMessage> results) {
-                if (results == null || results.isEmpty()) {
-                    notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                            NotificationEvent.NotificationType.SUCCESS));
-                } else {
-                    ValidationPopup.showMessages(results);
-                }
-                callFinished.execute();
-            }
-        }, new CommandErrorCallback(callFinished)).validate(versionRecordManager.getCurrentPath(),
-                                                            EnumParser.toString(view.getContent()));
+        enumService
+                .call(new AssetValidatedCallback(callFinished, notification),
+                      new CommandErrorCallback(callFinished))
+                .validate(versionRecordManager.getCurrentPath(),
+                          EnumParser.toString(view.getContent()));
     }
 
     @Override
