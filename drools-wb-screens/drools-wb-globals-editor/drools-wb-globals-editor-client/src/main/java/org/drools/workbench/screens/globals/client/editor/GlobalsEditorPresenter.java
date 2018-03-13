@@ -40,6 +40,7 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -64,9 +65,6 @@ public class GlobalsEditorPresenter
     protected ValidationPopup validationPopup;
 
     private GlobalsEditorView view;
-
-    @Inject
-    private Event<NotificationEvent> notification;
 
     @Inject
     private GlobalResourceType type;
@@ -103,7 +101,7 @@ public class GlobalsEditorPresenter
         }
 
         fileMenuBuilder
-                .addValidate(onValidate())
+                .addValidate(getValidateCommand())
                 .addNewTopLevelMenu(versionRecordManager.buildMenu());
     }
 
@@ -141,24 +139,12 @@ public class GlobalsEditorPresenter
         };
     }
 
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                globalsEditorService.call(new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback(final List<ValidationMessage> results) {
-                        if (results == null || results.isEmpty()) {
-                            notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                    NotificationEvent.NotificationType.SUCCESS));
-                        } else {
-                            validationPopup.showMessages(results);
-                        }
-                    }
-                }).validate(versionRecordManager.getCurrentPath(),
-                            model);
-            }
-        };
+    @Override
+    protected void onValidate(final Command finished) {
+        globalsEditorService.call(
+                validationPopup.getValidationCallback(finished),
+                new CommandErrorCallback(finished)).validate(versionRecordManager.getCurrentPath(),
+                                                             model);
     }
 
     @Override

@@ -32,7 +32,7 @@ import org.drools.workbench.screens.guided.rule.client.type.GuidedRuleDRLResourc
 import org.drools.workbench.screens.guided.rule.client.type.GuidedRuleDSLRResourceType;
 import org.drools.workbench.screens.guided.rule.model.GuidedEditorContent;
 import org.drools.workbench.screens.guided.rule.service.GuidedRuleEditorService;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
+import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -43,7 +43,6 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.datamodel.ImportAddedEvent;
 import org.kie.workbench.common.widgets.client.datamodel.ImportRemovedEvent;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.client.source.ViewSourceView;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
@@ -55,6 +54,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.workbench.type.ClientResourceType;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 import org.uberfire.lifecycle.OnClose;
@@ -63,7 +63,6 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
@@ -80,7 +79,7 @@ public class GuidedRuleEditorPresenter
     private ViewSourceView viewSource;
 
     @Inject
-    private Caller<GuidedRuleEditorService> service;
+    protected Caller<GuidedRuleEditorService> service;
 
     @Inject
     private Caller<RuleNamesService> ruleNamesService;
@@ -95,7 +94,7 @@ public class GuidedRuleEditorPresenter
     private AsyncPackageDataModelOracleFactory oracleFactory;
 
     @Inject
-    private ValidationPopup validationPopup;
+    protected ValidationPopup validationPopup;
 
     @Inject
     private ManagedInstance<RuleModellerActionPlugin> actionPluginInstance;
@@ -195,24 +194,12 @@ public class GuidedRuleEditorPresenter
         view.refresh();
     }
 
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                getService().call(new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback(final List<ValidationMessage> results) {
-                        if (results == null || results.isEmpty()) {
-                            notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                    NotificationEvent.NotificationType.SUCCESS));
-                        } else {
-                            validationPopup.showMessages(results);
-                        }
-                    }
-                }).validate(versionRecordManager.getCurrentPath(),
-                            view.getContent());
-            }
-        };
+    @Override
+    protected void onValidate(final Command finished) {
+        getService().call(
+                validationPopup.getValidationCallback(finished),
+                new CommandErrorCallback(finished)).validate(versionRecordManager.getCurrentPath(),
+                                                             view.getContent());
     }
 
     protected void save() {
