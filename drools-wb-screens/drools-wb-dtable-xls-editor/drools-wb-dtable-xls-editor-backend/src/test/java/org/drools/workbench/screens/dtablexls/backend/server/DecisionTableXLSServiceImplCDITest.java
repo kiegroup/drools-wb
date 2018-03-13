@@ -137,6 +137,16 @@ public class DecisionTableXLSServiceImplCDITest extends CDITestSetup {
         Assertions.assertThat(messages).hasSize(0);
     }
 
+    /**
+     * Increase coverage of RHBA-520
+     */
+    @Test
+    public void testValidate8000rows() throws Exception {
+        final String resourcePath = "dtables/src/main/resources/guvnor/feature/dtables/8000rows-spreadsheet.xls";
+        final List<ValidationMessage> messages = validateResource(resourcePath);
+        Assertions.assertThat(messages).hasSize(0);
+    }
+
     private ConversionResult convertResource(final String resource) throws Exception {
         final Path resourcePath = getPath(resource);
         return xlsService.convert(resourcePath);
