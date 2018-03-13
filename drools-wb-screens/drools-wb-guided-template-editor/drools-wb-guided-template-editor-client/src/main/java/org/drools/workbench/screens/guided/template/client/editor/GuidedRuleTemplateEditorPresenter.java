@@ -54,6 +54,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.ext.editor.commons.service.support.SupportsSaveAndRename;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -77,13 +78,13 @@ public class GuidedRuleTemplateEditorPresenter
     private ImportsWidgetPresenter importsWidget;
 
     @Inject
-    private Caller<GuidedRuleTemplateEditorService> service;
+    protected Caller<GuidedRuleTemplateEditorService> service;
 
     @Inject
     private Event<NotificationEvent> notification;
 
     @Inject
-    private ValidationPopup validationPopup;
+    protected ValidationPopup validationPopup;
 
     @Inject
     private GuidedRuleTemplateResourceType type;
@@ -196,24 +197,12 @@ public class GuidedRuleTemplateEditorPresenter
         view.refresh();
     }
 
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                getService().call(new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback(final List<ValidationMessage> results) {
-                        if (results == null || results.isEmpty()) {
-                            notification.fire(new NotificationEvent(CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                    NotificationEvent.NotificationType.SUCCESS));
-                        } else {
-                            validationPopup.showMessages(results);
-                        }
-                    }
-                }).validate(versionRecordManager.getCurrentPath(),
-                            view.getContent());
-            }
-        };
+    @Override
+    protected void onValidate(final Command finished) {
+        getService().call(
+                validationPopup.getValidationCallback(finished),
+                new CommandErrorCallback(finished)).validate(versionRecordManager.getCurrentPath(),
+                                                             view.getContent());
     }
 
     @Override

@@ -107,11 +107,6 @@ public class ScenarioEditorPresenter
                    type);
     }
 
-    @Override
-    protected Command onValidate() {
-        return null;
-    }
-
     protected void loadContent() {
         view.showLoading();
         service.call(getModelSuccessCallback(),
