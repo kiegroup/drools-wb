@@ -38,6 +38,7 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.ext.widgets.common.client.callbacks.CommandErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -56,13 +57,13 @@ public class DSLEditorPresenter
         extends KieEditor {
 
     @Inject
-    private Caller<DSLTextEditorService> dslTextEditorService;
+    protected Caller<DSLTextEditorService> dslTextEditorService;
 
     @Inject
     private Event<NotificationEvent> notification;
 
     @Inject
-    private ValidationPopup validationPopup;
+    protected ValidationPopup validationPopup;
 
     private DSLEditorView view;
 
@@ -112,24 +113,12 @@ public class DSLEditorPresenter
         };
     }
 
-    protected Command onValidate() {
-        return new Command() {
-            @Override
-            public void execute() {
-                dslTextEditorService.call( new RemoteCallback<List<ValidationMessage>>() {
-                    @Override
-                    public void callback( final List<ValidationMessage> results ) {
-                        if ( results == null || results.isEmpty() ) {
-                            notification.fire( new NotificationEvent( CommonConstants.INSTANCE.ItemValidatedSuccessfully(),
-                                                                      NotificationEvent.NotificationType.SUCCESS ) );
-                        } else {
-                            validationPopup.showMessages( results );
-                        }
-                    }
-                } ).validate( versionRecordManager.getCurrentPath(),
-                              view.getContent() );
-            }
-        };
+    @Override
+    protected void onValidate(final Command finished) {
+        dslTextEditorService.call(
+                validationPopup.getValidationCallback(finished),
+                new CommandErrorCallback(finished)).validate(versionRecordManager.getCurrentPath(),
+                                                             view.getContent());
     }
 
     @Override
