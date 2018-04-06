@@ -106,9 +106,6 @@ public class DecisionTableXLSEditorPresenterTest {
     KieEditorWrapperView kieView;
 
     @Mock
-    EventSourceMock<NotificationEvent> notification;
-
-    @Mock
     ValidationPopup validationPopup;
 
     @Mock
@@ -152,7 +149,6 @@ public class DecisionTableXLSEditorPresenterTest {
                                                             decisionTableXLSResourceType,
                                                             decisionTableXLSXResourceType,
                                                             busyIndicatorView,
-                                                            notification,
                                                             validationPopup,
                                                             new ServiceMock()
         ) {
@@ -218,7 +214,6 @@ public class DecisionTableXLSEditorPresenterTest {
                                                             null,
                                                             null,
                                                             busyIndicatorView,
-                                                            null,
                                                             null,
                                                             null) {
             {
