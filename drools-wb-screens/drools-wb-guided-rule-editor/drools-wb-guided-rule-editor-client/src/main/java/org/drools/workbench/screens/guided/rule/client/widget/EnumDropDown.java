@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.guided.rule.client.widget;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -86,7 +87,8 @@ public class EnumDropDown
                         final DropDownData dropData,
                         final boolean multipleSelect,
                         final Path resource) {
-        listBox = new ListBox(multipleSelect);
+        listBox = GWT.create(ListBox.class);
+        listBox.setMultipleSelect(multipleSelect);
         this.valueChangedCommand = valueChanged;
         this.resource = resource;
 

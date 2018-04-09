@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.guided.rule.client.editor;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +30,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
@@ -55,8 +53,8 @@ import org.drools.workbench.screens.guided.rule.client.editor.events.TemplateVar
 import org.drools.workbench.screens.guided.rule.client.editor.util.ConstraintValueEditorHelper;
 import org.drools.workbench.screens.guided.rule.client.resources.GuidedRuleEditorResources;
 import org.drools.workbench.screens.guided.rule.client.resources.images.GuidedRuleEditorImages508;
-import org.drools.workbench.screens.guided.rule.client.widget.EnumDropDown;
 import org.drools.workbench.screens.guided.rule.client.widget.ExpressionBuilder;
+import org.drools.workbench.screens.guided.rule.client.widget.constraint.LiteralValueConstraintEditor;
 import org.guvnor.common.services.workingset.client.WorkingSetManager;
 import org.guvnor.common.services.workingset.client.factconstraints.customform.CustomFormConfiguration;
 import org.gwtbootstrap3.client.ui.Button;
@@ -66,13 +64,10 @@ import org.jboss.errai.ioc.client.container.IOC;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.soup.project.datamodel.oracle.OperatorsOracle;
-import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.CEPOracle;
 import org.kie.workbench.common.widgets.client.widget.TextBoxFactory;
 import org.uberfire.client.callbacks.Callback;
-import org.uberfire.ext.widgets.common.client.common.DatePicker;
-import org.uberfire.ext.widgets.common.client.common.DropDownValueChanged;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 
@@ -82,9 +77,6 @@ import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
  * the user to choose the first time.
  */
 public class ConstraintValueEditor extends Composite {
-
-    private static final String DATE_FORMAT = ApplicationPreferences.getDroolsDateFormat();
-    private static final DateTimeFormat DATE_FORMATTER = DateTimeFormat.getFormat(DATE_FORMAT);
 
     private final ConstraintValueEditorHelper helper;
     private WorkingSetManager workingSetManager = null;
@@ -277,110 +269,21 @@ public class ConstraintValueEditor extends Composite {
         return constraint.getValue();
     }
 
-    private Date getSanitizedDateValue() {
-        if (constraint.getValue() == null) {
-            return null;
-        }
-
-        try {
-            return DATE_FORMATTER.parse(constraint.getValue());
-        } catch (IllegalArgumentException iae) {
-            return null;
-        }
-    }
-
     private Widget literalEditor() {
 
-        //Custom screen
-        if (this.constraint instanceof SingleFieldConstraint) {
-            final SingleFieldConstraint con = (SingleFieldConstraint) this.constraint;
-            CustomFormConfiguration customFormConfiguration = getWorkingSetManager().getCustomFormConfiguration(modeller.getPath(),
-                                                                                                                factType,
-                                                                                                                fieldName);
-            if (customFormConfiguration != null) {
-                Button btnCustom = new Button(con.getValue(),
-                                              new ClickHandler() {
-
-                                                  public void onClick(ClickEvent event) {
-                                                      showTypeChoice(constraint);
-                                                  }
-                                              });
-                btnCustom.setEnabled(!this.readOnly);
-                return btnCustom;
-            }
-        }
-
-        //Label if read-only
-        if (this.readOnly) {
-            return new SmallLabel(getSanitizedValue());
-        }
-
-        //Enumeration (these support multi-select for "in" and "not in", so check before comma separated lists) 
-        if (this.dropDownData != null) {
-            final String operator = constraint.getOperator();
-            final boolean multipleSelect = OperatorsOracle.operatorRequiresList(operator);
-            EnumDropDown enumDropDown = new EnumDropDown(constraint.getValue(),
-                                                         new DropDownValueChanged() {
-
-                                                             public void valueChanged(String newText,
-                                                                                      String newValue) {
-
-                                                                 //Prevent recursion once value change has been applied
-                                                                 if (!newValue.equals(constraint.getValue())) {
-                                                                     constraint.setValue(newValue);
-                                                                     executeOnValueChangeCommand();
-                                                                 }
-                                                             }
-                                                         },
-                                                         dropDownData,
-                                                         multipleSelect,
-                                                         modeller.getPath());
-            return enumDropDown;
-        }
-
-        //Comma separated value list (this will become a dedicated Widget but for now a TextBox suffices)
-        String operator = null;
-        if (this.constraint instanceof SingleFieldConstraint) {
-            SingleFieldConstraint sfc = (SingleFieldConstraint) this.constraint;
-            operator = sfc.getOperator();
-        }
-        if (OperatorsOracle.operatorRequiresList(operator)) {
-            return getNewTextBox(DataType.TYPE_STRING);
-        }
-
-        //Date picker
-        boolean isCEPOperator = CEPOracle.isCEPOperator((this.constraint).getOperator());
-        if (DataType.TYPE_DATE.equals(this.fieldType) || (DataType.TYPE_THIS.equals(this.fieldName) && isCEPOperator)) {
-            if (this.readOnly) {
-                return new SmallLabel(constraint.getValue());
-            }
-
-            final DatePicker datePicker = new DatePicker(false);
-
-            // Wire up update handler
-            datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
-                @Override
-                public void onValueChange(final ValueChangeEvent<Date> event) {
-                    final Date date = datePicker.getValue();
-                    final String sDate = (date == null ? null : DATE_FORMATTER.format(datePicker.getValue()));
-                    boolean update = constraint.getValue() == null || !constraint.getValue().equals(sDate);
-
-                    constraint.setValue(sDate);
-
-                    if (update) {
-                        executeOnValueChangeCommand();
-                    }
-                }
-            });
-
-            datePicker.setFormat(DATE_FORMAT);
-            datePicker.setValue(getSanitizedDateValue());
-
-            return datePicker;
-        }
-
-        //Default editor for all other literals
-        return getNewTextBox(fieldType);
+        return new LiteralValueConstraintEditor(constraint,
+                                                fieldName,
+                                                fieldType,
+                                                getSanitizedValue(),
+                                                readOnly,
+                                                getWorkingSetManager().getCustomFormConfiguration(modeller.getPath(),
+                                                                                                  factType,
+                                                                                                  fieldName),
+                                                dropDownData,
+                                                modeller.getPath(),
+                                                this::executeOnValueChangeCommand,
+                                                this::getNewTextBox,
+                                                clickEvent -> showTypeChoice(constraint)).asWidget();
     }
 
     TextBox getNewTextBox(final String fieldType) {
