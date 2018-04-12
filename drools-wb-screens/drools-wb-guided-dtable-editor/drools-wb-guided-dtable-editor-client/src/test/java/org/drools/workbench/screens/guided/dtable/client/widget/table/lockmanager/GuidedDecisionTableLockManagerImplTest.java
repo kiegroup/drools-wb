@@ -141,6 +141,24 @@ public class GuidedDecisionTableLockManagerImplTest {
     }
 
     @Test
+    public void testFireChangeTitleEvent_LockInfoUpdateForActiveDecisionTableMissingCurrentPath() {
+        lockManager.init(mock(LockTarget.class),
+                         modellerPresenter);
+
+        final GuidedDecisionTableView.Presenter dtPresenter = mock(GuidedDecisionTableView.Presenter.class);
+        final PathFactory.PathImpl lockInfoPath = makePathImpl("filename");
+
+        when(lockInfo.getFile()).thenReturn(lockInfoPath);
+        when(dtPresenter.getCurrentPath()).thenReturn(null);
+        when(modellerPresenter.getActiveDecisionTable()).thenReturn(Optional.of(dtPresenter));
+
+        lockManager.fireChangeTitleEvent();
+
+        verify(changeTitleEvent,
+               never()).fire(any(ChangeTitleWidgetEvent.class));
+    }
+
+    @Test
     public void testFireChangeTitleEvent_LockInfoUpdateForNonActiveDecisionTable() {
         lockManager.init(mock(LockTarget.class),
                          modellerPresenter);
