@@ -95,6 +95,10 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-data-binding</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
     </dependency>
     <dependency>
@@ -1129,11 +1133,10 @@
       <artifactId>errai-javax-enterprise</artifactId>
     </dependency>
 
-    <!--SHARED???-->
-    <!--<dependency>-->
-      <!--<groupId>org.jboss.errai</groupId>-->
-      <!--<artifactId>errai-cdi-server</artifactId>-->
-    <!--</dependency>-->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-cdi-shared</artifactId>
+    </dependency>
 
     <!-- GWT/Errai Bean Validation - JSR303 -->
     <dependency>
