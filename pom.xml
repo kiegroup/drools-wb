@@ -115,6 +115,39 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.ltgt.gwt.maven</groupId>
+          <artifactId>gwt-maven-plugin</artifactId>
+          <configuration>
+            <style>PRETTY</style>
+            <logLevel>INFO</logLevel>
+            <jvmArgs>
+              <arg>-Xmx4g</arg>
+            </jvmArgs>
+            <!-- compile goal configuration, see https://tbroyer.github.io/gwt-maven-plugin/compile-mojo.html -->
+            <compilerArgs>
+              <arg>-strict</arg>
+              <arg>-saveSource</arg>
+              <arg>-saveSourceOutput</arg>
+              <arg>extra</arg>
+            </compilerArgs>
+            <!-- codeserver goal configuration, see https://tbroyer.github.io/gwt-maven-plugin/codeserver-mojo.html -->
+            <codeserverArgs>
+              <arg>-strict</arg>
+            </codeserverArgs>
+            <!-- GWT Super Dev Mode: point codeserver to backend to overwrite *.nocache.js -->
+            <launcherDir>drools-wb-webapp/target/drools-wb-webapp</launcherDir>
+            <systemProperties>
+              <!-- Write org/jboss/errai/ServerMarshallingFactoryImpl$Marshaller_*_Impl.class files
+              to the WAR's WEB-INF/classes (needed during compilation) -->
+              <errai.server.classOutput>${project.build.finalName}/WEB-INF/classes</errai.server.classOutput>
+            </systemProperties>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <!--Fix translations from Zanata -->
       <plugin>

@@ -69,17 +69,6 @@
       <artifactId>gwtbootstrap3-extras</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-contributors-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-contributors-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <!-- dependencies added because of new illegal transitive dependency check -->
     <dependency>
       <groupId>org.apache.lucene</groupId>
@@ -760,6 +749,16 @@
       <classifier>sources</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-client</artifactId>
+      <classifier>sources</classifier>
+    </dependency>
+
     <!-- KIE Workbench Playground Repository -->
     <dependency>
       <groupId>org.kie.workbench.playground</groupId>
@@ -1260,11 +1259,6 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <moduleName>org.drools.workbench.DroolsWorkbench</moduleName>
-          <compilerArgs>
-            <arg>-strict</arg>
-            <arg>-logLevel</arg>
-            <arg>INFO</arg>
-          </compilerArgs>
         </configuration>
       </plugin>
 
