@@ -37,7 +37,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Parameterized.class)
 public class DTCellValueUtilitiesTest {
 
-    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(SystemProperties.getProperty(ApplicationPreferences.DATE_FORMAT));
+    private static final String DATE_FORMAT = SystemProperties.getProperty(ApplicationPreferences.DATE_FORMAT);
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(DATE_FORMAT);
 
     private String type;
     private DTCellValue52 provided;
@@ -100,12 +101,13 @@ public class DTCellValueUtilitiesTest {
 
     @Test
     public void conversion() {
+        final String message = type + " " + "should equal to " + provided.getDataType().name();
+
         DTCellValueUtilities
                 .assertDTCellValue(type,
                                    provided,
-                                   (final String value, final DataType.DataTypes dataType) ->
-                                           assertTrue(type + " should equal to " + provided.getDataType().name(),
-                                                      hasConversionError));
+                                   (final String value,
+                                    final DataType.DataTypes dataType) -> assertTrue(message, hasConversionError));
         assertEquals(expectedDataType,
                      provided.getDataType());
         assertEquals(expectedValue,
