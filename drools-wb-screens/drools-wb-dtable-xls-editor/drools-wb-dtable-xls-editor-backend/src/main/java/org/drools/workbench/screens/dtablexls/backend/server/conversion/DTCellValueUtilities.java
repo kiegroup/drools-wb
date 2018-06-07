@@ -41,8 +41,7 @@ public class DTCellValueUtilities {
 
         /**
          * Called when a conversion error occurred.
-         *
-         * @param value    The value being converted.
+         * @param value The value being converted.
          * @param dataType The target data-type to which the value is being converted.
          */
         void onConversionError(final String value,
@@ -55,7 +54,6 @@ public class DTCellValueUtilities {
      * associated with the Cell Value can be incorrect for legacy models. For
      * pre-5.2 they will always be String and for pre-5.4 numerical fields are
      * always Numeric
-     *
      * @param type
      * @param dcv
      */
@@ -66,7 +64,7 @@ public class DTCellValueUtilities {
             return;
         }
 
-        //If already converted exit
+        // If already converted exit
         final DataType.DataTypes dataType = convertToTypeSafeType(type);
         if (dataType.equals(dcv.getDataType())) {
             return;

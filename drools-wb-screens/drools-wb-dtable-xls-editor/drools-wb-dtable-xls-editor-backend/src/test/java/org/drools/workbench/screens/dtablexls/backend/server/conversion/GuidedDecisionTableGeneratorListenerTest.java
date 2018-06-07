@@ -63,7 +63,6 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
-import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -86,16 +85,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
     @BeforeClass
     public static void setup() {
-        setupPreferences();
         setupSystemProperties();
-    }
-
-    private static void setupPreferences() {
-        final Map<String, String> preferences = new HashMap<String, String>() {{
-            put(ApplicationPreferences.DATE_FORMAT,
-                "dd/mm/yyyy");
-        }};
-        ApplicationPreferences.setUp(preferences);
     }
 
     private static void setupSystemProperties() {

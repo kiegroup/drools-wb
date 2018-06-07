@@ -16,31 +16,11 @@
 
 package org.drools.workbench.screens.dtablexls.backend.server.conversion;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 
 import static org.junit.Assert.assertEquals;
 
 public class DTCellValueUtilitiesStripQuotesTest {
-
-    private static final String DATE_FORMAT = "dd/mm/yyyy";
-
-    @BeforeClass
-    public static void setup() {
-        setupPreferences();
-    }
-
-    private static void setupPreferences() {
-        final Map<String, String> preferences = new HashMap<String, String>() {{
-            put(ApplicationPreferences.DATE_FORMAT,
-                DATE_FORMAT);
-        }};
-        ApplicationPreferences.setUp(preferences);
-    }
 
     @Test
     // This test is in it's own class since DTCellValueUtilitiesTest is @Parameterized

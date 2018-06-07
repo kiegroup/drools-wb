@@ -45,7 +45,6 @@ import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
 import org.kie.workbench.common.screens.datamodeller.service.DataModelerService;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
-import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.services.shared.project.KieModule;
 import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.kie.workbench.common.services.shared.project.ProjectImportsService;
@@ -121,16 +120,7 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
 
     @BeforeClass
     public static void setup() {
-        setupPreferences();
         setupSystemProperties();
-    }
-
-    private static void setupPreferences() {
-        final Map<String, String> preferences = new HashMap<String, String>() {{
-            put(ApplicationPreferences.DATE_FORMAT,
-                "dd/mm/yyyy");
-        }};
-        ApplicationPreferences.setUp(preferences);
     }
 
     private static void setupSystemProperties() {

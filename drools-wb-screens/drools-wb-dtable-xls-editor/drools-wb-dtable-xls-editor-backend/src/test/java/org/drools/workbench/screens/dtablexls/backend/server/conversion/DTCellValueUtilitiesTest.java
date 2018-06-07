@@ -22,11 +22,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
+import org.apache.xmlbeans.SystemProperties;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -39,28 +37,13 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Parameterized.class)
 public class DTCellValueUtilitiesTest {
 
-    private static final String DATE_FORMAT = "dd/mm/yyyy";
-
-    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(DATE_FORMAT);
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(SystemProperties.getProperty(ApplicationPreferences.DATE_FORMAT));
 
     private String type;
     private DTCellValue52 provided;
     private DataType.DataTypes expectedDataType;
     private Object expectedValue;
     private boolean hasConversionError;
-
-    @BeforeClass
-    public static void setup() {
-        setupPreferences();
-    }
-
-    private static void setupPreferences() {
-        final Map<String, String> preferences = new HashMap<String, String>() {{
-            put(ApplicationPreferences.DATE_FORMAT,
-                DATE_FORMAT);
-        }};
-        ApplicationPreferences.setUp(preferences);
-    }
 
     public DTCellValueUtilitiesTest(final String type,
                                     final DTCellValue52 provided,
@@ -87,7 +70,7 @@ public class DTCellValueUtilitiesTest {
                 {DataType.TYPE_NUMERIC_LONG, new DTCellValue52("100"), DataType.DataTypes.NUMERIC_LONG, 100l, false},
                 {DataType.TYPE_NUMERIC_SHORT, new DTCellValue52("100"), DataType.DataTypes.NUMERIC_SHORT, new Short("100"), false},
                 {DataType.TYPE_BOOLEAN, new DTCellValue52("true"), DataType.DataTypes.BOOLEAN, true, false},
-                {DataType.TYPE_DATE, new DTCellValue52("31/12/2016"), DataType.DataTypes.DATE, FORMATTER.parse("31/12/2016"), false},
+                {DataType.TYPE_DATE, new DTCellValue52("31-12-2016"), DataType.DataTypes.DATE, FORMATTER.parse("31-12-2016"), false},
                 {DataType.TYPE_STRING, new DTCellValue52("String"), DataType.DataTypes.STRING, "String", false},
 
                 {DataType.TYPE_NUMERIC, new DTCellValue52("\"100\""), DataType.DataTypes.NUMERIC_BIGDECIMAL, new BigDecimal(100), false},
@@ -99,7 +82,7 @@ public class DTCellValueUtilitiesTest {
                 {DataType.TYPE_NUMERIC_INTEGER, new DTCellValue52("\"100\""), DataType.DataTypes.NUMERIC_INTEGER, 100, false},
                 {DataType.TYPE_NUMERIC_LONG, new DTCellValue52("\"100\""), DataType.DataTypes.NUMERIC_LONG, 100l, false},
                 {DataType.TYPE_NUMERIC_SHORT, new DTCellValue52("\"100\""), DataType.DataTypes.NUMERIC_SHORT, new Short("100"), false},
-                {DataType.TYPE_DATE, new DTCellValue52("\"31/12/2016\""), DataType.DataTypes.DATE, FORMATTER.parse("31/12/2016"), false},
+                {DataType.TYPE_DATE, new DTCellValue52("\"31-12-2016\""), DataType.DataTypes.DATE, FORMATTER.parse("31-12-2016"), false},
 
                 {DataType.TYPE_NUMERIC, new DTCellValue52("a"), DataType.DataTypes.NUMERIC_BIGDECIMAL, null, true},
                 {DataType.TYPE_NUMERIC_BIGDECIMAL, new DTCellValue52("a"), DataType.DataTypes.NUMERIC_BIGDECIMAL, null, true},
@@ -117,10 +100,12 @@ public class DTCellValueUtilitiesTest {
 
     @Test
     public void conversion() {
-        DTCellValueUtilities.assertDTCellValue(type,
-                                               provided,
-                                               (final String value,
-                                                final DataType.DataTypes dataType) -> assertTrue(hasConversionError));
+        DTCellValueUtilities
+                .assertDTCellValue(type,
+                                   provided,
+                                   (final String value, final DataType.DataTypes dataType) ->
+                                           assertTrue(type + " should equal to " + provided.getDataType().name(),
+                                                      hasConversionError));
         assertEquals(expectedDataType,
                      provided.getDataType());
         assertEquals(expectedValue,
