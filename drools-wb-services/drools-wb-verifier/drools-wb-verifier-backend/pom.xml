@@ -117,7 +117,6 @@
                     <logLevel>INFO</logLevel>
                     <disableCastChecking>true</disableCastChecking>
                     <compileSourcesArtifacts>
-
                         <compileSourcesArtifact>org.drools:drools-workbench-models-guided-dtable</compileSourcesArtifact>
                         <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
                         <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
@@ -125,7 +124,6 @@
                         <compileSourcesArtifact>org.drools:drools-wb-verifier-api</compileSourcesArtifact>
                         <compileSourcesArtifact>org.drools:drools-wb-verifier-core</compileSourcesArtifact>
                         <compileSourcesArtifact>org.drools:drools-wb-verifier-client</compileSourcesArtifact>
-                        <compileSourcesArtifact>org.drools:drools-wb-verifier-backend</compileSourcesArtifact>
                     </compileSourcesArtifacts>
                 </configuration>
                 <executions>
