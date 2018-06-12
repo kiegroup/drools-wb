@@ -1261,6 +1261,31 @@
           <moduleName>org.drools.workbench.DroolsWorkbench</moduleName>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-sources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/${project.build.finalName}/sourcemaps</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/gwt/deploy/org.drools.workbench.DroolsWorkbench/symbolMaps</directory>
+                  <filtering>false</filtering>
+                </resource>
+                <resource>
+                  <directory>${project.build.directory}/extra/org.drools.workbench.DroolsWorkbench/src</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
       <!-- The drools-wb-ui is used just for development/testing, we don't want to publish it into remote repos. -->
       <plugin>
