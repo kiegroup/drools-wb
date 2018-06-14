@@ -205,6 +205,10 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
     <dependency>
@@ -215,6 +219,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-properties-editor-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-properties-editor-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -252,12 +260,20 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-commons-editor-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-commons</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-core-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -317,6 +333,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-wires-core-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -482,6 +502,10 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-project-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -517,6 +541,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-message-console-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-message-console-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -557,6 +585,10 @@
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-refactoring-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.services</groupId>
+      <artifactId>kie-wb-common-refactoring-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -583,6 +615,10 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-project-imports-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-project-imports-editor-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -590,6 +626,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-project-explorer-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-project-explorer-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -634,6 +674,10 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-home-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-home-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -641,6 +685,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-java-editor-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-java-editor-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -660,6 +708,10 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-default-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-default-editor-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -667,6 +719,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-server-ui-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-server-ui-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -686,6 +742,10 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-social-activities-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-social-activities-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -701,6 +761,10 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-social-home-page-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-social-home-page-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -712,6 +776,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-examples-screen-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-examples-screen-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -756,6 +824,10 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-contributors-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-contributors-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -778,6 +850,10 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-apps-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-apps-client</artifactId>
       <classifier>sources</classifier>
     </dependency>
 
@@ -796,6 +872,10 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-verifier-api</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-verifier-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.drools</groupId>
