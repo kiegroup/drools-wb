@@ -63,7 +63,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- dependencies added because of new illegal transitive dependency check -->
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
@@ -99,6 +98,16 @@
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-idm-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-idm-impl</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-impl</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -137,6 +146,28 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-api</artifactId>
+      <exclusions>
+        <!--
+        In order to avoid
+        WELD-001409: Ambiguous dependencies for type AuthenticationService with qualifiers @Default
+        at injection point [BackedAnnotatedParameter] Parameter 1 of [BackedAnnotatedMethod]
+        @Produces
+        @RequestScoped
+        @Default public org.uberfire.server.cdi.UberFireGeneralFactory.getSessionInfo(AuthenticationService)
+        at org.uberfire.server.cdi.UberFireGeneralFactory.getSessionInfo(UberFireGeneralFactory.java:42)
+  Possible dependencies:
+  - Managed Bean [class org.jboss.errai.security.server.PicketLinkAuthenticationService] with qualifiers [@Any @Default],
+  - Managed Bean [class org.uberfire.ext.security.server.ServletSecurityAuthenticationService] with qualifiers [@Any @Default]
+        -->
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-servlet-security</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -399,6 +430,11 @@
 
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-server-ui-api</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-server-ui-backend</artifactId>
     </dependency>
 
@@ -438,6 +474,53 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-library-api</artifactId>
+    </dependency>
+    <!-- Ugly, but some generated code depends on classes from client modules...
+     - is this really needed on server? i.e. is the generated class (org/jboss/errai/cdi/EventQualifierSerializerImpl.class) ever loaded?
+       - why I have never seen class loading issues even though the client artifacts weren't in WEB-INF/lib?
+     - could/should these dependencies (annotations, interfaces) be moved from -client modules, to -api modules?
+     - or should the generated classes be excluded from WEB-INF/classes? I can imagine they're generated
+       during GWT compilation, then compiled to JavaScript and never used on server
+    -->
+    <!-- org.kie.workbench.common.screens.library.client.screens.importrepository.Source etc. -->
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-library-client</artifactId>
+    </dependency>
+    <!-- org.uberfire.preferences.client.annotations.ComponentKey etc. -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-client</artifactId>
+    </dependency>
+    <!-- org.uberfire.ext.preferences.client.annotations.PreferenceForm etc. -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-ui-client</artifactId>
+    </dependency>
+    <!-- org.uberfire.client.workbench.annotations.Priority etc. -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-workbench-client</artifactId>
+    </dependency>
+    <!-- org.jboss.errai.ui.client.widget.Table etc. -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-ui</artifactId>
+    </dependency>
+    <!-- org.jboss.errai.ioc.client.api.ReplyTo etc. -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-ioc</artifactId>
+    </dependency>
+    <!-- org.jboss.errai.enterprise.client.cdi.EventQualifierSerializer -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-cdi-shared</artifactId>
+    </dependency>
+    <!-- org.jboss.errai.databinding.client.components.ListContainer etc. -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-data-binding</artifactId>
     </dependency>
 
     <dependency>
@@ -485,6 +568,10 @@
     </dependency>
 
     <!-- Drools Verifier Web Worker -->
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-verifier-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-verifier-backend</artifactId>
@@ -672,6 +759,7 @@
       </exclusions>
     </dependency>
 
+    <!-- Needed for authentication via org.jboss.errai.security.server.FormAuthenticationScheme -->
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-security-picketlink</artifactId>
@@ -722,6 +810,8 @@
       <artifactId>org.osgi.core</artifactId>
     </dependency>
 
+    <!-- TODO the hack is no longer needed IIUC. We want it in WEB-INF/lib (runtime) but we wanted to hide it from
+         compile time classpath during GWT compilation, which no longer happens in this module. -->
     <!-- hack to disable sisu annotation processing (that scans client side types) -->
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
