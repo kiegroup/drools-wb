@@ -69,11 +69,6 @@
       <artifactId>gwtbootstrap3-extras</artifactId>
     </dependency>
 
-    <!-- dependencies added because of new illegal transitive dependency check -->
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
@@ -89,10 +84,6 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-security-server</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -125,14 +116,6 @@
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-decorated-grid-widget</artifactId>
       <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.picketlink</groupId>
-      <artifactId>picketlink-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.picketlink</groupId>
-      <artifactId>picketlink-idm-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -252,11 +235,6 @@
       <artifactId>uberfire-backend-api</artifactId>
       <classifier>sources</classifier>
     </dependency>
-    <!--????-->
-    <!--<dependency>-->
-      <!--<groupId>org.uberfire</groupId>-->
-      <!--<artifactId>uberfire-backend-cdi</artifactId>-->
-    <!--</dependency>-->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-client</artifactId>
@@ -362,11 +340,6 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-simple-docks-client</artifactId>
       <classifier>sources</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-ci</artifactId>
     </dependency>
 
     <dependency>
@@ -530,11 +503,6 @@
 
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-project-builder</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
       <artifactId>uberfire-message-console-api</artifactId>
     </dependency>
     <dependency>
@@ -557,10 +525,6 @@
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-datamodel-api</artifactId>
       <classifier>sources</classifier>
-    </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-drl-extension-server</artifactId>
     </dependency>
 
     <dependency>
@@ -829,12 +793,6 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-contributors-client</artifactId>
       <classifier>sources</classifier>
-    </dependency>
-
-    <!-- KIE Workbench Playground Repository -->
-    <dependency>
-      <groupId>org.kie.workbench.playground</groupId>
-      <artifactId>kie-decision-playground</artifactId>
     </dependency>
 
     <!-- Uberfire Apps -->
@@ -1190,17 +1148,6 @@
       <artifactId>uberfire-workbench-processors</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-security-picketlink</artifactId>
-    </dependency>
-
-    <!-- Errai AS -->
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-jboss-as-support</artifactId>
-    </dependency>
-
     <!-- CDI Integration Modules -->
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -1296,15 +1243,6 @@
       <artifactId>dashbuilder-renderer-google</artifactId>
       <classifier>sources</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.dashbuilder</groupId>
-      <artifactId>dashbuilder-server-all</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.owasp.encoder</groupId>
-      <artifactId>encoder</artifactId>
-    </dependency>
 
     <!-- Test dependencies -->
     <dependency>
@@ -1321,13 +1259,6 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-testing-utils</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <!-- hack to disable sisu annotation processing (that scans client side types) -->
-    <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.inject</artifactId>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
