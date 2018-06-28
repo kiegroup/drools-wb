@@ -628,7 +628,7 @@ public class ConstraintValueEditor extends Composite {
                 final Button bindingButton = new Button(GuidedRuleEditorResources.CONSTANTS.BoundVariable());
 
                 //This Set is used as a 1flag to know whether the button has been added; due to use of callbacks
-                final Set<Button> bindingButtonContainer = new HashSet<Button>();
+                final Set<Button> bindingButtonContainer = new HashSet<>();
 
                 for (String var : bindingsInScope) {
                     helper.isApplicableBindingsInScope(var,
