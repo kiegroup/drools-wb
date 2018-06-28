@@ -131,6 +131,11 @@ public class ConstraintValueEditor extends Composite {
 
         setUpConstraint();
 
+        // DROOLS-2662
+        // Call refresh() before ConstraintValueEditorHelper is created
+        // This ensures dropDownData is not null
+        refresh();
+
         helper = new ConstraintValueEditorHelper(model,
                                                  oracle,
                                                  factType,
@@ -138,8 +143,6 @@ public class ConstraintValueEditor extends Composite {
                                                  constraint,
                                                  fieldType,
                                                  dropDownData);
-
-        refresh();
         initWidget(panel);
     }
 
