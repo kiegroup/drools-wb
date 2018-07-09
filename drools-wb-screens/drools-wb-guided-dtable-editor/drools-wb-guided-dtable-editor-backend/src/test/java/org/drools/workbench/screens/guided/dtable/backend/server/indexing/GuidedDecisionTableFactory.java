@@ -182,18 +182,25 @@ public class GuidedDecisionTableFactory {
 
         final FactPattern fp1 = new FactPattern();
         fp1.setFactType("Applicant");
+
         final SingleFieldConstraint sfc1 = new SingleFieldConstraint();
-        sfc1.setConstraintValueType(BaseSingleFieldConstraint.TYPE_PREDICATE);
-        sfc1.setValue("age = 45");
+        sfc1.setConstraintValueType(BaseSingleFieldConstraint.TYPE_LITERAL);
+        sfc1.setFactType("Applicant");
+        sfc1.setFieldName("age");
+        sfc1.setFieldBinding("$age");
         fp1.addConstraint(sfc1);
 
         final SingleFieldConstraint sfc2 = new SingleFieldConstraint();
         sfc2.setConstraintValueType(BaseSingleFieldConstraint.TYPE_LITERAL);
         sfc2.setFactType("Applicant");
-        sfc2.setOperator("==");
-        sfc2.setFieldName("age");
-        sfc2.setValue("45");
+        sfc2.setFieldName("height");
+        sfc2.setFieldBinding("$height");
         fp1.addConstraint(sfc2);
+
+        final SingleFieldConstraint sfc3 = new SingleFieldConstraint();
+        sfc3.setConstraintValueType(BaseSingleFieldConstraint.TYPE_PREDICATE);
+        sfc3.setValue("$age >= $height");
+        fp1.addConstraint(sfc3);
 
         brl.getDefinition().add(fp1);
         brl.getChildColumns().add(new BRLConditionVariableColumn("f1",

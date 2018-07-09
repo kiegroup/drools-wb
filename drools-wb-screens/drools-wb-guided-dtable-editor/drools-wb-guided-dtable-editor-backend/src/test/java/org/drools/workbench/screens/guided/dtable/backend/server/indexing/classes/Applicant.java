@@ -19,8 +19,13 @@ public class Applicant {
 
     private int age;
 
+    private int height;
+
     public int getAge() {
         return age;
     }
 
+    public int getHeight() {
+        return height;
+    }
 }
