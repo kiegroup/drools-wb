@@ -31,16 +31,15 @@ public class NumericalTypes {
     public NumericalTypes() {
     }
 
-    public NumericalTypes(
-            java.math.BigDecimal bigDecimalField,
-            java.math.BigInteger bigIntegerField,
-            Byte byteField,
-            Double doubleField,
-            Float floatField,
-            Integer integerField,
-            Long longField,
-            Short shortField,
-            String result) {
+    public NumericalTypes(java.math.BigDecimal bigDecimalField,
+                          java.math.BigInteger bigIntegerField,
+                          Byte byteField,
+                          Double doubleField,
+                          Float floatField,
+                          Integer integerField,
+                          Long longField,
+                          Short shortField,
+                          String result) {
         this.bigDecimalField = bigDecimalField;
         this.bigIntegerField = bigIntegerField;
         this.byteField = byteField;

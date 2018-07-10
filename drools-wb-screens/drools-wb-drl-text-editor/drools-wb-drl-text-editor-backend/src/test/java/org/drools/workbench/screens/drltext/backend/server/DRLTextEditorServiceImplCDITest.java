@@ -31,9 +31,6 @@ import org.junit.Test;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
 
     private static final String UNEMPLOY_ROOT = "DslSentencesInDrlFile/src/main/resources/org/kiegroup/";
@@ -72,38 +69,38 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     public void testValidDSRLFile() throws Exception {
         validateResource(UNEMPLOY);
 
-        assertEquals(0, validationMessages.size());
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
     public void testDSLCompinedWithPureDRL() throws Exception {
         validateResource(UNEMPLOY_REPLACE);
 
-        assertEquals(0, validationMessages.size());
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
     public void testInvalidDSRLFile() throws Exception {
         validateResource(UNEMPLOY_BROKEN);
 
-        assertEquals(3, validationMessages.size());
-        assertTrue(validationMessages.get(0).getText().contains("Unable to expand: a"));
-        assertTrue(validationMessages.get(1).getText().contains("Unable to expand:     b"));
-        assertTrue(validationMessages.get(2).getText().contains("mismatched input 'then'"));
+        Assertions.assertThat(validationMessages).hasSize(3);
+        Assertions.assertThat(validationMessages.get(0).getText()).contains("Unable to expand: a");
+        Assertions.assertThat(validationMessages.get(1).getText()).contains("Unable to expand:     b");
+        Assertions.assertThat(validationMessages.get(2).getText()).contains("mismatched input 'then'");
     }
 
     @Test
     public void testValidDRLFile() throws Exception {
         validateResource(CAR_DRIVING_LICENSE);
 
-        assertEquals(0, validationMessages.size());
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
     public void testDRLFileWithGlobalVariable() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_GLOBAL);
 
-        assertEquals(0, validationMessages.size());
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
@@ -120,7 +117,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     public void testDRLFileWithExplicitImport() throws Exception {
         validateResource(CAR_DRIVING_LICENSE_IMPORT);
 
-        Assertions.assertThat(validationMessages).hasSize(0);
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
@@ -137,7 +134,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     public void testValidDRLFileWithTwoRules() throws Exception {
         validateResource(CAR_BUS_DRIVING_LICENSE);
 
-        assertEquals(0, validationMessages.size());
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     @Test
@@ -155,12 +152,11 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
         final DrlModelContent content = drlService.loadContent(getPath(CAR_DRIVING_LICENSE));
 
         Assertions.assertThat(content.getDrl()).isEqualTo(drlService.load(getPath(CAR_DRIVING_LICENSE)));
-        Assertions.assertThat(content.getFullyQualifiedClassNames()).hasSize(4);
         Assertions.assertThat(content.getFullyQualifiedClassNames())
-                .contains("org.kiegroup.NumericalTypes",
-                          "org.kiegroup.Person",
-                          "org.kiegroup.DrivingLicenseApplication",
-                          "org.kiegroup.storage.Storage");
+                .containsExactlyInAnyOrder("org.kiegroup.NumericalTypes",
+                                           "org.kiegroup.Person",
+                                           "org.kiegroup.DrivingLicenseApplication",
+                                           "org.kiegroup.storage.Storage");
     }
 
     @Test
@@ -176,7 +172,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     public void testNumericalTypes() throws Exception {
         validateResource(NUMERICAL_TYPES_RULE);
 
-        Assertions.assertThat(validationMessages).hasSize(0);
+        Assertions.assertThat(validationMessages).isEmpty();
     }
 
     private Path getPath(final String resource) throws Exception {
