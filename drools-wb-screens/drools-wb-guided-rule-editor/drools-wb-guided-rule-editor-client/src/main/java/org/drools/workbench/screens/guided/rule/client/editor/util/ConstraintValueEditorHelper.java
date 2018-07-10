@@ -243,7 +243,7 @@ public class ConstraintValueEditorHelper {
         if (dropDownData != null) {
             return Arrays.equals(values, dropDownData.getFixedList());
         } else {
-            // droopDownData is null, so check if also values are null
+            // dropDownData is null, so check if also values are null
             return values == null;
         }
     }
