@@ -222,7 +222,8 @@ public class GuidedRuleModelIndexVisitor {
                                                new ValueTypeIndexTerm(fieldType),
                                                new ValueTypeIndexTerm(factType)));
         } else {
-            logger.info("Unable to index constraint FactType[" + factType + "], FieldName[" + fieldName + "], FieldType[" + fieldType + "]. Skipping.");
+            final String rule = model.name == null ? "" : "of '" + model.name + "' ";
+            logger.info("Constraint " + rule + "has FactType, FieldName or FieldType that is null. Skipping indexing of constraint.");
         }
         if (sfc.getConnectives() != null) {
             for (int i = 0; i < sfc.getConnectives().length; i++) {
