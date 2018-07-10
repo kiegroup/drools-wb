@@ -158,15 +158,15 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
         Assertions.assertThat(content.getFullyQualifiedClassNames()).hasSize(4);
         Assertions.assertThat(content.getFullyQualifiedClassNames())
                 .contains("org.kiegroup.NumericalTypes",
-                        "org.kiegroup.Person",
-                        "org.kiegroup.DrivingLicenseApplication",
-                        "org.kiegroup.storage.Storage");
+                          "org.kiegroup.Person",
+                          "org.kiegroup.DrivingLicenseApplication",
+                          "org.kiegroup.storage.Storage");
     }
 
     @Test
     public void testLoadClassFields() throws Exception {
         final List<String> fields = drlService.loadClassFields(getPath(CAR_DRIVING_LICENSE),
-                "org.kiegroup.Person");
+                                                               "org.kiegroup.Person");
 
         Assertions.assertThat(fields).hasSize(3);
         Assertions.assertThat(fields).contains("this", "age", "dummy");
@@ -188,6 +188,6 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     private void validateResource(final String resource) throws Exception {
         final URL resourceURL = getClass().getResource(resource);
         validationMessages = drlService.validate(getPath(resource),
-                IOUtils.toString(resourceURL.toURI(), "UTF-8"));
+                                                 IOUtils.toString(resourceURL.toURI(), "UTF-8"));
     }
 }

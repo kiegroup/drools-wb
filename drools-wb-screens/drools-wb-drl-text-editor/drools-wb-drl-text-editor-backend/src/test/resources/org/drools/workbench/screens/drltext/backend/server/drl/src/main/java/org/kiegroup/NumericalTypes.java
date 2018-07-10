@@ -123,5 +123,4 @@ public class NumericalTypes {
     public void setResult(String result) {
         this.result = result;
     }
-
 }
