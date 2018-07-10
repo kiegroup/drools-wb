@@ -86,7 +86,7 @@ public class ConstraintValueEditor extends Composite {
     private static final String DATE_FORMAT = ApplicationPreferences.getDroolsDateFormat();
     private static final DateTimeFormat DATE_FORMATTER = DateTimeFormat.getFormat(DATE_FORMAT);
 
-    private final ConstraintValueEditorHelper helper;
+    private ConstraintValueEditorHelper helper;
     private WorkingSetManager workingSetManager = null;
 
     private String factType;
@@ -115,11 +115,11 @@ public class ConstraintValueEditor extends Composite {
                 }
             });
 
-    public ConstraintValueEditor(BaseSingleFieldConstraint con,
-                                 CompositeFieldConstraint constraintList,
-                                 RuleModeller modeller,
-                                 EventBus eventBus,
-                                 boolean readOnly) {
+    public ConstraintValueEditor(final BaseSingleFieldConstraint con,
+                                 final CompositeFieldConstraint constraintList,
+                                 final RuleModeller modeller,
+                                 final EventBus eventBus,
+                                 final boolean readOnly) {
         this.constraint = con;
         this.constraintList = constraintList;
         this.oracle = modeller.getDataModelOracle();
@@ -128,21 +128,15 @@ public class ConstraintValueEditor extends Composite {
         this.modeller = modeller;
         this.eventBus = eventBus;
         this.readOnly = readOnly;
+    }
 
+    public void init() {
         setUpConstraint();
 
-        // DROOLS-2662
-        // Call refresh() before ConstraintValueEditorHelper is created
-        // This ensures dropDownData is not null
         refresh();
 
-        helper = new ConstraintValueEditorHelper(model,
-                                                 oracle,
-                                                 factType,
-                                                 fieldName,
-                                                 constraint,
-                                                 fieldType,
-                                                 dropDownData);
+        constructConstraintValueEditorHelper();
+
         initWidget(panel);
     }
 
@@ -776,5 +770,15 @@ public class ConstraintValueEditor extends Composite {
 
     Widget getConstraintWidget() {
         return constraintWidget;
+    }
+
+    void constructConstraintValueEditorHelper() {
+        helper = new ConstraintValueEditorHelper(model,
+                                                 oracle,
+                                                 factType,
+                                                 fieldName,
+                                                 constraint,
+                                                 fieldType,
+                                                 dropDownData);
     }
 }
