@@ -41,14 +41,17 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     private static final String UNEMPLOY_BROKEN = UNEMPLOY_ROOT + "unemploy-invalid.dslr";
     private static final String UNEMPLOY_REPLACE = UNEMPLOY_ROOT + "unemployAndReplace.dslr";
 
-    private static final String CAR_DRIVING_ROOT = "drl/src/main/resources/org/kiegroup/";
-    private static final String CAR_DRIVING_LICENSE = CAR_DRIVING_ROOT + "applyForCarDrivingLicense.drl";
-    private static final String CAR_DRIVING_LICENSE_BROKEN = CAR_DRIVING_ROOT + "applyForCarDrivingLicenseWrongConstructor.drl";
-    private static final String CAR_BUS_DRIVING_LICENSE = CAR_DRIVING_ROOT + "applyForCarAndBusDrivingLicense.drl";
-    private static final String CAR_DRIVING_LICENSE_GLOBAL = CAR_DRIVING_ROOT + "applyForCarDrivingLicenseAndStore.drl";
-    private static final String CAR_DRIVING_LICENSE_GLOBAL_BROKEN = CAR_DRIVING_ROOT + "applyForCarDrivingLicenseAndStoreBroken.drl";
-    private static final String CAR_DRIVING_LICENSE_IMPORT = CAR_DRIVING_ROOT + "addAdditionalStorage.drl";
-    private static final String CAR_DRIVING_LICENSE_IMPORT_BROKEN = CAR_DRIVING_ROOT + "addAdditionalStorageBroken.drl";
+    private static final String RULES_ROOT = "drl/src/main/resources/org/kiegroup/";
+
+    private static final String CAR_DRIVING_LICENSE = RULES_ROOT + "applyForCarDrivingLicense.drl";
+    private static final String CAR_DRIVING_LICENSE_BROKEN = RULES_ROOT + "applyForCarDrivingLicenseWrongConstructor.drl";
+    private static final String CAR_BUS_DRIVING_LICENSE = RULES_ROOT + "applyForCarAndBusDrivingLicense.drl";
+    private static final String CAR_DRIVING_LICENSE_GLOBAL = RULES_ROOT + "applyForCarDrivingLicenseAndStore.drl";
+    private static final String CAR_DRIVING_LICENSE_GLOBAL_BROKEN = RULES_ROOT + "applyForCarDrivingLicenseAndStoreBroken.drl";
+    private static final String CAR_DRIVING_LICENSE_IMPORT = RULES_ROOT + "addAdditionalStorage.drl";
+    private static final String CAR_DRIVING_LICENSE_IMPORT_BROKEN = RULES_ROOT + "addAdditionalStorageBroken.drl";
+
+    private static final String NUMERICAL_TYPES_RULE = RULES_ROOT + "numericalTypesRule.drl";
 
     private List<ValidationMessage> validationMessages;
     private DRLTextEditorService drlService;
@@ -152,20 +155,28 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
         final DrlModelContent content = drlService.loadContent(getPath(CAR_DRIVING_LICENSE));
 
         Assertions.assertThat(content.getDrl()).isEqualTo(drlService.load(getPath(CAR_DRIVING_LICENSE)));
-        Assertions.assertThat(content.getFullyQualifiedClassNames()).hasSize(3);
+        Assertions.assertThat(content.getFullyQualifiedClassNames()).hasSize(4);
         Assertions.assertThat(content.getFullyQualifiedClassNames())
-                .contains("org.kiegroup.Person",
-                          "org.kiegroup.DrivingLicenseApplication",
-                          "org.kiegroup.storage.Storage");
+                .contains("org.kiegroup.NumericalTypes",
+                        "org.kiegroup.Person",
+                        "org.kiegroup.DrivingLicenseApplication",
+                        "org.kiegroup.storage.Storage");
     }
 
     @Test
     public void testLoadClassFields() throws Exception {
         final List<String> fields = drlService.loadClassFields(getPath(CAR_DRIVING_LICENSE),
-                                                               "org.kiegroup.Person");
+                "org.kiegroup.Person");
 
         Assertions.assertThat(fields).hasSize(3);
         Assertions.assertThat(fields).contains("this", "age", "dummy");
+    }
+
+    @Test
+    public void testNumericalTypes() throws Exception {
+        validateResource(NUMERICAL_TYPES_RULE);
+
+        Assertions.assertThat(validationMessages).hasSize(0);
     }
 
     private Path getPath(final String resource) throws Exception {
@@ -177,6 +188,6 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
     private void validateResource(final String resource) throws Exception {
         final URL resourceURL = getClass().getResource(resource);
         validationMessages = drlService.validate(getPath(resource),
-                                                 IOUtils.toString(resourceURL.toURI(), "UTF-8"));
+                IOUtils.toString(resourceURL.toURI(), "UTF-8"));
     }
 }
