@@ -93,7 +93,6 @@
 
   <!-- Specify the paths for translatable code -->
   <source path='client'/>
-  <source path="org.drools.workbench.screens.scesim.client" />
 
   <set-property name="user.agent" value="gecko1_8,safari"/>
   <set-property name="locale" value="default"/>
