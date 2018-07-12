@@ -16,7 +16,7 @@
   <description>Drools Workbench - Scenario Simulation Editor - API</description>
 
   <properties>
-    <java.module.name>org.drools.wb.scesim.editor.api</java.module.name>
+    <java.module.name>org.drools.wb.scenariosimulation.editor.api</java.module.name>
   </properties>
 
   <dependencies>

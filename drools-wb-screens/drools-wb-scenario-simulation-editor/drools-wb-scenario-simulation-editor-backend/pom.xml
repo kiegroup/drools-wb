@@ -16,7 +16,7 @@
   <description>Drools Workbench - Scenario Simulation Editor - Backend</description>
 
   <properties>
-    <java.module.name>org.drools.wb.scesim.editor.backend</java.module.name>
+    <java.module.name>org.drools.wb.scenariosimulation.editor.backend</java.module.name>
   </properties>
 
   <dependencies>

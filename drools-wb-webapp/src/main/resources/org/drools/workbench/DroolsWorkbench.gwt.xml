@@ -67,8 +67,8 @@
   <inherits name="org.drools.workbench.screens.testscenario.DroolsWorkbenchTestScenarioEditorClient"/>
   <inherits name="org.drools.workbench.models.datamodel.DroolsWorkbenchDataModelAPI"/>
   <!-- ScenarioSimulation -->
-  <inherits name="org.drools.workbench.screens.scesim.DroolsWorkbenchScenarioSimulationEditorAPI" />
-  <inherits name='org.drools.workbench.screens.scesim.DroolsWorkbenchScenarioSimulationEditorClient'/>
+  <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI" />
+  <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
 
 
 

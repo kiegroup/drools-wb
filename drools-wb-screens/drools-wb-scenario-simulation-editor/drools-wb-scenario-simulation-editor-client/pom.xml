@@ -16,7 +16,7 @@
   <description>Drools Workbench - Scenario Simulation Editor - Client</description>
 
   <properties>
-    <java.module.name>org.drools.wb.scesim.editor.client</java.module.name>
+    <java.module.name>org.drools.wb.scenariosimulation.editor.client</java.module.name>
   </properties>
 
   <dependencies>
@@ -95,6 +95,10 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-message-console-client</artifactId>
     </dependency>
 
     <dependency>
