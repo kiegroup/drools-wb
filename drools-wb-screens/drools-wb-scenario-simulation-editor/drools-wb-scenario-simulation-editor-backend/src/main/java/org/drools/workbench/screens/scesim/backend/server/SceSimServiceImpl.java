@@ -16,10 +16,6 @@
 
 package org.drools.workbench.screens.scesim.backend.server;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -34,17 +30,12 @@ import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
 import org.guvnor.common.services.project.builder.events.InvalidateDMOPackageCacheEvent;
-import org.guvnor.common.services.shared.message.Level;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
-import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.bus.server.annotations.Service;
-import org.kie.scanner.KieModuleMetaData;
 import org.kie.soup.project.datamodel.commons.util.MVELEvaluator;
 import org.kie.workbench.common.services.backend.builder.service.BuildInfoService;
 import org.kie.workbench.common.services.backend.service.KieService;
-import org.kie.workbench.common.services.datamodel.backend.server.builder.util.DataEnumLoader;
-import org.kie.workbench.common.services.shared.project.KieModule;
 import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.backend.service.SaveAndRenameServiceImpl;
@@ -79,25 +70,16 @@ public class SceSimServiceImpl
     private RenameService renameService;
 
     @Inject
-    private Event<InvalidateDMOPackageCacheEvent> invalidateDMOPackageCache;
-
-    @Inject
     private Event<ResourceOpenedEvent> resourceOpenedEvent;
 
     @Inject
     private SceSimResourceTypeDefinition resourceTypeDefinition;
 
     @Inject
-    private BuildInfoService buildInfoService;
-
-    @Inject
     private CommentedOptionFactory commentedOptionFactory;
 
     @Inject
-    private MVELEvaluator evaluator;
-
-    @Inject
-    private SaveAndRenameServiceImpl<String, Metadata> saveAndRenameService;
+    private SaveAndRenameServiceImpl<SceSimModel, Metadata> saveAndRenameService;
 
     private SafeSessionInfo safeSessionInfo;
 
@@ -117,7 +99,7 @@ public class SceSimServiceImpl
     @Override
     public Path create(final Path context,
                        final String fileName,
-                       final String content,
+                       final SceSimModel content,
                        final String comment) {
         try {
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
@@ -128,7 +110,7 @@ public class SceSimServiceImpl
             }
 
             ioService.write(nioPath,
-                            content,
+                            ScenarioSimulationXMLPersistence.getInstance().marshal(content),
                             commentedOptionFactory.makeCommentedOption(comment));
 
             return newPath;
@@ -138,11 +120,11 @@ public class SceSimServiceImpl
     }
 
     @Override
-    public String load(final Path path) {
+    public SceSimModel load(final Path path) {
         try {
             final String content = ioService.readAllString(Paths.convert(path));
 
-            return content;
+            return ScenarioSimulationXMLPersistence.getInstance().unmarshal(content);
         } catch (Exception e) {
             throw ExceptionUtilities.handleException(e);
         }
@@ -160,25 +142,22 @@ public class SceSimServiceImpl
         resourceOpenedEvent.fire(new ResourceOpenedEvent(path,
                                                          safeSessionInfo));
 
-        return new SceSimModelContent(new SceSimModel(load(path)),
+        return new SceSimModelContent(load(path),
                                       overview);
     }
 
     @Override
     public Path save(final Path resource,
-                     final String content,
+                     final SceSimModel content,
                      final Metadata metadata,
                      final String comment) {
         try {
             Metadata currentMetadata = metadataService.getMetadata(resource);
             ioService.write(Paths.convert(resource),
-                            content,
+                            ScenarioSimulationXMLPersistence.getInstance().marshal(content),
                             metadataService.setUpAttributes(resource,
                                                             metadata),
                             commentedOptionFactory.makeCommentedOption(comment));
-
-            //Invalidate Package-level DMO cache as SceSims have changed.
-            invalidateDMOPackageCache.fire(new InvalidateDMOPackageCacheEvent(resource));
 
             fireMetadataSocialEvents(resource,
                                      currentMetadata,
@@ -242,68 +221,10 @@ public class SceSimServiceImpl
     }
 
     @Override
-    public boolean accepts(final Path path) {
-        return resourceTypeDefinition.accept(path);
-    }
-
-    @Override
-    public List<ValidationMessage> validate(final Path path) {
-        try {
-            final String content = ioService.readAllString(Paths.convert(path));
-            return validate(path,
-                            content);
-        } catch (Exception e) {
-            throw ExceptionUtilities.handleException(e);
-        }
-    }
-
-    @Override
-    public List<ValidationMessage> validate(final Path path,
-                                            final String content) {
-        return doValidation(path,
-                            content);
-    }
-
-    private List<ValidationMessage> doValidation(final Path path,
-                                                 final String content) {
-        try {
-            final KieModule module = moduleService.resolveModule(path);
-            final org.kie.api.builder.KieModule kieModule = buildInfoService.getBuildInfo(module).getKieModuleIgnoringErrors();
-            final ClassLoader classLoader = KieModuleMetaData.Factory.newKieModuleMetaData(kieModule).getClassLoader();
-            final DataEnumLoader loader = new DataEnumLoader(content,
-                                                             classLoader,
-                                                             evaluator);
-            if (!loader.hasErrors()) {
-                return Collections.emptyList();
-            } else {
-                final List<ValidationMessage> validationMessages = new ArrayList<>();
-                final List<String> loaderErrors = loader.getErrors();
-
-                for (final String message : loaderErrors) {
-                    validationMessages.add(makeValidationMessages(path,
-                                                                  message));
-                }
-                return validationMessages;
-            }
-        } catch (Exception e) {
-            throw ExceptionUtilities.handleException(e);
-        }
-    }
-
-    private ValidationMessage makeValidationMessages(final Path path,
-                                                     final String message) {
-        final ValidationMessage msg = new ValidationMessage();
-        msg.setPath(path);
-        msg.setLevel(Level.ERROR);
-        msg.setText(message);
-        return msg;
-    }
-
-    @Override
     public Path saveAndRename(final Path path,
                               final String newFileName,
                               final Metadata metadata,
-                              final String content,
+                              final SceSimModel content,
                               final String comment) {
         return saveAndRenameService.saveAndRename(path, newFileName, metadata, content, comment);
     }

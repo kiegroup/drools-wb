@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scesim.client.resources.SceSimEditorResources;
 import org.drools.workbench.screens.scesim.client.resources.i18n.SceSimEditorConstants;
 import org.drools.workbench.screens.scesim.client.type.SceSimResourceType;
+import org.drools.workbench.screens.scesim.model.SceSimModel;
 import org.drools.workbench.screens.scesim.service.SceSimService;
 import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.common.client.api.Caller;
@@ -77,7 +78,7 @@ public class NewSceSimHandler extends DefaultNewResourceHandler {
                                  new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageMainResourcesPath(),
                                                                                                      buildFileName(baseFileName,
                                                                                                                    resourceType),
-                                                                                                     "",
+                                                                                                     new SceSimModel(),
                                                                                                      "");
     }
 }

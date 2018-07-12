@@ -25,6 +25,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scesim.client.type.SceSimResourceType;
+import org.drools.workbench.screens.scesim.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scesim.model.SceSimModel;
 import org.drools.workbench.screens.scesim.model.SceSimModelContent;
 import org.drools.workbench.screens.scesim.service.SceSimService;
@@ -32,12 +33,10 @@ import org.guvnor.common.services.project.client.context.WorkspaceProjectContext
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
-import org.jboss.errai.common.client.api.Caller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
-import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
 import org.kie.workbench.common.widgets.client.source.ViewDRLSourceWidget;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
@@ -48,14 +47,16 @@ import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
+import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -81,8 +82,6 @@ public class SceSimEditorPresenterTest {
     @Mock
     private SceSimService sceSimService;
 
-    private Caller<SceSimService> enumServiceCaller;
-
     @Mock
     private ObservablePath path;
 
@@ -97,9 +96,6 @@ public class SceSimEditorPresenterTest {
 
     @Mock
     private SaveAndRenameCommandBuilder<String, Metadata> mockSaveAndRenameCommandBuilder;
-
-    @Mock
-    private ValidationPopup validationPopup;
 
     @Mock
     private AlertsButtonMenuItemBuilder mockAlertsButtonMenuItemBuilder;
@@ -145,25 +141,17 @@ public class SceSimEditorPresenterTest {
 
         when(mockWorkbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
 
-        this.model = new SceSimModel("'Fact.field' : ['a', 'b']");
+        this.model = new SceSimModel();
         this.content = new SceSimModelContent(model,
                                               overview);
 
         when(sceSimService.loadContent(path)).thenReturn(content);
-        // TODO GC
 
-        /*when(view.getContent()).thenReturn(new ArrayList<SceSimRow>() {{
-            add(new SceSimRow("Fact",
-                              "field",
-                              "['a', 'b']"));
-        }});
-
-        this.enumServiceCaller = new CallerMock<SceSimService>(sceSimService);
+        when(view.getContent()).thenReturn(mock(ScenarioGridPanel.class));
 
         this.presenter = new SceSimEditorPresenter(view,
-                                                   enumServiceCaller,
-                                                   type,
-                                                   validationPopup) {
+                                                   new CallerMock<>(sceSimService),
+                                                   type) {
             {
                 //Yuck, yuck, yuck... the class hierarchy is really a mess
                 this.kieView = mockKieView;
@@ -173,7 +161,6 @@ public class SceSimEditorPresenterTest {
                 this.versionRecordManager = mockVersionRecordManager;
                 this.notification = mockNotification;
                 this.workbenchContext = mockWorkbenchContext;
-                this.saveAndRenameCommandBuilder = mockSaveAndRenameCommandBuilder;
                 this.alertsButtonMenuItemBuilder = mockAlertsButtonMenuItemBuilder;
             }
 
@@ -181,11 +168,16 @@ public class SceSimEditorPresenterTest {
             protected Command getSaveAndRename() {
                 return mock(Command.class);
             }
-        };*/
+        };
     }
 
     @Test
     public void testOnStartup() {
-        assertTrue(true); // TODO: Set the tests up.
+        presenter.onStartup(mock(ObservablePath.class),
+                            mock(PlaceRequest.class));
+
+        verify(view).showLoading();
+        view.setContent(any());
+        verify(view).hideBusyIndicator();
     }
 }

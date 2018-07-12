@@ -16,10 +16,9 @@
 
 package org.drools.workbench.screens.scesim.service;
 
+import org.drools.workbench.screens.scesim.model.SceSimModel;
 import org.drools.workbench.screens.scesim.model.SceSimModelContent;
-import org.guvnor.common.services.project.builder.service.BuildValidationHelper;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
-import org.guvnor.common.services.shared.validation.ValidationService;
 import org.jboss.errai.bus.server.annotations.Remote;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
@@ -31,11 +30,9 @@ import org.uberfire.ext.editor.commons.service.support.SupportsSaveAndRename;
 @Remote
 public interface SceSimService
         extends
-        BuildValidationHelper,
-        ValidationService<String>,
-        SupportsCreate<String>,
-        SupportsRead<String>,
-        SupportsSaveAndRename<String, Metadata>,
+        SupportsCreate<SceSimModel>,
+        SupportsRead<SceSimModel>,
+        SupportsSaveAndRename<SceSimModel, Metadata>,
         SupportsDelete,
         SupportsCopy {
 

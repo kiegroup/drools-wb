@@ -31,11 +31,4 @@ public class SceSimModel {
         this.scesims = scesims;
     }
 
-    public String getEnumDefinitions() {
-        return scesims;
-    }
-
-    public void setEnumDefinitions(final String enums) {
-        this.scesims = enums;
-    }
 }

@@ -52,77 +52,7 @@ public class SceSimIndexVisitor extends ResourceReferenceCollector {
     }
 
     public void visit() {
-        if (enumLoader.hasErrors()) {
-            logger.error("Errors when indexing " + resourcePath.toAbsolutePath().toFile().getAbsolutePath());
-            return;
-        }
-        for (Map.Entry<String, String[]> e : enumLoader.getData().entrySet()) {
-            //Add type
-            final String typeName = getTypeName(e.getKey());
-            final String fullyQualifiedClassName = getFullyQualifiedClassName(typeName);
 
-            //Add field
-            final String fieldName = getFieldName(e.getKey());
-            final String fieldFullyQualifiedClassName = getFieldFullyQualifiedClassName(fullyQualifiedClassName,
-                                                                                        fieldName);
-
-            //If either type or field could not be resolved log a warning
-            if (fullyQualifiedClassName == null) {
-                logger.warn("Index entry will not be created for '" + e.getKey() + "'. Unable to determine FQCN for '" + typeName + "'. ");
-            } else {
-                ResourceReference resRef = addResourceReference(fullyQualifiedClassName,
-                                                                ResourceType.JAVA);
-                if (fieldFullyQualifiedClassName == null) {
-                    logger.warn("Index entry will not be created for '" + e.getKey() + "'. Unable to determine FQCN for '" + typeName + "." + fieldName + "'. ");
-                } else {
-                    resRef.addPartReference(fieldName,
-                                            PartType.FIELD);
-                    addResourceReference(fieldFullyQualifiedClassName,
-                                         ResourceType.JAVA);
-                }
-            }
-        }
     }
 
-    private String getTypeName(final String key) {
-        final int hashIndex = key.indexOf("#");
-        return key.substring(0,
-                             hashIndex);
-    }
-
-    private String getFieldName(final String key) {
-        final int hashIndex = key.indexOf("#");
-        return key.substring(hashIndex + 1);
-    }
-
-    private String getFullyQualifiedClassName(final String typeName) {
-        if (typeName.contains(".")) {
-            return typeName;
-        }
-        //Look-up FQCN in DMO, if not found return null and log a warning
-        for (Map.Entry<String, ModelField[]> e : dmo.getModuleModelFields().entrySet()) {
-            String fqcn = e.getKey();
-            if (e.getKey().contains(".")) {
-                fqcn = fqcn.substring(fqcn.lastIndexOf(".") + 1);
-            }
-            if (fqcn.equals(typeName)) {
-                return e.getKey();
-            }
-        }
-        return null;
-    }
-
-    private String getFieldFullyQualifiedClassName(final String fullyQualifiedClassName,
-                                                   final String fieldName) {
-        //Look-up FQCN in DMO, if not found return null and log a warning
-        final ModelField[] mfs = dmo.getModuleModelFields().get(fullyQualifiedClassName);
-        if (mfs != null) {
-            for (ModelField mf : mfs) {
-                if (mf.getName().equals(fieldName)) {
-                    return mf.getClassName();
-                }
-            }
-        }
-        return null;
-    }
 }
