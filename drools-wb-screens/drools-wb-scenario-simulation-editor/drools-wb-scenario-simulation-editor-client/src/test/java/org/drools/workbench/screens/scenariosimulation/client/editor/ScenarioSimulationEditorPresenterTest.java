@@ -58,7 +58,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationViewEditorPresenterTest {
+public class ScenarioSimulationEditorPresenterTest {
 
     @Mock
     private ScenarioSimulationView view;
@@ -166,6 +166,15 @@ public class ScenarioSimulationViewEditorPresenterTest {
     @Test
     public void testOnStartup() {
         presenter.onStartup(mock(ObservablePath.class),
+                            mock(PlaceRequest.class));
+
+        verify(view).showLoading();
+        verify(view).hideBusyIndicator();
+    }
+
+    @Test
+    public void save() {
+        presenter.save(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
 
         verify(view).showLoading();

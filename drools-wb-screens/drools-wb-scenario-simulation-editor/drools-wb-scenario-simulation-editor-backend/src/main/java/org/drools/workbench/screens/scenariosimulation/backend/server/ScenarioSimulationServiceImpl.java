@@ -125,11 +125,6 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public ScenarioSimulationModelContent loadContent(final Path path) {
-        return super.loadContent(path);
-    }
-
-    @Override
     protected ScenarioSimulationModelContent constructContent(Path path,
                                                               Overview overview) {
         //Signal opening to interested parties
@@ -146,7 +141,7 @@ public class ScenarioSimulationServiceImpl
                      final Metadata metadata,
                      final String comment) {
         try {
-            Metadata currentMetadata = metadataService.getMetadata(resource);
+            final Metadata currentMetadata = metadataService.getMetadata(resource);
             ioService.write(Paths.convert(resource),
                             ScenarioSimulationXMLPersistence.getInstance().marshal(content),
                             metadataService.setUpAttributes(resource,
