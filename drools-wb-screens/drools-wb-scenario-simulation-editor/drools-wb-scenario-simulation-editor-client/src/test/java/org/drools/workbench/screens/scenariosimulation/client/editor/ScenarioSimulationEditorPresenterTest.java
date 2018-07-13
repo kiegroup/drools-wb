@@ -18,8 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.Optional;
 
-import javax.enterprise.event.Event;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -42,6 +40,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
@@ -54,6 +53,9 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -104,12 +106,8 @@ public class ScenarioSimulationEditorPresenterTest {
     @Captor
     private ArgumentCaptor<String> enumStringArgumentCaptor;
 
-    private Event<NotificationEvent> mockNotification = new EventSourceMock<NotificationEvent>() {
-        @Override
-        public void fire(final NotificationEvent event) {
-            //Do nothing. Default implementation throws a RuntimeException
-        }
-    };
+    @Mock
+    private EventSourceMock<NotificationEvent> mockNotification;
 
     private ScenarioSimulationResourceType type;
 
@@ -141,9 +139,9 @@ public class ScenarioSimulationEditorPresenterTest {
 
         when(scenarioSimulationService.loadContent(path)).thenReturn(content);
 
-        this.presenter = new ScenarioSimulationEditorPresenter(view,
-                                                               new CallerMock<>(scenarioSimulationService),
-                                                               type) {
+        this.presenter = spy(new ScenarioSimulationEditorPresenter(view,
+                                                                   new CallerMock<>(scenarioSimulationService),
+                                                                   type) {
             {
                 this.kieView = mockKieView;
                 this.overviewWidget = mockOverviewWidget;
@@ -159,7 +157,7 @@ public class ScenarioSimulationEditorPresenterTest {
             protected Command getSaveAndRename() {
                 return mock(Command.class);
             }
-        };
+        });
     }
 
     @Test
@@ -172,13 +170,24 @@ public class ScenarioSimulationEditorPresenterTest {
     }
 
     @Test
+    public void validateButtonShouldNotBeAdded() {
+        presenter.onStartup(mock(ObservablePath.class),
+                            mock(PlaceRequest.class));
+
+        verify(presenter, never()).getValidateCommand();
+    }
+
+    @Test
     public void save() {
-//        presenter.onStartup(mock(ObservablePath.class),
-//                            mock(PlaceRequest.class));
-//
-//        presenter.save("save message");
-//
-//        verify(view).showLoading();
-//        verify(view).hideBusyIndicator();
+        presenter.onStartup(mock(ObservablePath.class),
+                            mock(PlaceRequest.class));
+
+        reset(view);
+
+        presenter.save("save message");
+
+        verify(view).hideBusyIndicator();
+        verify(mockNotification).fire(any(NotificationEvent.class));
+        verify(mockVersionRecordManager).reloadVersions(any(Path.class));
     }
 }

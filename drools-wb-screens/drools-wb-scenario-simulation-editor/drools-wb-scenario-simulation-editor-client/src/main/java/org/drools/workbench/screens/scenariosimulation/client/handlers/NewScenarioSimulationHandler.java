@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Image;
@@ -30,29 +31,39 @@ import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.common.client.api.Caller;
 import org.kie.workbench.common.widgets.client.handlers.DefaultNewResourceHandler;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
+import org.kie.workbench.common.widgets.client.handlers.NewResourceSuccessEvent;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.BusyIndicatorView;
+import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.type.ResourceTypeDefinition;
 
 /**
  * Handler for the creation of new Scenario Simulation
  */
 @ApplicationScoped
-public class NewScenarioSimulationHandler extends DefaultNewResourceHandler {
+public class NewScenarioSimulationHandler
+        extends DefaultNewResourceHandler {
 
-    @Inject
-    private Caller<ScenarioSimulationService> sceSimServiceCaller;
+    private Caller<ScenarioSimulationService> scenarioSimulationService;
 
-    @Inject
-    private PlaceManager placeManager;
-
-    @Inject
     private ScenarioSimulationResourceType resourceType;
 
     @Inject
-    private BusyIndicatorView busyIndicatorView;
+    public NewScenarioSimulationHandler(final ScenarioSimulationResourceType resourceType,
+                                        final BusyIndicatorView busyIndicatorView,
+                                        final Event<NotificationEvent> notificationEvent,
+                                        final Event<NewResourceSuccessEvent> newResourceSuccessEvent,
+                                        final PlaceManager placeManager,
+                                        final Caller<ScenarioSimulationService> scenarioSimulationService) {
+        this.resourceType = resourceType;
+        this.newResourceSuccessEvent = newResourceSuccessEvent;
+        this.busyIndicatorView = busyIndicatorView;
+        this.scenarioSimulationService = scenarioSimulationService;
+        this.placeManager = placeManager;
+        this.notificationEvent = notificationEvent;
+    }
 
     @Override
     public String getDescription() {
@@ -74,11 +85,11 @@ public class NewScenarioSimulationHandler extends DefaultNewResourceHandler {
                        final String baseFileName,
                        final NewResourcePresenter presenter) {
         busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
-        sceSimServiceCaller.call(getSuccessCallback(presenter),
-                                 new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageMainResourcesPath(),
-                                                                                                     buildFileName(baseFileName,
-                                                                                                                   resourceType),
-                                                                                                     new ScenarioSimulationModel(),
-                                                                                                     "");
+        scenarioSimulationService.call(getSuccessCallback(presenter),
+                                       new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageMainResourcesPath(),
+                                                                                                           buildFileName(baseFileName,
+                                                                                                                         resourceType),
+                                                                                                           new ScenarioSimulationModel(),
+                                                                                                           "");
     }
 }
