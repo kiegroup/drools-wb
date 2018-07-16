@@ -102,6 +102,8 @@ public class GlobalsEditorPresenter
                     .addDelete(this::onDelete);
         }
 
+        addDownloadMenuItem(fileMenuBuilder);
+
         fileMenuBuilder
                 .addValidate(getValidateCommand())
                 .addNewTopLevelMenu(versionRecordManager.buildMenu())
