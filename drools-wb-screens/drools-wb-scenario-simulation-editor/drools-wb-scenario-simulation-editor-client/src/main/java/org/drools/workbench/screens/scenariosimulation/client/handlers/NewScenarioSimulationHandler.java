@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.common.client.api.Caller;
+import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.handlers.DefaultNewResourceHandler;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.handlers.NewResourceSuccessEvent;
@@ -91,5 +92,15 @@ public class NewScenarioSimulationHandler
                                                                                                                          resourceType),
                                                                                                            new ScenarioSimulationModel(),
                                                                                                            "");
+    }
+
+    @Override
+    public boolean canCreate() {
+
+        if (ApplicationPreferences.getStringPref(ScenarioSimulationService.SCENARIO_SIMULATION_ENABLED) != null) {
+            return ApplicationPreferences.getBooleanPref(ScenarioSimulationService.SCENARIO_SIMULATION_ENABLED);
+        } else {
+            return false;
+        }
     }
 }

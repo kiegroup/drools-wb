@@ -36,5 +36,7 @@ public interface ScenarioSimulationService
         SupportsDelete,
         SupportsCopy {
 
+    String SCENARIO_SIMULATION_ENABLED = "org.kie.verification.enable-scenario-simulation";
+
     ScenarioSimulationModelContent loadContent(final Path path);
 }
