@@ -23,6 +23,6 @@ public interface ScenarioSimulationEditorImageResources
         extends
         ClientBundle {
 
-    @Source("BPM_FileIcons_scesim.png")
+    @Source("BPM_FileIcons_ScenarioSimulation.png")
     ImageResource typeScenarioSimulation();
 }
