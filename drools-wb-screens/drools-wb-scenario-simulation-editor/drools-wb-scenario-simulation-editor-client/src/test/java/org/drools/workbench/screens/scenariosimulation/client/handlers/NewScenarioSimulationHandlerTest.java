@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -22,6 +25,7 @@ import org.guvnor.common.services.project.model.Package;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
@@ -31,6 +35,8 @@ import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.workbench.events.NotificationEvent;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -81,5 +87,32 @@ public class NewScenarioSimulationHandlerTest {
         verify(notificationEvent).fire(any(NotificationEvent.class));
         verify(newResourceSuccessEvent).fire(any(NewResourcePresenter.class));
         verify(placeManager).goTo(any(Path.class));
+    }
+
+    @Test
+    public void disabledByDefault() throws Exception {
+        assertFalse(handler.canCreate());
+    }
+
+    @Test
+    public void disabledWhenDisabled() throws Exception {
+
+        final Map<String, String> preferences = new HashMap<String, String>() {{
+            put(ScenarioSimulationService.SCENARIO_SIMULATION_ENABLED,
+                "false");
+        }};
+        ApplicationPreferences.setUp(preferences);
+        assertFalse(handler.canCreate());
+    }
+
+    @Test
+    public void enabledWhenEnabled() throws Exception {
+
+        final Map<String, String> preferences = new HashMap<String, String>() {{
+            put(ScenarioSimulationService.SCENARIO_SIMULATION_ENABLED,
+                "true");
+        }};
+        ApplicationPreferences.setUp(preferences);
+        assertTrue(handler.canCreate());
     }
 }
