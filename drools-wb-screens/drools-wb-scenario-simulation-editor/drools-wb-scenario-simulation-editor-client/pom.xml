@@ -23,6 +23,10 @@
 
     <!-- dependencies added because of new illegal transitive dependency check -->
     <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
     </dependency>
@@ -61,6 +65,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-commons</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-metadata-widget</artifactId>
     </dependency>
@@ -77,6 +86,20 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-message-console-client</artifactId>
+    </dependency>
+
+    <!--Wires Grids dependencies-->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-grids</artifactId>
+      <!--<scope>provided</scope>-->
+    </dependency>
+
+    <!-- Lienzo -->
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>lienzo-core</artifactId>
+      <!-- <scope>provided</scope>-->
     </dependency>
 
     <!-- GWT and GWT Extensions -->

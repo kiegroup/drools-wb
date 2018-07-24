@@ -63,8 +63,6 @@ import static org.mockito.Mockito.when;
 public class ScenarioSimulationEditorPresenterTest {
 
     @Mock
-    private ScenarioSimulationView view;
-    @Mock
     private KieEditorWrapperView mockKieView;
 
     @Mock
@@ -139,8 +137,7 @@ public class ScenarioSimulationEditorPresenterTest {
 
         when(scenarioSimulationService.loadContent(path)).thenReturn(content);
 
-        this.presenter = spy(new ScenarioSimulationEditorPresenter(view,
-                                                                   new CallerMock<>(scenarioSimulationService),
+        this.presenter = spy(new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                    type) {
             {
                 this.kieView = mockKieView;
@@ -170,8 +167,8 @@ public class ScenarioSimulationEditorPresenterTest {
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
 
-        verify(view).showLoading();
-        verify(view).hideBusyIndicator();
+        verify(presenter.getView()).showLoading();
+        verify(presenter.getView()).hideBusyIndicator();
     }
 
     @Test
@@ -187,11 +184,11 @@ public class ScenarioSimulationEditorPresenterTest {
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
 
-        reset(view);
+        reset(presenter.getView());
 
         presenter.save("save message");
 
-        verify(view).hideBusyIndicator();
+        verify(presenter.getView()).hideBusyIndicator();
         verify(mockNotification).fire(any(NotificationEvent.class));
         verify(mockVersionRecordManager).reloadVersions(any(Path.class));
     }

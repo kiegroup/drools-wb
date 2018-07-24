@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2017 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.screens.scenariosimulation.client.values;
 
-package org.drools.workbench.screens.scenariosimulation.client.editor;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 
-import java.util.Map;
+public class ScenarioGridCellValue extends BaseGridCellValue<String> {
 
-import com.google.gwt.user.client.ui.IsWidget;
-import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
-
-public interface ScenarioSimulationView extends KieEditorView,
-                                                IsWidget {
-
-    void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
-
-}
+        public ScenarioGridCellValue(String value) {
+            super(value);
+        }
+    }
