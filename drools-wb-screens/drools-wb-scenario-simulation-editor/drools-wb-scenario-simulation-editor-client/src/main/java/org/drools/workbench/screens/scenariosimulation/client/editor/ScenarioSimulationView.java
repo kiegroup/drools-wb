@@ -16,14 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Map;
-
 import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
 
 public interface ScenarioSimulationView extends KieEditorView,
                                                 IsWidget {
-
-    void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
 
 }

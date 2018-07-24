@@ -16,36 +16,20 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Map;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.Dependent;
 
-import com.google.gwt.core.client.GWT;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import com.google.gwt.user.client.ui.Label;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorViewImpl;
 
-/**
- * Implementation of the main view for the ScenarioSimulation editor.
- *
- * This view contains a <code>ScenarioGridPanel</code>.
- *
- */
+@Dependent
 public class ScenarioSimulationViewImpl
         extends KieEditorViewImpl
         implements ScenarioSimulationView {
 
-    private ScenarioGridPanel scenarioGridPanel;
+    @PostConstruct
+    public void init() {
 
-    public ScenarioSimulationViewImpl(ScenarioGridPanel scenarioGridPanel) {
-        GWT.log("ScenarioSimulationViewImpl " +
-                        " scenarioGridPanel " + System.identityHashCode(scenarioGridPanel));
-        this.scenarioGridPanel = scenarioGridPanel;
-        initWidget(scenarioGridPanel);
+        initWidget(new Label());
     }
-
-    @Override
-    public void setContent(Map<Integer, String> headersMap, Map<Integer, Map<Integer, String>> rowsMap) {
-        GWT.log("setContent");
-        scenarioGridPanel.getScenarioGrid().setContent(headersMap, rowsMap);
-    }
-
-
 }
