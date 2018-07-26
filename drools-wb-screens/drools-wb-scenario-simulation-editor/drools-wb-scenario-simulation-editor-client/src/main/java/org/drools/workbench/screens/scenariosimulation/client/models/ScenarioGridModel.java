@@ -21,7 +21,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
@@ -78,15 +77,9 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public void clear() {
-        GWT.log("ScenarioGridModel " +
-                        "clear  " + System.identityHashCode(this));
-        GWT.log("Before Deleting rows getRowCount() " + getRowCount());
         // Deleting rows
         IntStream.range(0, getRowCount()).forEach(this::deleteRow);
-        GWT.log("After Deleting rows getRowCount() " + getRowCount());
-        GWT.log("Before Deleting columns getColumns() " + getColumns());
         // Deleting columns
         getColumns().forEach(this::deleteColumn);
-        GWT.log("After Deleting columns getColumns() " + getColumns());
     }
 }

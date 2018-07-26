@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.ait.lienzo.client.core.shape.Layer;
-import com.google.gwt.core.client.GWT;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseBounds;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
@@ -40,30 +39,6 @@ public class ScenarioGridLayer extends DefaultGridLayer {
                                      0,
                                      0,
                                      0);
-
-
-        //Column DnD handlers
-        /*addNodeMouseDownHandler(this::onNodeMouseDown);
-        addNodeMouseUpHandler(this::onNodeMouseUp);*/
-
-        //Destroy SingletonDOMElements on MouseDownEvents to ensure they're hidden:-
-        // 1) When moving columns
-        // 2) When resizing columns
-        // 3) When the User clicks outside of a GridWidget
-        // We do this rather than setFocus on GridPanel as the FocusImplSafari implementation of
-        // FocusPanel sets focus at unpredictable times which can lead to SingletonDOMElements
-        // loosing focus after they've been attached to the DOM and hence disappearing.
-       /* addNodeMouseDownHandler((event) -> {
-            for (GridWidget gridWidget : getGridWidgets()) {
-                for (GridColumn<?> gridColumn : gridWidget.getModel().getColumns()) {
-                    if (gridColumn instanceof HasSingletonDOMElementResource) {
-                        ((HasSingletonDOMElementResource) gridColumn).flush();
-                        ((HasSingletonDOMElementResource) gridColumn).destroyResources();
-                        batch();
-                    }
-                }
-            }
-        });*/
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {
@@ -85,52 +60,8 @@ public class ScenarioGridLayer extends DefaultGridLayer {
      * @return The Layer
      */
     public Layer addScenarioGrid(final ScenarioGrid scenarioGrid) {
-        GWT.log("ScenarioGridLayer addScenarioGrid " +
-                        "scenarioGrid " + System.identityHashCode(scenarioGrid));
         this.scenarioGrid = scenarioGrid;
         return super.add(scenarioGrid);
     }
-
-    /*@Override
-    public void onNodeMouseDown(NodeMouseDownEvent event) {
-        if (isRightClick(event)) {
-            GWT.log("onNodeMouseDown isRightClick");
-        } else {
-            super.onNodeMouseDown(event);
-        }
-    }
-
-    @Override
-    public void onNodeMouseUp(NodeMouseUpEvent event) {
-        if (isRightClick(event)) {
-            GWT.log("onNodeMouseUp isRightClick");
-        } else {
-            super.onNodeMouseUp(event);
-        }
-    }*/
-
-    /*protected GridWidgetDnDMouseDownHandler getGridWidgetDnDMouseDownHandler() {
-        return new NodeMouseDownHandler() {
-            @Override
-            public void onNodeMouseDown(NodeMouseDownEvent event) {
-
-            }
-        };
-    }
-
-    protected GridWidgetDnDMouseMoveHandler getGridWidgetDnDMouseMoveHandler() {
-        return new GridWidgetDnDMouseMoveHandler(this,
-                                                 state);
-    }
-
-    protected GridWidgetDnDMouseUpHandler getGridWidgetDnDMouseUpHandler() {
-        return new GridWidgetDnDMouseUpHandler(this,
-                                               state);
-    }
-
-    private boolean isRightClick(AbstractNodeMouseEvent event) {
-        int nativeButton = event.getMouseEvent().getNativeButton();
-        return nativeButton == NativeEvent.BUTTON_RIGHT;
-    }*/
 
 }

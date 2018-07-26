@@ -62,7 +62,8 @@ public class ScenarioSimulationEditorPresenter
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
                                              final ScenarioSimulationResourceType type) {
-        super(getScenarioSimulationView());
+        super();
+        this.baseView = getLocalScenarioSimulationView();
         this.service = service;
         this.type = type;
     }
@@ -128,6 +129,10 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder
                 .addNewTopLevelMenu(versionRecordManager.buildMenu())
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+    }
+
+    protected ScenarioSimulationView getLocalScenarioSimulationView()  {
+              return getScenarioSimulationView();
     }
 
     protected void loadContent() {

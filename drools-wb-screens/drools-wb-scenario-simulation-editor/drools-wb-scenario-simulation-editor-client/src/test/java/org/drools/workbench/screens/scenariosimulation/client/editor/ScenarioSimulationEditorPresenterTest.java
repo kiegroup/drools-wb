@@ -107,6 +107,9 @@ public class ScenarioSimulationEditorPresenterTest {
     @Mock
     private EventSourceMock<NotificationEvent> mockNotification;
 
+    @Mock
+    private ScenarioSimulationView scenarioSimulationView;
+
     private ScenarioSimulationResourceType type;
 
     private ScenarioSimulationEditorPresenter presenter;
@@ -158,6 +161,11 @@ public class ScenarioSimulationEditorPresenterTest {
             @Override
             protected Command getSaveAndRename() {
                 return mock(Command.class);
+            }
+
+            @Override
+            protected ScenarioSimulationView getLocalScenarioSimulationView() {
+                return scenarioSimulationView;
             }
         });
     }

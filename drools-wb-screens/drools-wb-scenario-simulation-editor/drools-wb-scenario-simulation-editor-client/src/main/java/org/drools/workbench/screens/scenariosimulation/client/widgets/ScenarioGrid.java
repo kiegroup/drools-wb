@@ -19,7 +19,6 @@ import java.util.Map;
 
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelDoubleClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -37,10 +36,6 @@ public class ScenarioGrid extends BaseGridWidget {
 
     public ScenarioGrid(ScenarioGridModel model, ScenarioGridLayer scenarioGridLayer, ScenarioGridRenderer renderer, ScenarioGridPanel scenarioGridPanel) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
-        GWT.log("ScenarioGrid " +
-                        " model " + System.identityHashCode(model) +
-                        " scenarioGridLayer " + System.identityHashCode(scenarioGridLayer) +
-                        " renderer " + System.identityHashCode(renderer));
         this.scenarioGridLayer = scenarioGridLayer;
         this.scenarioGridPanel = scenarioGridPanel;
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
