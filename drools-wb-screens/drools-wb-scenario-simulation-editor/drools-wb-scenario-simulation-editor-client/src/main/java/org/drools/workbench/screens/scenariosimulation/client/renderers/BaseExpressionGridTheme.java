@@ -67,7 +67,7 @@ public class BaseExpressionGridTheme implements GridRendererTheme {
 
     @Override
     public String getName() {
-        return "DMN Editor";
+        return "Scenario Simulation Editor";
     }
 
     @Override

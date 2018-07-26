@@ -63,7 +63,7 @@ public class ScenarioSimulationEditorPresenter
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
                                              final ScenarioSimulationResourceType type) {
         super();
-        this.baseView = getLocalScenarioSimulationView();
+        this.baseView = getLocalScenarioSimulationView();   // Indirection added for test-purpose
         this.service = service;
         this.type = type;
     }
