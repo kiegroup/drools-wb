@@ -28,7 +28,10 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
+import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -50,10 +53,17 @@ import static org.drools.workbench.screens.scenariosimulation.client.factories.S
 public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
 
+    private ImportsWidgetPresenter importsWidget;
+
+    private AsyncPackageDataModelOracleFactory oracleFactory;
+
+    private ScenarioSimulationView view;
     private ScenarioSimulationModel model;
     private Caller<ScenarioSimulationService> service;
 
     private ScenarioSimulationResourceType type;
+
+    private AsyncPackageDataModelOracle oracle;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -61,11 +71,15 @@ public class ScenarioSimulationEditorPresenter
 
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
-                                             final ScenarioSimulationResourceType type) {
+                                             final ScenarioSimulationResourceType type,
+                                             final ImportsWidgetPresenter importsWidget,
+                                             final AsyncPackageDataModelOracleFactory oracleFactory) {
         super();
         this.baseView = getLocalScenarioSimulationView();   // Indirection added for test-purpose
         this.service = service;
         this.type = type;
+        this.importsWidget = importsWidget;
+        this.oracleFactory = oracleFactory;
     }
 
     @OnStartup
@@ -74,6 +88,59 @@ public class ScenarioSimulationEditorPresenter
         super.init(path,
                    place,
                    type);
+    }
+
+    protected void loadContent() {
+        service.call(getModelSuccessCallback(),
+                     getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
+    }
+
+    @Override
+    protected Supplier<ScenarioSimulationModel> getContentSupplier() {
+        return () -> model;
+    }
+
+    private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
+        return content -> {
+            //Path is set to null when the Editor is closed (which can happen before async calls complete).
+            if (versionRecordManager.getCurrentPath() == null) {
+                return;
+            }
+
+            resetEditorPages(content.getOverview());
+
+            model = content.getModel();
+
+            oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
+                                                                   model,
+                                                                   content.getDataModel());
+
+            importsWidget.setContent(oracle,
+                                     model.getImports(),
+                                     isReadOnly);
+
+            addImportsTab(importsWidget);
+
+            view.hideBusyIndicator();
+
+            createOriginalHash(model.hashCode());
+        };
+    }
+
+    @Override
+    protected void save(final String commitMessage) {
+        service.call(getSaveSuccessCallback(model.hashCode()),
+                     new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
+                                                                          model,
+                                                                          metadata,
+                                                                          commitMessage);
+    }
+
+    @Override
+    protected void addCommonActions(final FileMenuBuilder fileMenuBuilder) {
+        fileMenuBuilder
+                .addNewTopLevelMenu(versionRecordManager.buildMenu())
+                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
     @OnClose

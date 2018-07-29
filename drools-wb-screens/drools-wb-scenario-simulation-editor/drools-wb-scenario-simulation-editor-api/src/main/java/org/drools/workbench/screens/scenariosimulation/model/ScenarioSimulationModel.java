@@ -20,9 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.kie.soup.project.datamodel.imports.HasImports;
+import org.kie.soup.project.datamodel.imports.Imports;
 
 @Portable
-public class ScenarioSimulationModel {
+public class ScenarioSimulationModel
+        implements HasImports {
 
     /**
      * Map of Header columns: key is the column number, value is the column text
@@ -32,6 +35,8 @@ public class ScenarioSimulationModel {
      * Map of rows; Key is the row number, value is a Map itself where the key is the column number and the value is the cell text
      */
     private Map<Integer, Map<Integer, String>> rowsMap;
+
+    private Imports imports = new Imports();
 
     public ScenarioSimulationModel() {
         headersMap = new HashMap<>();
@@ -51,6 +56,15 @@ public class ScenarioSimulationModel {
         return headersMap;
     }
 
+    @Override
+    public Imports getImports() {
+        return imports;
+    }
+
+    @Override
+    public void setImports(Imports imports) {
+        this.imports = imports;
+    }
     public Map<Integer, Map<Integer, String>> getRowsMap() {
         return rowsMap;
     }
