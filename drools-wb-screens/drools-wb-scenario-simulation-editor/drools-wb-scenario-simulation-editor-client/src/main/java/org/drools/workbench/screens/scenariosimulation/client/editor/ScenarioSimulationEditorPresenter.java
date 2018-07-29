@@ -57,7 +57,6 @@ public class ScenarioSimulationEditorPresenter
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
 
-    private ScenarioSimulationView view;
     private ScenarioSimulationModel model;
     private Caller<ScenarioSimulationService> service;
 
@@ -88,59 +87,6 @@ public class ScenarioSimulationEditorPresenter
         super.init(path,
                    place,
                    type);
-    }
-
-    protected void loadContent() {
-        service.call(getModelSuccessCallback(),
-                     getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
-    }
-
-    @Override
-    protected Supplier<ScenarioSimulationModel> getContentSupplier() {
-        return () -> model;
-    }
-
-    private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
-        return content -> {
-            //Path is set to null when the Editor is closed (which can happen before async calls complete).
-            if (versionRecordManager.getCurrentPath() == null) {
-                return;
-            }
-
-            resetEditorPages(content.getOverview());
-
-            model = content.getModel();
-
-            oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
-                                                                   model,
-                                                                   content.getDataModel());
-
-            importsWidget.setContent(oracle,
-                                     model.getImports(),
-                                     isReadOnly);
-
-            addImportsTab(importsWidget);
-
-            view.hideBusyIndicator();
-
-            createOriginalHash(model.hashCode());
-        };
-    }
-
-    @Override
-    protected void save(final String commitMessage) {
-        service.call(getSaveSuccessCallback(model.hashCode()),
-                     new HasBusyIndicatorDefaultErrorCallback(view)).save(versionRecordManager.getCurrentPath(),
-                                                                          model,
-                                                                          metadata,
-                                                                          commitMessage);
-    }
-
-    @Override
-    protected void addCommonActions(final FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder
-                .addNewTopLevelMenu(versionRecordManager.buildMenu())
-                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
     @OnClose
@@ -174,7 +120,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public ScenarioSimulationView getView() {
-        return (ScenarioSimulationView)baseView;
+        return (ScenarioSimulationView) baseView;
     }
 
     @Override
@@ -198,8 +144,8 @@ public class ScenarioSimulationEditorPresenter
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
-    protected ScenarioSimulationView getLocalScenarioSimulationView()  {
-              return getScenarioSimulationView();
+    protected ScenarioSimulationView getLocalScenarioSimulationView() {
+        return getScenarioSimulationView();
     }
 
     protected void loadContent() {
@@ -214,12 +160,18 @@ public class ScenarioSimulationEditorPresenter
                 return;
             }
             resetEditorPages(content.getOverview());
-            baseView.hideBusyIndicator();
             model = content.getModel();
-            ((ScenarioSimulationView)baseView).setContent(model.getHeadersMap(), model.getRowsMap());
+            oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
+                                                                   model,
+                                                                   content.getDataModel());
+            importsWidget.setContent(oracle,
+                                     model.getImports(),
+                                     isReadOnly);
+            addImportsTab(importsWidget);
+            baseView.hideBusyIndicator();
+            ((ScenarioSimulationView) baseView).setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
         };
     }
-
 
 }

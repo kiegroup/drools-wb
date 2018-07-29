@@ -18,11 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
+import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
 public class ScenarioGridModel extends BaseGridData {
@@ -59,18 +62,22 @@ public class ScenarioGridModel extends BaseGridData {
 
     @Override
     public Range setCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
-        Range toReturn =  super.setCell(rowIndex, columnIndex, cellSupplier);
+        Range toReturn = super.setCell(rowIndex, columnIndex, cellSupplier);
         optionalRowsMap.ifPresent(rowsMap -> {
-            final GridCell<String> addedCell = (GridCell<String>) getCell(rowIndex, columnIndex);
-            final String cellValue = addedCell.getValue().getValue();
-            rowsMap.computeIfPresent(rowIndex, (integer, integerStringMap) -> {
-                integerStringMap.put(columnIndex, cellValue);
-                return integerStringMap;
-            });
-            rowsMap.computeIfAbsent(rowIndex, integer -> {
-                Map<Integer, String> toReturn1 = new HashMap<>(1);
-                toReturn1.put(columnIndex, cellValue);
-                return toReturn1;
+            Optional<?> optionalValue = getOptionalCellValue(getCell(rowIndex, columnIndex));
+            optionalValue.ifPresent((Consumer<Object>) rawValue -> {
+                if (rawValue instanceof String) { // Just to avoid unchecked cast - BaseGridData/GridRow should be generified
+                    final String cellValue = (String) rawValue;
+                    rowsMap.computeIfPresent(rowIndex, (integer, integerStringMap) -> {
+                        integerStringMap.put(columnIndex, cellValue);
+                        return integerStringMap;
+                    });
+                    rowsMap.computeIfAbsent(rowIndex, integer -> {
+                        Map<Integer, String> toReturn1 = new HashMap<>(1);
+                        toReturn1.put(columnIndex, cellValue);
+                        return toReturn1;
+                    });
+                }
             });
         });
         return toReturn;
@@ -81,5 +88,13 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(0, getRowCount()).forEach(this::deleteRow);
         // Deleting columns
         getColumns().forEach(this::deleteColumn);
+    }
+
+    // Helper method to avoid potential NPE
+    private Optional<?> getOptionalCellValue(GridCell<?> gridCell) {
+        if (gridCell == null) {
+            return Optional.empty();
+        }
+        return gridCell.getValue() != null ? Optional.of(gridCell.getValue().getValue()) : Optional.empty();
     }
 }
