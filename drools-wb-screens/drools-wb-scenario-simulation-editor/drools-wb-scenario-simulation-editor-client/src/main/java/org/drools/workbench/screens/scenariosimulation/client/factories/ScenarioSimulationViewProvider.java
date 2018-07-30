@@ -30,25 +30,25 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class ScenarioSimulationViewProvider {
 
 
-    public static ScenarioSimulationView getScenarioSimulationView() {
-        return new ScenarioSimulationViewImpl(getScenarioGridPanel());
+    public static ScenarioSimulationView newScenarioSimulationView() {
+        return new ScenarioSimulationViewImpl(newScenarioGridPanel());
     }
 
 
-    private static ScenarioGridPanel getScenarioGridPanel() {
+    private static ScenarioGridPanel newScenarioGridPanel() {
         final ScenarioGridLayer scenarioGridLayer = new ScenarioGridLayer();
-        ScenarioGridPanel toReturn = new ScenarioGridPanel(getScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer), scenarioGridLayer);
-        ScenarioGrid scenarioGrid = getScenarioGrid(toReturn, scenarioGridLayer);
+        ScenarioGridPanel toReturn = new ScenarioGridPanel(newScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer), scenarioGridLayer);
+        ScenarioGrid scenarioGrid = newScenarioGrid(toReturn, scenarioGridLayer);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         toReturn.add(scenarioGridLayer);
         return toReturn;
     }
 
-    private static ScenarioGrid getScenarioGrid(final ScenarioGridPanel scenarioGridPanel, final ScenarioGridLayer scenarioGridLayer) {
+    private static ScenarioGrid newScenarioGrid(final ScenarioGridPanel scenarioGridPanel, final ScenarioGridLayer scenarioGridLayer) {
         return new ScenarioGrid(new ScenarioGridModel(), scenarioGridLayer, new ScenarioGridRenderer(false), scenarioGridPanel);
     }
 
-    private static  ScenarioSimulationGridPanelContextMenuHandler getScenarioSimulationGridPanelContextMenuHandler(final ScenarioGridLayer scenarioGridLayer) {
+    private static  ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGridLayer scenarioGridLayer) {
         return new ScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer);
     }
 

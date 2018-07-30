@@ -61,6 +61,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -180,7 +181,7 @@ public class ScenarioSimulationEditorPresenterTest {
             }
 
             @Override
-            protected ScenarioSimulationView getLocalScenarioSimulationView() {
+            protected ScenarioSimulationView newScenarioSimulationView() {
                 return scenarioSimulationView;
             }
         });
@@ -190,20 +191,18 @@ public class ScenarioSimulationEditorPresenterTest {
     public void testOnStartup() {
 
         final AsyncPackageDataModelOracle oracle = mock(AsyncPackageDataModelOracle.class);
-
         when(oracleFactory.makeAsyncPackageDataModelOracle(any(),
                                                            eq(model),
                                                            eq(content.getDataModel()))).thenReturn(oracle);
-
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-
         verify(importsWidget).setContent(oracle,
                                          model.getImports(),
                                          false);
         verify(mockKieView).addImportsTab(importsWidget);
         verify(presenter.getView()).showLoading();
         verify(presenter.getView()).hideBusyIndicator();
+        verify(presenter.newScenarioSimulationView(), times(1));
     }
 
     @Test

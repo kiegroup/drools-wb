@@ -22,6 +22,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -45,8 +46,6 @@ import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-
-import static org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider.getScenarioSimulationView;
 
 @Dependent
 @WorkbenchEditor(identifier = "ScenarioSimulationEditor", supportedTypes = {ScenarioSimulationResourceType.class})
@@ -74,7 +73,7 @@ public class ScenarioSimulationEditorPresenter
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory) {
         super();
-        this.baseView = getLocalScenarioSimulationView();   // Indirection added for test-purpose
+        this.baseView = newScenarioSimulationView();   // Indirection added for test-purpose
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
@@ -144,8 +143,9 @@ public class ScenarioSimulationEditorPresenter
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
-    protected ScenarioSimulationView getLocalScenarioSimulationView() {
-        return getScenarioSimulationView();
+    // Add only for testing purpose
+    protected ScenarioSimulationView newScenarioSimulationView() {
+        return ScenarioSimulationViewProvider.newScenarioSimulationView();
     }
 
     protected void loadContent() {
