@@ -315,11 +315,6 @@
       <artifactId>drools-workbench-models-commons</artifactId>
     </dependency>
 
-    <!--<dependency>-->
-    <!--<groupId>org.drools</groupId>-->
-    <!--<artifactId>drools-workbench-models-test-scenarios</artifactId>-->
-    <!--</dependency>-->
-
     <!-- Guvnor -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -544,7 +539,6 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-workbench-client</artifactId>
-      <!--<scope>provided</scope>-->
       <exclusions>
         <exclusion>
           <groupId>org.uberfire</groupId>
@@ -617,8 +611,6 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
-      <!-- TODO CHECK WHAT IS ACTUALLY NEEDED -->
-      <!--<scope>provided</scope>-->
     </dependency>
 
     <!-- UberFire PlugIn Extension -->
@@ -708,7 +700,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-wires-core-grids</artifactId>
-      <!--<scope>provided</scope>-->
     </dependency>
 
     <!-- Lienzo -->
@@ -865,7 +856,7 @@
     <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 
     <plugins>
-      <!-- Let's try to include scenario-simulation sources for hot reload -->
+      <!-- Include scenario-simulation sources for hot reload -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -958,7 +949,6 @@
             <compileSourcesArtifact>org.drools:drools-workbench-models-commons</compileSourcesArtifact>
             <!-- drools-wb -->
             <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-api</compileSourcesArtifact>
-            <!--<compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-client</compileSourcesArtifact>-->
 
             <!-- UberFire Extensions -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>
@@ -981,9 +971,6 @@
             <compileSourcesArtifact>org.uberfire:uberfire-social-activities-client</compileSourcesArtifact>
 
             <!-- Wires -->
-            <!--<compileSourcesArtifact>org.uberfire:uberfire-wires-core-api</compileSourcesArtifact>-->
-            <!--<compileSourcesArtifact>org.uberfire:uberfire-wires-core-client</compileSourcesArtifact>-->
-            <!--<compileSourcesArtifact>org.uberfire:uberfire-wires-core-trees</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
 
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
