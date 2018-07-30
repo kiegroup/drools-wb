@@ -62,6 +62,7 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationResourceType type;
 
     private AsyncPackageDataModelOracle oracle;
+    private ScenarioSimulationView view;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -73,7 +74,8 @@ public class ScenarioSimulationEditorPresenter
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory) {
         super();
-        this.baseView = newScenarioSimulationView();   // Indirection added for test-purpose
+        this.view = newScenarioSimulationView();   // Indirection added for test-purpose
+        this.baseView = view;
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
@@ -119,7 +121,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public ScenarioSimulationView getView() {
-        return (ScenarioSimulationView) baseView;
+        return view;
     }
 
     @Override
@@ -169,7 +171,7 @@ public class ScenarioSimulationEditorPresenter
                                      isReadOnly);
             addImportsTab(importsWidget);
             baseView.hideBusyIndicator();
-            ((ScenarioSimulationView) baseView).setContent(model.getHeadersMap(), model.getRowsMap());
+            view.setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
         };
     }
