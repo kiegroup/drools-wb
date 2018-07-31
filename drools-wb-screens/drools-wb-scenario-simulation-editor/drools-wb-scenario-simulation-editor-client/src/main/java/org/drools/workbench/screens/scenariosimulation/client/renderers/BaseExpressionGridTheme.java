@@ -122,29 +122,7 @@ public class BaseExpressionGridTheme implements GridRendererTheme {
     @Override
     public Rectangle getBodyBackground(final GridColumn<?> column) {
         final Rectangle background = new Rectangle(0, 0);
-       /* if (column instanceof NameColumn) {
-            background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof org.kie.workbench.common.dmn.client.editors.expressions.types.invocation.NameColumn) {
-            background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof org.kie.workbench.common.dmn.client.editors.expressions.types.function.supplementary.NameColumn) {
-            background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof RelationColumn) {
-            background.setFillColor(RELATION_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof LiteralExpressionColumn) {
-            background.setFillColor(LITERAL_EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof RowNumberColumn) {
-            background.setFillColor(ROW_NUMBER_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof InputClauseColumn) {
-            background.setFillColor(INPUT_CLAUSE_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof OutputClauseColumn) {
-            background.setFillColor(OUTPUT_CLAUSE_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof DescriptionColumn) {
-            background.setFillColor(DESCRIPTION_COLUMN_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof ExpressionEditorColumn) {
-            background.setFillColor(EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR);
-        } else if (column instanceof UndefinedExpressionColumn) {
-            background.setFillColor(UNDEFINED_EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR);
-        }*/
+        // to customize background on column-type base, set the fill color (e.g. background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR); ) based on the column type
         return background;
     }
 
