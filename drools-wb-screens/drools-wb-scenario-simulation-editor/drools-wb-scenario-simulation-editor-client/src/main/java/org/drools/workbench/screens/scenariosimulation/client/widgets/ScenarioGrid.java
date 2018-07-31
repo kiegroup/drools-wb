@@ -60,16 +60,12 @@ public class ScenarioGrid extends BaseGridWidget {
     private void setHeaderColumns(Map<Integer, String> headersMap) {
         headersMap.forEach((columnIndex, columnTitle) ->
                                    model.insertColumn(columnIndex, getScenarioGridColumn(columnTitle, scenarioGridPanel, scenarioGridLayer)));
-
-
     }
 
     private void appendRows(Map<Integer, Map<Integer, String>> rowsMap) {
-        if (!rowsMap.isEmpty()) {
-            rowsMap.forEach((rowIndex, cellValueMap) -> {
-                model.insertRow(rowIndex, new ScenarioGridRow());
-                cellValueMap.forEach((columnIndex, cellValue) -> model.setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(cellValue))));
-            });
-        }
+        rowsMap.forEach((rowIndex, cellValueMap) -> {
+            model.insertRow(rowIndex, new ScenarioGridRow());
+            cellValueMap.forEach((columnIndex, cellValue) -> model.setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(cellValue))));
+        });
     }
 }
