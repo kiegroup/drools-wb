@@ -62,7 +62,7 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationResourceType type;
 
     private AsyncPackageDataModelOracle oracle;
-    private ScenarioSimulationView view;
+    protected ScenarioSimulationView view;  // making protected for test purposes
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies

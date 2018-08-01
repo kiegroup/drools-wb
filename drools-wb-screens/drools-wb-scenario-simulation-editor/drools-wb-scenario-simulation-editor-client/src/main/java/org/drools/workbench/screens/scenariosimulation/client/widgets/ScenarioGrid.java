@@ -41,6 +41,13 @@ public class ScenarioGrid extends BaseGridWidget {
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
 
+    public void setContent(Map<Integer, String> headersMap, Map<Integer, Map<Integer, String>> rowsMap) {
+        ((ScenarioGridModel) model).clear();
+        ((ScenarioGridModel) model).bindContent(headersMap, rowsMap);
+        setHeaderColumns(headersMap);
+        appendRows(rowsMap);
+    }
+
     @Override
     protected NodeMouseDoubleClickHandler getGridMouseDoubleClickHandler(final GridSelectionManager selectionManager,
                                                                          final GridPinnedModeManager pinnedModeManager) {
@@ -48,13 +55,6 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                  selectionManager,
                                                                  pinnedModeManager,
                                                                  renderer);
-    }
-
-    public void setContent(Map<Integer, String> headersMap, Map<Integer, Map<Integer, String>> rowsMap) {
-        ((ScenarioGridModel) model).clear();
-        ((ScenarioGridModel) model).bindContent(headersMap, rowsMap);
-        setHeaderColumns(headersMap);
-        appendRows(rowsMap);
     }
 
     private void setHeaderColumns(Map<Integer, String> headersMap) {

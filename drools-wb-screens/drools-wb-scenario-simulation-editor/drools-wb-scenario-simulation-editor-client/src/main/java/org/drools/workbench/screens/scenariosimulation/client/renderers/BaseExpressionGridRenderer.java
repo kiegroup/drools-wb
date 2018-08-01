@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.renderers;
 
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRenderer;
+
 public class BaseExpressionGridRenderer extends BaseGridRenderer {
 
     protected static final double HEADER_HEIGHT = 64;
