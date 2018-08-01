@@ -15,7 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -83,9 +85,23 @@ public class ScenarioGridModel extends BaseGridData {
 
     public void clear() {
         // Deleting rows
-        IntStream.range(0, getRowCount()).forEach(this::deleteRow);
+        int to = getRowCount();
+        IntStream.range(0, to)
+                .map(i -> to - i - 1)
+                .forEach(this::deleteRow);
+        optionalRowsMap.ifPresent(Map::clear);
         // Deleting columns
-        getColumns().forEach(this::deleteColumn);
+        List<GridColumn<?>> copyList = new ArrayList<>(getColumns());
+        copyList.forEach(this::deleteColumn);
+        optionalHeadersMap.ifPresent(Map::clear);
+    }
+
+    protected Optional<Map<Integer, String>> getOptionalHeadersMap() {
+        return optionalHeadersMap;
+    }
+
+    protected Optional<Map<Integer, Map<Integer, String>>> getOptionalRowsMap() {
+        return optionalRowsMap;
     }
 
     // Helper method to avoid potential NPE

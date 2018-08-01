@@ -16,40 +16,14 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Optional;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
-import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
-import org.guvnor.common.services.shared.metadata.model.Metadata;
-import org.guvnor.common.services.shared.metadata.model.Overview;
-import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
-import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
-import org.kie.workbench.common.widgets.client.source.ViewDRLSourceWidget;
-import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
-import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
-import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
-import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
-import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
-import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.mocks.CallerMock;
-import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
@@ -66,95 +40,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationEditorPresenterTest {
-
-    @Mock
-    private ScenarioSimulationView view;
-    @Mock
-    private KieEditorWrapperView mockKieView;
-
-    @Mock
-    private OverviewWidgetPresenter mockOverviewWidget;
-
-    @Mock
-    private VersionRecordManager mockVersionRecordManager;
-
-    @Mock
-    private FileMenuBuilder mockFileMenuBuilder;
-
-    @Mock
-    private DefaultFileNameValidator mockFileNameValidator;
-
-    @Mock
-    private ScenarioSimulationService scenarioSimulationService;
-
-    @Mock
-    private ObservablePath path;
-
-    @Mock
-    private PlaceRequest place;
-
-    @Mock
-    private Overview overview;
-
-    @Mock
-    private WorkspaceProjectContext mockWorkbenchContext;
-
-    @Mock
-    private SaveAndRenameCommandBuilder<String, Metadata> mockSaveAndRenameCommandBuilder;
-
-    @Mock
-    private AlertsButtonMenuItemBuilder mockAlertsButtonMenuItemBuilder;
-
-    @GwtMock
-    private ViewDRLSourceWidget sourceWidget;
-
-    @Captor
-    private ArgumentCaptor<String> enumStringArgumentCaptor;
-
-    @Mock
-    private EventSourceMock<NotificationEvent> mockNotification;
-
-    @Mock
-    private ScenarioSimulationView scenarioSimulationView;
-
-    @Mock
-    private ImportsWidgetPresenter importsWidget;
-
-    @Mock
-    private AsyncPackageDataModelOracleFactory oracleFactory;
-
-    private ScenarioSimulationResourceType type;
+public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimulationEditorTest {
 
     private ScenarioSimulationEditorPresenter presenter;
 
-    private ScenarioSimulationModelContent content;
-    private ScenarioSimulationModel model;
-
     @Before
     public void setup() {
-        this.type = GWT.create(ScenarioSimulationResourceType.class);
-
-        //Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
-        when(mockFileMenuBuilder.addSave(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
-        when(mockFileMenuBuilder.addCopy(any(ObservablePath.class), any(DefaultFileNameValidator.class))).thenReturn(mockFileMenuBuilder);
-        when(mockFileMenuBuilder.addRename(any(Command.class))).thenReturn(mockFileMenuBuilder);
-        when(mockFileMenuBuilder.addDelete(any(ObservablePath.class))).thenReturn(mockFileMenuBuilder);
-        when(mockFileMenuBuilder.addValidate(any(Command.class))).thenReturn(mockFileMenuBuilder);
-        when(mockFileMenuBuilder.addNewTopLevelMenu(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
-
-        when(mockVersionRecordManager.getCurrentPath()).thenReturn(path);
-        when(mockVersionRecordManager.getPathToLatest()).thenReturn(path);
-
-        when(mockWorkbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
-
-        this.model = new ScenarioSimulationModel();
-        this.content = new ScenarioSimulationModelContent(model,
-                                                          overview,
-                                                          mock(PackageDataModelOracleBaselinePayload.class));
-
-        when(scenarioSimulationService.loadContent(path)).thenReturn(content);
-
+        super.setup();
         this.presenter = spy(new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                    type,
                                                                    importsWidget,
@@ -182,7 +74,7 @@ public class ScenarioSimulationEditorPresenterTest {
 
             @Override
             protected ScenarioSimulationView newScenarioSimulationView() {
-                return scenarioSimulationView;
+                return mock(ScenarioSimulationViewImpl.class);
             }
         });
     }
@@ -217,7 +109,6 @@ public class ScenarioSimulationEditorPresenterTest {
     public void save() {
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-
         reset(presenter.getView());
 
         presenter.save("save message");
