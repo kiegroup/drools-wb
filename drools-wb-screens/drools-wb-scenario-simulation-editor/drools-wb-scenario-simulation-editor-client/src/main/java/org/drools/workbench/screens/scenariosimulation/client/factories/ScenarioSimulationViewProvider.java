@@ -29,11 +29,9 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  */
 public class ScenarioSimulationViewProvider {
 
-
     public static ScenarioSimulationView newScenarioSimulationView() {
         return new ScenarioSimulationViewImpl(newScenarioGridPanel());
     }
-
 
     private static ScenarioGridPanel newScenarioGridPanel() {
         final ScenarioGridLayer scenarioGridLayer = new ScenarioGridLayer();
@@ -48,8 +46,7 @@ public class ScenarioSimulationViewProvider {
         return new ScenarioGrid(new ScenarioGridModel(), scenarioGridLayer, new ScenarioGridRenderer(false), scenarioGridPanel);
     }
 
-    private static  ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGridLayer scenarioGridLayer) {
+    private static ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGridLayer scenarioGridLayer) {
         return new ScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer);
     }
-
 }

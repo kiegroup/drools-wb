@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -86,6 +88,12 @@ public abstract class AbstractScenarioSimulationEditorTest {
     @Mock
     protected AsyncPackageDataModelOracleFactory oracleFactory;
 
+    @Mock
+    protected ScenarioGridPanel scenarioGridPanel;
+
+    @Mock
+    protected ScenarioGrid scenarioGrid;
+
     protected ScenarioSimulationResourceType type;
 
     protected ScenarioSimulationModelContent content;
@@ -113,5 +121,7 @@ public abstract class AbstractScenarioSimulationEditorTest {
                                                           mock(PackageDataModelOracleBaselinePayload.class));
 
         when(scenarioSimulationService.loadContent(path)).thenReturn(content);
+
+        when(scenarioGridPanel.getScenarioGrid()).thenReturn(scenarioGrid);
     }
 }

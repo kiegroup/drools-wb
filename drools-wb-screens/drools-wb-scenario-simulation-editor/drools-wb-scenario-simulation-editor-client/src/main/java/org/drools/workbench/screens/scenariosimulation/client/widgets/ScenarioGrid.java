@@ -38,6 +38,7 @@ public class ScenarioGrid extends BaseGridWidget {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
         this.scenarioGridLayer = scenarioGridLayer;
         this.scenarioGridPanel = scenarioGridPanel;
+        setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
 
@@ -52,6 +53,17 @@ public class ScenarioGrid extends BaseGridWidget {
     public ScenarioGridLayer getScenarioGridLayer() {
         return scenarioGridLayer;
     }
+
+//    @Override
+//    public Group setDraggable(boolean draggable) {
+//        GWT.log("setDraggable " + draggable);
+//        return super.setDraggable(draggable);
+//    }
+//
+//    @Override
+//    public boolean isDraggable() {
+//        return false; // FOR SOME REASON, event if setDraggable(false) in the constructor, the base method returns true
+//    }
 
     @Override
     protected NodeMouseDoubleClickHandler getGridMouseDoubleClickHandler(final GridSelectionManager selectionManager,

@@ -25,6 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
+import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
@@ -47,8 +48,8 @@ public class ScenarioGridModel extends BaseGridData {
      * @param rowsMap
      */
     public void bindContent(Map<Integer, String> headersMap, Map<Integer, Map<Integer, String>> rowsMap) {
-        this.optionalHeadersMap = Optional.of(headersMap);
-        this.optionalRowsMap = Optional.of(rowsMap);
+        this.optionalHeadersMap = Optional.ofNullable(headersMap);
+        this.optionalRowsMap = Optional.ofNullable(rowsMap);
     }
 
     @Override
@@ -64,7 +65,7 @@ public class ScenarioGridModel extends BaseGridData {
     public Range setCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
         Range toReturn = super.setCell(rowIndex, columnIndex, cellSupplier);
         optionalRowsMap.ifPresent(rowsMap -> {
-            Optional<?> optionalValue = getOptionalCellValue(getCell(rowIndex, columnIndex));
+            Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
             optionalValue.ifPresent((Consumer<Object>) rawValue -> {
                 if (rawValue instanceof String) { // Just to avoid unchecked cast - BaseGridData/GridRow should be generified
                     final String cellValue = (String) rawValue;
@@ -105,10 +106,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     // Helper method to avoid potential NPE
-    private Optional<?> getOptionalCellValue(GridCell<?> gridCell) {
-        if (gridCell == null) {
-            return Optional.empty();
-        }
-        return gridCell.getValue() != null ? Optional.of(gridCell.getValue().getValue()) : Optional.empty();
+    private Optional<?> getCellValue(GridCell<?> gridCell) {
+        return Optional.ofNullable(gridCell).map(GridCell::getValue).map(GridCellValue::getValue);
     }
 }

@@ -17,10 +17,12 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.mocks.CallerMock;
@@ -44,9 +46,20 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     private ScenarioSimulationEditorPresenter presenter;
 
+    @Mock
+    private ScenarioGridLayer scenarioGridLayer;
+
+    @Mock
+    private ScenarioSimulationView scenarioSimulationView;
+
     @Before
     public void setup() {
         super.setup();
+        //ScenarioSimulationView scenarioSimulationView = mock(ScenarioSimulationViewImpl.class);
+        when(scenarioSimulationView.getScenarioGridPanel()).thenReturn(scenarioGridPanel);
+
+        when(scenarioGridPanel.getDefaultGridLayer()).thenReturn(scenarioGridLayer);
+
         this.presenter = spy(new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                    type,
                                                                    importsWidget,
@@ -74,7 +87,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             @Override
             protected ScenarioSimulationView newScenarioSimulationView() {
-                return mock(ScenarioSimulationViewImpl.class);
+                return scenarioSimulationView/*mock(ScenarioSimulationViewImpl.class)*/;
             }
         });
     }
@@ -94,6 +107,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(mockKieView).addImportsTab(importsWidget);
         verify(presenter.getView()).showLoading();
         verify(presenter.getView()).hideBusyIndicator();
+        verify(scenarioGridLayer, times(1)).enterPinnedMode(any(), any());
         verify(presenter.newScenarioSimulationView(), times(1));
     }
 

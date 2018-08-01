@@ -88,6 +88,7 @@ public class ScenarioSimulationEditorPresenter
         super.init(path,
                    place,
                    type);
+        view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {});  // Horrible hack due to  default implementation/design
     }
 
     @OnClose
@@ -133,9 +134,9 @@ public class ScenarioSimulationEditorPresenter
     protected void save(final String commitMessage) {
         service.call(getSaveSuccessCallback(model.hashCode()),
                      new HasBusyIndicatorDefaultErrorCallback(baseView)).save(versionRecordManager.getCurrentPath(),
-                                                                          model,
-                                                                          metadata,
-                                                                          commitMessage);
+                                                                              model,
+                                                                              metadata,
+                                                                              commitMessage);
     }
 
     @Override
@@ -175,5 +176,4 @@ public class ScenarioSimulationEditorPresenter
             createOriginalHash(model.hashCode());
         };
     }
-
 }
