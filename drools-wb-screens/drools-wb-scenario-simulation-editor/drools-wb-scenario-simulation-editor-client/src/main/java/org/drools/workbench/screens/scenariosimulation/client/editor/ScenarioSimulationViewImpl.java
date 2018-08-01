@@ -44,5 +44,8 @@ public class ScenarioSimulationViewImpl
         scenarioGridPanel.getScenarioGrid().setContent(headersMap, rowsMap);
     }
 
-
+    @Override
+    public ScenarioGridPanel getScenarioGridPanel() {
+        return scenarioGridPanel;
+    }
 }

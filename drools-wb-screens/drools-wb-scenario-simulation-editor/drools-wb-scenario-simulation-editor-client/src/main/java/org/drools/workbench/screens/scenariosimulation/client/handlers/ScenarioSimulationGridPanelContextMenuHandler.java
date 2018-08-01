@@ -39,6 +39,11 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
         this.scenarioGridPanel = scenarioGridPanel;
     }
 
+    // Add for testing purpose
+    public ScenarioGridLayer getScenarioGridLayer() {
+        return scenarioGridLayer;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void onContextMenu(final ContextMenuEvent event) {

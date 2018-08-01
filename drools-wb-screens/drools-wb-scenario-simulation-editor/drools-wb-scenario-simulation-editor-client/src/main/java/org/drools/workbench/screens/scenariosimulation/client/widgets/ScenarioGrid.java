@@ -48,6 +48,11 @@ public class ScenarioGrid extends BaseGridWidget {
         appendRows(rowsMap);
     }
 
+    // Add for testing purpose
+    public ScenarioGridLayer getScenarioGridLayer() {
+        return scenarioGridLayer;
+    }
+
     @Override
     protected NodeMouseDoubleClickHandler getGridMouseDoubleClickHandler(final GridSelectionManager selectionManager,
                                                                          final GridPinnedModeManager pinnedModeManager) {

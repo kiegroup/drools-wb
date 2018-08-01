@@ -37,7 +37,7 @@ public class ScenarioSimulationViewProvider {
 
     private static ScenarioGridPanel newScenarioGridPanel() {
         final ScenarioGridLayer scenarioGridLayer = new ScenarioGridLayer();
-        ScenarioGridPanel toReturn = new ScenarioGridPanel(newScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer), scenarioGridLayer);
+        ScenarioGridPanel toReturn = new ScenarioGridPanel(newScenarioSimulationGridPanelContextMenuHandler(scenarioGridLayer));
         ScenarioGrid scenarioGrid = newScenarioGrid(toReturn, scenarioGridLayer);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         toReturn.add(scenarioGridLayer);
