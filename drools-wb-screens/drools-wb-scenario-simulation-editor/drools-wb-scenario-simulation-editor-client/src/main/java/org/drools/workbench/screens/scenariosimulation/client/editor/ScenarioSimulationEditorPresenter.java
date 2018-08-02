@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -42,6 +43,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -49,10 +51,14 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
+import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
+
 @Dependent
-@WorkbenchEditor(identifier = "ScenarioSimulationEditor", supportedTypes = {ScenarioSimulationResourceType.class})
+@WorkbenchEditor(identifier = IDENTIFIER, supportedTypes = {ScenarioSimulationResourceType.class})
 public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
+
+    public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
     private ImportsWidgetPresenter importsWidget;
 
@@ -65,6 +71,9 @@ public class ScenarioSimulationEditorPresenter
 
     private AsyncPackageDataModelOracle oracle;
     protected ScenarioSimulationView view;  // making protected for test purposes
+
+    @Inject
+    private RightPanelMenuItem rightPanelMenuItem;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -92,7 +101,8 @@ public class ScenarioSimulationEditorPresenter
         super.init(path,
                    place,
                    type);
-        view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {});  // Horrible hack due to  default implementation/design
+        view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {
+        });  // Horrible hack due to  default implementation/design
     }
 
     @OnClose
@@ -129,6 +139,15 @@ public class ScenarioSimulationEditorPresenter
         return view;
     }
 
+    /**
+     * If you want to customize the menu override this method.
+     */
+    @Override
+    protected void makeMenuBar() {
+        super.makeMenuBar();
+        addRightPanelMenuItem(fileMenuBuilder);
+    }
+
     @Override
     protected Supplier<ScenarioSimulationModel> getContentSupplier() {
         return () -> model;
@@ -160,7 +179,7 @@ public class ScenarioSimulationEditorPresenter
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
+    protected RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
         return content -> {
             //Path is set to null when the Editor is closed (which can happen before async calls complete).
             if (versionRecordManager.getCurrentPath() == null) {
@@ -180,5 +199,9 @@ public class ScenarioSimulationEditorPresenter
             createOriginalHash(model.hashCode());
             placeManager.goTo(RightPanelPresenter.IDENTIFIER);
         };
+    }
+
+    private void addRightPanelMenuItem(final FileMenuBuilder fileMenuBuilder) {
+        fileMenuBuilder.addNewTopLevelMenu(rightPanelMenuItem);
     }
 }

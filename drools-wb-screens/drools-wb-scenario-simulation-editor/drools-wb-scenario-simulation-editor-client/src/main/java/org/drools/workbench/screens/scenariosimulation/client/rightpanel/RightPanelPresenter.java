@@ -37,9 +37,10 @@ import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.
 public class RightPanelPresenter
         implements RightPanelView.Presenter {
 
+    public static final String IDENTIFIER =  "org.drools.scenariosimulation.RightPanel";
+
     private RightPanelView view;
 
-    public static final String IDENTIFIER =  "org.drools.scenariosimulation.RightPanel";
 
     public RightPanelPresenter() {
         //Zero argument constructor for CDI

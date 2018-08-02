@@ -45,4 +45,8 @@ public interface ScenarioSimulationEditorConstants
     String remove();
 
     String invalidDefinitionDisabled();
+
+    String ShowRightPanel();
+
+    String HideRightPanel();
 }
