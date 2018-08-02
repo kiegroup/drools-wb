@@ -21,6 +21,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.uberfire.client.annotations.DefaultPosition;
@@ -47,8 +48,7 @@ public class RightPanelPresenter
     }
 
     @Inject
-    public RightPanelPresenter(RightPanelView view/*,
-                               TestRuntimeReportingService testRuntimeReportingService*/ ) {
+    public RightPanelPresenter(RightPanelView view) {
         this.view = view;
         view.setPresenter( this );
 //        view.bindDataGridToService( testRuntimeReportingService );
@@ -61,7 +61,7 @@ public class RightPanelPresenter
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "Reporting";
+        return ScenarioSimulationEditorConstants.INSTANCE.TestTools();
     }
 
     @WorkbenchPartView

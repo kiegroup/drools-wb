@@ -49,4 +49,6 @@ public interface ScenarioSimulationEditorConstants
     String ShowRightPanel();
 
     String HideRightPanel();
+
+    String TestTools();
 }

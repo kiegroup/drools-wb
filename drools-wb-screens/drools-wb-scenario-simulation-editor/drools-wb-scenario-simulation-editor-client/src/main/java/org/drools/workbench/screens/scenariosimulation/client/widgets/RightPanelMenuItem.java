@@ -28,7 +28,6 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.EnabledStateChangeListener;
 import org.uberfire.workbench.model.menu.MenuCustom;
@@ -121,8 +120,18 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
         return null;
     }
 
+    // add for test purpose
+    protected PlaceManager getPlaceManager() {
+        return placeManager;
+    }
 
-    private void setButtonText(boolean isRightPanelShown) {
+    // add for test purpose
+    protected Button getButton() {
+        return button;
+    }
+
+    // protected for test purpose
+    protected void setButtonText(boolean isRightPanelShown) {
         button.setText(isRightPanelShown ? ScenarioSimulationEditorConstants.INSTANCE.HideRightPanel() : ScenarioSimulationEditorConstants.INSTANCE.ShowRightPanel());
     }
 }

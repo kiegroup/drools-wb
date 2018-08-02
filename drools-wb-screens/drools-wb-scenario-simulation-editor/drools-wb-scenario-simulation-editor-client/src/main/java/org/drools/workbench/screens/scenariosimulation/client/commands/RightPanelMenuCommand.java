@@ -50,4 +50,9 @@ public class RightPanelMenuCommand implements Command {
             placeManager.goTo(RightPanelPresenter.IDENTIFIER);
         }
     }
+
+    // add for test purpose
+    protected PlaceManager getPlaceManager() {
+        return placeManager;
+    }
 }
