@@ -30,12 +30,16 @@ import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
+
 @ApplicationScoped
-@WorkbenchScreen(identifier = "org.drools.scenariosimulation.RightPanel")
+@WorkbenchScreen(identifier = IDENTIFIER)
 public class RightPanelPresenter
         implements RightPanelView.Presenter {
 
     private RightPanelView view;
+
+    public static final String IDENTIFIER =  "org.drools.scenariosimulation.RightPanel";
 
     public RightPanelPresenter() {
         //Zero argument constructor for CDI
@@ -70,7 +74,7 @@ public class RightPanelPresenter
             view.setExplanation( "" );
         }
 
-        view.setRunStatus( testResultMessage.getRunCount(), testResultMessage.getRunTime() );
+//        view.setRunStatus( testResultMessage.getRunCount(), testResultMessage.getRunTime() );
 
     }
 

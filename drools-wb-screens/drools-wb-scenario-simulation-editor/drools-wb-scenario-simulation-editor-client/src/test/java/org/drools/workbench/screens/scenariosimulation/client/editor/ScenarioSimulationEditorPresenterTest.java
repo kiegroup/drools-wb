@@ -25,6 +25,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
@@ -52,10 +53,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationView scenarioSimulationView;
 
+    @Mock
+    private PlaceManager placeManager;
+
     @Before
     public void setup() {
         super.setup();
-        //ScenarioSimulationView scenarioSimulationView = mock(ScenarioSimulationViewImpl.class);
         when(scenarioSimulationView.getScenarioGridPanel()).thenReturn(scenarioGridPanel);
 
         when(scenarioGridPanel.getDefaultGridLayer()).thenReturn(scenarioGridLayer);
@@ -63,7 +66,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         this.presenter = spy(new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                    type,
                                                                    importsWidget,
-                                                                   oracleFactory) {
+                                                                   oracleFactory,
+                                                                   placeManager) {
             {
                 this.kieView = mockKieView;
                 this.overviewWidget = mockOverviewWidget;
@@ -87,7 +91,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             @Override
             protected ScenarioSimulationView newScenarioSimulationView() {
-                return scenarioSimulationView/*mock(ScenarioSimulationViewImpl.class)*/;
+                return scenarioSimulationView;
             }
         });
     }

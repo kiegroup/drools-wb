@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -40,6 +41,7 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -72,7 +74,8 @@ public class ScenarioSimulationEditorPresenter
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
-                                             final AsyncPackageDataModelOracleFactory oracleFactory) {
+                                             final AsyncPackageDataModelOracleFactory oracleFactory,
+                                             final PlaceManager placeManager) {
         super();
         this.view = newScenarioSimulationView();   // Indirection added for test-purpose
         this.baseView = view;
@@ -80,6 +83,7 @@ public class ScenarioSimulationEditorPresenter
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
+        this.placeManager = placeManager;
     }
 
     @OnStartup
@@ -174,6 +178,7 @@ public class ScenarioSimulationEditorPresenter
             baseView.hideBusyIndicator();
             view.setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
+            placeManager.goTo(RightPanelPresenter.IDENTIFIER);
         };
     }
 }
