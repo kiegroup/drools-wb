@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.guvnor.common.services.shared.test.Failure;
 
 public interface RightPanelView
         extends IsWidget {
@@ -25,21 +24,11 @@ public interface RightPanelView
 
     interface Presenter {
 
-        void onMessageSelected(Failure failure);
-
-        void onAddingFailure(Failure failure);
 
     }
+
     void setPresenter(Presenter presenter);
 
-//    void bindDataGridToService(TestRuntimeReportingService testRuntimeReportingService);
 
-    void showSuccess();
-
-    void showFailure();
-
-    void setExplanation(String explanation);
-
-//    void setRunStatus(int runCount, long runTime);
 
 }

@@ -35,7 +35,7 @@ public class RightPanelViewImpl
         extends Composite
         implements RightPanelView {
 
-    private static Binder uiBinder = GWT.create( Binder.class );
+    private static Binder uiBinder = GWT.create(Binder.class);
     private Presenter presenter;
 
     interface Binder extends UiBinder<Widget, RightPanelViewImpl> {
@@ -43,92 +43,60 @@ public class RightPanelViewImpl
     }
 
     @UiField
-    Row dataGridHost;
+    private Row dataGridHost;
 
     @UiField
-    Label successPanel;
+    private  Label successPanel;
 
     @UiField
-    Label failurePanel;
+    private Label failurePanel;
 
     @UiField
-    InlineLabel stats;
+    private InlineLabel stats;
 
     protected final MessageTableWidget<Failure> dataGrid = new MessageTableWidget<Failure>() {{
-        setToolBarVisible( false );
+        setToolBarVisible(false);
     }};
 
     @Inject
     public RightPanelViewImpl() {
-        initWidget( uiBinder.createAndBindUi( this ) );
+        initWidget(uiBinder.createAndBindUi(this));
 
-        dataGridHost.add( dataGrid );
+        dataGridHost.add(dataGrid);
 
         addSuccessColumn();
         addTextColumn();
 
-        dataGrid.addStyleName( ColumnSize.MD_12.getCssName() );
+        dataGrid.addStyleName(ColumnSize.MD_12.getCssName());
     }
 
     private void addSuccessColumn() {
-        dataGrid.addLevelColumn( 10, new MessageTableWidget.ColumnExtractor<Level>() {
+        dataGrid.addLevelColumn(10, new MessageTableWidget.ColumnExtractor<Level>() {
             @Override
-            public Level getValue( final Object row ) {
-                presenter.onAddingFailure( (Failure) row );
+            public Level getValue(final Object row) {
                 return Level.ERROR;
             }
-        } );
+        });
     }
 
     private void addTextColumn() {
-        dataGrid.addTextColumn( 90, new MessageTableWidget.ColumnExtractor<String>() {
+        dataGrid.addTextColumn(90, new MessageTableWidget.ColumnExtractor<String>() {
             @Override
-            public String getValue( final Object row ) {
+            public String getValue(final Object row) {
 
-                return makeMessage( (Failure) row );
+                return makeMessage((Failure) row);
             }
-        } );
+        });
     }
 
-    private String makeMessage( Failure failure ) {
+    private String makeMessage(Failure failure) {
         final String displayName = failure.getDisplayName();
         final String message = failure.getMessage();
-        return displayName + ( !( message == null || message.isEmpty() ) ? " : " + message : "" );
+        return displayName + (!(message == null || message.isEmpty()) ? " : " + message : "");
     }
 
     @Override
-    public void setPresenter( Presenter presenter ) {
+    public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
     }
-
-//    @Override
-//    public void bindDataGridToService( TestRuntimeReportingService testRuntimeReportingService ) {
-//        testRuntimeReportingService.addDataDisplay( dataGrid );
-//    }
-
-    @Override
-    public void showSuccess() {
-        successPanel.setVisible( true );
-        failurePanel.setVisible( false );
-    }
-
-    @Override
-    public void showFailure() {
-        failurePanel.setVisible( true );
-        successPanel.setVisible( false );
-    }
-
-    @Override
-    public void setExplanation( String explanation ) {
-    }
-
-//    @Override
-//    public void setRunStatus( int runCount,
-//                              long runTime ) {
-//        Date date = new Date( runTime );
-//        DateTimeFormat minutesFormat = DateTimeFormat.getFormat( "m" );
-//        DateTimeFormat secondsFormat = DateTimeFormat.getFormat( "s" );
-//
-//        stats.setText( TestScenarioConstants.INSTANCE.XTestsRanInYMinutesZSeconds( runCount, minutesFormat.format( date ), secondsFormat.format( date ) ) );
-//    }
 }

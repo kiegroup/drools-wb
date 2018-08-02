@@ -17,13 +17,10 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.guvnor.common.services.shared.test.Failure;
-import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
@@ -69,23 +66,4 @@ public class RightPanelPresenter
         return view.asWidget();
     }
 
-    public void onSuccess( @Observes TestResultMessage testResultMessage ) {
-        if ( testResultMessage.wasSuccessful() ) {
-            view.showSuccess();
-            view.setExplanation( "" );
-        }
-
-//        view.setRunStatus( testResultMessage.getRunCount(), testResultMessage.getRunTime() );
-
-    }
-
-    @Override
-    public void onMessageSelected( Failure failure ) {
-        view.setExplanation( failure.getMessage() );
-    }
-
-    @Override
-    public void onAddingFailure( Failure failure ) {
-        view.showFailure();
-    }
 }
