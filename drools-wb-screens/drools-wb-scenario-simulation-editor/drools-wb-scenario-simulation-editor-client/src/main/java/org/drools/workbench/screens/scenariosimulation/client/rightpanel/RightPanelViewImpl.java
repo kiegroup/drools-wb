@@ -16,87 +16,69 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.inject.Inject;
+import javax.enterprise.context.Dependent;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Widget;
-import org.guvnor.common.services.shared.message.Level;
-import org.guvnor.common.services.shared.test.Failure;
-import org.guvnor.messageconsole.client.console.widget.MessageTableWidget;
-import org.gwtbootstrap3.client.ui.Label;
-import org.gwtbootstrap3.client.ui.Row;
-import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
+import org.jboss.errai.ui.shared.api.annotations.Templated;
 
+@Dependent
+@Templated
 public class RightPanelViewImpl
         extends Composite
         implements RightPanelView {
 
-    private static Binder uiBinder = GWT.create(Binder.class);
     private Presenter presenter;
 
-    interface Binder extends UiBinder<Widget, RightPanelViewImpl> {
+    @DataField("rightPanelTabs")
+    private UListElement rightPanelTabs = Document.get().createULElement();
 
-    }
+    @DataField("editorTab")
+    protected LIElement editorTab = Document.get().createLIElement();  // protected for test purpose
 
-    @UiField
-    private Row dataGridHost;
+    @DataField("cheatSheetTab")
+    protected LIElement cheatSheetTab = Document.get().createLIElement();  // protected for test purpose
 
-    @UiField
-    private  Label successPanel;
+    @DataField("editorTabContent")
+    protected DivElement editorTabContent = Document.get().createDivElement();  // protected for test purpose
 
-    @UiField
-    private Label failurePanel;
+    @DataField("cheatSheetTabContent")
+    protected DivElement cheatSheetTabContent = Document.get().createDivElement(); // protected for test purpose
 
-    @UiField
-    private InlineLabel stats;
-
-    protected final MessageTableWidget<Failure> dataGrid = new MessageTableWidget<Failure>() {{
-        setToolBarVisible(false);
-    }};
-
-    @Inject
     public RightPanelViewImpl() {
-        initWidget(uiBinder.createAndBindUi(this));
 
-        dataGridHost.add(dataGrid);
-
-        addSuccessColumn();
-        addTextColumn();
-
-        dataGrid.addStyleName(ColumnSize.MD_12.getCssName());
-    }
-
-    private void addSuccessColumn() {
-        dataGrid.addLevelColumn(10, new MessageTableWidget.ColumnExtractor<Level>() {
-            @Override
-            public Level getValue(final Object row) {
-                return Level.ERROR;
-            }
-        });
-    }
-
-    private void addTextColumn() {
-        dataGrid.addTextColumn(90, new MessageTableWidget.ColumnExtractor<String>() {
-            @Override
-            public String getValue(final Object row) {
-
-                return makeMessage((Failure) row);
-            }
-        });
-    }
-
-    private String makeMessage(Failure failure) {
-        final String displayName = failure.getDisplayName();
-        final String message = failure.getMessage();
-        return displayName + (!(message == null || message.isEmpty()) ? " : " + message : "");
     }
 
     @Override
-    public void setPresenter(Presenter presenter) {
+    public void init(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @EventHandler("editorTab")
+    public void onEditorTabClick(ClickEvent event) {
+        showTab(editorTab, editorTabContent);
+        hideTab(cheatSheetTab, cheatSheetTabContent);
+    }
+
+    @EventHandler("cheatSheetTab")
+    public void onCheatSheetTabClick(ClickEvent event) {
+        showTab(cheatSheetTab, cheatSheetTabContent);
+        hideTab(editorTab, editorTabContent);
+    }
+
+    protected void showTab(LIElement tab, DivElement content) {   // protected for test purpose
+        tab.setAttribute("class", "active");
+        content.removeAttribute("hidden");
+    }
+
+    protected void hideTab(LIElement tab, DivElement content) {   // protected for test purpose
+        tab.removeClassName("active");
+        content.setAttribute("hidden", null);
     }
 }

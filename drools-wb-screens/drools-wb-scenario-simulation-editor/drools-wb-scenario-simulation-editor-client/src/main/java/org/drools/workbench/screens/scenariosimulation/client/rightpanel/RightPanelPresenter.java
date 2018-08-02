@@ -16,7 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Widget;
@@ -30,15 +32,14 @@ import org.uberfire.workbench.model.Position;
 
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
 
-@ApplicationScoped
+@Dependent
 @WorkbenchScreen(identifier = IDENTIFIER)
 public class RightPanelPresenter
         implements RightPanelView.Presenter {
 
-    public static final String IDENTIFIER =  "org.drools.scenariosimulation.RightPanel";
+    public static final String IDENTIFIER = "org.drools.scenariosimulation.RightPanel";
 
     private RightPanelView view;
-
 
     public RightPanelPresenter() {
         //Zero argument constructor for CDI
@@ -47,8 +48,11 @@ public class RightPanelPresenter
     @Inject
     public RightPanelPresenter(RightPanelView view) {
         this.view = view;
-        view.setPresenter( this );
-//        view.bindDataGridToService( testRuntimeReportingService );
+    }
+
+    @PostConstruct
+    public void setup() {
+        view.init(this);
     }
 
     @DefaultPosition
@@ -65,5 +69,4 @@ public class RightPanelPresenter
     public Widget asWidget() {
         return view.asWidget();
     }
-
 }

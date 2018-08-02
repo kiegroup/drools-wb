@@ -17,18 +17,16 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.uberfire.client.mvp.HasPresenter;
 
 public interface RightPanelView
-        extends IsWidget {
+        extends IsWidget,
+                HasPresenter<RightPanelView.Presenter> {
 
 
     interface Presenter {
 
 
     }
-
-    void setPresenter(Presenter presenter);
-
-
 
 }
