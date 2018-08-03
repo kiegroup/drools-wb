@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -30,12 +29,14 @@ import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
 
 @Dependent
-@WorkbenchScreen(identifier = IDENTIFIER)
-public class RightPanelPresenter
-        implements RightPanelView.Presenter {
+@WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
+public class RightPanelPresenter implements RightPanelView.Presenter {
+
+    public static final int DEFAULT_PREFERRED_WIDHT = 300;
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.RightPanel";
 
@@ -64,6 +65,7 @@ public class RightPanelPresenter
     public String getTitle() {
         return ScenarioSimulationEditorConstants.INSTANCE.TestTools();
     }
+
 
     @WorkbenchPartView
     public Widget asWidget() {

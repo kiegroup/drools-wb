@@ -34,6 +34,7 @@ public class RightPanelViewImpl
         extends Composite
         implements RightPanelView {
 
+
     private Presenter presenter;
 
     @DataField("rightPanelTabs")
@@ -58,6 +59,7 @@ public class RightPanelViewImpl
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
+
     }
 
     @EventHandler("editorTab")

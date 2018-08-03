@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<div>
+<div id="right-panel">
     <ul data-field="rightPanelTabs" class="nav nav-tabs">
         <li data-field="editorTab" class="active">
             <a data-i18n-key="testEditor" href="#">Test Editor</a>
@@ -23,21 +23,19 @@
             <a data-i18n-key="scenarioCheatSheet" href="#">Scenario Cheatsheet</a>
         </li>
     </ul>
-    <div data-field="editorTabContent">Sed ut perspiciatis unde omnis iste natus error sit
-        voluptatem accusantium doloremque laudantium, totam rem
-        aperiam eaque ipsa, quae ab illo inventore veritatis et
-        quasi architecto beatae vitae dicta sunt, explicabo. Nemo
-        enim ipsam voluptatem, quia voluptas sit, aspernatur aut
-        odit aut fugit, sed quia consequuntur magni dolores eos,
-        qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui do
+    <div data-field="editorTabContent">To create a test template define "Given" and
+        "Expect" columns by entering an expression or
+        use the expression editor below.
     </div>
-    <div data-field="cheatSheetTabContent" hidden>Lorem ipsum dolor sit amet, consectetur adipisci elit,
-        sed eiusmod tempor incidunt ut labore et dolore magna aliqua.
-        Ut enim ad minim veniam, quis nostrum exercitationem ullam
-        corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
-        consequatur. Quis aute iure reprehenderit in voluptate velit
-        esse cillum dolore eu fugiat nulla pariatur.
-        Excepteur sint obcaecat cupiditat non proident, sunt in culpa
-        qui officia deserunt mollit anim id est laborum.
+    <div data-field="cheatSheetTabContent" hidden>Create a row for each scenario, and input
+        values using the following syntax.
+        <br/>
+        [2, 8] // between 2 and 8
+        <br/>
+        ["A", "B", "C"]
+        <br/>
+        !["A", "B", "C"]
+        <br/>
+        <, <=, >... etc
     </div>
 </div>

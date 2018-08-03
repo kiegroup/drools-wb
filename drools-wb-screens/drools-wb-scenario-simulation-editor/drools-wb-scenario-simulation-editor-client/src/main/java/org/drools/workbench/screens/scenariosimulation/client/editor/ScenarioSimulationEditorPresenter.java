@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -43,6 +44,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -107,6 +109,9 @@ public class ScenarioSimulationEditorPresenter
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+            placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+        }
     }
 
     @OnMayClose
@@ -196,7 +201,11 @@ public class ScenarioSimulationEditorPresenter
             baseView.hideBusyIndicator();
             view.setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
-            placeManager.goTo(RightPanelPresenter.IDENTIFIER);
+//            Activity activity = placeManager.getActivity(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER));
+//            activity.getPlace();
+            if (PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+                placeManager.goTo(RightPanelPresenter.IDENTIFIER);
+            }
         };
     }
 
