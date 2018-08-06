@@ -70,6 +70,10 @@ public class SimulationDescriptor {
                     new StringBuilder().append("An expression with name '").append(expressionIdentifier.getName())
                             .append("' already exists for the fact '").append(factIdentifier.getName()).append("'").toString());
         }
+        if (index > factMappings.size()) {
+            throw new IllegalArgumentException("Impossible to add an element at position " + index
+                                                       + " because there are only " + factMappings.size() + " elements");
+        }
         FactMapping factMapping = new FactMapping(expressionIdentifier, factIdentifier, index);
         factMappings.add(index, factMapping);
         return factMapping;
