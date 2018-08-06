@@ -73,7 +73,8 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationResourceType type;
 
     private AsyncPackageDataModelOracle oracle;
-    protected ScenarioSimulationView view;  // making protected for test purposes
+
+    private ScenarioSimulationView view;
 
     @Inject
     private RightPanelMenuItem rightPanelMenuItem;
@@ -192,17 +193,17 @@ public class ScenarioSimulationEditorPresenter
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
-    // Add only for testing purpose
-    protected ScenarioSimulationView newScenarioSimulationView() {
-        return ScenarioSimulationViewProvider.newScenarioSimulationView();
-    }
-
     protected void loadContent() {
         service.call(getModelSuccessCallback(),
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    protected RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
+    // Needed by test
+    protected ScenarioSimulationView newScenarioSimulationView() {
+        return ScenarioSimulationViewProvider.newScenarioSimulationView();
+    }
+
+    private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
         return content -> {
             //Path is set to null when the Editor is closed (which can happen before async calls complete).
             if (versionRecordManager.getCurrentPath() == null) {
@@ -220,9 +221,6 @@ public class ScenarioSimulationEditorPresenter
             baseView.hideBusyIndicator();
             view.setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
-//            if (PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
-//                placeManager.goTo(RightPanelPresenter.IDENTIFIER);
-//            }
         };
     }
 

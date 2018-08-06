@@ -16,13 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -34,33 +33,29 @@ public class RightPanelViewImplTest {
 
     private RightPanelViewImpl rightPanelView;
 
+    @Mock
+    private RightPanelPresenter mockRightPanelPresenter;
+
     @Before
     public void setup() {
         this.rightPanelView = spy(new RightPanelViewImpl() {
             {
+
             }
         });
+        rightPanelView.init(mockRightPanelPresenter);
     }
 
     @Test
     public void onEditorTabClick() {
         rightPanelView.onEditorTabClick(mock(ClickEvent.class));
-        verifyShowTab(rightPanelView.editorTab, rightPanelView.editorTabContent);
-        verifyHideTab(rightPanelView.cheatSheetTab, rightPanelView.cheatSheetTabContent);
+        verify(mockRightPanelPresenter, times(1)).onEditorTabActivated();
     }
 
     @Test
     public void onCheatSheetTabClick() {
         rightPanelView.onCheatSheetTabClick(mock(ClickEvent.class));
-        verifyShowTab(rightPanelView.cheatSheetTab, rightPanelView.cheatSheetTabContent);
-        verifyHideTab(rightPanelView.editorTab, rightPanelView.editorTabContent);
+        verify(mockRightPanelPresenter, times(1)).onCheatSheetTabActivated();
     }
 
-    private void verifyShowTab(LIElement tab, DivElement content) {
-        verify(rightPanelView, times(1)).showTab(tab, content);
-    }
-
-    private void verifyHideTab(LIElement tab, DivElement content) {
-        verify(rightPanelView, times(1)).hideTab(tab, content);
-    }
 }
