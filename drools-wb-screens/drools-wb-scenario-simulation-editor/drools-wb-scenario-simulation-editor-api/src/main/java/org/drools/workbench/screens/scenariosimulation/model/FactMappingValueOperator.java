@@ -17,6 +17,10 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * @see org.drools.workbench.screens.scenariosimulation.backend.server.OperatorEvaluator
+ *
+ */
 @Portable
 public enum FactMappingValueOperator {
 

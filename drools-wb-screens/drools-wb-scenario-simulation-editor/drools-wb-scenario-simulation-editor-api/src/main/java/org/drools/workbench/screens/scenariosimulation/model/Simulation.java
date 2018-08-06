@@ -24,7 +24,13 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class Simulation {
 
+    /**
+     * Describes structure of the simulation
+     */
     private final SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
+    /**
+     * Contains list of scenarios to test
+     */
     private final List<Scenario> scenarios = new LinkedList<>();
 
     public List<Scenario> getScenarios() {
@@ -40,7 +46,7 @@ public class Simulation {
     }
 
     public Scenario addScenario(String name) {
-        Scenario scenario = new Scenario(name);
+        Scenario scenario = new Scenario(name, simulationDescriptor);
         scenarios.add(scenario);
         return scenario;
     }

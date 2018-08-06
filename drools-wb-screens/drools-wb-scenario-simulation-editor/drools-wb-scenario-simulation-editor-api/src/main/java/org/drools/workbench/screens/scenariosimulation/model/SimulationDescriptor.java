@@ -46,7 +46,7 @@ public class SimulationDescriptor {
         return internalFilter(e -> e.getFactIdentifier().getName().equalsIgnoreCase(factName));
     }
 
-    public Optional<FactMapping> getFactMapping(ExpressionIdentifier ei, FactIdentifier factIdentifier) {
+    public Optional<FactMapping> getFactMapping(FactIdentifier factIdentifier, ExpressionIdentifier ei) {
         List<FactMapping> factMappings = internalFilter(e -> e.getExpressionIdentifier().equals(ei) &&
                 e.getFactIdentifier().equals(factIdentifier));
         return factMappings.stream().findFirst();
@@ -65,12 +65,12 @@ public class SimulationDescriptor {
     }
 
     public FactMapping addFactMapping(int index, ExpressionIdentifier expressionIdentifier, FactIdentifier factIdentifier) {
-        if (getFactMapping(expressionIdentifier, factIdentifier).isPresent()) {
+        if (getFactMapping(factIdentifier, expressionIdentifier).isPresent()) {
             throw new IllegalArgumentException(
                     new StringBuilder().append("An expression with name '").append(expressionIdentifier.getName())
                             .append("' already exists for the fact '").append(factIdentifier.getName()).append("'").toString());
         }
-        FactMapping factMapping = new FactMapping(expressionIdentifier, factIdentifier);
+        FactMapping factMapping = new FactMapping(expressionIdentifier, factIdentifier, index);
         factMappings.add(index, factMapping);
         return factMapping;
     }

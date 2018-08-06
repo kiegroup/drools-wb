@@ -19,6 +19,9 @@ import java.util.Objects;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * Identify an expression. It is defined by a name and a type
+ */
 @Portable
 public class ExpressionIdentifier {
 

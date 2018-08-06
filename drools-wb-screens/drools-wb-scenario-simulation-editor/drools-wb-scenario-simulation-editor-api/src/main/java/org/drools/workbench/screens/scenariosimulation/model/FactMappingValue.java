@@ -20,24 +20,24 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactMappingValue {
 
-    private final String factName;
+    private final FactIdentifier factIdentifier;
     private final ExpressionIdentifier expressionIdentifier;
     private final Object rawValue;
     private FactMappingValueOperator operator = FactMappingValueOperator.EQUALS;
 
-    public FactMappingValue(String factName, ExpressionIdentifier expressionIdentifier, Object rawValue) {
-        this.factName = factName;
+    public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue) {
+        this.factIdentifier = factIdentifier;
         this.expressionIdentifier = expressionIdentifier;
         this.rawValue = rawValue;
     }
 
-    public FactMappingValue(String factName, ExpressionIdentifier expressionIdentifier, Object rawValue, FactMappingValueOperator operator) {
-        this(factName, expressionIdentifier, rawValue);
+    public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue, FactMappingValueOperator operator) {
+        this(factIdentifier, expressionIdentifier, rawValue);
         this.operator = operator;
     }
 
-    public String getFactName() {
-        return factName;
+    public FactIdentifier getFactIdentifier() {
+        return factIdentifier;
     }
 
     public ExpressionIdentifier getExpressionIdentifier() {

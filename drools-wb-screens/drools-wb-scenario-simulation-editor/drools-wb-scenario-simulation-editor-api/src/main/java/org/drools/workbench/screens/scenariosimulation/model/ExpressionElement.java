@@ -17,6 +17,9 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * Single element of a expression, i.e. in person.fullName.last each component is an ExpressionElement
+ */
 @Portable
 public class ExpressionElement {
 

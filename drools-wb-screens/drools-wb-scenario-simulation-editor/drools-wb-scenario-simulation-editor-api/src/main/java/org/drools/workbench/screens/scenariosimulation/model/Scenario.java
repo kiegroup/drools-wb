@@ -30,42 +30,49 @@ import static java.util.stream.Collectors.toSet;
 public class Scenario {
 
     private final String description;
+    /**
+     * List of values to be used to test this scenario
+     */
     private final List<FactMappingValue> factMappingValues = new ArrayList<>();
 
-    public Scenario(String description) {
+    private final SimulationDescriptor simulationDescriptor;
+
+    public Scenario(String description, SimulationDescriptor simulationDescriptor) {
         this.description = description;
+        this.simulationDescriptor = simulationDescriptor;
     }
 
     public List<FactMappingValue> getFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
     }
 
-    public FactMappingValue getFactMappingValueByIndex(int index) {
-        return factMappingValues.get(index);
-    }
-
-    public FactMappingValue addMappingValue(String factName, ExpressionIdentifier expressionIdentifier, String value) {
-        return addMappingValue(factMappingValues.size(), factName, expressionIdentifier, value);
-    }
-
-    public FactMappingValue addMappingValue(int index, String factName, ExpressionIdentifier expressionIdentifier, String value) {
-        if (getFactMappingValue(factName, expressionIdentifier).isPresent()) {
+    public FactMappingValue addMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, String value) {
+        String factName = factIdentifier.getName();
+        if (getFactMappingValue(factIdentifier, expressionIdentifier).isPresent()) {
             throw new IllegalArgumentException(
                     new StringBuilder().append("A fact value for expression '").append(expressionIdentifier.getName())
                             .append("' and fact '").append(factName).append("' already exist").toString());
         }
-        FactMappingValue factMappingValue = new FactMappingValue(factName, expressionIdentifier, value);
-        factMappingValues.add(index, factMappingValue);
+        FactMappingValue factMappingValue = new FactMappingValue(factIdentifier, expressionIdentifier, value);
+        factMappingValues.add(factMappingValue);
         return factMappingValue;
     }
 
-    public Optional<FactMappingValue> getFactMappingValue(String factName, ExpressionIdentifier expressionIdentifier) {
-        return factMappingValues.stream().filter(e -> e.getFactName().equalsIgnoreCase(factName) &&
+    public Optional<FactMappingValue> getFactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
+        return factMappingValues.stream().filter(e -> e.getFactIdentifier().getName().equalsIgnoreCase(factIdentifier.getName()) &&
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 
-    public List<FactMappingValue> getFactMappingValuesByFactName(String factName) {
-        return factMappingValues.stream().filter(e -> e.getFactName().equalsIgnoreCase(factName)).collect(toList());
+    public Optional<FactMappingValue> getFactMappingValueByIndex(int index) {
+        FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(index);
+        if (factMappingByIndex == null) {
+            throw new IllegalArgumentException("Impossible to retrieve FactMapping at index " + index);
+        }
+        return getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
+    }
+
+    public List<FactMappingValue> getFactMappingValuesByFactIdentifier(FactIdentifier factIdentifier) {
+        return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier)).collect(toList());
     }
 
     public String getDescription() {
@@ -73,6 +80,6 @@ public class Scenario {
     }
 
     public Collection<String> getFactNames() {
-        return factMappingValues.stream().map(FactMappingValue::getFactName).collect(toSet());
+        return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
     }
 }
