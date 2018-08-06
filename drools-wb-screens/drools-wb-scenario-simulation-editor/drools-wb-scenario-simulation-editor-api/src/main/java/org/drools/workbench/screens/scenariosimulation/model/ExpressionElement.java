@@ -23,7 +23,10 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class ExpressionElement {
 
-    private final String step;
+    private String step;
+
+    public ExpressionElement() {
+    }
 
     public ExpressionElement(String step) {
         this.step = step;

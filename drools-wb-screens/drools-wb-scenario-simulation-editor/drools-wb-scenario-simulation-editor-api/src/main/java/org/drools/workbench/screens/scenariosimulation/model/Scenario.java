@@ -29,13 +29,16 @@ import static java.util.stream.Collectors.toSet;
 @Portable
 public class Scenario {
 
-    private final String description;
+    private String description;
     /**
      * List of values to be used to test this scenario
      */
-    private final List<FactMappingValue> factMappingValues = new ArrayList<>();
+    private List<FactMappingValue> factMappingValues = new ArrayList<>();
 
-    private final SimulationDescriptor simulationDescriptor;
+    private SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
+
+    public Scenario() {
+    }
 
     public Scenario(String description, SimulationDescriptor simulationDescriptor) {
         this.description = description;

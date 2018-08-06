@@ -30,17 +30,17 @@ public class FactMapping {
     /**
      * Expression to reach the property. I.e. person.fullName.last
      */
-    private final List<ExpressionElement> expressionElements = new LinkedList<>();
+    private List<ExpressionElement> expressionElements = new LinkedList<>();
 
     /**
      * Identifier of this expression (it contains the type of expression, i.e. given/expected)
      */
-    private final ExpressionIdentifier expressionIdentifier;
+    private ExpressionIdentifier expressionIdentifier;
 
     /**
      * Identify the fact by name and class name
      */
-    private final FactIdentifier factIdentifier;
+    private FactIdentifier factIdentifier;
 
     /**
      * String name of the type of the property described by this class
@@ -51,6 +51,9 @@ public class FactMapping {
      * Used to store column position in the UI so it can be saved and restore
      */
     private int columnPosition;
+
+    public FactMapping() {
+    }
 
     public FactMapping(ExpressionIdentifier expressionIdentifier, FactIdentifier factIdentifier, int columnPosition) {
         this.expressionIdentifier = expressionIdentifier;

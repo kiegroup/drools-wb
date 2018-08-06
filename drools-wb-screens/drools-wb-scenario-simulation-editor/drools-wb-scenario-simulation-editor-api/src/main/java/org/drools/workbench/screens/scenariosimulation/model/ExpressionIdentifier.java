@@ -25,8 +25,11 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class ExpressionIdentifier {
 
-    private final String name;
-    private final FactMappingType type;
+    private String name;
+    private FactMappingType type;
+
+    public ExpressionIdentifier() {
+    }
 
     public ExpressionIdentifier(String name, FactMappingType type) {
         this.name = name;

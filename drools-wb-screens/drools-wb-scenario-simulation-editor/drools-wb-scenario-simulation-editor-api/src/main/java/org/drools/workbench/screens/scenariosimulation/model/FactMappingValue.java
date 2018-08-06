@@ -20,10 +20,13 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactMappingValue {
 
-    private final FactIdentifier factIdentifier;
-    private final ExpressionIdentifier expressionIdentifier;
-    private final Object rawValue;
+    private FactIdentifier factIdentifier;
+    private ExpressionIdentifier expressionIdentifier;
+    private Object rawValue;
     private FactMappingValueOperator operator = FactMappingValueOperator.EQUALS;
+
+    public FactMappingValue() {
+    }
 
     public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue) {
         this.factIdentifier = factIdentifier;

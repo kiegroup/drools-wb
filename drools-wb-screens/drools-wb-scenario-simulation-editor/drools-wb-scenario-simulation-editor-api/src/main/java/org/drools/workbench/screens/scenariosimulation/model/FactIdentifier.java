@@ -22,8 +22,11 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactIdentifier {
 
-    private final String name;
-    private final String className;
+    private String name;
+    private String className;
+
+    public FactIdentifier() {
+    }
 
     public FactIdentifier(String name, String className) {
         this.name = name;
