@@ -16,13 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -33,7 +32,6 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.screens.library.client.util.LibraryPlaces;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -47,13 +45,13 @@ import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
+import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
@@ -108,20 +106,6 @@ public class ScenarioSimulationEditorPresenter
                    type);
         view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
-
-        GWT.log(" final DefaultPlaceRequest projectScreenPlaceRequest = new DefaultPlaceRequest(LibraryPlaces.PROJECT_SCREEN)");
-        final DefaultPlaceRequest projectScreenPlaceRequest = new DefaultPlaceRequest(LibraryPlaces.PROJECT_SCREEN);
-        List<Command> alreadyRegisteredCallbacks = placeManager.getOnOpenCallbacks(projectScreenPlaceRequest);
-        if (alreadyRegisteredCallbacks == null || alreadyRegisteredCallbacks.isEmpty()) {
-            GWT.log("ADD callback for LibraryPlaces.PROJECT_SCREEN");
-            placeManager.registerOnOpenCallback(projectScreenPlaceRequest,
-                                                () -> {
-                                                    GWT.log("inside callback for LibraryPlaces.PROJECT_SCREEN");
-                                                    if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
-                                                        placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
-                                                    }
-                                                });
-        }
     }
 
     @OnClose
@@ -129,6 +113,7 @@ public class ScenarioSimulationEditorPresenter
         this.versionRecordManager.clear();
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
             placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+            this.getView().showLoading();
         }
     }
 
@@ -155,6 +140,22 @@ public class ScenarioSimulationEditorPresenter
     @WorkbenchMenu
     public Menus getMenus() {
         return menus;
+    }
+
+    // Observing to show RightPanel when ScenarioSimulationScreen is put in foreground
+    public void onPlaceGainFocusEvent(@Observes PlaceGainFocusEvent placeGainFocusEvent) {
+        PlaceRequest placeRequest = placeGainFocusEvent.getPlace();
+        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER) && PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+            placeManager.goTo(RightPanelPresenter.IDENTIFIER);
+        }
+    }
+
+    // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
+    public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
+        PlaceRequest placeRequest = placeHiddenEvent.getPlace();
+        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER) && PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+            placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+        }
     }
 
     public ScenarioSimulationView getView() {
@@ -219,11 +220,9 @@ public class ScenarioSimulationEditorPresenter
             baseView.hideBusyIndicator();
             view.setContent(model.getHeadersMap(), model.getRowsMap());
             createOriginalHash(model.hashCode());
-//            Activity activity = placeManager.getActivity(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER));
-//            activity.getPlace();
-            if (PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
-                placeManager.goTo(RightPanelPresenter.IDENTIFIER);
-            }
+//            if (PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+//                placeManager.goTo(RightPanelPresenter.IDENTIFIER);
+//            }
         };
     }
 
