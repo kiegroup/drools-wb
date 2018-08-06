@@ -6,9 +6,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
+@Portable
 public class Scenario {
 
     private final String description;
@@ -33,7 +36,8 @@ public class Scenario {
     public FactMappingValue addMappingValue(int index, String factName, ExpressionIdentifier expressionIdentifier, String value) {
         if(getFactMappingValue(factName, expressionIdentifier).isPresent()) {
             throw new IllegalArgumentException(
-                    String.format("A fact value for expression '%s' and fact '%s' already exist", expressionIdentifier.getName(), factName));
+                    new StringBuilder().append("A fact value for expression '").append(expressionIdentifier.getName())
+                            .append("' and fact '").append(factName).append("' already exist").toString());
         }
         FactMappingValue factMappingValue = new FactMappingValue(factName, expressionIdentifier, value);
         factMappingValues.add(index, factMappingValue);

@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class FactMapping {
 
     private final List<ExpressionElement> expressionElements = new LinkedList<>();

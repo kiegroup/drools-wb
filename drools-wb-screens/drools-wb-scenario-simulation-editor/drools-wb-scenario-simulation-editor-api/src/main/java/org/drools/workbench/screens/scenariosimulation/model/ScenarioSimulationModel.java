@@ -59,6 +59,14 @@ public class ScenarioSimulationModel
         return headersMap;
     }
 
+    public Simulation getSimulation() {
+        return simulation;
+    }
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+    }
+
     @Override
     public Imports getImports() {
         return imports;

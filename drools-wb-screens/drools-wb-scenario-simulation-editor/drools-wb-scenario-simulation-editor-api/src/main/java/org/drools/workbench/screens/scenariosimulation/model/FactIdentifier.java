@@ -2,6 +2,9 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.Objects;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+@Portable
 public class FactIdentifier {
 
     private final String name;

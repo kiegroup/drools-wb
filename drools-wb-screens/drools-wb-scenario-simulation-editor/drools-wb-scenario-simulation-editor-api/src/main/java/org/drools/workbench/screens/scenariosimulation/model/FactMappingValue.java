@@ -1,14 +1,14 @@
 package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.Objects;
-import java.util.function.BiFunction;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
+@Portable
 public class FactMappingValue {
 
     private final String factName;
     private final ExpressionIdentifier expressionIdentifier;
     private final Object rawValue;
-    private Operator operator = Operator.equals;
+    private FactMappingValueOperator operator = FactMappingValueOperator.EQUALS;
 
     public FactMappingValue(String factName, ExpressionIdentifier expressionIdentifier, Object rawValue) {
         this.factName = factName;
@@ -16,7 +16,7 @@ public class FactMappingValue {
         this.rawValue = rawValue;
     }
 
-    public FactMappingValue(String factName, ExpressionIdentifier expressionIdentifier, Object rawValue, Operator operator) {
+    public FactMappingValue(String factName, ExpressionIdentifier expressionIdentifier, Object rawValue, FactMappingValueOperator operator) {
         this(factName, expressionIdentifier, rawValue);
         this.operator = operator;
     }
@@ -33,34 +33,8 @@ public class FactMappingValue {
         return rawValue;
     }
 
-    public Operator getOperator() {
+    public FactMappingValueOperator getOperator() {
         return operator;
     }
 
-    public enum Operator {
-
-        equals(Objects::equals),
-        less_them((a, b) -> defaultComparator.apply(a, b) < 0),
-        great_then((a, b) -> defaultComparator.apply(a, b) > 0);
-
-        final BiFunction<Object, Object, Boolean> compare;
-
-        Operator(BiFunction<Object, Object, Boolean> compare) {
-            this.compare = compare;
-        }
-
-        public Boolean evaluate(Object resultValue, Object expectedValue) {
-            return compare.apply(resultValue, expectedValue);
-        }
-
-    }
-
-    private static BiFunction<Object, Object, Integer> defaultComparator = (a, b) -> {
-        if (Comparable.class.isAssignableFrom(a.getClass()) && Comparable.class.isAssignableFrom(b.getClass())
-                && a.getClass().equals(b.getClass())) {
-            Comparable comparableA = (Comparable) a;
-            return comparableA.compareTo(b);
-        }
-        throw new IllegalArgumentException("Object cannot be compared '" + a.getClass().getCanonicalName() + "'");
-    };
 }
