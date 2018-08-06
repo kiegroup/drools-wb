@@ -1,3 +1,18 @@
+/*
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.ArrayList;
@@ -26,7 +41,7 @@ public class SimulationDescriptor {
     public FactMapping getFactMappingByIndex(int index) {
         return factMappings.get(index);
     }
-    
+
     public List<FactMapping> getFactMappingsByFactName(String factName) {
         return internalFilter(e -> e.getFactIdentifier().getName().equalsIgnoreCase(factName));
     }
@@ -37,8 +52,8 @@ public class SimulationDescriptor {
         return factMappings.stream().findFirst();
     }
 
-    public FactIdentifier newFactIdentifier(String factName, Class<?> clazz) {
-        return new FactIdentifier(factName, clazz);
+    public FactIdentifier newFactIdentifier(String factName, String className) {
+        return new FactIdentifier(factName, className);
     }
 
     private List<FactMapping> internalFilter(Predicate<FactMapping> predicate) {
@@ -50,7 +65,7 @@ public class SimulationDescriptor {
     }
 
     public FactMapping addFactMapping(int index, ExpressionIdentifier expressionIdentifier, FactIdentifier factIdentifier) {
-        if(getFactMapping(expressionIdentifier, factIdentifier).isPresent()) {
+        if (getFactMapping(expressionIdentifier, factIdentifier).isPresent()) {
             throw new IllegalArgumentException(
                     new StringBuilder().append("An expression with name '").append(expressionIdentifier.getName())
                             .append("' already exists for the fact '").append(factIdentifier.getName()).append("'").toString());
@@ -59,5 +74,4 @@ public class SimulationDescriptor {
         factMappings.add(index, factMapping);
         return factMapping;
     }
-
 }
