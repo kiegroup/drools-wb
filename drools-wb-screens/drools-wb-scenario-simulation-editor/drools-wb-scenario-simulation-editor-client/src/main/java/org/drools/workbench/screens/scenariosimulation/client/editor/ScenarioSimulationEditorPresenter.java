@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -32,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.screens.library.client.util.LibraryPlaces;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -49,7 +51,9 @@ import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultE
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
@@ -103,7 +107,21 @@ public class ScenarioSimulationEditorPresenter
                    place,
                    type);
         view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {
-        });  // Horrible hack due to  default implementation/design
+        });  // Hack to overcome default implementation
+
+        GWT.log(" final DefaultPlaceRequest projectScreenPlaceRequest = new DefaultPlaceRequest(LibraryPlaces.PROJECT_SCREEN)");
+        final DefaultPlaceRequest projectScreenPlaceRequest = new DefaultPlaceRequest(LibraryPlaces.PROJECT_SCREEN);
+        List<Command> alreadyRegisteredCallbacks = placeManager.getOnOpenCallbacks(projectScreenPlaceRequest);
+        if (alreadyRegisteredCallbacks == null || alreadyRegisteredCallbacks.isEmpty()) {
+            GWT.log("ADD callback for LibraryPlaces.PROJECT_SCREEN");
+            placeManager.registerOnOpenCallback(projectScreenPlaceRequest,
+                                                () -> {
+                                                    GWT.log("inside callback for LibraryPlaces.PROJECT_SCREEN");
+                                                    if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+                                                        placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+                                                    }
+                                                });
+        }
     }
 
     @OnClose
