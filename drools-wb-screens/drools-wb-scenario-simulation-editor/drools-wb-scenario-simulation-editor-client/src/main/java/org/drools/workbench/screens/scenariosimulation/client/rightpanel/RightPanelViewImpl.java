@@ -34,7 +34,6 @@ public class RightPanelViewImpl
         extends Composite
         implements RightPanelView {
 
-
     private Presenter presenter;
 
     @DataField("rightPanelTabs")
@@ -59,27 +58,44 @@ public class RightPanelViewImpl
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
-
     }
 
     @EventHandler("editorTab")
     public void onEditorTabClick(ClickEvent event) {
-        showTab(editorTab, editorTabContent);
-        hideTab(cheatSheetTab, cheatSheetTabContent);
+        presenter.onEditorTabActivated();
     }
 
     @EventHandler("cheatSheetTab")
     public void onCheatSheetTabClick(ClickEvent event) {
+        presenter.onCheatSheetTabActivated();
+    }
+
+    @Override
+    public void showEditorTab() {
+        showTab(editorTab, editorTabContent);
+    }
+
+    @Override
+    public void hideCheatSheetTabTab() {
+        hideTab(cheatSheetTab, cheatSheetTabContent);
+    }
+
+    @Override
+    public void showCheatSheetTabTab() {
         showTab(cheatSheetTab, cheatSheetTabContent);
+    }
+
+    @Override
+    public void hideEditorTabTab() {
         hideTab(editorTab, editorTabContent);
     }
 
-    protected void showTab(LIElement tab, DivElement content) {   // protected for test purpose
+    private void showTab(LIElement tab, DivElement content) {
         tab.setAttribute("class", "active");
         content.removeAttribute("hidden");
     }
 
-    protected void hideTab(LIElement tab, DivElement content) {   // protected for test purpose
+    private void hideTab(LIElement tab, DivElement content) {
         tab.removeClassName("active");
         content.setAttribute("hidden", null);
     }

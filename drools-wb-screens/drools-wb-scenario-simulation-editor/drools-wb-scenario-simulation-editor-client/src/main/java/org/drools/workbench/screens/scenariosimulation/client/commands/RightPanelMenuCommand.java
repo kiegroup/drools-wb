@@ -45,8 +45,4 @@ public class RightPanelMenuCommand implements Command {
         }
     }
 
-    // add for test purpose
-    protected PlaceManager getPlaceManager() {
-        return placeManager;
-    }
 }

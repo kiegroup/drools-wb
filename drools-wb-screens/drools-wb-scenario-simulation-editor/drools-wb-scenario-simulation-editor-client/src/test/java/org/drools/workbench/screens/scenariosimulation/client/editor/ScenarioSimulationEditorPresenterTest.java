@@ -66,16 +66,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Before
     public void setup() {
         super.setup();
-        when(mockScenarioSimulationView.getScenarioGridPanel()).thenReturn(scenarioGridPanel);
+        when(mockScenarioSimulationView.getScenarioGridPanel()).thenReturn(mockScenarioGridPanel);
 
-        when(scenarioGridPanel.getDefaultGridLayer()).thenReturn(mockScenarioGridLayer);
+        when(mockScenarioGridPanel.getDefaultGridLayer()).thenReturn(mockScenarioGridLayer);
 
         when(mockPlaceRequest.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
 
         this.presenter = spy(new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                    type,
-                                                                   importsWidget,
-                                                                   oracleFactory,
+                                                                   mockImportsWidget,
+                                                                   mockOracleFactory,
                                                                    mockPlaceManager) {
             {
                 this.kieView = mockKieView;
@@ -109,19 +109,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void testOnStartup() {
 
         final AsyncPackageDataModelOracle oracle = mock(AsyncPackageDataModelOracle.class);
-        when(oracleFactory.makeAsyncPackageDataModelOracle(any(),
-                                                           eq(model),
-                                                           eq(content.getDataModel()))).thenReturn(oracle);
+        when(mockOracleFactory.makeAsyncPackageDataModelOracle(any(),
+                                                               eq(model),
+                                                               eq(content.getDataModel()))).thenReturn(oracle);
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-        verify(importsWidget).setContent(oracle,
-                                         model.getImports(),
-                                         false);
-        verify(mockKieView).addImportsTab(importsWidget);
+        verify(mockImportsWidget).setContent(oracle,
+                                             model.getImports(),
+                                             false);
+        verify(mockKieView).addImportsTab(mockImportsWidget);
         verify(presenter.getView()).showLoading();
         verify(presenter.getView()).hideBusyIndicator();
         verify(mockScenarioGridLayer, times(1)).enterPinnedMode(any(), any());
-       // verify(presenter.newScenarioSimulationView(), times(1));
     }
 
     @Test

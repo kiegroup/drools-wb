@@ -33,17 +33,17 @@ public class RightPanelPresenterTest {
     private RightPanelPresenter rightPanelPresenter;
 
     @Mock
-    private RightPanelView view;
+    private RightPanelView mockRightPanelView;
 
     @Before
     public void setup() {
-        this.rightPanelPresenter = new RightPanelPresenter(view);
+        this.rightPanelPresenter = new RightPanelPresenter(mockRightPanelView);
     }
 
     @Test
     public void onSetup() {
         rightPanelPresenter.setup();
-        verify(view, times(1)).init(rightPanelPresenter);
+        verify(mockRightPanelView, times(1)).init(rightPanelPresenter);
     }
 
     @Test
@@ -51,4 +51,17 @@ public class RightPanelPresenterTest {
         assertEquals(ScenarioSimulationEditorConstants.INSTANCE.TestTools(), rightPanelPresenter.getTitle());
     }
 
+    @Test
+    public void onEditorTabActivated() {
+        rightPanelPresenter.onEditorTabActivated();
+        verify(mockRightPanelView, times(1)).showEditorTab();
+        verify(mockRightPanelView, times(1)).hideCheatSheetTabTab();
+    }
+
+    @Test
+    public void onCheatSheetTabActivated() {
+        rightPanelPresenter.onCheatSheetTabActivated();
+        verify(mockRightPanelView, times(1)).showCheatSheetTabTab();
+        verify(mockRightPanelView, times(1)).hideEditorTabTab();
+    }
 }

@@ -71,4 +71,17 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public Widget asWidget() {
         return view.asWidget();
     }
+
+    @Override
+    public void onEditorTabActivated() {
+        view.showEditorTab();
+        view.hideCheatSheetTabTab();
+    }
+
+    @Override
+    public void onCheatSheetTabActivated() {
+        view.showCheatSheetTabTab();
+        view.hideEditorTabTab();
+
+    }
 }

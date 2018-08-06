@@ -120,18 +120,7 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
         return null;
     }
 
-    // add for test purpose
-    protected PlaceManager getPlaceManager() {
-        return placeManager;
-    }
-
-    // add for test purpose
-    protected Button getButton() {
-        return button;
-    }
-
-    // protected for test purpose
-    protected void setButtonText(boolean isRightPanelShown) {
+    private void setButtonText(boolean isRightPanelShown) {
         button.setText(isRightPanelShown ? ScenarioSimulationEditorConstants.INSTANCE.HideRightPanel() : ScenarioSimulationEditorConstants.INSTANCE.ShowRightPanel());
     }
 }

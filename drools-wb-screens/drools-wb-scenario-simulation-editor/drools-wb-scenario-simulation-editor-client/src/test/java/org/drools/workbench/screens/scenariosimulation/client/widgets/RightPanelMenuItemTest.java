@@ -19,7 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.RightPanelMenuCommand;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.gwtbootstrap3.client.ui.Button;
 import org.junit.Before;
@@ -43,23 +42,22 @@ public class RightPanelMenuItemTest {
     private RightPanelMenuItem rightPanelMenuItem;
 
     @Mock
-    private RightPanelMenuCommand rightPanelMenuCommand;
+    private RightPanelMenuCommand mockRightPanelMenuCommand;
 
     @Mock
-    private PlaceManager placeManager;
+    private PlaceManager mockPlaceManager;
 
     @Before
     public void setup() {
-        this.rightPanelMenuItem = new RightPanelMenuItem(placeManager, rightPanelMenuCommand);
-        when(placeManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
+        this.rightPanelMenuItem = new RightPanelMenuItem(mockPlaceManager, mockRightPanelMenuCommand);
+        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
     }
 
     @Test
     public void init() {
         rightPanelMenuItem.init();
-        verify(rightPanelMenuItem.getButton(), times(1)).setText(ScenarioSimulationEditorConstants.INSTANCE.HideRightPanel());
-        verify(placeManager, times(1)).registerOnOpenCallback(any(DefaultPlaceRequest.class), any());
-        verify(placeManager, times(1)).registerOnCloseCallback(any(DefaultPlaceRequest.class), any());
+        verify(mockPlaceManager, times(1)).registerOnOpenCallback(any(DefaultPlaceRequest.class), any());
+        verify(mockPlaceManager, times(1)).registerOnCloseCallback(any(DefaultPlaceRequest.class), any());
     }
 
     @Test

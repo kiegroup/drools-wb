@@ -27,7 +27,6 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
 
-    // Add for testing purpose
     ScenarioGridPanel getScenarioGridPanel();
 
 
