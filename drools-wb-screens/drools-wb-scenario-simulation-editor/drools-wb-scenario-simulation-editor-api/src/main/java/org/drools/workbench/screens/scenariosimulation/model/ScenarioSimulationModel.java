@@ -16,8 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.kie.soup.project.datamodel.imports.HasImports;
@@ -41,12 +45,20 @@ public class ScenarioSimulationModel
     private Imports imports = new Imports();
 
     public ScenarioSimulationModel() {
-        headersMap = new HashMap<>();
         // DEFAULT HEADERS -TO CHANGE
-        headersMap.put(0, "T");
-        headersMap.put(1, "");
-        headersMap.put(2, "Expression");
+        headersMap = Collections.unmodifiableMap(
+                Stream.of(
+                        new AbstractMap.SimpleEntry<>(0, "T"),
+                        new AbstractMap.SimpleEntry<>(1, ""),
+                        new AbstractMap.SimpleEntry<>(2, "Expression")
+                )
+                        .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+        // FAKE FIRST ROW - TO CHANGE
         rowsMap = new HashMap<>();
+        rowsMap.put(0, Collections.unmodifiableMap(Stream.of(new AbstractMap.SimpleEntry<>(0, "T Value"),
+                                                             new AbstractMap.SimpleEntry<>(1, "<> Value"),
+                                                             new AbstractMap.SimpleEntry<>(2, "Expression Value"))
+                                                           .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue))));
         simulation = new Simulation();
     }
 
@@ -76,6 +88,7 @@ public class ScenarioSimulationModel
     public void setImports(Imports imports) {
         this.imports = imports;
     }
+
     public Map<Integer, Map<Integer, String>> getRowsMap() {
         return rowsMap;
     }
