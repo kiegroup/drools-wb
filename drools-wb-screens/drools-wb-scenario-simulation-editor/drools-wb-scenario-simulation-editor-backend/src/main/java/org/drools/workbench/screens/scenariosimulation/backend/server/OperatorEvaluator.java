@@ -30,7 +30,8 @@ public class OperatorEvaluator {
                 }
                 return Objects.equals(resultValue, expectedValue);
             default:
-                throw new UnsupportedOperationException("Operator " + operator.name() + " is not supported");
+                throw new UnsupportedOperationException(new StringBuilder().append("Operator ").append(operator.name())
+                                                                .append(" is not supported").toString());
         }
     }
 

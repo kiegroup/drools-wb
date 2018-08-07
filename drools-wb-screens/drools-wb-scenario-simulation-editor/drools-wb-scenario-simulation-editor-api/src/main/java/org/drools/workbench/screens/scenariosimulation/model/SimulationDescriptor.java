@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * SimulationDescriptor describes a template of a simulation
+ */
 @Portable
 public class SimulationDescriptor {
 
@@ -71,8 +74,9 @@ public class SimulationDescriptor {
                             .append("' already exists for the fact '").append(factIdentifier.getName()).append("'").toString());
         }
         if (index > factMappings.size()) {
-            throw new IllegalArgumentException("Impossible to add an element at position " + index
-                                                       + " because there are only " + factMappings.size() + " elements");
+            throw new IllegalArgumentException(
+                    new StringBuilder().append("Impossible to add an element at position ").append(index)
+                            .append(" because there are only ").append(factMappings.size()).append(" elements").toString());
         }
         FactMapping factMapping = new FactMapping(expressionIdentifier, factIdentifier, index);
         factMappings.add(index, factMapping);

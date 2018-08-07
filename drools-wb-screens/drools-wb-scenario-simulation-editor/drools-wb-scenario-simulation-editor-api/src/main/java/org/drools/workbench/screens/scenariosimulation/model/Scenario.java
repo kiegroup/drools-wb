@@ -26,6 +26,9 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
+/**
+ * Scenario contains description and values to test in the defined scenario
+ */
 @Portable
 public class Scenario {
 
@@ -67,9 +70,12 @@ public class Scenario {
     }
 
     public Optional<FactMappingValue> getFactMappingValueByIndex(int index) {
-        FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(index);
-        if (factMappingByIndex == null) {
-            throw new IllegalArgumentException("Impossible to retrieve FactMapping at index " + index);
+        FactMapping factMappingByIndex;
+        try {
+            factMappingByIndex = simulationDescriptor.getFactMappingByIndex(index);
+        }catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    new StringBuilder().append("Impossible to retrieve FactMapping at index ").append(index).toString(), e);
         }
         return getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
     }

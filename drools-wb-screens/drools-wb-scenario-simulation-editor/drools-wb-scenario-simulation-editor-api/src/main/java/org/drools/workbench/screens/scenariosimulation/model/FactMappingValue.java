@@ -17,12 +17,18 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * FactMappingValue contains the identifier of a fact mapping + the raw value
+ */
 @Portable
 public class FactMappingValue {
 
     private FactIdentifier factIdentifier;
     private ExpressionIdentifier expressionIdentifier;
     private Object rawValue;
+    /**
+     * Each mapping value is bound with an operator. Default is equals that can be used as assignment in an "GIVEN" value or as equality check with "EXPECTED"
+     */
     private FactMappingValueOperator operator = FactMappingValueOperator.EQUALS;
 
     public FactMappingValue() {

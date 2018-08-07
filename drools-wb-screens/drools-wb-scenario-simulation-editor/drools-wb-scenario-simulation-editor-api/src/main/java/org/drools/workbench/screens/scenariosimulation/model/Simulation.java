@@ -21,6 +21,9 @@ import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * Envelop class that wrap the definition of the simulation and the values of the scenarios
+ */
 @Portable
 public class Simulation {
 

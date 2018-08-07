@@ -17,6 +17,9 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * Type of fact mappings
+ */
 @Portable
 public enum FactMappingType {
     GIVEN,

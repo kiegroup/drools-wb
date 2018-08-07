@@ -19,6 +19,9 @@ import java.util.Objects;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+/**
+ * A fact is identified by its name and the canonical name of its class
+ */
 @Portable
 public class FactIdentifier {
 
