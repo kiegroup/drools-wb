@@ -54,6 +54,8 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
     public void onContextMenu(final ContextMenuEvent event) {
         event.preventDefault();
         event.stopPropagation();
+        gridContextMenu.hide();
+        headerContextMenu.hide();
         final int canvasX = getRelativeX(event);
         final int canvasY = getRelativeY(event);
         final boolean isShiftKeyDown = event.getNativeEvent().getShiftKey();
@@ -66,8 +68,6 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
         if (uiColumnIndex == null) {
             return;
         }
-        gridContextMenu.hide();
-        headerContextMenu.hide();
         if (!manageHeaderClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex)) {
             manageBodyClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex, isShiftKeyDown, isControlKeyDown);
         }
