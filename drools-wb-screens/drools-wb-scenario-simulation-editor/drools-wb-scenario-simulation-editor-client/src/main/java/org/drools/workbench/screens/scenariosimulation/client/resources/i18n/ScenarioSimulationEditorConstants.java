@@ -30,27 +30,27 @@ public interface ScenarioSimulationEditorConstants
 
     String newScenarioSimulationDescription();
 
-    String FactColumnHeader();
+    String factColumnHeader();
 
-    String FieldColumnHeader();
+    String fieldColumnHeader();
 
-    String ContextColumnHeader();
+    String contextColumnHeader();
 
-    String AddScenarioSimulation();
+    String addScenarioSimulation();
 
-    String ScenarioSimulationEditorTitle();
+    String scenarioSimulationEditorTitle();
 
-    String ScenarioSimulationResourceTypeDescription();
+    String scenarioSimulationResourceTypeDescription();
 
     String remove();
 
     String invalidDefinitionDisabled();
 
-    String ShowRightPanel();
+    String showRightPanel();
 
-    String HideRightPanel();
+    String hideRightPanel();
 
-    String TestTools();
+    String testTools();
 
     String testEditor();
 

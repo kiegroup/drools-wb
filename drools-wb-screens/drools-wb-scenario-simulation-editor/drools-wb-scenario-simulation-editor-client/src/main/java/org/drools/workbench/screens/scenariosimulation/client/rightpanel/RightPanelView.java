@@ -25,11 +25,11 @@ public interface RightPanelView
 
     void showEditorTab();
 
-    void hideCheatSheetTabTab();
+    void hideCheatSheetTab();
 
-    void showCheatSheetTabTab();
+    void showCheatSheetTab();
 
-    void hideEditorTabTab();
+    void hideEditorTab();
 
     interface Presenter {
 

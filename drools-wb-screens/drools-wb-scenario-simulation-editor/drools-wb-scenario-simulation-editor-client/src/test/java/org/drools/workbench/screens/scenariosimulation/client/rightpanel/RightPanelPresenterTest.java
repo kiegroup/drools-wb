@@ -48,20 +48,20 @@ public class RightPanelPresenterTest {
 
     @Test
     public void getTitle() {
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.TestTools(), rightPanelPresenter.getTitle());
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.testTools(), rightPanelPresenter.getTitle());
     }
 
     @Test
     public void onEditorTabActivated() {
         rightPanelPresenter.onEditorTabActivated();
         verify(mockRightPanelView, times(1)).showEditorTab();
-        verify(mockRightPanelView, times(1)).hideCheatSheetTabTab();
+        verify(mockRightPanelView, times(1)).hideCheatSheetTab();
     }
 
     @Test
     public void onCheatSheetTabActivated() {
         rightPanelPresenter.onCheatSheetTabActivated();
-        verify(mockRightPanelView, times(1)).showCheatSheetTabTab();
-        verify(mockRightPanelView, times(1)).hideEditorTabTab();
+        verify(mockRightPanelView, times(1)).showCheatSheetTab();
+        verify(mockRightPanelView, times(1)).hideEditorTab();
     }
 }

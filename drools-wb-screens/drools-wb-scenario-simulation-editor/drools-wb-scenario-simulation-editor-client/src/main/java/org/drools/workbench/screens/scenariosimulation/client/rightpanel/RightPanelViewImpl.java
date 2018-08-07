@@ -76,17 +76,17 @@ public class RightPanelViewImpl
     }
 
     @Override
-    public void hideCheatSheetTabTab() {
+    public void hideCheatSheetTab() {
         hideTab(cheatSheetTab, cheatSheetTabContent);
     }
 
     @Override
-    public void showCheatSheetTabTab() {
+    public void showCheatSheetTab() {
         showTab(cheatSheetTab, cheatSheetTabContent);
     }
 
     @Override
-    public void hideEditorTabTab() {
+    public void hideEditorTab() {
         hideTab(editorTab, editorTabContent);
     }
 

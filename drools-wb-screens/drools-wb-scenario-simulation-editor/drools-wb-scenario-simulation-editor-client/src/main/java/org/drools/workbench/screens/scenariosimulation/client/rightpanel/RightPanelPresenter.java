@@ -63,7 +63,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return ScenarioSimulationEditorConstants.INSTANCE.TestTools();
+        return ScenarioSimulationEditorConstants.INSTANCE.testTools();
     }
 
 
@@ -75,13 +75,13 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onEditorTabActivated() {
         view.showEditorTab();
-        view.hideCheatSheetTabTab();
+        view.hideCheatSheetTab();
     }
 
     @Override
     public void onCheatSheetTabActivated() {
-        view.showCheatSheetTabTab();
-        view.hideEditorTabTab();
+        view.showCheatSheetTab();
+        view.hideEditorTab();
 
     }
 }

@@ -121,6 +121,6 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     }
 
     private void setButtonText(boolean isRightPanelShown) {
-        button.setText(isRightPanelShown ? ScenarioSimulationEditorConstants.INSTANCE.HideRightPanel() : ScenarioSimulationEditorConstants.INSTANCE.ShowRightPanel());
+        button.setText(isRightPanelShown ? ScenarioSimulationEditorConstants.INSTANCE.hideRightPanel() : ScenarioSimulationEditorConstants.INSTANCE.showRightPanel());
     }
 }
