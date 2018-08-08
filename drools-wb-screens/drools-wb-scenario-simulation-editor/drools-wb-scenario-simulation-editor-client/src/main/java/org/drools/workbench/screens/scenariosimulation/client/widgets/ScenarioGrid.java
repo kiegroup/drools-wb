@@ -59,8 +59,10 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     private void setHeaderColumns(Map<Integer, String> headersMap) {
-        headersMap.forEach((columnIndex, columnTitle) ->
-                                   model.insertColumn(columnIndex, getScenarioGridColumn(columnTitle, scenarioGridPanel, scenarioGridLayer)));
+        headersMap.forEach((columnIndex, columnTitle) -> {
+            String columnGroup = columnIndex < 3 ? "Given" : "Expected";
+            model.insertColumn(columnIndex, getScenarioGridColumn(columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+        });
     }
 
     private void appendRows(Map<Integer, Map<Integer, String>> rowsMap) {

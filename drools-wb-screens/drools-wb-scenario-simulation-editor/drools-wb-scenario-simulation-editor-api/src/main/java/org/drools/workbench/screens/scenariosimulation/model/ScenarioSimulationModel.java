@@ -43,9 +43,12 @@ public class ScenarioSimulationModel
     public ScenarioSimulationModel() {
         headersMap = new HashMap<>();
         // DEFAULT HEADERS -TO CHANGE
-        headersMap.put(0, "T");
-        headersMap.put(1, "");
-        headersMap.put(2, "Expression");
+        headersMap.put(0, "Given A");
+        headersMap.put(1, "Given B");
+        headersMap.put(2, "Given C");
+        headersMap.put(3, "Expected D");
+        headersMap.put(4, "Expected E");
+        headersMap.put(5, "Expected F");
         rowsMap = new HashMap<>();
         simulation = new Simulation();
     }
