@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.factories;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationViewImpl;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -46,8 +46,8 @@ public class ScenarioSimulationViewProvider {
         return toReturn;
     }
 
-    public static  ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGrid scenarioGrid) {
-        return new ScenarioSimulationGridPanelContextMenuHandler(scenarioGrid);
+    public static ScenarioSimulationGridPanelClickHandler newScenarioSimulationGridPanelClickHandler(final ScenarioGrid scenarioGrid) {
+        return new ScenarioSimulationGridPanelClickHandler(scenarioGrid);
     }
 
     private static ScenarioGrid newScenarioGrid(final ScenarioGridPanel scenarioGridPanel, final ScenarioGridLayer scenarioGridLayer) {

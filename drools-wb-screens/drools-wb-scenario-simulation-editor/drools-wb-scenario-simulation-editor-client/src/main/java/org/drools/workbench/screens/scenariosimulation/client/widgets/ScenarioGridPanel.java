@@ -15,15 +15,16 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 /**
  * ScenarioGridPanel implementation of <code>GridLienzoPanel</code>.
  * <p>
  * This panel contains a <code>ScenarioGridLayer</code> and it is instantiated only once.
- * The Right click is managed by the injected <code>ScenarioSimulationGridPanelContextMenuHandler</code>
+ * The Clicks are managed by the injected <code>ScenarioSimulationGridPanelClickHandler</code>
  */
 public class ScenarioGridPanel extends GridLienzoPanel {
 
@@ -35,11 +36,11 @@ public class ScenarioGridPanel extends GridLienzoPanel {
         super(LIENZO_PANEL_WIDTH, LIENZO_PANEL_HEIGHT);
     }
 
-    public void setContextMenuHandler(ScenarioSimulationGridPanelContextMenuHandler contextMenuHandler) {
-        getDomElementContainer().addDomHandler(contextMenuHandler,
-                                               ContextMenuEvent.getType());
+    public void setClickHandler(ScenarioSimulationGridPanelClickHandler clickHandler) {
+        getDomElementContainer().addDomHandler(clickHandler,
+                                                       ContextMenuEvent.getType());
+        getDomElementContainer().addDomHandler(clickHandler, ClickEvent.getType());
     }
-
 
     public ScenarioGrid getScenarioGrid() {
         return ((ScenarioGridLayer) getDefaultGridLayer()).getScenarioGrid();
