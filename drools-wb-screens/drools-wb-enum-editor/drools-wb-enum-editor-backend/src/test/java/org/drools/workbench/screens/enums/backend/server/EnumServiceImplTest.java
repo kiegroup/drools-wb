@@ -35,6 +35,7 @@ import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.ext.editor.commons.backend.service.SaveAndRenameServiceImpl;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.FileAlreadyExistsException;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -122,5 +123,13 @@ public class EnumServiceImplTest {
         enumService.saveAndRename(path, newFileName, metadata, content, comment);
 
         verify(saveAndRenameService).saveAndRename(path, newFileName, metadata, content, comment);
+    }
+
+    @Test(expected = FileAlreadyExistsException.class)
+    public void testCreateEnumAlreadyExists() {
+        final Path path = PathFactory.newPath("enum.enumeration", "file:///enum.enumeration");
+        when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(true);
+
+        enumService.create(path, "", "", "");
     }
 }
