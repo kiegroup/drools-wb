@@ -27,21 +27,21 @@ public class SimulationDescriptorTest {
     @Before
     public void init() {
         simulationDescriptor = new SimulationDescriptor();
-        factIdentifier = simulationDescriptor.newFactIdentifier("test fact", String.class.getCanonicalName());
-        expressionIdentifier = ExpressionIdentifier.identifier("test expression", FactMappingType.EXPECTED);
+        factIdentifier = FactIdentifier.create("test fact", String.class.getCanonicalName());
+        expressionIdentifier = ExpressionIdentifier.create("test expression", FactMappingType.EXPECTED);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFactMappingTest() {
-        simulationDescriptor.addFactMapping(expressionIdentifier, factIdentifier);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
 
         // Should fail
-        simulationDescriptor.addFactMapping(expressionIdentifier, factIdentifier);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFactMappingIndexTest() {
         // Should fail
-        simulationDescriptor.addFactMapping(1, expressionIdentifier, factIdentifier);
+        simulationDescriptor.addFactMapping(1, factIdentifier, expressionIdentifier);
     }
 }
