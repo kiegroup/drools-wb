@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.9.0-SNAPSHOT</version>
+    <version>7.10.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -21,7 +21,20 @@
 
   <dependencies>
 
-    <!-- dependencies added because of new illegal transitive dependency check -->
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-api</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.kie.soup</groupId>
+        <artifactId>kie-soup-commons</artifactId>
+      </dependency>
+    
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
@@ -50,6 +63,16 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-commons-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-message-console-client</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
@@ -58,6 +81,11 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.workbench.services</groupId>
+      <artifactId>kie-wb-common-datamodel-api</artifactId>
     </dependency>
 
     <dependency>
@@ -71,13 +99,24 @@
     </dependency>
 
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-commons-editor-client</artifactId>
+      <groupId>org.kie.workbench.widgets</groupId>
+      <artifactId>kie-wb-config-resource-widget</artifactId>
     </dependency>
+
+    <!--Wires Grids dependencies-->
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-message-console-client</artifactId>
+      <artifactId>uberfire-wires-core-grids</artifactId>
+      <!--<scope>provided</scope>-->
     </dependency>
+
+    <!-- Lienzo -->
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>lienzo-core</artifactId>
+      <!-- <scope>provided</scope>-->
+    </dependency>
+
 
     <!-- GWT and GWT Extensions -->
     <dependency>
@@ -96,6 +135,11 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-testing-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>lienzo-tests</artifactId>
       <scope>test</scope>
     </dependency>
 
