@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
 
+import static org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider.newScenarioGridPanel;
 import static org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider.newScenarioSimulationView;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -32,13 +33,13 @@ import static org.junit.Assert.assertTrue;
 @RunWith(LienzoMockitoTestRunner.class)
 public class ScenarioSimulationViewProviderTest {
 
-
     @Test
     public void newScenarioSimulationViewTest() {
-        ScenarioSimulationView retrieved = newScenarioSimulationView();
-        assertNotNull(retrieved);
-        ScenarioGridPanel scenarioGridPanel= retrieved.getScenarioGridPanel();
+        final ScenarioGridLayer scenarioGridLayer = new ScenarioGridLayer();
+        final ScenarioGridPanel scenarioGridPanel = newScenarioGridPanel(scenarioGridLayer);
         assertNotNull(scenarioGridPanel);
+        ScenarioSimulationView retrieved = newScenarioSimulationView(scenarioGridPanel);
+        assertNotNull(retrieved);
         DefaultGridLayer defaultGridLayer = scenarioGridPanel.getDefaultGridLayer();
         assertNotNull(defaultGridLayer);
         assertTrue(defaultGridLayer instanceof ScenarioGridLayer);

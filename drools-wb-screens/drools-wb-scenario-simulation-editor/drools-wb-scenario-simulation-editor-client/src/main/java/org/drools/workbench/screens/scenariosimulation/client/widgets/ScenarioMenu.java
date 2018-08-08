@@ -13,20 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-package org.drools.workbench.screens.scenariosimulation.client.editor;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import java.util.Map;
+import com.ait.lienzo.client.core.shape.Group;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
+public class ScenarioMenu extends Group {
 
-public interface ScenarioSimulationView extends KieEditorView,
-                                                IsWidget {
+    private List<ScenarioMenuItem> items;
 
-    ScenarioGridPanel getScenarioGridPanel();
+    public ScenarioMenu() {
+        this.items = getMenuItems();
+    }
 
-    void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
-
+    private List<ScenarioMenuItem> getMenuItems() {
+        return asList("One", "Two", "Three")
+                .stream()
+                .map(ScenarioMenuItem::new)
+                .collect(Collectors.toList());
+    }
 }

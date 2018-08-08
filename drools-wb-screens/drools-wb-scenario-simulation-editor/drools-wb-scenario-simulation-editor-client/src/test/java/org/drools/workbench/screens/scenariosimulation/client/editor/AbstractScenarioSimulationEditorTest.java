@@ -19,6 +19,9 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 import java.util.Optional;
 
 import com.google.gwt.core.client.GWT;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -27,20 +30,13 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.shared.metadata.model.Overview;
-import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
-import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
-import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
-import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
-import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
-import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.mockito.Mockito.any;
@@ -50,19 +46,10 @@ import static org.mockito.Mockito.when;
 public abstract class AbstractScenarioSimulationEditorTest {
 
     @Mock
-    protected KieEditorWrapperView mockKieView;
-
-    @Mock
-    protected OverviewWidgetPresenter mockOverviewWidget;
-
-    @Mock
     protected VersionRecordManager mockVersionRecordManager;
 
     @Mock
     protected FileMenuBuilder mockFileMenuBuilder;
-
-    @Mock
-    protected DefaultFileNameValidator mockFileNameValidator;
 
     @Mock
     protected ScenarioSimulationService scenarioSimulationService;
@@ -74,19 +61,19 @@ public abstract class AbstractScenarioSimulationEditorTest {
     protected Overview mockOverview;
 
     @Mock
+    protected GridContextMenu mockGridContextMenu;
+
+    @Mock
+    protected HeaderContextMenu mockHeaderContextMenu;
+
+    @Mock
+    protected BaseMenuView mockGridContextMenuView;
+
+    @Mock
+    protected BaseMenuView mockHeaderContextMenuView;
+
+    @Mock
     protected WorkspaceProjectContext mockWorkbenchContext;
-
-    @Mock
-    protected AlertsButtonMenuItemBuilder mockAlertsButtonMenuItemBuilder;
-
-    @Mock
-    protected EventSourceMock<NotificationEvent> mockNotification;
-
-    @Mock
-    protected ImportsWidgetPresenter mockImportsWidget;
-
-    @Mock
-    protected AsyncPackageDataModelOracleFactory mockOracleFactory;
 
     @Mock
     protected ScenarioGridPanel mockScenarioGridPanel;
@@ -114,6 +101,9 @@ public abstract class AbstractScenarioSimulationEditorTest {
         when(mockVersionRecordManager.getPathToLatest()).thenReturn(mockObservablePath);
 
         when(mockWorkbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
+
+        when(mockGridContextMenu.getView()).thenReturn(mockGridContextMenuView);
+        when(mockHeaderContextMenu.getView()).thenReturn(mockHeaderContextMenuView);
 
         this.model = new ScenarioSimulationModel();
         this.content = new ScenarioSimulationModelContent(model,

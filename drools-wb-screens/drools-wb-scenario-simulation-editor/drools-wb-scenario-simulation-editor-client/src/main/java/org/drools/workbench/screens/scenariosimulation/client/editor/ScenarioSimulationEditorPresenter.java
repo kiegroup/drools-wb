@@ -22,11 +22,18 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -71,6 +78,8 @@ public class ScenarioSimulationEditorPresenter
     private Caller<ScenarioSimulationService> service;
 
     private ScenarioSimulationResourceType type;
+    private GridContextMenu gridContextMenu;
+    private HeaderContextMenu headerContextMenu;
 
     private AsyncPackageDataModelOracle oracle;
 
@@ -88,15 +97,19 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final PlaceManager placeManager) {
+                                             final PlaceManager placeManager,
+                                             final GridContextMenu gridContextMenu,
+                                             final HeaderContextMenu headerContextMenu) {
         super();
-        this.view = newScenarioSimulationView();   // Indirection added for test-purpose
-        this.baseView = view;
+        this.gridContextMenu = gridContextMenu;
+        this.headerContextMenu = headerContextMenu;
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
+        initComponents();
+        addMenuItems();
     }
 
     @OnStartup
@@ -163,6 +176,18 @@ public class ScenarioSimulationEditorPresenter
         return view;
     }
 
+    public ScenarioGridPanel getScenarioGridPanel() {
+        return ((ScenarioSimulationView) baseView).getScenarioGridPanel();
+    }
+
+    public ScenarioGrid getScenarioGrid() {
+        return getScenarioGridPanel().getScenarioGrid();
+    }
+
+    public ScenarioSimulationModel getModel() {
+        return model;
+    }
+
     /**
      * If you want to customize the menu override this method.
      */
@@ -193,14 +218,46 @@ public class ScenarioSimulationEditorPresenter
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
     }
 
+    protected void initComponents() {
+        // Indirections added for test-purpose
+        final ScenarioGridLayer scenarioGridLayer = newScenarioGridLayer();
+        final ScenarioGridPanel scenarioGridPanel = newScenarioGridPanel(scenarioGridLayer);
+        final ScenarioSimulationGridPanelContextMenuHandler scenarioSimulationGridPanelContextMenuHandler = newScenarioSimulationGridPanelContextMenuHandler(scenarioGridPanel.getScenarioGrid());
+        scenarioSimulationGridPanelContextMenuHandler.setGridContextMenu(gridContextMenu);
+        scenarioSimulationGridPanelContextMenuHandler.setHeaderContextMenu(headerContextMenu);
+        scenarioGridPanel.setContextMenuHandler(scenarioSimulationGridPanelContextMenuHandler);
+        this.view = newScenarioSimulationView(scenarioGridPanel);   // Indirection added for test-purpose
+        this.baseView = view;
+    }
+
+    // Add only for testing purpose
+    protected ScenarioGridLayer newScenarioGridLayer() {
+        return new ScenarioGridLayer();
+    }
+
+    protected ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(
+            final ScenarioGrid scenarioGrid) {
+        return ScenarioSimulationViewProvider.newScenarioSimulationGridPanelContextMenuHandler(scenarioGrid);
+    }
+
+    protected ScenarioGridPanel newScenarioGridPanel(final ScenarioGridLayer scenarioGridLayer) {
+        return ScenarioSimulationViewProvider.newScenarioGridPanel(scenarioGridLayer);
+    }
+
+    protected ScenarioSimulationView newScenarioSimulationView ( final ScenarioGridPanel newScenarioGridPanel){
+               return ScenarioSimulationViewProvider.newScenarioSimulationView(newScenarioGridPanel);
+           }
+
     protected void loadContent() {
         service.call(getModelSuccessCallback(),
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    // Needed by test
-    protected ScenarioSimulationView newScenarioSimulationView() {
-        return ScenarioSimulationViewProvider.newScenarioSimulationView();
+    protected void addMenuItems() {
+        gridContextMenu.addMenuItem("one", "ONE", "", () -> GWT.log("ONE COMMAND"));
+        gridContextMenu.addMenuItem("two", "TWO", "", () -> GWT.log("TWO COMMAND"));
+        headerContextMenu.addMenuItem("one", "HEADER-ONE", "", () -> GWT.log("HEADER-ONE COMMAND"));
+        headerContextMenu.addMenuItem("two", "HEADER-TWO", "", () -> GWT.log("HEADER-TWO COMMAND"));
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

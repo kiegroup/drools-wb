@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.editor;
+package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import java.util.Map;
-
-import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
-
-public interface ScenarioSimulationView extends KieEditorView,
-                                                IsWidget {
-
-    ScenarioGridPanel getScenarioGridPanel();
-
-    void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
+public class HeaderContextMenu extends BaseMenu {
 
 }

@@ -35,7 +35,6 @@ public class ScenarioGridModel extends BaseGridData {
     private Optional<Map<Integer, Map<Integer, String>>> optionalRowsMap = Optional.empty();
 
     public ScenarioGridModel() {
-        super();
     }
 
     public ScenarioGridModel(boolean isMerged) {

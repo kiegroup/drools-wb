@@ -21,10 +21,9 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPane
 
 /**
  * ScenarioGridPanel implementation of <code>GridLienzoPanel</code>.
- *
+ * <p>
  * This panel contains a <code>ScenarioGridLayer</code> and it is instantiated only once.
  * The Right click is managed by the injected <code>ScenarioSimulationGridPanelContextMenuHandler</code>
- *
  */
 public class ScenarioGridPanel extends GridLienzoPanel {
 
@@ -32,8 +31,11 @@ public class ScenarioGridPanel extends GridLienzoPanel {
 
     public static final int LIENZO_PANEL_HEIGHT = 450;
 
-    public ScenarioGridPanel(ScenarioSimulationGridPanelContextMenuHandler contextMenuHandler) {
+    public ScenarioGridPanel() {
         super(LIENZO_PANEL_WIDTH, LIENZO_PANEL_HEIGHT);
+    }
+
+    public void setContextMenuHandler(ScenarioSimulationGridPanelContextMenuHandler contextMenuHandler) {
         getDomElementContainer().addDomHandler(contextMenuHandler,
                                                ContextMenuEvent.getType());
     }
@@ -42,6 +44,4 @@ public class ScenarioGridPanel extends GridLienzoPanel {
     public ScenarioGrid getScenarioGrid() {
         return ((ScenarioGridLayer) getDefaultGridLayer()).getScenarioGrid();
     }
-
-
 }

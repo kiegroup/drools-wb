@@ -17,12 +17,20 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
+import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
+import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
+import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
@@ -30,7 +38,9 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
 import org.uberfire.client.workbench.events.PlaceHiddenEvent;
+import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.mocks.CallerMock;
+import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
@@ -52,10 +62,34 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioSimulationEditorPresenter presenter;
 
     @Mock
+    private KieEditorWrapperView mockKieView;
+
+    @Mock
+    private OverviewWidgetPresenter mockOverviewWidget;
+
+    @Mock
+    private DefaultFileNameValidator mockFileNameValidator;
+
+    @Mock
+    private AlertsButtonMenuItemBuilder mockAlertsButtonMenuItemBuilder;
+
+    @Mock
+    private EventSourceMock<NotificationEvent> mockNotification;
+
+    @Mock
     private ScenarioGridLayer mockScenarioGridLayer;
 
     @Mock
     private ScenarioSimulationView mockScenarioSimulationView;
+
+    @Mock
+    private ScenarioSimulationGridPanelContextMenuHandler mockScenarioSimulationGridPanelContextMenuHandler;
+
+    @Mock
+    protected ImportsWidgetPresenter mockImportsWidget;
+
+    @Mock
+    protected AsyncPackageDataModelOracleFactory mockOracleFactory;
 
     @Mock
     private PlaceManager mockPlaceManager;
@@ -76,7 +110,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                    type,
                                                                    mockImportsWidget,
                                                                    mockOracleFactory,
-                                                                   mockPlaceManager) {
+                                                                   mockPlaceManager,
+                                                                   mockGridContextMenu,
+                                                                   mockHeaderContextMenu) {
             {
                 this.kieView = mockKieView;
                 this.overviewWidget = mockOverviewWidget;
@@ -99,8 +135,28 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected ScenarioSimulationView newScenarioSimulationView() {
+            protected ScenarioGridLayer newScenarioGridLayer() {
+                return mockScenarioGridLayer;
+            }
+
+            @Override
+            protected ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGrid scenarioGrid) {
+                return mockScenarioSimulationGridPanelContextMenuHandler;
+            }
+
+            @Override
+            protected ScenarioGridPanel newScenarioGridPanel(ScenarioGridLayer scenarioGridLayer) {
+                return mockScenarioGridPanel;
+            }
+
+            @Override
+            protected ScenarioSimulationView newScenarioSimulationView(ScenarioGridPanel newScenarioGridPanel) {
                 return mockScenarioSimulationView;
+            }
+
+            @Override
+            protected void makeMenuBar() {
+
             }
         });
     }
@@ -121,6 +177,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenter.getView()).showLoading();
         verify(presenter.getView()).hideBusyIndicator();
         verify(mockScenarioGridLayer, times(1)).enterPinnedMode(any(), any());
+    }
+
+    @Test
+    public void testInitComponents() {
+        presenter.initComponents();
+        verify(presenter, times(1)).newScenarioGridLayer();
+        verify(presenter, times(1)).newScenarioSimulationGridPanelContextMenuHandler(mockScenarioGrid);
+        verify(presenter, times(1)).newScenarioGridPanel(mockScenarioGridLayer);
+        verify(presenter, times(1)).newScenarioSimulationView(mockScenarioGridPanel);
     }
 
     @Test
