@@ -18,8 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.dom.client.DomEvent;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -28,14 +31,14 @@ import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData;
 
-public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMenuHandler {
+public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
+                                                                ContextMenuHandler {
 
     private ScenarioGrid scenarioGrid;
     private GridContextMenu gridContextMenu;
     private HeaderContextMenu headerContextMenu;
 
-
-    public ScenarioSimulationGridPanelContextMenuHandler(final ScenarioGrid scenarioGrid) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
+    public ScenarioSimulationGridPanelClickHandler(final ScenarioGrid scenarioGrid) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
         // detect and identify the click on each of them
         this.scenarioGrid = scenarioGrid;
     }
@@ -48,14 +51,19 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
         this.headerContextMenu = headerContextMenu;
     }
 
+    @Override
+    public void onClick(ClickEvent event) {
+        commonClickManagement(event);
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public void onContextMenu(final ContextMenuEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
-        gridContextMenu.hide();
-        headerContextMenu.hide();
+        commonClickManagement(event);
+        manageRightClick(event);
+    }
+
+    protected void manageRightClick(final ContextMenuEvent event) {
         final int canvasX = getRelativeX(event);
         final int canvasY = getRelativeY(event);
         final boolean isShiftKeyDown = event.getNativeEvent().getShiftKey();
@@ -68,9 +76,16 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
         if (uiColumnIndex == null) {
             return;
         }
-        if (!manageHeaderClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex)) {
-            manageBodyClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex, isShiftKeyDown, isControlKeyDown);
+        if (!manageHeaderRightClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex)) {
+            manageBodyRightClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex, isShiftKeyDown, isControlKeyDown);
         }
+    }
+
+    private void commonClickManagement(DomEvent event) {
+        event.preventDefault();
+        event.stopPropagation();
+        gridContextMenu.hide();
+        headerContextMenu.hide();
     }
 
     /**
@@ -83,7 +98,7 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
      * @param uiColumnIndex
      * @return
      */
-    private boolean manageHeaderClick(ScenarioGrid scenarioGrid, int left, int top, double gridY, Integer uiColumnIndex) {
+    private boolean manageHeaderRightClick(ScenarioGrid scenarioGrid, int left, int top, double gridY, Integer uiColumnIndex) {
         ScenarioHeaderMetaData columnMetadata = getColumnScenarioHeaderMetaData(scenarioGrid, scenarioGrid.getModel().getColumns().get(uiColumnIndex), gridY);
         if (columnMetadata == null) {
             return false;
@@ -104,7 +119,7 @@ public class ScenarioSimulationGridPanelContextMenuHandler implements ContextMen
      * @param isControlKeyDown
      * @return
      */
-    private boolean manageBodyClick(ScenarioGrid scenarioGrid, int left, int top, double gridY, Integer uiColumnIndex, boolean isShiftKeyDown, boolean isControlKeyDown) {
+    private boolean manageBodyRightClick(ScenarioGrid scenarioGrid, int left, int top, double gridY, Integer uiColumnIndex, boolean isShiftKeyDown, boolean isControlKeyDown) {
         scenarioGrid.deselect();
         final Integer uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, gridY);
         if (uiRowIndex == null) {

@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -83,7 +83,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioSimulationView mockScenarioSimulationView;
 
     @Mock
-    private ScenarioSimulationGridPanelContextMenuHandler mockScenarioSimulationGridPanelContextMenuHandler;
+    private ScenarioSimulationGridPanelClickHandler mockScenarioSimulationGridPanelClickHandler;
 
     @Mock
     protected ImportsWidgetPresenter mockImportsWidget;
@@ -140,8 +140,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(final ScenarioGrid scenarioGrid) {
-                return mockScenarioSimulationGridPanelContextMenuHandler;
+            protected ScenarioSimulationGridPanelClickHandler newScenarioSimulationGridPanelClickHandler(final ScenarioGrid scenarioGrid) {
+                return mockScenarioSimulationGridPanelClickHandler;
             }
 
             @Override
@@ -183,7 +183,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void testInitComponents() {
         presenter.initComponents();
         verify(presenter, times(1)).newScenarioGridLayer();
-        verify(presenter, times(1)).newScenarioSimulationGridPanelContextMenuHandler(mockScenarioGrid);
+        verify(presenter, times(1)).newScenarioSimulationGridPanelClickHandler(mockScenarioGrid);
         verify(presenter, times(1)).newScenarioGridPanel(mockScenarioGridLayer);
         verify(presenter, times(1)).newScenarioSimulationView(mockScenarioGridPanel);
     }

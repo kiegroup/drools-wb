@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
@@ -222,10 +222,10 @@ public class ScenarioSimulationEditorPresenter
         // Indirections added for test-purpose
         final ScenarioGridLayer scenarioGridLayer = newScenarioGridLayer();
         final ScenarioGridPanel scenarioGridPanel = newScenarioGridPanel(scenarioGridLayer);
-        final ScenarioSimulationGridPanelContextMenuHandler scenarioSimulationGridPanelContextMenuHandler = newScenarioSimulationGridPanelContextMenuHandler(scenarioGridPanel.getScenarioGrid());
-        scenarioSimulationGridPanelContextMenuHandler.setGridContextMenu(gridContextMenu);
-        scenarioSimulationGridPanelContextMenuHandler.setHeaderContextMenu(headerContextMenu);
-        scenarioGridPanel.setContextMenuHandler(scenarioSimulationGridPanelContextMenuHandler);
+        final ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler = newScenarioSimulationGridPanelClickHandler(scenarioGridPanel.getScenarioGrid());
+        scenarioSimulationGridPanelClickHandler.setGridContextMenu(gridContextMenu);
+        scenarioSimulationGridPanelClickHandler.setHeaderContextMenu(headerContextMenu);
+        scenarioGridPanel.setClickHandler(scenarioSimulationGridPanelClickHandler);
         this.view = newScenarioSimulationView(scenarioGridPanel);   // Indirection added for test-purpose
         this.baseView = view;
     }
@@ -235,9 +235,9 @@ public class ScenarioSimulationEditorPresenter
         return new ScenarioGridLayer();
     }
 
-    protected ScenarioSimulationGridPanelContextMenuHandler newScenarioSimulationGridPanelContextMenuHandler(
+    protected ScenarioSimulationGridPanelClickHandler newScenarioSimulationGridPanelClickHandler(
             final ScenarioGrid scenarioGrid) {
-        return ScenarioSimulationViewProvider.newScenarioSimulationGridPanelContextMenuHandler(scenarioGrid);
+        return ScenarioSimulationViewProvider.newScenarioSimulationGridPanelClickHandler(scenarioGrid);
     }
 
     protected ScenarioGridPanel newScenarioGridPanel(final ScenarioGridLayer scenarioGridLayer) {
