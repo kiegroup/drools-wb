@@ -95,7 +95,6 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public void clear() {
-        checkSimulation();
         // Deleting rows
         int to = getRowCount();
         IntStream.range(0, to)
@@ -103,7 +102,10 @@ public class ScenarioGridModel extends BaseGridData {
                 .forEach(this::deleteRow);
         List<GridColumn<?>> copyList = new ArrayList<>(getColumns());
         copyList.forEach(this::deleteColumn);
-        simulation.clear();
+        // clear can be called before bind
+        if(simulation != null) {
+            simulation.clear();
+        }
     }
 
     private void checkSimulation() {

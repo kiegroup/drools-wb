@@ -29,9 +29,24 @@ public class ScenarioSimulationModel
     private Imports imports = new Imports();
 
     public ScenarioSimulationModel() {
-        // Empty table with only description column
         simulation = new Simulation();
-        simulation.getSimulationDescriptor().addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+
+        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
+
+        FactIdentifier givenFact = FactIdentifier.create("GIVEN", String.class.getCanonicalName());
+        FactIdentifier expectFact = FactIdentifier.create("EXPECT", String.class.getCanonicalName());
+
+        ExpressionIdentifier givenExpression = ExpressionIdentifier.create("GIVEN", FactMappingType.GIVEN);
+        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create("EXPECTED", FactMappingType.EXPECTED);
+
+        simulationDescriptor.addFactMapping(givenFact, givenExpression);
+        simulationDescriptor.addFactMapping(expectFact, expectedExpression);
+
+        Scenario scenario = simulation.addScenario();
+        scenario.setDescription("Scenario example");
+        scenario.addMappingValue(givenFact, givenExpression, "sample");
+        scenario.addMappingValue(expectFact, expectedExpression, "sample");
     }
 
     public ScenarioSimulationModel(Simulation simulation) {
