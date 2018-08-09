@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -86,16 +87,19 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioSimulationGridPanelClickHandler mockScenarioSimulationGridPanelClickHandler;
 
     @Mock
-    protected ImportsWidgetPresenter mockImportsWidget;
+    private ImportsWidgetPresenter mockImportsWidget;
 
     @Mock
-    protected AsyncPackageDataModelOracleFactory mockOracleFactory;
+    private AsyncPackageDataModelOracleFactory mockOracleFactory;
 
     @Mock
     private PlaceManager mockPlaceManager;
 
     @Mock
     private PlaceRequest mockPlaceRequest;
+
+    @Mock
+    private HandlerRegistration mockHandler;
 
     @Before
     public void setup() {
@@ -122,6 +126,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.notification = mockNotification;
                 this.workbenchContext = mockWorkbenchContext;
                 this.alertsButtonMenuItemBuilder = mockAlertsButtonMenuItemBuilder;
+                this.clickHandlerRegistration = mockHandler;
+            }
+
+            @Override
+            protected void registerClickHandler() {
+                //
             }
 
             @Override
@@ -225,5 +235,35 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
         presenter.onPlaceHiddenEvent(mockPlaceHiddenEvent);
         verify(mockPlaceManager, times(1)).closePlace(RightPanelPresenter.IDENTIFIER);
+    }
+
+    @Test
+    public void onClose() {
+        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
+        presenter.onClose();
+        onClosePlaceStatusOpen();
+        reset(mockVersionRecordManager);
+        reset(mockPlaceManager);
+        reset(mockHandler);
+
+        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.CLOSE);
+        presenter.onClose();
+        onClosePlaceStatusClose();
+        reset(mockVersionRecordManager);
+        reset(mockPlaceManager);
+        reset(mockHandler);
+    }
+
+    private void onClosePlaceStatusOpen() {
+        verify(mockVersionRecordManager, times(1)).clear();
+        verify(mockPlaceManager, times(1)).closePlace(RightPanelPresenter.IDENTIFIER);
+        verify(presenter.getView()).showLoading();
+        verify(mockHandler, times(1)).removeHandler();
+    }
+
+    private void onClosePlaceStatusClose() {
+        verify(mockVersionRecordManager, times(1)).clear();
+        verify(mockPlaceManager, times(0)).closePlace(RightPanelPresenter.IDENTIFIER);
+        verify(mockHandler, times(1)).removeHandler();
     }
 }

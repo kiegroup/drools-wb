@@ -15,47 +15,15 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridBodyDoubleClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridBodyRightClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridHeaderDoubleClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridHeaderRightClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridBodyDoubleClickHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridBodyRightClickHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridHeaderDoubleClickHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridHeaderRightClickHandler;
-
 /**
  * This class is meant to be a centralized listener for events fired up by UI, responding to them with specific <code>Command</code>s.
  *
  * It follows the GWT standard Event/Handler mechanism
  */
-public class CommandExecutor implements ScenarioGridHeaderRightClickHandler,
-                                        ScenarioGridBodyRightClickHandler,
-                                        ScenarioGridHeaderDoubleClickHandler,
-                                        ScenarioGridBodyDoubleClickHandler {
+public class CommandExecutor  {
 
     public CommandExecutor() {
         // CDI
     }
 
-    @Override
-    public void onRightClick(ScenarioGridHeaderRightClickEvent event) {
-        event.getScenarioGrid().select();
-        new ShowHeaderMenuCommand(event.getScenarioGrid(), event.getLeft(), event.getTop()).execute();
-    }
-
-    @Override
-    public void onRightClick(ScenarioGridBodyRightClickEvent event) {
-        new AddNewColumnCommand(event.getScenarioGridPanel(), event.getScenarioGridLayer()).execute();
-    }
-
-    @Override
-    public void onDoubleClick(ScenarioGridBodyDoubleClickEvent event) {
-        new EditBodyCellCommand(event.getScenarioGridPanel(), event.getScenarioGridLayer()).execute();
-    }
-
-    @Override
-    public void onDoubleClick(ScenarioGridHeaderDoubleClickEvent event) {
-        new EditHeaderCellCommand(event.getScenarioGridPanel(), event.getScenarioGridLayer()).execute();
-    }
 }

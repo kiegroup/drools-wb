@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
@@ -23,6 +24,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.events.RefreshMenusEvent;
+import org.gwtbootstrap3.client.ui.constants.Styles;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -150,4 +152,15 @@ public class BaseMenuTest {
         verify(mockEvent, times(1)).stopPropagation();
         verify(baseMenu, times(1)).hide();
     }
+
+    @Test
+    public void enableElement() {
+        Element mockElement = mock(Element.class);
+        baseMenu.enableElement(mockElement, true);
+        verify(mockElement, times(1)).removeClassName(Styles.DISABLED);
+        reset(mockElement);
+        baseMenu.enableElement(mockElement, false);
+        verify(mockElement, times(1)).addClassName(Styles.DISABLED);
+    }
+
 }

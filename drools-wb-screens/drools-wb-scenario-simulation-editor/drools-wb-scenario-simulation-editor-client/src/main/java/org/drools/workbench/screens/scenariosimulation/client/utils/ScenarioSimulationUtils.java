@@ -36,7 +36,7 @@ public class ScenarioSimulationUtils {
 
 
     public static GridCell<String> getSelectedCell(final ScenarioGrid source) {
-        GridData.SelectedCell selectedCell = source.getModel().getSelectedCells().get(0); // TODO GC FOR THE MOMENT BEING - TO FIX FOR MULTIPLE CELL SELECTION
+        GridData.SelectedCell selectedCell = source.getModel().getSelectedCells().get(0);
         return (GridCell<String>) source.getModel().getCell(selectedCell.getRowIndex(), selectedCell.getColumnIndex());
     }
 

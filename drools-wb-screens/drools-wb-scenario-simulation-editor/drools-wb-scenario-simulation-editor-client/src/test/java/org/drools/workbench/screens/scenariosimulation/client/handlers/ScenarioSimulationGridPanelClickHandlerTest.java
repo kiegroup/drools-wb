@@ -30,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -60,6 +61,9 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     @Mock
     private Document mockDocument;
 
+    @Mock
+    private ContextMenuEvent mockContextMenuEvent;
+
     @Before
     public void setUp() throws Exception {
 
@@ -72,17 +76,32 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
         scenarioSimulationGridPanelClickHandler.setGridContextMenu(mockGridContextMenu);
         scenarioSimulationGridPanelClickHandler.setHeaderContextMenu(mockHeaderContextMenu);
 
-        when(mockNativeEvent.getClientX()).thenReturn(10);
-        when(mockNativeEvent.getClientY()).thenReturn(10);
+        when(mockNativeEvent.getClientX()).thenReturn(100);
+        when(mockNativeEvent.getClientY()).thenReturn(100);
 
         when(mockTarget.getOwnerDocument()).thenReturn(mockDocument);
-        when(mockTarget.getAbsoluteLeft()).thenReturn(10);
-        when(mockTarget.getScrollLeft()).thenReturn(10);
-        when(mockTarget.getAbsoluteTop()).thenReturn(10);
-        when(mockTarget.getScrollTop()).thenReturn(10);
+        when(mockTarget.getAbsoluteLeft()).thenReturn(50);
+        when(mockTarget.getScrollLeft()).thenReturn(20);
+        when(mockTarget.getAbsoluteTop()).thenReturn(50);
+        when(mockTarget.getScrollTop()).thenReturn(20);
 
         when(mockDocument.getScrollLeft()).thenReturn(10);
         when(mockDocument.getScrollTop()).thenReturn(10);
+
+        when(mockContextMenuEvent.getNativeEvent()).thenReturn(mockNativeEvent);
+        when(mockContextMenuEvent.getRelativeElement()).thenReturn(mockTarget);
+    }
+
+    @Test
+    public void getRelativeX() {
+        int retrieved = scenarioSimulationGridPanelClickHandler.getRelativeX(mockContextMenuEvent);
+        assertEquals(80, retrieved);
+    }
+
+    @Test
+    public void getRelativeY() {
+        int retrieved = scenarioSimulationGridPanelClickHandler.getRelativeY(mockContextMenuEvent);
+        assertEquals(80, retrieved);
     }
 
     @Test
@@ -96,12 +115,9 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
     @Test
     public void onContextMenu() {
-        ContextMenuEvent mockEvent = mock(ContextMenuEvent.class);
-        when(mockEvent.getNativeEvent()).thenReturn(mockNativeEvent);
-        when(mockEvent.getRelativeElement()).thenReturn(mockTarget);
-        scenarioSimulationGridPanelClickHandler.onContextMenu(mockEvent);
-        verify(mockEvent, times(1)).preventDefault();
-        verify(mockEvent, times(1)).stopPropagation();
+        scenarioSimulationGridPanelClickHandler.onContextMenu(mockContextMenuEvent);
+        verify(mockContextMenuEvent, times(1)).preventDefault();
+        verify(mockContextMenuEvent, times(1)).stopPropagation();
         commonCheck();
     }
 

@@ -90,7 +90,7 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
 
-    private HandlerRegistration clickHandlerRegistration;
+    protected HandlerRegistration clickHandlerRegistration;
 
     @Inject
     private RightPanelMenuItem rightPanelMenuItem;
@@ -127,7 +127,7 @@ public class ScenarioSimulationEditorPresenter
                    type);
         view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
-        clickHandlerRegistration = RootPanel.get().addDomHandler(scenarioSimulationGridPanelClickHandler, ClickEvent.getType());
+        registerClickHandler();
     }
 
     @OnClose
@@ -227,6 +227,10 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder
                 .addNewTopLevelMenu(versionRecordManager.buildMenu())
                 .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+    }
+
+    protected void registerClickHandler() {
+        clickHandlerRegistration = RootPanel.get().addDomHandler(scenarioSimulationGridPanelClickHandler, ClickEvent.getType());
     }
 
     protected void initComponents() {

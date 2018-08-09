@@ -82,6 +82,18 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         }
     }
 
+    protected int getRelativeX(final ContextMenuEvent event) {
+        final NativeEvent e = event.getNativeEvent();
+        final Element target = event.getRelativeElement();
+        return e.getClientX() - target.getAbsoluteLeft() + target.getScrollLeft() + target.getOwnerDocument().getScrollLeft();
+    }
+
+    protected int getRelativeY(final ContextMenuEvent event) {
+        final NativeEvent e = event.getNativeEvent();
+        final Element target = event.getRelativeElement();
+        return e.getClientY() - target.getAbsoluteTop() + target.getScrollTop() + target.getOwnerDocument().getScrollTop();
+    }
+
     private void commonClickManagement() {
         gridContextMenu.hide();
         headerContextMenu.hide();
@@ -126,17 +138,5 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         }
         gridContextMenu.show(left, top);
         return true;
-    }
-
-    private int getRelativeX(final ContextMenuEvent event) {
-        final NativeEvent e = event.getNativeEvent();
-        final Element target = event.getRelativeElement();
-        return e.getClientX() - target.getAbsoluteLeft() + target.getScrollLeft() + target.getOwnerDocument().getScrollLeft();
-    }
-
-    private int getRelativeY(final ContextMenuEvent event) {
-        final NativeEvent e = event.getNativeEvent();
-        final Element target = event.getRelativeElement();
-        return e.getClientY() - target.getAbsoluteTop() + target.getScrollTop() + target.getOwnerDocument().getScrollTop();
     }
 }
