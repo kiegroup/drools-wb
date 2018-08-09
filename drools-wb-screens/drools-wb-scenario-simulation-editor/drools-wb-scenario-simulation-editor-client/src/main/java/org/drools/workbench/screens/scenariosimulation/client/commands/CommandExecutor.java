@@ -34,20 +34,9 @@ public class CommandExecutor implements ScenarioGridHeaderRightClickHandler,
                                         ScenarioGridHeaderDoubleClickHandler,
                                         ScenarioGridBodyDoubleClickHandler {
 
-//    private ScenarioGridPanel scenarioGridPanel;
-//    private ScenarioGridLayer scenarioGridLayer;
-//    private ScenarioGrid scenarioGrid;
-
     public CommandExecutor() {
         // CDI
     }
-
-//    @Inject
-//    public CommandExecutor(ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-//        this.scenarioGridPanel = scenarioGridPanel;
-//        this.scenarioGridLayer = scenarioGridLayer;
-//        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
-//    }
 
     @Override
     public void onRightClick(ScenarioGridHeaderRightClickEvent event) {
