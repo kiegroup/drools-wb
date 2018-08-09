@@ -37,6 +37,7 @@ import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -125,11 +126,11 @@ public class EnumServiceImplTest {
         verify(saveAndRenameService).saveAndRename(path, newFileName, metadata, content, comment);
     }
 
-    @Test(expected = FileAlreadyExistsException.class)
+    @Test
     public void testCreateEnumAlreadyExists() {
         final Path path = PathFactory.newPath("enum.enumeration", "file:///enum.enumeration");
         when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(true);
-
-        enumService.create(path, "", "", "");
+        assertThatThrownBy(() -> enumService.create(path, "", "", ""))
+                .isInstanceOf(FileAlreadyExistsException.class);
     }
 }
