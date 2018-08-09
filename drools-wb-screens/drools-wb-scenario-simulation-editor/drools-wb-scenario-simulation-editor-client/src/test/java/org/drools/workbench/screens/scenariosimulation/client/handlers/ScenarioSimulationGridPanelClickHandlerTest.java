@@ -21,7 +21,6 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
@@ -92,7 +91,7 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
         when(mockEvent.getNativeEvent()).thenReturn(mockNativeEvent);
         when(mockEvent.getRelativeElement()).thenReturn(mockTarget);
         scenarioSimulationGridPanelClickHandler.onClick(mockEvent);
-        commonCheck(mockEvent);
+        commonCheck();
     }
 
     @Test
@@ -101,12 +100,12 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
         when(mockEvent.getNativeEvent()).thenReturn(mockNativeEvent);
         when(mockEvent.getRelativeElement()).thenReturn(mockTarget);
         scenarioSimulationGridPanelClickHandler.onContextMenu(mockEvent);
-        commonCheck(mockEvent);
-    }
-
-    private void commonCheck(DomEvent mockEvent) {
         verify(mockEvent, times(1)).preventDefault();
         verify(mockEvent, times(1)).stopPropagation();
+        commonCheck();
+    }
+
+    private void commonCheck() {
         verify(mockGridContextMenu, times(1)).hide();
         verify(mockHeaderContextMenu, times(1)).hide();
         reset(mockGridContextMenu);

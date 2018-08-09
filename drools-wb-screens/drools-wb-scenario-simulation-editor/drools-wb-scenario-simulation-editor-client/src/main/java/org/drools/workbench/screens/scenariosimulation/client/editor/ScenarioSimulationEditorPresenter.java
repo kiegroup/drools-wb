@@ -23,7 +23,10 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.RootPanel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
@@ -85,6 +88,10 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
+    private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
+
+    private HandlerRegistration clickHandlerRegistration;
+
     @Inject
     private RightPanelMenuItem rightPanelMenuItem;
 
@@ -120,6 +127,7 @@ public class ScenarioSimulationEditorPresenter
                    type);
         view.getScenarioGridPanel().getDefaultGridLayer().enterPinnedMode(view.getScenarioGridPanel().getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
+        clickHandlerRegistration = RootPanel.get().addDomHandler(scenarioSimulationGridPanelClickHandler, ClickEvent.getType());
     }
 
     @OnClose
@@ -128,6 +136,9 @@ public class ScenarioSimulationEditorPresenter
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
             placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
             this.getView().showLoading();
+        }
+        if (clickHandlerRegistration != null) {
+            clickHandlerRegistration.removeHandler();
         }
     }
 
@@ -222,7 +233,7 @@ public class ScenarioSimulationEditorPresenter
         // Indirections added for test-purpose
         final ScenarioGridLayer scenarioGridLayer = newScenarioGridLayer();
         final ScenarioGridPanel scenarioGridPanel = newScenarioGridPanel(scenarioGridLayer);
-        final ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler = newScenarioSimulationGridPanelClickHandler(scenarioGridPanel.getScenarioGrid());
+        scenarioSimulationGridPanelClickHandler = newScenarioSimulationGridPanelClickHandler(scenarioGridPanel.getScenarioGrid());
         scenarioSimulationGridPanelClickHandler.setGridContextMenu(gridContextMenu);
         scenarioSimulationGridPanelClickHandler.setHeaderContextMenu(headerContextMenu);
         scenarioGridPanel.setClickHandler(scenarioSimulationGridPanelClickHandler);
@@ -244,9 +255,9 @@ public class ScenarioSimulationEditorPresenter
         return ScenarioSimulationViewProvider.newScenarioGridPanel(scenarioGridLayer);
     }
 
-    protected ScenarioSimulationView newScenarioSimulationView ( final ScenarioGridPanel newScenarioGridPanel){
-               return ScenarioSimulationViewProvider.newScenarioSimulationView(newScenarioGridPanel);
-           }
+    protected ScenarioSimulationView newScenarioSimulationView(final ScenarioGridPanel newScenarioGridPanel) {
+        return ScenarioSimulationViewProvider.newScenarioSimulationView(newScenarioGridPanel);
+    }
 
     protected void loadContent() {
         service.call(getModelSuccessCallback(),

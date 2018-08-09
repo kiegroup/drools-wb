@@ -22,7 +22,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
-import com.google.gwt.event.dom.client.DomEvent;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -53,13 +52,15 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
 
     @Override
     public void onClick(ClickEvent event) {
-        commonClickManagement(event);
+        commonClickManagement();
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void onContextMenu(final ContextMenuEvent event) {
-        commonClickManagement(event);
+        event.preventDefault();
+        event.stopPropagation();
+        commonClickManagement();
         manageRightClick(event);
     }
 
@@ -81,9 +82,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         }
     }
 
-    private void commonClickManagement(DomEvent event) {
-        event.preventDefault();
-        event.stopPropagation();
+    private void commonClickManagement() {
         gridContextMenu.hide();
         headerContextMenu.hide();
     }
