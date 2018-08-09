@@ -62,10 +62,11 @@ public class ScenarioGridModel extends BaseGridData {
 
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         String title = column.getHeaderMetaData().get(0).getTitle();
-        FactIdentifier factIdentifier = FactIdentifier.create(title, String.class.getCanonicalName());
+        String columnId = title;
+        FactIdentifier factIdentifier = FactIdentifier.create(columnId, String.class.getCanonicalName());
         int columnIndex = getColumnCount() - 1;
-        ExpressionIdentifier ei = ExpressionIdentifier.create(title, FactMappingType.GIVEN);
-        simulationDescriptor.addFactMapping(columnIndex, factIdentifier, ei);
+        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.GIVEN);
+        simulationDescriptor.addFactMapping(columnIndex, title, factIdentifier, ei);
     }
 
     @Override

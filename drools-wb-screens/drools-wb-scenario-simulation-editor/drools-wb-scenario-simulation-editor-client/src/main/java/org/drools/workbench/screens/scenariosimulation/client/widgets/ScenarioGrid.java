@@ -51,8 +51,7 @@ public class ScenarioGrid extends BaseGridWidget {
         ((ScenarioGridModel) model).clear();
         ((ScenarioGridModel) model).bindContent(simulation);
         // sort based on columnPosition to restore previous order
-        // FIXME add test
-        simulation.getSimulationDescriptor().sortByColumnPosition();
+        simulation.getSimulationDescriptor().sortByLogicalPosition();
         setHeaderColumns(simulation);
         appendRows(simulation);
     }
@@ -67,10 +66,11 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     private void setHeaderColumns(Simulation simulation) {
-
         simulation.getSimulationDescriptor().getFactMappings().forEach(fact -> {
-            model.insertColumn(fact.getColumnPosition(),
-                               getScenarioGridColumn(fact.getExpressionIdentifier().getName(), scenarioGridPanel, scenarioGridLayer));
+            String columnId = fact.getExpressionIdentifier().getName();
+            String columnTitle = fact.getExpressionAlias();
+            model.insertColumn(fact.getLogicalPosition(),
+                               getScenarioGridColumn(columnId, columnTitle, scenarioGridPanel, scenarioGridLayer));
         });
     }
 

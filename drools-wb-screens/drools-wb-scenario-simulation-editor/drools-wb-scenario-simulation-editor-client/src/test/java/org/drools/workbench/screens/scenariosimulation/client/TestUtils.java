@@ -29,28 +29,42 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
  */
 public class TestUtils {
 
-    public static final int NUMBER_OF_ROWS = 3;
-    public static final int NUMBER_OF_COLUMNS = 3;
-
-    public static Simulation getSimulation() {
+    public static Simulation getSimulation(int numberOfColumns, int numberOfRows) {
         Simulation simulation = new Simulation();
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
         // generate simulationDescriptor
-        IntStream.range(0, NUMBER_OF_COLUMNS).forEach(columnIndex -> {
-            simulationDescriptor.addFactMapping(FactIdentifier.create("GROUP_COL-" + columnIndex, String.class.getCanonicalName()), ExpressionIdentifier.create("COL-" + columnIndex, FactMappingType.EXPECTED)
+        IntStream.range(0, numberOfColumns).forEach(columnIndex -> {
+            simulationDescriptor.addFactMapping(FactIdentifier.create(getFactName(columnIndex), String.class.getCanonicalName()),
+                                                ExpressionIdentifier.create(getColName(columnIndex), FactMappingType.EXPECTED)
             );
         });
         // generate scenarios
-        IntStream.range(0, NUMBER_OF_ROWS).forEach(rowIndex -> {
+        IntStream.range(0, numberOfRows).forEach(rowIndex -> {
             final Scenario scenario = simulation.addScenario();
-            scenario.setDescription("ROW-" + rowIndex);
-            IntStream.range(0, NUMBER_OF_COLUMNS).forEach( columnIndex -> {
-                scenario.addMappingValue(FactIdentifier.create("GROUP_COL-" + columnIndex, String.class.getCanonicalName()),
-                                         ExpressionIdentifier.create("COL-" + columnIndex, FactMappingType.EXPECTED),
-                                         "VAL_COL-" + columnIndex + "-ROW-" + rowIndex);
+            scenario.setDescription(getRowName(rowIndex));
+            IntStream.range(0, numberOfColumns).forEach( columnIndex -> {
+                scenario.addMappingValue(FactIdentifier.create(getFactName(columnIndex), String.class.getCanonicalName()),
+                                         ExpressionIdentifier.create(getColName(columnIndex), FactMappingType.EXPECTED),
+                                         getCellValue(columnIndex, rowIndex));
             });
         });
         return simulation;
+    }
+
+    public static String getColName(int index) {
+        return "COL-" + index;
+    }
+
+    public static String getRowName(int index) {
+        return "ROW-" + index;
+    }
+
+    public static String getFactName(int index) {
+        return "GROUP_COL-" + index;
+    }
+
+    public static String getCellValue(int col, int row) {
+        return "VAL_COL-" + col + "-ROW-" + row;
     }
 }

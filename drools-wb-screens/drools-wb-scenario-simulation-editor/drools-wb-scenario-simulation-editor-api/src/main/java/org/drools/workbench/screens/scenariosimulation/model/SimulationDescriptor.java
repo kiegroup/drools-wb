@@ -40,11 +40,10 @@ public class SimulationDescriptor {
     }
 
     /**
-     * Sort elements based on columnPosition value
+     * Sort elements based on logicalPosition value
      */
-    // FIXME add test
-    public void sortByColumnPosition() {
-        factMappings.sort(Comparator.comparing(FactMapping::getColumnPosition));
+    public void sortByLogicalPosition() {
+        factMappings.sort(Comparator.comparing(FactMapping::getLogicalPosition));
     }
 
     public Set<FactIdentifier> getFactIdentifiers() {
@@ -55,7 +54,6 @@ public class SimulationDescriptor {
         return factMappings.get(index);
     }
 
-    // FIXME add test
     public int getIndexByIdentifier(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
         return IntStream.range(0, factMappings.size()).filter(index -> {
             FactMapping factMapping = factMappings.get(index);
@@ -85,6 +83,10 @@ public class SimulationDescriptor {
     }
 
     public FactMapping addFactMapping(int index, FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
+        return addFactMapping(index, expressionIdentifier.getName(), factIdentifier, expressionIdentifier);
+    }
+
+    public FactMapping addFactMapping(int index, String expressionAlias, FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
         if (getFactMapping(factIdentifier, expressionIdentifier).isPresent()) {
             throw new IllegalArgumentException(
                     new StringBuilder().append("An expression with name '").append(expressionIdentifier.getName())
@@ -95,7 +97,7 @@ public class SimulationDescriptor {
                     new StringBuilder().append("Impossible to add an element at position ").append(index)
                             .append(" because there are only ").append(factMappings.size()).append(" elements").toString());
         }
-        FactMapping factMapping = new FactMapping(expressionIdentifier, factIdentifier, index);
+        FactMapping factMapping = new FactMapping(expressionAlias, factIdentifier, expressionIdentifier, index);
         factMappings.add(index, factMapping);
         return factMapping;
     }

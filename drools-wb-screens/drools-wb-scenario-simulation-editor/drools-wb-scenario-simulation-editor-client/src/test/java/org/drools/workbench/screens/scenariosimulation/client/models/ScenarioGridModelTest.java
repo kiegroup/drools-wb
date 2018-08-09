@@ -17,9 +17,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.junit.Before;
@@ -29,9 +31,10 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getCellValue;
+import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getColName;
 import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getSimulation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -49,13 +52,19 @@ public class ScenarioGridModelTest {
     private GridColumn<String> mockGridColumn;
 
     @Mock
-    private GridRow mockGridRow;
-
-    @Mock
     private List<GridColumn.HeaderMetaData> mockHeaderMetaDataList;
 
     @Mock
     private GridColumn.HeaderMetaData mockHeaderMetaData;
+
+    @Mock
+    private GridColumn<String> mockGridColumnAppend;
+
+    @Mock
+    private List<GridColumn.HeaderMetaData> mockHeaderMetaDataListAppend;
+
+    @Mock
+    private GridColumn.HeaderMetaData mockHeaderMetaDataAppend;
 
     @Mock
     private BaseGridCell<String> mockGridCell;
@@ -65,13 +74,15 @@ public class ScenarioGridModelTest {
 
     private Simulation simulation;
 
-    private final String GRID_COLUMN_TITLE = "MOCKED GRID COLUMN TITLE";
-    private final String GRID_CELL_TEXT = "MOCKED GRID CELL TEXT";
+    private final String GRID_COLUMN_TITLE = getColName(1);
+    private final String GRID_CELL_TEXT = getCellValue(1, 1);
 
     @Before
     public void setup() {
+        int cols = 1;
+        int rows = 1;
         scenarioGridModel = new ScenarioGridModel();
-        simulation = getSimulation();
+        simulation = getSimulation(cols, rows);
         scenarioGridModel.bindContent(simulation);
 
         when(mockGridColumn.getHeaderMetaData()).thenReturn(mockHeaderMetaDataList);
@@ -84,6 +95,7 @@ public class ScenarioGridModelTest {
         final ScenarioGridColumn scenarioGridColumn = mock(ScenarioGridColumn.class);
         when(scenarioGridColumn.getIndex()).thenReturn(1);
         scenarioGridModel.appendColumn(mockGridColumn);
+        IntStream.range(0, rows).forEach(i -> scenarioGridModel.appendRow(new ScenarioGridRow()));
     }
 
     @Test
@@ -93,20 +105,27 @@ public class ScenarioGridModelTest {
 
     @Test
     public void appendColumn() {
+
+        String colName = getColName(2);
+
+        when(mockGridColumnAppend.getHeaderMetaData()).thenReturn(mockHeaderMetaDataListAppend);
+        when(mockHeaderMetaDataListAppend.get(0)).thenReturn(mockHeaderMetaDataAppend);
+        when(mockHeaderMetaDataAppend.getTitle()).thenReturn(colName);
+
         int expectedColumnCount = scenarioGridModel.getColumnCount() + 1;
-        scenarioGridModel.appendColumn(mockGridColumn);
+        scenarioGridModel.appendColumn(mockGridColumnAppend);
         int currentColumnCount = scenarioGridModel.getColumnCount();
         assertEquals(currentColumnCount, expectedColumnCount);
         int insertedColumnIndex = currentColumnCount - 1;
         String insertedString = simulation.getSimulationDescriptor().getFactMappingByIndex(insertedColumnIndex).getExpressionIdentifier().getName();
         assertNotNull(insertedString);
-        assertEquals(insertedString, GRID_COLUMN_TITLE);
+        assertEquals(insertedString, colName);
     }
 
     @Test
     public void testSetCell() {
         int insertedRowIndex = 0;
-        int insertedColumnIndex = 1;
+        int insertedColumnIndex = 0;
 
         final GridData.Range r = scenarioGridModel.setCell(insertedRowIndex, insertedColumnIndex, () -> mockGridCell);
         assertEquals(insertedRowIndex, r.getMinRowIndex());

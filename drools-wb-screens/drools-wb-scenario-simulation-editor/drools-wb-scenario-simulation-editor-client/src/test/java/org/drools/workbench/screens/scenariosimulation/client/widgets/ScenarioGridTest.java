@@ -26,8 +26,6 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.NUMBER_OF_COLUMNS;
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.NUMBER_OF_ROWS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getSimulation;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
@@ -63,9 +61,11 @@ public class ScenarioGridTest {
 
     @Test
     public void setContent() {
-        scenarioGrid.setContent(getSimulation());
-        // NUMBER_OF_COLUMNS + 1 because there is also the description column
-        verify(mockScenarioGridModel, times(NUMBER_OF_COLUMNS + 1)).insertColumn(anyInt(), anyObject());
-        verify(mockScenarioGridModel, times(NUMBER_OF_ROWS)).insertRow(anyInt(), anyObject());
+        int cols = 2;
+        int rows = 2;
+        scenarioGrid.setContent(getSimulation(cols, rows));
+        // cols + 1 because there is also the description column
+        verify(mockScenarioGridModel, times(cols + 1)).insertColumn(anyInt(), anyObject());
+        verify(mockScenarioGridModel, times(rows)).insertRow(anyInt(), anyObject());
     }
 }
