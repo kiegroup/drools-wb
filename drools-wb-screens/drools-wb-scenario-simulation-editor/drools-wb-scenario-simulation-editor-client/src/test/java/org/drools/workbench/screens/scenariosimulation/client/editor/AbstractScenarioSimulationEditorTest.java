@@ -18,13 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.Optional;
 
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -75,21 +71,12 @@ public abstract class AbstractScenarioSimulationEditorTest {
     @Mock
     protected WorkspaceProjectContext mockWorkbenchContext;
 
-    @Mock
-    protected ScenarioGridPanel mockScenarioGridPanel;
-
-    @Mock
-    protected ScenarioGrid mockScenarioGrid;
-
-    protected ScenarioSimulationResourceType type;
-
     protected ScenarioSimulationModelContent content;
     protected ScenarioSimulationModel model;
 
     public void setup() {
-        this.type = GWT.create(ScenarioSimulationResourceType.class);
 
-        //Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
+//        //Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
         when(mockFileMenuBuilder.addSave(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
         when(mockFileMenuBuilder.addCopy(any(ObservablePath.class), any(DefaultFileNameValidator.class))).thenReturn(mockFileMenuBuilder);
         when(mockFileMenuBuilder.addRename(any(Command.class))).thenReturn(mockFileMenuBuilder);
@@ -111,7 +98,5 @@ public abstract class AbstractScenarioSimulationEditorTest {
                                                           mock(PackageDataModelOracleBaselinePayload.class));
 
         when(scenarioSimulationService.loadContent(mockObservablePath)).thenReturn(content);
-
-        when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
     }
 }

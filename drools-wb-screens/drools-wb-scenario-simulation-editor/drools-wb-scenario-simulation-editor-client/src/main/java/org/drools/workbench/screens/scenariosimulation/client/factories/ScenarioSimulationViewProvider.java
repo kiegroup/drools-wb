@@ -15,9 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -29,14 +26,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  * Class used to instantiate a <code>ScenarioSimulationViewImpl</code> with all the contents/handlers required, avoiding CDI as much as possible
  */
 public class ScenarioSimulationViewProvider {
-
-    private static final CommandExecutor commandExecutor = new CommandExecutor();
-
-
-    public static ScenarioSimulationView newScenarioSimulationView(final ScenarioGridPanel scenarioGridPanel) {
-        return new ScenarioSimulationViewImpl(scenarioGridPanel);
-    }
-
 
     public static ScenarioGridPanel newScenarioGridPanel(final ScenarioGridLayer scenarioGridLayer) {
         ScenarioGridPanel toReturn = new ScenarioGridPanel();

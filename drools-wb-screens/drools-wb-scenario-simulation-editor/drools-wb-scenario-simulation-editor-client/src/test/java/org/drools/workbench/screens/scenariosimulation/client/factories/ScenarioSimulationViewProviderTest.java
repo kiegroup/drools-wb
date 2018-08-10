@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
 
 import static org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider.newScenarioGridPanel;
-import static org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider.newScenarioSimulationView;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -38,8 +36,6 @@ public class ScenarioSimulationViewProviderTest {
         final ScenarioGridLayer scenarioGridLayer = new ScenarioGridLayer();
         final ScenarioGridPanel scenarioGridPanel = newScenarioGridPanel(scenarioGridLayer);
         assertNotNull(scenarioGridPanel);
-        ScenarioSimulationView retrieved = newScenarioSimulationView(scenarioGridPanel);
-        assertNotNull(retrieved);
         DefaultGridLayer defaultGridLayer = scenarioGridPanel.getDefaultGridLayer();
         assertNotNull(defaultGridLayer);
         assertTrue(defaultGridLayer instanceof ScenarioGridLayer);

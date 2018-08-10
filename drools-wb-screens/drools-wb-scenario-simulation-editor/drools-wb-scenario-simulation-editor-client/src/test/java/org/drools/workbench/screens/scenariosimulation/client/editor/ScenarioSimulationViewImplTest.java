@@ -17,22 +17,38 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationEditorTest {
 
     private ScenarioSimulationView scenarioSimulationView;
 
+    @Mock
+    private ScenarioGridPanel mockScenarioGridPanel;
+
+    @Mock
+    private ScenarioGrid mockScenarioGrid;
+
     @Before
     public void setup() {
         super.setup();
-        scenarioSimulationView = new ScenarioSimulationViewImpl(mockScenarioGridPanel);
+        when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
+        scenarioSimulationView = spy(new ScenarioSimulationViewImpl() {
+            {
+                scenarioGridPanel = mockScenarioGridPanel;
+            }
+        });
     }
 
     @Test
