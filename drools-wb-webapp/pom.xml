@@ -1272,7 +1272,8 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <extraJvmArgs>-Xmx5G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true</extraJvmArgs>
+          <!-- -Djava.io.tmpdir=${project.build.directory}  so that gwt cache directory gets cleaned on mvn clean !-->
+          <extraJvmArgs>-Xmx5G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.DroolsWorkbench</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
@@ -1280,6 +1281,11 @@
           <disableCastChecking>true</disableCastChecking>
           <runTarget>drools-wb.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>
+          <!-- this is so that gwt compile directory gets cleaned on mvn clean !-->
+          <workDir>${project.build.directory}</workDir>
+          
+          
+          
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-commons</compileSourcesArtifact>
