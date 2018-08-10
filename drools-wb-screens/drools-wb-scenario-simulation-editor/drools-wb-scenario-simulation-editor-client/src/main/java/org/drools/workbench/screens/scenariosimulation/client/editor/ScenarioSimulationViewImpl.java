@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.ClickEvent;

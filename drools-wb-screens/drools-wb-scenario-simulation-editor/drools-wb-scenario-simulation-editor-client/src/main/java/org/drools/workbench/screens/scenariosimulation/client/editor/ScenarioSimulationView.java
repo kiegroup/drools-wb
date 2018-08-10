@@ -16,8 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
 
