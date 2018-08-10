@@ -649,11 +649,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-rule-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-rule-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-guided-rule-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-rule-editor-backend</artifactId>
@@ -663,11 +664,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-template-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-template-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-guided-template-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-template-editor-backend</artifactId>
@@ -677,11 +679,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtable-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-dtable-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-guided-dtable-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtable-editor-backend</artifactId>
@@ -691,11 +694,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtree-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-dtree-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-guided-dtree-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtree-editor-backend</artifactId>
@@ -705,11 +709,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-scorecard-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-scorecard-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-guided-scorecard-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-scorecard-editor-backend</artifactId>
@@ -719,11 +724,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-drl-text-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-drl-text-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-drl-text-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-drl-text-editor-backend</artifactId>
@@ -733,11 +739,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-enum-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-enum-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-enum-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-enum-editor-backend</artifactId>
@@ -756,11 +763,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dsl-text-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-dsl-text-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-dsl-text-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dsl-text-editor-backend</artifactId>
@@ -770,11 +778,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dtable-xls-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-dtable-xls-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-dtable-xls-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dtable-xls-editor-backend</artifactId>
@@ -784,11 +793,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scorecard-xls-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-scorecard-xls-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-scorecard-xls-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scorecard-xls-editor-backend</artifactId>
@@ -798,11 +808,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-globals-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-globals-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-globals-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-globals-editor-backend</artifactId>
@@ -812,11 +823,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-test-scenario-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-test-scenario-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-test-scenario-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-test-scenario-editor-backend</artifactId>
@@ -826,11 +838,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-workitems-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-workitems-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-workitems-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-workitems-editor-backend</artifactId>
@@ -840,11 +853,12 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+    <!--<groupId>org.drools</groupId>-->
+    <!--<artifactId>drools-wb-scenario-simulation-editor-client</artifactId>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>org.drools</groupId>
@@ -1260,6 +1274,24 @@
       <artifactId>org.eclipse.sisu.inject</artifactId>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- Included dependencies because previously where cross-provided by other components. -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-grids</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-trees</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-html5</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
@@ -1267,6 +1299,72 @@
     <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 
     <plugins>
+      <!-- Include aditional sources path for hot reload -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <!-- Include screens sources !-->
+                <source>../drools-wb-screens/drools-wb-drl-text-editor/drools-wb-drl-text-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-drl-text-editor/drools-wb-drl-text-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-dsl-text-editor/drools-wb-dsl-text-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-dsl-text-editor/drools-wb-dsl-text-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-dtable-xls-editor/drools-wb-dtable-xls-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-dtable-xls-editor/drools-wb-dtable-xls-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-enum-editor/drools-wb-enum-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-enum-editor/drools-wb-enum-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-globals-editor/drools-wb-globals-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-globals-editor/drools-wb-globals-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-guided-dtable-editor/drools-wb-guided-dtable-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-guided-dtable-editor/drools-wb-guided-dtable-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-guided-dtree-editor/drools-wb-guided-dtree-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-guided-dtree-editor/drools-wb-guided-dtree-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-guided-rule-editor/drools-wb-guided-rule-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-guided-rule-editor/drools-wb-guided-rule-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-guided-scorecard-editor/drools-wb-guided-scorecard-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-guided-scorecard-editor/drools-wb-guided-scorecard-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-guided-template-editor/drools-wb-guided-template-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-guided-template-editor/drools-wb-guided-template-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-scorecard-xls-editor/drools-wb-scorecard-xls-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-scorecard-xls-editor/drools-wb-scorecard-xls-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-test-scenario-editor/drools-wb-test-scenario-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-test-scenario-editor/drools-wb-test-scenario-editor-client/src/main/resources</source>
+
+                <source>../drools-wb-screens/drools-wb-workitems-editor/drools-wb-workitems-editor-client/src/main/java</source>
+                <source>../drools-wb-screens/drools-wb-workitems-editor/drools-wb-workitems-editor-client/src/main/resources</source>
+
+
+                <!--<source>(path_to_/kie-wb-common/kie-wb-common-widgets/kie-wb-common-ui/src/main/java)</source>-->
+                <!--<source>(path_to_/kie-wb-common/kie-wb-common-widgets/kie-wb-common-ui/src/main/resources)</source>-->
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>gwt-maven-plugin</artifactId>
@@ -1283,9 +1381,10 @@
           <hostedWebapp>src/main/webapp</hostedWebapp>
           <!-- this is so that gwt compile directory gets cleaned on mvn clean !-->
           <workDir>${project.build.directory}</workDir>
-          
-          
-          
+          <!-- this is to use more cores when gwt compile permutations !-->
+          <localWorkers>4</localWorkers>
+
+
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-commons</compileSourcesArtifact>
@@ -1351,37 +1450,51 @@
 
             <!-- drools-wb -->
             <compileSourcesArtifact>org.drools:drools-wb-enum-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-enum-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-enum-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-drl-text-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-drl-text-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-drl-text-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-factmodel-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-verifier-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-verifier-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-wb-guided-rule-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-guided-rule-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-guided-rule-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-guided-template-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-guided-template-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-guided-template-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-guided-dtable-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-guided-dtable-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-guided-dtable-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-guided-dtree-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-guided-dtree-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-guided-dtree-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-guided-scorecard-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-guided-scorecard-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-guided-scorecard-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-dsl-text-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-dsl-text-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-dsl-text-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-globals-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-globals-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-globals-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-test-scenario-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-test-scenario-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-test-scenario-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-dtable-xls-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-dtable-xls-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-dtable-xls-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-scorecard-xls-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-scorecard-xls-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-scorecard-xls-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.drools:drools-wb-workitems-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-workitems-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-workitems-editor-client</compileSourcesArtifact>-->
             <!-- scenario simulation -->
             <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-client</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-client</compileSourcesArtifact>-->
 
             <!-- Stunner -->
             <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-core-api</compileSourcesArtifact>
