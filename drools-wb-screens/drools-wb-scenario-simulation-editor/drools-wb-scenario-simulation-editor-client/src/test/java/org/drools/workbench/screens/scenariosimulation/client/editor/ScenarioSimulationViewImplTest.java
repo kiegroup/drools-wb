@@ -53,7 +53,7 @@ public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationEd
 
     @Test
     public void testSetContent() {
-        scenarioSimulationView.setContent(model.getHeadersMap(), model.getRowsMap());
-        verify(mockScenarioGrid, times(1)).setContent(model.getHeadersMap(), model.getRowsMap());
+        scenarioSimulationView.setContent(model.getSimulation());
+        verify(mockScenarioGrid, times(1)).setContent(model.getSimulation());
     }
 }
