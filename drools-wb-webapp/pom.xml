@@ -35,6 +35,8 @@
   <properties>
     <!-- Add the absolute path for $JBOSS_HOME below to manage another instance -->
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
+    <!-- This must be overridden on a per-profile base, to meet individual' machine setup -->
+    <path.to.kie.wb.common>../../kie-wb-common</path.to.kie.wb.common>
   </properties>
 
   <dependencies>
@@ -129,11 +131,12 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.kie.workbench.widgets</groupId>
-      <artifactId>kie-wb-common-ui</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!-- Not needed - add as sources !-->
+    <!--<dependency>-->
+      <!--<groupId>org.kie.workbench.widgets</groupId>-->
+      <!--<artifactId>kie-wb-common-ui</artifactId>-->
+      <!--<scope>provided</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-api</artifactId>
@@ -556,19 +559,19 @@
       <artifactId>uberfire-social-activities-client</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-social-home-page-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-social-home-page-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-social-home-page-backend</artifactId>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>org.kie.workbench.screens</groupId>-->
+      <!--<artifactId>kie-wb-common-social-home-page-api</artifactId>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.kie.workbench.screens</groupId>-->
+      <!--<artifactId>kie-wb-common-social-home-page-client</artifactId>-->
+      <!--<scope>provided</scope>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+      <!--<groupId>org.kie.workbench.screens</groupId>-->
+      <!--<artifactId>kie-wb-common-social-home-page-backend</artifactId>-->
+    <!--</dependency>-->
 
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -1294,16 +1297,18 @@
     </dependency>
   </dependencies>
 
+  
+
   <build>
     <finalName>${project.artifactId}</finalName>
     <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 
     <plugins>
-      <!-- Include aditional sources path for hot reload -->
+      <!-- Include additional sources path for hot reload -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -1357,8 +1362,8 @@
                 <source>../drools-wb-screens/drools-wb-workitems-editor/drools-wb-workitems-editor-client/src/main/resources</source>
 
 
-                <!--<source>(path_to_/kie-wb-common/kie-wb-common-widgets/kie-wb-common-ui/src/main/java)</source>-->
-                <!--<source>(path_to_/kie-wb-common/kie-wb-common-widgets/kie-wb-common-ui/src/main/resources)</source>-->
+                <source>${path.to.kie.wb.common}/kie-wb-common-widgets/kie-wb-common-ui/src/main/java</source>
+                <source>${path.to.kie.wb.common}/kie-wb-common-widgets/kie-wb-common-ui/src/main/resources</source>
               </sources>
             </configuration>
           </execution>
@@ -1370,7 +1375,7 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <!-- -Djava.io.tmpdir=${project.build.directory}  so that gwt cache directory gets cleaned on mvn clean !-->
+          <!-- -Djava.io.tmpdir=${project.build.directory} so that gwt cache directory and all other temporary files gets cleaned on mvn clean !-->
           <extraJvmArgs>-Xmx5G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.DroolsWorkbench</module>
           <logLevel>INFO</logLevel>
@@ -1383,7 +1388,6 @@
           <workDir>${project.build.directory}</workDir>
           <!-- this is to use more cores when gwt compile permutations !-->
           <localWorkers>4</localWorkers>
-
 
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>
@@ -1427,7 +1431,8 @@
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-data-modeller-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>
+            <!-- Not needed - add as sources !-->
+            <!--<compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-decorated-grid-widget</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-metadata-widget</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-config-resource-widget</compileSourcesArtifact>
