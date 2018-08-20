@@ -14,30 +14,42 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.editor;
+package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationEditorTest {
+public class MenuItemViewImplTest {
 
-    private ScenarioSimulationView scenarioSimulationView;
+    private MenuItemViewImpl menuItemView;
+
+    @Mock
+    private MenuItemPresenter mockMenuItemPresenter;
 
     @Before
     public void setup() {
-        super.setup();
-        scenarioSimulationView = new ScenarioSimulationViewImpl(mockScenarioGridPanel);
+        this.menuItemView = spy(new MenuItemViewImpl() {
+            {
+
+            }
+        });
+        menuItemView.setPresenter(mockMenuItemPresenter);
     }
 
     @Test
-    public void testSetContent() {
-        scenarioSimulationView.setContent(model.getHeadersMap(), model.getRowsMap());
-        verify(mockScenarioGrid, times(1)).setContent(model.getHeadersMap(), model.getRowsMap());
+    public void onClickEvent() {
+        ClickEvent mockClickEvent = mock(ClickEvent.class);
+        menuItemView.onClickEvent(mockClickEvent);
+        verify(mockMenuItemPresenter, times(1)).onClickEvent(mockClickEvent);
     }
 }
