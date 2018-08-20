@@ -133,9 +133,9 @@
     </dependency>
     <!-- Not needed - add as sources !-->
     <!--<dependency>-->
-      <!--<groupId>org.kie.workbench.widgets</groupId>-->
-      <!--<artifactId>kie-wb-common-ui</artifactId>-->
-      <!--<scope>provided</scope>-->
+    <!--<groupId>org.kie.workbench.widgets</groupId>-->
+    <!--<artifactId>kie-wb-common-ui</artifactId>-->
+    <!--<scope>provided</scope>-->
     <!--</dependency>-->
     <dependency>
       <groupId>org.picketlink</groupId>
@@ -560,17 +560,17 @@
     </dependency>
 
     <!--<dependency>-->
-      <!--<groupId>org.kie.workbench.screens</groupId>-->
-      <!--<artifactId>kie-wb-common-social-home-page-api</artifactId>-->
+    <!--<groupId>org.kie.workbench.screens</groupId>-->
+    <!--<artifactId>kie-wb-common-social-home-page-api</artifactId>-->
     <!--</dependency>-->
     <!--<dependency>-->
-      <!--<groupId>org.kie.workbench.screens</groupId>-->
-      <!--<artifactId>kie-wb-common-social-home-page-client</artifactId>-->
-      <!--<scope>provided</scope>-->
+    <!--<groupId>org.kie.workbench.screens</groupId>-->
+    <!--<artifactId>kie-wb-common-social-home-page-client</artifactId>-->
+    <!--<scope>provided</scope>-->
     <!--</dependency>-->
     <!--<dependency>-->
-      <!--<groupId>org.kie.workbench.screens</groupId>-->
-      <!--<artifactId>kie-wb-common-social-home-page-backend</artifactId>-->
+    <!--<groupId>org.kie.workbench.screens</groupId>-->
+    <!--<artifactId>kie-wb-common-social-home-page-backend</artifactId>-->
     <!--</dependency>-->
 
     <dependency>
@@ -1295,9 +1295,96 @@
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-html5</artifactId>
     </dependency>
+
+    <!-- Added because of dependency:analyze result -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-wires-core-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>lienzo-core</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.widgets</groupId>
+      <artifactId>kie-wb-config-resource-widget</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-verifier-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-core-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.widgets</groupId>
+      <artifactId>kie-wb-decorated-grid-widget</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-project-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-commons-editor-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-dom</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.annotation</groupId>
+      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.widgets</groupId>
+      <artifactId>kie-wb-metadata-widget</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-properties-editor-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.widgets</groupId>
+      <artifactId>kie-wb-common-ui</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-jaxrs-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
 
-  
 
   <build>
     <finalName>${project.artifactId}</finalName>
