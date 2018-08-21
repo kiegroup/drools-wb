@@ -67,8 +67,8 @@ public class ScenarioGrid extends BaseGridWidget {
 
     private void setHeaderColumns(Simulation simulation) {
         simulation.getSimulationDescriptor().getFactMappings().forEach(fact -> {
-            String columnId = String.valueOf(fact.getLogicalPosition());
-            String columnTitle = fact.getFactIdentifier().getName();
+            String columnId = fact.getExpressionIdentifier().getName();
+            String columnTitle = fact.getExpressionAlias();
             String columnGroup = fact.getExpressionIdentifier().getType().name();
             model.insertColumn(fact.getLogicalPosition(),
                                getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));

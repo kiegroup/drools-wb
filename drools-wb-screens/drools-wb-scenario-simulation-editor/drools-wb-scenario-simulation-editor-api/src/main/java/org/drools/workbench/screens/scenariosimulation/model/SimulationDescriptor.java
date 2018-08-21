@@ -82,6 +82,10 @@ public class SimulationDescriptor {
         return addFactMapping(factMappings.size(), factIdentifier, expressionIdentifier);
     }
 
+    public FactMapping addFactMapping(String expressionAlias, FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
+        return addFactMapping(factMappings.size(), expressionAlias, factIdentifier, expressionIdentifier);
+    }
+
     public FactMapping addFactMapping(int index, FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
         return addFactMapping(index, expressionIdentifier.getName(), factIdentifier, expressionIdentifier);
     }

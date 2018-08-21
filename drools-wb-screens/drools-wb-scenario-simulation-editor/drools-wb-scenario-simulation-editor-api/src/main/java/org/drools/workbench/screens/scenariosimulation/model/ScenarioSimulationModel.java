@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -36,23 +37,23 @@ public class ScenarioSimulationModel
 
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
-        ExpressionIdentifier givenExpression = ExpressionIdentifier.create("GIVEN", FactMappingType.GIVEN);
-        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create("EXPECTED", FactMappingType.EXPECTED);
-
         Scenario scenario = simulation.addScenario();
         scenario.setDescription("Scenario example");
+        Random random = new Random();
 
         // Add GIVEN Facts
         IntStream.range(1, 3).forEach(id -> {
-            FactIdentifier givenFact = FactIdentifier.create("GIVEN-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping(givenFact, givenExpression);
+            ExpressionIdentifier givenExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.GIVEN);
+            FactIdentifier givenFact = FactIdentifier.create("GIVENFACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping("GIVEN-" + id, givenFact, givenExpression);
             scenario.addMappingValue(givenFact, givenExpression, "given-sample-" + id);
         });
 
         // Add EXPECTED Facts
         IntStream.range(1, 3).forEach(id -> {
-            FactIdentifier expectFact = FactIdentifier.create("EXPECTED-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping(expectFact, expectedExpression);
+            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.EXPECTED);
+            FactIdentifier expectFact = FactIdentifier.create("EXPECTEDFACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping("EXPECTED-" + id, expectFact, expectedExpression);
             scenario.addMappingValue(expectFact, expectedExpression, "expected-sample-" + id);
         });
     }
