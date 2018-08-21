@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
@@ -71,8 +72,15 @@ public class SimulationDescriptorTest {
 
     @Test
     public void getIndexByIdentifierTest() {
-        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
-        int index = simulationDescriptor.getIndexByIdentifier(this.factIdentifier, this.expressionIdentifier);
-        assertEquals(0, index);
+        List<FactMapping> originalFactMappings = IntStream.range(0, 2).boxed()
+                .map(i -> simulationDescriptor
+                        .addFactMapping(FactIdentifier.create("test " + i, String.class.getCanonicalName()), this.expressionIdentifier)
+                ).collect(Collectors.toList());
+        int indexToCheck = 0;
+        int indexRetrieved = simulationDescriptor.getIndexByIdentifier(originalFactMappings.get(indexToCheck).getFactIdentifier(), this.expressionIdentifier);
+        assertEquals(indexToCheck, indexRetrieved);
+        indexToCheck = 1;
+        indexRetrieved = simulationDescriptor.getIndexByIdentifier(originalFactMappings.get(indexToCheck).getFactIdentifier(), this.expressionIdentifier);
+        assertEquals(indexToCheck, indexRetrieved);
     }
 }

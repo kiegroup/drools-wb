@@ -58,7 +58,7 @@ public class SimulationDescriptor {
         return IntStream.range(0, factMappings.size()).filter(index -> {
             FactMapping factMapping = factMappings.get(index);
             return factMapping.getExpressionIdentifier().equals(expressionIdentifier) &&
-                    factMapping.getExpressionIdentifier().equals(expressionIdentifier);
+                    factMapping.getFactIdentifier().equals(factIdentifier);
         }).findFirst().orElseThrow(() -> new IllegalArgumentException(
                 new StringBuilder().append("Impossible to find a FactMapping with factIdentifier '").append(factIdentifier.getName())
                         .append("' and expressionIdentifier '").append(expressionIdentifier.getName()).append("'").toString()));

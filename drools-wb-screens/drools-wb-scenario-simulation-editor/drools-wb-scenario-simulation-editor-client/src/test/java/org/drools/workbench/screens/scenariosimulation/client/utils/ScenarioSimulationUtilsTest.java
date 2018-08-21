@@ -27,7 +27,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationUtilsTest {
@@ -38,13 +39,15 @@ public class ScenarioSimulationUtilsTest {
     @Mock
     private ScenarioGridLayer mockScenarioGridLayer;
 
+    private final String COLUMN_ID = "COLUMN ID";
+
     private final String COLUMN_TITLE = "COLUMN TITLE";
 
     private final String COLUMN_GROUP = "COLUMN GROUP";
 
     @Test
     public void getScenarioGridColumn() {
-        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_TITLE, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
+        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_ID, COLUMN_TITLE, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
         assertNotNull(scenarioGridColumn);
         List<GridColumn.HeaderMetaData> headerMetaData = scenarioGridColumn.getHeaderMetaData();
         assertNotNull(headerMetaData);
@@ -59,7 +62,7 @@ public class ScenarioSimulationUtilsTest {
 
     @Test
     public void getScenarioGridColumn1() {
-        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_TITLE, mockScenarioGridPanel, mockScenarioGridLayer);
+        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_ID, COLUMN_TITLE, mockScenarioGridPanel, mockScenarioGridLayer);
         assertNotNull(scenarioGridColumn);
         List<GridColumn.HeaderMetaData> headerMetaData = scenarioGridColumn.getHeaderMetaData();
         assertNotNull(headerMetaData);
