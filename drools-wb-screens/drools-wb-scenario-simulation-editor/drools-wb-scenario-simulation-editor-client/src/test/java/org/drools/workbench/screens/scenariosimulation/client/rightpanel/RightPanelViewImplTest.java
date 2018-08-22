@@ -17,9 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -34,7 +32,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class RightPanelViewImplTest {
@@ -43,15 +40,6 @@ public class RightPanelViewImplTest {
 
     @Mock
     private RightPanelPresenter mockRightPanelPresenter;
-
-    @Mock
-    private DivElement mockListGroupItemHeader;
-
-    @Mock
-    private DivElement mockListGroupItemContainer;
-
-    @Mock
-    private SpanElement mockFaAngleRight;
 
     @Mock
     private InputElement mockInputSearch;
@@ -63,9 +51,6 @@ public class RightPanelViewImplTest {
     public void setup() {
         this.rightPanelView = spy(new RightPanelViewImpl() {
             {
-                this.listGroupItemHeader = mockListGroupItemHeader;
-                this.listGroupItemContainer = mockListGroupItemContainer;
-                this.faAngleRight = mockFaAngleRight;
                 this.inputSearch = mockInputSearch;
                 this.clearSearchButton = mockClearSearchButton;
             }
@@ -87,16 +72,6 @@ public class RightPanelViewImplTest {
         verify(mockRightPanelPresenter, times(1)).showClearButton();
     }
 
-    @Test()
-    public void onListGroupItemHeaderClick() {
-        when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item list-view-pf-expand-active");
-        rightPanelView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockRightPanelPresenter, times(1)).toggleRowExpansion(eq(true));
-        when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item");
-        rightPanelView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockRightPanelPresenter, times(1)).toggleRowExpansion(eq(false));
-    }
-
     @Test
     public void clearInputSearch() {
         rightPanelView.clearInputSearch();
@@ -115,22 +90,6 @@ public class RightPanelViewImplTest {
         rightPanelView.showClearButton();
         verify(mockClearSearchButton, times(1)).setDisabled(eq(false));
         verify(mockClearSearchButton, times(1)).removeAttribute(eq("style"));
-    }
-
-    @Test
-    public void closeRow() {
-        rightPanelView.closeRow();
-        verify(mockListGroupItemHeader, times(1)).removeClassName(eq("list-view-pf-expand-active"));
-        verify(mockListGroupItemContainer, times(1)).addClassName(eq("hidden"));
-        verify(mockFaAngleRight, times(1)).removeClassName(eq("fa-angle-down"));
-    }
-
-    @Test
-    public void expandRow() {
-        rightPanelView.expandRow();
-        verify(mockListGroupItemHeader, times(1)).addClassName(eq("list-view-pf-expand-active"));
-        verify(mockListGroupItemContainer, times(1)).removeClassName(eq("hidden"));
-        verify(mockFaAngleRight, times(1)).addClassName(eq("fa-angle-down"));
     }
 
 }

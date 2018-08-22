@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.stream.IntStream;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -42,18 +44,23 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     private RightPanelView view;
 
+    private ListGroupItemPresenter listGroupItemPresenter;
+
     public RightPanelPresenter() {
         //Zero argument constructor for CDI
     }
 
     @Inject
-    public RightPanelPresenter(RightPanelView view) {
+    public RightPanelPresenter(RightPanelView view, ListGroupItemPresenter listGroupItemPresenter) {
         this.view = view;
+        this.listGroupItemPresenter = listGroupItemPresenter;
     }
 
     @PostConstruct
     public void setup() {
         view.init(this);
+        // static expression builder - to remove
+        IntStream.range(0, 2).forEach(this::addListGroupItemView);
     }
 
     @DefaultPosition
@@ -83,11 +90,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void toggleRowExpansion(boolean currentlyShown) {
-        if (currentlyShown) {
-            view.closeRow();
-        } else {
-            view.expandRow();
-        }
+    public void addListGroupItemView(int id) {
+        view.getListContainer().appendChild(listGroupItemPresenter.getDivElement(id));
     }
 }

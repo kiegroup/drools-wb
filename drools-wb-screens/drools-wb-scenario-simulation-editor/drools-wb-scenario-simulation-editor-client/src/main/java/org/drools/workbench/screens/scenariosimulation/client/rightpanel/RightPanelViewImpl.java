@@ -48,14 +48,8 @@ public class RightPanelViewImpl
     @DataField("inputSearch")
     InputElement inputSearch = Document.get().createTextInputElement();
 
-    @DataField("listGroupItemHeader")
-    DivElement listGroupItemHeader = Document.get().createDivElement();
-
-    @DataField("listGroupItemContainer")
-    DivElement listGroupItemContainer = Document.get().createDivElement();
-
-    @DataField("faAngleRight")
-    SpanElement faAngleRight = Document.get().createSpanElement();
+    @DataField("listContainer")
+    DivElement listContainer = Document.get().createDivElement();
 
     public RightPanelViewImpl() {
 
@@ -77,11 +71,6 @@ public class RightPanelViewImpl
         presenter.showClearButton();
     }
 
-    @EventHandler("listGroupItemHeader")
-    public void onListGroupItemHeaderClick(ClickEvent event) {
-        presenter.toggleRowExpansion(listGroupItemHeader.getClassName().contains("list-view-pf-expand-active"));
-    }
-
     @Override
     public void clearInputSearch() {
         inputSearch.setValue("");
@@ -100,16 +89,7 @@ public class RightPanelViewImpl
     }
 
     @Override
-    public void closeRow() {
-        listGroupItemHeader.removeClassName("list-view-pf-expand-active");
-        listGroupItemContainer.addClassName("hidden");
-        faAngleRight.removeClassName("fa-angle-down");
-    }
-
-    @Override
-    public void expandRow() {
-        listGroupItemHeader.addClassName("list-view-pf-expand-active");
-        listGroupItemContainer.removeClassName("hidden");
-        faAngleRight.addClassName("fa-angle-down");
+    public DivElement getListContainer() {
+        return listContainer;
     }
 }

@@ -13,31 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.mvp.HasPresenter;
 
-public interface RightPanelView
-        extends IsWidget,
-                HasPresenter<RightPanelView.Presenter> {
+public interface ListGroupItemView extends IsWidget,
+                                           HasPresenter<ListGroupItemView.Presenter> {
 
-    void clearInputSearch();
+    void setId(int id);
 
-    void hideClearButton();
+    DivElement getDivElement();
 
-    void showClearButton();
+    void closeRow();
 
-    DivElement getListContainer();
+    void expandRow();
 
     interface Presenter {
 
-        void clearSearch();
+        DivElement getDivElement(int id);
 
-        void showClearButton();
-
-        void addListGroupItemView(int id);
+        void toggleRowExpansion(int id, boolean currentlyShown);
     }
 }
