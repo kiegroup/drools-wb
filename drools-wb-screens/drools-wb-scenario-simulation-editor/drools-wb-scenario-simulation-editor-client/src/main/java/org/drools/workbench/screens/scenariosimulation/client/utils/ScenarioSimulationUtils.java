@@ -30,8 +30,12 @@ import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.TextBoxSi
 
 public class ScenarioSimulationUtils {
 
-    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, ScenarioHeaderMetaData> SCENARIOHEADERMETADATA_FUNCTION = ScenarioHeaderMetaData::new;
-    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, List<GridColumn.HeaderMetaData>> SCENARIOHEADERMETADATALIST_FUNCTION = (columnId, columnTitle, columnGroup, factory) -> Arrays.asList(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnGroup,"", factory), SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, columnGroup, factory));
+    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, ScenarioHeaderMetaData> SCENARIOHEADERMETADATA_FUNCTION =
+            ScenarioHeaderMetaData::new;
+    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, List<GridColumn.HeaderMetaData>> SCENARIOHEADERMETADATALIST_FUNCTION =
+            (columnId, columnTitle, columnGroup, factory) ->
+                    Arrays.asList(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnGroup, "", factory),
+                                  SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, columnGroup, factory));
 
     public static ScenarioGridColumn getScenarioGridColumn(String columnId, String columnTitle, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
         TextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
