@@ -18,11 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.Dependent;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -39,17 +42,20 @@ public class RightPanelViewImpl
     @DataField("rightPanelTabs")
     private UListElement rightPanelTabs = Document.get().createULElement();
 
-    @DataField("editorTab")
-    protected LIElement editorTab = Document.get().createLIElement();  // protected for test purpose
+    @DataField("clearSearchButton")
+    ButtonElement clearSearchButton = Document.get().createButtonElement();
 
-    @DataField("cheatSheetTab")
-    protected LIElement cheatSheetTab = Document.get().createLIElement();  // protected for test purpose
+    @DataField("inputSearch")
+    InputElement inputSearch = Document.get().createTextInputElement();
 
-    @DataField("editorTabContent")
-    protected DivElement editorTabContent = Document.get().createDivElement();  // protected for test purpose
+    @DataField("listGroupItemHeader")
+    DivElement listGroupItemHeader = Document.get().createDivElement();
 
-    @DataField("cheatSheetTabContent")
-    protected DivElement cheatSheetTabContent = Document.get().createDivElement(); // protected for test purpose
+    @DataField("listGroupItemContainer")
+    DivElement listGroupItemContainer = Document.get().createDivElement();
+
+    @DataField("faAngleRight")
+    SpanElement faAngleRight = Document.get().createSpanElement();
 
     public RightPanelViewImpl() {
 
@@ -58,45 +64,52 @@ public class RightPanelViewImpl
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
+        this.presenter.clearSearch();
     }
 
-    @EventHandler("editorTab")
-    public void onEditorTabClick(ClickEvent event) {
-        presenter.onEditorTabActivated();
+    @EventHandler("clearSearchButton")
+    public void onClearSearchButtonClick(ClickEvent event) {
+        presenter.clearSearch();
     }
 
-    @EventHandler("cheatSheetTab")
-    public void onCheatSheetTabClick(ClickEvent event) {
-        presenter.onCheatSheetTabActivated();
+    @EventHandler("inputSearch")
+    public void onInputSearchKeyUp(KeyUpEvent event) {
+        presenter.showClearButton();
     }
 
-    @Override
-    public void showEditorTab() {
-        showTab(editorTab, editorTabContent);
-    }
-
-    @Override
-    public void hideCheatSheetTab() {
-        hideTab(cheatSheetTab, cheatSheetTabContent);
+    @EventHandler("listGroupItemHeader")
+    public void onListGroupItemHeaderClick(ClickEvent event) {
+        presenter.toggleRowExpansion(listGroupItemHeader.getClassName().contains("list-view-pf-expand-active"));
     }
 
     @Override
-    public void showCheatSheetTab() {
-        showTab(cheatSheetTab, cheatSheetTabContent);
+    public void clearInputSearch() {
+        inputSearch.setValue("");
     }
 
     @Override
-    public void hideEditorTab() {
-        hideTab(editorTab, editorTabContent);
+    public void hideClearButton() {
+        clearSearchButton.setDisabled(true);
+        clearSearchButton.setAttribute("style", "display: none;");
     }
 
-    private void showTab(LIElement tab, DivElement content) {
-        tab.setAttribute("class", "active");
-        content.removeAttribute("hidden");
+    @Override
+    public void showClearButton() {
+        clearSearchButton.setDisabled(false);
+        clearSearchButton.removeAttribute("style");
     }
 
-    private void hideTab(LIElement tab, DivElement content) {
-        tab.removeClassName("active");
-        content.setAttribute("hidden", null);
+    @Override
+    public void closeRow() {
+        listGroupItemHeader.removeClassName("list-view-pf-expand-active");
+        listGroupItemContainer.addClassName("hidden");
+        faAngleRight.removeClassName("fa-angle-down");
+    }
+
+    @Override
+    public void expandRow() {
+        listGroupItemHeader.addClassName("list-view-pf-expand-active");
+        listGroupItemContainer.removeClassName("hidden");
+        faAngleRight.addClassName("fa-angle-down");
     }
 }

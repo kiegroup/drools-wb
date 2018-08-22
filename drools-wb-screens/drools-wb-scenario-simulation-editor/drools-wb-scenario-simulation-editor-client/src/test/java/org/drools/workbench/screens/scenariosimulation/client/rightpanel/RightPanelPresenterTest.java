@@ -52,16 +52,24 @@ public class RightPanelPresenterTest {
     }
 
     @Test
-    public void onEditorTabActivated() {
-        rightPanelPresenter.onEditorTabActivated();
-        verify(mockRightPanelView, times(1)).showEditorTab();
-        verify(mockRightPanelView, times(1)).hideCheatSheetTab();
+    public void clearSearch() {
+        rightPanelPresenter.clearSearch();
+        verify(mockRightPanelView, times(1)).clearInputSearch();
+        verify(mockRightPanelView, times(1)).hideClearButton();
     }
 
     @Test
-    public void onCheatSheetTabActivated() {
-        rightPanelPresenter.onCheatSheetTabActivated();
-        verify(mockRightPanelView, times(1)).showCheatSheetTab();
-        verify(mockRightPanelView, times(1)).hideEditorTab();
+    public void showClearButton() {
+        rightPanelPresenter.showClearButton();
+        verify(mockRightPanelView, times(1)).showClearButton();
     }
+
+    @Test
+    public void toggleRowExpansion() {
+        rightPanelPresenter.toggleRowExpansion(true);
+        verify(mockRightPanelView, times(1)).closeRow();
+        rightPanelPresenter.toggleRowExpansion(false);
+        verify(mockRightPanelView, times(1)).expandRow();
+    }
+
 }

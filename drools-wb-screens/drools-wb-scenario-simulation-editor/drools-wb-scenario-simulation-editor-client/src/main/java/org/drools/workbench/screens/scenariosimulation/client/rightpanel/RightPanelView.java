@@ -23,19 +23,22 @@ public interface RightPanelView
         extends IsWidget,
                 HasPresenter<RightPanelView.Presenter> {
 
-    void showEditorTab();
+    void clearInputSearch();
 
-    void hideCheatSheetTab();
+    void hideClearButton();
 
-    void showCheatSheetTab();
+    void showClearButton();
 
-    void hideEditorTab();
+    void closeRow();
+
+    void expandRow();
 
     interface Presenter {
 
-        void onEditorTabActivated();
+        void clearSearch();
 
-        void onCheatSheetTabActivated();
+        void showClearButton();
+
+        void toggleRowExpansion(boolean currentlyShown);
     }
-
 }

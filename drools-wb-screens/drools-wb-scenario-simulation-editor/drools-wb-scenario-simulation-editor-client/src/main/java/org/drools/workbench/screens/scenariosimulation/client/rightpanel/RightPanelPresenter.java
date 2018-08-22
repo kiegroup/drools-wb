@@ -66,22 +66,28 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         return ScenarioSimulationEditorConstants.INSTANCE.testTools();
     }
 
-
     @WorkbenchPartView
     public Widget asWidget() {
         return view.asWidget();
     }
 
     @Override
-    public void onEditorTabActivated() {
-        view.showEditorTab();
-        view.hideCheatSheetTab();
+    public void clearSearch() {
+        view.clearInputSearch();
+        view.hideClearButton();
     }
 
     @Override
-    public void onCheatSheetTabActivated() {
-        view.showCheatSheetTab();
-        view.hideEditorTab();
+    public void showClearButton() {
+        view.showClearButton();
+    }
 
+    @Override
+    public void toggleRowExpansion(boolean currentlyShown) {
+        if (currentlyShown) {
+            view.closeRow();
+        } else {
+            view.expandRow();
+        }
     }
 }
