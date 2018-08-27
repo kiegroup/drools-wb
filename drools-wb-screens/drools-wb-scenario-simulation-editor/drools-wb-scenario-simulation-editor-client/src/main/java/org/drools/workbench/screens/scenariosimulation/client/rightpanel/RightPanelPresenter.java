@@ -16,13 +16,15 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import java.util.stream.IntStream;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -34,7 +36,7 @@ import org.uberfire.workbench.model.Position;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
 
-@Dependent
+@ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
 public class RightPanelPresenter implements RightPanelView.Presenter {
 
@@ -45,6 +47,8 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     private RightPanelView view;
 
     private ListGroupItemPresenter listGroupItemPresenter;
+
+    Map<String, FactModelTree> factTypeFieldsMap;
 
     public RightPanelPresenter() {
         //Zero argument constructor for CDI
@@ -59,8 +63,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @PostConstruct
     public void setup() {
         view.init(this);
-        // static expression builder - to remove
-        IntStream.range(0, 2).forEach(this::addListGroupItemView);
     }
 
     @DefaultPosition
@@ -85,12 +87,24 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public FactModelTree getFactModelTree(String factName) {
+        return factTypeFieldsMap.get(factName);
+    }
+
+    @Override
+    public void setFactTypeFieldsMap(Map<String, FactModelTree> factTypeFieldsMap) {
+        this.factTypeFieldsMap = factTypeFieldsMap;
+        this.factTypeFieldsMap.forEach(this::addListGroupItemView);
+    }
+
+    @Override
     public void showClearButton() {
         view.showClearButton();
     }
 
     @Override
-    public void addListGroupItemView(int id) {
-        view.getListContainer().appendChild(listGroupItemPresenter.getDivElement(id));
+    public void addListGroupItemView(String factName, FactModelTree factModelTree) {
+        DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
+        view.getListContainer().appendChild(toAdd);
     }
 }

@@ -16,13 +16,29 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface ListGroupItemView extends IsWidget,
                                            HasPresenter<ListGroupItemView.Presenter> {
 
-    void setId(int id);
+    void setToExpand(boolean toExpand);
+
+    boolean isToExpand();
+
+    void setFactName(String factName);
+
+    void setFactNameAndType(String factName, String factType);
+
+    String getFactName();
+
+    String getFactType();
+
+    void addFactField(LIElement fieldElement);
+
+    void addExpandableFactField(DivElement fieldElement);
 
     DivElement getDivElement();
 
@@ -32,8 +48,10 @@ public interface ListGroupItemView extends IsWidget,
 
     interface Presenter {
 
-        DivElement getDivElement(int id);
+        DivElement getDivElement(String factName, FactModelTree factModelTree);
 
-        void toggleRowExpansion(int id, boolean currentlyShown);
+        DivElement getDivElement(String factName, String factModelTreeClass);
+
+        void toggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
     }
 }

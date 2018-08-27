@@ -16,8 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Map;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface RightPanelView
@@ -38,6 +41,10 @@ public interface RightPanelView
 
         void showClearButton();
 
-        void addListGroupItemView(int id);
+        void addListGroupItemView(String factName , FactModelTree factModelTree);
+
+        void setFactTypeFieldsMap(Map<String, FactModelTree> factTypeFieldsMap);
+
+        FactModelTree getFactModelTree(String factName);
     }
 }

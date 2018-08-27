@@ -16,6 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -24,6 +28,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
@@ -32,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -43,6 +49,7 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
@@ -76,6 +83,8 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
+    private RightPanelPresenter rightPanelPresenter;
+
     @Inject
     private RightPanelMenuItem rightPanelMenuItem;
 
@@ -89,7 +98,8 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final PlaceManager placeManager) {
+                                             final PlaceManager placeManager,
+                                             final RightPanelPresenter rightPanelPresenter) {
         super(view);
         this.view = view;
         this.baseView = view;
@@ -98,9 +108,10 @@ public class ScenarioSimulationEditorPresenter
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
+        this.rightPanelPresenter = rightPanelPresenter;
 
         addMenuItems();
-        
+
         view.init(this);
     }
 
@@ -172,6 +183,11 @@ public class ScenarioSimulationEditorPresenter
         return model;
     }
 
+    public void onRunScenario() {
+        service.call().runScenario(versionRecordManager.getCurrentPath(),
+                                   model);
+    }
+
     /**
      * If you want to customize the menu override this method.
      */
@@ -208,6 +224,19 @@ public class ScenarioSimulationEditorPresenter
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
+    void populateRightPanel() {
+        // Retrieve the relevant facttypes
+        String[] factTypes = oracle.getFactTypes();
+        // Instantiate a container map
+        Map<String, FactModelTree> factTypeFieldsMap = new HashMap<>();
+        // Instantiate the aggregator callback
+        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(factTypes.length, factTypeFieldsMap);
+        // Iterate over all facttypes to retrieve their modelfields
+        for (String factType : factTypes) {
+            oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
+        }
+    }
+
     private void addMenuItems() {
         view.addGridMenuItem("one", "ONE", "", () -> GWT.log("ONE COMMAND"));
         view.addGridMenuItem("two", "TWO", "", () -> GWT.log("TWO COMMAND"));
@@ -226,6 +255,7 @@ public class ScenarioSimulationEditorPresenter
             oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
                                                                    model,
                                                                    content.getDataModel());
+            populateRightPanel();
             importsWidget.setContent(oracle,
                                      model.getImports(),
                                      isReadOnly);
@@ -240,8 +270,52 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(rightPanelMenuItem);
     }
 
-    public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(),
-                                   model);
+    /**
+     * This <code>Callback</code> will receive <code>ModelField[]</code> from <code>AsyncPackageDataModelOracleFactory.getFieldCompletions(final String,
+     * final Callback&lt;ModelField[]&gt;)</code>; build a <code>FactModelTree</code> from them, and send it to the
+     * given <code>Callback&lt;FactModelTree&gt;</code> aggregatorCallback
+     * @param factName
+     * @param aggregatorCallback
+     * @return
+     */
+    private Callback<ModelField[]> fieldCompletionsCallback(String factName, Callback<FactModelTree> aggregatorCallback) {
+        return result -> {
+            Map<String, String> simpleProperties = new HashMap<>();
+            for (ModelField modelField : result) {
+                if (!modelField.getName().equals("this")) {
+                    simpleProperties.put(modelField.getName(), modelField.getClassName());
+                }
+            }
+            FactModelTree toSend = new FactModelTree(factName, simpleProperties);
+            aggregatorCallback.callback(toSend);
+        };
+    }
+
+    /**
+     * This <code>Callback</code> will receive data from other callbacks and when the retrieved results get to the
+     * expected ones it will recursively elaborate the map
+     * @param expectedElements
+     * @param factTypeFieldsMap
+     * @return
+     */
+    private Callback<FactModelTree> aggregatorCallback(final int expectedElements, Map<String, FactModelTree> factTypeFieldsMap) {
+        return result -> {
+            factTypeFieldsMap.put(result.getFactName(), result);
+            if (factTypeFieldsMap.size() == expectedElements) {
+                factTypeFieldsMap.values().forEach(factModelTree -> populateFactModel(factModelTree, factTypeFieldsMap));
+                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+            }
+        };
+    }
+
+    private void populateFactModel(FactModelTree toPopulate, Map<String, FactModelTree> factTypeFieldsMap) {
+        List<String> toRemove = new ArrayList<>();
+        toPopulate.getSimpleProperties().forEach((key, value) -> {
+            if (factTypeFieldsMap.containsKey(value)) {
+                toRemove.add(key);
+                toPopulate.addExpandableProperty(key, factTypeFieldsMap.get(value).getFactName());
+            }
+        });
+        toRemove.forEach(toPopulate::removeSimpleProperty);
     }
 }

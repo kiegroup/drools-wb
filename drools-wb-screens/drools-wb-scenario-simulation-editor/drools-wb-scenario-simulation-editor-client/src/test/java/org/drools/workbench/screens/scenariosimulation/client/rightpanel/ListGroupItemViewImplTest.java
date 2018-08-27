@@ -17,7 +17,9 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
@@ -25,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -33,7 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ListGroupItemViewImplTest {
+public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
 
     @Mock
     private ListGroupItemPresenter mockListGroupItemPresenter;
@@ -45,33 +48,54 @@ public class ListGroupItemViewImplTest {
     private DivElement mockListGroupItemContainer;
 
     @Mock
+    private DivElement mockFullClassName;
+
+    @Mock
     private SpanElement mockFaAngleRight;
 
-    private ListGroupItemViewImpl listGroupItemView;
+    @Mock
+    private UListElement mockFactProperties;
 
-    private final int ID = 3;
+    @Mock
+    private LIElement mockFactField;
+
+    private ListGroupItemViewImpl listGroupItemView;
 
     @Before
     public void setup() {
         this.listGroupItemView = spy(new ListGroupItemViewImpl() {
             {
-                this.id = ID;
+                this.factName = FACT_NAME;
                 this.listGroupItemHeader = mockListGroupItemHeader;
                 this.listGroupItemContainer = mockListGroupItemContainer;
                 this.faAngleRight = mockFaAngleRight;
+                this.fullClassName = mockFullClassName;
+                this.factProperties = mockFactProperties;
             }
         });
         listGroupItemView.init(mockListGroupItemPresenter);
     }
 
-    @Test()
+    @Test
     public void onListGroupItemHeaderClick() {
         when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item list-view-pf-expand-active");
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(ID), eq(true));
+        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(true));
         when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item");
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(ID), eq(false));
+        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(false));
+    }
+
+    @Test
+    public void setFactName() {
+        listGroupItemView.setFactName(FACT_NAME);
+        verify(mockFullClassName, times(1)).setInnerText(eq(FACT_NAME));
+    }
+
+    @Test
+    public void addFactField() {
+        listGroupItemView.addFactField(mockFactField);
+        verify(mockFactProperties, times(1)).appendChild(anyObject());
     }
 
     @Test

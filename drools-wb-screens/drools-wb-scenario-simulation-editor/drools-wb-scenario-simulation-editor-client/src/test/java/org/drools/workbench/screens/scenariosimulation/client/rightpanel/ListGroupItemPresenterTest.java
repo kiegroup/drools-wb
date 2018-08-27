@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.DivElement;
@@ -27,6 +28,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -35,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ListGroupItemPresenterTest {
+public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
 
     private ListGroupItemPresenter listGroupItemPresenter;
 
@@ -46,14 +48,19 @@ public class ListGroupItemPresenterTest {
     private DivElement mockDivElement;
 
     @Mock
-    private Map<Integer, ListGroupItemView> mockListGroupItemViewMap;
+    private FieldItemPresenter mockFieldItemPresenter;
+
+    @Mock
+    private List<ListGroupItemView> mockListGroupItemViewList;
 
     @Before
     public void setup() {
+        super.setup();
         when(mockListGroupItemView.getDivElement()).thenReturn(mockDivElement);
         this.listGroupItemPresenter = spy(new ListGroupItemPresenter() {
             {
-                listGroupItemViewMap = mockListGroupItemViewMap;
+                listGroupItemViewList = mockListGroupItemViewList;
+                fieldItemPresenter = mockFieldItemPresenter;
             }
 
             @Override
@@ -65,31 +72,49 @@ public class ListGroupItemPresenterTest {
 
     @Test
     public void getDivElement() {
-        int id = 3;
-        DivElement retrieved = listGroupItemPresenter.getDivElement(id);
+        DivElement retrieved = listGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE);
         verify(listGroupItemPresenter, times(1)).getListGroupItemView();
-        verify(mockListGroupItemView, times(1)).setId(eq(id));
+        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(FACT_NAME), eq(FACT_MODEL_TREE));
         verify(mockListGroupItemView, times(1)).init(eq(listGroupItemPresenter));
-        verify(mockListGroupItemViewMap, times(1)).put(eq(id), eq(mockListGroupItemView));
+        verify(mockListGroupItemViewList, times(1)).add(eq(mockListGroupItemView));
         assertNotNull(retrieved);
         assertEquals(mockDivElement, retrieved);
     }
 
     @Test
     public void toggleRowExpansion() {
-        int id = 3;
-        reset(mockListGroupItemViewMap);
-        when(mockListGroupItemViewMap.containsKey(id)).thenReturn(true);
-        when(mockListGroupItemViewMap.get(id)).thenReturn(mockListGroupItemView);
-        listGroupItemPresenter.toggleRowExpansion(id, true);
-        verify(mockListGroupItemViewMap, times(1)).get(eq(id));
+        reset(mockListGroupItemViewList);
+        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
+        //when(mockListGroupItemViewList.get(mockListGroupItemView)).thenReturn(mockListGroupItemView);
+        listGroupItemPresenter.toggleRowExpansion(mockListGroupItemView, true);
+        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
         verify(mockListGroupItemView, times(1)).closeRow();
-        reset(mockListGroupItemViewMap);
-        when(mockListGroupItemViewMap.containsKey(id)).thenReturn(true);
-        when(mockListGroupItemViewMap.get(id)).thenReturn(mockListGroupItemView);
+        reset(mockListGroupItemViewList);
+        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
+        //when(mockListGroupItemViewMap.get(FACT_NAME)).thenReturn(mockListGroupItemView);
         reset(mockListGroupItemView);
-        listGroupItemPresenter.toggleRowExpansion(id, false);
-        verify(mockListGroupItemViewMap, times(1)).get(eq(id));
+        listGroupItemPresenter.toggleRowExpansion(mockListGroupItemView, false);
+        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
         verify(mockListGroupItemView, times(1)).expandRow();
+    }
+
+    @Test
+    public void populateListGroupItemView() {
+        // factName.equals(factModelTree.getFactName())
+        listGroupItemPresenter.populateListGroupItemView(mockListGroupItemView, FACT_NAME, FACT_MODEL_TREE);
+        verify(mockListGroupItemView, times(1)).setFactName(eq(FACT_NAME));
+        Map<String, String> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
+        for (String key : simpleProperties.keySet()) {
+            String value = simpleProperties.get(key);
+            verify(mockFieldItemPresenter, times(1)).getLIElement(eq(FACT_NAME), eq(key), eq(value));
+        }
+        verify(mockListGroupItemView, times(simpleProperties.size())).addFactField(anyObject());
+        reset(mockListGroupItemView);
+        Map<String, String> expandableProperties = FACT_MODEL_TREE.getExpandableProperties();
+        for (String key : expandableProperties.keySet()) {
+            String value = expandableProperties.get(key);
+            verify(listGroupItemPresenter, times(1)).getDivElement(eq(key), eq(value));
+        }
+        verify(mockListGroupItemView, times(expandableProperties.size())).addExpandableFactField(anyObject());
     }
 }

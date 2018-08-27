@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,16 +26,17 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class RightPanelPresenterTest {
-
-    private RightPanelPresenter rightPanelPresenter;
+public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Mock
     private RightPanelView mockRightPanelView;
@@ -45,10 +47,16 @@ public class RightPanelPresenterTest {
     @Mock
     private ListGroupItemPresenter mockListGroupItemPresenter;
 
+    private RightPanelPresenter rightPanelPresenter;
+    private RightPanelPresenter rightPanelPresenterSpy;
+
     @Before
     public void setup() {
+        super.setup();
         when(mockRightPanelView.getListContainer()).thenReturn(mockListContainer);
+        when(mockListGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(mockListContainer);
         this.rightPanelPresenter = new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter);
+        rightPanelPresenterSpy = spy(rightPanelPresenter);
     }
 
     @Test
@@ -77,10 +85,24 @@ public class RightPanelPresenterTest {
 
     @Test
     public void addListGroupItemView() {
-        int id = 3;
-        rightPanelPresenter.addListGroupItemView(id);
+        rightPanelPresenter.addListGroupItemView(FACT_NAME, FACT_MODEL_TREE);
         verify(mockRightPanelView, times(1)).getListContainer();
-        verify(mockListGroupItemPresenter, times(1)).getDivElement(eq(id));
+        verify(mockListGroupItemPresenter, times(1)).getDivElement(eq(FACT_NAME), eq(FACT_MODEL_TREE));
         verify(mockListContainer, times(1)).appendChild(anyObject());
+    }
+
+    @Test
+    public void setFactTypeFieldsMap() {
+        rightPanelPresenterSpy.setFactTypeFieldsMap(mockTopLevelMap);
+        verify(rightPanelPresenterSpy, times(mockTopLevelMap.size())).addListGroupItemView(anyString(), anyObject());
+    }
+
+    @Test
+    public void getFactModelTree() {
+        rightPanelPresenter.setFactTypeFieldsMap(mockTopLevelMap);
+        String factName = getRandomFactModelTree(mockTopLevelMap, 0);
+        FactModelTree retrieved = rightPanelPresenter.getFactModelTree(factName);
+        assertNotNull(retrieved);
+        assertEquals(mockTopLevelMap.get(factName), retrieved);
     }
 }

@@ -19,7 +19,9 @@ import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -42,9 +44,19 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     @DataField("faAngleRight")
     SpanElement faAngleRight = Document.get().createSpanElement();
 
+    @DataField("fullClassName")
+    DivElement fullClassName = Document.get().createDivElement();
+
+    @DataField("factProperties")
+    UListElement factProperties = Document.get().createULElement();
+
     Presenter presenter;
 
-    int id;
+    String factName;
+
+    String factType;
+
+    boolean toExpand = false;
 
     @Override
     public Widget asWidget() {
@@ -53,7 +65,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @EventHandler("listGroupItemHeader")
     public void onListGroupItemHeaderClick(ClickEvent event) {
-        presenter.toggleRowExpansion(id, listGroupItemHeader.getClassName().contains("list-view-pf-expand-active"));
+        presenter.toggleRowExpansion(this, listGroupItemHeader.getClassName().contains("list-view-pf-expand-active"));
     }
 
     @Override
@@ -62,8 +74,55 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     }
 
     @Override
-    public void setId(int id) {
-        this.id = id;
+    public void setToExpand(boolean toExpand) {
+        this.toExpand = toExpand;
+    }
+
+    @Override
+    public boolean isToExpand() {
+        return toExpand;
+    }
+
+    @Override
+    public void setFactName(String factName) {
+        this.factName = factName;
+        this.factType = factName;
+        fullClassName.setInnerText(factName);
+        listGroupItem.setAttribute("id", "listGroupItem-" + factName);
+    }
+
+    @Override
+    public void setFactNameAndType(String factName, String factType) {
+        this.factName = factName;
+        this.factType = factType;
+        String innerHtml = new StringBuilder()
+                .append("<b>")
+                .append(factName)
+                .append("</b> ")
+                .append(factType)
+                .toString();
+        fullClassName.setInnerHTML(innerHtml);
+        listGroupItem.setAttribute("id", "listGroupItem-" + factName);
+    }
+
+    @Override
+    public String getFactName() {
+        return factName;
+    }
+
+    @Override
+    public String getFactType() {
+        return factType;
+    }
+
+    @Override
+    public void addFactField(LIElement fieldElement) {
+        factProperties.appendChild(fieldElement);
+    }
+
+    @Override
+    public void addExpandableFactField(DivElement fieldElement) {
+        listGroupItemContainer.appendChild(fieldElement);
     }
 
     @Override
