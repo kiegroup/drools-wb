@@ -19,17 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
 
     @Inject
-    private Instance<ListGroupItemView> instance;
+    ViewsProvider viewsProvider;
 
     @Inject
     FieldItemPresenter fieldItemPresenter;
@@ -69,10 +69,6 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         }
     }
 
-    protected ListGroupItemView getListGroupItemView() {  // This is needed for test because Mockito can not mock Instance
-        return instance.get();
-    }
-
     protected void populateListGroupItemView(ListGroupItemView toPopulate, String factName, FactModelTree factModelTree) {
         if (factName.equals(factModelTree.getFactName())) {
             toPopulate.setFactName(factName);
@@ -93,7 +89,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
      * @return
      */
     protected ListGroupItemView commonGetListGroupItemView(boolean toExpand) {
-        ListGroupItemView listGroupItemView = getListGroupItemView();
+        ListGroupItemView listGroupItemView = viewsProvider.getListGroupItemView();
         listGroupItemView.init(this);
         listGroupItemView.setToExpand(toExpand);
         listGroupItemViewList.add(listGroupItemView);

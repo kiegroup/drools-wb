@@ -17,27 +17,24 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class FieldItemPresenter implements FieldItemView.Presenter {
 
     @Inject
-    private Instance<FieldItemView> instance;
+    ViewsProvider viewsProvider;
 
     @Override
     public LIElement getLIElement(String factName, String fieldName, String className) {
-        FieldItemView fieldItemView = getFieldItemView();
+        FieldItemView fieldItemView = viewsProvider.getFieldItemView();
         fieldItemView.setFieldData(factName, fieldName, className);
         fieldItemView.setPresenter(this);
         LIElement toReturn = fieldItemView.getLIElement();
         return toReturn;
     }
 
-    protected FieldItemView getFieldItemView() {  // This is needed for test because Mockito can not mock Instance
-        return instance.get();
-    }
 }

@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.junit.Before;
 import org.mockito.Mock;
 
@@ -31,6 +32,9 @@ abstract class AbstractRightPanelTest {
 
     @Mock
     protected LIElement mockLIElement;
+
+    @Mock
+    protected ViewsProvider mockViewsProvider;
 
     Map<String, FactModelTree> mockTopLevelMap;
     String FACT_NAME;
@@ -78,7 +82,7 @@ abstract class AbstractRightPanelTest {
     private String getRandomString() {
         String letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         StringBuilder builder = new StringBuilder();
-        int numberOfLetters =  letters.length();
+        int numberOfLetters = letters.length();
         Random random = new Random();
         int sizeOfRandomString = random.nextInt(6) + 3;
         IntStream

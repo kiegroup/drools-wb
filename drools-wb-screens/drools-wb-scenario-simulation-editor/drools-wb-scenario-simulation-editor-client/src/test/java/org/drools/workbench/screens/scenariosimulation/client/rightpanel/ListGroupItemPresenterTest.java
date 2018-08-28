@@ -56,16 +56,13 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     @Before
     public void setup() {
         super.setup();
+        when(mockViewsProvider.getListGroupItemView()).thenReturn(mockListGroupItemView);
         when(mockListGroupItemView.getDivElement()).thenReturn(mockDivElement);
         this.listGroupItemPresenter = spy(new ListGroupItemPresenter() {
             {
                 listGroupItemViewList = mockListGroupItemViewList;
                 fieldItemPresenter = mockFieldItemPresenter;
-            }
-
-            @Override
-            protected ListGroupItemView getListGroupItemView() {
-                return mockListGroupItemView;
+                viewsProvider = mockViewsProvider;
             }
         });
     }
@@ -73,7 +70,7 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     @Test
     public void getDivElement() {
         DivElement retrieved = listGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE);
-        verify(listGroupItemPresenter, times(1)).getListGroupItemView();
+        verify(mockViewsProvider, times(1)).getListGroupItemView();
         verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(FACT_NAME), eq(FACT_MODEL_TREE));
         verify(mockListGroupItemView, times(1)).init(eq(listGroupItemPresenter));
         verify(mockListGroupItemViewList, times(1)).add(eq(mockListGroupItemView));

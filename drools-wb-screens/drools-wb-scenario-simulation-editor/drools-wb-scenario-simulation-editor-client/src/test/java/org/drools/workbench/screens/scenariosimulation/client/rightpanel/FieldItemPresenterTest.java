@@ -32,21 +32,18 @@ import static org.mockito.Mockito.when;
 public class FieldItemPresenterTest extends AbstractRightPanelTest {
 
     @Mock
-        protected FieldItemView mockFieldItemView;
+    protected FieldItemView mockFieldItemView;
 
     private FieldItemPresenter fieldItemPresenter;
 
     @Before
     public void setup() {
         super.setup();
+        when(mockViewsProvider.getFieldItemView()).thenReturn(mockFieldItemView);
         when(mockFieldItemView.getLIElement()).thenReturn(mockLIElement);
         this.fieldItemPresenter = spy(new FieldItemPresenter() {
             {
-            }
-
-            @Override
-            protected FieldItemView getFieldItemView() {
-                return mockFieldItemView;
+                viewsProvider = mockViewsProvider;
             }
         });
     }
@@ -54,7 +51,7 @@ public class FieldItemPresenterTest extends AbstractRightPanelTest {
     @Test
     public void getLIElement() {
         fieldItemPresenter.getLIElement(FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
-        verify(fieldItemPresenter, times(1)).getFieldItemView();
+        verify(mockViewsProvider, times(1)).getFieldItemView();
         verify(mockFieldItemView, times(1)).setFieldData(eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()));
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
