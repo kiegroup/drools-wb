@@ -42,6 +42,9 @@ public abstract class BaseMenu implements IsWidget,
     protected MenuItemPresenter menuItemPresenter;
 
     @Inject
+    protected ExecutableMenuItemPresenter executableMenuItemPresenter;
+    
+    @Inject
     protected BaseMenuView view;
 
     @PostConstruct
@@ -51,8 +54,13 @@ public abstract class BaseMenu implements IsWidget,
     }
 
     @Override
-    public void addMenuItem(String id, String label, String i18n, Command command) {
-        view.getContextMenuDropdown().appendChild(menuItemPresenter.getLIElement(id, label, command));
+    public void addMenuItem(String id, String label, String i18n) {
+        view.getContextMenuDropdown().appendChild(menuItemPresenter.getLIElement(id, label));
+    }
+
+    @Override
+    public void addExecutableMenuItem(String id, String label, String i18n, Command command) {
+        view.getContextMenuDropdown().appendChild(executableMenuItemPresenter.getLIElement(id, label, command));
     }
 
     @Override
@@ -116,7 +124,6 @@ public abstract class BaseMenu implements IsWidget,
         event.stopPropagation();
         hide();
     }
-
 
     protected RootPanel getRootPanel() {
         return RootPanel.get();

@@ -33,8 +33,12 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     MenuItem getRunScenarioMenuItem();
 
-    void addGridMenuItem(String id, String label, String i18n, Command command);
+    void addGridMenuItem(String id, String label, String i18n);
 
-    void addHeaderMenuItem(String id, String label, String i18n, Command command);
+    void addExecutableGridMenuItem(String id, String label, String i18n, Command command);
+
+    void addHeaderMenuItem(String id, String label, String i18n);
+
+    void addExecutableHeaderMenuItem(String id, String label, String i18n, Command command);
 
 }

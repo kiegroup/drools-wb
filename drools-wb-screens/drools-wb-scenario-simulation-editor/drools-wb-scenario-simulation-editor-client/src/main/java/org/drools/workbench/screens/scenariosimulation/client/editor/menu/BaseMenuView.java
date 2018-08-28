@@ -34,13 +34,21 @@ public interface BaseMenuView<M extends BaseMenu> extends UberView<M> {
         void initialise();
 
         /**
-         * Add a menu voice in form of <code>LIElement</code> to the underlying view
+         * Add a <i>label</i> menu voice in form of <code>LIElement</code> to the underlying view
+         * @param id
+         * @param label
+         * @param i18n
+         */
+        void addMenuItem(String id, String label, String i18n);
+
+        /**
+         * Add an <i>executable</i> menu voice in form of <code>LIElement</code> to the underlying view
          * @param id
          * @param label
          * @param i18n
          * @param command
          */
-        void addMenuItem(String id, String label, String i18n, Command command);
+        void addExecutableMenuItem(String id, String label, String i18n, Command command);
 
         void onRefreshMenusEvent(final RefreshMenusEvent event);
 
@@ -54,7 +62,6 @@ public interface BaseMenuView<M extends BaseMenu> extends UberView<M> {
         void enableElement(final Element element, final boolean enabled);
 
         boolean isDisabled(final Element element);
-
 
         /**
          * Method to retrieve the visibility state of the view

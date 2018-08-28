@@ -16,16 +16,23 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.Command;
 
-public class MenuItemPresenter implements MenuItemView.Presenter {
+
+public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Presenter {
 
     @Inject
-    private Instance<MenuItemView> instance;
+    private Instance<ExecutableMenuItemView> instance;
+
+    protected Map<LIElement, Command> menuItemsCommandMap = new HashMap<>();
 
     @Override
     public void onClickEvent(ClickEvent event) {
@@ -34,12 +41,21 @@ public class MenuItemPresenter implements MenuItemView.Presenter {
     }
 
     @Override
-    public LIElement getLIElement(String id, String label) {
-        MenuItemView menuItemView = getMenuItemView();
+    public void executeCommand(LIElement clickedElement) {
+        if (menuItemsCommandMap.containsKey(clickedElement)) {
+            menuItemsCommandMap.get(clickedElement).execute();
+        }
+    }
+
+    @Override
+    public LIElement getLIElement(String id, String label, Command command) {
+        ExecutableMenuItemView menuItemView = getMenuItemView();
         menuItemView.setId(id);
         menuItemView.setLabel(label);
         menuItemView.setPresenter(this);
-        return menuItemView.getLIElement();
+        LIElement toReturn = menuItemView.getLIElement();
+        menuItemsCommandMap.put(toReturn, command);
+        return toReturn;
     }
 
     @Override
@@ -47,7 +63,7 @@ public class MenuItemPresenter implements MenuItemView.Presenter {
 
     }
 
-    protected MenuItemView getMenuItemView() {  // This is needed for test because Mockito can not mock Instance
+    protected ExecutableMenuItemView getMenuItemView() {  // This is needed for test because Mockito can not mock Instance
         return instance.get(); 
 
     }

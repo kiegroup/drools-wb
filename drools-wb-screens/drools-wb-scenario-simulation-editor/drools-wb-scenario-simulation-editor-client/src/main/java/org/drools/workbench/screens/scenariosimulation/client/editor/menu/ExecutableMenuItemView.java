@@ -20,19 +20,20 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Command;
 
-public interface MenuItemView {
+public interface ExecutableMenuItemView {
 
     interface Presenter {
 
-        LIElement getLIElement(String id, String innerText);
+        void executeCommand(LIElement clickedElement);
+
+        LIElement getLIElement(String id, String innerText, Command command);
 
         void enableElement(boolean toEnable);
 
         void onClickEvent(ClickEvent event);
-
     }
 
-    void setPresenter(MenuItemPresenter menuItemPresenter);
+    void setPresenter(ExecutableMenuItemPresenter executableMenuItemPresenter);
 
     void setId(String id);
 

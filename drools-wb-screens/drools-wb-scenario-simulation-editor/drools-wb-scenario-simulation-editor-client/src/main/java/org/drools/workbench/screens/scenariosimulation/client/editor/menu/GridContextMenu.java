@@ -18,4 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 public class GridContextMenu extends BaseMenu {
 
+
+
 }

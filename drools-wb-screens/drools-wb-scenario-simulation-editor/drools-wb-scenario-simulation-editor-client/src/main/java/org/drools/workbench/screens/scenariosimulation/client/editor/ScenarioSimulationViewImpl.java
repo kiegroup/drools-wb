@@ -82,23 +82,28 @@ public class ScenarioSimulationViewImpl
     }
 
     @Override
-    public void addGridMenuItem(String id, String label, String i18n, Command command) {
-        gridContextMenu.addMenuItem(id, label, i18n, command);
+    public void addGridMenuItem(String id, String label, String i18n) {
+        gridContextMenu.addMenuItem(id, label, i18n);
     }
 
     @Override
-    public void addHeaderMenuItem(String id, String label, String i18n, Command command) {
-        headerContextMenu.addMenuItem(id, label, i18n, command);
+    public void addExecutableGridMenuItem(String id, String label, String i18n, Command command) {
+        gridContextMenu.addExecutableMenuItem(id, label, i18n, command);
+    }
+
+    @Override
+    public void addHeaderMenuItem(String id, String label, String i18n) {
+        headerContextMenu.addMenuItem(id, label, i18n);
+    }
+
+    @Override
+    public void addExecutableHeaderMenuItem(String id, String label, String i18n, Command command) {
+        headerContextMenu.addExecutableMenuItem(id, label, i18n, command);
     }
 
     @Override
     public MenuItem getRunScenarioMenuItem() {
         return new RunScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
-                                       new Command() {
-                                           @Override
-                                           public void execute() {
-                                               presenter.onRunScenario();
-                                           }
-                                       });
+                                       () -> presenter.onRunScenario());
     }
 }

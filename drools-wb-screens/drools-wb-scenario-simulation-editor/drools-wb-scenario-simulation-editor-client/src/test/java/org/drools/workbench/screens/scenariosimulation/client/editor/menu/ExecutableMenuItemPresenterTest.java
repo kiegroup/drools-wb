@@ -16,8 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Map;
+
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.Command;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,27 +35,36 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class MenuItemPresenterTest {
+public class ExecutableMenuItemPresenterTest {
 
     @Mock
-    private MenuItemViewImpl mockMenuItemViewImpl;
+    private ExecutableMenuItemViewImpl mockExecutableMenuItemViewImpl;
 
     @Mock
     private LIElement mockLIElement;
 
-    private MenuItemPresenter menuItemPresenter;
+    @Mock
+    private Map<LIElement, Command> mockMenuItemsCommandMap;
+
+    @Mock
+    private Command mockCommand;
+
+    private ExecutableMenuItemPresenter executableMenuItemPresenter;
 
     @Before
     public void setup() {
-        when(mockMenuItemViewImpl.getLIElement()).thenReturn(mockLIElement);
+        when(mockExecutableMenuItemViewImpl.getLIElement()).thenReturn(mockLIElement);
+        when(mockMenuItemsCommandMap.containsKey(mockLIElement)).thenReturn(true);
+        when(mockMenuItemsCommandMap.get(mockLIElement)).thenReturn(mockCommand);
 
-        this.menuItemPresenter = spy(new MenuItemPresenter() {
+        this.executableMenuItemPresenter = spy(new ExecutableMenuItemPresenter() {
             {
+                menuItemsCommandMap = mockMenuItemsCommandMap;
             }
 
             @Override
-            protected MenuItemView getMenuItemView() {
-                return mockMenuItemViewImpl;
+            protected ExecutableMenuItemView getMenuItemView() {
+                return mockExecutableMenuItemViewImpl;
             }
         });
     }
@@ -60,15 +72,22 @@ public class MenuItemPresenterTest {
     @Test
     public void onClickEvent() {
         ClickEvent mockClickEvent = mock(ClickEvent.class);
-        menuItemPresenter.onClickEvent(mockClickEvent);
+        executableMenuItemPresenter.onClickEvent(mockClickEvent);
         verify(mockClickEvent, times(1)).preventDefault();
         verify(mockClickEvent, times(1)).stopPropagation();
     }
 
+    @Test
+    public void executeCommand() {
+        executableMenuItemPresenter.executeCommand(mockLIElement);
+        verify(mockMenuItemsCommandMap, times(1)).containsKey(mockLIElement);
+        verify(mockCommand, times(1)).execute();
+    }
 
     @Test
     public void getLIElement() {
-        LIElement liElement = menuItemPresenter.getLIElement("TEST-ID", "TEST-LABEL");
+        LIElement liElement = executableMenuItemPresenter.getLIElement("TEST-ID", "TEST-LABEL", mockCommand);
         assertNotNull(liElement);
+        verify(mockMenuItemsCommandMap, times(1)).put(liElement, mockCommand);
     }
 }

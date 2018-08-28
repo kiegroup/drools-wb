@@ -24,8 +24,8 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-@Templated
-public class MenuItemViewImpl implements MenuItemView {
+@Templated("MenuItemViewImpl.html")
+public class ExecutableMenuItemViewImpl implements ExecutableMenuItemView {
 
     @DataField("liElement")
     private LIElement liElement = Document.get().createLIElement();
@@ -33,17 +33,16 @@ public class MenuItemViewImpl implements MenuItemView {
     @DataField("spanElement")
     private SpanElement spanElement = Document.get().createSpanElement();
 
-    private MenuItemPresenter menuItemPresenter;
+    private ExecutableMenuItemPresenter executableMenuItemPresenter;
 
     @Override
     public LIElement getLIElement() {
-        liElement.addClassName("disabled");
         return liElement;
     }
 
     @Override
-    public void setPresenter(MenuItemPresenter menuItemPresenter) {
-        this.menuItemPresenter = menuItemPresenter;
+    public void setPresenter(ExecutableMenuItemPresenter executableMenuItemPresenter) {
+        this.executableMenuItemPresenter = executableMenuItemPresenter;
     }
 
     @Override
@@ -58,12 +57,11 @@ public class MenuItemViewImpl implements MenuItemView {
 
     @Override
     public void setLabel(String label) {
-        String innerHtml = "<b>" + label.toUpperCase() + "</b>";
-        spanElement.setInnerHTML(innerHtml);
+        spanElement.setInnerText(label);
     }
 
     @EventHandler("liElement")
     public void onClickEvent(ClickEvent event) {
-        menuItemPresenter.onClickEvent(event);
+        executableMenuItemPresenter.onClickEvent(event);
     }
 }

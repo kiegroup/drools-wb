@@ -50,6 +50,9 @@ public class BaseMenuTest {
     private MenuItemPresenter mockMenuItemPresenter;
 
     @Mock
+    private ExecutableMenuItemPresenter mockExecutableMenuItemPresenter;
+
+    @Mock
     private BaseMenuView mockView;
 
     @Mock
@@ -68,6 +71,7 @@ public class BaseMenuTest {
             {
                 this.view = mockView;
                 this.menuItemPresenter = mockMenuItemPresenter;
+                this.executableMenuItemPresenter = mockExecutableMenuItemPresenter;
             }
 
             @Override
@@ -85,12 +89,21 @@ public class BaseMenuTest {
 
     @Test
     public void addMenuItem() {
+        String id = "TEST-ID";
+        String label = "TEST-LABEL";
+        String i18n = "TEST-i18n";
+        baseMenu.addMenuItem(id, label, i18n);
+        verify(mockContextMenuDropdown, times(1)).appendChild(mockMenuItemPresenter.getLIElement(id, label));
+    }
+
+    @Test
+    public void addExecutableMenuItem() {
         Command mockCommand = mock(Command.class);
         String id = "TEST-ID";
         String label = "TEST-LABEL";
         String i18n = "TEST-i18n";
-        baseMenu.addMenuItem(id, label, i18n, mockCommand);
-        verify(mockContextMenuDropdown, times(1)).appendChild(mockMenuItemPresenter.getLIElement(id, label, mockCommand));
+        baseMenu.addExecutableMenuItem(id, label, i18n, mockCommand);
+        verify(mockContextMenuDropdown, times(1)).appendChild(mockExecutableMenuItemPresenter.getLIElement(id, label, mockCommand));
     }
 
     @Test
@@ -162,5 +175,4 @@ public class BaseMenuTest {
         baseMenu.enableElement(mockElement, false);
         verify(mockElement, times(1)).addClassName(Styles.DISABLED);
     }
-
 }

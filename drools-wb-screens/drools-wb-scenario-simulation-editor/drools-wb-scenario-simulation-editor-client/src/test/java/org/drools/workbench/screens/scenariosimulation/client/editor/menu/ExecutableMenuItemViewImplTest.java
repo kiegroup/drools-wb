@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
@@ -24,51 +23,33 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class MenuItemPresenterTest {
+public class ExecutableMenuItemViewImplTest {
+
+    private MenuItemViewImpl menuItemView;
 
     @Mock
-    private MenuItemViewImpl mockMenuItemViewImpl;
-
-    @Mock
-    private LIElement mockLIElement;
-
-    private MenuItemPresenter menuItemPresenter;
+    private MenuItemPresenter mockMenuItemPresenter;
 
     @Before
     public void setup() {
-        when(mockMenuItemViewImpl.getLIElement()).thenReturn(mockLIElement);
-
-        this.menuItemPresenter = spy(new MenuItemPresenter() {
+        this.menuItemView = spy(new MenuItemViewImpl() {
             {
-            }
 
-            @Override
-            protected MenuItemView getMenuItemView() {
-                return mockMenuItemViewImpl;
             }
         });
+        menuItemView.setPresenter(mockMenuItemPresenter);
     }
 
     @Test
     public void onClickEvent() {
         ClickEvent mockClickEvent = mock(ClickEvent.class);
-        menuItemPresenter.onClickEvent(mockClickEvent);
-        verify(mockClickEvent, times(1)).preventDefault();
-        verify(mockClickEvent, times(1)).stopPropagation();
-    }
-
-
-    @Test
-    public void getLIElement() {
-        LIElement liElement = menuItemPresenter.getLIElement("TEST-ID", "TEST-LABEL");
-        assertNotNull(liElement);
+        menuItemView.onClickEvent(mockClickEvent);
+        verify(mockMenuItemPresenter, times(1)).onClickEvent(mockClickEvent);
     }
 }

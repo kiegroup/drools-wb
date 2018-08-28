@@ -100,7 +100,7 @@ public class ScenarioSimulationEditorPresenter
         this.placeManager = placeManager;
 
         addMenuItems();
-        
+
         view.init(this);
     }
 
@@ -209,10 +209,35 @@ public class ScenarioSimulationEditorPresenter
     }
 
     private void addMenuItems() {
-        view.addGridMenuItem("one", "ONE", "", () -> GWT.log("ONE COMMAND"));
-        view.addGridMenuItem("two", "TWO", "", () -> GWT.log("TWO COMMAND"));
-        view.addHeaderMenuItem("one", "HEADER-ONE", "", () -> GWT.log("HEADER-ONE COMMAND"));
-        view.addHeaderMenuItem("two", "HEADER-TWO", "", () -> GWT.log("HEADER-TWO COMMAND"));
+        addHeaderMenuItems();
+        addGridMenuItems();
+    }
+
+    private void addHeaderMenuItems() {
+        // DESCRIPTION
+        view.addHeaderMenuItem("description", "DESCRIPTION", "");
+        view.addExecutableHeaderMenuItem("description-item", "Log", "", () -> GWT.log("DESCRIPTION LOG COMMAND"));
+        // GIVEN
+        view.addHeaderMenuItem("given", "GIVEN", "");
+        view.addExecutableHeaderMenuItem("given-insert-column-left", "Insert column left", "", () -> GWT.log("GIVEN INSERT COLUMN LEFT"));
+        view.addExecutableHeaderMenuItem("given-insert-column-right", "Insert column right", "", () -> GWT.log("GIVEN INSERT COLUMN RIGHT"));
+        view.addExecutableHeaderMenuItem("given-delete-column", "Delete column", "", () -> GWT.log("GIVEN DELETE COLUMN"));
+        // EXPECTED
+        view.addHeaderMenuItem("expected", "EXPECTED", "");
+        view.addExecutableHeaderMenuItem("expected-insert-column-left", "Insert column left", "", () -> GWT.log("EXPECTED INSERT COLUMN LEFT"));
+        view.addExecutableHeaderMenuItem("expected-insert-column-right", "Insert column right", "", () -> GWT.log("EXPECTED INSERT COLUMN RIGHT"));
+        view.addExecutableHeaderMenuItem("expected-delete-column", "Delete column", "", () -> GWT.log("EXPECTED DELETE COLUMN"));
+        // SCENARIO
+        view.addHeaderMenuItem("header-scenario", "SCENARIO", "");
+        view.addExecutableHeaderMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("HEADER INSERT ROW BELOW"));
+    }
+
+    private void addGridMenuItems() {
+        view.addGridMenuItem("grid-scenario", "SCENARIO", "");
+        view.addExecutableGridMenuItem("grid-scenario-insert-above", "Insert row above", "", () -> GWT.log("GRID INSERT ROW ABOVE"));
+        view.addExecutableGridMenuItem("grid-scenario-insert-below", "Insert row below", "", () -> GWT.log("GRID INSERT ROW BELOW"));
+        view.addExecutableGridMenuItem("grid-scenario-delete", "Delete row", "", () -> GWT.log("GRID DELETE ROW"));
+        view.addExecutableGridMenuItem("grid-scenario-duplicate", "Duplicate row", "", () -> GWT.log("GRID DUPLICATE ROW"));
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
