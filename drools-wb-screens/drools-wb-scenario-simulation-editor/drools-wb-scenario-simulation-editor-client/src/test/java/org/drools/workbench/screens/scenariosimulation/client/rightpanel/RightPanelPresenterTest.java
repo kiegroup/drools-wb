@@ -24,12 +24,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.uberfire.client.workbench.events.PlaceHiddenEvent;
+import org.uberfire.mvp.PlaceRequest;
 
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -78,6 +82,19 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     }
 
     @Test
+    public void clearNameField() {
+        rightPanelPresenter.clearNameField();
+        verify(mockRightPanelView, times(1)).clearNameField();
+    }
+
+    @Test
+    public void clearStatus() {
+        rightPanelPresenterSpy.clearStatus();
+        verify(rightPanelPresenterSpy, times(1)).clearSearch();
+        verify(rightPanelPresenterSpy, times(1)).clearNameField();
+    }
+
+    @Test
     public void showClearButton() {
         rightPanelPresenter.showClearButton();
         verify(mockRightPanelView, times(1)).showClearButton();
@@ -104,5 +121,15 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         FactModelTree retrieved = rightPanelPresenter.getFactModelTree(factName);
         assertNotNull(retrieved);
         assertEquals(mockTopLevelMap.get(factName), retrieved);
+    }
+
+    @Test
+    public void onPlaceHiddenEvent() {
+        PlaceRequest mockPlaceRequest = mock(PlaceRequest.class);
+        when(mockPlaceRequest.getIdentifier()).thenReturn(IDENTIFIER);
+        PlaceHiddenEvent mockPlaceHiddenEvent = mock(PlaceHiddenEvent.class);
+        when(mockPlaceHiddenEvent.getPlace()).thenReturn(mockPlaceRequest);
+        rightPanelPresenterSpy.onPlaceHiddenEvent(mockPlaceHiddenEvent);
+        verify(rightPanelPresenterSpy, times(1)).clearStatus();
     }
 }

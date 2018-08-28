@@ -45,6 +45,9 @@ public class RightPanelViewImplTest {
     private InputElement mockInputSearch;
 
     @Mock
+    private InputElement mockNameField;
+
+    @Mock
     private ButtonElement mockClearSearchButton;
 
     @Before
@@ -53,6 +56,7 @@ public class RightPanelViewImplTest {
             {
                 this.inputSearch = mockInputSearch;
                 this.clearSearchButton = mockClearSearchButton;
+                this.nameField = mockNameField;
             }
         });
         rightPanelView.init(mockRightPanelPresenter);
@@ -79,6 +83,12 @@ public class RightPanelViewImplTest {
     }
 
     @Test
+    public void clearNameField() {
+        rightPanelView.clearNameField();
+        verify(mockNameField, times(1)).setValue(eq(""));
+    }
+
+    @Test
     public void hideClearButton() {
         rightPanelView.hideClearButton();
         verify(mockClearSearchButton, times(1)).setDisabled(eq(true));
@@ -91,5 +101,4 @@ public class RightPanelViewImplTest {
         verify(mockClearSearchButton, times(1)).setDisabled(eq(false));
         verify(mockClearSearchButton, times(1)).removeAttribute(eq("style"));
     }
-
 }

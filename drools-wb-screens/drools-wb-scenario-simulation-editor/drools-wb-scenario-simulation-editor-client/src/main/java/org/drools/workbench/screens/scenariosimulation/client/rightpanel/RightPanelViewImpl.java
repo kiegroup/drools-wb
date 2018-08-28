@@ -47,6 +47,9 @@ public class RightPanelViewImpl
     @DataField("inputSearch")
     InputElement inputSearch = Document.get().createTextInputElement();
 
+    @DataField("nameField")
+    InputElement nameField = Document.get().createTextInputElement();
+
     @DataField("listContainer")
     DivElement listContainer = Document.get().createDivElement();
 
@@ -73,6 +76,11 @@ public class RightPanelViewImpl
     @Override
     public void clearInputSearch() {
         inputSearch.setValue("");
+    }
+
+    @Override
+    public void clearNameField() {
+        nameField.setValue("");
     }
 
     @Override

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
@@ -30,6 +31,8 @@ import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
+import org.uberfire.client.workbench.events.PlaceHiddenEvent;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
@@ -87,6 +90,17 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public void clearNameField() {
+        view.clearNameField();
+    }
+
+    @Override
+    public void clearStatus() {
+        clearSearch();
+        clearNameField();
+    }
+
+    @Override
     public FactModelTree getFactModelTree(String factName) {
         return factTypeFieldsMap.get(factName);
     }
@@ -94,6 +108,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void setFactTypeFieldsMap(Map<String, FactModelTree> factTypeFieldsMap) {
         this.factTypeFieldsMap = factTypeFieldsMap;
+        view.getListContainer().removeAllChildren();
         this.factTypeFieldsMap.forEach(this::addListGroupItemView);
     }
 
@@ -106,5 +121,13 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void addListGroupItemView(String factName, FactModelTree factModelTree) {
         DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
         view.getListContainer().appendChild(toAdd);
+    }
+
+    // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
+    public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
+        PlaceRequest placeRequest = placeHiddenEvent.getPlace();
+        if (placeRequest.getIdentifier().equals(IDENTIFIER)) {
+            clearStatus();
+        }
     }
 }

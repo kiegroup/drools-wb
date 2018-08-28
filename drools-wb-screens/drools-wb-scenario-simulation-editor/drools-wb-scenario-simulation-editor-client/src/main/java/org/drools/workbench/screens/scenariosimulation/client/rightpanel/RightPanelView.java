@@ -29,6 +29,8 @@ public interface RightPanelView
 
     void clearInputSearch();
 
+    void clearNameField();
+
     void hideClearButton();
 
     void showClearButton();
@@ -38,6 +40,10 @@ public interface RightPanelView
     interface Presenter {
 
         void clearSearch();
+
+        void clearNameField();
+
+        void clearStatus();
 
         void showClearButton();
 
