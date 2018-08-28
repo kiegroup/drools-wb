@@ -24,6 +24,8 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -71,6 +73,15 @@ public class RightPanelViewImpl
     @EventHandler("inputSearch")
     public void onInputSearchKeyUp(KeyUpEvent event) {
         presenter.onShowClearButton();
+    }
+
+    @EventHandler("inputSearch")
+    public void onInputSearchKeyDownEvent(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            //Window.alert("ENTER " + inputSearch.getValue());
+            presenter.onSearchedEvent(inputSearch.getValue());
+        }
+
     }
 
     @Override

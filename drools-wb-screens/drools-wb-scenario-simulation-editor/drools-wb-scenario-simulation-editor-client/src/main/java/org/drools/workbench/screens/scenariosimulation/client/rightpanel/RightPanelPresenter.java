@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Map;
+import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -106,7 +107,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void setFactTypeFieldsMap(Map<String, FactModelTree> factTypeFieldsMap) {
+    public void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap) {
         this.factTypeFieldsMap = factTypeFieldsMap;
         view.getListContainer().removeAllChildren();
         this.factTypeFieldsMap.forEach(this::addListGroupItemView);
@@ -115,6 +116,21 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onShowClearButton() {
         view.showClearButton();
+    }
+
+    @Override
+    public void onSearchedEvent(String search) {
+        DivElement listContainer = view.getListContainer();
+        int children = listContainer.getChildCount();
+        for (int i = 0; i < children; i ++) {
+            DivElement child = (DivElement) listContainer.getChild(i);
+            String factName = child.getAttribute("id").replace("listGroupItem-", "").toLowerCase();
+            if (factName.contains(search.toLowerCase())) {
+                child.removeAttribute("style");
+            } else {
+                child.setAttribute("style", "display: none;");
+            }
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import java.util.Map;
+import java.util.SortedMap;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -47,9 +47,11 @@ public interface RightPanelView
 
         void onShowClearButton();
 
+        void onSearchedEvent(String search);
+
         void addListGroupItemView(String factName , FactModelTree factModelTree);
 
-        void setFactTypeFieldsMap(Map<String, FactModelTree> factTypeFieldsMap);
+        void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
         FactModelTree getFactModelTree(String factName);
     }

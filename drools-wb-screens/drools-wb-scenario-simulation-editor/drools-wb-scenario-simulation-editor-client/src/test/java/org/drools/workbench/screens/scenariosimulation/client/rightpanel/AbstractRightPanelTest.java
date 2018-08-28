@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.LIElement;
@@ -36,7 +38,7 @@ abstract class AbstractRightPanelTest {
     @Mock
     protected ViewsProvider mockViewsProvider;
 
-    Map<String, FactModelTree> mockTopLevelMap;
+    SortedMap<String, FactModelTree> mockTopLevelMap;
     String FACT_NAME;
     FactModelTree FACT_MODEL_TREE;
 
@@ -51,8 +53,8 @@ abstract class AbstractRightPanelTest {
         return new ArrayList<>(source.keySet()).get(position);
     }
 
-    private Map<String, FactModelTree> getMockTopLevelMap() {
-        Map<String, FactModelTree> toReturn = new HashMap<>();
+    private SortedMap<String, FactModelTree> getMockTopLevelMap() {
+        SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
         IntStream
                 .range(0, 3)
                 .forEach(id -> {

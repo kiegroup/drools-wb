@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -228,7 +230,7 @@ public class ScenarioSimulationEditorPresenter
         // Retrieve the relevant facttypes
         String[] factTypes = oracle.getFactTypes();
         // Instantiate a container map
-        Map<String, FactModelTree> factTypeFieldsMap = new HashMap<>();
+        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Instantiate the aggregator callback
         Callback<FactModelTree> aggregatorCallback = aggregatorCallback(factTypes.length, factTypeFieldsMap);
         // Iterate over all facttypes to retrieve their modelfields
@@ -298,7 +300,7 @@ public class ScenarioSimulationEditorPresenter
      * @param factTypeFieldsMap
      * @return
      */
-    private Callback<FactModelTree> aggregatorCallback(final int expectedElements, Map<String, FactModelTree> factTypeFieldsMap) {
+    private Callback<FactModelTree> aggregatorCallback(final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap) {
         return result -> {
             factTypeFieldsMap.put(result.getFactName(), result);
             if (factTypeFieldsMap.size() == expectedElements) {
@@ -308,7 +310,7 @@ public class ScenarioSimulationEditorPresenter
         };
     }
 
-    private void populateFactModel(FactModelTree toPopulate, Map<String, FactModelTree> factTypeFieldsMap) {
+    private void populateFactModel(FactModelTree toPopulate, SortedMap<String, FactModelTree> factTypeFieldsMap) {
         List<String> toRemove = new ArrayList<>();
         toPopulate.getSimpleProperties().forEach((key, value) -> {
             if (factTypeFieldsMap.containsKey(value)) {
