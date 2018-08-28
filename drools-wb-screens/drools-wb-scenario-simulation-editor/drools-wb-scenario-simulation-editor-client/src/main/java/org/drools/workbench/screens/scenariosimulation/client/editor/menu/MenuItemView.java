@@ -28,7 +28,7 @@ public interface MenuItemView {
 
         LIElement getLIElement(String id, String innerText, Command command);
 
-        void enableElement(boolean toEnable);
+        void onEnableElement(boolean toEnable);
 
         void onClickEvent(ClickEvent event);
 

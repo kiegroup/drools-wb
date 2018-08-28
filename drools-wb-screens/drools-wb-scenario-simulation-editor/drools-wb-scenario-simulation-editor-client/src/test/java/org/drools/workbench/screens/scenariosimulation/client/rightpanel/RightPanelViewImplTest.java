@@ -60,20 +60,20 @@ public class RightPanelViewImplTest {
             }
         });
         rightPanelView.init(mockRightPanelPresenter);
-        verify(mockRightPanelPresenter, times(1)).clearSearch();
+        verify(mockRightPanelPresenter, times(1)).onClearSearch();
     }
 
     @Test
     public void onClearSearchButtonClick() {
         reset(mockRightPanelPresenter);
         rightPanelView.onClearSearchButtonClick(mock(ClickEvent.class));
-        verify(mockRightPanelPresenter, times(1)).clearSearch();
+        verify(mockRightPanelPresenter, times(1)).onClearSearch();
     }
 
     @Test
     public void onInputSearchKeyUp() {
         rightPanelView.onInputSearchKeyUp(mock(KeyUpEvent.class));
-        verify(mockRightPanelPresenter, times(1)).showClearButton();
+        verify(mockRightPanelPresenter, times(1)).onShowClearButton();
     }
 
     @Test

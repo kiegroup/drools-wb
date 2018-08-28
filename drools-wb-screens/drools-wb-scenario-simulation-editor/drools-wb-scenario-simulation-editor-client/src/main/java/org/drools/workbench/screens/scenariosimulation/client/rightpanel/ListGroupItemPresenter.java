@@ -54,7 +54,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
-    public void toggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown) {
+    public void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown) {
         if (listGroupItemViewList.contains(listGroupItemView)) {
             if (currentlyShown) {
                 listGroupItemView.closeRow();
@@ -85,7 +85,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     /**
-     * @param toExpand If <code>true</code>, on toggleRowExpansion inner properties will be populated
+     * @param toExpand If <code>true</code>, on onToggleRowExpansion inner properties will be populated
      * @return
      */
     protected ListGroupItemView commonGetListGroupItemView(boolean toExpand) {

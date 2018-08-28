@@ -39,13 +39,13 @@ public interface RightPanelView
 
     interface Presenter {
 
-        void clearSearch();
+        void onClearSearch();
 
-        void clearNameField();
+        void onClearNameField();
 
-        void clearStatus();
+        void onClearStatus();
 
-        void showClearButton();
+        void onShowClearButton();
 
         void addListGroupItemView(String factName , FactModelTree factModelTree);
 

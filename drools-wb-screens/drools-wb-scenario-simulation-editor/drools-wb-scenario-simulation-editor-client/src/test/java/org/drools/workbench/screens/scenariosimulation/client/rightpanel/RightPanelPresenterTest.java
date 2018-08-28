@@ -75,28 +75,28 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     }
 
     @Test
-    public void clearSearch() {
-        rightPanelPresenter.clearSearch();
+    public void onClearSearch() {
+        rightPanelPresenter.onClearSearch();
         verify(mockRightPanelView, times(1)).clearInputSearch();
         verify(mockRightPanelView, times(1)).hideClearButton();
     }
 
     @Test
-    public void clearNameField() {
-        rightPanelPresenter.clearNameField();
+    public void onClearNameField() {
+        rightPanelPresenter.onClearNameField();
         verify(mockRightPanelView, times(1)).clearNameField();
     }
 
     @Test
-    public void clearStatus() {
-        rightPanelPresenterSpy.clearStatus();
-        verify(rightPanelPresenterSpy, times(1)).clearSearch();
-        verify(rightPanelPresenterSpy, times(1)).clearNameField();
+    public void onClearStatus() {
+        rightPanelPresenterSpy.onClearStatus();
+        verify(rightPanelPresenterSpy, times(1)).onClearSearch();
+        verify(rightPanelPresenterSpy, times(1)).onClearNameField();
     }
 
     @Test
-    public void showClearButton() {
-        rightPanelPresenter.showClearButton();
+    public void onShowClearButton() {
+        rightPanelPresenter.onShowClearButton();
         verify(mockRightPanelView, times(1)).showClearButton();
     }
 
@@ -130,6 +130,6 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         PlaceHiddenEvent mockPlaceHiddenEvent = mock(PlaceHiddenEvent.class);
         when(mockPlaceHiddenEvent.getPlace()).thenReturn(mockPlaceRequest);
         rightPanelPresenterSpy.onPlaceHiddenEvent(mockPlaceHiddenEvent);
-        verify(rightPanelPresenterSpy, times(1)).clearStatus();
+        verify(rightPanelPresenterSpy, times(1)).onClearStatus();
     }
 }

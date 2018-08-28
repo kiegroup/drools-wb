@@ -88,10 +88,10 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
         String toReturn =  LIST_GROUP_ITEM + " " + LIST_VIEW_PF_EXPAND_ACTIVE;
         when(mockListGroupItemHeader.getClassName()).thenReturn(toReturn);
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(true));
+        verify(mockListGroupItemPresenter, times(1)).onToggleRowExpansion(eq(listGroupItemView), eq(true));
         when(mockListGroupItemHeader.getClassName()).thenReturn(LIST_GROUP_ITEM);
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
-        verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(false));
+        verify(mockListGroupItemPresenter, times(1)).onToggleRowExpansion(eq(listGroupItemView), eq(false));
     }
 
     @Test

@@ -69,7 +69,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @EventHandler("listGroupItemHeader")
     public void onListGroupItemHeaderClick(ClickEvent event) {
-        presenter.toggleRowExpansion(this, listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE));
+        presenter.onToggleRowExpansion(this, listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE));
     }
 
     @Override

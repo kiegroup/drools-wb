@@ -84,20 +84,20 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void clearSearch() {
+    public void onClearSearch() {
         view.clearInputSearch();
         view.hideClearButton();
     }
 
     @Override
-    public void clearNameField() {
+    public void onClearNameField() {
         view.clearNameField();
     }
 
     @Override
-    public void clearStatus() {
-        clearSearch();
-        clearNameField();
+    public void onClearStatus() {
+        onClearSearch();
+        onClearNameField();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void showClearButton() {
+    public void onShowClearButton() {
         view.showClearButton();
     }
 
@@ -127,7 +127,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
         PlaceRequest placeRequest = placeHiddenEvent.getPlace();
         if (placeRequest.getIdentifier().equals(IDENTIFIER)) {
-            clearStatus();
+            onClearStatus();
         }
     }
 }

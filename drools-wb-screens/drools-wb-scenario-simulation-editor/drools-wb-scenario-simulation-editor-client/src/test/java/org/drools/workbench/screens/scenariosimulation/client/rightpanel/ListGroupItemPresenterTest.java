@@ -79,18 +79,18 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     }
 
     @Test
-    public void toggleRowExpansion() {
+    public void onToggleRowExpansion() {
         reset(mockListGroupItemViewList);
         when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
         //when(mockListGroupItemViewList.get(mockListGroupItemView)).thenReturn(mockListGroupItemView);
-        listGroupItemPresenter.toggleRowExpansion(mockListGroupItemView, true);
+        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
         verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
         verify(mockListGroupItemView, times(1)).closeRow();
         reset(mockListGroupItemViewList);
         when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
         //when(mockListGroupItemViewMap.get(FACT_NAME)).thenReturn(mockListGroupItemView);
         reset(mockListGroupItemView);
-        listGroupItemPresenter.toggleRowExpansion(mockListGroupItemView, false);
+        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
         verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
         verify(mockListGroupItemView, times(1)).expandRow();
     }

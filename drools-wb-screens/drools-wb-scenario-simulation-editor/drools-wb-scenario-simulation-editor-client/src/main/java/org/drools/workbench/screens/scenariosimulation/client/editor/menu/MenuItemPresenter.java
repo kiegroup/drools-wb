@@ -58,7 +58,7 @@ public class MenuItemPresenter implements MenuItemView.Presenter {
     }
 
     @Override
-    public void enableElement(boolean toEnable) {
+    public void onEnableElement(boolean toEnable) {
 
     }
 

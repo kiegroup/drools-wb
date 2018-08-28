@@ -60,17 +60,17 @@ public class RightPanelViewImpl
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
-        this.presenter.clearSearch();
+        this.presenter.onClearSearch();
     }
 
     @EventHandler("clearSearchButton")
     public void onClearSearchButtonClick(ClickEvent event) {
-        presenter.clearSearch();
+        presenter.onClearSearch();
     }
 
     @EventHandler("inputSearch")
     public void onInputSearchKeyUp(KeyUpEvent event) {
-        presenter.showClearButton();
+        presenter.onShowClearButton();
     }
 
     @Override
