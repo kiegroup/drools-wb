@@ -27,6 +27,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.FA_ANGLE_DOWN;
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.HIDDEN;
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.LIST_VIEW_PF_EXPAND_ACTIVE;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -61,6 +64,10 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
 
     private ListGroupItemViewImpl listGroupItemView;
 
+    private static final String LIST_GROUP_ITEM = "list-group-item";
+
+
+
     @Before
     public void setup() {
         this.listGroupItemView = spy(new ListGroupItemViewImpl() {
@@ -78,10 +85,11 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
 
     @Test
     public void onListGroupItemHeaderClick() {
-        when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item list-view-pf-expand-active");
+        String toReturn =  LIST_GROUP_ITEM + " " + LIST_VIEW_PF_EXPAND_ACTIVE;
+        when(mockListGroupItemHeader.getClassName()).thenReturn(toReturn);
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
         verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(true));
-        when(mockListGroupItemHeader.getClassName()).thenReturn("list-group-item");
+        when(mockListGroupItemHeader.getClassName()).thenReturn(LIST_GROUP_ITEM);
         listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
         verify(mockListGroupItemPresenter, times(1)).toggleRowExpansion(eq(listGroupItemView), eq(false));
     }
@@ -101,16 +109,16 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
     @Test
     public void closeRow() {
         listGroupItemView.closeRow();
-        verify(mockListGroupItemHeader, times(1)).removeClassName(eq("list-view-pf-expand-active"));
-        verify(mockListGroupItemContainer, times(1)).addClassName(eq("hidden"));
-        verify(mockFaAngleRight, times(1)).removeClassName(eq("fa-angle-down"));
+        verify(mockListGroupItemHeader, times(1)).removeClassName(eq(LIST_VIEW_PF_EXPAND_ACTIVE));
+        verify(mockListGroupItemContainer, times(1)).addClassName(eq(HIDDEN));
+        verify(mockFaAngleRight, times(1)).removeClassName(eq(FA_ANGLE_DOWN));
     }
 
     @Test
     public void expandRow() {
         listGroupItemView.expandRow();
-        verify(mockListGroupItemHeader, times(1)).addClassName(eq("list-view-pf-expand-active"));
-        verify(mockListGroupItemContainer, times(1)).removeClassName(eq("hidden"));
-        verify(mockFaAngleRight, times(1)).addClassName(eq("fa-angle-down"));
+        verify(mockListGroupItemHeader, times(1)).addClassName(eq(LIST_VIEW_PF_EXPAND_ACTIVE));
+        verify(mockListGroupItemContainer, times(1)).removeClassName(eq(HIDDEN));
+        verify(mockFaAngleRight, times(1)).addClassName(eq(FA_ANGLE_DOWN));
     }
 }

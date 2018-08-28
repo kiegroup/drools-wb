@@ -32,6 +32,10 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @Templated
 public class ListGroupItemViewImpl implements ListGroupItemView {
 
+    public static final String FA_ANGLE_DOWN = "fa-angle-down";
+    public static final String LIST_VIEW_PF_EXPAND_ACTIVE = "list-view-pf-expand-active";
+    public static final String HIDDEN = "hidden";
+
     @DataField("listGroupItem")
     DivElement listGroupItem = Document.get().createDivElement();
 
@@ -65,7 +69,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @EventHandler("listGroupItemHeader")
     public void onListGroupItemHeaderClick(ClickEvent event) {
-        presenter.toggleRowExpansion(this, listGroupItemHeader.getClassName().contains("list-view-pf-expand-active"));
+        presenter.toggleRowExpansion(this, listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE));
     }
 
     @Override
@@ -132,15 +136,15 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @Override
     public void closeRow() {
-        listGroupItemHeader.removeClassName("list-view-pf-expand-active");
-        listGroupItemContainer.addClassName("hidden");
-        faAngleRight.removeClassName("fa-angle-down");
+        listGroupItemHeader.removeClassName(LIST_VIEW_PF_EXPAND_ACTIVE);
+        listGroupItemContainer.addClassName(HIDDEN);
+        faAngleRight.removeClassName(FA_ANGLE_DOWN);
     }
 
     @Override
     public void expandRow() {
-        listGroupItemHeader.addClassName("list-view-pf-expand-active");
-        listGroupItemContainer.removeClassName("hidden");
-        faAngleRight.addClassName("fa-angle-down");
+        listGroupItemHeader.addClassName(LIST_VIEW_PF_EXPAND_ACTIVE);
+        listGroupItemContainer.removeClassName(HIDDEN);
+        faAngleRight.addClassName(FA_ANGLE_DOWN);
     }
 }
