@@ -92,6 +92,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         rightPanelPresenterSpy.onClearStatus();
         verify(rightPanelPresenterSpy, times(1)).onClearSearch();
         verify(rightPanelPresenterSpy, times(1)).onClearNameField();
+        verify(rightPanelPresenterSpy, times(1)).clearList();
     }
 
     @Test

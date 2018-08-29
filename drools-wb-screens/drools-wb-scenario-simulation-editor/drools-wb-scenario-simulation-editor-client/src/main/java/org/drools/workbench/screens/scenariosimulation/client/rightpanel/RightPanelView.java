@@ -49,6 +49,8 @@ public interface RightPanelView
 
         void onSearchedEvent(String search);
 
+        void clearList();
+
         void addListGroupItemView(String factName , FactModelTree factModelTree);
 
         void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);

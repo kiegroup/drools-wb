@@ -99,6 +99,12 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void onClearStatus() {
         onClearSearch();
         onClearNameField();
+        clearList();
+    }
+
+    @Override
+    public void clearList() {
+        view.getListContainer().removeAllChildren();
     }
 
     @Override
@@ -109,7 +115,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap) {
         this.factTypeFieldsMap = factTypeFieldsMap;
-        view.getListContainer().removeAllChildren();
         this.factTypeFieldsMap.forEach(this::addListGroupItemView);
     }
 

@@ -229,6 +229,9 @@ public class ScenarioSimulationEditorPresenter
     void populateRightPanel() {
         // Retrieve the relevant facttypes
         String[] factTypes = oracle.getFactTypes();
+        if (factTypes.length == 0) {  // We do not have to set nothing
+            return;
+        }
         // Instantiate a container map
         SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Instantiate the aggregator callback
