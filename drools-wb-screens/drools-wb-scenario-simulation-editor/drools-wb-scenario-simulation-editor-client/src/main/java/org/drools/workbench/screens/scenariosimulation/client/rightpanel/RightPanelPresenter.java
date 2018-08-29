@@ -125,17 +125,12 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onSearchedEvent(String search) {
-        DivElement listContainer = view.getListContainer();
-        int children = listContainer.getChildCount();
-        for (int i = 0; i < children; i ++) {
-            DivElement child = (DivElement) listContainer.getChild(i);
-            String factName = child.getAttribute("id").replace("listGroupItem-", "").toLowerCase();
-            if (factName.contains(search.toLowerCase())) {
-                child.removeAttribute("style");
-            } else {
-                child.setAttribute("style", "display: none;");
-            }
-        }
+        clearList();
+        factTypeFieldsMap
+                        .entrySet()
+                        .stream()
+                        .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
+                .forEach(filteredEntry -> addListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
     }
 
     @Override
