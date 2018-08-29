@@ -22,18 +22,16 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.gwt.core.client.GWT;
 
 /**
- * The contextual menu of a any <i>ROW</i> cell
+ * The contextual menu of the <i>OTHER</i> group (both top level and specific column).
  */
 @ApplicationScoped
-public class GridContextMenu extends AbstractHeaderMenuPresenter {
+public class OtherContextMenu extends AbstractHeaderMenuPresenter {
 
     @PostConstruct
     @Override
     public void initMenu() {
-        addMenuItem("grid-scenario", "SCENARIO", "");
-        addExecutableMenuItem("grid-scenario-insert-above", "Insert row above", "", () -> GWT.log("GRID INSERT ROW ABOVE"));
-        addExecutableMenuItem("grid-scenario-insert-below", "Insert row below", "", () -> GWT.log("GRID INSERT ROW BELOW"));
-        addExecutableMenuItem("grid-scenario-delete", "Delete row", "", () -> GWT.log("GRID DELETE ROW"));
-        addExecutableMenuItem("grid-scenario-duplicate", "Duplicate row", "", () -> GWT.log("GRID DUPLICATE ROW"));
+        // SCENARIO
+        addMenuItem("header-scenario", "SCENARIO", "");
+        addExecutableMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("OtherContextMenu INSERT ROW BELOW"));
     }
 }

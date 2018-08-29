@@ -22,18 +22,21 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.gwt.core.client.GWT;
 
 /**
- * The contextual menu of a any <i>ROW</i> cell
+ * The contextual menu of a specific <i>EXPECTED</i> column
+ * It differ from <code>HeaderExpectedContextMenu</code> because it manage column (insert/remove) in different way
  */
 @ApplicationScoped
-public class GridContextMenu extends AbstractHeaderMenuPresenter {
+public class ExpectedContextMenu extends AbstractHeaderMenuPresenter {
 
     @PostConstruct
     @Override
     public void initMenu() {
-        addMenuItem("grid-scenario", "SCENARIO", "");
-        addExecutableMenuItem("grid-scenario-insert-above", "Insert row above", "", () -> GWT.log("GRID INSERT ROW ABOVE"));
-        addExecutableMenuItem("grid-scenario-insert-below", "Insert row below", "", () -> GWT.log("GRID INSERT ROW BELOW"));
-        addExecutableMenuItem("grid-scenario-delete", "Delete row", "", () -> GWT.log("GRID DELETE ROW"));
-        addExecutableMenuItem("grid-scenario-duplicate", "Duplicate row", "", () -> GWT.log("GRID DUPLICATE ROW"));
+        addMenuItem("expected", constants.expected().toUpperCase(), "");
+        addExecutableMenuItem("expected-insert-column-left", constants.insertColumnLeft(), "", () -> GWT.log("EXPECTED INSERT COLUMN LEFT"));
+        addExecutableMenuItem("expected-insert-column-right", "Insert column right", "", () -> GWT.log("EXPECTED INSERT COLUMN RIGHT"));
+        addExecutableMenuItem("expected-delete-column", "Delete column", "", () -> GWT.log("EXPECTED DELETE COLUMN"));
+        // SCENARIO
+        addMenuItem("header-scenario", "SCENARIO", "");
+        addExecutableMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("HEADER INSERT ROW BELOW"));
     }
 }

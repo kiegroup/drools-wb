@@ -13,31 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.event.dom.client.ClickEvent;
+import javax.inject.Inject;
 
-public interface MenuItemView {
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 
-    interface Presenter {
+/**
+ * This is the first <i>ScenaraioSimulation</i> specific abstract class - i.e. it is bound to a specific use case. Not every implementation
+ * would need this. Menu initialization may be done in other different ways. It is provided to avoid code duplication in concrete implementations
+ */
+public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements HeaderMenuPresenter {
 
-        LIElement getLIElement(String id, String innerText);
+    @Inject
+    protected ScenarioSimulationEditorConstants constants;
 
-        void enableElement(boolean toEnable);
 
-        void onClickEvent(ClickEvent event);
-
-    }
-
-    void setPresenter(MenuItemPresenter menuItemPresenter);
-
-    void setId(String id);
-
-    void setDataI18nKey(String dataI18nKey);
-
-    void setLabel(String label);
-
-    LIElement getLIElement();
 }

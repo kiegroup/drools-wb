@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-public class HeaderContextMenu extends BaseMenu {
+/**
+ * This is the first <i>ScenaraioSimulation</i> specific interface - i.e. it is bound to a specific use case. Not every implementation
+ * would need this. Menu initialization may be done in other different ways
+ */
+public interface HeaderMenuPresenter extends BaseMenuView.BaseMenuPresenter {
 
+    void initMenu();
 }

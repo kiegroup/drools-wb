@@ -19,9 +19,12 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Command;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioSimulationViewProvider;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -46,12 +49,18 @@ public class ScenarioSimulationViewImpl
 
     @Inject
     private ScenarioGridLayer scenarioGridLayer;
-
+    @Inject
+    private OtherContextMenu otherContextMenu;
+    @Inject
+    private HeaderGivenContextMenu headerGivenContextMenu;
+    @Inject
+    private HeaderExpectedContextMenu headerExpectedContextMenu;
+    @Inject
+    private GivenContextMenu givenContextMenu;
+    @Inject
+    private ExpectedContextMenu expectedContextMenu;
     @Inject
     private GridContextMenu gridContextMenu;
-
-    @Inject
-    private HeaderContextMenu headerContextMenu;
 
     private HandlerRegistration clickHandlerRegistration;
 
@@ -61,8 +70,12 @@ public class ScenarioSimulationViewImpl
 
         this.scenarioGridPanel = ScenarioSimulationViewProvider.newScenarioGridPanel(scenarioGridLayer);
         clickHandlerRegistration = this.scenarioGridPanel.addClickHandler(new ScenarioSimulationGridPanelClickHandler(scenarioGridPanel.getScenarioGrid(),
-                                                                                                                      gridContextMenu,
-                                                                                                                      headerContextMenu));
+                                                                                                                      otherContextMenu,
+                                                                                                                      headerGivenContextMenu,
+                                                                                                                      headerExpectedContextMenu,
+                                                                                                                      givenContextMenu,
+                                                                                                                      expectedContextMenu,
+                                                                                                                      gridContextMenu));
         scenarioGridLayer.enterPinnedMode(scenarioGridLayer.getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
 
@@ -79,26 +92,6 @@ public class ScenarioSimulationViewImpl
         if (clickHandlerRegistration != null) {
             clickHandlerRegistration.removeHandler();
         }
-    }
-
-    @Override
-    public void addGridMenuItem(String id, String label, String i18n) {
-        gridContextMenu.addMenuItem(id, label, i18n);
-    }
-
-    @Override
-    public void addExecutableGridMenuItem(String id, String label, String i18n, Command command) {
-        gridContextMenu.addExecutableMenuItem(id, label, i18n, command);
-    }
-
-    @Override
-    public void addHeaderMenuItem(String id, String label, String i18n) {
-        headerContextMenu.addMenuItem(id, label, i18n);
-    }
-
-    @Override
-    public void addExecutableHeaderMenuItem(String id, String label, String i18n, Command command) {
-        headerContextMenu.addExecutableMenuItem(id, label, i18n, command);
     }
 
     @Override

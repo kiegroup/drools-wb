@@ -22,8 +22,12 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,10 +51,17 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     private ScenarioGrid mockScenarioGrid;
 
     @Mock
-    private GridContextMenu mockGridContextMenu;
-
+    private OtherContextMenu mockOtherContextMenu;
     @Mock
-    private HeaderContextMenu mockHeaderContextMenu;
+    private HeaderGivenContextMenu mockHeaderGivenContextMenu;
+    @Mock
+    private HeaderExpectedContextMenu mockHeaderExpectedContextMenu;
+    @Mock
+    private GivenContextMenu mockGivenContextMenu;
+    @Mock
+    private ExpectedContextMenu mockExpectedContextMenu;
+    @Mock
+    private GridContextMenu mockGridContextMenu;
 
     @Mock
     private Element mockTarget;
@@ -68,8 +79,12 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     public void setUp() throws Exception {
 
         scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(mockScenarioGrid,
-                                                                                                  mockGridContextMenu,
-                                                                                                  mockHeaderContextMenu) {
+                                                                                                  mockOtherContextMenu,
+                                                                                                  mockHeaderGivenContextMenu,
+                                                                                                  mockHeaderExpectedContextMenu,
+                                                                                                  mockGivenContextMenu,
+                                                                                                  mockExpectedContextMenu,
+                                                                                                  mockGridContextMenu) {
             @Override
             protected void manageRightClick(ContextMenuEvent event) {
                 // 
@@ -123,8 +138,8 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
     private void commonCheck() {
         verify(mockGridContextMenu, times(1)).hide();
-        verify(mockHeaderContextMenu, times(1)).hide();
+        verify(mockHeaderGivenContextMenu, times(1)).hide();
         reset(mockGridContextMenu);
-        reset(mockHeaderContextMenu);
+        reset(mockHeaderGivenContextMenu);
     }
 }

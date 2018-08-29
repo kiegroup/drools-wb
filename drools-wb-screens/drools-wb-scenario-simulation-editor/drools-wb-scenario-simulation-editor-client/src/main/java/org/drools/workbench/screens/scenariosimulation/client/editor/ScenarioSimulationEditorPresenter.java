@@ -22,7 +22,6 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -99,8 +98,6 @@ public class ScenarioSimulationEditorPresenter
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
 
-        addMenuItems();
-
         view.init(this);
     }
 
@@ -172,6 +169,11 @@ public class ScenarioSimulationEditorPresenter
         return model;
     }
 
+    public void onRunScenario() {
+        service.call().runScenario(versionRecordManager.getCurrentPath(),
+                                   model);
+    }
+
     /**
      * If you want to customize the menu override this method.
      */
@@ -208,38 +210,6 @@ public class ScenarioSimulationEditorPresenter
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    private void addMenuItems() {
-        addHeaderMenuItems();
-        addGridMenuItems();
-    }
-
-    private void addHeaderMenuItems() {
-        // DESCRIPTION
-        view.addHeaderMenuItem("description", "DESCRIPTION", "");
-        view.addExecutableHeaderMenuItem("description-item", "Log", "", () -> GWT.log("DESCRIPTION LOG COMMAND"));
-        // GIVEN
-        view.addHeaderMenuItem("given", "GIVEN", "");
-        view.addExecutableHeaderMenuItem("given-insert-column-left", "Insert column left", "", () -> GWT.log("GIVEN INSERT COLUMN LEFT"));
-        view.addExecutableHeaderMenuItem("given-insert-column-right", "Insert column right", "", () -> GWT.log("GIVEN INSERT COLUMN RIGHT"));
-        view.addExecutableHeaderMenuItem("given-delete-column", "Delete column", "", () -> GWT.log("GIVEN DELETE COLUMN"));
-        // EXPECTED
-        view.addHeaderMenuItem("expected", "EXPECTED", "");
-        view.addExecutableHeaderMenuItem("expected-insert-column-left", "Insert column left", "", () -> GWT.log("EXPECTED INSERT COLUMN LEFT"));
-        view.addExecutableHeaderMenuItem("expected-insert-column-right", "Insert column right", "", () -> GWT.log("EXPECTED INSERT COLUMN RIGHT"));
-        view.addExecutableHeaderMenuItem("expected-delete-column", "Delete column", "", () -> GWT.log("EXPECTED DELETE COLUMN"));
-        // SCENARIO
-        view.addHeaderMenuItem("header-scenario", "SCENARIO", "");
-        view.addExecutableHeaderMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("HEADER INSERT ROW BELOW"));
-    }
-
-    private void addGridMenuItems() {
-        view.addGridMenuItem("grid-scenario", "SCENARIO", "");
-        view.addExecutableGridMenuItem("grid-scenario-insert-above", "Insert row above", "", () -> GWT.log("GRID INSERT ROW ABOVE"));
-        view.addExecutableGridMenuItem("grid-scenario-insert-below", "Insert row below", "", () -> GWT.log("GRID INSERT ROW BELOW"));
-        view.addExecutableGridMenuItem("grid-scenario-delete", "Delete row", "", () -> GWT.log("GRID DELETE ROW"));
-        view.addExecutableGridMenuItem("grid-scenario-duplicate", "Duplicate row", "", () -> GWT.log("GRID DUPLICATE ROW"));
-    }
-
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
         return content -> {
             //Path is set to null when the Editor is closed (which can happen before async calls complete).
@@ -263,10 +233,5 @@ public class ScenarioSimulationEditorPresenter
 
     private void addRightPanelMenuItem(final FileMenuBuilder fileMenuBuilder) {
         fileMenuBuilder.addNewTopLevelMenu(rightPanelMenuItem);
-    }
-
-    public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(),
-                                   model);
     }
 }

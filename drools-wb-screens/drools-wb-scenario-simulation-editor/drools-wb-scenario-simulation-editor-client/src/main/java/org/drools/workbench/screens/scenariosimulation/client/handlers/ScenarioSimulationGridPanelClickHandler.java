@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
@@ -22,8 +25,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
@@ -34,16 +42,30 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                                 ContextMenuHandler {
 
     private ScenarioGrid scenarioGrid;
+    private OtherContextMenu otherContextMenu;
+    private HeaderGivenContextMenu headerGivenContextMenu;
+    private HeaderExpectedContextMenu headerExpectedContextMenu;
+    private GivenContextMenu givenContextMenu;
+    private ExpectedContextMenu expectedContextMenu;
     private GridContextMenu gridContextMenu;
-    private HeaderContextMenu headerContextMenu;
+    private List<BaseMenu> managedMenus;
 
     public ScenarioSimulationGridPanelClickHandler(final ScenarioGrid scenarioGrid,
-                                                   GridContextMenu gridContextMenu,
-                                                   HeaderContextMenu headerContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
+                                                   OtherContextMenu otherContextMenu,
+                                                   HeaderGivenContextMenu headerGivenContextMenu,
+                                                   HeaderExpectedContextMenu headerExpectedContextMenu,
+                                                   GivenContextMenu givenContextMenu,
+                                                   ExpectedContextMenu expectedContextMenu,
+                                                   GridContextMenu gridContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
         // detect and identify the click on each of them
         this.scenarioGrid = scenarioGrid;
+        this.otherContextMenu = otherContextMenu;
+        this.headerGivenContextMenu = headerGivenContextMenu;
+        this.headerExpectedContextMenu = headerExpectedContextMenu;
+        this.givenContextMenu = givenContextMenu;
+        this.expectedContextMenu = expectedContextMenu;
         this.gridContextMenu = gridContextMenu;
-        this.headerContextMenu = headerContextMenu;
+        managedMenus = Arrays.asList(otherContextMenu, headerGivenContextMenu, headerExpectedContextMenu, givenContextMenu, expectedContextMenu, gridContextMenu);
     }
 
     @Override
@@ -91,8 +113,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     }
 
     private void commonClickManagement() {
-        gridContextMenu.hide();
-        headerContextMenu.hide();
+        managedMenus.forEach(BaseMenu::hide);
     }
 
     /**
@@ -110,7 +131,24 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (columnMetadata == null) {
             return false;
         }
-        headerContextMenu.show(left, top);
+        String group = columnMetadata.getColumnGroup();
+        switch (group) {
+            case "":
+                if (columnMetadata.getTitle().equals("GIVEN")) {
+                    headerGivenContextMenu.show(left, top);
+                } else {
+                    headerExpectedContextMenu.show(left, top);
+                }
+                break;
+            case "GIVEN":
+                givenContextMenu.show(left, top);
+                break;
+            case "EXPECTED":
+                expectedContextMenu.show(left, top);
+                break;
+            default:
+                otherContextMenu.show(left, top);
+        }
         return true;
     }
 

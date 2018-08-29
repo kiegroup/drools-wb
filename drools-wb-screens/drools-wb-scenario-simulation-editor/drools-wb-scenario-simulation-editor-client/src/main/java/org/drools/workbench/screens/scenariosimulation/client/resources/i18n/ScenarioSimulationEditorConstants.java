@@ -57,4 +57,8 @@ public interface ScenarioSimulationEditorConstants
     String scenarioCheatSheet();
 
     String runScenarioSimulation();
+
+    String expected();
+
+    String insertColumnLeft();
 }
