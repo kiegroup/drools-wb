@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioException;
+
 public class ScenarioBeanUtil {
 
     private ScenarioBeanUtil() {
@@ -31,14 +33,14 @@ public class ScenarioBeanUtil {
         try {
             clazz = (Class<T>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(new StringBuilder().append("Impossible to load class ").append(className).toString(), e);
+            throw new ScenarioException(new StringBuilder().append("Impossible to load class ").append(className).toString(), e);
         }
 
         final T beanToFill;
         try {
             beanToFill = clazz.newInstance();
         } catch (ReflectiveOperationException e) {
-            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
+            throw new ScenarioException(new StringBuilder().append("Class ").append(className)
                                                        .append(" has no empty constructor").toString(), e);
         }
 
@@ -46,7 +48,7 @@ public class ScenarioBeanUtil {
             try {
                 fillProperties(beanToFill, param.getKey(), param.getValue());
             } catch (ReflectiveOperationException e) {
-                throw new IllegalArgumentException(new StringBuilder().append("Impossible to fill ").append(className)
+                throw new ScenarioException(new StringBuilder().append("Impossible to fill ").append(className)
                                                            .append(" with the provided properties").toString(), e);
             }
         }
@@ -79,7 +81,7 @@ public class ScenarioBeanUtil {
 
     public static Object navigateToObject(Object rootObject, List<String> steps) {
         if (steps.size() < 1) {
-            throw new IllegalArgumentException(new StringBuilder().append("Invalid path to a property: path='")
+            throw new ScenarioException(new StringBuilder().append("Invalid path to a property: path='")
                                                        .append(String.join(".", steps)).append("'").toString());
         }
 
@@ -91,7 +93,7 @@ public class ScenarioBeanUtil {
             try {
                 declaredField = currentClass.getDeclaredField(step);
             } catch (NoSuchFieldException e) {
-                throw new IllegalArgumentException(new StringBuilder().append("Impossible to find field with name '")
+                throw new ScenarioException(new StringBuilder().append("Impossible to find field with name '")
                                                            .append(step).append("' in class ")
                                                            .append(currentClass.getCanonicalName()).toString(), e);
             }
@@ -100,7 +102,7 @@ public class ScenarioBeanUtil {
             try {
                 currentObject = getOrCreate(declaredField, currentObject);
             } catch (ReflectiveOperationException e) {
-                throw new IllegalArgumentException(new StringBuilder().append("Impossible to get or create class ")
+                throw new ScenarioException(new StringBuilder().append("Impossible to get or create class ")
                                                            .append(currentClass.getCanonicalName()).toString());
             }
         }

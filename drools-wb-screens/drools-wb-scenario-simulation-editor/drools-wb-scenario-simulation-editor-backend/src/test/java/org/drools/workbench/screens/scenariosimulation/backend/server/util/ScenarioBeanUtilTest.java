@@ -25,6 +25,7 @@ import java.util.Map;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Dispute;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.NotEmptyConstructor;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Person;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,12 +51,12 @@ public class ScenarioBeanUtilTest {
         assertEquals(dispute.getCreator().getAge(), AGE);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ScenarioException.class)
     public void fillBeanLoadClassTest() {
         ScenarioBeanUtil.fillBean("FakeCanonicalName", new HashMap<>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ScenarioException.class)
     public void fillBeanFailNotEmptyConstructorTest() {
         Map<List<String>, Object> paramsToSet = new HashMap<>();
         paramsToSet.put(Arrays.asList("name"), null);
@@ -63,7 +64,7 @@ public class ScenarioBeanUtilTest {
         ScenarioBeanUtil.fillBean(NotEmptyConstructor.class.getCanonicalName(), paramsToSet);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ScenarioException.class)
     public void fillBeanFailTest() {
         Map<List<String>, Object> paramsToSet = new HashMap<>();
         paramsToSet.put(Arrays.asList("fakeField"), null);
@@ -84,12 +85,12 @@ public class ScenarioBeanUtilTest {
         assertEquals(targetObject, FIRST_NAME);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ScenarioException.class)
     public void navigateToObjectNoStepTest() {
         ScenarioBeanUtil.navigateToObject(new Dispute(), new ArrayList<>());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ScenarioException.class)
     public void navigateToObjectFakeFieldTest() {
         Dispute dispute = new Dispute();
         List<String> pathToProperty = Arrays.asList("fakeField");
