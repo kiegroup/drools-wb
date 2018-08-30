@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.OperatorEvaluator;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ExpectedResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
@@ -85,10 +83,7 @@ public class ScenarioRunnerHelper {
 
             FactIdentifier factIdentifier = entry.getKey();
 
-            List<ExpectedResult> expectedResults = entry.getValue().stream()
-                    .map(fmv -> new ExpectedResult(factIdentifier, fmv)).collect(toList());
-
-            scenarioOutput.add(new ScenarioOutput(factIdentifier, expectedResults));
+            scenarioOutput.add(new ScenarioOutput(factIdentifier, entry.getValue()));
         }
 
         return scenarioOutput;
@@ -107,7 +102,6 @@ public class ScenarioRunnerHelper {
 
         for (ScenarioInput input : inputData) {
             FactIdentifier factIdentifier = input.getFactIdentifier();
-            Object factInstance = input.getValue();
             List<ScenarioOutput> assertionOnFact = outputData.stream().filter(elem -> elem.getFactIdentifier().equals(factIdentifier)).collect(toList());
 
             // check if this fact has something to check
@@ -115,33 +109,34 @@ public class ScenarioRunnerHelper {
                 continue;
             }
 
-            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, factInstance, factIdentifier));
+            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, input));
         }
 
         return scenarioResult;
     }
 
-    public static List<ScenarioResult> getScenarioResults(SimulationDescriptor simulationDescriptor, List<ScenarioOutput> scenarioOutputsPerFact, Object factInstance, FactIdentifier factIdentifier) {
+    public static List<ScenarioResult> getScenarioResults(SimulationDescriptor simulationDescriptor, List<ScenarioOutput> scenarioOutputsPerFact, ScenarioInput input) {
+        FactIdentifier factIdentifier = input.getFactIdentifier();
+        Object factInstance = input.getValue();
         List<ScenarioResult> scenarioResults = new ArrayList<>();
         for (ScenarioOutput scenarioOutput : scenarioOutputsPerFact) {
-            List<ExpectedResult> expectedResults = scenarioOutput.getExpectedResult();
+            List<FactMappingValue> expectedResults = scenarioOutput.getExpectedResult();
 
-            for (ExpectedResult expectedResult : expectedResults) {
-                FactMappingValue factMappingValue = expectedResult.getFactMappingValue();
-                FactMappingValueOperator operator = factMappingValue.getOperator();
+            for (FactMappingValue expectedResult : expectedResults) {
+                FactMappingValueOperator operator = expectedResult.getOperator();
 
-                ExpressionIdentifier expressionIdentifier = factMappingValue.getExpressionIdentifier();
+                ExpressionIdentifier expressionIdentifier = expectedResult.getExpressionIdentifier();
 
                 FactMapping factMapping = simulationDescriptor.getFactMapping(factIdentifier, expressionIdentifier)
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
                 List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
-                Object expectedValue = expectedResult.getFactMappingValue().getRawValue();
+                Object expectedValue = expectedResult.getRawValue();
                 Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue);
 
                 Boolean conditionResult = new OperatorEvaluator().evaluate(operator, resultValue, expectedValue);
 
-                scenarioResults.add(new ScenarioResult(factIdentifier, factMappingValue, conditionResult));
+                scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, conditionResult));
             }
         }
         return scenarioResults;

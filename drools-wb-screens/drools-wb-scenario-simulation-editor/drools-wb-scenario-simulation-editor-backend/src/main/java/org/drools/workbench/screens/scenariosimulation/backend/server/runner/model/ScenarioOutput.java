@@ -19,14 +19,15 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.runner.mo
 import java.util.List;
 
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 
 public class ScenarioOutput {
 
     private final FactIdentifier factIdentifier;
 
-    private final List<ExpectedResult> expectedResult;
+    private final List<FactMappingValue> expectedResult;
 
-    public ScenarioOutput(FactIdentifier factIdentifier, List<ExpectedResult> expectedResult) {
+    public ScenarioOutput(FactIdentifier factIdentifier, List<FactMappingValue> expectedResult) {
         this.factIdentifier = factIdentifier;
         this.expectedResult = expectedResult;
     }
@@ -35,7 +36,7 @@ public class ScenarioOutput {
         return factIdentifier;
     }
 
-    public List<ExpectedResult> getExpectedResult() {
+    public List<FactMappingValue> getExpectedResult() {
         return expectedResult;
     }
 }
