@@ -26,23 +26,42 @@ public class ScenarioBeanUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T fillBean(String className, Map<List<String>, Object> params) throws ReflectiveOperationException {
-        Class<T> clazz = (Class<T>) Class.forName(className);
+    public static <T> T fillBean(String className, Map<List<String>, Object> params) {
+        Class<T> clazz = null;
+        try {
+            clazz = (Class<T>) Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(new StringBuilder().append("Impossible to load class ").append(className).toString(), e);
+        }
 
-        final T beanToFill = clazz.newInstance();
+        final T beanToFill;
+        try {
+            beanToFill = clazz.newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
+                                                       .append(" has no empty constructor").toString(), e);
+        }
 
         for (Map.Entry<List<String>, Object> param : params.entrySet()) {
-            fillProperty(beanToFill, param.getKey(), param.getValue());
+            try {
+                fillProperties(beanToFill, param.getKey(), param.getValue());
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalArgumentException(new StringBuilder().append("Impossible to fill ").append(className)
+                                                           .append(" with the provided properties").toString(), e);
+            }
         }
 
         return beanToFill;
     }
 
-    private static <T> void fillProperty(T beanToFill, List<String> steps, Object propertyValue) throws ReflectiveOperationException {
+    private static <T> void fillProperties(T beanToFill, List<String> steps, Object propertyValue) throws ReflectiveOperationException {
         List<String> pathToProperty = steps.subList(0, steps.size() - 1);
         String lastStep = steps.get(steps.size() - 1);
 
-        Object currentObject = navigateToObject(beanToFill, pathToProperty);
+        Object currentObject = beanToFill;
+        if (pathToProperty.size() > 0) {
+            currentObject = navigateToObject(beanToFill, pathToProperty);
+        }
 
         Field last = currentObject.getClass().getDeclaredField(lastStep);
         last.setAccessible(true);
@@ -50,16 +69,15 @@ public class ScenarioBeanUtil {
     }
 
     private static Object getOrCreate(Field declaredField, Object currentObject) throws ReflectiveOperationException {
-        try {
-            return declaredField.get(currentObject);
-        } catch (NullPointerException e) {
-            Object initValue = declaredField.getDeclaringClass().newInstance();
-            declaredField.set(currentObject, initValue);
-            return initValue;
+        Object value = declaredField.get(currentObject);
+        if (value == null) {
+            value = declaredField.getType().newInstance();
+            declaredField.set(currentObject, value);
         }
+        return value;
     }
 
-    public static Object navigateToObject(Object rootObject, List<String> steps) throws ReflectiveOperationException {
+    public static Object navigateToObject(Object rootObject, List<String> steps) {
         if (steps.size() < 1) {
             throw new IllegalArgumentException(new StringBuilder().append("Invalid path to a property: path='")
                                                        .append(String.join(".", steps)).append("'").toString());
@@ -69,10 +87,22 @@ public class ScenarioBeanUtil {
         Object currentObject = rootObject;
 
         for (String step : steps) {
-            Field declaredField = currentClass.getDeclaredField(step);
+            Field declaredField = null;
+            try {
+                declaredField = currentClass.getDeclaredField(step);
+            } catch (NoSuchFieldException e) {
+                throw new IllegalArgumentException(new StringBuilder().append("Impossible to find field with name '")
+                                                           .append(step).append("' in class ")
+                                                           .append(currentClass.getCanonicalName()).toString(), e);
+            }
             declaredField.setAccessible(true);
-            currentClass = declaredField.getDeclaringClass();
-            currentObject = getOrCreate(declaredField, currentObject);
+            currentClass = declaredField.getType();
+            try {
+                currentObject = getOrCreate(declaredField, currentObject);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalArgumentException(new StringBuilder().append("Impossible to get or create class ")
+                                                           .append(currentClass.getCanonicalName()).toString());
+            }
         }
 
         return currentObject;

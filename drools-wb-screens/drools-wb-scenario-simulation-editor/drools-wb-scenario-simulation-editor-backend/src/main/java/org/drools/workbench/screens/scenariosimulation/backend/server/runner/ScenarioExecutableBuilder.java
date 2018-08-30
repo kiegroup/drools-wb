@@ -66,7 +66,7 @@ public class ScenarioExecutableBuilder {
 
     public RequestContext run() {
         Objects.requireNonNull(executableBuilder, "Executable builder is null, please invoke create(KieContainer, )");
-        kieSessionFluent.fireAllRules().dispose();
+        kieSessionFluent.fireAllRules().dispose().end();
         return ExecutableRunner.create().execute(executableBuilder.getExecutable());
     }
 }
