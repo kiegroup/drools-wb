@@ -19,7 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.user.client.Command;
+import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.events.RefreshMenusEvent;
 import org.uberfire.client.mvp.UberView;
 
@@ -46,9 +46,9 @@ public interface BaseMenuView<M extends BaseMenu> extends UberView<M> {
          * @param id
          * @param label
          * @param i18n
-         * @param command
+         * @param event the <code>Event</code> to fire on click
          */
-        void addExecutableMenuItem(String id, String label, String i18n, Command command);
+        void addExecutableMenuItem(String id, String label, String i18n, Event event);
 
         void onRefreshMenusEvent(final RefreshMenusEvent event);
 

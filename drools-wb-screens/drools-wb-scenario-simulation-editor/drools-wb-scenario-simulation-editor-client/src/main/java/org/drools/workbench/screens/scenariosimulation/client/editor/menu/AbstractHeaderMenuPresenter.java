@@ -15,9 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 
 /**
  * This is the first <i>ScenaraioSimulation</i> specific abstract class - i.e. it is bound to a specific use case. Not every implementation
@@ -25,8 +33,23 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
  */
 public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements HeaderMenuPresenter {
 
+    protected ScenarioSimulationEditorConstants constants = ScenarioSimulationEditorConstants.INSTANCE;
+
+    protected ScenarioGridModel model;
+    protected ScenarioGridPanel scenarioGridPanel;
+    protected ScenarioGridLayer scenarioGridLayer;
+
+    protected AppendRowEvent appendRowEvent = new AppendRowEvent();
+
     @Inject
-    protected ScenarioSimulationEditorConstants constants;
+    protected CommandExecutor commandExecutor;
 
+    @Inject
+    protected EventBus eventBus;
 
+    @PostConstruct
+    public void registerHandler() {
+        eventBus.addHandler(AppendRowEvent.TYPE, commandExecutor);
+        eventBus.addHandler(AppendColumnEvent.TYPE, commandExecutor);
+    }
 }

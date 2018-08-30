@@ -18,19 +18,19 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Command;
+import com.google.web.bindery.event.shared.Event;
 
 public interface ExecutableMenuItemView {
 
     interface Presenter {
 
-        void executeCommand(LIElement clickedElement);
+        void fireEvent(LIElement clickedElement);
 
-        LIElement getLIElement(String id, String innerText, Command command);
+        LIElement getLIElement(String id, String innerText, Event event);
 
         void enableElement(boolean toEnable);
 
-        void onClickEvent(ClickEvent event);
+        void onClickEvent(ClickEvent event, LIElement clickedElement);
     }
 
     void setPresenter(ExecutableMenuItemPresenter executableMenuItemPresenter);

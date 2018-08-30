@@ -62,6 +62,6 @@ public class ExecutableMenuItemViewImpl implements ExecutableMenuItemView {
 
     @EventHandler("liElement")
     public void onClickEvent(ClickEvent event) {
-        executableMenuItemPresenter.onClickEvent(event);
+        executableMenuItemPresenter.onClickEvent(event, liElement);
     }
 }

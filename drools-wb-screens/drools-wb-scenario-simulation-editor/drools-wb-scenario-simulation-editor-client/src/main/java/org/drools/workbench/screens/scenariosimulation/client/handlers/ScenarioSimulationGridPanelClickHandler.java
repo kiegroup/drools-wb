@@ -25,6 +25,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.AbstractHeaderMenuPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
@@ -34,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData;
@@ -48,9 +50,9 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     private GivenContextMenu givenContextMenu;
     private ExpectedContextMenu expectedContextMenu;
     private GridContextMenu gridContextMenu;
-    private List<BaseMenu> managedMenus;
+    private List<AbstractHeaderMenuPresenter> managedMenus;
 
-    public ScenarioSimulationGridPanelClickHandler(final ScenarioGrid scenarioGrid,
+    public ScenarioSimulationGridPanelClickHandler(final ScenarioGridPanel scenarioGridPanel,
                                                    OtherContextMenu otherContextMenu,
                                                    HeaderGivenContextMenu headerGivenContextMenu,
                                                    HeaderExpectedContextMenu headerExpectedContextMenu,
@@ -58,7 +60,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                    ExpectedContextMenu expectedContextMenu,
                                                    GridContextMenu gridContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
         // detect and identify the click on each of them
-        this.scenarioGrid = scenarioGrid;
+        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
         this.otherContextMenu = otherContextMenu;
         this.headerGivenContextMenu = headerGivenContextMenu;
         this.headerExpectedContextMenu = headerExpectedContextMenu;
@@ -134,10 +136,15 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         String group = columnMetadata.getColumnGroup();
         switch (group) {
             case "":
-                if (columnMetadata.getTitle().equals("GIVEN")) {
-                    headerGivenContextMenu.show(left, top);
-                } else {
-                    headerExpectedContextMenu.show(left, top);
+                switch (columnMetadata.getTitle()) {
+                    case "GIVEN":
+                        headerGivenContextMenu.show(left, top);
+                        break;
+                    case "EXPECTED":
+                        headerExpectedContextMenu.show(left, top);
+                        break;
+                    default:
+                        otherContextMenu.show(left, top);
                 }
                 break;
             case "GIVEN":

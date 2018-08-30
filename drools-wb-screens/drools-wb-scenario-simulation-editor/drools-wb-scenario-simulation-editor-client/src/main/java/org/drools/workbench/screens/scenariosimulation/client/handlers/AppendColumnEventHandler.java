@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
+package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-/**
- * This is the first <i>ScenaraioSimulation</i> specific interface - i.e. it is bound to a specific use case. Not every implementation
- * would need this. Menu initialization may be done in other different ways
- */
-public interface HeaderMenuPresenter extends BaseMenuView.BaseMenuPresenter {
+import com.google.gwt.event.shared.EventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 
-    /**
-     * This method is required to initialze the menus
-     */
-    void initMenu();
-    
+public interface AppendColumnEventHandler extends EventHandler {
+    void onEvent(AppendColumnEvent event);
 }

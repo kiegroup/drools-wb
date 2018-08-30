@@ -24,37 +24,43 @@ import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Command;
-
+import com.google.gwt.event.shared.EventBus;
+import com.google.web.bindery.event.shared.Event;
 
 public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Presenter {
 
     @Inject
     private Instance<ExecutableMenuItemView> instance;
 
-    protected Map<LIElement, Command> menuItemsCommandMap = new HashMap<>();
+    @Inject
+    private EventBus eventBus;
+
+    protected Map<LIElement, Event> menuItemsEventMap = new HashMap<>();
 
     @Override
-    public void onClickEvent(ClickEvent event) {
+    public void onClickEvent(ClickEvent event, LIElement clickedElement) {
         event.preventDefault();
         event.stopPropagation();
+        event.getRelativeElement();
+        fireEvent(clickedElement);
     }
 
     @Override
-    public void executeCommand(LIElement clickedElement) {
-        if (menuItemsCommandMap.containsKey(clickedElement)) {
-            menuItemsCommandMap.get(clickedElement).execute();
+    public void fireEvent(LIElement clickedElement) {
+        if (menuItemsEventMap.containsKey(clickedElement)) {
+            final Event event = menuItemsEventMap.get(clickedElement);
+            eventBus.fireEvent(event);
         }
     }
 
     @Override
-    public LIElement getLIElement(String id, String label, Command command) {
+    public LIElement getLIElement(String id, String label, Event event) {
         ExecutableMenuItemView menuItemView = getMenuItemView();
         menuItemView.setId(id);
         menuItemView.setLabel(label);
         menuItemView.setPresenter(this);
         LIElement toReturn = menuItemView.getLIElement();
-        menuItemsCommandMap.put(toReturn, command);
+        menuItemsEventMap.put(toReturn, event);
         return toReturn;
     }
 
@@ -64,7 +70,6 @@ public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Prese
     }
 
     protected ExecutableMenuItemView getMenuItemView() {  // This is needed for test because Mockito can not mock Instance
-        return instance.get(); 
-
+        return instance.get();
     }
 }

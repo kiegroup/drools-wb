@@ -13,17 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
+package org.drools.workbench.screens.scenariosimulation.client.producers;
 
-/**
- * This is the first <i>ScenaraioSimulation</i> specific interface - i.e. it is bound to a specific use case. Not every implementation
- * would need this. Menu initialization may be done in other different ways
- */
-public interface HeaderMenuPresenter extends BaseMenuView.BaseMenuPresenter {
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-    /**
-     * This method is required to initialze the menus
-     */
-    void initMenu();
-    
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.SimpleEventBus;
+
+@ApplicationScoped
+public class EventBusProducer {
+
+    private final EventBus eventBus = new SimpleEventBus();
+
+
+    @Produces
+    public EventBus getEventBus() {
+         return eventBus;
+    }
+
 }

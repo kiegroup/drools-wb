@@ -15,15 +15,50 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+
 /**
  * This class is meant to be a centralized listener for events fired up by UI, responding to them with specific <code>Command</code>s.
- *
+ * <p>
  * It follows the GWT standard Event/Handler mechanism
  */
-public class CommandExecutor  {
+@ApplicationScoped
+public class CommandExecutor implements AppendRowEventHandler,
+                                        AppendColumnEventHandler {
+
+    private ScenarioGridModel model;
+    private ScenarioGridPanel scenarioGridPanel;
+    private ScenarioGridLayer scenarioGridLayer;
 
     public CommandExecutor() {
         // CDI
     }
 
+    @Inject
+    public CommandExecutor(ScenarioGridModel model, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+        this.model = model;
+        this.scenarioGridPanel = scenarioGridPanel;
+        this.scenarioGridLayer = scenarioGridLayer;
+    }
+
+    @Override
+    public void onEvent(AppendRowEvent event) {
+        AppendRowCommand command = new AppendRowCommand(model);
+        command.execute();
+    }
+
+    @Override
+    public void onEvent(AppendColumnEvent event) {
+        AppendColumnCommand command = new AppendColumnCommand(model, event.getColumnId(), event.getColumnTitle(), scenarioGridPanel, scenarioGridLayer);
+        command.execute();
+    }
 }

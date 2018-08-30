@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +47,9 @@ import static org.mockito.Mockito.when;
 public class ScenarioSimulationGridPanelClickHandlerTest {
 
     private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
+
+    @Mock
+    private ScenarioGridPanel mockScenarioGridPanel;
 
     @Mock
     private ScenarioGrid mockScenarioGrid;
@@ -77,8 +81,8 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
     @Before
     public void setUp() throws Exception {
-
-        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(mockScenarioGrid,
+        when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
+        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(mockScenarioGridPanel,
                                                                                                   mockOtherContextMenu,
                                                                                                   mockHeaderGivenContextMenu,
                                                                                                   mockHeaderExpectedContextMenu,

@@ -17,23 +17,27 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-
-import com.google.gwt.core.client.GWT;
+import javax.enterprise.context.Dependent;
 
 /**
  * The contextual menu of a any <i>ROW</i> cell
  */
-@ApplicationScoped
+@Dependent
 public class GridContextMenu extends AbstractHeaderMenuPresenter {
+
+    private final String GRIDCONTEXTMENU_SCENARIO =  "gridcontextmenu-scenario";
+    private final String GRIDCONTEXTMENU_INSERT_ROW_ABOVE =  "gridcontextmenu-insert-row-above";
+    private final String GRIDCONTEXTMENU_INSERT_ROW_BELOW =  "gridcontextmenu-insert-row-below";
+    private final String GRIDCONTEXTMENU_DELETE_ROW =  "gridcontextmenu-delete-row";
+    private final String GRIDCONTEXTMENU_DUPLICATE_ROW =  "gridcontextmenu-duplicate-row";
 
     @PostConstruct
     @Override
     public void initMenu() {
-        addMenuItem("grid-scenario", "SCENARIO", "");
-        addExecutableMenuItem("grid-scenario-insert-above", "Insert row above", "", () -> GWT.log("GRID INSERT ROW ABOVE"));
-        addExecutableMenuItem("grid-scenario-insert-below", "Insert row below", "", () -> GWT.log("GRID INSERT ROW BELOW"));
-        addExecutableMenuItem("grid-scenario-delete", "Delete row", "", () -> GWT.log("GRID DELETE ROW"));
-        addExecutableMenuItem("grid-scenario-duplicate", "Duplicate row", "", () -> GWT.log("GRID DUPLICATE ROW"));
+        addMenuItem(GRIDCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
+       // addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove", () -> GWT.log(GRIDCONTEXTMENU_INSERT_ROW_ABOVE));
+        addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
+//        addExecutableMenuItem(GRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow", () -> GWT.log(GRIDCONTEXTMENU_DELETE_ROW));
+//        addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow", () -> GWT.log(GRIDCONTEXTMENU_DUPLICATE_ROW));
     }
 }

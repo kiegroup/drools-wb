@@ -15,13 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import javax.enterprise.context.Dependent;
-
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.uberfire.mvp.Command;
 
-@Dependent
 public class AppendRowCommand implements Command {
 
     private ScenarioGridModel model;

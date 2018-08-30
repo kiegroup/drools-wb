@@ -61,4 +61,20 @@ public interface ScenarioSimulationEditorConstants
     String expected();
 
     String insertColumnLeft();
+
+    String insertColumnRight();
+
+    String deleteColumn();
+
+    String insertRowBelow();
+
+    String scenario();
+
+    String given();
+
+    String insertRowAbove();
+
+    String deleteRow();
+
+    String duplicateRow();
 }

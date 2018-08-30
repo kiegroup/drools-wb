@@ -69,7 +69,7 @@ public class ScenarioSimulationViewImpl
         this.presenter = presenter;
 
         this.scenarioGridPanel = ScenarioSimulationViewProvider.newScenarioGridPanel(scenarioGridLayer);
-        clickHandlerRegistration = this.scenarioGridPanel.addClickHandler(new ScenarioSimulationGridPanelClickHandler(scenarioGridPanel.getScenarioGrid(),
+        clickHandlerRegistration = this.scenarioGridPanel.addClickHandler(new ScenarioSimulationGridPanelClickHandler(scenarioGridPanel,
                                                                                                                       otherContextMenu,
                                                                                                                       headerGivenContextMenu,
                                                                                                                       headerExpectedContextMenu,

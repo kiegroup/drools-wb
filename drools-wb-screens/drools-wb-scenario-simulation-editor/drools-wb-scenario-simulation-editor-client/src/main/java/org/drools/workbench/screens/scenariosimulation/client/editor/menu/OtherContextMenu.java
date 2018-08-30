@@ -17,21 +17,22 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-
-import com.google.gwt.core.client.GWT;
+import javax.enterprise.context.Dependent;
 
 /**
  * The contextual menu of the <i>OTHER</i> group (both top level and specific column).
  */
-@ApplicationScoped
+@Dependent
 public class OtherContextMenu extends AbstractHeaderMenuPresenter {
+
+    private final String OTHERCONTEXTMENU_SCENARIO = "othercontextmenu-scenario";
+    private final String OTHERCONTEXTMENU_INSERT_ROW_BELOW = "othercontextmenu-insert-row-below";
 
     @PostConstruct
     @Override
     public void initMenu() {
         // SCENARIO
-        addMenuItem("header-scenario", "SCENARIO", "");
-        addExecutableMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("OtherContextMenu INSERT ROW BELOW"));
+        addMenuItem(OTHERCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
+        addExecutableMenuItem(OTHERCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
     }
 }

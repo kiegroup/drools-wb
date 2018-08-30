@@ -25,10 +25,10 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.events.RefreshMenusEvent;
 import org.gwtbootstrap3.client.ui.constants.Styles;
 
@@ -59,8 +59,8 @@ public abstract class BaseMenu implements IsWidget,
     }
 
     @Override
-    public void addExecutableMenuItem(String id, String label, String i18n, Command command) {
-        view.getContextMenuDropdown().appendChild(executableMenuItemPresenter.getLIElement(id, label, command));
+    public void addExecutableMenuItem(String id, String label, String i18n, Event event) {
+        view.getContextMenuDropdown().appendChild(executableMenuItemPresenter.getLIElement(id, label, event));
     }
 
     @Override

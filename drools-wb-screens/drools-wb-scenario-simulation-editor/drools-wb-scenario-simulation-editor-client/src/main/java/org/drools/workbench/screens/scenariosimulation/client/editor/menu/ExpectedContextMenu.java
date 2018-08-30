@@ -17,26 +17,31 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-
-import com.google.gwt.core.client.GWT;
+import javax.enterprise.context.Dependent;
 
 /**
  * The contextual menu of a specific <i>EXPECTED</i> column
  * It differ from <code>HeaderExpectedContextMenu</code> because it manage column (insert/remove) in different way
  */
-@ApplicationScoped
+@Dependent
 public class ExpectedContextMenu extends AbstractHeaderMenuPresenter {
+
+    private final String EXPECTEDCONTEXTMENU_EXPECTED = "expectedcontextmenu-expected";
+    private final String EXPECTEDCONTEXTMENU_SCENARIO = "expectedcontextmenu-scenario";
+    private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT = "expectedcontextmenu-insert-column-left";
+    private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectedcontextmenu-insert-column-right";
+    private final String EXPECTEDCONTEXTMENU_DELETE_COLUMN = "expectedcontextmenu-delete-column";
+    private final String EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW = "expectedcontextmenu-insert-row-below";
 
     @PostConstruct
     @Override
     public void initMenu() {
-        addMenuItem("expected", constants.expected().toUpperCase(), "");
-        addExecutableMenuItem("expected-insert-column-left", constants.insertColumnLeft(), "", () -> GWT.log("EXPECTED INSERT COLUMN LEFT"));
-        addExecutableMenuItem("expected-insert-column-right", "Insert column right", "", () -> GWT.log("EXPECTED INSERT COLUMN RIGHT"));
-        addExecutableMenuItem("expected-delete-column", "Delete column", "", () -> GWT.log("EXPECTED DELETE COLUMN"));
+//        addMenuItem(EXPECTEDCONTEXTMENU_EXPECTED, constants.expected().toUpperCase(), "expected");
+//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT));
+//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", () -> GWT.log(EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT));
+//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(EXPECTEDCONTEXTMENU_DELETE_COLUMN));
         // SCENARIO
-        addMenuItem("header-scenario", "SCENARIO", "");
-        addExecutableMenuItem("header-insert-below", "Insert row below", "", () -> GWT.log("HEADER INSERT ROW BELOW"));
+        addMenuItem(EXPECTEDCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
+        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
     }
 }
