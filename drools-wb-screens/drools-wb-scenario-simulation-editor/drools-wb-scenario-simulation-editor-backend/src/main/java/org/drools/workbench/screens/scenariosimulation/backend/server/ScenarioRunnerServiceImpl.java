@@ -88,7 +88,7 @@ public class ScenarioRunnerServiceImpl
                         final ScenarioSimulationModel model) {
 
         KieContainer kieContainer = getKieContainer(path);
-        Runner scenarioRunner = runnerSupplier.apply(kieContainer, model.getSimulation());
+        Runner scenarioRunner = getRunnerSupplier().apply(kieContainer, model.getSimulation());
 
         final List<Failure> failures = new ArrayList<>();
 
