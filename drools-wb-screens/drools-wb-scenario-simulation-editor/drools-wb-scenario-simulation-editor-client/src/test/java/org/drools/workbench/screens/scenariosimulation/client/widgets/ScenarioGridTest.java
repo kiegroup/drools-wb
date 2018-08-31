@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
 import org.junit.Before;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(LienzoMockitoTestRunner.class)
+@RunWith(GwtMockitoTestRunner.class)
 public class ScenarioGridTest {
 
     @Mock

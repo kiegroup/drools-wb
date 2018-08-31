@@ -99,4 +99,14 @@ public class ScenarioSimulationViewImpl
         return new RunScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
                                        () -> presenter.onRunScenario());
     }
+
+    @Override
+    public ScenarioGridPanel getScenarioGridPanel() {
+        return scenarioGridPanel;
+    }
+
+    @Override
+    public ScenarioGridLayer getScenarioGridLayer() {
+        return scenarioGridLayer;
+    }
 }

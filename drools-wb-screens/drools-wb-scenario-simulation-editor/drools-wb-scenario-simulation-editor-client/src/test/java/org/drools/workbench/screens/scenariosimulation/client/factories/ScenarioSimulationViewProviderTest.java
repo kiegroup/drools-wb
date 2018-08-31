@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -28,7 +28,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.factories.S
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(LienzoMockitoTestRunner.class)
+@RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationViewProviderTest {
 
     @Test

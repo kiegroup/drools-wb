@@ -15,9 +15,14 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
@@ -31,7 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  * <p>
  * It follows the GWT standard Event/Handler mechanism
  */
-@ApplicationScoped
+@Dependent
 public class CommandExecutor implements AppendRowEventHandler,
                                         AppendColumnEventHandler {
 
@@ -39,15 +44,49 @@ public class CommandExecutor implements AppendRowEventHandler,
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
+    private EventBus eventBus;
+
+    private HandlerRegistration appendRowEventHandlerRegistration;
+    private HandlerRegistration appendColumnEventHandlerRegistration;
+
     public CommandExecutor() {
         // CDI
     }
 
     @Inject
-    public CommandExecutor(ScenarioGridModel model, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        this.model = model;
+    public CommandExecutor(EventBus eventBus) {
+        GWT.log("CommandExecutor with event");
+        this.eventBus = eventBus;
+        GWT.log("CommandExecutor " + toString() + " With eventBus " + eventBus.toString());
+    }
+
+    @PostConstruct
+    public void registerHandlers() {
+        if (appendRowEventHandlerRegistration == null) {
+            appendRowEventHandlerRegistration = eventBus.addHandler(AppendRowEvent.TYPE, this);
+        }
+        if (appendColumnEventHandlerRegistration == null) {
+            appendColumnEventHandlerRegistration = eventBus.addHandler(AppendColumnEvent.TYPE, this);
+        }
+    }
+
+    @PreDestroy
+    public void unregisterHandlers() {
+        if (appendRowEventHandlerRegistration != null) {
+            appendRowEventHandlerRegistration.removeHandler();
+        }
+        if (appendColumnEventHandlerRegistration != null) {
+            appendColumnEventHandlerRegistration.removeHandler();
+        }
+    }
+
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
         this.scenarioGridPanel = scenarioGridPanel;
+    }
+
+    public void setScenarioGridLayer(ScenarioGridLayer scenarioGridLayer) {
         this.scenarioGridLayer = scenarioGridLayer;
+        this.model = scenarioGridLayer.getScenarioGrid().getModel();
     }
 
     @Override

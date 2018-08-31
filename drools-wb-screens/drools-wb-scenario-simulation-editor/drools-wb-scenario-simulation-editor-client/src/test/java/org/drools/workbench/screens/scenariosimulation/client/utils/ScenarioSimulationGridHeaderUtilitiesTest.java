@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.types.Point2D;
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-@RunWith(LienzoMockitoTestRunner.class)
+@RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationGridHeaderUtilitiesTest {
 
     private static final double HEADER_HEIGHT = 50.0;

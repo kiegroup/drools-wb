@@ -36,9 +36,9 @@ public class HeaderExpectedContextMenu extends AbstractHeaderMenuPresenter {
     @PostConstruct
     @Override
     public void initMenu() {
-//        addMenuItem(HEADEREXPECTEDCONTEXTMENU_EXPECTED, constants.expected().toUpperCase(), "expected");
-//        addExecutableMenuItem(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT));
-//        addExecutableMenuItem(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", () -> GWT.log(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT));
+        addMenuItem(HEADEREXPECTEDCONTEXTMENU_EXPECTED, constants.expected().toUpperCase(), "expected");
+       // addExecutableMenuItem(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT));
+        addExecutableMenuItem(HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", appendColumnEvent);
 //        addExecutableMenuItem(HEADEREXPECTEDCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(HEADEREXPECTEDCONTEXTMENU_DELETE_COLUMN));
         // SCENARIO
         addMenuItem(HEADEREXPECTEDCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");

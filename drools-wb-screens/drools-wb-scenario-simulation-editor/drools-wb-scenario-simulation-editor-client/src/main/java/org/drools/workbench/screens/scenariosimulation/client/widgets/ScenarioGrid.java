@@ -57,6 +57,11 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     @Override
+    public ScenarioGridModel getModel() {
+        return (ScenarioGridModel) model;
+    }
+
+    @Override
     protected NodeMouseDoubleClickHandler getGridMouseDoubleClickHandler(final GridSelectionManager selectionManager,
                                                                          final GridPinnedModeManager pinnedModeManager) {
         return new ScenarioSimulationGridPanelDoubleClickHandler(this,

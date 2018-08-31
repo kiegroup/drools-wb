@@ -23,6 +23,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
@@ -78,6 +79,8 @@ public class ScenarioSimulationEditorPresenter
     @Inject
     private RightPanelMenuItem rightPanelMenuItem;
 
+    private CommandExecutor commandExecutor;
+
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
     }
@@ -88,7 +91,8 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final PlaceManager placeManager) {
+                                             final PlaceManager placeManager,
+                                             final CommandExecutor commandExecutor) {
         super(view);
         this.view = view;
         this.baseView = view;
@@ -98,7 +102,9 @@ public class ScenarioSimulationEditorPresenter
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
 
-        view.init(this);
+        view.init(this); // This must be executed before commandExecutor' setters
+        commandExecutor.setScenarioGridPanel(view.getScenarioGridPanel());
+        commandExecutor.setScenarioGridLayer(view.getScenarioGridLayer());
     }
 
     @OnStartup
