@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -35,6 +36,7 @@ import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPre
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
@@ -99,6 +101,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private PlaceRequest mockPlaceRequest;
 
+    @Mock
+    private AbstractWorkbenchActivity mockRightPanelActivity;
+
+    @Mock
+    private RightPanelView mockRightPanelView;
+
+    @Mock
+    private RightPanelPresenter mockRightPanelPresenter;
+
     @Before
     public void setup() {
         super.setup();
@@ -106,7 +117,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(mockPlaceRequest.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
 
         when(mockOracleFactory.makeAsyncPackageDataModelOracle(anyObject(), anyObject(), anyObject())).thenReturn(mockOracle);
-        
+
+        when(mockRightPanelView.getPresenter()).thenReturn(mockRightPanelPresenter);
+        when(mockRightPanelActivity.getWidget()).thenReturn(mockRightPanelView);
+
+        when(mockPlaceManager.getActivity(RightPanelPresenter.PLACE_REQUEST)).thenReturn(mockRightPanelActivity);
 
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                mockScenarioSimulationView,
@@ -215,6 +230,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
         presenter.onPlaceHiddenEvent(mockPlaceHiddenEvent);
         verify(mockPlaceManager, times(1)).closePlace(RightPanelPresenter.IDENTIFIER);
+        verify(mockRightPanelPresenter, times(1)).onClearStatus();
     }
 
     @Test

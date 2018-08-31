@@ -57,6 +57,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         when(mockListGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(mockListContainer);
         this.rightPanelPresenter = new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter);
         rightPanelPresenterSpy = spy(rightPanelPresenter);
+        rightPanelPresenterSpy.factTypeFieldsMap = mockTopLevelMap;
     }
 
     @Test
@@ -72,14 +73,14 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void onClearSearch() {
-        rightPanelPresenter.onClearSearch();
+        rightPanelPresenterSpy.onClearSearch();
         verify(mockRightPanelView, times(1)).clearInputSearch();
         verify(mockRightPanelView, times(1)).hideClearButton();
     }
 
     @Test
     public void onClearNameField() {
-        rightPanelPresenter.onClearNameField();
+        rightPanelPresenterSpy.onClearNameField();
         verify(mockRightPanelView, times(1)).clearNameField();
     }
 
@@ -119,5 +120,4 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         assertNotNull(retrieved);
         assertEquals(mockTopLevelMap.get(factName), retrieved);
     }
-
 }

@@ -60,7 +60,6 @@ public class RightPanelViewImplTest {
             }
         });
         rightPanelView.init(mockRightPanelPresenter);
-        verify(mockRightPanelPresenter, times(1)).onClearSearch();
     }
 
     @Test
