@@ -37,6 +37,8 @@ public interface RightPanelView
 
     DivElement getListContainer();
 
+    Presenter getPresenter();
+
     interface Presenter {
 
         void onClearSearch();

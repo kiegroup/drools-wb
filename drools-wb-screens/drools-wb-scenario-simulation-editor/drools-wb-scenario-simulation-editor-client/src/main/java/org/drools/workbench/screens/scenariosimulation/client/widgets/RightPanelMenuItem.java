@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -28,7 +29,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.menu.EnabledStateChangeListener;
 import org.uberfire.workbench.model.menu.MenuCustom;
 import org.uberfire.workbench.model.menu.MenuPosition;
@@ -41,7 +42,10 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
 
     private PlaceManager placeManager;
 
-    private RightPanelMenuCommand rightPanelMenuCommand;
+    private Command setButtonTextFalse =  () -> setButtonText(false);
+
+    private Command setButtonTextTrue =  () -> setButtonText(true);
+
 
     public RightPanelMenuItem() {
 
@@ -51,7 +55,6 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     @Inject
     public RightPanelMenuItem(final PlaceManager placeManager, final RightPanelMenuCommand rightPanelMenuCommand) {
         this.placeManager = placeManager;
-        this.rightPanelMenuCommand = rightPanelMenuCommand;
         button.addClickHandler(event -> {
             if (rightPanelMenuCommand != null) {
                 rightPanelMenuCommand.execute();
@@ -64,10 +67,14 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     public void init() {
         final boolean isRightPanelShown = PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER));
         setButtonText(isRightPanelShown);
-        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER),
-                                            () -> setButtonText(true));
-        placeManager.registerOnCloseCallback(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER),
-                                             () -> setButtonText(false));
+        placeManager.registerOnOpenCallback(RightPanelPresenter.PLACE_REQUEST, setButtonTextTrue);
+        placeManager.registerOnCloseCallback(RightPanelPresenter.PLACE_REQUEST,setButtonTextFalse);
+    }
+
+    @PreDestroy
+    public void close() {
+        placeManager.getOnOpenCallbacks(RightPanelPresenter.PLACE_REQUEST).remove(setButtonTextTrue);
+        placeManager.getOnCloseCallbacks(RightPanelPresenter.PLACE_REQUEST).remove(setButtonTextFalse);
     }
 
     @Override

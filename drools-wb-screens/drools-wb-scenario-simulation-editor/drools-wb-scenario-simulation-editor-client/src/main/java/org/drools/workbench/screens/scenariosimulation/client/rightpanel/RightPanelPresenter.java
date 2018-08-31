@@ -20,8 +20,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
@@ -32,21 +31,23 @@ import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
-import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
 
-@ApplicationScoped
+@Dependent
 @WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
 public class RightPanelPresenter implements RightPanelView.Presenter {
 
     public static final int DEFAULT_PREFERRED_WIDHT = 300;
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.RightPanel";
+
+    public static final PlaceRequest PLACE_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     private RightPanelView view;
 
@@ -62,6 +63,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public RightPanelPresenter(RightPanelView view, ListGroupItemPresenter listGroupItemPresenter) {
         this.view = view;
         this.listGroupItemPresenter = listGroupItemPresenter;
+        this.listGroupItemPresenter.init(this);
     }
 
     @PostConstruct
@@ -88,6 +90,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void onClearSearch() {
         view.clearInputSearch();
         view.hideClearButton();
+        onSearchedEvent("");
     }
 
     @Override
@@ -99,7 +102,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void onClearStatus() {
         onClearSearch();
         onClearNameField();
-        clearList();
     }
 
     @Override
@@ -114,6 +116,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap) {
+        clearList();
         this.factTypeFieldsMap = factTypeFieldsMap;
         this.factTypeFieldsMap.forEach(this::addListGroupItemView);
     }
@@ -126,6 +129,9 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onSearchedEvent(String search) {
         clearList();
+        if(factTypeFieldsMap.isEmpty()) {
+            return;
+        }
         factTypeFieldsMap
                         .entrySet()
                         .stream()
@@ -139,11 +145,4 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         view.getListContainer().appendChild(toAdd);
     }
 
-    // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
-    public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
-        PlaceRequest placeRequest = placeHiddenEvent.getPlace();
-        if (placeRequest.getIdentifier().equals(IDENTIFIER)) {
-            onClearStatus();
-        }
-    }
 }

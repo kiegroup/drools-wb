@@ -53,5 +53,7 @@ public interface ListGroupItemView extends IsWidget,
         DivElement getDivElement(String factName, String factModelTreeClass);
 
         void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
+
+        void init(RightPanelView.Presenter rightPanelPresenter);
     }
 }

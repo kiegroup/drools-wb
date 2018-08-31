@@ -34,10 +34,14 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Inject
     FieldItemPresenter fieldItemPresenter;
 
-    @Inject
-    RightPanelPresenter rightPanelPresenter;
+    RightPanelView.Presenter rightPanelPresenter;
 
     List<ListGroupItemView> listGroupItemViewList = new ArrayList<>();
+
+    @Override
+    public void init(RightPanelView.Presenter rightPanelPresenter) {
+        this.rightPanelPresenter = rightPanelPresenter;
+    }
 
     @Override
     public DivElement getDivElement(String factName, FactModelTree factModelTree) {

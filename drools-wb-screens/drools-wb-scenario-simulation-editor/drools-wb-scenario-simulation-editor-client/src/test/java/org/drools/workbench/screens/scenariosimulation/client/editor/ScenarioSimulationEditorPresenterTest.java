@@ -85,9 +85,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioSimulationView mockScenarioSimulationView;
 
     @Mock
-    private RightPanelPresenter mockRightPanelPresenter;
-
-    @Mock
     private ImportsWidgetPresenter mockImportsWidget;
 
     @Mock
@@ -116,8 +113,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                mock(ScenarioSimulationResourceType.class),
                                                                mockImportsWidget,
                                                                mockOracleFactory,
-                                                               mockPlaceManager,
-                                                               mockRightPanelPresenter) {
+                                                               mockPlaceManager) {
             {
                 this.kieView = mockKieView;
                 this.overviewWidget = mockOverviewWidget;

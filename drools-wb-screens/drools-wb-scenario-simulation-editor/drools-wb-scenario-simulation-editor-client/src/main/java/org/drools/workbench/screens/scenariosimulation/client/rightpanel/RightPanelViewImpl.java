@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
@@ -32,7 +32,7 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-@ApplicationScoped
+@Dependent
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class RightPanelViewImpl
         extends Composite
@@ -45,6 +45,9 @@ public class RightPanelViewImpl
 
     @DataField("clearSearchButton")
     ButtonElement clearSearchButton = Document.get().createButtonElement();
+
+    @DataField("searchButton")
+    ButtonElement searchButton = Document.get().createButtonElement();
 
     @DataField("inputSearch")
     InputElement inputSearch = Document.get().createTextInputElement();
@@ -62,7 +65,11 @@ public class RightPanelViewImpl
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
-        this.presenter.onClearSearch();
+    }
+
+    @Override
+    public Presenter getPresenter() {
+        return presenter;
     }
 
     @EventHandler("clearSearchButton")
@@ -78,10 +85,13 @@ public class RightPanelViewImpl
     @EventHandler("inputSearch")
     public void onInputSearchKeyDownEvent(KeyDownEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            //Window.alert("ENTER " + inputSearch.getValue());
             presenter.onSearchedEvent(inputSearch.getValue());
         }
+    }
 
+    @EventHandler("searchButton")
+    public void onSearchButtonClicked(ClickEvent event) {
+        presenter.onSearchedEvent(inputSearch.getValue());
     }
 
     @Override
