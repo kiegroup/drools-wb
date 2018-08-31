@@ -207,4 +207,11 @@ public class ScenarioRunnerHelperTest {
         assertEquals(1, scenario2Given.get(disputeFactIdentifier).size());
         assertEquals(1, scenario2Expected.get(disputeFactIdentifier).size());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void groupByFactIdentifierAndFilterFailTest() {
+        List<FactMappingValue> fail = new ArrayList<>();
+        fail.add(new FactMappingValue(personFactIdentifier, null, null));
+        groupByFactIdentifierAndFilter(fail, FactMappingType.GIVEN);
+    }
 }

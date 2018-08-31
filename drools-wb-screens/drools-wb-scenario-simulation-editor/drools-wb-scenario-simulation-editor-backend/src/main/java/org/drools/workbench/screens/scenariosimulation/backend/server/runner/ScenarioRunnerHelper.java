@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.OperatorEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
@@ -60,7 +61,7 @@ public class ScenarioRunnerHelper {
 
             FactIdentifier factIdentifier = entry.getKey();
 
-            // for each fact, create a map of path to fields and values to set filtered by type
+            // for each fact, create a map of path to fields and values to set
             Map<List<String>, Object> paramsForBean = getParamsForBean(simulationDescriptor,
                                                                        factIdentifier,
                                                                        entry.getValue());
@@ -102,7 +103,7 @@ public class ScenarioRunnerHelper {
 
         for (ScenarioInput input : inputData) {
             FactIdentifier factIdentifier = input.getFactIdentifier();
-            List<ScenarioOutput> assertionOnFact = outputData.stream().filter(elem -> elem.getFactIdentifier().equals(factIdentifier)).collect(toList());
+            List<ScenarioOutput> assertionOnFact = outputData.stream().filter(elem -> Objects.equals(elem.getFactIdentifier(), factIdentifier)).collect(toList());
 
             // check if this fact has something to check
             if (assertionOnFact.size() < 1) {
@@ -174,10 +175,13 @@ public class ScenarioRunnerHelper {
                                                                                              FactMappingType type) {
         Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifier = new HashMap<>();
         for (FactMappingValue factMappingValue : factMappingValues) {
-
             FactIdentifier factIdentifier = factMappingValue.getFactIdentifier();
+            ExpressionIdentifier expressionIdentifier = factMappingValue.getExpressionIdentifier();
+            if (expressionIdentifier == null) {
+                throw new IllegalArgumentException("ExpressionIdentifier malformed");
+            }
 
-            if (!factMappingValue.getExpressionIdentifier().getType().equals(type)) {
+            if (!Objects.equals(expressionIdentifier.getType(), type)) {
                 continue;
             }
 
