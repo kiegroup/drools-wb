@@ -16,21 +16,22 @@
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.SimpleEventBus;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 
 /**
- * <code>@Dependent</code> <i>Producer</i> for a given {@link EventBus}
+ * <code>@Dependent</code> <i>Producer</i> for a given {@link RightPanelMenuItem}
  */
 @Dependent
-public class EventBusProducer {
+public class RightPanelMenuItemProducer {
 
-    private final EventBus eventBus = new SimpleEventBus();
+    @Inject
+    private RightPanelMenuItem rightPanelMenuItem;
 
-    public EventBus getEventBus() {
-        GWT.log("EventBusProducer " + this.toString() + " eventBus " + eventBus.toString());
-        return eventBus;
+    public RightPanelMenuItem getRightPanelMenuItem() {
+        GWT.log("RightPanelMenuItemProducer " + this.toString() + " rightPanelMenuItem " + rightPanelMenuItem.toString());
+        return rightPanelMenuItem;
     }
 }

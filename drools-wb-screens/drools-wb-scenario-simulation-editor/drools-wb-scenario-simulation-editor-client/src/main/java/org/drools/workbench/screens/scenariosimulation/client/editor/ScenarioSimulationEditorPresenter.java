@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
@@ -76,7 +77,6 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
-    @Inject
     private RightPanelMenuItem rightPanelMenuItem;
 
     private CommandExecutor commandExecutor;
@@ -87,24 +87,23 @@ public class ScenarioSimulationEditorPresenter
 
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
-                                             final ScenarioSimulationView view,
+                                             final ScenarioSimulationProducer scenarioSimulationProducer,
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final PlaceManager placeManager,
-                                             final CommandExecutor commandExecutor) {
-        super(view);
-        this.view = view;
+                                             final PlaceManager placeManager) {
+        super(scenarioSimulationProducer.getScenarioSimulationView());
+        this.view = scenarioSimulationProducer.getScenarioSimulationView();
         this.baseView = view;
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
+        this.rightPanelMenuItem = scenarioSimulationProducer.getRightPanelMenuItem();
+        this.commandExecutor = scenarioSimulationProducer.getCommandExecutor();
 
         view.init(this); // This must be executed before commandExecutor' setters
-        commandExecutor.setScenarioGridPanel(view.getScenarioGridPanel());
-        commandExecutor.setScenarioGridLayer(view.getScenarioGridLayer());
     }
 
     @OnStartup

@@ -75,7 +75,7 @@ public class ScenarioGrid extends BaseGridWidget {
             String columnId = fact.getExpressionIdentifier().getName();
             String columnTitle = fact.getExpressionAlias();
             String columnGroup = fact.getExpressionIdentifier().getType().name();
-            model.insertColumn(fact.getLogicalPosition(),
+            ((ScenarioGridModel) model).populateColumn(fact.getLogicalPosition(),
                                getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
         });
     }

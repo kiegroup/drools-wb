@@ -15,8 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.dom.client.Element;
@@ -25,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.AbstractHeaderMenuPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
@@ -35,11 +38,11 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData;
 
+@Dependent
 public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                                 ContextMenuHandler {
 
@@ -50,24 +53,69 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     private GivenContextMenu givenContextMenu;
     private ExpectedContextMenu expectedContextMenu;
     private GridContextMenu gridContextMenu;
-    private List<AbstractHeaderMenuPresenter> managedMenus;
+    private Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
 
-    public ScenarioSimulationGridPanelClickHandler(final ScenarioGridPanel scenarioGridPanel,
-                                                   OtherContextMenu otherContextMenu,
-                                                   HeaderGivenContextMenu headerGivenContextMenu,
-                                                   HeaderExpectedContextMenu headerExpectedContextMenu,
-                                                   GivenContextMenu givenContextMenu,
-                                                   ExpectedContextMenu expectedContextMenu,
-                                                   GridContextMenu gridContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
-        // detect and identify the click on each of them
-        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
+    public ScenarioSimulationGridPanelClickHandler() {
+    }
+
+//    public ScenarioSimulationGridPanelClickHandler(final ScenarioGridPanel scenarioGridPanel,
+//                                                   OtherContextMenu otherContextMenu,
+//                                                   HeaderGivenContextMenu headerGivenContextMenu,
+//                                                   HeaderExpectedContextMenu headerExpectedContextMenu,
+//                                                   GivenContextMenu givenContextMenu,
+//                                                   ExpectedContextMenu expectedContextMenu,
+//                                                   GridContextMenu gridContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
+//        // detect and identify the click on each of them
+//        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
+//        this.otherContextMenu = otherContextMenu;
+//        this.headerGivenContextMenu = headerGivenContextMenu;
+//        this.headerExpectedContextMenu = headerExpectedContextMenu;
+//        this.givenContextMenu = givenContextMenu;
+//        this.expectedContextMenu = expectedContextMenu;
+//        this.gridContextMenu = gridContextMenu;
+//        managedMenus = Arrays.asList(otherContextMenu, headerGivenContextMenu, headerExpectedContextMenu, givenContextMenu, expectedContextMenu, gridContextMenu);
+//    }
+
+    public void setScenarioGrid(ScenarioGrid scenarioGrid) {
+        this.scenarioGrid = scenarioGrid;
+    }
+
+    public void setOtherContextMenu(OtherContextMenu otherContextMenu) {
         this.otherContextMenu = otherContextMenu;
+        managedMenus.add(otherContextMenu);
+    }
+
+    public void setHeaderGivenContextMenu(HeaderGivenContextMenu headerGivenContextMenu) {
         this.headerGivenContextMenu = headerGivenContextMenu;
+        managedMenus.add(headerGivenContextMenu);
+    }
+
+    public void setHeaderExpectedContextMenu(HeaderExpectedContextMenu headerExpectedContextMenu) {
         this.headerExpectedContextMenu = headerExpectedContextMenu;
+        managedMenus.add(headerExpectedContextMenu);
+    }
+
+    public void setGivenContextMenu(GivenContextMenu givenContextMenu) {
         this.givenContextMenu = givenContextMenu;
+        managedMenus.add(givenContextMenu);
+    }
+
+    public void setExpectedContextMenu(ExpectedContextMenu expectedContextMenu) {
         this.expectedContextMenu = expectedContextMenu;
+        managedMenus.add(expectedContextMenu);
+    }
+
+    public void setGridContextMenu(GridContextMenu gridContextMenu) {
         this.gridContextMenu = gridContextMenu;
-        managedMenus = Arrays.asList(otherContextMenu, headerGivenContextMenu, headerExpectedContextMenu, givenContextMenu, expectedContextMenu, gridContextMenu);
+        managedMenus.add(gridContextMenu);
+    }
+
+    /**
+     * This method must be called <b>after</b> all the <i>ContextMenu</i> setters
+     * @param eventBus
+     */
+    public void setEventBus(EventBus eventBus) {
+        managedMenus.forEach(menu -> menu.setEventBus(eventBus));
     }
 
     @Override

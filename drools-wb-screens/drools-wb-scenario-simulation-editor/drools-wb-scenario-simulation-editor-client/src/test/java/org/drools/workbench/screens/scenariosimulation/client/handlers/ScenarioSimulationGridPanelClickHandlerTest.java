@@ -82,13 +82,13 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     @Before
     public void setUp() throws Exception {
         when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
-        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(mockScenarioGridPanel,
+        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(/*mockScenarioGridPanel,
                                                                                                   mockOtherContextMenu,
                                                                                                   mockHeaderGivenContextMenu,
                                                                                                   mockHeaderExpectedContextMenu,
                                                                                                   mockGivenContextMenu,
                                                                                                   mockExpectedContextMenu,
-                                                                                                  mockGridContextMenu) {
+                                                                                                  mockGridContextMenu*/) {
             @Override
             protected void manageRightClick(ContextMenuEvent event) {
                 // 

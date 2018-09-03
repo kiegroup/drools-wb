@@ -22,12 +22,12 @@ public class AppendColumnEvent extends GwtEvent<AppendColumnEventHandler> {
 
     public static Type<AppendColumnEventHandler> TYPE = new Type<>();
 
-    private String columnId;
     private String columnTitle;
+    private String columnGroup;
 
-    public AppendColumnEvent(String columnId, String columnTitle) {
-        this.columnId = columnId;
+    public AppendColumnEvent(String columnTitle, String columnGroup) {
         this.columnTitle = columnTitle;
+        this.columnGroup = columnGroup;
     }
 
     @Override
@@ -40,12 +40,11 @@ public class AppendColumnEvent extends GwtEvent<AppendColumnEventHandler> {
         handler.onEvent(this);
     }
 
-    public String getColumnId() {
-        return columnId;
-    }
-
     public String getColumnTitle() {
         return columnTitle;
     }
 
+    public String getColumnGroup() {
+        return columnGroup;
+    }
 }

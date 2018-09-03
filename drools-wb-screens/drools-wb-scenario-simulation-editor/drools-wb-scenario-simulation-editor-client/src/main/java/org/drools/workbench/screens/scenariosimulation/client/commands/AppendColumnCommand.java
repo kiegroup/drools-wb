@@ -30,23 +30,25 @@ public class AppendColumnCommand implements Command {
     private ScenarioGridModel model;
     private String columnId;
     private String columnTitle;
+    private String columnGroup;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
     public AppendColumnCommand() {
     }
 
-    public AppendColumnCommand(ScenarioGridModel model, String columnId, String columnTitle, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public AppendColumnCommand(ScenarioGridModel model, String columnId, String columnTitle, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         this.model = model;
         this.columnId = columnId;
         this.columnTitle = columnTitle;
+        this.columnGroup = columnGroup;
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridLayer;
     }
 
-    
     @Override
     public void execute() {
-        model.appendColumn(getScenarioGridColumn(columnId, columnTitle, scenarioGridPanel, scenarioGridLayer));
+        final int index = model.getFirstIndexRightOfGroup(columnGroup);
+        model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

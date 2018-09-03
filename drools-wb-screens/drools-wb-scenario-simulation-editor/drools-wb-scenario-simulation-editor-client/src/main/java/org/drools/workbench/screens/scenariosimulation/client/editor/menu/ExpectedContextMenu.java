@@ -18,6 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 
 /**
  * The contextual menu of a specific <i>EXPECTED</i> column
@@ -32,6 +35,13 @@ public class ExpectedContextMenu extends AbstractHeaderMenuPresenter {
     private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectedcontextmenu-insert-column-right";
     private final String EXPECTEDCONTEXTMENU_DELETE_COLUMN = "expectedcontextmenu-delete-column";
     private final String EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW = "expectedcontextmenu-insert-row-below";
+
+    private CommandExecutor commandExecutor;
+
+    @Inject
+    public ExpectedContextMenu(CommandExecutor commandExecutor) {
+        this.commandExecutor = commandExecutor;
+    }
 
     @PostConstruct
     @Override

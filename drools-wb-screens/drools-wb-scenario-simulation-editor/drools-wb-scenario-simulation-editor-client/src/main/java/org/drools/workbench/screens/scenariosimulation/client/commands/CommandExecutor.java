@@ -15,10 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import javax.annotation.PostConstruct;
+import java.util.Date;
+
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
@@ -53,21 +53,22 @@ public class CommandExecutor implements AppendRowEventHandler,
         // CDI
     }
 
-    @Inject
-    public CommandExecutor(EventBus eventBus) {
-        GWT.log("CommandExecutor with event");
+    public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
-        GWT.log("CommandExecutor " + toString() + " With eventBus " + eventBus.toString());
+        registerHandlers();
+        GWT.log("CommandExecutor " + this.toString() + " setEventBus " + eventBus.toString());
     }
 
-    @PostConstruct
-    public void registerHandlers() {
-        if (appendRowEventHandlerRegistration == null) {
-            appendRowEventHandlerRegistration = eventBus.addHandler(AppendRowEvent.TYPE, this);
-        }
-        if (appendColumnEventHandlerRegistration == null) {
-            appendColumnEventHandlerRegistration = eventBus.addHandler(AppendColumnEvent.TYPE, this);
-        }
+    /**
+     * This method set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
+     * from the give <code>ScenarioGridPanel</code>
+     * @param scenarioGridPanel
+     */
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
+        this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
+        this.model = scenarioGridLayer.getScenarioGrid().getModel();
+        GWT.log("CommandExecutor " + this.toString() + " scenarioGridPanel " + scenarioGridPanel.hashCode() + " scenarioGridLayer " + scenarioGridLayer.hashCode() + " model " + model.toString());
     }
 
     @PreDestroy
@@ -80,24 +81,26 @@ public class CommandExecutor implements AppendRowEventHandler,
         }
     }
 
-    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
-    }
-
-    public void setScenarioGridLayer(ScenarioGridLayer scenarioGridLayer) {
-        this.scenarioGridLayer = scenarioGridLayer;
-        this.model = scenarioGridLayer.getScenarioGrid().getModel();
-    }
-
     @Override
     public void onEvent(AppendRowEvent event) {
         AppendRowCommand command = new AppendRowCommand(model);
         command.execute();
+        scenarioGridPanel.getScenarioGrid().refresh();
     }
 
     @Override
     public void onEvent(AppendColumnEvent event) {
-        AppendColumnCommand command = new AppendColumnCommand(model, event.getColumnId(), event.getColumnTitle(), scenarioGridPanel, scenarioGridLayer);
+        AppendColumnCommand command = new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnTitle(), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer);
         command.execute();
+        scenarioGridPanel.getScenarioGrid().refresh();
+    }
+
+    private void registerHandlers() {
+        if (appendRowEventHandlerRegistration == null) {
+            appendRowEventHandlerRegistration = eventBus.addHandler(AppendRowEvent.TYPE, this);
+        }
+        if (appendColumnEventHandlerRegistration == null) {
+            appendColumnEventHandlerRegistration = eventBus.addHandler(AppendColumnEvent.TYPE, this);
+        }
     }
 }

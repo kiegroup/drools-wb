@@ -19,6 +19,8 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
+
 /**
  * The contextual menu of the top level <i>EXPECTED</i> group.
  * It differ from <code>GivenContextMenu</code> because it manage column (insert/remove) in different way
@@ -33,12 +35,14 @@ public class HeaderGivenContextMenu extends AbstractHeaderMenuPresenter {
     private final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
     private final String HEADERGIVENCONTEXTMENU_INSERT_ROW_BELOW = "headergivencontextmenu-insert-row-below";
 
+    private final AppendColumnEvent appendColumnEvent = new AppendColumnEvent("NEW_GIVEN_COLUMN", "GIVEN");
+
     @PostConstruct
     @Override
     public void initMenu() {
-//        addMenuItem(HEADERGIVENCONTEXTMENU_GIVEN, constants.given(), "given");
+        addMenuItem(HEADERGIVENCONTEXTMENU_GIVEN, constants.given(), "given");
 //        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT));
-//        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", () -> GWT.log(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT));
+        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", appendColumnEvent);
 //        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(HEADERGIVENCONTEXTMENU_DELETE_COLUMN));
         // SCENARIO
         addMenuItem(HEADERGIVENCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");

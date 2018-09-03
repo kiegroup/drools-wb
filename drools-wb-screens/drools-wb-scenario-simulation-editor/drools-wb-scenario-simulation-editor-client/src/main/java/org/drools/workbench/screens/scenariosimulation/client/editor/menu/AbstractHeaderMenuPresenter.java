@@ -15,10 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import javax.inject.Inject;
-
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -35,9 +32,7 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
 
     protected AppendRowEvent appendRowEvent = new AppendRowEvent();
 
-    protected AppendColumnEvent appendColumnEvent = new AppendColumnEvent("new_column_id", "NEW_COLUMN_TITLE");
-
-    @Inject
-    protected EventBus eventBus;
-
+    public void setEventBus(EventBus eventBus) {
+        this.executableMenuItemPresenter.setEventBus(eventBus);
+    }
 }

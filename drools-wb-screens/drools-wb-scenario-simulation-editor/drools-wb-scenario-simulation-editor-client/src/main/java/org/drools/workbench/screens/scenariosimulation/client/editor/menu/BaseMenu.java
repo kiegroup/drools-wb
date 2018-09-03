@@ -51,6 +51,7 @@ public abstract class BaseMenu implements IsWidget,
     @Override
     public void initialise() {
         view.init(this);
+        executableMenuItemPresenter.init(this);
     }
 
     @Override
