@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -24,12 +22,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.RightPanelMenuCommand;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.Command;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.EnabledStateChangeListener;
 import org.uberfire.workbench.model.menu.MenuCustom;
 import org.uberfire.workbench.model.menu.MenuPosition;
@@ -41,6 +39,10 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     private Button button = GWT.create(Button.class);
 
     private PlaceManager placeManager;
+
+    private PlaceRequest rightPanelRequest;
+
+    private RightPanelMenuCommand rightPanelMenuCommand;
 
     private Command setButtonTextFalse =  () -> setButtonText(false);
 
@@ -55,6 +57,7 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     @Inject
     public RightPanelMenuItem(final PlaceManager placeManager, final RightPanelMenuCommand rightPanelMenuCommand) {
         this.placeManager = placeManager;
+        this.rightPanelMenuCommand = rightPanelMenuCommand;
         button.addClickHandler(event -> {
             if (rightPanelMenuCommand != null) {
                 rightPanelMenuCommand.execute();
@@ -63,18 +66,11 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
         button.setSize(ButtonSize.SMALL);
     }
 
-    @PostConstruct
-    public void init() {
-        final boolean isRightPanelShown = PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER));
+    public void init(PlaceRequest rightPanelRequest) {
+        this.rightPanelRequest = rightPanelRequest;
+        rightPanelMenuCommand.init(rightPanelRequest);
+        final boolean isRightPanelShown = PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest));
         setButtonText(isRightPanelShown);
-        placeManager.registerOnOpenCallback(RightPanelPresenter.PLACE_REQUEST, setButtonTextTrue);
-        placeManager.registerOnCloseCallback(RightPanelPresenter.PLACE_REQUEST,setButtonTextFalse);
-    }
-
-    @PreDestroy
-    public void close() {
-        placeManager.getOnOpenCallbacks(RightPanelPresenter.PLACE_REQUEST).remove(setButtonTextTrue);
-        placeManager.getOnCloseCallbacks(RightPanelPresenter.PLACE_REQUEST).remove(setButtonTextFalse);
     }
 
     @Override
@@ -125,6 +121,14 @@ public class RightPanelMenuItem implements MenuCustom<Widget> {
     @Override
     public String getIdentifier() {
         return null;
+    }
+
+    public Command getSetButtonTextFalse() {
+        return setButtonTextFalse;
+    }
+
+    public Command getSetButtonTextTrue() {
+        return setButtonTextTrue;
     }
 
     private void setButtonText(boolean isRightPanelShown) {

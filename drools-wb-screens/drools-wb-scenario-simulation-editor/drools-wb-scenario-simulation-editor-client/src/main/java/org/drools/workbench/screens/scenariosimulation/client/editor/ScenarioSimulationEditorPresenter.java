@@ -65,6 +65,8 @@ import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
@@ -89,10 +91,13 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
-    @Inject
     private RightPanelMenuItem rightPanelMenuItem;
 
     private Command populateRightPanelCommand;
+
+    PlaceRequest rightPanelRequest;
+
+    ObservablePath path;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -104,6 +109,7 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
+                                             final RightPanelMenuItem rightPanelMenuItem,
                                              final PlaceManager placeManager) {
         super(view);
         this.view = view;
@@ -112,11 +118,17 @@ public class ScenarioSimulationEditorPresenter
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
+        this.rightPanelMenuItem = rightPanelMenuItem;
         this.placeManager = placeManager;
 
         addMenuItems();
 
         view.init(this);
+
+        rightPanelRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
+        rightPanelRequest.addParameter("ScenarioSimulationEditorPresenter", this.toString());
+
+        rightPanelMenuItem.init(rightPanelRequest);
 
         populateRightPanelCommand = getPopulateRightPanelCommand();
     }
@@ -127,16 +139,16 @@ public class ScenarioSimulationEditorPresenter
         super.init(path,
                    place,
                    type);
+        this.path = path;
     }
 
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
-            placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
+            placeManager.closePlace(rightPanelRequest);
             this.view.showLoading();
         }
-
         this.view.clear();
     }
 
@@ -167,20 +179,31 @@ public class ScenarioSimulationEditorPresenter
 
     // Observing to show RightPanel when ScenarioSimulationScreen is put in foreground
     public void onPlaceGainFocusEvent(@Observes PlaceGainFocusEvent placeGainFocusEvent) {
-        PlaceRequest placeRequest = placeGainFocusEvent.getPlace();
-        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER) && PlaceStatus.CLOSE.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+        if (!(placeGainFocusEvent.getPlace() instanceof PathPlaceRequest)) {  // Ignoring other requests
+            return;
+        }
+        PathPlaceRequest placeRequest = (PathPlaceRequest) placeGainFocusEvent.getPlace();
+        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
+                && placeRequest.getPath().equals(this.path)
+                && PlaceStatus.CLOSE.equals(placeManager.getStatus(rightPanelRequest))) {
             registerRightPanelCallback();
-            placeManager.goTo(RightPanelPresenter.IDENTIFIER);
+            placeManager.goTo(rightPanelRequest);
+            populateRightPanel();
         }
     }
 
     // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
     public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
-        PlaceRequest placeRequest = placeHiddenEvent.getPlace();
-        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER) && PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
+        if (!(placeHiddenEvent.getPlace() instanceof PathPlaceRequest)) {  // Ignoring other requests
+            return;
+        }
+        PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
+        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
+                && placeRequest.getPath().equals(this.path)
+                && PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
             unRegisterRightPanelCallback();
             clearRightPanelStatus();
-            placeManager.closePlace(RightPanelPresenter.IDENTIFIER);
+            placeManager.closePlace(rightPanelRequest);
         }
     }
 
@@ -198,11 +221,15 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void registerRightPanelCallback() {
-        placeManager.registerOnOpenCallback(RightPanelPresenter.PLACE_REQUEST, populateRightPanelCommand);
+        placeManager.registerOnOpenCallback(rightPanelRequest, populateRightPanelCommand);
+        placeManager.registerOnOpenCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextTrue());
+        placeManager.registerOnCloseCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextFalse());
     }
 
     protected void unRegisterRightPanelCallback() {
-        placeManager.getOnOpenCallbacks(RightPanelPresenter.PLACE_REQUEST).remove(populateRightPanelCommand);
+        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(populateRightPanelCommand);
+        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextTrue());
+        placeManager.getOnCloseCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextFalse());
     }
 
     /**
@@ -247,23 +274,34 @@ public class ScenarioSimulationEditorPresenter
     }
 
     void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
+        GWT.log("ScenarioSimulationPResenter " + this.toString() + " populateRightPanel rightPanelPresenter " + rightPanelPresenter.toString());
+        // Instantiate a container map
+        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Execute only when oracle has been set
         if (oracle == null) {
+            if (rightPanelPresenter != null) {
+                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+            }
             return;
         }
         // Retrieve the relevant facttypes
         String[] factTypes = oracle.getFactTypes();
         if (factTypes.length == 0) {  // We do not have to set nothing
+            if (rightPanelPresenter != null) {
+                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+            }
             return;
         }
-        // Instantiate a container map
-        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Instantiate the aggregator callback
         Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, factTypes.length, factTypeFieldsMap);
         // Iterate over all facttypes to retrieve their modelfields
         for (String factType : factTypes) {
             oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
         }
+    }
+
+    void clearRightPanelStatus() {
+        getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
     }
 
     private void addMenuItems() {
@@ -279,6 +317,7 @@ public class ScenarioSimulationEditorPresenter
             if (versionRecordManager.getCurrentPath() == null) {
                 return;
             }
+
             resetEditorPages(content.getOverview());
             model = content.getModel();
             oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
@@ -349,13 +388,9 @@ public class ScenarioSimulationEditorPresenter
         toRemove.forEach(toPopulate::removeSimpleProperty);
     }
 
-    private void clearRightPanelStatus() {
-        getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
-    }
-
     private Optional<RightPanelView> getRightPanelView() {
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(RightPanelPresenter.IDENTIFIER))) {
-            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(RightPanelPresenter.PLACE_REQUEST);
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
+            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(rightPanelRequest);
             return Optional.of((RightPanelView) rightPanelActivity.getWidget());
         } else {
             return Optional.empty();

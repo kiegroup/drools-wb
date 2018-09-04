@@ -20,6 +20,7 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -46,6 +47,7 @@ import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
@@ -99,7 +101,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private PlaceManager mockPlaceManager;
 
     @Mock
-    private PlaceRequest mockPlaceRequest;
+    private PathPlaceRequest mockPlaceRequest;
 
     @Mock
     private AbstractWorkbenchActivity mockRightPanelActivity;
@@ -109,6 +111,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Mock
     private RightPanelPresenter mockRightPanelPresenter;
+
+    @Mock
+    private RightPanelMenuItem mockRightPanelMenuItem;
+
+    @Mock
+    private ObservablePath mockPath;
 
     @Before
     public void setup() {
@@ -123,11 +131,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         when(mockPlaceManager.getActivity(RightPanelPresenter.PLACE_REQUEST)).thenReturn(mockRightPanelActivity);
 
+        when(mockPlaceRequest.getPath()).thenReturn(mockPath);
+
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),
                                                                mockScenarioSimulationView,
                                                                mock(ScenarioSimulationResourceType.class),
                                                                mockImportsWidget,
                                                                mockOracleFactory,
+                                                               mockRightPanelMenuItem,
                                                                mockPlaceManager) {
             {
                 this.kieView = mockKieView;
@@ -138,6 +149,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.notification = mockNotification;
                 this.workbenchContext = mockWorkbenchContext;
                 this.alertsButtonMenuItemBuilder = mockAlertsButtonMenuItemBuilder;
+                this.rightPanelRequest = mockPlaceRequest;
+                this.path = mockPath;
             }
 
             @Override
@@ -153,6 +166,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             @Override
             void populateRightPanel() {
                 // 
+            }
+
+            @Override
+            void clearRightPanelStatus() {
+
             }
         };
 
@@ -218,31 +236,30 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onPlaceGainFocusEvent() {
         PlaceGainFocusEvent mockPlaceGainFocusEvent = mock(PlaceGainFocusEvent.class);
         when(mockPlaceGainFocusEvent.getPlace()).thenReturn(mockPlaceRequest);
-        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.CLOSE);
+        when(mockPlaceManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.CLOSE);
         presenter.onPlaceGainFocusEvent(mockPlaceGainFocusEvent);
-        verify(mockPlaceManager, times(1)).goTo(RightPanelPresenter.IDENTIFIER);
+        verify(mockPlaceManager, times(1)).goTo(mockPlaceRequest);
     }
 
     @Test
     public void onPlaceHiddenEvent() {
         PlaceHiddenEvent mockPlaceHiddenEvent = mock(PlaceHiddenEvent.class);
         when(mockPlaceHiddenEvent.getPlace()).thenReturn(mockPlaceRequest);
-        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
+        when(mockPlaceManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.OPEN);
         presenter.onPlaceHiddenEvent(mockPlaceHiddenEvent);
-        verify(mockPlaceManager, times(1)).closePlace(RightPanelPresenter.IDENTIFIER);
-        verify(mockRightPanelPresenter, times(1)).onClearStatus();
+        verify(mockPlaceManager, times(1)).closePlace(mockPlaceRequest);
     }
 
     @Test
     public void onClose() {
-        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.OPEN);
+        when(mockPlaceManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.OPEN);
         presenter.onClose();
         onClosePlaceStatusOpen();
         reset(mockVersionRecordManager);
         reset(mockPlaceManager);
         reset(mockScenarioSimulationView);
 
-        when(mockPlaceManager.getStatus(RightPanelPresenter.IDENTIFIER)).thenReturn(PlaceStatus.CLOSE);
+        when(mockPlaceManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.CLOSE);
         presenter.onClose();
         onClosePlaceStatusClose();
     }
@@ -271,14 +288,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     private void onClosePlaceStatusOpen() {
         verify(mockVersionRecordManager, times(1)).clear();
-        verify(mockPlaceManager, times(1)).closePlace(RightPanelPresenter.IDENTIFIER);
+        verify(mockPlaceManager, times(1)).closePlace(mockPlaceRequest);
         verify(presenter.getView()).showLoading();
         verify(mockScenarioSimulationView, times(1)).clear();
     }
 
     private void onClosePlaceStatusClose() {
         verify(mockVersionRecordManager, times(1)).clear();
-        verify(mockPlaceManager, times(0)).closePlace(RightPanelPresenter.IDENTIFIER);
+        verify(mockPlaceManager, times(0)).closePlace(mockPlaceRequest);
         verify(mockScenarioSimulationView, times(1)).clear();
     }
 }
