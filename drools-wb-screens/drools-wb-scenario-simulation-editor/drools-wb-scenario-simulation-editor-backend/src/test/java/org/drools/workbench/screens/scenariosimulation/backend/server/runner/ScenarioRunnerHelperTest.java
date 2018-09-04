@@ -48,6 +48,7 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.run
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.verifyConditions;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -176,15 +177,19 @@ public class ScenarioRunnerHelperTest {
     public void validateAssertionTest() {
 
         List<ScenarioResult> scenarioFailResult = new ArrayList<>();
-        scenarioFailResult.add(new ScenarioResult(disputeFactIdentifier, amountNameExpectedFactMappingValue, false));
-        validateAssertion(scenarioFailResult, scenario2, singleNotifier);
+        scenarioFailResult.add(new ScenarioResult(disputeFactIdentifier, amountNameExpectedFactMappingValue, "SOMETHING_ELSE", false));
+        try {
+            validateAssertion(scenarioFailResult, scenario2, singleNotifier);
+            fail();
+        } catch (ScenarioException ignored) {
+        }
 
         verify(singleNotifier, times(1)).addFailedAssumption(any());
 
         reset(singleNotifier);
 
         List<ScenarioResult> scenarioSuccessResult = new ArrayList<>();
-        scenarioSuccessResult.add(new ScenarioResult(disputeFactIdentifier, amountNameExpectedFactMappingValue, true));
+        scenarioSuccessResult.add(new ScenarioResult(disputeFactIdentifier, amountNameExpectedFactMappingValue, amountNameExpectedFactMappingValue.getRawValue(), true));
         validateAssertion(scenarioSuccessResult, scenario2, singleNotifier);
 
         verify(singleNotifier, times(0)).addFailedAssumption(any());

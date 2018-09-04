@@ -27,13 +27,13 @@ import org.junit.runner.notification.RunListener;
 
 public class JunitRunnerHelper {
 
-    public static Result runWithJunit(Runner runner, List<Failure> failures) {
+    public static Result runWithJunit(Runner runner, List<Failure> failures, List<Failure> failureDetails) {
         JUnitCore jUnitCore = new JUnitCore();
 
         jUnitCore.addListener(new RunListener() {
             @Override
             public void testAssumptionFailure(org.junit.runner.notification.Failure failure) {
-                failures.add(failureToFailure(failure));
+                failureDetails.add(failureToFailure(failure));
             }
         });
 

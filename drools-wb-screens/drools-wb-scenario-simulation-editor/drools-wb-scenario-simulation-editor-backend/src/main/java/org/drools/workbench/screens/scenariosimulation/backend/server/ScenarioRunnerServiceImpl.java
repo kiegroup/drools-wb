@@ -92,7 +92,9 @@ public class ScenarioRunnerServiceImpl
 
         final List<Failure> failures = new ArrayList<>();
 
-        Result result = runWithJunit(scenarioRunner, failures);
+        final List<Failure> failureDetails = new ArrayList<>();
+
+        Result result = runWithJunit(scenarioRunner, failures, failureDetails);
 
         defaultTestResultMessageEvent.fire(
                 new TestResultMessage(

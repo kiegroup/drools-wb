@@ -137,19 +137,25 @@ public class ScenarioRunnerHelper {
 
                 Boolean conditionResult = new OperatorEvaluator().evaluate(operator, resultValue, expectedValue);
 
-                scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, conditionResult));
+                scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue, conditionResult));
             }
         }
         return scenarioResults;
     }
 
     public static void validateAssertion(List<ScenarioResult> scenarioResults, Scenario scenario, EachTestNotifier singleNotifier) {
-        boolean isScenarioSatisfied = scenarioResults.stream().allMatch(ScenarioResult::getResult);
-        if (!isScenarioSatisfied) {
-            scenario.getDescription();
-            singleNotifier.addFailedAssumption(
-                    new AssumptionViolatedException(new StringBuilder().append("Scenario '").append(scenario.getDescription())
-                                                            .append("' has wrong assertion").toString()));
+        boolean scenarioFailed = false;
+        for (ScenarioResult scenarioResult : scenarioResults) {
+            if(scenarioResult.getResult() == null || !scenarioResult.getResult()) {
+                singleNotifier.addFailedAssumption(
+                        new ScenarioAssumptionViolatedException(scenario, scenarioResult, new StringBuilder().append("Scenario '").append(scenario.getDescription())
+                                                                        .append("' has wrong assertion").toString()));
+                scenarioFailed = true;
+            }
+        }
+
+        if(scenarioFailed) {
+            throw new ScenarioException("Scenario '" + scenario.getDescription() + "' failed");
         }
     }
 

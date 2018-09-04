@@ -23,11 +23,13 @@ public class ScenarioResult {
 
     private final FactIdentifier factIdentifier;
     private final FactMappingValue factMappingValue;
+    private final Object resultValue;
     private final Boolean result;
 
-    public ScenarioResult(FactIdentifier factIdentifier, FactMappingValue factMappingValue, Boolean result) {
+    public ScenarioResult(FactIdentifier factIdentifier, FactMappingValue factMappingValue, Object resultValue, Boolean result) {
         this.factIdentifier = factIdentifier;
         this.factMappingValue = factMappingValue;
+        this.resultValue = resultValue;
         this.result = result;
     }
 
@@ -37,6 +39,10 @@ public class ScenarioResult {
 
     public FactMappingValue getFactMappingValue() {
         return factMappingValue;
+    }
+
+    public Object getResultValue() {
+        return resultValue;
     }
 
     public Boolean getResult() {
