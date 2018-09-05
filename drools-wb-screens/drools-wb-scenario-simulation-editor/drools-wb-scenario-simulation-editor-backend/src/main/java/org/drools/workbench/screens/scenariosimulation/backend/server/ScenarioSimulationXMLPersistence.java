@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.kie.soup.commons.xstream.XStreamUtils;
 
@@ -35,6 +36,8 @@ public class ScenarioSimulationXMLPersistence {
     }
 
     public String marshal(ScenarioSimulationModel sc) {
+        // force factMappingValues sorting based on factMappings before save
+        sc.getSimulation().getScenarios().forEach(Scenario::sort);
         return xt.toXML(sc);
     }
 
