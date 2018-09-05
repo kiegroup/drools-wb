@@ -18,25 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.hamcrest.Matcher;
 import org.junit.AssumptionViolatedException;
 
 public class ScenarioAssumptionViolatedException extends AssumptionViolatedException {
 
     private final Scenario scenario;
     private final ScenarioResult scenarioResult;
-
-    public <T> ScenarioAssumptionViolatedException(Scenario scenario, ScenarioResult scenarioResult, T actual, Matcher<T> matcher) {
-        super(actual, matcher);
-        this.scenario = scenario;
-        this.scenarioResult = scenarioResult;
-    }
-
-    public <T> ScenarioAssumptionViolatedException(Scenario scenario, ScenarioResult scenarioResult, String message, T expected, Matcher<T> matcher) {
-        super(message, expected, matcher);
-        this.scenario = scenario;
-        this.scenarioResult = scenarioResult;
-    }
 
     public ScenarioAssumptionViolatedException(Scenario scenario, ScenarioResult scenarioResult, String message) {
         super(message);
