@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.kie.soup.commons.xstream.XStreamUtils;
 
