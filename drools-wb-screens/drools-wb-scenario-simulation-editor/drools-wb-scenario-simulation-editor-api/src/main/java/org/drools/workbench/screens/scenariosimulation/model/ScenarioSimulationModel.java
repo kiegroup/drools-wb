@@ -35,26 +35,26 @@ public class ScenarioSimulationModel
         simulation = new Simulation();
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
 
-        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
+        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
         Scenario scenario = simulation.addScenario();
-        scenario.setDescription("Scenario example");
         Random random = new Random();
+        scenario.setDescription(FactIdentifier.DESCRIPTION.getName() + random.nextInt());
 
         // Add GIVEN Facts
         IntStream.range(1, 3).forEach(id -> {
             ExpressionIdentifier givenExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.GIVEN);
-            FactIdentifier givenFact = FactIdentifier.create("GIVENFACT-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping("GIVEN-" + id, givenFact, givenExpression);
-            scenario.addMappingValue(givenFact, givenExpression, "given-sample-" + id);
+            FactIdentifier givenFact = FactIdentifier.create(FactMappingType.GIVEN + "FACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping(FactMappingType.GIVEN + "-" + id, givenFact, givenExpression);
+            scenario.addMappingValue(givenFact, givenExpression, FactMappingType.GIVEN + "-" + id + random.nextInt());
         });
 
         // Add EXPECTED Facts
         IntStream.range(1, 3).forEach(id -> {
             ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.EXPECTED);
-            FactIdentifier expectFact = FactIdentifier.create("EXPECTEDFACT-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping("EXPECTED-" + id, expectFact, expectedExpression);
-            scenario.addMappingValue(expectFact, expectedExpression, "expected-sample-" + id);
+            FactIdentifier expectFact = FactIdentifier.create(FactMappingType.EXPECTED + "FACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping(FactMappingType.EXPECTED + "-" + id, expectFact, expectedExpression);
+            scenario.addMappingValue(expectFact, expectedExpression, FactMappingType.EXPECTED + "-" + id + random.nextInt());
         });
     }
 

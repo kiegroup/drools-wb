@@ -21,27 +21,26 @@ import javax.enterprise.context.Dependent;
 
 /**
  * The contextual menu of a specific <i>GIVEN</i> column
- * It differ from <code>HeaderGivenContextMenu</code> because it manage column (insert/remove) in different way
+ * It differ from {@link HeaderGivenContextMenu} because it manage column (insert/remove) in different way
  */
 @Dependent
 public class GivenContextMenu extends AbstractHeaderMenuPresenter {
 
+    // This strings are used to give unique id in the final dom
     private final String GIVENCONTEXTMENU_GIVEN = "givencontextmenu-given";
     private final String GIVENCONTEXTMENU_SCENARIO = "givencontextmenu-scenario";
     private final String GIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "givencontextmenu-insert-column-left";
     private final String GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "givencontextmenu-insert-column-right";
     private final String GIVENCONTEXTMENU_DELETE_COLUMN = "givencontextmenu-delete-column";
+    private final String GIVENCONTEXTMENU_INSERT_ROW_ABOVE = "givencontextmenu-insert-row-above";
     private final String GIVENCONTEXTMENU_INSERT_ROW_BELOW = "givencontextmenu-insert-row-below";
 
     @PostConstruct
     @Override
     public void initMenu() {
-//        addMenuItem(GIVENCONTEXTMENU_GIVEN, constants.given(), "given");
-//        addExecutableMenuItem(GIVENCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(GIVENCONTEXTMENU_INSERT_COLUMN_LEFT));
-//        addExecutableMenuItem(GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", () -> GWT.log(GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT));
-//        addExecutableMenuItem(GIVENCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(GIVENCONTEXTMENU_DELETE_COLUMN));
-        // SCENARIO
-        addMenuItem(GIVENCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
-        addExecutableMenuItem(GIVENCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
+        HEADERCONTEXTMENU_SCENARIO = GIVENCONTEXTMENU_SCENARIO;
+        HEADERCONTEXTMENU_INSERT_ROW_ABOVE = GIVENCONTEXTMENU_INSERT_ROW_ABOVE;
+        HEADERCONTEXTMENU_INSERT_ROW_BELOW = GIVENCONTEXTMENU_INSERT_ROW_BELOW;
+        super.initMenu();
     }
 }

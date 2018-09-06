@@ -41,18 +41,6 @@ public class ScenarioSimulationViewImpl
     private ScenarioSimulationEditorPresenter presenter;
 
     private ScenarioGridLayer scenarioGridLayer;
-//    @Inject
-//    private OtherContextMenu otherContextMenu;
-//    @Inject
-//    private HeaderGivenContextMenu headerGivenContextMenu;
-//    @Inject
-//    private HeaderExpectedContextMenu headerExpectedContextMenu;
-//    @Inject
-//    private GivenContextMenu givenContextMenu;
-//    @Inject
-//    private ExpectedContextMenu expectedContextMenu;
-//    @Inject
-//    private GridContextMenu gridContextMenu;
 
     private HandlerRegistration clickHandlerRegistration;
 
@@ -76,14 +64,6 @@ public class ScenarioSimulationViewImpl
     @Override
     public void init(final ScenarioSimulationEditorPresenter presenter) {
         this.presenter = presenter;
-//
-//        clickHandlerRegistration = this.scenarioGridPanel.addClickHandler(new ScenarioSimulationGridPanelClickHandler(scenarioGridPanel,
-//                                                                                                                      otherContextMenu,
-//                                                                                                                      headerGivenContextMenu,
-//                                                                                                                      headerExpectedContextMenu,
-//                                                                                                                      givenContextMenu,
-//                                                                                                                      expectedContextMenu,
-//                                                                                                                      gridContextMenu));
         scenarioGridLayer.enterPinnedMode(scenarioGridLayer.getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
 

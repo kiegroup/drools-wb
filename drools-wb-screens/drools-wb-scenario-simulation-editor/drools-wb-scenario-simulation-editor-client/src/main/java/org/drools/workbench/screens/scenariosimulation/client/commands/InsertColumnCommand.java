@@ -46,7 +46,7 @@ public class InsertColumnCommand implements Command {
         this.scenarioGridLayer = scenarioGridLayer;
     }
 
-    
+
     @Override
     public void execute() {
         model.insertColumn(columnIndex, getScenarioGridColumn(columnId, columnTitle, scenarioGridPanel, scenarioGridLayer));

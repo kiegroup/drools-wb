@@ -16,28 +16,26 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnLeftEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>append</b> (i.e. put in the last position) a row
+ * <code>GwtEvent</code> to <b>insert</b> a column to the left of the selected one
  */
-public class AppendRowEvent extends GwtEvent<AppendRowEventHandler> {
+public class InsertColumnLeftEvent extends GwtEvent<InsertColumnLeftEventHandler> {
 
-    public static Type<AppendRowEventHandler> TYPE = new Type<>();
+    public static Type<InsertColumnLeftEventHandler> TYPE = new Type<>();
 
-
-    public AppendRowEvent() {
+    public InsertColumnLeftEvent() {
     }
 
     @Override
-    public Type<AppendRowEventHandler> getAssociatedType() {
+    public Type<InsertColumnLeftEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(AppendRowEventHandler handler) {
+    protected void dispatch(InsertColumnLeftEventHandler handler) {
         handler.onEvent(this);
     }
-
 
 }

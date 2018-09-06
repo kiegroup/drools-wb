@@ -16,8 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridHeaderRightClickEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 
-public interface ScenarioGridHeaderRightClickHandler extends EventHandler {
-    void onRightClick(ScenarioGridHeaderRightClickEvent event);
+/**
+ * <code>EventHandler</code> for {@link PrependRowEvent}
+ */
+public interface PrependRowEventHandler extends EventHandler {
+    void onEvent(PrependRowEvent event);
 }

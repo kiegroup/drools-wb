@@ -25,19 +25,19 @@ import javax.enterprise.context.Dependent;
 @Dependent
 public class GridContextMenu extends AbstractHeaderMenuPresenter {
 
-    private final String GRIDCONTEXTMENU_SCENARIO =  "gridcontextmenu-scenario";
-    private final String GRIDCONTEXTMENU_INSERT_ROW_ABOVE =  "gridcontextmenu-insert-row-above";
-    private final String GRIDCONTEXTMENU_INSERT_ROW_BELOW =  "gridcontextmenu-insert-row-below";
-    private final String GRIDCONTEXTMENU_DELETE_ROW =  "gridcontextmenu-delete-row";
-    private final String GRIDCONTEXTMENU_DUPLICATE_ROW =  "gridcontextmenu-duplicate-row";
+    // This strings are used to give unique id in the final dom
+    private final String GRIDCONTEXTMENU_SCENARIO = "gridcontextmenu-scenario";
+    private final String GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "gridcontextmenu-insert-row-above";
+    private final String GRIDCONTEXTMENU_INSERT_ROW_BELOW = "gridcontextmenu-insert-row-below";
+    private final String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
+    private final String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
 
     @PostConstruct
     @Override
     public void initMenu() {
-        addMenuItem(GRIDCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
-       // addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove", () -> GWT.log(GRIDCONTEXTMENU_INSERT_ROW_ABOVE));
-        addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
-//        addExecutableMenuItem(GRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow", () -> GWT.log(GRIDCONTEXTMENU_DELETE_ROW));
-//        addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow", () -> GWT.log(GRIDCONTEXTMENU_DUPLICATE_ROW));
+        HEADERCONTEXTMENU_SCENARIO = GRIDCONTEXTMENU_SCENARIO;
+        HEADERCONTEXTMENU_INSERT_ROW_ABOVE = GRIDCONTEXTMENU_INSERT_ROW_ABOVE;
+        HEADERCONTEXTMENU_INSERT_ROW_BELOW = GRIDCONTEXTMENU_INSERT_ROW_BELOW;
+        super.initMenu();
     }
 }

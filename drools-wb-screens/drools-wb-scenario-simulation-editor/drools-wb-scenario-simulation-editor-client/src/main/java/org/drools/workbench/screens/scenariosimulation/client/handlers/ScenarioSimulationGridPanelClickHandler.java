@@ -58,24 +58,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     public ScenarioSimulationGridPanelClickHandler() {
     }
 
-//    public ScenarioSimulationGridPanelClickHandler(final ScenarioGridPanel scenarioGridPanel,
-//                                                   OtherContextMenu otherContextMenu,
-//                                                   HeaderGivenContextMenu headerGivenContextMenu,
-//                                                   HeaderExpectedContextMenu headerExpectedContextMenu,
-//                                                   GivenContextMenu givenContextMenu,
-//                                                   ExpectedContextMenu expectedContextMenu,
-//                                                   GridContextMenu gridContextMenu) {  // This could be make more generic, but apparently DefaultGridLayer could have more then one grid, so we have to find a way to
-//        // detect and identify the click on each of them
-//        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
-//        this.otherContextMenu = otherContextMenu;
-//        this.headerGivenContextMenu = headerGivenContextMenu;
-//        this.headerExpectedContextMenu = headerExpectedContextMenu;
-//        this.givenContextMenu = givenContextMenu;
-//        this.expectedContextMenu = expectedContextMenu;
-//        this.gridContextMenu = gridContextMenu;
-//        managedMenus = Arrays.asList(otherContextMenu, headerGivenContextMenu, headerExpectedContextMenu, givenContextMenu, expectedContextMenu, gridContextMenu);
-//    }
-
     public void setScenarioGrid(ScenarioGrid scenarioGrid) {
         this.scenarioGrid = scenarioGrid;
     }

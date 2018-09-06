@@ -43,6 +43,8 @@ public class ScenarioSimulationViewProducer {
     public ScenarioSimulationView getScenarioSimulationView(EventBus eventBus) {
 
         final ScenarioGridPanel scenarioGridPanel = scenarioGridPanelProducer.getScenarioGridPanel();
+        scenarioGridPanel.setEventBus(eventBus);
+
         final ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler = scenarioSimulationGridPanelClickHandlerProducer.getScenarioSimulationGridPanelClickHandler();
 
         scenarioSimulationGridPanelClickHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());

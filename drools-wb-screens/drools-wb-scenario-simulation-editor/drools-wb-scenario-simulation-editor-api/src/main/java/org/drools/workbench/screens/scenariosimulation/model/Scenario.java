@@ -70,7 +70,7 @@ public class Scenario {
     }
 
     public Optional<FactMappingValue> getFactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
-        return factMappingValues.stream().filter(e -> e.getFactIdentifier().getName().equalsIgnoreCase(factIdentifier.getName()) &&
+        return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier) &&
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 

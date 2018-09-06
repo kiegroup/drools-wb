@@ -16,11 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 
 /**
- * <code>EventHandler</code> for {@link AppendRowEvent}
+ * <code>EventHandler</code> for {@link PrependColumnEvent}
  */
-public interface AppendRowEventHandler extends EventHandler {
-    void onEvent(AppendRowEvent event);
+public interface PrependColumnEventHandler extends EventHandler {
+    void onEvent(PrependColumnEvent event);
 }

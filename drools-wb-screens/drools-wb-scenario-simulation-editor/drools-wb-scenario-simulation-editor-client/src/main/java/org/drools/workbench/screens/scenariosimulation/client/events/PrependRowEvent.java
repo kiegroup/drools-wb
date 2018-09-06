@@ -16,26 +16,26 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>append</b> (i.e. put in the last position) a row
+ * <code>GwtEvent</code> to <b>prepend</b> (i.e. put in the first position) a row
  */
-public class AppendRowEvent extends GwtEvent<AppendRowEventHandler> {
+public class PrependRowEvent extends GwtEvent<PrependRowEventHandler> {
 
-    public static Type<AppendRowEventHandler> TYPE = new Type<>();
+    public static Type<PrependRowEventHandler> TYPE = new Type<>();
 
 
-    public AppendRowEvent() {
+    public PrependRowEvent() {
     }
 
     @Override
-    public Type<AppendRowEventHandler> getAssociatedType() {
+    public Type<PrependRowEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(AppendRowEventHandler handler) {
+    protected void dispatch(PrependRowEventHandler handler) {
         handler.onEvent(this);
     }
 

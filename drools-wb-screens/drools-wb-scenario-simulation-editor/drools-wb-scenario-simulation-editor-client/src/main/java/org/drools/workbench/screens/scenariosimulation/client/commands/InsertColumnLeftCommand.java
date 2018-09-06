@@ -24,33 +24,31 @@ import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
-
 /**
- *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
+ *  <code>Command</code> to <b>insert</b> a column to the left of the selected one
  */
 @Dependent
-public class AppendColumnCommand implements Command {
+public class InsertColumnLeftCommand implements Command {
 
     private ScenarioGridModel model;
     private String columnId;
-    private String columnGroup;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
-    public AppendColumnCommand() {
+    public InsertColumnLeftCommand() {
     }
 
-    public AppendColumnCommand(ScenarioGridModel model, String columnId, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public InsertColumnLeftCommand(ScenarioGridModel model, String columnId, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         this.model = model;
         this.columnId = columnId;
-        this.columnGroup = columnGroup;
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridLayer;
     }
 
     @Override
     public void execute() {
-        final int index = model.getFirstIndexRightOfGroup(columnGroup);
+        final int index = model.getSelectedCellsOrigin().getColumnIndex();
+        String columnGroup = model.getColumns().get(index).getHeaderMetaData().get(1).getColumnGroup();
         String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) + 1);
         model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }

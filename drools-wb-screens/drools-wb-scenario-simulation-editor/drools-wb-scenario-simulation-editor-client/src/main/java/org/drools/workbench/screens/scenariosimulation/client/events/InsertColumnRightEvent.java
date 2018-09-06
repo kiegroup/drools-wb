@@ -16,19 +16,26 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridBodyRightClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnRightEventHandler;
 
-public class ScenarioGridBodyRightClickEvent extends GwtEvent<ScenarioGridBodyRightClickHandler> {
+/**
+ * <code>GwtEvent</code> to <b>insert</b> a column to the right of the selected one
+ */
+public class InsertColumnRightEvent extends GwtEvent<InsertColumnRightEventHandler> {
 
-    public static Type<ScenarioGridBodyRightClickHandler> TYPE = new Type<>();
-    
+    public static Type<InsertColumnRightEventHandler> TYPE = new Type<>();
+
+    public InsertColumnRightEvent() {
+    }
+
     @Override
-    public Type<ScenarioGridBodyRightClickHandler> getAssociatedType() {
+    public Type<InsertColumnRightEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(ScenarioGridBodyRightClickHandler handler) {
-        handler.onRightClick(this);
+    protected void dispatch(InsertColumnRightEventHandler handler) {
+        handler.onEvent(this);
     }
+
 }

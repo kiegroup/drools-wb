@@ -16,8 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridHeaderDoubleClickEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 
-public interface ScenarioGridHeaderDoubleClickHandler extends EventHandler {
-    void onDoubleClick(ScenarioGridHeaderDoubleClickEvent event);
+/**
+ * <code>EventHandler</code> for {@link ScenarioGridReloadEvent}
+ */
+public interface ScenarioGridReloadEventHandler extends EventHandler {
+    void handle(ScenarioGridReloadEvent event);
 }

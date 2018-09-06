@@ -24,12 +24,11 @@ import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
-
 /**
- *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
+ * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a column to a given <i>group</i>
  */
 @Dependent
-public class AppendColumnCommand implements Command {
+public class PrependColumnCommand implements Command {
 
     private ScenarioGridModel model;
     private String columnId;
@@ -37,10 +36,10 @@ public class AppendColumnCommand implements Command {
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
-    public AppendColumnCommand() {
+    public PrependColumnCommand() {
     }
 
-    public AppendColumnCommand(ScenarioGridModel model, String columnId, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public PrependColumnCommand(ScenarioGridModel model, String columnId, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         this.model = model;
         this.columnId = columnId;
         this.columnGroup = columnGroup;
@@ -50,8 +49,9 @@ public class AppendColumnCommand implements Command {
 
     @Override
     public void execute() {
-        final int index = model.getFirstIndexRightOfGroup(columnGroup);
-        String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) + 1);
+        final int index = model.getFirstIndexLeftOfGroup(columnGroup);
+        final long newColumnPosition = model.getGroupSize(columnGroup) + 1;
+        String columnTitle = columnGroup.toUpperCase() + "-" + newColumnPosition;
         model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

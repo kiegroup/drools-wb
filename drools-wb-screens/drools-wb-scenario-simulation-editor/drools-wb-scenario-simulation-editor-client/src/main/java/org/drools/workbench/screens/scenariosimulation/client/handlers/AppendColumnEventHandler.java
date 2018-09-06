@@ -18,6 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import com.google.gwt.event.shared.EventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 
+/**
+ * <code>EventHandler</code> for {@link AppendColumnEvent}
+ */
 public interface AppendColumnEventHandler extends EventHandler {
     void onEvent(AppendColumnEvent event);
 }

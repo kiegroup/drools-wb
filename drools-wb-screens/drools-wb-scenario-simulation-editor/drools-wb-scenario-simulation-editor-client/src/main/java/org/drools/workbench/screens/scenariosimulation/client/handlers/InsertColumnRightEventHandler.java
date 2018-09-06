@@ -16,8 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridBodyDoubleClickEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
 
-public interface ScenarioGridBodyDoubleClickHandler extends EventHandler {
-    void onDoubleClick(ScenarioGridBodyDoubleClickEvent event);
+/**
+ * <code>EventHandler</code> for {@link InsertColumnRightEvent}
+ */
+public interface InsertColumnRightEventHandler extends EventHandler {
+    void onEvent(InsertColumnRightEvent event);
 }

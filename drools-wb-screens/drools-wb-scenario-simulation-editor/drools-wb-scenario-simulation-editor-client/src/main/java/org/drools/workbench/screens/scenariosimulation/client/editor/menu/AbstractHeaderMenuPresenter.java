@@ -17,11 +17,12 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 
 /**
- * This is the first <i>ScenaraioSimulation</i> specific abstract class - i.e. it is bound to a specific use case. Not every implementation
+ * This is the first <i>ScenarioSimulation</i> specific abstract class - i.e. it is bound to a specific use case. Not every implementation
  * would need this. Menu initialization may be done in other different ways. It is provided to avoid code duplication in concrete implementations
  */
 public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements HeaderMenuPresenter {
@@ -30,9 +31,24 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
 
     protected ScenarioGridModel model;
 
-    protected AppendRowEvent appendRowEvent = new AppendRowEvent();
+    String HEADERCONTEXTMENU_SCENARIO;
+    String HEADERCONTEXTMENU_INSERT_ROW_ABOVE;
+    String HEADERCONTEXTMENU_INSERT_ROW_BELOW;
+
+    PrependRowEvent prependRowEvent = new PrependRowEvent();
+    AppendRowEvent appendRowEvent = new AppendRowEvent();
 
     public void setEventBus(EventBus eventBus) {
         this.executableMenuItemPresenter.setEventBus(eventBus);
+    }
+
+    /**
+     * This method set common <b>SCENARIO</b> menu items
+     */
+    public void initMenu() {
+        // SCENARIO
+        addMenuItem(HEADERCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
+        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove", prependRowEvent);
+        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
     }
 }

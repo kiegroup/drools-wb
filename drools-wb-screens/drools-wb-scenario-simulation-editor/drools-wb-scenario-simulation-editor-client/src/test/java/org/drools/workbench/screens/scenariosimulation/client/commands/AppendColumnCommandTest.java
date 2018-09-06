@@ -44,11 +44,13 @@ public class AppendColumnCommandTest {
 
     private final String COLUMN_TITLE = "COLUMN TITLE";
 
+    private final String COLUMN_GROUP = "COLUMN GROUP";
+
     private AppendColumnCommand appendColumnCommand;
 
     @Before
     public void setup() {
-        appendColumnCommand = new AppendColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_TITLE, mockScenarioGridPanel, mockScenarioGridLayer);
+        appendColumnCommand = new AppendColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
     }
 
     @Test

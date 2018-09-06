@@ -13,31 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.events;
+package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
+import org.uberfire.mvp.Command;
 
 /**
- * <code>GwtEvent</code> to <b>append</b> (i.e. put in the last position) a row
+ *  <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
  */
-public class AppendRowEvent extends GwtEvent<AppendRowEventHandler> {
+public class PrependRowCommand implements Command {
 
-    public static Type<AppendRowEventHandler> TYPE = new Type<>();
+    private ScenarioGridModel model;
 
+    public PrependRowCommand() {
+    }
 
-    public AppendRowEvent() {
+    public PrependRowCommand(ScenarioGridModel model) {
+        this.model = model;
     }
 
     @Override
-    public Type<AppendRowEventHandler> getAssociatedType() {
-        return TYPE;
+    public void execute() {
+        model.insertEditingRow(0, new ScenarioGridRow());
     }
-
-    @Override
-    protected void dispatch(AppendRowEventHandler handler) {
-        handler.onEvent(this);
-    }
-
-
 }

@@ -15,7 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
@@ -25,8 +27,18 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnLeftEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnLeftEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnRightEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependColumnEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -37,8 +49,13 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  * It follows the GWT standard Event/Handler mechanism
  */
 @Dependent
-public class CommandExecutor implements AppendRowEventHandler,
-                                        AppendColumnEventHandler {
+public class CommandExecutor implements AppendColumnEventHandler,
+                                        AppendRowEventHandler,
+                                        InsertColumnLeftEventHandler,
+                                        InsertColumnRightEventHandler,
+                                        PrependColumnEventHandler,
+                                        PrependRowEventHandler,
+                                        ScenarioGridReloadEventHandler {
 
     private ScenarioGridModel model;
     private ScenarioGridPanel scenarioGridPanel;
@@ -46,8 +63,7 @@ public class CommandExecutor implements AppendRowEventHandler,
 
     private EventBus eventBus;
 
-    private HandlerRegistration appendRowEventHandlerRegistration;
-    private HandlerRegistration appendColumnEventHandlerRegistration;
+    private List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
 
     public CommandExecutor() {
         // CDI
@@ -73,34 +89,62 @@ public class CommandExecutor implements AppendRowEventHandler,
 
     @PreDestroy
     public void unregisterHandlers() {
-        if (appendRowEventHandlerRegistration != null) {
-            appendRowEventHandlerRegistration.removeHandler();
-        }
-        if (appendColumnEventHandlerRegistration != null) {
-            appendColumnEventHandlerRegistration.removeHandler();
-        }
+        handlerRegistrationList.forEach(HandlerRegistration::removeHandler);
+    }
+
+    @Override
+    public void onEvent(AppendColumnEvent event) {
+        AppendColumnCommand command = new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer);
+        command.execute();
+        scenarioGridPanel.onResize();
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
         AppendRowCommand command = new AppendRowCommand(model);
         command.execute();
-        scenarioGridPanel.getScenarioGrid().refresh();
+        scenarioGridPanel.onResize();
     }
 
     @Override
-    public void onEvent(AppendColumnEvent event) {
-        AppendColumnCommand command = new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnTitle(), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer);
+    public void onEvent(InsertColumnLeftEvent event) {
+        InsertColumnLeftCommand command = new InsertColumnLeftCommand(model, String.valueOf(new Date().getTime()), scenarioGridPanel, scenarioGridLayer);
         command.execute();
-        scenarioGridPanel.getScenarioGrid().refresh();
+        scenarioGridPanel.onResize();
+    }
+
+    @Override
+    public void onEvent(InsertColumnRightEvent event) {
+        InsertColumnRightCommand command = new InsertColumnRightCommand(model, String.valueOf(new Date().getTime()), scenarioGridPanel, scenarioGridLayer);
+        command.execute();
+        scenarioGridPanel.onResize();
+    }
+
+    @Override
+    public void onEvent(PrependColumnEvent event) {
+        PrependColumnCommand command = new PrependColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer);
+        command.execute();
+        scenarioGridPanel.onResize();
+    }
+
+    @Override
+    public void onEvent(PrependRowEvent event) {
+        PrependRowCommand command = new PrependRowCommand(model);
+        command.execute();
+        scenarioGridPanel.onResize();
+    }
+
+    @Override
+    public void handle(ScenarioGridReloadEvent event) {
+        scenarioGridPanel.onResize();
     }
 
     private void registerHandlers() {
-        if (appendRowEventHandlerRegistration == null) {
-            appendRowEventHandlerRegistration = eventBus.addHandler(AppendRowEvent.TYPE, this);
-        }
-        if (appendColumnEventHandlerRegistration == null) {
-            appendColumnEventHandlerRegistration = eventBus.addHandler(AppendColumnEvent.TYPE, this);
-        }
+        // LET'S DO THE RISKY THING: NOT CHECKING FOR ACTUAL REGISTRATIONS
+        handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(AppendRowEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
     }
 }

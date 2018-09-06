@@ -18,40 +18,40 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnLeftEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
 
 /**
  * The contextual menu of a specific <i>EXPECTED</i> column
- * It differ from <code>HeaderExpectedContextMenu</code> because it manage column (insert/remove) in different way
+ * It differ from {@link HeaderExpectedContextMenu} because it manage column (insert/remove) in different way
  */
 @Dependent
-public class ExpectedContextMenu extends AbstractHeaderMenuPresenter {
+public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
 
+    // This strings are used to give unique id in the final dom
     private final String EXPECTEDCONTEXTMENU_EXPECTED = "expectedcontextmenu-expected";
     private final String EXPECTEDCONTEXTMENU_SCENARIO = "expectedcontextmenu-scenario";
     private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT = "expectedcontextmenu-insert-column-left";
     private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectedcontextmenu-insert-column-right";
     private final String EXPECTEDCONTEXTMENU_DELETE_COLUMN = "expectedcontextmenu-delete-column";
+    private final String EXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE = "expectedcontextmenu-insert-row-below";
     private final String EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW = "expectedcontextmenu-insert-row-below";
-
-    private CommandExecutor commandExecutor;
-
-    @Inject
-    public ExpectedContextMenu(CommandExecutor commandExecutor) {
-        this.commandExecutor = commandExecutor;
-    }
 
     @PostConstruct
     @Override
     public void initMenu() {
-//        addMenuItem(EXPECTEDCONTEXTMENU_EXPECTED, constants.expected().toUpperCase(), "expected");
-//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", () -> GWT.log(EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT));
-//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", () -> GWT.log(EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT));
-//        addExecutableMenuItem(EXPECTEDCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(EXPECTEDCONTEXTMENU_DELETE_COLUMN));
-        // SCENARIO
-        addMenuItem(EXPECTEDCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
-        addExecutableMenuItem(EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
+        // EXPECTED MENU
+        COLUMNCONTEXTMENU_COLUMN = EXPECTEDCONTEXTMENU_EXPECTED;
+        COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT = EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT;
+        COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT = EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT;
+        COLUMNCONTEXTMENU_DELETE_COLUMN = EXPECTEDCONTEXTMENU_DELETE_COLUMN;
+        COLUMNCONTEXTMENU_LABEL = constants.expected().toUpperCase();
+        COLUMNCONTEXTMENU_I18N = "expected";
+        // SCENARIO MENU
+        HEADERCONTEXTMENU_SCENARIO = EXPECTEDCONTEXTMENU_SCENARIO;
+        HEADERCONTEXTMENU_INSERT_ROW_ABOVE = EXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE;
+        HEADERCONTEXTMENU_INSERT_ROW_BELOW = EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW;
+        super.initMenu();
     }
 }
