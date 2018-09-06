@@ -5,6 +5,10 @@
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          version="2.5">
 
+  <listener>
+    <listener-class>org.guvnor.m2repo.backend.server.M2ServletContextListener</listener-class>
+  </listener>
+  
   <filter>
     <filter-name>UI Security Filter</filter-name>
 
