@@ -1443,7 +1443,7 @@
           <runTarget>drools-wb.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>
           <workDir>${project.build.directory}</workDir>
-          <localWorkers>4</localWorkers>
+          <draftCompile>true</draftCompile>
 
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>
