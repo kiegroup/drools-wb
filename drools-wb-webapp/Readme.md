@@ -8,3 +8,8 @@ The *trick* used is to just add the actual sources directories as additional *so
 For the **drools-wb-screens** it has been possible to set a relative directory.
 The jars included as additional sources should be set as **provided** in the **dependencies** list and  removed from the **compileSourcesArtifacts** list.
 
+NOTE
+----
+Be sure you increased your inotify limit before start the project. See [here](https://github.com/kiegroup/droolsjbpm-build-bootstrap/blob/master/README.md#linux-inotify) for more detail".
+
+
