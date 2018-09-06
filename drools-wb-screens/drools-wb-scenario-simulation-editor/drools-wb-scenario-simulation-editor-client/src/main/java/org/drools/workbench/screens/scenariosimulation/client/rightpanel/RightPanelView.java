@@ -16,26 +16,47 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.SortedMap;
+
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface RightPanelView
         extends IsWidget,
                 HasPresenter<RightPanelView.Presenter> {
 
-    void showEditorTab();
+    void clearInputSearch();
 
-    void hideCheatSheetTab();
+    void clearNameField();
 
-    void showCheatSheetTab();
+    void hideClearButton();
 
-    void hideEditorTab();
+    void showClearButton();
+
+    DivElement getListContainer();
+
+    Presenter getPresenter();
 
     interface Presenter {
 
-        void onEditorTabActivated();
+        void onClearSearch();
 
-        void onCheatSheetTabActivated();
+        void onClearNameField();
+
+        void onClearStatus();
+
+        void onShowClearButton();
+
+        void onSearchedEvent(String search);
+
+        void clearList();
+
+        void addListGroupItemView(String factName , FactModelTree factModelTree);
+
+        void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
+
+        FactModelTree getFactModelTree(String factName);
     }
-
 }

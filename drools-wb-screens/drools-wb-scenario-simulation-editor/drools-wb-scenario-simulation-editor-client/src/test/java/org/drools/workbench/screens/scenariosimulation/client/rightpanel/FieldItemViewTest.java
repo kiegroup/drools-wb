@@ -14,30 +14,42 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.editor;
+package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationEditorTest {
+public class FieldItemViewTest extends AbstractRightPanelTest {
 
-    private ScenarioSimulationView scenarioSimulationView;
+    private FieldItemViewImpl fieldItemView;
+
+    private String INNER_HTML;
+    private String ID_ATTRIBUTE;
 
     @Before
     public void setup() {
         super.setup();
-        scenarioSimulationView = new ScenarioSimulationViewImpl(mockScenarioGridPanel);
+        INNER_HTML = "<b>" + FACT_NAME + "</b> " + FACT_MODEL_TREE.getFactName();
+        ID_ATTRIBUTE = "fieldElement-" + FACT_NAME + "-" + FACT_MODEL_TREE.getFactName();
+        this.fieldItemView = spy(new FieldItemViewImpl() {
+            {
+                this.fieldElement = mockLIElement;
+            }
+        });
     }
 
     @Test
-    public void testSetContent() {
-        scenarioSimulationView.setContent(model.getSimulation());
-        verify(mockScenarioGrid, times(1)).setContent(model.getSimulation());
+    public void setFieldData() {
+        fieldItemView.setFieldData(FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
+        verify(mockLIElement, times(1)).setInnerHTML(eq(INNER_HTML));
+        verify(mockLIElement, times(1)).setAttribute(eq("id"), eq(ID_ATTRIBUTE));
     }
 }
