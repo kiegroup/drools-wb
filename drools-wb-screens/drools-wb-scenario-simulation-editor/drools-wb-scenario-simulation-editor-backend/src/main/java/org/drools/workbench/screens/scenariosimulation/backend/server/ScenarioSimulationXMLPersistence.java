@@ -36,8 +36,6 @@ public class ScenarioSimulationXMLPersistence {
     }
 
     public String marshal(ScenarioSimulationModel sc) {
-        // force factMappingValues sorting based on factMappings before save
-        sc.getSimulation().getScenarios().forEach(Scenario::sort);
         return xt.toXML(sc);
     }
 
