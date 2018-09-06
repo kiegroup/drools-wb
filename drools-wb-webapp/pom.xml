@@ -1434,7 +1434,6 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <!-- -Djava.io.tmpdir=${project.build.directory} so that gwt cache directory and all other temporary files gets cleaned on mvn clean !-->
           <extraJvmArgs>-Xmx5G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.DroolsWorkbench</module>
           <logLevel>INFO</logLevel>
@@ -1443,9 +1442,7 @@
           <disableCastChecking>true</disableCastChecking>
           <runTarget>drools-wb.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>
-          <!-- this is so that gwt compile directory gets cleaned on mvn clean !-->
           <workDir>${project.build.directory}</workDir>
-          <!-- this is to use more cores when gwt compile permutations !-->
           <localWorkers>4</localWorkers>
 
           <compileSourcesArtifacts>
