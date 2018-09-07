@@ -39,7 +39,7 @@ public class SimulationDescriptor {
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
      */
-    public List<FactMapping> getFactMappings() {
+    public List<FactMapping> getUnmodifiableFactMappings() {
         return Collections.unmodifiableList(factMappings);
     }
 

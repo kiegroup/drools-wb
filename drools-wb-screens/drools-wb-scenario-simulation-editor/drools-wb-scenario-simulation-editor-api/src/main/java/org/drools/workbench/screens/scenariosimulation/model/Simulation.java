@@ -40,7 +40,7 @@ public class Simulation {
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
      */
-    public List<Scenario> getScenarios() {
+    public List<Scenario> getUnmodifiableScenarios() {
         return Collections.unmodifiableList(scenarios);
     }
 

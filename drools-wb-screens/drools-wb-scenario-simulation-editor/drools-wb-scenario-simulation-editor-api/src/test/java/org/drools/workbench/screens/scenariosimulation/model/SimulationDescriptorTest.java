@@ -22,13 +22,12 @@ import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 public class SimulationDescriptorTest {
 
@@ -67,7 +66,7 @@ public class SimulationDescriptorTest {
         FactMapping factMappingEdited = originalFactMappings.get(0);
         factMappingEdited.setLogicalPosition(100);
         simulationDescriptor.sortByLogicalPosition();
-        List<FactMapping> updatedFactMappings = simulationDescriptor.getFactMappings();
+        List<FactMapping> updatedFactMappings = simulationDescriptor.getUnmodifiableFactMappings();
         assertNotSame(updatedFactMappings.get(0), factMappingEdited);
         assertSame(updatedFactMappings.get(updatedFactMappings.size() - 1), factMappingEdited);
         assertEquals(originalFactMappings.size(), updatedFactMappings.size());
@@ -85,9 +84,9 @@ public class SimulationDescriptorTest {
     @Test
     public void removeFactMapping() {
         FactMapping retrieved = simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
-        assertTrue(simulationDescriptor.getFactMappings().contains(retrieved));
+        assertTrue(simulationDescriptor.getUnmodifiableFactMappings().contains(retrieved));
         simulationDescriptor.removeFactMapping(retrieved);
-        assertFalse(simulationDescriptor.getFactMappings().contains(retrieved));
+        assertFalse(simulationDescriptor.getUnmodifiableFactMappings().contains(retrieved));
     }
 
     @Test

@@ -50,7 +50,7 @@ public class Scenario {
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
      */
-    public List<FactMappingValue> getFactMappingValues() {
+    public List<FactMappingValue> getUnmodifiableFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
     }
 
