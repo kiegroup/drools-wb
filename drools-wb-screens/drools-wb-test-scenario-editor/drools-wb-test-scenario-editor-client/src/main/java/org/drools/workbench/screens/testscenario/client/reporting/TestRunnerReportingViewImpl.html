@@ -16,7 +16,8 @@
   ~ limitations under the License.
   -->
 
-<div data-field="resultPanel" class="container-fluid">
+<!--<div data-field="resultPanel" class="container-fluid">
+
     <div class="row">
         <div data-field="resultTitle"></div>
     </div>
@@ -30,4 +31,108 @@
     <div class="row">
         <div data-field="resultDetails"></div>
     </div>
+</div>-->
+
+<div data-field="resultPanel" class="container-fluid">
+    <div class="row">
+        <!-- Content - filters -->
+        <div class="col-xs-9 tab-content kie-tab-content--filters" style="heigth: 100%; height: 100vh">
+            <!-- GENERAL -->
+            <div class="tab-pane kie__dock active" id="kieDockPanel1">
+                <h3 class="kie-dock__heading">
+                    Test Report
+                </h3>
+                <hr class="kie-dock__divider"/>
+
+                <h5 class="kie-dock__heading--section">Overview</h5>
+
+                <dl class="dl-horizontal kie-dl-horizontal clearfix">
+                    <dt>
+                        Test Results:
+                    </dt>
+                    <dd>
+                        <span class="pficon pficon-error-circle-o"></span> TEST FAILED
+                    </dd>
+                    <dt>
+                        Completed at:
+                    </dt>
+                    <dd>
+                        17:11:40.391
+                    </dd>
+                    <dt>
+                        Scenarios run:
+                    </dt>
+                    <dd>
+                        2
+                    </dd>
+                    <dt>
+                        Duration:
+                    </dt>
+                    <dd>
+                        552 seconds
+                    </dd>
+                </dl>
+
+                <a href="">View Details</a>
+
+                <hr class="kie-dock__divider"/>
+                <h5 class="kie-dock__heading--section">Scenario Status</h5>
+
+                <!-- *************** donut graph here *******************-->
+                <div id="kie-test-results1" class="example-donut-chart-bottom-legend"></div>
+                <div id="kie-test-results2" class="example-donut-chart-bottom-legend"></div>
+                <div id="kie-test-results3" class="example-donut-chart-bottom-legend"></div>
+                <!-- *************** END donut graph here *******************-->
+
+                <br/>
+
+            </div>
+
+            <!-- PLACEHOLDER -->
+            <div class="tab-pane" id="kieDockPanel2">
+                <h3 class="kie-dock__heading">
+                    Placeholder
+                </h3>
+                <hr class="kie-dock__divider"/>
+                <br/>
+
+            </div>
+
+            <!-- PLACEHOLDER -->
+            <div class="tab-pane" id="kieDockPanel3">
+                <h3 class="kie-dock__heading">
+                    Placeholder
+                </h3>
+                <hr class="kie-dock__divider"/>
+                <br/>
+            </div>
+
+
+        </div>
+
+        <!-- Tabs for the filter control -->
+        <!-- should be implemented with existing slide-in panel control -->
+        <div class="col-xs-3" style="">
+            <nav class="navbar navbar-static nav-stacked" id="kiePreferences">
+                <ul class="nav kie-dock-selector" role="tablist">
+                    <li class="kie-dock-selector__tab active">
+                        <a href="#kieDockPanel1" data-toggle="tab">
+                            <span class="fa fa-file-text"></span>
+                        </a>
+                    </li>
+                    <li class="kie-dock-selector__tab">
+                        <a href="#kieDockPanel2" data-toggle="tab">
+                            <span class="pficon pficon-info"></span>
+                        </a>
+                    </li>
+                    <li class="kie-dock-selector__tab">
+                        <a href="#kieDockPanel3" data-toggle="tab">
+                            <span class="fa fa-play-circle"></span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
+

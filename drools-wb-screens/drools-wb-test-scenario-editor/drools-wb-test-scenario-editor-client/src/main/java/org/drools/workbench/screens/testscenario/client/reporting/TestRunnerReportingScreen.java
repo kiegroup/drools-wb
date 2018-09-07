@@ -33,7 +33,7 @@ import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
 @ApplicationScoped
-@WorkbenchScreen(identifier = "org.kie.guvnor.TestResults")
+@WorkbenchScreen(identifier = "org.kie.guvnor.TestResults", preferredWidth = 437)
 public class TestRunnerReportingScreen
         implements TestRunnerReportingView.Presenter {
 
@@ -53,7 +53,7 @@ public class TestRunnerReportingScreen
 
     @DefaultPosition
     public Position getDefaultPosition() {
-        return CompassPosition.SOUTH;
+        return CompassPosition.EAST;
     }
 
     @WorkbenchPartTitle

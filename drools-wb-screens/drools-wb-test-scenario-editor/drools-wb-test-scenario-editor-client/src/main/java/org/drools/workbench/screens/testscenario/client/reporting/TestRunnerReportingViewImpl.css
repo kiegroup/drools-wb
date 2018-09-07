@@ -1,0 +1,69 @@
+.kie-dl-horizontal dt {
+  text-align: left;
+  font-weight: normal;
+  width: auto;
+}
+
+.kie-dl-horizontal dd {
+  margin-bottom: 0.75rem;
+  margin-left: 1rem;
+  float: left;
+}
+
+.kie-dock__heading {
+  font-weight: 600;
+}
+
+.kie-dock-selector > li > a {
+  padding: 1rem 2rem;
+  color: #030303;
+}
+
+.kie-dock-selector > li > a:hover,
+.kie-dock-selector > li > a:focus {
+  background-color: #def3ff;
+  color: #0088ce;
+}
+
+.kie-dock-selector > li.active a {
+  background-color: #def3ff;
+  color: #0088ce;
+}
+
+.kie-dock__heading--section {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.kie-dock__divider {
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.kie-dock-selector__tab {
+  font-size: 1.16666667;
+  text-align: left;
+  border-left: 3px solid transparent;
+}
+
+.kie-dock-selector__tab.active {
+  border-color: #0088ce;
+}
+
+.kie-tab-content--filters {
+  border-left: 1px solid #bbb;
+  background-color: #fafafa;
+}
+
+.kie-tab-content--filters hr {
+  border-color: #d1d1d1;
+}
+
+.col-xs-3 {
+  width: 25%;
+  float: left;
+  position: relative;
+  min-height: 1px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
