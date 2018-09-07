@@ -127,7 +127,7 @@ public class ScenarioGridModelTest {
         int insertedRowIndex = 0;
         int insertedColumnIndex = 0;
 
-        final GridData.Range r = scenarioGridModel.setCell(insertedRowIndex, insertedColumnIndex, () -> mockGridCell);
+        final GridData.Range r = scenarioGridModel.setNewCell(insertedRowIndex, insertedColumnIndex, () -> mockGridCell);
         assertEquals(insertedRowIndex, r.getMinRowIndex());
         assertEquals(insertedRowIndex, r.getMaxRowIndex());
         assertEquals(mockGridCell, scenarioGridModel.getCell(insertedRowIndex, insertedColumnIndex));
@@ -144,8 +144,8 @@ public class ScenarioGridModelTest {
         assertNotEquals(0, scenarioGridModel.getRowCount());
         assertNotEquals(0, scenarioGridModel.getColumnCount());
         scenarioGridModel.clear();
-        assertTrue(simulation.getScenarios().isEmpty());
-        assertTrue(simulation.getSimulationDescriptor().getFactMappings().isEmpty());
+        assertTrue(simulation.getUnmodifiableScenarios().isEmpty());
+        assertTrue(simulation.getSimulationDescriptor().getUnmodifiableFactMappings().isEmpty());
         assertEquals(0, scenarioGridModel.getRowCount());
         assertEquals(0, scenarioGridModel.getColumnCount());
     }

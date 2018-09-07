@@ -178,10 +178,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                 }
                 break;
             case "GIVEN":
-                givenContextMenu.show(left, top);
+                givenContextMenu.show(left, top, uiColumnIndex);
                 break;
             case "EXPECTED":
-                expectedContextMenu.show(left, top);
+                expectedContextMenu.show(left, top, uiColumnIndex);
                 break;
             default:
                 otherContextMenu.show(left, top);
@@ -207,7 +207,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (uiRowIndex == null) {
             return false;
         }
-        gridContextMenu.show(left, top);
+        gridContextMenu.show(left, top, uiColumnIndex, uiRowIndex);
         return true;
     }
 }

@@ -16,11 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 
 /**
- * <code>EventHandler</code> for {@link InsertColumnRightEvent}
+ * <code>EventHandler</code> for {@link InsertColumnEvent}
  */
-public interface InsertColumnRightEventHandler extends EventHandler {
-    void onEvent(InsertColumnRightEvent event);
+public interface InsertColumnEventHandler extends EventHandler {
+    void onEvent(InsertColumnEvent event);
 }

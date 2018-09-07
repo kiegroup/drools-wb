@@ -52,6 +52,6 @@ public class AppendColumnCommand implements Command {
     public void execute() {
         final int index = model.getFirstIndexRightOfGroup(columnGroup);
         String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) + 1);
-        model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+        model.insertNewColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

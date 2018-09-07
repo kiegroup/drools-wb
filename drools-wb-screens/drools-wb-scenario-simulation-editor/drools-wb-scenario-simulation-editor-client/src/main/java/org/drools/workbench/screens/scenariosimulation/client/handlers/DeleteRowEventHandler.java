@@ -16,11 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnLeftEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 
 /**
- * <code>EventHandler</code> for {@link InsertColumnLeftEvent}
+ * <code>EventHandler</code> for {@link DeleteRowEvent}
  */
-public interface InsertColumnLeftEventHandler extends EventHandler {
-    void onEvent(InsertColumnLeftEvent event);
+public interface DeleteRowEventHandler extends EventHandler {
+    void onEvent(DeleteRowEvent event);
 }

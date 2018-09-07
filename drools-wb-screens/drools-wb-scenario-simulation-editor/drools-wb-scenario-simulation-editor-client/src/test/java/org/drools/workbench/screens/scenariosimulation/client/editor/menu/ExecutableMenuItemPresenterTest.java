@@ -53,7 +53,7 @@ public class ExecutableMenuItemPresenterTest {
 
     @Before
     public void setup() {
-        when(mockExecutableMenuItemViewImpl.getLIElement()).thenReturn(mockLIElement);
+        when(mockExecutableMenuItemViewImpl.getLExecutableMenuElement()).thenReturn(mockLIElement);
         when(mockMenuItemsEventMap.containsKey(mockLIElement)).thenReturn(true);
         when(mockMenuItemsEventMap.get(mockLIElement)).thenReturn(mockEvent);
 
@@ -85,7 +85,7 @@ public class ExecutableMenuItemPresenterTest {
 
     @Test
     public void getLIElement() {
-        LIElement liElement = executableMenuItemPresenter.getLIElement("TEST-ID", "TEST-LABEL", mockEvent);
+        LIElement liElement = executableMenuItemPresenter.getLExecutableMenuElement("TEST-ID", "TEST-LABEL", mockEvent);
         assertNotNull(liElement);
         verify(mockMenuItemsEventMap, times(1)).put(liElement, mockEvent);
     }

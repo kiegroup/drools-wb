@@ -44,7 +44,7 @@ public class MenuItemPresenterTest {
 
     @Before
     public void setup() {
-        when(mockMenuItemViewImpl.getLIElement()).thenReturn(mockLIElement);
+        when(mockMenuItemViewImpl.getLabelMenuElement()).thenReturn(mockLIElement);
 
         this.menuItemPresenter = spy(new MenuItemPresenter() {
             {
@@ -68,7 +68,7 @@ public class MenuItemPresenterTest {
 
     @Test
     public void getLIElement() {
-        LIElement liElement = menuItemPresenter.getLIElement("TEST-ID", "TEST-LABEL");
+        LIElement liElement = menuItemPresenter.getLabelMenuElement("TEST-ID", "TEST-LABEL");
         assertNotNull(liElement);
     }
 }

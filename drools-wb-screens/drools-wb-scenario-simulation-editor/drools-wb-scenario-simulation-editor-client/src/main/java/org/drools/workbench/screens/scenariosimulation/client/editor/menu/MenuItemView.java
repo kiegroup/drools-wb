@@ -23,12 +23,17 @@ public interface MenuItemView {
 
     interface Presenter {
 
-        LIElement getLIElement(String id, String innerText);
+        /**
+         * This method retrieve a <b>LABEL</b> element (i.e. without behaviour) to be put inside the menu
+         * @param id
+         * @param innerText
+         * @return
+         */
+        LIElement getLabelMenuElement(String id, String innerText);
 
         void enableElement(boolean toEnable);
 
         void onClickEvent(ClickEvent event);
-
     }
 
     void setPresenter(MenuItemPresenter menuItemPresenter);
@@ -39,5 +44,10 @@ public interface MenuItemView {
 
     void setLabel(String label);
 
-    LIElement getLIElement();
+    /**
+     * This method retrieve a <b>LABEL</b> element (i.e. without behaviour) to be put inside the menu
+     *
+     * @return
+     */
+    LIElement getLabelMenuElement();
 }

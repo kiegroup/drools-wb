@@ -45,18 +45,16 @@ public class InsertColumnCommandTest {
 
     private final String COLUMN_ID = "COLUMN ID";
 
-    private final String COLUMN_TITLE = "COLUMN TITLE";
-
     private InsertColumnCommand insertColumnCommand;
 
     @Before
     public void setup() {
-        insertColumnCommand = new InsertColumnCommand(COLUMN_INDEX, mockScenarioGridModel, COLUMN_ID, COLUMN_TITLE, mockScenarioGridPanel, mockScenarioGridLayer);
+        insertColumnCommand = new InsertColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_INDEX, true, mockScenarioGridPanel, mockScenarioGridLayer);
     }
 
     @Test
     public void execute() {
         insertColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).insertColumn(eq(COLUMN_INDEX), anyObject());
+        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(COLUMN_INDEX), anyObject());
     }
 }

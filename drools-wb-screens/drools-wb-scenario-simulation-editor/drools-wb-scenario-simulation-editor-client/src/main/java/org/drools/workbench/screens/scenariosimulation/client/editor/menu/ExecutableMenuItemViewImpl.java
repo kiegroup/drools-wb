@@ -36,7 +36,7 @@ public class ExecutableMenuItemViewImpl implements ExecutableMenuItemView {
     private ExecutableMenuItemPresenter executableMenuItemPresenter;
 
     @Override
-    public LIElement getLIElement() {
+    public LIElement getLExecutableMenuElement() {
         return liElement;
     }
 

@@ -34,12 +34,12 @@ public class MenuItemPresenter implements MenuItemView.Presenter {
     }
 
     @Override
-    public LIElement getLIElement(String id, String label) {
+    public LIElement getLabelMenuElement(String id, String label) {
         MenuItemView menuItemView = getMenuItemView();
         menuItemView.setId(id);
         menuItemView.setLabel(label);
         menuItemView.setPresenter(this);
-        return menuItemView.getLIElement();
+        return menuItemView.getLabelMenuElement();
     }
 
     @Override

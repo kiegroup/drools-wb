@@ -16,26 +16,32 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnRightEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRowEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>insert</b> a column to the right of the selected one
+ * <code>GwtEvent</code> to <b>delete</b> a row
  */
-public class InsertColumnRightEvent extends GwtEvent<InsertColumnRightEventHandler> {
+public class DeleteRowEvent extends GwtEvent<DeleteRowEventHandler> {
 
-    public static Type<InsertColumnRightEventHandler> TYPE = new Type<>();
+    public static Type<DeleteRowEventHandler> TYPE = new Type<>();
 
-    public InsertColumnRightEvent() {
+    private int rowIndex;
+
+    public DeleteRowEvent(int rowIndex) {
+        this.rowIndex = rowIndex;
     }
 
     @Override
-    public Type<InsertColumnRightEventHandler> getAssociatedType() {
+    public Type<DeleteRowEventHandler> getAssociatedType() {
         return TYPE;
     }
 
-    @Override
-    protected void dispatch(InsertColumnRightEventHandler handler) {
-        handler.onEvent(this);
+    public int getRowIndex() {
+        return rowIndex;
     }
 
+    @Override
+    protected void dispatch(DeleteRowEventHandler handler) {
+        handler.onEvent(this);
+    }
 }

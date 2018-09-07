@@ -19,9 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnLeftEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
-
 /**
  * The contextual menu of a specific <i>EXPECTED</i> column
  * It differ from {@link HeaderExpectedContextMenu} because it manage column (insert/remove) in different way

@@ -58,7 +58,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 //        addMenuItem(HEADERGIVENCONTEXTMENU_GIVEN, constants.given(), "given");
 //        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", prependColumnEvent);
 //        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", appendColumnEvent);
-////        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(HEADERGIVENCONTEXTMENU_DELETE_COLUMN));
+////        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_DELETE_COLUMN, constants.deleteNewColumn(), "deleteNewColumn", () -> GWT.log(HEADERGIVENCONTEXTMENU_DELETE_COLUMN));
 //        // SCENARIO
 //        addMenuItem(HEADERGIVENCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
 //        addExecutableMenuItem(HEADERGIVENCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);

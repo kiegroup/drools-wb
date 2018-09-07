@@ -71,29 +71,29 @@ public class ScenarioGrid extends BaseGridWidget {
 
     private void setHeaderColumns(Simulation simulation) {
         // NOW USING INDEX OF FactMappings LIST FOR COLUMN POSITIONING INSIDE GRID
-        final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getFactMappings();
+        final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
         IntStream.range(0, factMappings.size())
                 .forEach(index -> {
                     FactMapping factMapping = factMappings.get(index);
                     String columnId = factMapping.getExpressionIdentifier().getName();
                     String columnTitle = factMapping.getExpressionAlias();
                     String columnGroup = factMapping.getExpressionIdentifier().getType().name();
-                    ((ScenarioGridModel) model).populateColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+                    model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
                 });
     }
 
     private void appendRows(Simulation simulation) {
-        List<Scenario> scenarios = simulation.getScenarios();
+        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size()).forEach(rowIndex -> {
             Scenario scenario = scenarios.get(rowIndex);
             model.insertRow(rowIndex, new ScenarioGridRow());
-            scenario.getFactMappingValues().forEach(value -> {
+            scenario.getUnmodifiableFactMappingValues().forEach(value -> {
                 FactIdentifier factIdentifier = value.getFactIdentifier();
                 ExpressionIdentifier expressionIdentifier = value.getExpressionIdentifier();
                 if (value.getRawValue() instanceof String) {
                     String stringValue = (String) value.getRawValue();
                     int columnIndex = simulation.getSimulationDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
-                    ((ScenarioGridModel) model).populateCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue)));
+                    model.setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue)));
                 } else {
                     throw new UnsupportedOperationException("Only string is supported at the moment");
                 }

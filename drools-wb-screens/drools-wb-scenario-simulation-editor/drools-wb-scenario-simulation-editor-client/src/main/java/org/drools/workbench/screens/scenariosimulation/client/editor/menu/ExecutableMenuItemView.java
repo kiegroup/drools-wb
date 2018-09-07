@@ -31,7 +31,32 @@ public interface ExecutableMenuItemView {
 
         void fireEvent(LIElement clickedElement);
 
-        LIElement getLIElement(String id, String innerText, Event event);
+        /**
+         * This method retrieve an <b>EXECUTABLE</b> element (i.e. with a behaviour) to be put inside the menu
+         * @param id
+         * @param innerText
+         * @param event
+         * @return
+         */
+        LIElement getLExecutableMenuElement(String id, String innerText, Event event);
+
+        /**
+         * This method retrieve an <b>EXECUTABLE</b> element (i.e. with a behaviour) to be put inside the menu
+         * It is an <b>overload</b> of {@link #getLExecutableMenuElement(String, String, Event)} to dynamically provide
+         * an event at runtime
+         * @param id
+         * @param innerText
+         * @return
+         */
+        LIElement getLExecutableMenuElement(String id, String innerText);
+
+        /**
+         * Method to map an <code>Event</code> to a given <b>EXECUTABLE</b> <code>LIElement</code>.
+         * To be used when <code>LIElement</code> has been retrieved with {@link #getLExecutableMenuElement(String, String)}
+         * @param executableMenuItem
+         * @param toBeMapped
+         */
+        void mapEvent(LIElement executableMenuItem, Event toBeMapped);
 
         void enableElement(boolean toEnable);
 
@@ -46,5 +71,9 @@ public interface ExecutableMenuItemView {
 
     void setLabel(String label);
 
-    LIElement getLIElement();
+    /**
+     * This method retrieve an <b>EXECUTABLE</b> element (i.e. with a behaviour) to be put inside the menu
+     * @return
+     */
+    LIElement getLExecutableMenuElement();
 }

@@ -93,7 +93,7 @@ public class BaseMenuTest {
         String label = "TEST-LABEL";
         String i18n = "TEST-i18n";
         baseMenu.addMenuItem(id, label, i18n);
-        verify(mockContextMenuDropdown, times(1)).appendChild(mockMenuItemPresenter.getLIElement(id, label));
+        verify(mockContextMenuDropdown, times(1)).appendChild(mockMenuItemPresenter.getLabelMenuElement(id, label));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class BaseMenuTest {
         String label = "TEST-LABEL";
         String i18n = "TEST-i18n";
         baseMenu.addExecutableMenuItem(id, label, i18n, mockEvent);
-        verify(mockContextMenuDropdown, times(1)).appendChild(mockExecutableMenuItemPresenter.getLIElement(id, label, mockEvent));
+        verify(mockContextMenuDropdown, times(1)).appendChild(mockExecutableMenuItemPresenter.getLExecutableMenuElement(id, label, mockEvent));
     }
 
     @Test

@@ -24,7 +24,7 @@ import javax.enterprise.context.Dependent;
  * It differ from {@link HeaderGivenContextMenu} because it manage column (insert/remove) in different way
  */
 @Dependent
-public class GivenContextMenu extends AbstractHeaderMenuPresenter {
+public class GivenContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
     private final String GIVENCONTEXTMENU_GIVEN = "givencontextmenu-given";
@@ -38,6 +38,14 @@ public class GivenContextMenu extends AbstractHeaderMenuPresenter {
     @PostConstruct
     @Override
     public void initMenu() {
+        // GIVEN MENU
+        COLUMNCONTEXTMENU_COLUMN = GIVENCONTEXTMENU_GIVEN;
+        COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT = GIVENCONTEXTMENU_INSERT_COLUMN_LEFT;
+        COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT = GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT;
+        COLUMNCONTEXTMENU_DELETE_COLUMN = GIVENCONTEXTMENU_DELETE_COLUMN;
+        COLUMNCONTEXTMENU_LABEL = constants.expected().toUpperCase();
+        COLUMNCONTEXTMENU_I18N = "given";
+        // SCENARIO MENU
         HEADERCONTEXTMENU_SCENARIO = GIVENCONTEXTMENU_SCENARIO;
         HEADERCONTEXTMENU_INSERT_ROW_ABOVE = GIVENCONTEXTMENU_INSERT_ROW_ABOVE;
         HEADERCONTEXTMENU_INSERT_ROW_BELOW = GIVENCONTEXTMENU_INSERT_ROW_BELOW;

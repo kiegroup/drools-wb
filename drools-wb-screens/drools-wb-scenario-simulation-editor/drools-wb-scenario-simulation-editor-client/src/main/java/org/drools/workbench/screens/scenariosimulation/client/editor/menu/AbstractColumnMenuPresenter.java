@@ -15,11 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import org.drools.workbench.screens.scenariosimulation.client.commands.InsertColumnLeftCommand;
-import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnLeftEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnRightEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
+import com.google.gwt.dom.client.LIElement;
+import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 
 /**
  * This class is meant to provide common methods to <b>column-specific</b> menus {@link ExpectedContextMenu} and {@link GivenContextMenu}
@@ -34,17 +32,25 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     String COLUMNCONTEXTMENU_LABEL;
     String COLUMNCONTEXTMENU_I18N;
 
-    private final InsertColumnLeftEvent insertColumnLeftEvent = new InsertColumnLeftEvent();
-    private final InsertColumnRightEvent insertColumnRightEvent = new InsertColumnRightEvent();
+    private LIElement insertColumnLeftLIElement;
+    private LIElement insertColumnRightLIElement;
+    private LIElement deleteColumnLIElement;
 
     /**
      * This method set <b>column-specific</b> menu items and common <b>SCENARIO</b> menu items
      */
     public void initMenu() {
         addMenuItem(COLUMNCONTEXTMENU_COLUMN, COLUMNCONTEXTMENU_LABEL, COLUMNCONTEXTMENU_I18N);
-        addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", insertColumnLeftEvent);
-        addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", insertColumnRightEvent);
-        //        addExecutableMenuItem(COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn", () -> GWT.log(COLUMNCONTEXTMENU_DELETE_COLUMN));
+        insertColumnLeftLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft");
+        insertColumnRightLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight");
+        deleteColumnLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
         super.initMenu();
+    }
+
+    public void show(final int mx, final int my, int columnIndex) {
+        super.show(mx, my);
+        mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(columnIndex, false));
+        mapEvent(insertColumnRightLIElement, new InsertColumnEvent(columnIndex, true));
+        mapEvent(deleteColumnLIElement, new DeleteColumnEvent(columnIndex));
     }
 }

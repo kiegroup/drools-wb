@@ -52,6 +52,6 @@ public class PrependColumnCommand implements Command {
         final int index = model.getFirstIndexLeftOfGroup(columnGroup);
         final long newColumnPosition = model.getGroupSize(columnGroup) + 1;
         String columnTitle = columnGroup.toUpperCase() + "-" + newColumnPosition;
-        model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+        model.insertNewColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

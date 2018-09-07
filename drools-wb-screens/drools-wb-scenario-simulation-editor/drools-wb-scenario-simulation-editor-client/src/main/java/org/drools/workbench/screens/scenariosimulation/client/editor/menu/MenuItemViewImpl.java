@@ -36,7 +36,7 @@ public class MenuItemViewImpl implements MenuItemView {
     private MenuItemPresenter menuItemPresenter;
 
     @Override
-    public LIElement getLIElement() {
+    public LIElement getLabelMenuElement() {
         liElement.addClassName("disabled");
         return liElement;
     }

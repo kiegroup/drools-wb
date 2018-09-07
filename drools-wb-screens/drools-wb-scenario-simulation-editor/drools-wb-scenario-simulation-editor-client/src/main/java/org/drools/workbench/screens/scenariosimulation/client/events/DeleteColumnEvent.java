@@ -16,26 +16,32 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnLeftEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>insert</b> a column to the left of the selected one
+ * <code>GwtEvent</code> to <b>delete</b> a column
  */
-public class InsertColumnLeftEvent extends GwtEvent<InsertColumnLeftEventHandler> {
+public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
 
-    public static Type<InsertColumnLeftEventHandler> TYPE = new Type<>();
+    public static Type<DeleteColumnEventHandler> TYPE = new Type<>();
 
-    public InsertColumnLeftEvent() {
+    private int columnIndex;
+
+    public DeleteColumnEvent(int columnIndex) {
+        this.columnIndex = columnIndex;
     }
 
     @Override
-    public Type<InsertColumnLeftEventHandler> getAssociatedType() {
+    public Type<DeleteColumnEventHandler> getAssociatedType() {
         return TYPE;
     }
 
-    @Override
-    protected void dispatch(InsertColumnLeftEventHandler handler) {
-        handler.onEvent(this);
+    public int getColumnIndex() {
+        return columnIndex;
     }
 
+    @Override
+    protected void dispatch(DeleteColumnEventHandler handler) {
+        handler.onEvent(this);
+    }
 }

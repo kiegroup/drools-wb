@@ -65,7 +65,7 @@ public class ScenarioGridTest {
         int rows = 2;
         scenarioGrid.setContent(getSimulation(cols, rows));
         // cols + 1 because there is also the description column
-        verify(mockScenarioGridModel, times(cols + 1)).insertColumn(anyInt(), anyObject());
+        verify(mockScenarioGridModel, times(cols + 1)).insertNewColumn(anyInt(), anyObject());
         verify(mockScenarioGridModel, times(rows)).insertRow(anyInt(), anyObject());
     }
 }

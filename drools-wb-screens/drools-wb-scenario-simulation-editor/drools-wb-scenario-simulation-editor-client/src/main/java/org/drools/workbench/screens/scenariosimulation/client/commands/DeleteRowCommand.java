@@ -15,26 +15,34 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import javax.enterprise.context.Dependent;
+
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.uberfire.mvp.Command;
 
 /**
- *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
+ * <code>Command</code> to <b>delete</b> a row.
  */
-public class AppendRowCommand implements Command {
+@Dependent
+public class DeleteRowCommand implements Command {
 
     private ScenarioGridModel model;
+    private int rowIndex;
 
-    public AppendRowCommand() {
+    public DeleteRowCommand() {
     }
 
-    public AppendRowCommand(ScenarioGridModel model) {
+    /**
+     * @param model
+     * @param rowIndex
+     */
+    public DeleteRowCommand(ScenarioGridModel model, int rowIndex) {
         this.model = model;
+        this.rowIndex = rowIndex;
     }
 
     @Override
     public void execute() {
-        model.appendNewRow(new ScenarioGridRow());
+        model.deleteNewRow(rowIndex);
     }
 }

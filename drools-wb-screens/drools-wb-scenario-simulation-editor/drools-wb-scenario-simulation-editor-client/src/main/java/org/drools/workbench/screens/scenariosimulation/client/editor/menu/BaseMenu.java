@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -43,7 +44,7 @@ public abstract class BaseMenu implements IsWidget,
 
     @Inject
     protected ExecutableMenuItemPresenter executableMenuItemPresenter;
-    
+
     @Inject
     protected BaseMenuView view;
 
@@ -56,12 +57,24 @@ public abstract class BaseMenu implements IsWidget,
 
     @Override
     public void addMenuItem(String id, String label, String i18n) {
-        view.getContextMenuDropdown().appendChild(menuItemPresenter.getLIElement(id, label));
+        view.getContextMenuDropdown().appendChild(menuItemPresenter.getLabelMenuElement(id, label));
     }
 
     @Override
     public void addExecutableMenuItem(String id, String label, String i18n, Event event) {
-        view.getContextMenuDropdown().appendChild(executableMenuItemPresenter.getLIElement(id, label, event));
+        view.getContextMenuDropdown().appendChild(executableMenuItemPresenter.getLExecutableMenuElement(id, label, event));
+    }
+
+    @Override
+    public LIElement addExecutableMenuItem(String id, String label, String i18n) {
+        LIElement toReturn = executableMenuItemPresenter.getLExecutableMenuElement(id, label);
+        view.getContextMenuDropdown().appendChild(toReturn);
+        return toReturn;
+    }
+
+    @Override
+    public void mapEvent(LIElement executableMenuItem, Event toBeMapped) {
+        executableMenuItemPresenter.mapEvent(executableMenuItem, toBeMapped);
     }
 
     @Override

@@ -67,14 +67,24 @@ public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Prese
     }
 
     @Override
-    public LIElement getLIElement(String id, String label, Event event) {
+    public LIElement getLExecutableMenuElement(String id, String label, Event event) {
+        LIElement toReturn = getLExecutableMenuElement(id, label);
+        menuItemsEventMap.put(toReturn, event);
+        return toReturn;
+    }
+
+    @Override
+    public LIElement getLExecutableMenuElement(String id, String label) {
         ExecutableMenuItemView menuItemView = getMenuItemView();
         menuItemView.setId(id);
         menuItemView.setLabel(label);
         menuItemView.setPresenter(this);
-        LIElement toReturn = menuItemView.getLIElement();
-        menuItemsEventMap.put(toReturn, event);
-        return toReturn;
+        return menuItemView.getLExecutableMenuElement();
+    }
+
+    @Override
+    public void mapEvent(LIElement executableMenuItem, Event toBeMapped) {
+        menuItemsEventMap.put(executableMenuItem, toBeMapped);
     }
 
     @Override

@@ -16,14 +16,12 @@
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.Random;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -65,12 +63,13 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public void setEventBus(EventBus eventBus) {
-        GWT.log("ScenarioGridModel " + this.toString() + " setEventBus " + eventBus.toString());
         this.eventBus = eventBus;
     }
 
-    @Override
-    public void appendColumn(final GridColumn<?> column) {
+    /**
+     * This method <i>append</i> a new column to the grid <b>and</b> to the underlying model
+     */
+    public void appendNewColumn(final GridColumn<?> column) {
         commonAddColumn(-1, column);
     }
 
@@ -78,7 +77,8 @@ public class ScenarioGridModel extends BaseGridData {
      * This method <i>append</i> a new row to the grid <b>and</b> to the underlying model
      * @param row
      */
-    public void appendEditingRow(GridRow row) {
+    public void appendNewRow(GridRow row) {
+        checkSimulation();
         super.appendRow(row);
         int rowIndex = getRowCount() - 1;
         commonAddRow(rowIndex);
@@ -88,19 +88,21 @@ public class ScenarioGridModel extends BaseGridData {
      * This method <i>insert</i> a new row to the grid <b>and</b> to the underlying model
      * @param row
      */
-    public void insertEditingRow(int rowIndex, GridRow row) {
+    public void insertNewRow(int rowIndex, GridRow row) {
+        checkSimulation();
         super.insertRow(rowIndex, row);
         commonAddRow(rowIndex);
     }
 
     /**
-     * This method <i>insert</i> a new column to the grid <b>and</b> to the underlying model
-     * @param index
-     * @param column
+     * This method <i>delete</i> the row at the given index from both the grid <b>and</b> the underlying model
+     * @param rowIndex
      */
-    @Override
-    public void insertColumn(final int index, final GridColumn<?> column) {
-        commonAddColumn(index, column);
+    public Range deleteNewRow(int rowIndex) {
+        checkSimulation();
+        Range toReturn = super.deleteRow(rowIndex);
+        simulation.removeScenarioByIndex(rowIndex);
+        return toReturn;
     }
 
     /**
@@ -108,9 +110,47 @@ public class ScenarioGridModel extends BaseGridData {
      * @param index
      * @param column
      */
-    public void populateColumn(final int index, final GridColumn<?> column) {
+    @Override
+    public void insertColumn(final int index, final GridColumn<?> column) {
         checkSimulation();
         super.insertColumn(index, column);
+    }
+
+    /**
+     * This method <i>insert</i> a new column to the grid <b>and</b> to the underlying model
+     * @param index
+     * @param column
+     */
+    public void insertNewColumn(final int index, final GridColumn<?> column) {
+        checkSimulation();
+        commonAddColumn(index, column);
+    }
+
+    /**
+     * This method <i>delete</i> the column at the given index from both the grid <b>and</b> the underlying model
+     * @param columnIndex
+     */
+    public void deleteNewColumn(int columnIndex) {
+        checkSimulation();
+        final GridColumn<?> toDelete = getColumns().get(columnIndex);
+        deleteColumn(toDelete);
+        final FactMapping toRemove = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        simulation.getSimulationDescriptor().removeFactMapping(toRemove);
+        simulation.getUnmodifiableScenarios().forEach(scenario -> {
+            scenario.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier());
+        });
+    }
+
+    /**
+     * This method <i>set</i> a cell value to the grid <b>without</b> modify underlying model
+     * @param rowIndex
+     * @param columnIndex
+     * @param cellSupplier
+     */
+    @Override
+    public Range setCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
+        checkSimulation();
+        return super.setCell(rowIndex, columnIndex, cellSupplier);
     }
 
     /**
@@ -119,10 +159,8 @@ public class ScenarioGridModel extends BaseGridData {
      * @param columnIndex
      * @param cellSupplier
      */
-    @Override
-    public Range setCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
-        checkSimulation();
-        Range toReturn = super.setCell(rowIndex, columnIndex, cellSupplier);
+    public Range setNewCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
+        Range toReturn = setCell(rowIndex, columnIndex, cellSupplier);
         try {
             Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
             if (!optionalValue.isPresent()) {
@@ -140,21 +178,10 @@ public class ScenarioGridModel extends BaseGridData {
                 throw new IllegalArgumentException("Type not supported " + rawValue.getClass().getCanonicalName());
             }
         } catch (Throwable t) {
+            toReturn = super.deleteCell(rowIndex, columnIndex);
             eventBus.fireEvent(new ScenarioGridReloadEvent());
-            return super.deleteCell(rowIndex, columnIndex);
         }
         return toReturn;
-    }
-
-    /**
-     * This method <i>set</i> a cell value to the grid <b>without</b> modify underlying model
-     * @param rowIndex
-     * @param columnIndex
-     * @param cellSupplier
-     */
-    public Range populateCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
-        checkSimulation();
-        return super.setCell(rowIndex, columnIndex, cellSupplier);
     }
 
     /**
@@ -170,7 +197,7 @@ public class ScenarioGridModel extends BaseGridData {
                 .findFirst()
                 .map(gridColumn -> {
                     int indexOfColumn = this.getColumns().indexOf(gridColumn);
-                    return indexOfColumn > -1 ? indexOfColumn: 0;   // mapping the retrieved column to its index inside the list, or 0
+                    return indexOfColumn > -1 ? indexOfColumn : 0;   // mapping the retrieved column to its index inside the list, or 0
                 });
         return first.orElseGet(() -> 0); // returning the retrieved value or, if null, 0
     }
@@ -238,25 +265,23 @@ public class ScenarioGridModel extends BaseGridData {
         String columnId = scenarioHeaderMetaData.getColumnId();
         FactIdentifier factIdentifier = FactIdentifier.create(columnId, String.class.getCanonicalName());
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        if (index == -1) {  // This is actually an append
-            super.appendColumn(column);
-        } else {
-            super.insertColumn(index, column);
-        }
         final int columnIndex = index == -1 ? getColumnCount() : index;
         try {
             simulationDescriptor.addFactMapping(columnIndex, title, factIdentifier, ei);
+            if (index == -1) {  // This is actually an append
+                super.appendColumn(column);
+            } else {
+                super.insertColumn(index, column);
+            }
         } catch (Throwable t) {
-            GWT.log("DELETING COLUMN " + column);
-            super.deleteColumn(column);
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
         }
-        final List<Scenario> scenarios = simulation.getScenarios();
+        final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size())
                 .forEach(rowIndex -> {
                     String value = title + "-" + Random.nextInt();
-                    setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
+                    setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
                 });
     }
 
@@ -268,7 +293,7 @@ public class ScenarioGridModel extends BaseGridData {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             String value = factMappingByIndex.getExpressionAlias() + "-" + Random.nextInt();
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), value);
-            setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
+            setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
         });
     }
 

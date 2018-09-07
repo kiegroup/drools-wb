@@ -24,31 +24,44 @@ import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
+/**
+ * <code>Command</code> to <b>insert</b> a column.
+ */
 @Dependent
 public class InsertColumnCommand implements Command {
 
-    private int columnIndex;
     private ScenarioGridModel model;
     private String columnId;
-    private String columnTitle;
+    private int columnIndex;
+    private boolean isRight;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
     public InsertColumnCommand() {
     }
 
-    public InsertColumnCommand(int columnIndex, ScenarioGridModel model, String columnId, String columnTitle, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        this.columnIndex = columnIndex;
+    /**
+     * @param model
+     * @param columnId
+     * @param columnIndex
+     * @param isRight when <code>true</code>, column will be inserted to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
+     * @param scenarioGridPanel
+     * @param scenarioGridLayer
+     */
+    public InsertColumnCommand(ScenarioGridModel model, String columnId, int columnIndex, boolean isRight, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         this.model = model;
         this.columnId = columnId;
-        this.columnTitle = columnTitle;
+        this.columnIndex = columnIndex;
+        this.isRight = isRight;
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridLayer;
     }
 
-
     @Override
     public void execute() {
-        model.insertColumn(columnIndex, getScenarioGridColumn(columnId, columnTitle, scenarioGridPanel, scenarioGridLayer));
+        String columnGroup = model.getColumns().get(columnIndex).getHeaderMetaData().get(1).getColumnGroup();
+        int columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) +1);
+        model.insertNewColumn(columnPosition, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }
