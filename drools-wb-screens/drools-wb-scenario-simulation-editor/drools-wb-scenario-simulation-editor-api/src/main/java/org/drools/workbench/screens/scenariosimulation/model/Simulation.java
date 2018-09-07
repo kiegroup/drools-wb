@@ -36,8 +36,20 @@ public class Simulation {
      */
     private final List<Scenario> scenarios = new LinkedList<>();
 
+    /**
+     * Returns an <b>unmodifiable</b> list wrapping the backed one
+     * @return
+     */
     public List<Scenario> getScenarios() {
         return Collections.unmodifiableList(scenarios);
+    }
+
+    public void removeScenarioByIndex(int index) {
+        scenarios.remove(index);
+    }
+
+    public void removeScenario(Scenario toRemove) {
+        scenarios.remove(toRemove);
     }
 
     public SimulationDescriptor getSimulationDescriptor() {

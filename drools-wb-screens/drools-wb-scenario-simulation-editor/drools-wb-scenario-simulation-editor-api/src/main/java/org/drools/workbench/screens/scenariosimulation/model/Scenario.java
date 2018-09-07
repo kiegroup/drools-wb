@@ -46,8 +46,20 @@ public class Scenario {
         this.simulationDescriptor = simulationDescriptor;
     }
 
+    /**
+     * Returns an <b>unmodifiable</b> list wrapping the backed one
+     * @return
+     */
     public List<FactMappingValue> getFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
+    }
+
+    public void removeFactMappingValueByIdentifiers(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
+        getFactMappingValue(factIdentifier, expressionIdentifier).ifPresent(factMappingValues::remove);
+    }
+
+    public void removeFactMappingValue(FactMappingValue toRemove) {
+        factMappingValues.remove(toRemove);
     }
 
     public FactMappingValue addMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object value) {

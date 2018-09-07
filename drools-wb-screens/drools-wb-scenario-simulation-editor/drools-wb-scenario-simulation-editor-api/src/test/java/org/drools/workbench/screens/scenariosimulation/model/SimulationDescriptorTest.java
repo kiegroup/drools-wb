@@ -22,8 +22,12 @@ import java.util.stream.IntStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 public class SimulationDescriptorTest {
@@ -67,6 +71,23 @@ public class SimulationDescriptorTest {
         assertNotSame(updatedFactMappings.get(0), factMappingEdited);
         assertSame(updatedFactMappings.get(updatedFactMappings.size() - 1), factMappingEdited);
         assertEquals(originalFactMappings.size(), updatedFactMappings.size());
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void removeFactMappingByIndex() {
+        int testingIndex = 0;
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
+        assertNotNull(simulationDescriptor.getFactMappingByIndex(testingIndex));
+        simulationDescriptor.removeFactMappingByIndex(testingIndex);
+        simulationDescriptor.getFactMappingByIndex(testingIndex);
+    }
+
+    @Test
+    public void removeFactMapping() {
+        FactMapping retrieved = simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
+        assertTrue(simulationDescriptor.getFactMappings().contains(retrieved));
+        simulationDescriptor.removeFactMapping(retrieved);
+        assertFalse(simulationDescriptor.getFactMappings().contains(retrieved));
     }
 
     @Test

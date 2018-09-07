@@ -15,10 +15,16 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ScenarioTest {
 
@@ -33,6 +39,26 @@ public class ScenarioTest {
         scenario = new Scenario(simulationDescriptor);
         factIdentifier = FactIdentifier.create("test fact", String.class.getCanonicalName());
         expressionIdentifier = ExpressionIdentifier.create("test expression", FactMappingType.EXPECTED);
+    }
+
+    @Test
+    public void removeFactMappingValueByIdentifiersTest() {
+        scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
+        Optional<FactMappingValue> retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertTrue(retrieved.isPresent());
+        scenario.removeFactMappingValueByIdentifiers(factIdentifier, expressionIdentifier);
+        retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertFalse(retrieved.isPresent());
+    }
+
+    @Test
+    public void removeFactMappingValue() {
+        scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
+        Optional<FactMappingValue> retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertTrue(retrieved.isPresent());
+        scenario.removeFactMappingValue(retrieved.get());
+        retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertFalse(retrieved.isPresent());
     }
 
     @Test(expected = IllegalArgumentException.class)
