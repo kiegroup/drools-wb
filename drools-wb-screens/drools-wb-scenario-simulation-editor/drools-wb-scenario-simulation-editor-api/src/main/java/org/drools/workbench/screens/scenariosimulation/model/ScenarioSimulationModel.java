@@ -16,8 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.kie.soup.project.datamodel.imports.HasImports;
@@ -27,33 +27,47 @@ import org.kie.soup.project.datamodel.imports.Imports;
 public class ScenarioSimulationModel
         implements HasImports {
 
-    /**
-     * Map of Header columns: key is the column number, value is the column text
-     */
-    private Map<Integer, String> headersMap;
-    /**
-     * Map of rows; Key is the row number, value is a Map itself where the key is the column number and the value is the cell text
-     */
-    private Map<Integer, Map<Integer, String>> rowsMap;
+    private Simulation simulation;
 
     private Imports imports = new Imports();
 
     public ScenarioSimulationModel() {
-        headersMap = new HashMap<>();
-        // DEFAULT HEADERS -TO CHANGE
-        headersMap.put(0, "T");
-        headersMap.put(1, "");
-        headersMap.put(2, "Expression");
-        rowsMap = new HashMap<>();
+        simulation = new Simulation();
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+
+        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
+
+        Scenario scenario = simulation.addScenario();
+        scenario.setDescription("Scenario example");
+        Random random = new Random();
+
+        // Add GIVEN Facts
+        IntStream.range(1, 3).forEach(id -> {
+            ExpressionIdentifier givenExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.GIVEN);
+            FactIdentifier givenFact = FactIdentifier.create("GIVENFACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping("GIVEN-" + id, givenFact, givenExpression);
+            scenario.addMappingValue(givenFact, givenExpression, "given-sample-" + id);
+        });
+
+        // Add EXPECTED Facts
+        IntStream.range(1, 3).forEach(id -> {
+            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.EXPECTED);
+            FactIdentifier expectFact = FactIdentifier.create("EXPECTEDFACT-" + id, String.class.getCanonicalName());
+            simulationDescriptor.addFactMapping("EXPECTED-" + id, expectFact, expectedExpression);
+            scenario.addMappingValue(expectFact, expectedExpression, "expected-sample-" + id);
+        });
     }
 
-    public ScenarioSimulationModel(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap) {
-        this.headersMap = headersMap;
-        this.rowsMap = rowsMap;
+    public ScenarioSimulationModel(Simulation simulation) {
+        this.simulation = simulation;
     }
 
-    public Map<Integer, String> getHeadersMap() {
-        return headersMap;
+    public Simulation getSimulation() {
+        return simulation;
+    }
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
     }
 
     @Override
@@ -64,8 +78,5 @@ public class ScenarioSimulationModel
     @Override
     public void setImports(Imports imports) {
         this.imports = imports;
-    }
-    public Map<Integer, Map<Integer, String>> getRowsMap() {
-        return rowsMap;
     }
 }

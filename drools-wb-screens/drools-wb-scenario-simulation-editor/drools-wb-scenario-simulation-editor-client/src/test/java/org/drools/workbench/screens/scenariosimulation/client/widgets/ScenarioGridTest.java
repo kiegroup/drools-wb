@@ -26,10 +26,7 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.NUMBER_OF_COLUMNS;
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.NUMBER_OF_ROWS;
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getHeadersMap;
-import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getRowsMap;
+import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getSimulation;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
@@ -41,19 +38,19 @@ import static org.mockito.Mockito.verify;
 public class ScenarioGridTest {
 
     @Mock
-    private ScenarioGridModel model;
+    private ScenarioGridModel mockScenarioGridModel;
     @Mock
-    private ScenarioGridLayer scenarioGridLayer;
+    private ScenarioGridLayer mockScenarioGridLayer;
     @Mock
-    private ScenarioGridRenderer renderer;
+    private ScenarioGridRenderer mockScenarioGridRenderer;
     @Mock
-    private ScenarioGridPanel scenarioGridPanel;
+    private ScenarioGridPanel mockScenarioGridPanel;
 
     private ScenarioGrid scenarioGrid;
 
     @Before
     public void setup() {
-        scenarioGrid = new ScenarioGrid(model, scenarioGridLayer, renderer, scenarioGridPanel);
+        scenarioGrid = new ScenarioGrid(mockScenarioGridModel, mockScenarioGridLayer, mockScenarioGridRenderer, mockScenarioGridPanel);
     }
 
     @Test
@@ -64,8 +61,11 @@ public class ScenarioGridTest {
 
     @Test
     public void setContent() {
-        scenarioGrid.setContent(getHeadersMap(), getRowsMap());
-        verify(model, times(NUMBER_OF_COLUMNS)).insertColumn(anyInt(), anyObject());
-        verify(model, times(NUMBER_OF_ROWS)).insertRow(anyInt(), anyObject());
+        int cols = 2;
+        int rows = 2;
+        scenarioGrid.setContent(getSimulation(cols, rows));
+        // cols + 1 because there is also the description column
+        verify(mockScenarioGridModel, times(cols + 1)).insertColumn(anyInt(), anyObject());
+        verify(mockScenarioGridModel, times(rows)).insertRow(anyInt(), anyObject());
     }
 }
