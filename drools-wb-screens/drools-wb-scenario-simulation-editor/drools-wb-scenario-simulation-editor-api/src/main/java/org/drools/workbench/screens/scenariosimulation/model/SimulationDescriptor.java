@@ -45,7 +45,7 @@ public class SimulationDescriptor {
     public void moveFactMapping(int oldIndex, int newIndex) {
         if (oldIndex < 0 || oldIndex >= factMappings.size()) {
             throw new IllegalArgumentException(new StringBuilder().append("Index ").append(oldIndex)
-                                                       .append(" not fond in the list").toString());
+                                                       .append(" not found in the list").toString());
         }
         if (newIndex < 0 || newIndex >= factMappings.size()) {
             throw new IllegalArgumentException(new StringBuilder().append("Index ").append(newIndex)
