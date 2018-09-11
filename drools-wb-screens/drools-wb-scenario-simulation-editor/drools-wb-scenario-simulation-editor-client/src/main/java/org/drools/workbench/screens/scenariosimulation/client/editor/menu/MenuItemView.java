@@ -31,7 +31,7 @@ public interface MenuItemView {
          */
         LIElement getLabelMenuElement(String id, String innerText);
 
-        void enableElement(boolean toEnable);
+        void onEnableElement(boolean toEnable);
 
         void onClickEvent(ClickEvent event);
     }

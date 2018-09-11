@@ -25,8 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
 public class SimulationDescriptorTest {
@@ -54,22 +53,6 @@ public class SimulationDescriptorTest {
     public void addFactMappingIndexTest() {
         // Should fail
         simulationDescriptor.addFactMapping(1, factIdentifier, expressionIdentifier);
-    }
-
-    @Test
-    public void sortByLogicalPositionTest() {
-        List<FactMapping> originalFactMappings = IntStream.range(0, 2).boxed()
-                .map(i -> simulationDescriptor
-                        .addFactMapping(FactIdentifier.create("test " + i, String.class.getCanonicalName()),
-                                        ExpressionIdentifier.create("test " + i, FactMappingType.EXPECTED))
-                ).collect(Collectors.toList());
-        FactMapping factMappingEdited = originalFactMappings.get(0);
-        factMappingEdited.setLogicalPosition(100);
-        simulationDescriptor.sortByLogicalPosition();
-        List<FactMapping> updatedFactMappings = simulationDescriptor.getUnmodifiableFactMappings();
-        assertNotSame(updatedFactMappings.get(0), factMappingEdited);
-        assertSame(updatedFactMappings.get(updatedFactMappings.size() - 1), factMappingEdited);
-        assertEquals(originalFactMappings.size(), updatedFactMappings.size());
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
@@ -101,5 +84,81 @@ public class SimulationDescriptorTest {
         indexToCheck = 1;
         indexRetrieved = simulationDescriptor.getIndexByIdentifier(originalFactMappings.get(indexToCheck).getFactIdentifier(), this.expressionIdentifier);
         assertEquals(indexToCheck, indexRetrieved);
+    }
+
+    @Test
+    public void moveFactMappingTest() {
+        ExpressionIdentifier expressionIdentifier2 = ExpressionIdentifier.create("Test expression 2", FactMappingType.GIVEN);
+        ExpressionIdentifier expressionIdentifier3 = ExpressionIdentifier.create("Test expression 3", FactMappingType.GIVEN);
+        FactMapping factMapping1 = simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
+        FactMapping factMapping2 = simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier2);
+        FactMapping factMapping3 = simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier3);
+        List<FactMapping> factMappings = simulationDescriptor.getFactMappings();
+
+        assertEquals(factMappings.get(0), factMapping1);
+        assertEquals(factMappings.get(1), factMapping2);
+        assertEquals(factMappings.get(2), factMapping3);
+
+        simulationDescriptor.moveFactMapping(0, 1);
+
+        factMappings = simulationDescriptor.getFactMappings();
+        assertEquals(factMappings.get(0), factMapping2);
+        assertEquals(factMappings.get(1), factMapping1);
+        assertEquals(factMappings.get(2), factMapping3);
+
+        simulationDescriptor.moveFactMapping(2, 1);
+
+        factMappings = simulationDescriptor.getFactMappings();
+        assertEquals(factMappings.get(0), factMapping2);
+        assertEquals(factMappings.get(1), factMapping3);
+        assertEquals(factMappings.get(2), factMapping1);
+
+        simulationDescriptor.moveFactMapping(2, 2);
+
+        factMappings = simulationDescriptor.getFactMappings();
+        assertEquals(factMappings.get(0), factMapping2);
+        assertEquals(factMappings.get(1), factMapping3);
+        assertEquals(factMappings.get(2), factMapping1);
+    }
+
+    @Test
+    public void moveFactMappingOldFailTest() {
+        ExpressionIdentifier expressionIdentifier2 = ExpressionIdentifier.create("Test expression 2", FactMappingType.GIVEN);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier2);
+
+        muteException(() -> {
+                          simulationDescriptor.moveFactMapping(2, 0);
+                          fail();
+                      },
+                      IllegalArgumentException.class);
+
+        muteException(() -> {
+                          simulationDescriptor.moveFactMapping(-1, 0);
+                          fail();
+                      },
+                      IllegalArgumentException.class);
+
+        muteException(() -> {
+                          simulationDescriptor.moveFactMapping(0, 2);
+                          fail();
+                      },
+                      IllegalArgumentException.class);
+
+        muteException(() -> {
+                          simulationDescriptor.moveFactMapping(0, -1);
+                          fail();
+                      },
+                      IllegalArgumentException.class);
+    }
+
+    private <T extends Throwable> void muteException(Runnable toBeExecuted, Class<T> expected) {
+        try {
+            toBeExecuted.run();
+        } catch (Throwable t) {
+            if (!t.getClass().isAssignableFrom(expected)) {
+                throw t;
+            }
+        }
     }
 }

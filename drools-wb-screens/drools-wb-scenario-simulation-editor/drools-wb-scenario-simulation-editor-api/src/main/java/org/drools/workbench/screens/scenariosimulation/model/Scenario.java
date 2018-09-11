@@ -48,9 +48,14 @@ public class Scenario {
 
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
-     * @return
+
+     * NOTE: list order could not be aligned to factMapping order. Use {@link Scenario#sort()} before call this method
+     * to ensure the order.
+     * Best way to have ordered factMappingValues is to iterate over {@link SimulationDescriptor#factMappings} and use
+     * {@link #getFactMappingValue(FactIdentifier, ExpressionIdentifier)}
+     * @return not modifiable list of FactMappingValues
      */
-    public List<FactMappingValue> getUnmodifiableFactMappingValues() {
+    public List<FactMappingValue> getFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
     }
 
@@ -114,5 +119,13 @@ public class Scenario {
 
     public Collection<String> getFactNames() {
         return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
+    }
+
+    public void sort() {
+        factMappingValues.sort((a, b) -> {
+            Integer aIndex = simulationDescriptor.getIndexByIdentifier(a.getFactIdentifier(), a.getExpressionIdentifier());
+            Integer bIndex = simulationDescriptor.getIndexByIdentifier(b.getFactIdentifier(), b.getExpressionIdentifier());
+            return aIndex.compareTo(bIndex);
+        });
     }
 }
