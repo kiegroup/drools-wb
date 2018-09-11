@@ -78,4 +78,8 @@ public class Simulation {
         simulationDescriptor.clear();
         scenarios.clear();
     }
+
+    public void sort() {
+        scenarios.forEach(Scenario::sort);
+    }
 }
