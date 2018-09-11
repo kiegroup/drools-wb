@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendColum
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
@@ -36,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendCol
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
@@ -55,18 +57,19 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                         AppendRowEventHandler,
                                         DeleteColumnEventHandler,
                                         DeleteRowEventHandler,
+                                        DuplicateRowEventHandler,
                                         InsertColumnEventHandler,
                                         PrependColumnEventHandler,
                                         PrependRowEventHandler,
                                         ScenarioGridReloadEventHandler {
 
-    private ScenarioGridModel model;
-    private ScenarioGridPanel scenarioGridPanel;
-    private ScenarioGridLayer scenarioGridLayer;
+    ScenarioGridModel model;
+    ScenarioGridPanel scenarioGridPanel;
+    ScenarioGridLayer scenarioGridLayer;
 
-    private EventBus eventBus;
+    EventBus eventBus;
 
-    private List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
+    List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
 
     public CommandExecutor() {
         // CDI
@@ -114,6 +117,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(DuplicateRowEvent event) {
+        commonExecute(new DuplicateRowCommand(model, event.getRowIndex()));
+    }
+
+    @Override
     public void onEvent(InsertColumnEvent event) {
         commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), scenarioGridPanel, scenarioGridLayer));
     }
@@ -133,17 +141,18 @@ public class CommandExecutor implements AppendColumnEventHandler,
         scenarioGridPanel.onResize();
     }
 
-    private void commonExecute(Command toExecute) {
+    void commonExecute(Command toExecute) {
         toExecute.execute();
         scenarioGridPanel.onResize();
     }
 
-    private void registerHandlers() {
+    void registerHandlers() {
         // LET'S DO THE RISKY THING: NOT CHECKING FOR ACTUAL REGISTRATIONS
         handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(AppendRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DeleteColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DeleteRowEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));

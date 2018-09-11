@@ -22,7 +22,6 @@ import java.util.Map;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.EventBus;
@@ -33,9 +32,9 @@ public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Prese
     @Inject
     private Instance<ExecutableMenuItemView> instance;
 
-    private EventBus eventBus;
+    EventBus eventBus;
 
-    private BaseMenu parent;
+    BaseMenu parent;
 
     protected Map<LIElement, Event> menuItemsEventMap = new HashMap<>();
 
@@ -46,7 +45,6 @@ public class ExecutableMenuItemPresenter implements ExecutableMenuItemView.Prese
 
     @Override
     public void setEventBus(EventBus eventBus) {
-        GWT.log("ExecutableMenuItemPresenter " + this.toString() + " setEventBus " + eventBus.toString());
         this.eventBus = eventBus;
     }
 

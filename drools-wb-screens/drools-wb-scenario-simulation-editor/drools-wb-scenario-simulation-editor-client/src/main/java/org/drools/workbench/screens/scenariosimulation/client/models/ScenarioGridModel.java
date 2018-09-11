@@ -42,9 +42,9 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
 public class ScenarioGridModel extends BaseGridData {
 
-    private Simulation simulation;
+    Simulation simulation;
 
-    private EventBus eventBus;
+    EventBus eventBus;
 
     public ScenarioGridModel() {
     }
@@ -85,6 +85,26 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * This method <i>insert</i> a row to the grid and populate it with values taken from given <code>Scenario</code>
+     * @param row
+     */
+    public void insertRow(final int rowIndex,
+                          final GridRow row, final Scenario scenario) {
+        insertRow(rowIndex, row);
+        scenario.getUnmodifiableFactMappingValues().forEach(value -> {
+            FactIdentifier factIdentifier = value.getFactIdentifier();
+            ExpressionIdentifier expressionIdentifier = value.getExpressionIdentifier();
+            if (value.getRawValue() instanceof String) {
+                String stringValue = (String) value.getRawValue();
+                int columnIndex = simulation.getSimulationDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
+                setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue)));
+            } else {
+                throw new UnsupportedOperationException("Only string is supported at the moment");
+            }
+        });
+    }
+
+    /**
      * This method <i>insert</i> a new row to the grid <b>and</b> to the underlying model
      * @param row
      */
@@ -99,10 +119,23 @@ public class ScenarioGridModel extends BaseGridData {
      * @param rowIndex
      */
     public Range deleteNewRow(int rowIndex) {
+        // TODO CURRENTLY BROKEN BY duplicateNewRow - TO BE FIXED WHEN DROOL-2982 AVAILABLE
         checkSimulation();
         Range toReturn = super.deleteRow(rowIndex);
         simulation.removeScenarioByIndex(rowIndex);
         return toReturn;
+    }
+
+    /**
+     * This method <i>duplicate</i> the row at the given index from both the grid <b>and</b> the underlying model
+     * and insert just below the original one
+     * @param rowIndex
+     */
+    public void duplicateNewRow(int rowIndex, GridRow row) {
+        // TODO CURRENTLY BROKE deleteRow - TO BE FIXED WHEN DROOL-2982 AVAILABLE
+        checkSimulation();
+        final Scenario toDuplicate = simulation.getScenarioByIndex(rowIndex);
+        insertRow(++rowIndex, row, toDuplicate);
     }
 
     /**
@@ -122,7 +155,6 @@ public class ScenarioGridModel extends BaseGridData {
      * @param column
      */
     public void insertNewColumn(final int index, final GridColumn<?> column) {
-        checkSimulation();
         commonAddColumn(index, column);
     }
 
@@ -297,7 +329,7 @@ public class ScenarioGridModel extends BaseGridData {
         });
     }
 
-    private void checkSimulation() {
+    void checkSimulation() {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
     }
 

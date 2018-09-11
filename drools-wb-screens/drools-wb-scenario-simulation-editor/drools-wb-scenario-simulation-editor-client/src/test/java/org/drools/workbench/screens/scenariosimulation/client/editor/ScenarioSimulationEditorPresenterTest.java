@@ -102,7 +102,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Before
     public void setup() {
         super.setup();
-
+        when(mockScenarioSimulationProducer.getScenarioSimulationView()).thenReturn(mockScenarioSimulationView);
         when(mockPlaceRequest.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
 
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationService),

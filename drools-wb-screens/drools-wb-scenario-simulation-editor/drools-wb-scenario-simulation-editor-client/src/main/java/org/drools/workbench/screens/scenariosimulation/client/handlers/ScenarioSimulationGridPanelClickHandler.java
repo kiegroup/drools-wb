@@ -46,14 +46,14 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                                 ContextMenuHandler {
 
-    private ScenarioGrid scenarioGrid;
-    private OtherContextMenu otherContextMenu;
-    private HeaderGivenContextMenu headerGivenContextMenu;
-    private HeaderExpectedContextMenu headerExpectedContextMenu;
-    private GivenContextMenu givenContextMenu;
-    private ExpectedContextMenu expectedContextMenu;
-    private GridContextMenu gridContextMenu;
-    private Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
+    ScenarioGrid scenarioGrid;
+    OtherContextMenu otherContextMenu;
+    HeaderGivenContextMenu headerGivenContextMenu;
+    HeaderExpectedContextMenu headerExpectedContextMenu;
+    GivenContextMenu givenContextMenu;
+    ExpectedContextMenu expectedContextMenu;
+    GridContextMenu gridContextMenu;
+    Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
 
     public ScenarioSimulationGridPanelClickHandler() {
     }
@@ -144,7 +144,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         return e.getClientY() - target.getAbsoluteTop() + target.getScrollTop() + target.getOwnerDocument().getScrollTop();
     }
 
-    private void commonClickManagement() {
+    void commonClickManagement() {
         managedMenus.forEach(BaseMenu::hide);
     }
 

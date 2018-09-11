@@ -21,6 +21,7 @@ import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 
 /**
  * The contextual menu of a any <i>ROW</i> cell. It has the same items has {@link AbstractColumnMenuPresenter} and specific ones (?)
@@ -40,6 +41,7 @@ public class GridContextMenu extends AbstractColumnMenuPresenter {
     private final String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
     private final String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
 
+    private LIElement duplicateRowLIElement;
     private LIElement deleteRowLIElement;
 
     @PostConstruct
@@ -57,11 +59,13 @@ public class GridContextMenu extends AbstractColumnMenuPresenter {
         HEADERCONTEXTMENU_INSERT_ROW_ABOVE = GRIDCONTEXTMENU_INSERT_ROW_ABOVE;
         HEADERCONTEXTMENU_INSERT_ROW_BELOW = GRIDCONTEXTMENU_INSERT_ROW_BELOW;
         super.initMenu();
+        duplicateRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
         deleteRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow");
     }
 
     public void show(final int mx, final int my, int columnIndex, int rowIndex) {
         super.show(mx, my, columnIndex);
+        mapEvent(duplicateRowLIElement, new DuplicateRowEvent(rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(rowIndex));
     }
 }

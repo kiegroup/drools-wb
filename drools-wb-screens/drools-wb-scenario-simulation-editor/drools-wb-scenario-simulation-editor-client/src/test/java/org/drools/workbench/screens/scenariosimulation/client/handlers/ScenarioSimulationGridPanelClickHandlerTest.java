@@ -16,12 +16,16 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Set;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.AbstractHeaderMenuPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
@@ -36,8 +40,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -79,21 +83,38 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     @Mock
     private ContextMenuEvent mockContextMenuEvent;
 
+    @Mock
+    private Set<AbstractHeaderMenuPresenter> mockManagedMenus;
+
+    @Mock
+    private EventBus mockEventBus;
+
     @Before
     public void setUp() throws Exception {
         when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
-        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler(/*mockScenarioGridPanel,
-                                                                                                  mockOtherContextMenu,
-                                                                                                  mockHeaderGivenContextMenu,
-                                                                                                  mockHeaderExpectedContextMenu,
-                                                                                                  mockGivenContextMenu,
-                                                                                                  mockExpectedContextMenu,
-                                                                                                  mockGridContextMenu*/) {
+        scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler() {
+            {
+                scenarioGrid = mockScenarioGrid;
+                otherContextMenu = mockOtherContextMenu;
+                headerGivenContextMenu = mockHeaderGivenContextMenu;
+                headerExpectedContextMenu = mockHeaderExpectedContextMenu;
+                givenContextMenu = mockGivenContextMenu;
+                expectedContextMenu = mockExpectedContextMenu;
+                gridContextMenu = mockGridContextMenu;
+                managedMenus.add(mockOtherContextMenu);
+                managedMenus.add(mockHeaderGivenContextMenu);
+                managedMenus.add(mockHeaderExpectedContextMenu);
+                managedMenus.add(mockGivenContextMenu);
+                managedMenus.add(mockExpectedContextMenu);
+                managedMenus.add(mockGridContextMenu);
+            }
+
             @Override
             protected void manageRightClick(ContextMenuEvent event) {
                 // 
             }
         });
+        mockManagedMenus = spy(scenarioSimulationGridPanelClickHandler.managedMenus);
 
         when(mockNativeEvent.getClientX()).thenReturn(100);
         when(mockNativeEvent.getClientY()).thenReturn(100);
@@ -112,6 +133,65 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     }
 
     @Test
+    public void setScenarioGrid() {
+        scenarioSimulationGridPanelClickHandler.setScenarioGrid(mockScenarioGrid);
+        assertEquals(mockScenarioGrid, scenarioSimulationGridPanelClickHandler.scenarioGrid);
+    }
+
+    @Test
+    public void setOtherContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setOtherContextMenu(mockOtherContextMenu);
+        assertEquals(mockOtherContextMenu, scenarioSimulationGridPanelClickHandler.otherContextMenu);
+//        verify(mockManagedMenus, times(1)).add(eq(mockOtherContextMenu));
+    }
+
+    @Test
+    public void setHeaderGivenContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setHeaderGivenContextMenu(mockHeaderGivenContextMenu);
+        assertEquals(mockHeaderGivenContextMenu, scenarioSimulationGridPanelClickHandler.headerGivenContextMenu);
+//        verify(mockManagedMenus, times(1)).add(eq(mockHeaderGivenContextMenu));
+    }
+
+    @Test
+    public void setHeaderExpectedContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setHeaderExpectedContextMenu(mockHeaderExpectedContextMenu);
+        assertEquals(mockHeaderExpectedContextMenu, scenarioSimulationGridPanelClickHandler.headerExpectedContextMenu);
+//        verify(mockManagedMenus, times(1)).add(eq(mockHeaderExpectedContextMenu));
+    }
+
+    @Test
+    public void setGivenContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setGivenContextMenu(mockGivenContextMenu);
+        assertEquals(mockGivenContextMenu, scenarioSimulationGridPanelClickHandler.givenContextMenu);
+//        verify(mockManagedMenus, times(1)).add(eq(mockGivenContextMenu));
+    }
+
+    @Test
+    public void setExpectedContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setExpectedContextMenu(mockExpectedContextMenu);
+        assertEquals(mockExpectedContextMenu, scenarioSimulationGridPanelClickHandler.expectedContextMenu);
+       // verify(mockManagedMenus, times(1)).add(eq(mockExpectedContextMenu));
+    }
+
+    @Test
+    public void setGridContextMenu() {
+        scenarioSimulationGridPanelClickHandler.setGridContextMenu(mockGridContextMenu);
+        assertEquals(mockGridContextMenu, scenarioSimulationGridPanelClickHandler.gridContextMenu);
+//        verify(mockManagedMenus, times(1)).add(eq(mockGridContextMenu));
+    }
+
+    @Test
+    public void setEventBus() {
+        scenarioSimulationGridPanelClickHandler.setEventBus(mockEventBus);
+        verify(mockOtherContextMenu, times(1)).setEventBus(eq(mockEventBus));
+        verify(mockHeaderGivenContextMenu, times(1)).setEventBus(eq(mockEventBus));
+        verify(mockHeaderExpectedContextMenu, times(1)).setEventBus(eq(mockEventBus));
+        verify(mockGivenContextMenu, times(1)).setEventBus(eq(mockEventBus));
+        verify(mockExpectedContextMenu, times(1)).setEventBus(eq(mockEventBus));
+        verify(mockGridContextMenu, times(1)).setEventBus(eq(mockEventBus));
+    }
+
+    @Test
     public void getRelativeX() {
         int retrieved = scenarioSimulationGridPanelClickHandler.getRelativeX(mockContextMenuEvent);
         assertEquals(80, retrieved);
@@ -121,6 +201,17 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     public void getRelativeY() {
         int retrieved = scenarioSimulationGridPanelClickHandler.getRelativeY(mockContextMenuEvent);
         assertEquals(80, retrieved);
+    }
+
+    @Test
+    public void commonClickManagement() {
+        scenarioSimulationGridPanelClickHandler.commonClickManagement();
+        verify(mockOtherContextMenu, times(1)).hide();
+        verify(mockHeaderGivenContextMenu, times(1)).hide();
+        verify(mockHeaderExpectedContextMenu, times(1)).hide();
+        verify(mockGivenContextMenu, times(1)).hide();
+        verify(mockExpectedContextMenu, times(1)).hide();
+        verify(mockGridContextMenu, times(1)).hide();
     }
 
     @Test
@@ -141,9 +232,6 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     }
 
     private void commonCheck() {
-        verify(mockGridContextMenu, times(1)).hide();
-        verify(mockHeaderGivenContextMenu, times(1)).hide();
-        reset(mockGridContextMenu);
-        reset(mockHeaderGivenContextMenu);
+        verify(scenarioSimulationGridPanelClickHandler, times(1)).commonClickManagement();
     }
 }

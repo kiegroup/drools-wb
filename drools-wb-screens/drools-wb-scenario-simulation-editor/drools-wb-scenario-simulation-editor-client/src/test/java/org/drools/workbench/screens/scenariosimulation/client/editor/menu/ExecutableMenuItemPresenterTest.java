@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.Event;
 import org.junit.Before;
@@ -28,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -49,6 +51,12 @@ public class ExecutableMenuItemPresenterTest {
     @Mock
     private Event mockEvent;
 
+    @Mock
+    private EventBus mockEventBus;
+
+    @Mock
+    private BaseMenu mockparent;
+
     private ExecutableMenuItemPresenter executableMenuItemPresenter;
 
     @Before
@@ -60,6 +68,8 @@ public class ExecutableMenuItemPresenterTest {
         this.executableMenuItemPresenter = spy(new ExecutableMenuItemPresenter() {
             {
                 menuItemsEventMap = mockMenuItemsEventMap;
+                eventBus = mockEventBus;
+                parent = mockparent;
             }
 
             @Override
@@ -75,12 +85,15 @@ public class ExecutableMenuItemPresenterTest {
         executableMenuItemPresenter.onClickEvent(mockClickEvent, mockLIElement);
         verify(mockClickEvent, times(1)).preventDefault();
         verify(mockClickEvent, times(1)).stopPropagation();
+        verify(mockparent, times(1)).hide();
+        verify(executableMenuItemPresenter, times(1)).fireEvent(eq(mockLIElement));
     }
 
     @Test
     public void fireEvent() {
         executableMenuItemPresenter.fireEvent(mockLIElement);
         verify(mockMenuItemsEventMap, times(1)).containsKey(mockLIElement);
+        verify(mockEventBus, times(1)).fireEvent(eq(mockEvent));
     }
 
     @Test

@@ -23,9 +23,6 @@ import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelDoubleClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
-import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -69,7 +66,7 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                  renderer);
     }
 
-    private void setHeaderColumns(Simulation simulation) {
+    void setHeaderColumns(Simulation simulation) {
         // NOW USING INDEX OF FactMappings LIST FOR COLUMN POSITIONING INSIDE GRID
         final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
         IntStream.range(0, factMappings.size())
@@ -82,22 +79,10 @@ public class ScenarioGrid extends BaseGridWidget {
                 });
     }
 
-    private void appendRows(Simulation simulation) {
+    void appendRows(Simulation simulation) {
         List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size()).forEach(rowIndex -> {
-            Scenario scenario = scenarios.get(rowIndex);
-            model.insertRow(rowIndex, new ScenarioGridRow());
-            scenario.getUnmodifiableFactMappingValues().forEach(value -> {
-                FactIdentifier factIdentifier = value.getFactIdentifier();
-                ExpressionIdentifier expressionIdentifier = value.getExpressionIdentifier();
-                if (value.getRawValue() instanceof String) {
-                    String stringValue = (String) value.getRawValue();
-                    int columnIndex = simulation.getSimulationDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
-                    model.setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue)));
-                } else {
-                    throw new UnsupportedOperationException("Only string is supported at the moment");
-                }
-            });
+            ((ScenarioGridModel) model).insertRow(rowIndex, new ScenarioGridRow(), scenarios.get(rowIndex));
         });
     }
 }

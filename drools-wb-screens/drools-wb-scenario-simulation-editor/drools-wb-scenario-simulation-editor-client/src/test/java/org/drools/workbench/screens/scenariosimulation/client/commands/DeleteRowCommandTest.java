@@ -17,33 +17,30 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AppendColumnCommandTest extends AbstractCommandTest {
+public class DeleteRowCommandTest extends AbstractCommandTest {
 
 
 
-    private AppendColumnCommand appendColumnCommand;
+    private DeleteRowCommand deleteRowCommand;
 
     @Before
     public void setup() {
         super.setup();
-        appendColumnCommand = new AppendColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
+        deleteRowCommand = new DeleteRowCommand(mockScenarioGridModel, ROW_INDEX);
     }
 
     @Test
     public void execute() {
-        appendColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).getFirstIndexRightOfGroup(eq(COLUMN_GROUP));
-        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(FIRST_INDEX_RIGHT), isA(ScenarioGridColumn.class));
+        deleteRowCommand.execute();
+        verify(mockScenarioGridModel, times(1)).deleteNewRow(eq(ROW_INDEX));
     }
 }

@@ -17,44 +17,33 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class InsertColumnCommandTest {
-
-    @Mock
-    private ScenarioGridModel mockScenarioGridModel;
-
-    @Mock
-    private ScenarioGridPanel mockScenarioGridPanel;
-    @Mock
-    private ScenarioGridLayer mockScenarioGridLayer;
-
-    private final int COLUMN_INDEX = 3;
-
-    private final String COLUMN_ID = "COLUMN ID";
+public class InsertColumnCommandTest extends AbstractCommandTest {
 
     private InsertColumnCommand insertColumnCommand;
 
     @Before
     public void setup() {
-        insertColumnCommand = new InsertColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_INDEX, true, mockScenarioGridPanel, mockScenarioGridLayer);
+        super.setup();
     }
 
     @Test
     public void execute() {
+        insertColumnCommand = new InsertColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_INDEX, false, mockScenarioGridPanel, mockScenarioGridLayer);
         insertColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(COLUMN_INDEX), anyObject());
+        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class));
+        insertColumnCommand = new InsertColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_INDEX, true, mockScenarioGridPanel, mockScenarioGridLayer);
+        insertColumnCommand.execute();
+        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(COLUMN_INDEX + 1), isA(ScenarioGridColumn.class));
     }
 }

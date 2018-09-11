@@ -17,32 +17,31 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AppendRowCommandTest {
+public class AppendRowCommandTest extends AbstractCommandTest {
 
-    @Mock
-    private ScenarioGridModel mockScenarioGridModel;
+
 
     private AppendRowCommand appendRowCommand;
 
     @Before
     public void setup() {
+        super.setup();
         appendRowCommand = new AppendRowCommand(mockScenarioGridModel);
     }
 
     @Test
     public void execute() {
         appendRowCommand.execute();
-        verify(mockScenarioGridModel, times(1)).appendRow(anyObject());
+        verify(mockScenarioGridModel, times(1)).appendNewRow(isA(ScenarioGridRow.class));
     }
 }

@@ -66,7 +66,6 @@ public class ScenarioSimulationViewImpl
         this.presenter = presenter;
         scenarioGridLayer.enterPinnedMode(scenarioGridLayer.getScenarioGrid(), () -> {
         });  // Hack to overcome default implementation
-
         initWidget(scenarioGridPanel);
     }
 

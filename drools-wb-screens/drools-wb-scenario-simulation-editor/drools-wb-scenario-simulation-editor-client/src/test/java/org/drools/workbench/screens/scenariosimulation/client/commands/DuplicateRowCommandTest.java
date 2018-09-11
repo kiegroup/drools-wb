@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,22 +28,21 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AppendColumnCommandTest extends AbstractCommandTest {
+public class DuplicateRowCommandTest extends AbstractCommandTest {
 
 
 
-    private AppendColumnCommand appendColumnCommand;
+    private DuplicateRowCommand duplicateRowCommand;
 
     @Before
     public void setup() {
         super.setup();
-        appendColumnCommand = new AppendColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
+        duplicateRowCommand = new DuplicateRowCommand(mockScenarioGridModel, ROW_INDEX);
     }
 
     @Test
     public void execute() {
-        appendColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).getFirstIndexRightOfGroup(eq(COLUMN_GROUP));
-        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(FIRST_INDEX_RIGHT), isA(ScenarioGridColumn.class));
+        duplicateRowCommand.execute();
+        verify(mockScenarioGridModel, times(1)).duplicateNewRow(eq(ROW_INDEX), isA(ScenarioGridRow.class));
     }
 }

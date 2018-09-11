@@ -16,10 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
-import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.junit.runner.RunWith;
-
-@RunWith(GwtMockitoTestRunner.class)
+//@RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationViewProviderTest {
 
 //    @Test

@@ -28,22 +28,22 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AppendColumnCommandTest extends AbstractCommandTest {
+public class PrependColumnCommandTest extends AbstractCommandTest {
 
 
 
-    private AppendColumnCommand appendColumnCommand;
+    private PrependColumnCommand prependColumnCommand;
 
     @Before
     public void setup() {
         super.setup();
-        appendColumnCommand = new AppendColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
+        prependColumnCommand = new PrependColumnCommand(mockScenarioGridModel, COLUMN_ID, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
     }
 
     @Test
     public void execute() {
-        appendColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).getFirstIndexRightOfGroup(eq(COLUMN_GROUP));
-        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(FIRST_INDEX_RIGHT), isA(ScenarioGridColumn.class));
+        prependColumnCommand.execute();
+        verify(mockScenarioGridModel, times(1)).getFirstIndexLeftOfGroup(eq(COLUMN_GROUP));
+        verify(mockScenarioGridModel, times(1)).insertNewColumn(eq(FIRST_INDEX_LEFT), isA(ScenarioGridColumn.class));
     }
 }

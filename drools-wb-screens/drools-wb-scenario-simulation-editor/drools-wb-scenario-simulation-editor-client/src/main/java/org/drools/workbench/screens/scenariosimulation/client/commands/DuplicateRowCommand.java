@@ -15,26 +15,35 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import javax.enterprise.context.Dependent;
+
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.uberfire.mvp.Command;
 
 /**
- *  <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
+ * <code>Command</code> to <b>duplicate</b> a row.
  */
-public class PrependRowCommand implements Command {
+@Dependent
+public class DuplicateRowCommand implements Command {
 
-    protected ScenarioGridModel model;
+    private ScenarioGridModel model;
+    private int rowIndex;
 
-    public PrependRowCommand() {
+    public DuplicateRowCommand() {
     }
 
-    public PrependRowCommand(ScenarioGridModel model) {
+    /**
+     * @param model
+     * @param rowIndex
+     */
+    public DuplicateRowCommand(ScenarioGridModel model, int rowIndex) {
         this.model = model;
+        this.rowIndex = rowIndex;
     }
 
     @Override
     public void execute() {
-        model.insertNewRow(0, new ScenarioGridRow());
+        model.duplicateNewRow(rowIndex, new ScenarioGridRow());
     }
 }
