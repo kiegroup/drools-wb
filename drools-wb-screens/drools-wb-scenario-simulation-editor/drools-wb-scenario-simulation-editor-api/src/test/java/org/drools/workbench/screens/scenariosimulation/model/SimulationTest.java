@@ -66,7 +66,7 @@ public class SimulationTest {
         assertEquals(clonedScenario, simulation.getScenarioByIndex(1));
 
         assertNotEquals(originalScenario, clonedScenario);
-        assertNotEquals(originalScenario.getFactMappingValueByIndex(0), clonedScenario.getFactMappingValueByIndex(0));
+        assertNotEquals(originalScenario.getFactMappingValues().get(0), clonedScenario.getFactMappingValues().get(0));
     }
 
     @Test
