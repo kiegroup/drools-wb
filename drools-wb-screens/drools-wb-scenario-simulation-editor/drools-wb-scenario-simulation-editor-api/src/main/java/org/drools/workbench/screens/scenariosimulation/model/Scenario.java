@@ -35,7 +35,7 @@ public class Scenario {
     /**
      * List of values to be used to test this scenario
      */
-    private List<FactMappingValue> factMappingValues = new ArrayList<>();
+    private final List<FactMappingValue> factMappingValues = new ArrayList<>();
 
     private SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
 
@@ -102,5 +102,11 @@ public class Scenario {
 
     public Collection<String> getFactNames() {
         return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
+    }
+
+    Scenario cloneScenario() {
+        Scenario cloned = new Scenario(simulationDescriptor);
+        cloned.factMappingValues.addAll(factMappingValues.stream().map(FactMappingValue::cloneFactMappingValue).collect(toList()));
+        return cloned;
     }
 }
