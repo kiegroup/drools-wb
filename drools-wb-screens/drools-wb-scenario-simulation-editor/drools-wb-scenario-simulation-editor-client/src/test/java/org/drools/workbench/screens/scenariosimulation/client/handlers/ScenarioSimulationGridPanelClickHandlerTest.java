@@ -142,42 +142,36 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     public void setOtherContextMenu() {
         scenarioSimulationGridPanelClickHandler.setOtherContextMenu(mockOtherContextMenu);
         assertEquals(mockOtherContextMenu, scenarioSimulationGridPanelClickHandler.otherContextMenu);
-//        verify(mockManagedMenus, times(1)).add(eq(mockOtherContextMenu));
     }
 
     @Test
     public void setHeaderGivenContextMenu() {
         scenarioSimulationGridPanelClickHandler.setHeaderGivenContextMenu(mockHeaderGivenContextMenu);
         assertEquals(mockHeaderGivenContextMenu, scenarioSimulationGridPanelClickHandler.headerGivenContextMenu);
-//        verify(mockManagedMenus, times(1)).add(eq(mockHeaderGivenContextMenu));
     }
 
     @Test
     public void setHeaderExpectedContextMenu() {
         scenarioSimulationGridPanelClickHandler.setHeaderExpectedContextMenu(mockHeaderExpectedContextMenu);
         assertEquals(mockHeaderExpectedContextMenu, scenarioSimulationGridPanelClickHandler.headerExpectedContextMenu);
-//        verify(mockManagedMenus, times(1)).add(eq(mockHeaderExpectedContextMenu));
     }
 
     @Test
     public void setGivenContextMenu() {
         scenarioSimulationGridPanelClickHandler.setGivenContextMenu(mockGivenContextMenu);
         assertEquals(mockGivenContextMenu, scenarioSimulationGridPanelClickHandler.givenContextMenu);
-//        verify(mockManagedMenus, times(1)).add(eq(mockGivenContextMenu));
     }
 
     @Test
     public void setExpectedContextMenu() {
         scenarioSimulationGridPanelClickHandler.setExpectedContextMenu(mockExpectedContextMenu);
         assertEquals(mockExpectedContextMenu, scenarioSimulationGridPanelClickHandler.expectedContextMenu);
-       // verify(mockManagedMenus, times(1)).add(eq(mockExpectedContextMenu));
     }
 
     @Test
     public void setGridContextMenu() {
         scenarioSimulationGridPanelClickHandler.setGridContextMenu(mockGridContextMenu);
         assertEquals(mockGridContextMenu, scenarioSimulationGridPanelClickHandler.gridContextMenu);
-//        verify(mockManagedMenus, times(1)).add(eq(mockGridContextMenu));
     }
 
     @Test

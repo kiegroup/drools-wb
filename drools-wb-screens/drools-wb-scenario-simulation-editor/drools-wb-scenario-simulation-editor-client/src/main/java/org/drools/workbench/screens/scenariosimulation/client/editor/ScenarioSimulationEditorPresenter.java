@@ -127,11 +127,6 @@ public class ScenarioSimulationEditorPresenter
 
         view.init(this);
 
-//        rightPanelRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
-//        rightPanelRequest.addParameter("ScenarioSimulationEditorPresenter", this.toString());
-//
-//        rightPanelMenuItem.init(rightPanelRequest);
-
         populateRightPanelCommand = getPopulateRightPanelCommand();
     }
 

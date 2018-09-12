@@ -277,15 +277,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         onClosePlaceStatusClose();
     }
 
-//    @Test
-//    public void menusAdded() throws Exception {
-//
-//        verify(mockScenarioSimulationView).addGridMenuItem(eq("one"), eq("ONE"), eq(""), any(com.google.gwt.user.client.Command.class));
-//        verify(mockScenarioSimulationView).addGridMenuItem(eq("two"), eq("TWO"), eq(""), any(com.google.gwt.user.client.Command.class));
-//        verify(mockScenarioSimulationView).addHeaderMenuItem(eq("one"), eq("HEADER-ONE"), eq(""), any(com.google.gwt.user.client.Command.class));
-//        verify(mockScenarioSimulationView).addHeaderMenuItem(eq("two"), eq("HEADER-TWO"), eq(""), any(com.google.gwt.user.client.Command.class));
-//    }
-
     @Test
     public void onRunTest() throws Exception {
 

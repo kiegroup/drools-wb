@@ -41,7 +41,6 @@ public abstract class AbstractHeaderGroupMenuPresenter extends AbstractHeaderMen
         addMenuItem(HEADERCONTEXTMENU_GROUP, HEADERCONTEXTMENU_LABEL, HEADERCONTEXTMENU_I18N);
         addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", prependColumnEvent);
         addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", appendColumnEvent);
-        //        addExecutableMenuItem(HEADERCONTEXTMENU_DELETE_COLUMN, constants.deleteNewColumn(), "deleteNewColumn", () -> GWT.log(HEADERCONTEXTMENU_DELETE_COLUMN));
         super.initMenu();
     }
 }
