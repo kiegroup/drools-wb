@@ -61,12 +61,12 @@ public class SimulationTest {
         Scenario clonedScenario = simulation.cloneScenario(0, 1);
 
         assertEquals(originalScenario.getDescription(), clonedScenario.getDescription());
-        assertEquals(originalScenario.getFactMappingValues().size(), clonedScenario.getFactMappingValues().size());
+        assertEquals(originalScenario.getUnmodifiableFactMappingValues().size(), clonedScenario.getUnmodifiableFactMappingValues().size());
         assertEquals(originalScenario, simulation.getScenarioByIndex(0));
         assertEquals(clonedScenario, simulation.getScenarioByIndex(1));
 
         assertNotEquals(originalScenario, clonedScenario);
-        assertNotEquals(originalScenario.getFactMappingValues().get(0), clonedScenario.getFactMappingValues().get(0));
+        assertNotEquals(originalScenario.getUnmodifiableFactMappingValues().get(0), clonedScenario.getUnmodifiableFactMappingValues().get(0));
     }
 
     @Test

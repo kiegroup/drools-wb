@@ -119,7 +119,6 @@ public class ScenarioGridModel extends BaseGridData {
      * @param rowIndex
      */
     public Range deleteNewRow(int rowIndex) {
-        // TODO CURRENTLY BROKEN BY duplicateNewRow - TO BE FIXED WHEN DROOL-2982 AVAILABLE
         checkSimulation();
         Range toReturn = super.deleteRow(rowIndex);
         simulation.removeScenarioByIndex(rowIndex);
@@ -132,10 +131,10 @@ public class ScenarioGridModel extends BaseGridData {
      * @param rowIndex
      */
     public void duplicateNewRow(int rowIndex, GridRow row) {
-        // TODO CURRENTLY BROKE deleteRow - TO BE FIXED WHEN DROOL-2982 AVAILABLE
         checkSimulation();
-        final Scenario toDuplicate = simulation.getScenarioByIndex(rowIndex);
-        insertRow(++rowIndex, row, toDuplicate);
+        int newRowIndex = rowIndex +1;
+        final Scenario toDuplicate = simulation.cloneScenario(rowIndex, newRowIndex);
+        insertRow(newRowIndex, row, toDuplicate);
     }
 
     /**

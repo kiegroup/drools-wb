@@ -120,8 +120,10 @@ public class ScenarioGridModelTest {
 
         when(mockGridCell.getValue()).thenReturn(mockGridCellValue);
         when(mockGridCellValue.getValue()).thenReturn(GRID_CELL_TEXT);
+
         when(mockScenario.getUnmodifiableFactMappingValues()).thenReturn(mockFactMappingValues);
         when(mockSimulation.getScenarioByIndex(ROW_INDEX)).thenReturn(mockScenario);
+        when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX +1)).thenReturn(mockScenario);
         gridCellSupplier = () -> mockGridCell;
         scenarioGridModel = spy(new ScenarioGridModel() {
             {
@@ -192,7 +194,7 @@ public class ScenarioGridModelTest {
     public void duplicateNewRow() {
         scenarioGridModel.duplicateNewRow(ROW_INDEX, mockGridRow);
         verify(scenarioGridModel, times(1)).checkSimulation();
-        // TODO CHECK NEW METHOD FROM DROOLS-2982
+        verify(mockSimulation, times(1)).cloneScenario(eq(ROW_INDEX), eq(ROW_INDEX +1));
         verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX + 1), eq(mockGridRow), isA(Scenario.class));
     }
 
