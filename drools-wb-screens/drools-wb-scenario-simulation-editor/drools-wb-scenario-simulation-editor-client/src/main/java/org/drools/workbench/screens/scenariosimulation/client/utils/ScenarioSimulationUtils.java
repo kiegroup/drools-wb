@@ -39,11 +39,11 @@ public class ScenarioSimulationUtils {
 
     public static ScenarioGridColumn getScenarioGridColumn(String columnId, String columnTitle, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
         TextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(SCENARIOHEADERMETADATALIST_FUNCTION.apply(columnId, columnTitle, columnGroup, factory), new ScenarioGridColumnRenderer(), 100, false);
+        return new ScenarioGridColumn(SCENARIOHEADERMETADATALIST_FUNCTION.apply(columnId, columnTitle, columnGroup, factory), new ScenarioGridColumnRenderer(), 100, false, factory);
     }
 
     public static ScenarioGridColumn getScenarioGridColumn(String columnId, String columnTitle, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
         TextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, "", factory), new ScenarioGridColumnRenderer(), 100, false);
+        return new ScenarioGridColumn(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, "", factory), new ScenarioGridColumnRenderer(), 100, false, factory);
     }
 }
