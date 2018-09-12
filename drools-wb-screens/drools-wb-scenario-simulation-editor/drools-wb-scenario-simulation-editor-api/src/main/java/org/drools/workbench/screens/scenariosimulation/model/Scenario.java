@@ -55,7 +55,7 @@ public class Scenario {
      * {@link #getFactMappingValue(FactIdentifier, ExpressionIdentifier)}
      * @return not modifiable list of FactMappingValues
      */
-    public List<FactMappingValue> getFactMappingValues() {
+    public List<FactMappingValue> getUnmodifiableFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
     }
 

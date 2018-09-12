@@ -16,15 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Command;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class MenuItemPresenter implements MenuItemView.Presenter {

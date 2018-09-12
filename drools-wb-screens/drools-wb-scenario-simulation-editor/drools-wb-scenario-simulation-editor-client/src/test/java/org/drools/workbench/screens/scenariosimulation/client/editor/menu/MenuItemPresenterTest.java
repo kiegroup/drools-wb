@@ -42,30 +42,18 @@ public class MenuItemPresenterTest {
     private LIElement mockLIElement;
 
     @Mock
-    private Map<LIElement, Command> mockMenuItemsCommandMap;
-
-    @Mock
-    private Command mockCommand;
-
-    @Mock
     private ViewsProvider mockViewsProvider;
 
     private MenuItemPresenter menuItemPresenter;
 
     @Before
     public void setup() {
-        when(mockViewsProvider.getMenuItemView()).thenReturn(mockMenuItemView);
+        when(mockViewsProvider.getMenuItemView()).thenReturn(mockMenuItemViewImpl);
         when(mockMenuItemViewImpl.getLabelMenuElement()).thenReturn(mockLIElement);
 
         this.menuItemPresenter = spy(new MenuItemPresenter() {
             {
-                menuItemsCommandMap = mockMenuItemsCommandMap;
-                viewsProvider = mockViewsProvider;
-            }
-
-            @Override
-            protected MenuItemView getMenuItemView() {
-                return mockMenuItemViewImpl;
+                this.viewsProvider = mockViewsProvider;
             }
         });
     }
@@ -77,7 +65,6 @@ public class MenuItemPresenterTest {
         verify(mockClickEvent, times(1)).preventDefault();
         verify(mockClickEvent, times(1)).stopPropagation();
     }
-
 
     @Test
     public void getLIElement() {

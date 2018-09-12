@@ -122,9 +122,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ObservablePath mockPath;
 
+    @Mock
+    private Command mockSetButtonTextFalse;
+
+    @Mock
+    private Command mockSetButtonTextTrue;
+
     @Before
     public void setup() {
         super.setup();
+
+        when(mockRightPanelMenuItem.getSetButtonTextFalse()).thenReturn(mockSetButtonTextFalse);
+        when(mockRightPanelMenuItem.getSetButtonTextTrue()).thenReturn(mockSetButtonTextTrue);
         when(mockScenarioSimulationProducer.getScenarioSimulationView()).thenReturn(mockScenarioSimulationView);
         when(mockPlaceRequest.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
 
@@ -142,7 +151,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                mock(ScenarioSimulationResourceType.class),
                                                                mockImportsWidget,
                                                                mockOracleFactory,
-                                                               mockRightPanelMenuItem,
                                                                mockPlaceManager) {
             {
                 this.kieView = mockKieView;
@@ -155,6 +163,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.alertsButtonMenuItemBuilder = mockAlertsButtonMenuItemBuilder;
                 this.rightPanelRequest = mockPlaceRequest;
                 this.path = mockPath;
+                this.rightPanelMenuItem = mockRightPanelMenuItem;
             }
 
             @Override
