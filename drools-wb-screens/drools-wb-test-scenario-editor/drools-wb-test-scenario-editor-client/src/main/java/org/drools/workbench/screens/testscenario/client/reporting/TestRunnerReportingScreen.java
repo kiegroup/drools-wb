@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,22 @@
 
 package org.drools.workbench.screens.testscenario.client.reporting;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.testscenario.client.service.TestRuntimeReportingService;
+import org.guvnor.common.services.shared.message.Level;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
+import org.guvnor.messageconsole.events.PublishBatchMessagesEvent;
+import org.guvnor.messageconsole.events.SystemMessage;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
@@ -39,16 +46,18 @@ public class TestRunnerReportingScreen
 
     private TestRunnerReportingView view;
 
+    @Inject
+    private Event<PublishBatchMessagesEvent> publishBatchMessagesEvent;
+
     public TestRunnerReportingScreen() {
         //Zero argument constructor for CDI
     }
 
     @Inject
-    public TestRunnerReportingScreen( TestRunnerReportingView view,
-                                      TestRuntimeReportingService testRuntimeReportingService ) {
+    public TestRunnerReportingScreen(TestRunnerReportingView view,
+                                     TestRuntimeReportingService testRuntimeReportingService) {
         this.view = view;
-        view.setPresenter( this );
-        view.bindDataGridToService( testRuntimeReportingService );
+        view.setPresenter(this);
     }
 
     @DefaultPosition
@@ -58,7 +67,7 @@ public class TestRunnerReportingScreen
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "Reporting";
+        return "";
     }
 
     @WorkbenchPartView
@@ -66,23 +75,39 @@ public class TestRunnerReportingScreen
         return view.asWidget();
     }
 
-    public void onSuccess( @Observes TestResultMessage testResultMessage ) {
-        if ( testResultMessage.wasSuccessful() ) {
+    public void onTestRun(@Observes TestResultMessage testResultMessage) {
+        if (testResultMessage.wasSuccessful()) {
+            publishMessages(new ArrayList<>());
             view.showSuccess();
-            view.setExplanation( "" );
+        } else {
+            if (testResultMessage.getFailures() != null) {
+                publishMessages(testResultMessage.getFailures().stream().map(this::convert).collect(Collectors.toList()));
+            }
+            view.showFailure();
         }
 
-        view.setRunStatus( testResultMessage.getRunCount(), testResultMessage.getRunTime() );
-
+        view.setRunStatus(testResultMessage.getRunCount(),
+                          testResultMessage.getRunTime());
     }
 
-    @Override
-    public void onMessageSelected( Failure failure ) {
-        view.setExplanation( failure.getMessage() );
+    private void publishMessages(List<SystemMessage> systemMessages) {
+        PublishBatchMessagesEvent batchMessages = new PublishBatchMessagesEvent();
+        batchMessages.setCleanExisting(true);
+        batchMessages.setMessagesToPublish(systemMessages);
+        publishBatchMessagesEvent.fire(batchMessages);
     }
 
-    @Override
-    public void onAddingFailure( Failure failure ) {
-        view.showFailure();
+    private SystemMessage convert(Failure failure) {
+        SystemMessage systemMessage = new SystemMessage();
+        systemMessage.setMessageType("TestResults");
+        systemMessage.setLevel(Level.ERROR);
+        systemMessage.setText(makeMessage(failure));
+        return systemMessage;
+    }
+
+    private String makeMessage(Failure failure) {
+        final String displayName = failure.getDisplayName();
+        final String message = failure.getMessage();
+        return displayName + (!(message == null || message.isEmpty()) ? " : " + message : "");
     }
 }

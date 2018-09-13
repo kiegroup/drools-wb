@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.testscenario.client.reporting;
 
 import java.util.Date;
+
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -24,13 +25,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
 import elemental2.dom.HTMLAnchorElement;
 import elemental2.dom.HTMLDivElement;
-import org.drools.workbench.screens.testscenario.client.service.TestRuntimeReportingService;
-import org.guvnor.common.services.shared.message.Level;
-import org.guvnor.common.services.shared.test.Failure;
-import org.guvnor.messageconsole.client.console.MessageConsoleService;
-import org.guvnor.messageconsole.client.console.widget.MessageTableWidget;
 import org.guvnor.messageconsole.client.console.widget.button.ViewHideAlertsButtonPresenter;
-import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -41,9 +36,6 @@ public class TestRunnerReportingViewImpl
         implements TestRunnerReportingView {
 
     private Presenter presenter;
-
-    @Inject
-    private ViewHideAlertsButtonPresenter alertsPresenter;
 
     @DataField
     private HTMLDivElement resultPanel;
@@ -67,11 +59,7 @@ public class TestRunnerReportingViewImpl
     private HTMLAnchorElement viewAlerts;
 
     @Inject
-    private MessageConsoleService consoleService;
-
-    protected final MessageTableWidget<Failure> dataGrid = new MessageTableWidget<Failure>() {{
-        setToolBarVisible(false);
-    }};
+    private ViewHideAlertsButtonPresenter alertsPresenter;
 
     @Inject
     public TestRunnerReportingViewImpl(HTMLDivElement resultPanel,
@@ -88,11 +76,6 @@ public class TestRunnerReportingViewImpl
         this.completedAt = completedAt;
         this.duration = duration;
         this.viewAlerts = viewAlerts;
-
-        addSuccessColumn();
-        addTextColumn();
-
-        dataGrid.addStyleName(ColumnSize.MD_12.getCssName());
     }
 
     @EventHandler("viewAlerts")
@@ -100,42 +83,9 @@ public class TestRunnerReportingViewImpl
         alertsPresenter.viewAlerts();
     }
 
-    private void addSuccessColumn() {
-        dataGrid.addLevelColumn(10,
-                                new MessageTableWidget.ColumnExtractor<Level>() {
-                                    @Override
-                                    public Level getValue(final Object row) {
-                                        presenter.onAddingFailure((Failure) row);
-                                        return Level.ERROR;
-                                    }
-                                });
-    }
-
-    private void addTextColumn() {
-        dataGrid.addTextColumn(90,
-                               new MessageTableWidget.ColumnExtractor<String>() {
-                                   @Override
-                                   public String getValue(final Object row) {
-
-                                       return makeMessage((Failure) row);
-                                   }
-                               });
-    }
-
-    private String makeMessage(Failure failure) {
-        final String displayName = failure.getDisplayName();
-        final String message = failure.getMessage();
-        return displayName + (!(message == null || message.isEmpty()) ? " : " + message : "");
-    }
-
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
-    }
-
-    @Override
-    public void bindDataGridToService(TestRuntimeReportingService testRuntimeReportingService) {
-        testRuntimeReportingService.addDataDisplay(dataGrid);
     }
 
     @Override
@@ -148,10 +98,6 @@ public class TestRunnerReportingViewImpl
     public void showFailure() {
         testResultIcon.className = "pficon pficon-error-circle-o";
         testResultText.textContent = "FAILED";
-    }
-
-    @Override
-    public void setExplanation(String explanation) {
     }
 
     @Override
