@@ -32,8 +32,8 @@ public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
     private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_LEFT = "expectedcontextmenu-insert-column-left";
     private final String EXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectedcontextmenu-insert-column-right";
     private final String EXPECTEDCONTEXTMENU_DELETE_COLUMN = "expectedcontextmenu-delete-column";
-    private final String EXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE = "expectedcontextmenu-insert-row-below";
-    private final String EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW = "expectedcontextmenu-insert-row-below";
+    private final String EXPECTEDCONTEXTMENU_PREPEND_ROW = "expectedcontextmenu-prepend-row";
+    private final String EXPECTEDCONTEXTMENU_APPEND_ROW = "expectedcontextmenu-append-row";
 
     @PostConstruct
     @Override
@@ -47,8 +47,8 @@ public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_I18N = "expected";
         // SCENARIO MENU
         HEADERCONTEXTMENU_SCENARIO = EXPECTEDCONTEXTMENU_SCENARIO;
-        HEADERCONTEXTMENU_INSERT_ROW_ABOVE = EXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE;
-        HEADERCONTEXTMENU_INSERT_ROW_BELOW = EXPECTEDCONTEXTMENU_INSERT_ROW_BELOW;
+        HEADERCONTEXTMENU_PREPEND_ROW = EXPECTEDCONTEXTMENU_PREPEND_ROW;
+        HEADERCONTEXTMENU_APPEND_ROW = EXPECTEDCONTEXTMENU_APPEND_ROW;
         super.initMenu();
     }
 }

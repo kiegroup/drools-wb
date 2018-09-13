@@ -207,7 +207,12 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (uiRowIndex == null) {
             return false;
         }
-        gridContextMenu.show(left, top, uiColumnIndex, uiRowIndex);
+        ScenarioHeaderMetaData columnMetadata = (ScenarioHeaderMetaData) scenarioGrid.getModel().getColumns().get(uiColumnIndex).getHeaderMetaData().get(1);
+        if (columnMetadata == null) {
+            return false;
+        }
+        String group = columnMetadata.getColumnGroup();
+        gridContextMenu.show(left, top, uiColumnIndex, uiRowIndex, group);
         return true;
     }
 }

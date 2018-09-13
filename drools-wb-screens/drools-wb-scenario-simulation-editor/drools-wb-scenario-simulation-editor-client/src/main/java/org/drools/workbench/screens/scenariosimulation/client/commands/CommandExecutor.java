@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColum
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -39,6 +40,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteCol
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
@@ -59,6 +61,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                         DeleteRowEventHandler,
                                         DuplicateRowEventHandler,
                                         InsertColumnEventHandler,
+                                        InsertRowEventHandler,
                                         PrependColumnEventHandler,
                                         PrependRowEventHandler,
                                         ScenarioGridReloadEventHandler {
@@ -127,6 +130,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(InsertRowEvent event) {
+        commonExecute(new InsertRowCommand(model, event.getRowIndex()));
+    }
+
+    @Override
     public void onEvent(PrependColumnEvent event) {
         commonExecute(new PrependColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer));
     }
@@ -154,6 +162,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DeleteRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(InsertRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));

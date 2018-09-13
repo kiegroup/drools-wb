@@ -317,10 +317,9 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     protected void commonAddRow(int rowIndex) {
-        Scenario scenario = simulation.addScenario();
+        Scenario scenario = simulation.addScenario(rowIndex);
         final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {
-            // TODO CHECK IF STILL WORKING AFTER DZONCA MODIFICATION  2955
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             String value = factMappingByIndex.getExpressionAlias() + "-" + Random.nextInt();
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), value);

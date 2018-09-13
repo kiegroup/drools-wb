@@ -34,12 +34,12 @@ public class InsertRowCommandTest extends AbstractCommandTest  {
 
     @Before
     public void setup() {
-        insertRowCommand = new InsertRowCommand(ROW_INDEX, mockScenarioGridModel);
+        insertRowCommand = new InsertRowCommand(mockScenarioGridModel, ROW_INDEX);
     }
 
     @Test
     public void execute() {
         insertRowCommand.execute();
-        verify(mockScenarioGridModel, times(1)).insertRow(eq(ROW_INDEX), isA(ScenarioGridRow.class));
+        verify(mockScenarioGridModel, times(1)).insertNewRow(eq(ROW_INDEX), isA(ScenarioGridRow.class));
     }
 }

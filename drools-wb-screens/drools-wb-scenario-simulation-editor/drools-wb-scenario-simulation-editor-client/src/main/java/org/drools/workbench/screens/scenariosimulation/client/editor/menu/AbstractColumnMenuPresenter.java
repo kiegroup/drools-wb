@@ -35,12 +35,13 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     private LIElement insertColumnLeftLIElement;
     private LIElement insertColumnRightLIElement;
     private LIElement deleteColumnLIElement;
+    protected LIElement columnContextLIElement;
 
     /**
      * This method set <b>column-specific</b> menu items and common <b>SCENARIO</b> menu items
      */
     public void initMenu() {
-        addMenuItem(COLUMNCONTEXTMENU_COLUMN, COLUMNCONTEXTMENU_LABEL, COLUMNCONTEXTMENU_I18N);
+        columnContextLIElement = addMenuItem(COLUMNCONTEXTMENU_COLUMN, COLUMNCONTEXTMENU_LABEL, COLUMNCONTEXTMENU_I18N);
         insertColumnLeftLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft");
         insertColumnRightLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight");
         deleteColumnLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");

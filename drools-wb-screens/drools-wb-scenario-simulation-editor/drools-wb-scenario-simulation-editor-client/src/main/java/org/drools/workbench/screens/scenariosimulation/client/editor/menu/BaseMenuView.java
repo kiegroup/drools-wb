@@ -39,8 +39,9 @@ public interface BaseMenuView<M extends BaseMenu> extends UberView<M> {
          * @param id
          * @param label
          * @param i18n
+         * @return
          */
-        void addMenuItem(String id, String label, String i18n);
+        LIElement addMenuItem(String id, String label, String i18n);
 
         /**
          * Add an <i>executable</i> menu voice in form of <code>LIElement</code> to the underlying view

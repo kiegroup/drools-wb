@@ -77,4 +77,8 @@ public interface ScenarioSimulationEditorConstants
     String deleteRow();
 
     String duplicateRow();
+
+    String prependRow();
+
+    String appendRow();
 }

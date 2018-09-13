@@ -30,13 +30,13 @@ public class InsertRowCommand implements Command {
     public InsertRowCommand() {
     }
 
-    public InsertRowCommand(int rowIndex, ScenarioGridModel model) {
-        this.rowIndex = rowIndex;
+    public InsertRowCommand(ScenarioGridModel model, int rowIndex) {
         this.model = model;
+        this.rowIndex = rowIndex;
     }
 
     @Override
     public void execute() {
-        model.insertRow(rowIndex, new ScenarioGridRow());
+        model.insertNewRow(rowIndex, new ScenarioGridRow());
     }
 }

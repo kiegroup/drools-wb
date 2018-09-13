@@ -26,6 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColum
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -63,6 +64,8 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Mock
     private HandlerRegistration mockInsertColumnHandlerRegistration;
     @Mock
+    private HandlerRegistration mockInsertRowHandlerRegistration;
+    @Mock
     private HandlerRegistration mockPrependColumnHandlerRegistration;
     @Mock
     private HandlerRegistration mockPrependRowHandlerRegistration;
@@ -80,6 +83,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
         when(mockEventBus.addHandler(eq(DeleteRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDeleteRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(DuplicateRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDuplicateHandlerRegistration);
         when(mockEventBus.addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertColumnHandlerRegistration);
+        when(mockEventBus.addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependColumnHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockScenarioGridReloadHandlerRegistration);
@@ -158,6 +162,13 @@ public class CommandExecutorTest extends AbstractCommandTest {
     }
 
     @Test
+    public void onInsertRowEvent() {
+        InsertRowEvent event = new InsertRowEvent(ROW_INDEX);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, times(1)).commonExecute(isA(InsertRowCommand.class));
+    }
+
+    @Test
     public void onPrependColumnEvent() {
         PrependColumnEvent event = new PrependColumnEvent(COLUMN_GROUP);
         commandExecutor.onEvent(event);
@@ -203,6 +214,8 @@ public class CommandExecutorTest extends AbstractCommandTest {
         verify(mockHandlerRegistrationList, times(1)).add(eq(mockDuplicateHandlerRegistration));
         verify(mockEventBus, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class));
         verify(mockHandlerRegistrationList, times(1)).add(eq(mockInsertColumnHandlerRegistration));
+        verify(mockEventBus, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class));
+        verify(mockHandlerRegistrationList, times(1)).add(eq(mockInsertRowHandlerRegistration));
         verify(mockEventBus, times(1)).addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class));
         verify(mockHandlerRegistrationList, times(1)).add(eq(mockPrependColumnHandlerRegistration));
         verify(mockEventBus, times(1)).addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class));

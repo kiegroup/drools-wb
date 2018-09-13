@@ -56,8 +56,10 @@ public abstract class BaseMenu implements IsWidget,
     }
 
     @Override
-    public void addMenuItem(String id, String label, String i18n) {
-        view.getContextMenuDropdown().appendChild(menuItemPresenter.getLabelMenuElement(id, label));
+    public LIElement addMenuItem(String id, String label, String i18n) {
+        final LIElement toReturn = menuItemPresenter.getLabelMenuElement(id, label);
+        view.getContextMenuDropdown().appendChild(toReturn);
+        return toReturn;
     }
 
     @Override

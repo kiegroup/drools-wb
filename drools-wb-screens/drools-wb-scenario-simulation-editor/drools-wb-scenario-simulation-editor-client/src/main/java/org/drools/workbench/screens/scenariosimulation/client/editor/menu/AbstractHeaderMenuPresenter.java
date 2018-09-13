@@ -32,8 +32,8 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
     protected ScenarioGridModel model;
 
     String HEADERCONTEXTMENU_SCENARIO;
-    String HEADERCONTEXTMENU_INSERT_ROW_ABOVE;
-    String HEADERCONTEXTMENU_INSERT_ROW_BELOW;
+    String HEADERCONTEXTMENU_PREPEND_ROW;
+    String HEADERCONTEXTMENU_APPEND_ROW;
 
     PrependRowEvent prependRowEvent = new PrependRowEvent();
     AppendRowEvent appendRowEvent = new AppendRowEvent();
@@ -48,7 +48,7 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
     public void initMenu() {
         // SCENARIO
         addMenuItem(HEADERCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
-        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove", prependRowEvent);
-        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow", appendRowEvent);
+        addExecutableMenuItem(HEADERCONTEXTMENU_PREPEND_ROW, constants.prependRow(), "prependRow", prependRowEvent);
+        addExecutableMenuItem(HEADERCONTEXTMENU_APPEND_ROW, constants.appendRow(), "appendRow", appendRowEvent);
     }
 }

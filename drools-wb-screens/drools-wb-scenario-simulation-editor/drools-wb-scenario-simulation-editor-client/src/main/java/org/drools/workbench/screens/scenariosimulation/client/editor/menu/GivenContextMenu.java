@@ -32,8 +32,8 @@ public class GivenContextMenu extends AbstractColumnMenuPresenter {
     private final String GIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "givencontextmenu-insert-column-left";
     private final String GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "givencontextmenu-insert-column-right";
     private final String GIVENCONTEXTMENU_DELETE_COLUMN = "givencontextmenu-delete-column";
-    private final String GIVENCONTEXTMENU_INSERT_ROW_ABOVE = "givencontextmenu-insert-row-above";
-    private final String GIVENCONTEXTMENU_INSERT_ROW_BELOW = "givencontextmenu-insert-row-below";
+    private final String GIVENCONTEXTMENU_PREPEND_ROW = "givencontextmenu-prepend-row";
+    private final String GIVENCONTEXTMENU_APPEND_ROW = "givencontextmenu-append-row";
 
     @PostConstruct
     @Override
@@ -43,12 +43,12 @@ public class GivenContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT = GIVENCONTEXTMENU_INSERT_COLUMN_LEFT;
         COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT = GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT;
         COLUMNCONTEXTMENU_DELETE_COLUMN = GIVENCONTEXTMENU_DELETE_COLUMN;
-        COLUMNCONTEXTMENU_LABEL = constants.expected().toUpperCase();
+        COLUMNCONTEXTMENU_LABEL = constants.given().toUpperCase();
         COLUMNCONTEXTMENU_I18N = "given";
         // SCENARIO MENU
         HEADERCONTEXTMENU_SCENARIO = GIVENCONTEXTMENU_SCENARIO;
-        HEADERCONTEXTMENU_INSERT_ROW_ABOVE = GIVENCONTEXTMENU_INSERT_ROW_ABOVE;
-        HEADERCONTEXTMENU_INSERT_ROW_BELOW = GIVENCONTEXTMENU_INSERT_ROW_BELOW;
+        HEADERCONTEXTMENU_PREPEND_ROW = GIVENCONTEXTMENU_PREPEND_ROW;
+        HEADERCONTEXTMENU_APPEND_ROW = GIVENCONTEXTMENU_APPEND_ROW;
         super.initMenu();
     }
 }
