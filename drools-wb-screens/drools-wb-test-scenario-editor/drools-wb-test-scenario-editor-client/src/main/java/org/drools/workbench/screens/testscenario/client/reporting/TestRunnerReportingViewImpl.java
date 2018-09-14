@@ -16,16 +16,18 @@
 
 package org.drools.workbench.screens.testscenario.client.reporting;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Widget;
 import elemental2.dom.HTMLAnchorElement;
 import elemental2.dom.HTMLDivElement;
-import org.guvnor.messageconsole.client.console.widget.button.ViewHideAlertsButtonPresenter;
+import org.guvnor.messageconsole.events.PublishBatchMessagesEvent;
+import org.guvnor.messageconsole.events.SystemMessage;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -36,6 +38,9 @@ public class TestRunnerReportingViewImpl
         implements TestRunnerReportingView {
 
     private Presenter presenter;
+
+    @Inject
+    private Event<PublishBatchMessagesEvent> publishBatchMessagesEvent;
 
     @DataField
     private HTMLDivElement resultPanel;
@@ -58,8 +63,7 @@ public class TestRunnerReportingViewImpl
     @DataField
     private HTMLAnchorElement viewAlerts;
 
-    @Inject
-    private ViewHideAlertsButtonPresenter alertsPresenter;
+    List<SystemMessage> systemMessages = new ArrayList<>();
 
     @Inject
     public TestRunnerReportingViewImpl(HTMLDivElement resultPanel,
@@ -80,12 +84,20 @@ public class TestRunnerReportingViewImpl
 
     @EventHandler("viewAlerts")
     public void onClickEvent(ClickEvent event) {
-        alertsPresenter.viewAlerts();
+        PublishBatchMessagesEvent messagesEvent = new PublishBatchMessagesEvent();
+        messagesEvent.setCleanExisting(true);
+        messagesEvent.setMessagesToPublish(systemMessages);
+        publishBatchMessagesEvent.fire(messagesEvent);
     }
 
     @Override
     public void setPresenter(Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void setSystemMessages(List<SystemMessage> systemMessages){
+        this.systemMessages = systemMessages;
     }
 
     @Override
@@ -101,38 +113,12 @@ public class TestRunnerReportingViewImpl
     }
 
     @Override
-    public void setRunStatus(int runCount,
-                             long runTime) {
-        setCompletionTime();
-        setRunCount(runCount);
-        setDuration(runTime);
-    }
-
-    private void setRunCount(int runCount) {
-        scenariosRun.textContent = String.valueOf(runCount);
-    }
-
-    private void setCompletionTime() {
-        DateTimeFormat timeFormat = DateTimeFormat.getFormat("HH:mm:ss.SSS");
-        completedAt.textContent = timeFormat.format(new Date());
-    }
-
-    private void setDuration(long runTime) {
-        Date runtime = new Date(runTime);
-
-        DateTimeFormat secondsFormat = DateTimeFormat.getFormat("s");
-        DateTimeFormat minutesFormat = DateTimeFormat.getFormat("m");
-
-        String seconds = secondsFormat.format(runtime) + " seconds";
-        String milliSeconds = runTime + " milliseconds";
-
-        if (runTime >= 60000) {
-            duration.textContent = minutesFormat.format(runtime) + " minutes and " + seconds;
-        } else if (runTime >= 1000) {
-            duration.textContent = seconds + " and " + milliSeconds;
-        } else {
-            duration.textContent = milliSeconds;
-        }
+    public void setRunStatus(String completedAt,
+                             String scenariosRun,
+                             String duration) {
+        this.completedAt.textContent = completedAt;
+        this.scenariosRun.textContent = scenariosRun;
+        this.duration.textContent = duration;
     }
 
     @Override

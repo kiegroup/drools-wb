@@ -16,7 +16,10 @@
 
 package org.drools.workbench.screens.testscenario.client.reporting;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.IsWidget;
+import org.guvnor.messageconsole.events.SystemMessage;
 
 public interface TestRunnerReportingView
         extends IsWidget {
@@ -27,10 +30,13 @@ public interface TestRunnerReportingView
 
     void setPresenter(Presenter presenter);
 
+    void setSystemMessages(List<SystemMessage> systemMessages);
+
     void showSuccess();
 
     void showFailure();
 
-    void setRunStatus(int runCount,
-                      long runTime);
+    void setRunStatus(String completedAt,
+                      String ScenariosRun,
+                      String duration);
 }
