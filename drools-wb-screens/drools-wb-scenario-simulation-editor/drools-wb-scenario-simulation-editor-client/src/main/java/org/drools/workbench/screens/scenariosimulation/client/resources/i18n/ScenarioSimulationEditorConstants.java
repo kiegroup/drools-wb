@@ -81,4 +81,8 @@ public interface ScenarioSimulationEditorConstants
     String prependRow();
 
     String appendRow();
+
+    String insertLeftmostColumn();
+
+    String insertRightmostColumn();
 }

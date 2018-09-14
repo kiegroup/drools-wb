@@ -39,8 +39,8 @@ public abstract class AbstractHeaderGroupMenuPresenter extends AbstractHeaderMen
      */
     public void initMenu() {
         addMenuItem(HEADERCONTEXTMENU_GROUP, HEADERCONTEXTMENU_LABEL, HEADERCONTEXTMENU_I18N);
-        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft", prependColumnEvent);
-        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight", appendColumnEvent);
+        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertLeftmostColumn(), "insertLeftmostColumn", prependColumnEvent);
+        addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertRightmostColumn(), "insertRightmostColumn", appendColumnEvent);
         super.initMenu();
     }
 }
