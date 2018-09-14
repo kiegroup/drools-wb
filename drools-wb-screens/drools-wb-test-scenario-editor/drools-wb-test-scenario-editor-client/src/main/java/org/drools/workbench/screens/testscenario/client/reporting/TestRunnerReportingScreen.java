@@ -81,7 +81,9 @@ public class TestRunnerReportingScreen
             }
             view.showFailure();
         }
-        view.setRunStatus(getCompletedAt(), getScenariosRun(testResultMessage), getDuration(testResultMessage));
+        view.setRunStatus(getCompletedAt(),
+                          getScenariosRun(testResultMessage),
+                          getDuration(testResultMessage));
     }
 
     private SystemMessage convert(Failure failure) {
@@ -92,31 +94,29 @@ public class TestRunnerReportingScreen
         return systemMessage;
     }
 
-    private String getCompletedAt(){
+    private String getCompletedAt() {
         DateTimeFormat timeFormat = DateTimeFormat.getFormat("HH:mm:ss.SSS");
         return timeFormat.format(new Date());
     }
 
-    private String getScenariosRun(TestResultMessage testResultMessage){
+    private String getScenariosRun(TestResultMessage testResultMessage) {
         return String.valueOf(testResultMessage.getRunCount());
     }
 
-    private String getDuration(TestResultMessage testResultMessage){
+    private String getDuration(TestResultMessage testResultMessage) {
         Long runTime = testResultMessage.getRunTime();
         Date runtime = new Date(runTime);
 
-        DateTimeFormat secondsFormat = DateTimeFormat.getFormat("s");
-        DateTimeFormat minutesFormat = DateTimeFormat.getFormat("m");
+        String milliseconds = DateTimeFormat.getFormat("SSS").format(runtime) + " milliseconds";
+        String seconds = DateTimeFormat.getFormat("s").format(runtime) + " seconds";
+        String minutes = DateTimeFormat.getFormat("m").format(runtime) + " minutes";
 
-        String seconds = secondsFormat.format(runtime) + " seconds";
-
-        if (runTime >= 60000) {
-            return minutesFormat.format(runtime) + " minutes and " + seconds;
-        } else if (runTime >= 1000) {
-            DateTimeFormat miliSecondsFormat = DateTimeFormat.getFormat("SSS");
-            return seconds + " and " + miliSecondsFormat.format(runtime)+ " milliseconds";
+        if (runTime < 1000) {
+            return milliseconds;
+        } else if (runTime < 60000) {
+            return seconds + " and " + milliseconds;
         } else {
-            return runTime + " milliseconds";
+            return minutes + " and " + seconds;
         }
     }
 
