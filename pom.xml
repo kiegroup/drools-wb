@@ -61,9 +61,12 @@
 
   <modules>
     <module>drools-wb-services</module>
+    <module>drools-wb-extensions</module>
+    <module>drools-wb-apis</module>
+    <module>drools-wb-backends</module>
+    <module>drools-wb-clients</module>
     <module>drools-wb-screens</module>
     <module>drools-wb-webapp</module>
-    <module>drools-wb-extensions</module>
   </modules>
 
   <dependencyManagement>

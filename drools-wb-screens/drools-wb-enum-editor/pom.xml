@@ -31,10 +31,39 @@
   <name>Drools Workbench - Enum Editor</name>
   <description>Drools Workbench - Enum Editor</description>
 
-  <modules>
-    <module>drools-wb-enum-editor-api</module>
-    <module>drools-wb-enum-editor-client</module>
-    <module>drools-wb-enum-editor-backend</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-enum-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-enum-editor-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-enum-editor-client</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-enum-editor-api</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-enum-editor-backend</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-enum-editor-client</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+     </dependencies>
+  </dependencyManagement>
 
 </project>

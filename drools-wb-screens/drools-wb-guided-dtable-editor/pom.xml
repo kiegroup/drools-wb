@@ -15,10 +15,39 @@
   <name>Drools Workbench - Guided Decision Table Editor</name>
   <description>Drools Workbench - Guided Decision Table Editor</description>
 
-  <modules>
-    <module>drools-wb-guided-dtable-editor-api</module>
-    <module>drools-wb-guided-dtable-editor-backend</module>
-    <module>drools-wb-guided-dtable-editor-client</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-dtable-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-dtable-editor-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-dtable-editor-client</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-dtable-editor-api</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-dtable-editor-backend</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-dtable-editor-client</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+     </dependencies>
+  </dependencyManagement>
 
 </project>

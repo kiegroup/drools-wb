@@ -31,9 +31,30 @@
   <name>Drools Workbench - Fact Model Editor</name>
   <description>Drools Workbench - Fact Model Editor</description>
 
-  <modules>
-    <module>drools-wb-factmodel-editor-api</module>
-    <module>drools-wb-factmodel-editor-backend</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-factmodel-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-factmodel-editor-backend</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-factmodel-editor-api</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-factmodel-editor-backend</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+     </dependencies>
+  </dependencyManagement>
 
 </project>

@@ -30,11 +30,40 @@
 
   <name>Drools Workbench - XLS Decision Table Editor</name>
   <description>Drools Workbench - XLS Decision Table Editor</description>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-dtable-xls-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-dtable-xls-editor-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-dtable-xls-editor-client</artifactId>
+    </dependency>
+  </dependencies>
 
-  <modules>
-    <module>drools-wb-dtable-xls-editor-api</module>
-    <module>drools-wb-dtable-xls-editor-client</module>
-    <module>drools-wb-dtable-xls-editor-backend</module>
-  </modules>
+  <dependencyManagement>
+    <dependencies>
+        <dependency>
+          <groupId>org.drools</groupId>
+          <artifactId>drools-wb-dtable-xls-editor-api</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.drools</groupId>
+          <artifactId>drools-wb-dtable-xls-editor-backend</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.drools</groupId>
+          <artifactId>drools-wb-dtable-xls-editor-client</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+  </dependencyManagement>
 
 </project>

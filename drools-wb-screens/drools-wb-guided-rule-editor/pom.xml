@@ -31,10 +31,39 @@
   <name>Drools Workbench - Rule Editor</name>
   <description>Drools Workbench - Rule Editor</description>
 
-  <modules>
-    <module>drools-wb-guided-rule-editor-api</module>
-    <module>drools-wb-guided-rule-editor-client</module>
-    <module>drools-wb-guided-rule-editor-backend</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-rule-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-rule-editor-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-guided-rule-editor-client</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-rule-editor-api</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-rule-editor-backend</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-guided-rule-editor-client</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+     </dependencies>
+  </dependencyManagement>
 
 </project>

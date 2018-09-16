@@ -31,10 +31,39 @@
   <name>Drools Workbench - XLS Score Card Editor</name>
   <description>Drools Workbench - XLS Score Card Editor</description>
 
-  <modules>
-    <module>drools-wb-scorecard-xls-editor-api</module>
-    <module>drools-wb-scorecard-xls-editor-client</module>
-    <module>drools-wb-scorecard-xls-editor-backend</module>
-  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-scorecard-xls-editor-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-scorecard-xls-editor-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-scorecard-xls-editor-client</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-scorecard-xls-editor-api</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-scorecard-xls-editor-backend</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.drools</groupId>
+         <artifactId>drools-wb-scorecard-xls-editor-client</artifactId>
+         <version>${project.version}</version>
+       </dependency>
+     </dependencies>
+  </dependencyManagement>
 
 </project>

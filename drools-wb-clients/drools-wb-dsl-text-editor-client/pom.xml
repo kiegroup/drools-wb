@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.drools</groupId>
+    <artifactId>drools-wb-clients</artifactId>
+    <version>7.12.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>drools-wb-dsl-text-editor-client</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Drools Workbench - Domain Specific Language Editor - Client</name>
+  <description>Drools Workbench - Domain Specific Language Editor - Client</description>
+
+  <properties>
+    <java.module.name>org.drools.wb.dsl.text.editor.client</java.module.name>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-dsl-text-editor-api</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>
