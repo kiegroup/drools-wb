@@ -35,6 +35,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getCellValue;
 import static org.drools.workbench.screens.scenariosimulation.client.TestUtils.getColName;
@@ -155,5 +156,35 @@ public class ScenarioGridModelTest {
         assertTrue(simulation.getSimulationDescriptor().getFactMappings().isEmpty());
         assertEquals(0, scenarioGridModel.getRowCount());
         assertEquals(0, scenarioGridModel.getColumnCount());
+    }
+
+    @Test
+    public void setCellValueTest() {
+        String newValue = "TEST";
+
+        scenarioGridModel.setCellValue(0, 0, new BaseGridCellValue<>(newValue));
+
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(0);
+        Scenario scenario = simulation.getScenarioByIndex(0);
+
+        Optional<FactMappingValue> factMappingValue = scenario.getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+
+        assertEquals(newValue, factMappingValue.get().getRawValue());
+    }
+
+    @Test
+    public void deleteCellTest() {
+        String newValue = "TEST";
+
+        scenarioGridModel.setCellValue(0, 0, new BaseGridCellValue<>(newValue));
+
+        scenarioGridModel.deleteCell(0, 0);
+
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(0);
+        Scenario scenario = simulation.getScenarioByIndex(0);
+
+        Optional<FactMappingValue> factMappingValue = scenario.getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+
+        assertEquals("", factMappingValue.get().getRawValue());
     }
 }

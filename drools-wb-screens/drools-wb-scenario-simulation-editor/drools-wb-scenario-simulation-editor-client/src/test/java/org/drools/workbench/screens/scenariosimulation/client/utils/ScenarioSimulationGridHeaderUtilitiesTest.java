@@ -305,8 +305,8 @@ public class ScenarioSimulationGridHeaderUtilitiesTest {
 
     @Test
     public void isEditableHeaderTest() {
-        ScenarioHeaderMetaData readOnly = new ScenarioHeaderMetaData("", "", "", null, true);
-        ScenarioHeaderMetaData editable = new ScenarioHeaderMetaData("", "", "", null);
+        ScenarioHeaderMetaData readOnly = new ScenarioHeaderMetaData(null, "", "", "", null, true);
+        ScenarioHeaderMetaData editable = new ScenarioHeaderMetaData(null, "", "", "", null);
 
         assertFalse(isEditableHeader(mockGridColumn(100, asList(readOnly)), 0));
         assertFalse(isEditableHeader(mockGridColumn(100, asList(headerMetaData)), 0));

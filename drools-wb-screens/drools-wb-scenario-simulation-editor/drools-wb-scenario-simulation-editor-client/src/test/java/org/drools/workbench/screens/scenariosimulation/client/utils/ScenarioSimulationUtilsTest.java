@@ -53,7 +53,7 @@ public class ScenarioSimulationUtilsTest {
         ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven = ScenarioSimulationUtils.getTwoLevelHeaderBuilder(factGiven);
         assertEquals(2, columnBuilderGiven.build(factory).size());
         assertEquals("", columnBuilderGiven.columnGroup);
-        assertEquals(alias, columnBuilderGiven.columnTitle);
+        assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.columnTitle);
         assertEquals(alias, columnBuilderGiven.nestedLevel.columnTitle);
         assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.nestedLevel.columnGroup);
     }
