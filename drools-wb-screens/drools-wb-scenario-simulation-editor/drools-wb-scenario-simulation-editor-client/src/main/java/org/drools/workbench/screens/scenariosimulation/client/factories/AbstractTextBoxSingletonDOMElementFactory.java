@@ -19,14 +19,15 @@ package org.drools.workbench.screens.scenariosimulation.client.factories;
 import com.google.gwt.event.dom.client.DomEvent;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
+import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
-public class ScenarioTextBoxSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, TextBox, ScenarioTextBoxDOMElement> {
+public abstract class AbstractTextBoxSingletonDOMElementFactory<T extends BaseDOMElement<String, TextBox>> extends BaseSingletonDOMElementFactory<String, TextBox, T> {
 
-    public ScenarioTextBoxSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
+    public AbstractTextBoxSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                      final GridLayer gridLayer,
                                                      final GridWidget gridWidget) {
         super(gridPanel,
@@ -43,13 +44,12 @@ public class ScenarioTextBoxSingletonDOMElementFactory extends BaseSingletonDOME
     }
 
     @Override
-    public ScenarioTextBoxDOMElement createDomElement(final GridLayer gridLayer,
-                                                      final GridWidget gridWidget,
-                                                      final GridBodyCellRenderContext context) {
+    public T createDomElement(final GridLayer gridLayer,
+                              final GridWidget gridWidget,
+                              final GridBodyCellRenderContext context) {
         this.widget = createWidget();
-        this.e = new ScenarioTextBoxDOMElement(widget,
-                                               gridLayer,
-                                               gridWidget);
+        this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
+
         widget.addBlurHandler(event -> {
             destroyResources();
             gridLayer.batch();
@@ -65,5 +65,7 @@ public class ScenarioTextBoxSingletonDOMElementFactory extends BaseSingletonDOME
         }
         return null;
     }
+
+    protected abstract T internalCreateDomElement(TextBox widget, GridLayer gridLayer, GridWidget gridWidget);
 }
 

@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertNull;
 public class ScenarioSimulationUtilsTest {
 
     @Mock
-    private ScenarioTextBoxSingletonDOMElementFactory factory;
+    private ScenarioHeaderTextBoxSingletonDOMElementFactory factory;
 
     @Test
     public void getColumnBuilder() {
@@ -43,14 +43,14 @@ public class ScenarioSimulationUtilsTest {
         String expressionName = "ExpressionName";
 
         FactMapping factOther = testFactMapping(alias, factName, expressionName, FactMappingType.OTHER);
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther = ScenarioSimulationUtils.getColumnBuilder(factOther);
+        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther = ScenarioSimulationUtils.getTwoLevelHeaderBuilder(factOther);
         assertEquals(1, columnBuilderOther.build(factory).size());
         assertEquals(FactMappingType.OTHER.name(), columnBuilderOther.columnGroup);
         assertNull(columnBuilderOther.nestedLevel);
         assertEquals(alias, columnBuilderOther.columnTitle);
 
         FactMapping factGiven = testFactMapping(alias, factName, expressionName, FactMappingType.GIVEN);
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven = ScenarioSimulationUtils.getColumnBuilder(factGiven);
+        ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven = ScenarioSimulationUtils.getTwoLevelHeaderBuilder(factGiven);
         assertEquals(2, columnBuilderGiven.build(factory).size());
         assertEquals("", columnBuilderGiven.columnGroup);
         assertEquals(alias, columnBuilderGiven.columnTitle);

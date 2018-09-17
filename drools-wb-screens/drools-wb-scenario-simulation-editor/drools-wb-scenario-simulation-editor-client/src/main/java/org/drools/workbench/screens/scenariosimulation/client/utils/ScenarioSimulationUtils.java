@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioTextBoxDOMElement;
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridColumnRenderer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -28,22 +28,21 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMElementFactory;
 
 public class ScenarioSimulationUtils {
 
     public static ScenarioGridColumn getScenarioGridColumn(FactMapping factMapping, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
-        return getScenarioGridColumn(getColumnBuilder(factMapping), scenarioGridPanel, gridLayer);
+        return getScenarioGridColumn(getTwoLevelHeaderBuilder(factMapping), scenarioGridPanel, gridLayer);
     }
 
     public static ScenarioGridColumn getScenarioGridColumn(ColumnBuilder columnBuilder, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
-        ScenarioTextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(columnBuilder.build(factory), new ScenarioGridColumnRenderer(), 100, false, factory);
+        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
+        ScenarioCellTextBoxSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
+        return new ScenarioGridColumn(columnBuilder.build(factoryHeader), new ScenarioGridColumnRenderer(), 100, false, factoryCell);
     }
 
-    public static ColumnBuilder getColumnBuilder(FactMapping fact) {
+    public static ColumnBuilder getTwoLevelHeaderBuilder(FactMapping fact) {
         ColumnBuilder columnBuilder = ColumnBuilder.get();
 
         columnBuilder.setColumnId(fact.getExpressionIdentifier().getName());
@@ -108,7 +107,7 @@ public class ScenarioSimulationUtils {
             return this.nestedLevel;
         }
 
-        public List<GridColumn.HeaderMetaData> build(SingletonDOMElementFactory<TextBox, ScenarioTextBoxDOMElement> factory) {
+        public List<GridColumn.HeaderMetaData> build(ScenarioHeaderTextBoxSingletonDOMElementFactory factory) {
             List<GridColumn.HeaderMetaData> toReturn = new ArrayList<>();
             ColumnBuilder current = this;
             do {
@@ -118,7 +117,7 @@ public class ScenarioSimulationUtils {
             return toReturn;
         }
 
-        private GridColumn.HeaderMetaData internalBuild(SingletonDOMElementFactory<TextBox, ScenarioTextBoxDOMElement> factory) {
+        private GridColumn.HeaderMetaData internalBuild(ScenarioHeaderTextBoxSingletonDOMElementFactory factory) {
             return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly);
         }
     }
