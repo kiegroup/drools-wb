@@ -18,26 +18,26 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioTextBoxSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.TextBoxSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.GridColumnRenderer;
 
 public class ScenarioGridColumn extends BaseGridColumn<String> {
 
-    private final TextBoxSingletonDOMElementFactory factory;
+    private final ScenarioTextBoxSingletonDOMElementFactory factory;
 
-    public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, TextBoxSingletonDOMElementFactory factory) {
+    public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioTextBoxSingletonDOMElementFactory factory) {
         super(headerMetaData, columnRenderer, width);
         this.setMovable(isMovable);
         this.factory = factory;
     }
 
-    public ScenarioGridColumn(List<HeaderMetaData> headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, TextBoxSingletonDOMElementFactory factory) {
+    public ScenarioGridColumn(List<HeaderMetaData> headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioTextBoxSingletonDOMElementFactory factory) {
         super(headerMetaData, columnRenderer, width);
         this.setMovable(isMovable);
         this.factory = factory;
@@ -54,6 +54,6 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         if (cell != null) {
             return cell;
         }
-        return new BaseGridCell<>(new BaseGridCellValue<String>(""));
+        return new BaseGridCell<>(new BaseGridCellValue<>(""));
     }
 }

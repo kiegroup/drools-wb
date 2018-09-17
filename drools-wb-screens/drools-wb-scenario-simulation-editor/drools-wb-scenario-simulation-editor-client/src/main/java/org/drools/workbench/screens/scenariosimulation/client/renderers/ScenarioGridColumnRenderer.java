@@ -19,4 +19,4 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.im
 
 public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
-    }
+}

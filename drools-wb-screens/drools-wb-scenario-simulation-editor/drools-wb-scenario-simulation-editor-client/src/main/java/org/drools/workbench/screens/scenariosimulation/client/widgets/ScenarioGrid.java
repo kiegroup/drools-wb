@@ -68,11 +68,9 @@ public class ScenarioGrid extends BaseGridWidget {
         List<FactMapping> factMappings = simulation.getSimulationDescriptor().getFactMappings();
         IntStream.range(0, factMappings.size()).forEach(i -> {
             FactMapping fact = factMappings.get(i);
-            String columnId = fact.getExpressionIdentifier().getName();
-            String columnTitle = fact.getExpressionAlias();
-            String columnGroup = fact.getExpressionIdentifier().getType().name();
+
             model.insertColumn(i,
-                               getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+                               getScenarioGridColumn(fact, scenarioGridPanel, scenarioGridLayer));
         });
     }
 

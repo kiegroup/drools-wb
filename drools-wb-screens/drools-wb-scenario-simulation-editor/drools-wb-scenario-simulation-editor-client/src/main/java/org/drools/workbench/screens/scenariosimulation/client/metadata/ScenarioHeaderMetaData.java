@@ -15,22 +15,29 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.metadata;
 
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioTextBoxDOMElement;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.TextBoxDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMElementFactory;
 
 public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
-    final SingletonDOMElementFactory<TextBox, TextBoxDOMElement> factory;
+    final SingletonDOMElementFactory<TextBox, ScenarioTextBoxDOMElement> factory;
 
     final String columnId;
 
-    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, TextBoxDOMElement> factory) {
+    final boolean readOnly;
+
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioTextBoxDOMElement> factory, boolean readOnly) {
         super(columnTitle, columnGroup);
         this.columnId = columnId;
         this.factory = factory;
+        this.readOnly = readOnly;
+    }
+
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioTextBoxDOMElement> factory) {
+        this(columnId, columnTitle, columnGroup, factory, false);
     }
 
     public void edit(final GridBodyCellEditContext context) {
@@ -41,5 +48,9 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
     public String getColumnId() {
         return columnId;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }
