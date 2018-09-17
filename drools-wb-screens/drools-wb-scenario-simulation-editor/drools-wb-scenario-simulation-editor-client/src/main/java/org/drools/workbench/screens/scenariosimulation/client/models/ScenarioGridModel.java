@@ -22,10 +22,12 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
@@ -93,6 +95,20 @@ public class ScenarioGridModel extends BaseGridData {
         return toReturn;
     }
 
+    @Override
+    public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
+        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value));
+    }
+
+    @Override
+    public Range deleteCell(int rowIndex, int columnIndex) {
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        Optional<FactMappingValue> factMappingValueToDelete = simulation.getScenarioByIndex(rowIndex)
+                .getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+        factMappingValueToDelete.ifPresent(factMappingValue -> factMappingValue.setRawValue(""));
+        return super.deleteCell(rowIndex, columnIndex);
+    }
+
     public void clear() {
         // Deleting rows
         int to = getRowCount();
@@ -102,7 +118,7 @@ public class ScenarioGridModel extends BaseGridData {
         List<GridColumn<?>> copyList = new ArrayList<>(getColumns());
         copyList.forEach(this::deleteColumn);
         // clear can be called before bind
-        if(simulation != null) {
+        if (simulation != null) {
             simulation.clear();
         }
     }
