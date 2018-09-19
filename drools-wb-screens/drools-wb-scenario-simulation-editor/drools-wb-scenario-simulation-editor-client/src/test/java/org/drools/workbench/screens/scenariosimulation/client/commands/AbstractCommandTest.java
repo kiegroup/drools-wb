@@ -23,6 +23,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -57,7 +58,7 @@ public abstract class AbstractCommandTest {
 
     protected final String COLUMN_ID = "COLUMN ID";
 
-    protected final String COLUMN_GROUP = "COLUMN GROUP";
+    protected final String COLUMN_GROUP = FactMappingType.EXPECTED.name();
 
     protected final int ROW_INDEX = 2;
     protected final int COLUMN_INDEX = 3;

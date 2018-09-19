@@ -16,9 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.Random;
 import java.util.stream.IntStream;
 
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.kie.soup.project.datamodel.imports.HasImports;
 import org.kie.soup.project.datamodel.imports.Imports;
@@ -26,6 +26,9 @@ import org.kie.soup.project.datamodel.imports.Imports;
 @Portable
 public class ScenarioSimulationModel
         implements HasImports {
+
+    @XStreamAsAttribute()
+    private String version = "1.0";
 
     private Simulation simulation;
 
@@ -38,23 +41,23 @@ public class ScenarioSimulationModel
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
         Scenario scenario = simulation.addScenario();
-        Random random = new Random();
-        scenario.setDescription(FactIdentifier.DESCRIPTION.getName() + random.nextInt());
+        int row = simulation.getUnmodifiableScenarios().indexOf(scenario);
+        scenario.setDescription(FactIdentifier.DESCRIPTION.getName() + " " + row);
 
         // Add GIVEN Facts
         IntStream.range(1, 3).forEach(id -> {
-            ExpressionIdentifier givenExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.GIVEN);
+            ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
             FactIdentifier givenFact = FactIdentifier.create(FactMappingType.GIVEN + "FACT-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping(FactMappingType.GIVEN + "-" + id, givenFact, givenExpression);
-            scenario.addMappingValue(givenFact, givenExpression, FactMappingType.GIVEN + "-" + id + random.nextInt());
+            simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.GIVEN, id), givenFact, givenExpression);
+            scenario.addMappingValue(givenFact, givenExpression, FactMappingValue.getPlaceHolder(row, id));
         });
 
         // Add EXPECTED Facts
         IntStream.range(1, 3).forEach(id -> {
-            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(String.valueOf(random.nextLong()), FactMappingType.EXPECTED);
+            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
             FactIdentifier expectFact = FactIdentifier.create(FactMappingType.EXPECTED + "FACT-" + id, String.class.getCanonicalName());
-            simulationDescriptor.addFactMapping(FactMappingType.EXPECTED + "-" + id, expectFact, expectedExpression);
-            scenario.addMappingValue(expectFact, expectedExpression, FactMappingType.EXPECTED + "-" + id + random.nextInt());
+            simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.EXPECTED, id), expectFact, expectedExpression);
+            scenario.addMappingValue(expectFact, expectedExpression, FactMappingValue.getPlaceHolder(row, id));
         });
     }
 

@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 
 /**
@@ -31,7 +30,6 @@ public class RightPanelMenuItemProducer {
     private RightPanelMenuItem rightPanelMenuItem;
 
     public RightPanelMenuItem getRightPanelMenuItem() {
-        GWT.log("RightPanelMenuItemProducer " + this.toString() + " rightPanelMenuItem " + rightPanelMenuItem.toString());
         return rightPanelMenuItem;
     }
 }

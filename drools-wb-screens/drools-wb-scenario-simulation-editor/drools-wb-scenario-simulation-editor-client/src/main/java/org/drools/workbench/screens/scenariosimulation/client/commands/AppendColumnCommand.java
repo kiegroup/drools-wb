@@ -20,13 +20,14 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
-
 /**
- *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
+ * <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
  */
 @Dependent
 public class AppendColumnCommand implements Command {
@@ -51,7 +52,8 @@ public class AppendColumnCommand implements Command {
     @Override
     public void execute() {
         final int index = model.getFirstIndexRightOfGroup(columnGroup);
-        String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) + 1);
+        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
+        String columnTitle = FactMapping.getPlaceHolder(factMappingType, (int) (model.getGroupSize(columnGroup) + 1));
         model.insertNewColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

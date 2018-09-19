@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import javax.enterprise.context.Dependent;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.EventBus;
@@ -60,7 +59,6 @@ public class ScenarioGridPanel extends GridLienzoPanel {
     }
 
     public void setEventBus(EventBus eventBus) {
-        GWT.log("ScenarioGridPanel " + this.toString() + " setEventBus " + eventBus.toString());
         this.eventBus = eventBus;
         getScenarioGrid().getModel().setEventBus(eventBus);
     }

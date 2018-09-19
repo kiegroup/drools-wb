@@ -73,6 +73,16 @@ public class Simulation {
         return scenario;
     }
 
+    public void removeFactMappingByIndex(int index) {
+        cleanScenarios(simulationDescriptor.getFactMappingByIndex(index));
+        simulationDescriptor.removeFactMappingByIndex(index);
+    }
+
+    public void removeFactMapping(FactMapping toRemove) {
+        cleanScenarios(toRemove);
+        simulationDescriptor.removeFactMapping(toRemove);
+    }
+
     public Scenario cloneScenario(int sourceIndex, int targetIndex) {
         if (sourceIndex < 0 || sourceIndex >= scenarios.size()) {
             throw new IllegalArgumentException(new StringBuilder().append("SourceIndex out of range ").append(sourceIndex).toString());
@@ -93,5 +103,9 @@ public class Simulation {
 
     public void sort() {
         scenarios.forEach(Scenario::sort);
+    }
+
+    private void cleanScenarios(FactMapping toRemove) {
+        scenarios.forEach(e -> e.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier()));
     }
 }
