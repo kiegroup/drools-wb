@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
@@ -53,7 +52,6 @@ public class ScenarioSimulationViewProducer {
         HandlerRegistration clickHandlerRegistration = scenarioGridPanel.addClickHandler(scenarioSimulationGridPanelClickHandler);
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);
         scenarioSimulationView.setClickHandlerRegistration(clickHandlerRegistration);
-        GWT.log("ScenarioSimulationViewProducer " + this.toString() + " scenarioGridPanel " + scenarioGridPanel.hashCode() + " scenarioSimulationView " + scenarioSimulationView.toString() + " eventBus " + eventBus.toString());
         return scenarioSimulationView;
     }
 

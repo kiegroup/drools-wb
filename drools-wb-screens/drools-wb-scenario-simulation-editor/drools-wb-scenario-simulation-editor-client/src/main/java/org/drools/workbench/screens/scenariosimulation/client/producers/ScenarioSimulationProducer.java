@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
@@ -43,24 +42,20 @@ public class ScenarioSimulationProducer {
     private CommandExecutor commandExecutor;
 
     public RightPanelMenuItem getRightPanelMenuItem() {
-        GWT.log("ScenarioSimulationProducer " + this.toString() + " rightPanelMenuItemProducer " + rightPanelMenuItemProducer.toString());
         return rightPanelMenuItemProducer.getRightPanelMenuItem();
     }
 
     public EventBus getEventBus() {
-        GWT.log("ScenarioSimulationProducer " + this.toString() + " eventBusProducer " + eventBusProducer.toString());
         return eventBusProducer.getEventBus();
     }
 
     public ScenarioSimulationView getScenarioSimulationView() {
-        GWT.log("ScenarioSimulationProducer " + this.toString() + " scenarioSimulationViewProducer " + scenarioSimulationViewProducer.toString());
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
     }
 
     public CommandExecutor getCommandExecutor() {
         commandExecutor.setEventBus(getEventBus());
         commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
-        GWT.log("ScenarioSimulationProducer " + this.toString() + " commandExecutor " + commandExecutor.toString());
         return commandExecutor;
     }
 }

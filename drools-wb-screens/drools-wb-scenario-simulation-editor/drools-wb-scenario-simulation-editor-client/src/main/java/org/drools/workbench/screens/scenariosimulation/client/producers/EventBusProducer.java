@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import javax.enterprise.context.Dependent;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.SimpleEventBus;
 
@@ -30,7 +29,6 @@ public class EventBusProducer {
     private final EventBus eventBus = new SimpleEventBus();
 
     public EventBus getEventBus() {
-        GWT.log("EventBusProducer " + this.toString() + " eventBus " + eventBus.toString());
         return eventBus;
     }
 }

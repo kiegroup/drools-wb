@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -38,7 +37,6 @@ public class ScenarioGridPanelProducer {
     private ScenarioGridPanel scenarioGridPanel;
 
     public ScenarioGridPanel getScenarioGridPanel() {
-        GWT.log("ScenarioGridPanelProducer " + this.toString() + " scenarioGridLayer " + scenarioGridLayer.hashCode() + " scenarioGridPanel " + scenarioGridPanel.hashCode());
         scenarioGridLayer.addScenarioGrid(newScenarioGrid(scenarioGridPanel,
                                                           scenarioGridLayer));
         scenarioGridPanel.add(scenarioGridLayer);
@@ -47,7 +45,6 @@ public class ScenarioGridPanelProducer {
 
     private ScenarioGrid newScenarioGrid(final ScenarioGridPanel scenarioGridPanel,
                                          final ScenarioGridLayer scenarioGridLayer) {
-        GWT.log("ScenarioGridPanelProducer " + this.toString() + " newScenarioGrid: scenarioGridLayer " + scenarioGridLayer.hashCode() + " scenarioGridPanel " + scenarioGridPanel.hashCode());
         return new ScenarioGrid(new ScenarioGridModel(),
                                 scenarioGridLayer,
                                 new ScenarioGridRenderer(false),

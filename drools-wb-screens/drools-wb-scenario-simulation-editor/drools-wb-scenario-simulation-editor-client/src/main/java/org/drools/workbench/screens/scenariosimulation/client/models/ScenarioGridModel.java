@@ -32,6 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifie
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
@@ -165,11 +166,7 @@ public class ScenarioGridModel extends BaseGridData {
         checkSimulation();
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
-        final FactMapping toRemove = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        simulation.getSimulationDescriptor().removeFactMapping(toRemove);
-        simulation.getUnmodifiableScenarios().forEach(scenario -> {
-            scenario.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier());
-        });
+        simulation.removeFactMappingByIndex(columnIndex);
     }
 
     /**
@@ -311,7 +308,7 @@ public class ScenarioGridModel extends BaseGridData {
         final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size())
                 .forEach(rowIndex -> {
-                    String value = title + "-" + Random.nextInt();
+                    String value = FactMappingValue.getPlaceHolder(rowIndex);
                     setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
                 });
     }

@@ -64,11 +64,11 @@ public class SimulationDescriptor {
         return factMappings.get(index);
     }
 
-    public void removeFactMappingByIndex(int index) {
+    void removeFactMappingByIndex(int index) {
         factMappings.remove(index);
     }
 
-    public void removeFactMapping(FactMapping toRemove) {
+    void removeFactMapping(FactMapping toRemove) {
         factMappings.remove(toRemove);
     }
 

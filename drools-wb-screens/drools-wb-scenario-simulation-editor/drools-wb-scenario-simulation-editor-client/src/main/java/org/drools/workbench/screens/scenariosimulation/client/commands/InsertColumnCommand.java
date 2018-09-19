@@ -20,6 +20,8 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
@@ -61,7 +63,8 @@ public class InsertColumnCommand implements Command {
     public void execute() {
         String columnGroup = model.getColumns().get(columnIndex).getHeaderMetaData().get(1).getColumnGroup();
         int columnPosition = isRight ? columnIndex + 1 : columnIndex;
-        String columnTitle = columnGroup.toUpperCase() + "-" + (model.getGroupSize(columnGroup) +1);
+        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
+        String columnTitle = FactMapping.getPlaceHolder(factMappingType, (int) (model.getGroupSize(columnGroup) + 1));
         model.insertNewColumn(columnPosition, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }
