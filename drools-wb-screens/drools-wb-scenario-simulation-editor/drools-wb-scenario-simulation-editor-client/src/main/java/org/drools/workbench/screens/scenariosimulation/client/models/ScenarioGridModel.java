@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Random;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -308,7 +307,7 @@ public class ScenarioGridModel extends BaseGridData {
         final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size())
                 .forEach(rowIndex -> {
-                    String value = FactMappingValue.getPlaceHolder(rowIndex);
+                    String value = FactMappingValue.getPlaceHolder(rowIndex, columnIndex);
                     setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
                 });
     }
@@ -318,7 +317,7 @@ public class ScenarioGridModel extends BaseGridData {
         final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
-            String value = factMappingByIndex.getExpressionAlias() + "-" + Random.nextInt();
+            String value = FactMappingValue.getPlaceHolder(rowIndex, columnIndex);
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), value);
             setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(value)));
         });

@@ -20,6 +20,8 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
@@ -50,8 +52,8 @@ public class PrependColumnCommand implements Command {
     @Override
     public void execute() {
         final int index = model.getFirstIndexLeftOfGroup(columnGroup);
-        final long newColumnPosition = model.getGroupSize(columnGroup) + 1;
-        String columnTitle = columnGroup.toUpperCase() + "-" + newColumnPosition;
+        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
+        String columnTitle = FactMapping.getPlaceHolder(factMappingType, (int) (model.getGroupSize(columnGroup) + 1));
         model.insertNewColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
     }
 }

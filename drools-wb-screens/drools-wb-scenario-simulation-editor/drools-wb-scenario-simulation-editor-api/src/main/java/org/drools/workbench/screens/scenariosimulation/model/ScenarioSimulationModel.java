@@ -42,7 +42,7 @@ public class ScenarioSimulationModel
 
         Scenario scenario = simulation.addScenario();
         int row = simulation.getUnmodifiableScenarios().indexOf(scenario);
-        scenario.setDescription(FactIdentifier.DESCRIPTION.getName() + " " + row);
+        scenario.setDescription(FactMappingValue.getPlaceHolder(0, 0));
 
         // Add GIVEN Facts
         IntStream.range(1, 3).forEach(id -> {
@@ -54,6 +54,7 @@ public class ScenarioSimulationModel
 
         // Add EXPECTED Facts
         IntStream.range(1, 3).forEach(id -> {
+            id += 2; // This is to have consistent labels/names even when adding columns at runtime
             ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
             FactIdentifier expectFact = FactIdentifier.create(FactMappingType.EXPECTED + "FACT-" + id, String.class.getCanonicalName());
             simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.EXPECTED, id), expectFact, expectedExpression);
