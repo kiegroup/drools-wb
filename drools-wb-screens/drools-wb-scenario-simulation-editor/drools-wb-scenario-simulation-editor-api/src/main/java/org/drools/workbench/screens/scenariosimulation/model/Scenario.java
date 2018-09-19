@@ -108,7 +108,6 @@ public class Scenario {
         });
     }
 
-
     Scenario cloneScenario() {
         Scenario cloned = new Scenario(simulationDescriptor);
         cloned.factMappingValues.addAll(factMappingValues.stream().map(FactMappingValue::cloneFactMappingValue).collect(toList()));

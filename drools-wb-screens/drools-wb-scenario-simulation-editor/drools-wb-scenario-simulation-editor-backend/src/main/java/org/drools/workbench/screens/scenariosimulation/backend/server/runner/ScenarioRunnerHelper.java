@@ -50,7 +50,7 @@ public class ScenarioRunnerHelper {
 
     }
 
-    public static List<ScenarioInput> extractGivenValues(SimulationDescriptor simulationDescriptor, List<FactMappingValue> factMappingValues) {
+    public static List<ScenarioInput> extractGivenValues(SimulationDescriptor simulationDescriptor, List<FactMappingValue> factMappingValues, ClassLoader classLoader) {
         List<ScenarioInput> scenarioInput = new ArrayList<>();
 
         Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifier =
@@ -65,7 +65,7 @@ public class ScenarioRunnerHelper {
                                                                        factIdentifier,
                                                                        entry.getValue());
 
-            Object bean = fillBean(factIdentifier.getClassName(), paramsForBean);
+            Object bean = fillBean(factIdentifier.getClassName(), paramsForBean, classLoader);
 
             scenarioInput.add(new ScenarioInput(factIdentifier, bean));
         }
@@ -131,7 +131,7 @@ public class ScenarioRunnerHelper {
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
                 List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
-                Object expectedValue = expectedResult.getRawValue();
+                Object expectedValue = expectedResult.getCleanValue();
                 Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue);
 
                 Boolean conditionResult = new OperatorEvaluator().evaluate(operator, resultValue, expectedValue);
@@ -170,7 +170,8 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            paramsForBean.put(pathToField, factMappingValue.getRawValue());
+            Object parsedValue = convertValue(factMapping.getClassName(), factMappingValue.getCleanValue());
+            paramsForBean.put(pathToField, parsedValue);
         }
 
         return paramsForBean;
@@ -194,5 +195,55 @@ public class ScenarioRunnerHelper {
                     .add(factMappingValue);
         }
         return groupByFactIdentifier;
+    }
+
+    public static Object convertValue(String className, Object cleanValue) {
+        try {
+            Class<?> clazz = loadClass(className);
+
+            // if it is not a String, it has to be an instance of the desired type
+            if (!(cleanValue instanceof String)) {
+                if (clazz.isInstance(cleanValue)) {
+                    return cleanValue;
+                }
+                throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
+                                                           .append(" is not a String or an instance of ").append(className).toString());
+            }
+
+            String value = (String) cleanValue;
+
+            if (clazz.isAssignableFrom(String.class)) {
+                return value;
+            } else if (clazz.isAssignableFrom(Integer.class)) {
+                return Integer.parseInt(value);
+            } else if (clazz.isAssignableFrom(Long.class)) {
+                return Long.parseLong(value);
+            } else if (clazz.isAssignableFrom(Double.class)) {
+                return Double.parseDouble(value);
+            } else if (clazz.isAssignableFrom(Float.class)) {
+                return Float.parseFloat(value);
+            }
+
+            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
+                                                       .append(" is not supported").toString());
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
+                                                       .append(" cannot be resolved").toString(), e);
+        }
+    }
+
+    private static Class<?> loadClass(String className) throws ClassNotFoundException {
+        switch (className) {
+            case "int":
+                return Integer.class;
+            case "long":
+                return Long.class;
+            case "double":
+                return Double.class;
+            case "float":
+                return Float.class;
+            default:
+                return Class.forName(className);
+        }
     }
 }
