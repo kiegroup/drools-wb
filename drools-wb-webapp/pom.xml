@@ -1239,6 +1239,23 @@
       <artifactId>logback-classic</artifactId>
     </dependency>
 
+    <!-- Experimental Deps -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-extensions-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-extensions-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-extensions-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
@@ -1482,6 +1499,10 @@
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-default</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-google</compileSourcesArtifact>
+
+            <!-- Experimental Deps -->
+            <compileSourcesArtifact>org.uberfire:uberfire-experimental-extensions-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-experimental-extensions-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>
