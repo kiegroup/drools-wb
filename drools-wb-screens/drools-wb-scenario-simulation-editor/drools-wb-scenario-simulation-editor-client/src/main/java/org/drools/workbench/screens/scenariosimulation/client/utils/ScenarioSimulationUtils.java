@@ -26,30 +26,35 @@ import org.drools.workbench.screens.scenariosimulation.client.renderers.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 public class ScenarioSimulationUtils {
 
-    public static ScenarioGridColumn getScenarioGridColumn(FactMapping factMapping, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
+    public static ScenarioGridColumn getScenarioGridColumn(String title,
+                                                           String columnId,
+                                                           String columnGroup,
+                                                           FactMappingType factMappingType,
+                                                           ScenarioGridPanel scenarioGridPanel,
+                                                           ScenarioGridLayer gridLayer) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioCellTextBoxSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(getTwoLevelHeaderBuilder(factMapping).build(factoryHeader), new ScenarioGridColumnRenderer(), 150, false, factoryCell);
+        return new ScenarioGridColumn(getTwoLevelHeaderBuilder(title, columnId, columnGroup, factMappingType).build(factoryHeader), new ScenarioGridColumnRenderer(), 150, false, factoryCell);
     }
 
-    public static ColumnBuilder getTwoLevelHeaderBuilder(FactMapping fact) {
-        String columnGroup = fact.getExpressionIdentifier().getType().name();
-        String title = fact.getExpressionAlias();
+    public static ColumnBuilder getTwoLevelHeaderBuilder(String title,
+                                                         String columnId,
+                                                         String columnGroup,
+                                                         FactMappingType factMappingType) {
 
-        ColumnBuilder columnBuilder = ColumnBuilder.get(fact);
+        ColumnBuilder columnBuilder = ColumnBuilder.get();
 
-        columnBuilder.setColumnId(fact.getExpressionIdentifier().getName());
+        columnBuilder.setColumnId(columnId);
 
         columnBuilder.setColumnTitle(columnGroup);
         columnBuilder.setReadOnly(true);
 
-        if (isOther(fact)) {
+        if (isOther(factMappingType)) {
             columnBuilder.setColumnTitle(title);
             columnBuilder.setColumnGroup(columnGroup);
             return columnBuilder;
@@ -62,25 +67,20 @@ public class ScenarioSimulationUtils {
         return columnBuilder;
     }
 
-    private static boolean isOther(FactMapping fact) {
-        return FactMappingType.OTHER.equals(fact.getExpressionIdentifier().getType());
+    private static boolean isOther(FactMappingType factMappingType) {
+        return FactMappingType.OTHER.equals(factMappingType);
     }
 
     public static class ColumnBuilder {
 
-        final FactMapping factMapping;
         String columnId;
         String columnTitle;
         String columnGroup = "";
         boolean readOnly = false;
         ColumnBuilder nestedLevel;
 
-        private ColumnBuilder(FactMapping factMapping) {
-            this.factMapping = factMapping;
-        }
-
-        public static ColumnBuilder get(FactMapping factMapping) {
-            return new ColumnBuilder(factMapping);
+        public static ColumnBuilder get() {
+            return new ColumnBuilder();
         }
 
         public ColumnBuilder setColumnId(String columnId) {
@@ -104,7 +104,7 @@ public class ScenarioSimulationUtils {
         }
 
         public ColumnBuilder newLevel() {
-            this.nestedLevel = ColumnBuilder.get(factMapping)
+            this.nestedLevel = ColumnBuilder.get()
                     .setColumnId(columnId)
                     .setColumnTitle(columnTitle)
                     .setColumnGroup(columnGroup)
@@ -123,7 +123,7 @@ public class ScenarioSimulationUtils {
         }
 
         private GridColumn.HeaderMetaData internalBuild(ScenarioHeaderTextBoxSingletonDOMElementFactory factory) {
-            return new ScenarioHeaderMetaData(factMapping, columnId, columnTitle, columnGroup, factory, readOnly);
+            return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly);
         }
     }
 }

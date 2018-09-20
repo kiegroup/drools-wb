@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.metadata;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxDOMElement;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
@@ -27,18 +26,16 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
     final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory;
     final String columnId;
     final boolean readOnly;
-    private final FactMapping factMapping;
 
-    public ScenarioHeaderMetaData(FactMapping factMapping, String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory, boolean readOnly) {
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory, boolean readOnly) {
         super(columnTitle, columnGroup);
-        this.factMapping = factMapping;
         this.columnId = columnId;
         this.factory = factory;
         this.readOnly = readOnly;
     }
 
-    public ScenarioHeaderMetaData(FactMapping factMapping, String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory) {
-        this(factMapping, columnId, columnTitle, columnGroup, factory, false);
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory) {
+        this(columnId, columnTitle, columnGroup, factory, false);
     }
 
     public void edit(final GridBodyCellEditContext context) {
@@ -56,11 +53,5 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
     public boolean isReadOnly() {
         return readOnly;
-    }
-
-    @Override
-    public void setTitle(String columnTitle) {
-        super.setTitle(columnTitle);
-        factMapping.setExpressionAlias(columnTitle);
     }
 }

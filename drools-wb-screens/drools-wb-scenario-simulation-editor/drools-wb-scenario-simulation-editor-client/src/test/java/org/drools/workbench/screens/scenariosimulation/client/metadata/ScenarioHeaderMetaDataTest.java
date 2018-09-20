@@ -26,7 +26,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMElementFactory;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -41,7 +40,7 @@ public class ScenarioHeaderMetaDataTest {
 
     @Test
     public void editTest() {
-        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData(factMapping, "", "", "", factory);
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factory);
         scenarioHeaderMetaData.edit(null);
 
         verify(factory, times(1)).attachDomElement(any(), any(), any());
@@ -49,16 +48,8 @@ public class ScenarioHeaderMetaDataTest {
 
     @Test(expected = IllegalStateException.class)
     public void editFailTest() {
-        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData(factMapping, "", "", "", factory, true);
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factory, true);
 
         scenarioHeaderMetaData.edit(null);
-    }
-
-    @Test
-    public void setTitleTest() {
-        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData(factMapping, "", "", "", factory, true);
-
-        scenarioHeaderMetaData.setTitle("Test");
-        verify(factMapping, times(1)).setExpressionAlias(anyString());
     }
 }

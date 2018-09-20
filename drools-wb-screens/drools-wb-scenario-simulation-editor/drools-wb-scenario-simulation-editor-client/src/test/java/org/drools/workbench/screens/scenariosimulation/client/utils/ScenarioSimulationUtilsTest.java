@@ -17,9 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,23 +39,19 @@ public class ScenarioSimulationUtilsTest {
         String factName = "FactName";
         String expressionName = "ExpressionName";
 
-        FactMapping factOther = testFactMapping(alias, factName, expressionName, FactMappingType.OTHER);
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther = ScenarioSimulationUtils.getTwoLevelHeaderBuilder(factOther);
+        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther =
+                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.OTHER.name(), FactMappingType.OTHER);
         assertEquals(1, columnBuilderOther.build(factory).size());
         assertEquals(FactMappingType.OTHER.name(), columnBuilderOther.columnGroup);
         assertNull(columnBuilderOther.nestedLevel);
         assertEquals(alias, columnBuilderOther.columnTitle);
 
-        FactMapping factGiven = testFactMapping(alias, factName, expressionName, FactMappingType.GIVEN);
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven = ScenarioSimulationUtils.getTwoLevelHeaderBuilder(factGiven);
+        ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven =
+                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.GIVEN.name(), FactMappingType.GIVEN);
         assertEquals(2, columnBuilderGiven.build(factory).size());
         assertEquals("", columnBuilderGiven.columnGroup);
         assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.columnTitle);
         assertEquals(alias, columnBuilderGiven.nestedLevel.columnTitle);
         assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.nestedLevel.columnGroup);
-    }
-
-    private FactMapping testFactMapping(String expressionAlias, String factName, String expressionName, FactMappingType type) {
-        return new FactMapping(expressionAlias, FactIdentifier.create(factName, String.class.getCanonicalName()), ExpressionIdentifier.create(expressionName, type));
     }
 }

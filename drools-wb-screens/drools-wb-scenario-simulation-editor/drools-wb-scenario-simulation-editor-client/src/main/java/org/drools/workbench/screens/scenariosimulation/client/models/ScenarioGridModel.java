@@ -27,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
@@ -37,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
+import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
@@ -133,7 +133,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void duplicateNewRow(int rowIndex, GridRow row) {
         checkSimulation();
-        int newRowIndex = rowIndex +1;
+        int newRowIndex = rowIndex + 1;
         final Scenario toDuplicate = simulation.cloneScenario(rowIndex, newRowIndex);
         insertRow(newRowIndex, row, toDuplicate);
     }
@@ -260,6 +260,10 @@ public class ScenarioGridModel extends BaseGridData {
                 .count();
     }
 
+    public void updateHeader(int columnIndex, int rowIndex, String value) {
+        getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex).setTitle(value);
+        simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
+    }
 
     @Override
     public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
@@ -269,12 +273,10 @@ public class ScenarioGridModel extends BaseGridData {
     @Override
     public Range deleteCell(int rowIndex, int columnIndex) {
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        Optional<FactMappingValue> factMappingValueToDelete = simulation.getScenarioByIndex(rowIndex)
-                .getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
-        factMappingValueToDelete.ifPresent(factMappingValue -> factMappingValue.setRawValue(""));
+        simulation.getScenarioByIndex(rowIndex)
+                .removeFactMappingValueByIdentifiers(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
         return super.deleteCell(rowIndex, columnIndex);
     }
-
 
     public void clear() {
         // Deleting rows

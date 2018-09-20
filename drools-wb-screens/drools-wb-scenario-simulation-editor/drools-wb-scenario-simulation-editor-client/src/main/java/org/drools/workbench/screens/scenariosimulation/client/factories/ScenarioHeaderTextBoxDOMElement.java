@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.TextBoxDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -32,8 +33,8 @@ public class ScenarioHeaderTextBoxDOMElement extends TextBoxDOMElement {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         try {
-            gridWidget.getModel().getColumns().get(columnIndex)
-                    .getHeaderMetaData().get(rowIndex).setTitle(value);
+            ScenarioGridModel model = (ScenarioGridModel) gridWidget.getModel();
+            model.updateHeader(columnIndex, rowIndex, value);
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)
                                                        .append(") of column ").append(columnIndex).toString(), e);
