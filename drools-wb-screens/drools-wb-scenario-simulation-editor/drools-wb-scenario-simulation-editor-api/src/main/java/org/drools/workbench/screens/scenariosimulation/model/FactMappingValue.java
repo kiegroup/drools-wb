@@ -78,7 +78,6 @@ public class FactMappingValue {
         cloned.rawValue = rawValue;
         return cloned;
     }
-
     public static Object cleanValue(Object rawValue) {
         if (!(rawValue instanceof String)) {
             return rawValue;
@@ -105,5 +104,18 @@ public class FactMappingValue {
         String value = (String) rawValue;
 
         return FactMappingValueOperator.findOperator(value);
+    }
+
+
+    public static String getPlaceHolder() {
+        return "Empty value";
+    }
+
+    public static String getPlaceHolder(int index) {
+        return getPlaceHolder() + " " + index;
+    }
+
+    public static String getPlaceHolder(int rowIndex, int colIndex) {
+        return getPlaceHolder() + " " + rowIndex + " " + colIndex;
     }
 }
