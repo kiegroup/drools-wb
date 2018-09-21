@@ -14,42 +14,32 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class FieldItemViewTest extends AbstractRightPanelTest {
+public class DisableRightPanelCommandTest extends AbstractCommandTest {
 
-    private FieldItemViewImpl fieldItemView;
 
-    private String INNER_HTML;
-    private String ID_ATTRIBUTE;
+
+    private DisableRightPanelCommand disableRightPanelCommand;
 
     @Before
     public void setup() {
         super.setup();
-        INNER_HTML = "<b>" + FACT_NAME + "</b> " + FACT_MODEL_TREE.getFactName();
-        ID_ATTRIBUTE = "fieldElement-" + FACT_NAME + "-" + FACT_MODEL_TREE.getFactName();
-        this.fieldItemView = spy(new FieldItemViewImpl() {
-            {
-                this.fieldElement = mockLIElement;
-            }
-        });
+        disableRightPanelCommand = new DisableRightPanelCommand(mockRightPanelPresenter);
     }
 
     @Test
-    public void setFieldData() {
-        fieldItemView.setFieldData("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
-        verify(mockLIElement, times(1)).setInnerHTML(eq(INNER_HTML));
-        verify(mockLIElement, times(1)).setAttribute(eq("id"), eq(ID_ATTRIBUTE));
+    public void execute() {
+        disableRightPanelCommand.execute();
+        verify(mockRightPanelPresenter, times(1)).onDisableEditorTab();
     }
 }

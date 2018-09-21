@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -128,6 +129,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private Command mockSetButtonTextTrue;
 
+    @Mock
+    private CommandExecutor mockCommandExecutor;
+
     @Before
     public void setup() {
         super.setup();
@@ -135,14 +139,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(mockRightPanelMenuItem.getSetButtonTextFalse()).thenReturn(mockSetButtonTextFalse);
         when(mockRightPanelMenuItem.getSetButtonTextTrue()).thenReturn(mockSetButtonTextTrue);
         when(mockScenarioSimulationProducer.getScenarioSimulationView()).thenReturn(mockScenarioSimulationView);
+        when(mockScenarioSimulationProducer.getCommandExecutor()).thenReturn(mockCommandExecutor);
         when(mockPlaceRequest.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
 
         when(mockOracleFactory.makeAsyncPackageDataModelOracle(anyObject(), anyObject(), anyObject())).thenReturn(mockOracle);
 
         when(mockRightPanelView.getPresenter()).thenReturn(mockRightPanelPresenter);
         when(mockRightPanelActivity.getWidget()).thenReturn(mockRightPanelView);
-
-        when(mockPlaceManager.getActivity(RightPanelPresenter.PLACE_REQUEST)).thenReturn(mockRightPanelActivity);
 
         when(mockPlaceRequest.getPath()).thenReturn(mockPath);
 
