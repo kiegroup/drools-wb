@@ -129,6 +129,7 @@ public class ScenarioGridModelTest {
         when(mockScenario.getUnmodifiableFactMappingValues()).thenReturn(mockFactMappingValues);
         when(mockSimulation.getScenarioByIndex(ROW_INDEX)).thenReturn(mockScenario);
         when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
+        when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
         gridCellSupplier = () -> mockGridCell;
         scenarioGridModel = spy(new ScenarioGridModel() {
             {
@@ -227,7 +228,6 @@ public class ScenarioGridModelTest {
     public void deleteNewColumn() {
         scenarioGridModel.deleteNewColumn(COLUMN_INDEX);
         verify(scenarioGridModel, times(1)).checkSimulation();
-        verify(mockSimulationDescriptor, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(mockSimulation, times(1)).removeFactMappingByIndex(eq(COLUMN_INDEX));
     }
 

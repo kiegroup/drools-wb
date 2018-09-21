@@ -94,6 +94,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
         when(mockEventBus.addHandler(eq(DuplicateRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDuplicateHandlerRegistration);
         when(mockEventBus.addHandler(eq(EnableRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockEnableRightPanelEventHandler);
         when(mockEventBus.addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertColumnHandlerRegistration);
+        when(mockEventBus.addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependColumnHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockScenarioGridReloadHandlerRegistration);

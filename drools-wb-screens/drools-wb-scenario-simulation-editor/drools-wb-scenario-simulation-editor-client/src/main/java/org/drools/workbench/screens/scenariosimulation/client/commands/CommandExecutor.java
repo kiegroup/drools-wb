@@ -189,7 +189,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
     }
 
     void registerHandlers() {
-        // LET'S DO THE RISKY THING: NOT CHECKING FOR ACTUAL REGISTRATIONS
         handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(AppendRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DeleteColumnEvent.TYPE, this));
@@ -198,6 +197,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(EnableRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(InsertRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
