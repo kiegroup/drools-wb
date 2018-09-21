@@ -111,6 +111,8 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (manageLeftClick(event)) {
             event.preventDefault();
             event.stopPropagation();
+        } else {
+            eventBus.fireEvent(new DisableRightPanelEvent());
         }
     }
 
@@ -139,7 +141,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         }
         if (!manageHeaderRightClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex)) {
             return manageBodyRightClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex, isShiftKeyDown, isControlKeyDown);
-        }  else {
+        } else {
             return true;
         }
     }
@@ -255,10 +257,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         final Integer uiColumnIndex = CoordinateUtilities.getUiColumnIndex(scenarioGrid,
                                                                            ap.getX());
         if (uiColumnIndex == null) {
-            eventBus.fireEvent(new DisableRightPanelEvent());
             return false;
+        } else {
+            return manageHeaderLeftClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex);
         }
-        return manageHeaderLeftClick(scenarioGrid, event.getNativeEvent().getClientX(), event.getNativeEvent().getClientY(), ap.getY(), uiColumnIndex);
     }
 
     /**
@@ -276,7 +278,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (columnMetadata == null) {
             return false;
         }
-        final Integer uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, gridY);
         String group = columnMetadata.getColumnGroup();
         switch (group) {
             case "GIVEN":

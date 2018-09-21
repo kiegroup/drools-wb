@@ -228,7 +228,7 @@ public class ScenarioGridModelTest {
         scenarioGridModel.deleteNewColumn(COLUMN_INDEX);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(mockSimulationDescriptor, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
-        verify(mockSimulationDescriptor, times(1)).removeFactMapping(eq(mockFactMapping));
+        verify(mockSimulation, times(1)).removeFactMappingByIndex(eq(COLUMN_INDEX));
     }
 
     @Test

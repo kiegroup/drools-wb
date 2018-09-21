@@ -176,11 +176,7 @@ public class ScenarioGridModel extends BaseGridData {
         checkSimulation();
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
-        final FactMapping toRemove = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        simulation.getSimulationDescriptor().removeFactMapping(toRemove);
-        simulation.getUnmodifiableScenarios().forEach(scenario -> {
-            scenario.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier());
-        });
+        simulation.removeFactMappingByIndex(columnIndex);
     }
 
     /**
