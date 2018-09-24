@@ -35,7 +35,7 @@ public class DeleteColumnCommandTest extends AbstractCommandTest {
     @Before
     public void setup() {
         super.setup();
-        deleteColumnCommand = new DeleteColumnCommand(mockScenarioGridModel, COLUMN_INDEX);
+        deleteColumnCommand = new DeleteColumnCommand(mockScenarioGridModel, COLUMN_INDEX,  COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
     }
 
     @Test

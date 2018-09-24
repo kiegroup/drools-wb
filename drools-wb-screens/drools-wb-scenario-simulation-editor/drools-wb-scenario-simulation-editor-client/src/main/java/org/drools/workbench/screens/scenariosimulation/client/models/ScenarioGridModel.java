@@ -140,7 +140,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void duplicateNewRow(int rowIndex, GridRow row) {
         checkSimulation();
-        int newRowIndex = rowIndex +1;
+        int newRowIndex = rowIndex + 1;
         final Scenario toDuplicate = simulation.cloneScenario(rowIndex, newRowIndex);
         insertRow(newRowIndex, row, toDuplicate);
     }

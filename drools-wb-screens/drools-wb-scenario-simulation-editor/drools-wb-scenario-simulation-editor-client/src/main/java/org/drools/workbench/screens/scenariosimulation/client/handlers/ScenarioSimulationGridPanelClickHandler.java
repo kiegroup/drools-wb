@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridCo
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
@@ -53,6 +54,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     GivenContextMenu givenContextMenu;
     ExpectedContextMenu expectedContextMenu;
     GridContextMenu gridContextMenu;
+    UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
     Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
 
     public ScenarioSimulationGridPanelClickHandler() {
@@ -90,6 +92,11 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     public void setGridContextMenu(GridContextMenu gridContextMenu) {
         this.gridContextMenu = gridContextMenu;
         managedMenus.add(gridContextMenu);
+    }
+
+    public void setUnmodifiableColumnGridContextMenu(UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
+        this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
+        managedMenus.add(unmodifiableColumnGridContextMenu);
     }
 
     /**
@@ -178,10 +185,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                 }
                 break;
             case "GIVEN":
-                givenContextMenu.show(left, top, uiColumnIndex);
+                givenContextMenu.show(left, top, uiColumnIndex, group);
                 break;
             case "EXPECTED":
-                expectedContextMenu.show(left, top, uiColumnIndex);
+                expectedContextMenu.show(left, top, uiColumnIndex, group);
                 break;
             default:
                 otherContextMenu.show(left, top);
@@ -212,7 +219,14 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             return false;
         }
         String group = columnMetadata.getColumnGroup();
-        gridContextMenu.show(left, top, uiColumnIndex, uiRowIndex, group);
+        switch (group) {
+            case "GIVEN":
+            case "EXPECTED":
+                gridContextMenu.show(left, top, uiColumnIndex, uiRowIndex, group);
+                break;
+            default:
+                unmodifiableColumnGridContextMenu.show(left, top, uiRowIndex);
+        }
         return true;
     }
 }
