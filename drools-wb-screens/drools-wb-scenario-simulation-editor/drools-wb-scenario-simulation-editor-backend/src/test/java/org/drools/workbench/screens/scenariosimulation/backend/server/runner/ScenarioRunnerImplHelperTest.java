@@ -224,29 +224,35 @@ public class ScenarioRunnerImplHelperTest {
 
     @Test
     public void convertValueTest() {
-        assertEquals("Test", convertValue(String.class.getCanonicalName(), "Test"));
-        assertEquals(1, convertValue(int.class.getCanonicalName(), "1"));
-        assertEquals(1, convertValue(Integer.class.getCanonicalName(), "1"));
-        assertEquals(1l, convertValue(long.class.getCanonicalName(), "1"));
-        assertEquals(1l, convertValue(Long.class.getCanonicalName(), "1"));
-        assertEquals(1.0d, convertValue(double.class.getCanonicalName(), "1.0"));
-        assertEquals(1.0d, convertValue(Double.class.getCanonicalName(), "1.0"));
-        assertEquals(1.0f, convertValue(float.class.getCanonicalName(), "1.0"));
-        assertEquals(1.0f, convertValue(Float.class.getCanonicalName(), "1.0"));
+        assertEquals("Test", convertValue(String.class.getCanonicalName(), "Test", classLoader));
+        assertEquals(1, convertValue(int.class.getCanonicalName(), "1", classLoader));
+        assertEquals(1, convertValue(Integer.class.getCanonicalName(), "1", classLoader));
+        assertEquals(1L, convertValue(long.class.getCanonicalName(), "1", classLoader));
+        assertEquals(1L, convertValue(Long.class.getCanonicalName(), "1", classLoader));
+        assertEquals(1.0D, convertValue(double.class.getCanonicalName(), "1.0", classLoader));
+        assertEquals(1.0D, convertValue(Double.class.getCanonicalName(), "1.0", classLoader));
+        assertEquals(1.0F, convertValue(float.class.getCanonicalName(), "1.0", classLoader));
+        assertEquals(1.0F, convertValue(Float.class.getCanonicalName(), "1.0", classLoader));
+        assertEquals(null, convertValue(Float.class.getCanonicalName(), null, classLoader));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailLoadClassTest() {
-        convertValue("my.NotExistingClass", "Test");
+        convertValue("my.NotExistingClass", "Test", classLoader);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailUnsupportedTest() {
-        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), "Test");
+        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), "Test", classLoader);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void convertValueFailPrimitiveNullTest() {
+        convertValue("int", null, classLoader);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailNotStringOrTypeTest() {
-        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), 1);
+        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), 1, classLoader);
     }
 }

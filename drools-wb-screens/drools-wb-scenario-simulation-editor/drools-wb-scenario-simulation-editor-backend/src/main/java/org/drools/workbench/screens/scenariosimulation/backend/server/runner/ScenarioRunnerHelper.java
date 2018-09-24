@@ -46,6 +46,15 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.uti
 
 public class ScenarioRunnerHelper {
 
+    private static final Map<String, Class<?>> primitiveMap = new HashMap<>();
+    static {
+        primitiveMap.put("int", int.class);
+        primitiveMap.put("long", long.class);
+        primitiveMap.put("double", double.class);
+        primitiveMap.put("float", float.class);
+    }
+
+
     private ScenarioRunnerHelper() {
 
     }
@@ -63,7 +72,8 @@ public class ScenarioRunnerHelper {
             // for each fact, create a map of path to fields and values to set
             Map<List<String>, Object> paramsForBean = getParamsForBean(simulationDescriptor,
                                                                        factIdentifier,
-                                                                       entry.getValue());
+                                                                       entry.getValue(),
+                                                                       classLoader);
 
             Object bean = fillBean(factIdentifier.getClassName(), paramsForBean, classLoader);
 
@@ -158,7 +168,10 @@ public class ScenarioRunnerHelper {
         }
     }
 
-    public static Map<List<String>, Object> getParamsForBean(SimulationDescriptor simulationDescriptor, FactIdentifier factIdentifier, List<FactMappingValue> factMappingValues) {
+    public static Map<List<String>, Object> getParamsForBean(SimulationDescriptor simulationDescriptor,
+                                                             FactIdentifier factIdentifier,
+                                                             List<FactMappingValue> factMappingValues,
+                                                             ClassLoader classLoader) {
         Map<List<String>, Object> paramsForBean = new HashMap<>();
 
         for (FactMappingValue factMappingValue : factMappingValues) {
@@ -170,7 +183,7 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            Object parsedValue = convertValue(factMapping.getClassName(), factMappingValue.getCleanValue());
+            Object parsedValue = convertValue(factMapping.getClassName(), factMappingValue.getCleanValue(), classLoader);
             paramsForBean.put(pathToField, parsedValue);
         }
 
@@ -197,13 +210,16 @@ public class ScenarioRunnerHelper {
         return groupByFactIdentifier;
     }
 
-    public static Object convertValue(String className, Object cleanValue) {
+    public static Object convertValue(String className, Object cleanValue, ClassLoader classLoader) {
         try {
-            Class<?> clazz = loadClass(className);
+            Class<?> clazz = loadClass(className, classLoader);
 
             // if it is not a String, it has to be an instance of the desired type
             if (!(cleanValue instanceof String)) {
                 if (clazz.isInstance(cleanValue)) {
+                    return cleanValue;
+                }
+                if (!isPrimitive(className) && cleanValue == null) {
                     return cleanValue;
                 }
                 throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
@@ -214,13 +230,13 @@ public class ScenarioRunnerHelper {
 
             if (clazz.isAssignableFrom(String.class)) {
                 return value;
-            } else if (clazz.isAssignableFrom(Integer.class)) {
+            } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
                 return Integer.parseInt(value);
-            } else if (clazz.isAssignableFrom(Long.class)) {
+            } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
                 return Long.parseLong(value);
-            } else if (clazz.isAssignableFrom(Double.class)) {
+            } else if (clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(double.class)) {
                 return Double.parseDouble(value);
-            } else if (clazz.isAssignableFrom(Float.class)) {
+            } else if (clazz.isAssignableFrom(Float.class) || clazz.isAssignableFrom(float.class)) {
                 return Float.parseFloat(value);
             }
 
@@ -232,18 +248,14 @@ public class ScenarioRunnerHelper {
         }
     }
 
-    private static Class<?> loadClass(String className) throws ClassNotFoundException {
-        switch (className) {
-            case "int":
-                return Integer.class;
-            case "long":
-                return Long.class;
-            case "double":
-                return Double.class;
-            case "float":
-                return Float.class;
-            default:
-                return Class.forName(className);
+    private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
+        if(primitiveMap.containsKey(className)) {
+            return primitiveMap.get(className);
         }
+        return classLoader.loadClass(className);
+    }
+
+    private static boolean isPrimitive(String className) {
+        return primitiveMap.containsKey(className);
     }
 }
