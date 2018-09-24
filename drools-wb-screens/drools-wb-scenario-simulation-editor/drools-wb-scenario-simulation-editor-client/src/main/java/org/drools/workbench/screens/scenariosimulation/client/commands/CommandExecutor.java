@@ -127,6 +127,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
     @Override
     public void onEvent(DeleteColumnEvent event) {
         commonExecute(new DeleteColumnCommand(model, event.getColumnIndex()));
+        if (rightPanelPresenter != null) {
+            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
+        }
     }
 
     @Override

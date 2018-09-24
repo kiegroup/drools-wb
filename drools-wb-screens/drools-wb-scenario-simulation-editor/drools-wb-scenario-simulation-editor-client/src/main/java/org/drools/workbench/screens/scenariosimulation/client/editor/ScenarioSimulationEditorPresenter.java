@@ -208,11 +208,13 @@ public class ScenarioSimulationEditorPresenter
         }
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)
-                && PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            unRegisterRightPanelCallback();
-            clearRightPanelStatus();
-            placeManager.closePlace(rightPanelRequest);
+                && placeRequest.getPath().equals(this.path)) {
+            view.getScenarioGridLayer().getScenarioGrid().clearSelections();
+            if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
+                unRegisterRightPanelCallback();
+                clearRightPanelStatus();
+                placeManager.closePlace(rightPanelRequest);
+            }
         }
     }
 

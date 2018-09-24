@@ -157,6 +157,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
         DeleteColumnEvent event = new DeleteColumnEvent(COLUMN_INDEX);
         commandExecutor.onEvent(event);
         verify(commandExecutor, times(1)).commonExecute(isA(DeleteColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(DisableRightPanelCommand.class));
     }
 
     @Test

@@ -23,6 +23,8 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -88,6 +90,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private EventSourceMock<NotificationEvent> mockNotification;
 
     @Mock
+    private ScenarioGrid mockScenarioGrid;
+
+    @Mock
+    private ScenarioGridLayer mockScenarioGridLayer;
+
+    @Mock
     private ScenarioSimulationView mockScenarioSimulationView;
 
     @Mock
@@ -135,7 +143,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Before
     public void setup() {
         super.setup();
-
+        when(mockScenarioGridLayer.getScenarioGrid()).thenReturn(mockScenarioGrid);
+        when(mockScenarioSimulationView.getScenarioGridLayer()).thenReturn(mockScenarioGridLayer);
         when(mockRightPanelMenuItem.getSetButtonTextFalse()).thenReturn(mockSetButtonTextFalse);
         when(mockRightPanelMenuItem.getSetButtonTextTrue()).thenReturn(mockSetButtonTextTrue);
         when(mockScenarioSimulationProducer.getScenarioSimulationView()).thenReturn(mockScenarioSimulationView);
@@ -264,6 +273,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(mockPlaceManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.OPEN);
         presenter.onPlaceHiddenEvent(mockPlaceHiddenEvent);
         verify(mockPlaceManager, times(1)).closePlace(mockPlaceRequest);
+        verify(mockScenarioGrid, times(1)).clearSelections();
     }
 
     @Test

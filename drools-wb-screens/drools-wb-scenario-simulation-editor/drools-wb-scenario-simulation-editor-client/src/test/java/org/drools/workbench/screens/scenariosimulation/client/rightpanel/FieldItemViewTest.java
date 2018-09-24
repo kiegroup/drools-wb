@@ -37,7 +37,7 @@ public class FieldItemViewTest extends AbstractRightPanelTest {
     @Before
     public void setup() {
         super.setup();
-        INNER_HTML = "<b>" + FACT_NAME + "</b> " + FACT_MODEL_TREE.getFactName();
+        INNER_HTML = "<a title=\"" + FACT_NAME + "\" href=\"#\">"  + FACT_NAME + "</a> " + FACT_MODEL_TREE.getFactName();
         ID_ATTRIBUTE = "fieldElement-" + FACT_NAME + "-" + FACT_MODEL_TREE.getFactName();
         this.fieldItemView = spy(new FieldItemViewImpl() {
             {
