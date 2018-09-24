@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -46,6 +47,8 @@ public class ScenarioGridModel extends BaseGridData {
 
     EventBus eventBus;
 
+    AtomicInteger columnCounter = new AtomicInteger(0);
+
     public ScenarioGridModel() {
     }
 
@@ -60,16 +63,22 @@ public class ScenarioGridModel extends BaseGridData {
     public void bindContent(Simulation simulation) {
         this.simulation = simulation;
         checkSimulation();
+        columnCounter.set(simulation.getSimulationDescriptor().getUnmodifiableFactMappings().size());
     }
 
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
+    public int nextColumnCount() {
+        return columnCounter.getAndIncrement();
+    }
+
     /**
      * This method <i>append</i> a new column to the grid <b>and</b> to the underlying model
      */
     public void appendNewColumn(final GridColumn<?> column) {
+        checkSimulation();
         commonAddColumn(-1, column);
     }
 
@@ -90,6 +99,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void insertRow(final int rowIndex,
                           final GridRow row, final Scenario scenario) {
+        checkSimulation();
         insertRow(rowIndex, row);
         scenario.getUnmodifiableFactMappingValues().forEach(value -> {
             FactIdentifier factIdentifier = value.getFactIdentifier();
@@ -132,7 +142,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void duplicateNewRow(int rowIndex, GridRow row) {
         checkSimulation();
-        int newRowIndex = rowIndex +1;
+        int newRowIndex = rowIndex + 1;
         final Scenario toDuplicate = simulation.cloneScenario(rowIndex, newRowIndex);
         insertRow(newRowIndex, row, toDuplicate);
     }
@@ -154,6 +164,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param column
      */
     public void insertNewColumn(final int index, final GridColumn<?> column) {
+        checkSimulation();
         commonAddColumn(index, column);
     }
 
@@ -166,6 +177,33 @@ public class ScenarioGridModel extends BaseGridData {
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
         simulation.removeFactMappingByIndex(columnIndex);
+    }
+
+    /**
+     * This method update the type mapped inside a give column and updates the underlying model
+     * @param columnIndex
+     * @param value
+     */
+    public void updateColumnType(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName) {
+        checkSimulation();
+        deleteNewColumn(columnIndex);
+        ScenarioHeaderMetaData scenarioHeaderMetaData = (ScenarioHeaderMetaData) column.getHeaderMetaData().get(1);
+        String group = scenarioHeaderMetaData.getColumnGroup();
+        String columnId = scenarioHeaderMetaData.getColumnId();
+
+        String[] elements = value.split("\\.");
+        if (!fullPackage.endsWith(".")) {
+            fullPackage += ".";
+        }
+        String canonicalClassName = fullPackage + elements[0];
+        FactIdentifier factIdentifier = FactIdentifier.create(columnId, canonicalClassName);
+        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
+        commonAddColumn(columnIndex, column, factIdentifier, ei);
+        final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        factMappingByIndex.setExpressionAlias(value);
+        IntStream.range(1, elements.length)
+                .forEach(stepIndex ->
+                                 factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
     }
 
     /**
@@ -187,6 +225,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param cellSupplier
      */
     public Range setNewCell(int rowIndex, int columnIndex, Supplier<GridCell<?>> cellSupplier) {
+        checkSimulation();
         Range toReturn = setCell(rowIndex, columnIndex, cellSupplier);
         try {
             Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
@@ -273,25 +312,61 @@ public class ScenarioGridModel extends BaseGridData {
         }
     }
 
+    /**
+     * Select all the cells of the given column
+     * @param columnIndex
+     */
+    public void selectColumn(int columnIndex) {
+        if (columnIndex > getColumnCount() - 1) {
+            return;
+        }
+        int rows = getRowCount();
+        IntStream.range(0, rows).forEach(rowIndex -> selectCell(rowIndex, columnIndex));
+    }
+
+    /**
+     * Select all the cells of the given row
+     * @param rowIndex
+     */
+    public void selectRow(int rowIndex) {
+        if (rowIndex > getRowCount() - 1) {
+            return;
+        }
+        int columns = getColumnCount();
+        IntStream.range(0, columns).forEach(columnIndex -> selectCell(rowIndex, columnIndex));
+    }
+
     public Optional<Simulation> getSimulation() {
         return Optional.ofNullable(simulation);
     }
 
     /**
      * This method <i>add</i> or <i>insert</i> a new column to the grid <b>and</b> to the underlying model, depending on the index value.
-     * If index == -1 -> add, otherwise insert
+     * If index == -1 -> add, otherwise insert. It automatically creates default <code>FactIdentifier</code>  (for String class) and <code>ExpressionIdentifier</code>
      * @param index
      * @param column
      */
     protected void commonAddColumn(final int index, final GridColumn<?> column) {
-        checkSimulation();
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         ScenarioHeaderMetaData scenarioHeaderMetaData = (ScenarioHeaderMetaData) column.getHeaderMetaData().get(1);
-        String title = scenarioHeaderMetaData.getTitle();
         String group = scenarioHeaderMetaData.getColumnGroup();
         String columnId = scenarioHeaderMetaData.getColumnId();
         FactIdentifier factIdentifier = FactIdentifier.create(columnId, String.class.getCanonicalName());
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
+        commonAddColumn(index, column, factIdentifier, ei);
+    }
+
+    /**
+     * This method <i>add</i> or <i>insert</i> a new column to the grid <b>and</b> to the underlying model, depending on the index value.
+     * If index == -1 -> add, otherwise insert.
+     * @param index
+     * @param column
+     * @param factIdentifier
+     * @param ei
+     */
+    protected void commonAddColumn(final int index, final GridColumn<?> column, FactIdentifier factIdentifier, ExpressionIdentifier ei) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        ScenarioHeaderMetaData scenarioHeaderMetaData = (ScenarioHeaderMetaData) column.getHeaderMetaData().get(1);
+        String title = scenarioHeaderMetaData.getTitle();
         final int columnIndex = index == -1 ? getColumnCount() : index;
         try {
             simulationDescriptor.addFactMapping(columnIndex, title, factIdentifier, ei);

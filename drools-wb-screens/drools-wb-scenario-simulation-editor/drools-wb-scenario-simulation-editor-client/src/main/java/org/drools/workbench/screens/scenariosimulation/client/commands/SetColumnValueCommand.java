@@ -20,41 +20,39 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
 /**
- * <code>Command</code> to <b>insert</b> a column.
+ * <code>Command</code> to <b>enable</b> the <code>RightPanelView</code>
  */
 @Dependent
-public class InsertColumnCommand implements Command {
+public class SetColumnValueCommand implements Command {
 
     private ScenarioGridModel model;
-    private String columnId;
     private int columnIndex;
-    private boolean isRight;
+    private String columnId;
+    private String fullPackage;
+    private String value;
+    private String valueClassName;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
 
-    public InsertColumnCommand() {
+    public SetColumnValueCommand() {
     }
 
     /**
-     * @param model
-     * @param columnId
      * @param columnIndex
-     * @param isRight when <code>true</code>, column will be inserted to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
-     * @param scenarioGridPanel
-     * @param scenarioGridLayer
+     * @param value
      */
-    public InsertColumnCommand(ScenarioGridModel model, String columnId, int columnIndex, boolean isRight, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public SetColumnValueCommand(ScenarioGridModel model, int columnIndex, String columnId, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         this.model = model;
-        this.columnId = columnId;
         this.columnIndex = columnIndex;
-        this.isRight = isRight;
+        this.columnId = columnId;
+        this.fullPackage = fullPackage;
+        this.value = value;
+        this.valueClassName = valueClassName;
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridLayer;
     }
@@ -62,9 +60,6 @@ public class InsertColumnCommand implements Command {
     @Override
     public void execute() {
         String columnGroup = model.getColumns().get(columnIndex).getHeaderMetaData().get(1).getColumnGroup();
-        int columnPosition = isRight ? columnIndex + 1 : columnIndex;
-        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String columnTitle = FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-        model.insertNewColumn(columnPosition, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+        model.updateColumnType(columnIndex, getScenarioGridColumn(columnId, value, columnGroup, scenarioGridPanel, scenarioGridLayer), fullPackage, value, valueClassName);
     }
 }
