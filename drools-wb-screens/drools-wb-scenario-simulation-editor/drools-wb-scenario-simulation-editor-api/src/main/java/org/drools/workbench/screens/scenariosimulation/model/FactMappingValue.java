@@ -78,22 +78,22 @@ public class FactMappingValue {
         cloned.rawValue = rawValue;
         return cloned;
     }
+
     public static Object cleanValue(Object rawValue) {
         if (!(rawValue instanceof String)) {
             return rawValue;
         }
         String value = ((String) rawValue).trim();
-        String symbolToRemove = "";
 
         FactMappingValueOperator operator = FactMappingValueOperator.findOperator(value);
         Optional<String> first = operator.getSymbols().stream().filter(value::startsWith).findFirst();
         if (first.isPresent()) {
-            symbolToRemove = first.get();
+            String symbolToRemove = first.get();
+            int index = value.indexOf(symbolToRemove);
+            value = value.substring(index + symbolToRemove.length()).trim();
         }
 
-        int index = value.indexOf(symbolToRemove);
-
-        return value.substring(index + symbolToRemove.length()).trim();
+        return value.trim();
     }
 
     public static FactMappingValueOperator extractOperator(Object rawValue) {
@@ -105,7 +105,6 @@ public class FactMappingValue {
 
         return FactMappingValueOperator.findOperator(value);
     }
-
 
     public static String getPlaceHolder() {
         return "Empty value";
