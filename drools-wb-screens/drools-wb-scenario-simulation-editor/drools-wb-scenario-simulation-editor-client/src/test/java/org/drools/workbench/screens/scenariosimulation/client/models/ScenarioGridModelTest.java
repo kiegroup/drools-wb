@@ -126,6 +126,8 @@ public class ScenarioGridModelTest {
         when(mockHeaderMetaData.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(mockHeaderMetaData.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
+        when(mockGridColumn.getHeaderMetaData()).thenReturn(mockHeaderMetaDataList);
+
         when(mockGridCell.getValue()).thenReturn(mockGridCellValue);
         when(mockGridCellValue.getValue()).thenReturn(GRID_CELL_TEXT);
 
