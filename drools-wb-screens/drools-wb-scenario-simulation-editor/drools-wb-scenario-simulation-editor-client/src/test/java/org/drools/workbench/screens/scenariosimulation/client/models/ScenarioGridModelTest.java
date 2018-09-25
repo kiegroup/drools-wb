@@ -243,6 +243,8 @@ public class ScenarioGridModelTest {
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteNewColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(mockGridColumn), isA(FactIdentifier.class), isA(ExpressionIdentifier.class));
+        verify(scenarioGridModel, times(1)).selectColumn(eq(COLUMN_INDEX));
+
     }
 
     @Test
