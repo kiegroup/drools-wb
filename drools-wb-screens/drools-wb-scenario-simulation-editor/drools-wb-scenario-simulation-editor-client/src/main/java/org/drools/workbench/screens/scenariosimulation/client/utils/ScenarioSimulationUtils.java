@@ -54,11 +54,11 @@ public class ScenarioSimulationUtils {
         columnBuilder.setColumnTitle(columnGroup);
         columnBuilder.setReadOnly(true);
 
-        if (isOther(factMappingType)) {
-            columnBuilder.setColumnTitle(title);
-            columnBuilder.setColumnGroup(columnGroup);
-            return columnBuilder;
-        }
+//        if (isOther(factMappingType)) {
+//            columnBuilder.setColumnTitle(title);
+//            columnBuilder.setColumnGroup(columnGroup);
+//            return columnBuilder;
+//        }
 
         columnBuilder.newLevel()
                 .setColumnTitle(title)
