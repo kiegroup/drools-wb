@@ -24,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScenarioSimulationUtilsTest {
@@ -39,12 +38,12 @@ public class ScenarioSimulationUtilsTest {
         String factName = "FactName";
         String expressionName = "ExpressionName";
 
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther =
-                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.OTHER.name(), FactMappingType.OTHER);
-        assertEquals(1, columnBuilderOther.build(factory).size());
-        assertEquals(FactMappingType.OTHER.name(), columnBuilderOther.columnGroup);
-        assertNull(columnBuilderOther.nestedLevel);
-        assertEquals(alias, columnBuilderOther.columnTitle);
+//        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther =
+//                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.OTHER.name(), FactMappingType.OTHER);
+//        assertEquals(1, columnBuilderOther.build(factory).size());
+//        assertEquals(FactMappingType.OTHER.name(), columnBuilderOther.columnGroup);
+//        assertNull(columnBuilderOther.nestedLevel);
+//        assertEquals(alias, columnBuilderOther.columnTitle);
 
         ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven =
                 ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.GIVEN.name(), FactMappingType.GIVEN);
