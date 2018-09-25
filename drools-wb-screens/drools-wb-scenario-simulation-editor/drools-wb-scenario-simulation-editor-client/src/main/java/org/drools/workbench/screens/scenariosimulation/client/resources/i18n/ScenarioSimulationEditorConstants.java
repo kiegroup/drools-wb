@@ -30,19 +30,61 @@ public interface ScenarioSimulationEditorConstants
 
     String newScenarioSimulationDescription();
 
-    String FactColumnHeader();
+    String factColumnHeader();
 
-    String FieldColumnHeader();
+    String fieldColumnHeader();
 
-    String ContextColumnHeader();
+    String contextColumnHeader();
 
-    String AddScenarioSimulation();
+    String addScenarioSimulation();
 
-    String ScenarioSimulationEditorTitle();
+    String scenarioSimulationEditorTitle();
 
-    String ScenarioSimulationResourceTypeDescription();
+    String scenarioSimulationResourceTypeDescription();
 
     String remove();
 
     String invalidDefinitionDisabled();
+
+    String showRightPanel();
+
+    String hideRightPanel();
+
+    String testTools();
+
+    String testEditor();
+
+    String scenarioCheatSheet();
+
+    String runScenarioSimulation();
+
+    String expected();
+
+    String insertColumnLeft();
+
+    String insertColumnRight();
+
+    String deleteColumn();
+
+    String insertRowBelow();
+
+    String scenario();
+
+    String given();
+
+    String insertRowAbove();
+
+    String deleteRow();
+
+    String duplicateRow();
+
+    String prependRow();
+
+    String appendRow();
+
+    String insertLeftmostColumn();
+
+    String insertRightmostColumn();
+
+    String description();
 }

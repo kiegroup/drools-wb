@@ -15,14 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.IntStream;
 
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelDoubleClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
-import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
@@ -42,28 +45,40 @@ public class ScenarioGrid extends BaseGridWidget {
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
 
-    public void setContent(Map<Integer, String> headersMap, Map<Integer, Map<Integer, String>> rowsMap) {
+    public void setContent(Simulation simulation) {
         ((ScenarioGridModel) model).clear();
-        ((ScenarioGridModel) model).bindContent(headersMap, rowsMap);
-        setHeaderColumns(headersMap);
-        appendRows(rowsMap);
+        ((ScenarioGridModel) model).bindContent(simulation);
+        setHeaderColumns(simulation);
+        appendRows(simulation);
     }
 
-    // Add for testing purpose
-    public ScenarioGridLayer getScenarioGridLayer() {
-        return scenarioGridLayer;
+    @Override
+    public ScenarioGridModel getModel() {
+        return (ScenarioGridModel) model;
     }
 
-//    @Override
-//    public Group setDraggable(boolean draggable) {
-//        GWT.log("setDraggable " + draggable);
-//        return super.setDraggable(draggable);
-//    }
-//
-//    @Override
-//    public boolean isDraggable() {
-//        return false; // FOR SOME REASON, event if setDraggable(false) in the constructor, the base method returns true
-//    }
+    /**
+     * Unselect all cells/columns from model {@see GridData.clearSelections()}
+     */
+    public void clearSelections() {
+        model.clearSelections();
+    }
+
+    /**
+     * Select all the cells of the given column
+     * @param columnIndex
+     */
+    public void selectColumn(int columnIndex) {
+        ((ScenarioGridModel) model).selectColumn(columnIndex);
+    }
+
+    /**
+     * Select all the cells of the given row
+     * @param rowIndex
+     */
+    public void selectRow(int rowIndex) {
+        ((ScenarioGridModel) model).selectRow(rowIndex);
+    }
 
     @Override
     protected NodeMouseDoubleClickHandler getGridMouseDoubleClickHandler(final GridSelectionManager selectionManager,
@@ -74,15 +89,23 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                  renderer);
     }
 
-    private void setHeaderColumns(Map<Integer, String> headersMap) {
-        headersMap.forEach((columnIndex, columnTitle) ->
-                                   model.insertColumn(columnIndex, getScenarioGridColumn(columnTitle, scenarioGridPanel, scenarioGridLayer)));
+    void setHeaderColumns(Simulation simulation) {
+        // NOW USING INDEX OF FactMappings LIST FOR COLUMN POSITIONING INSIDE GRID
+        final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
+        IntStream.range(0, factMappings.size())
+                .forEach(index -> {
+                    FactMapping factMapping = factMappings.get(index);
+                    String columnId = factMapping.getExpressionIdentifier().getName();
+                    String columnTitle = factMapping.getExpressionAlias();
+                    String columnGroup = factMapping.getExpressionIdentifier().getType().name();
+                    model.insertColumn(index, getScenarioGridColumn(columnId, columnTitle, columnGroup, scenarioGridPanel, scenarioGridLayer));
+                });
     }
 
-    private void appendRows(Map<Integer, Map<Integer, String>> rowsMap) {
-        rowsMap.forEach((rowIndex, cellValueMap) -> {
-            model.insertRow(rowIndex, new ScenarioGridRow());
-            cellValueMap.forEach((columnIndex, cellValue) -> model.setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(cellValue))));
+    void appendRows(Simulation simulation) {
+        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
+        IntStream.range(0, scenarios.size()).forEach(rowIndex -> {
+            ((ScenarioGridModel) model).insertRow(rowIndex, new ScenarioGridRow(), scenarios.get(rowIndex));
         });
     }
 }

@@ -28,6 +28,7 @@
   <inherits name="org.guvnor.common.services.workingset.GuvnorWorkingsetClient"/>
   <inherits name="org.guvnor.messageconsole.GuvnorMessageConsoleClient"/>
 
+  <inherits name="org.kie.workbench.common.services.verifier.reporting.VerifierReporting"/>
   <!--Common Screens -->
   <inherits name="org.kie.workbench.common.screens.library.LibraryClient"/>
   <inherits name="org.kie.workbench.common.screens.contributors.KieWorkbenchContributorsClient"/>
@@ -86,7 +87,6 @@
   <inherits name="org.kie.workbench.common.dmn.project.DMNProjectClient"/>
 
   <!-- Social Home page -->
-  <inherits name="org.kie.workbench.common.screens.social.hp.SocialHomePageClient"/>
   <inherits name="org.ext.uberfire.social.activities.SocialActivitiesAPI"/>
   <inherits name="org.ext.uberfire.social.activities.SocialActivitiesClient"/>
 
@@ -107,7 +107,7 @@
   <set-property name="locale" value="default"/>
 
   <!-- To change the default logLevel -->
-  <set-property name="gwt.logging.logLevel" value="FINE"/>
+  <set-property name="gwt.logging.logLevel" value="INFO"/>
   <!-- To enable logging -->
   <set-property name="gwt.logging.enabled" value="TRUE"/>
 
