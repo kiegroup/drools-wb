@@ -115,8 +115,13 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
             }
 
             @Override
-            protected void manageRightClick(ContextMenuEvent event) {
-                // 
+            protected boolean manageRightClick(ContextMenuEvent event) {
+                return true;
+            }
+
+            @Override
+            protected boolean manageLeftClick(ClickEvent event) {
+                return true;
             }
         });
         mockManagedMenus = spy(scenarioSimulationGridPanelClickHandler.managedMenus);
@@ -210,7 +215,7 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
     @Test
     public void commonClickManagement() {
-        scenarioSimulationGridPanelClickHandler.commonClickManagement();
+        scenarioSimulationGridPanelClickHandler.hideMenus();
         verify(mockOtherContextMenu, times(1)).hide();
         verify(mockHeaderGivenContextMenu, times(1)).hide();
         verify(mockHeaderExpectedContextMenu, times(1)).hide();
@@ -238,6 +243,6 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     }
 
     private void commonCheck() {
-        verify(scenarioSimulationGridPanelClickHandler, times(1)).commonClickManagement();
+        verify(scenarioSimulationGridPanelClickHandler, times(1)).hideMenus();
     }
 }
