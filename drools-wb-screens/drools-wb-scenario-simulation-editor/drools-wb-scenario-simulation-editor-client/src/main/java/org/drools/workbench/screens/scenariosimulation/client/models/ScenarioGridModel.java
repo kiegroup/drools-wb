@@ -205,6 +205,7 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, elements.length)
                 .forEach(stepIndex ->
                                  factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
+        selectColumn(columnIndex);
     }
 
     /**
