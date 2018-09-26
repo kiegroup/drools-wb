@@ -38,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -109,6 +110,8 @@ public class ScenarioSimulationEditorPresenter
 
     EventBus eventBus;
 
+    ScenarioGridPanel scenarioGridPanel;
+
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
     }
@@ -131,7 +134,8 @@ public class ScenarioSimulationEditorPresenter
         this.commandExecutor = scenarioSimulationProducer.getCommandExecutor();
         this.eventBus = scenarioSimulationProducer.getEventBus();
 
-        commandExecutor.setScenarioGridPanel(view.getScenarioGridPanel());
+        scenarioGridPanel = view.getScenarioGridPanel();
+        commandExecutor.setScenarioGridPanel(scenarioGridPanel);
 
         view.init(this);
 
@@ -147,7 +151,6 @@ public class ScenarioSimulationEditorPresenter
         this.path = path;
         rightPanelRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
         rightPanelRequest.addParameter("ScenarioSimulationEditorPresenter", path.toString());
-
         rightPanelMenuItem.init(rightPanelRequest);
     }
 
@@ -159,6 +162,7 @@ public class ScenarioSimulationEditorPresenter
             this.view.showLoading();
         }
         this.view.clear();
+        scenarioGridPanel.unregister();
     }
 
     @OnMayClose

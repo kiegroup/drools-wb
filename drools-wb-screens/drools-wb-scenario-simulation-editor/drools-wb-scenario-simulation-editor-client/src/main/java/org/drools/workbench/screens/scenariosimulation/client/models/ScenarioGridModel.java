@@ -49,6 +49,8 @@ public class ScenarioGridModel extends BaseGridData {
 
     AtomicInteger columnCounter = new AtomicInteger(0);
 
+    GridColumn<?> selectedColumn = null;
+
     public ScenarioGridModel() {
     }
 
@@ -319,6 +321,12 @@ public class ScenarioGridModel extends BaseGridData {
         }
     }
 
+    @Override
+    public void clearSelections() {
+        super.clearSelections();
+        selectedColumn = null;
+    }
+
     /**
      * Select all the cells of the given column
      * @param columnIndex
@@ -327,6 +335,7 @@ public class ScenarioGridModel extends BaseGridData {
         if (columnIndex > getColumnCount() - 1) {
             return;
         }
+        selectedColumn = getColumns().get(columnIndex);
         int rows = getRowCount();
         IntStream.range(0, rows).forEach(rowIndex -> selectCell(rowIndex, columnIndex));
     }
@@ -341,6 +350,10 @@ public class ScenarioGridModel extends BaseGridData {
         }
         int columns = getColumnCount();
         IntStream.range(0, columns).forEach(columnIndex -> selectCell(rowIndex, columnIndex));
+    }
+
+    public GridColumn<?> getSelectedColumn() {
+        return selectedColumn;
     }
 
     public Optional<Simulation> getSimulation() {
