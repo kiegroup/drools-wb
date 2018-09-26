@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.types.Point2D;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -136,6 +137,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             }
         };
         t.schedule(300);
+        GWT.log("scheduled ");
     }
 
     @Override
