@@ -20,11 +20,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -411,17 +409,8 @@ public class ScenarioGridModel extends BaseGridData {
     protected void updateIndexColumn() {
         IntStream.range(0, getRowCount())
                 .forEach(rowIndex -> {
-                    GWT.log("***************");
-                    GWT.log("rowIndex " + rowIndex);
-                    Optional<?> cellValue = getCellValue(getCell(rowIndex, 0));
-                    GWT.log("cellValue present ? " + cellValue.isPresent());
-                    cellValue.ifPresent((Consumer<Object>) o -> GWT.log("cellValue " + o.toString()));
                     String value = String.valueOf(rowIndex + 1);
-                    GWT.log("update with value " + value);
                     setCellValue(rowIndex, 0, new ScenarioGridCellValue(value));
-                    cellValue = getCellValue(getCell(rowIndex, 0));
-                    GWT.log("cellValue present ? " + cellValue.isPresent());
-                    cellValue.ifPresent((Consumer<Object>) o -> GWT.log("cellValue " + o.toString()));
                 });
     }
 
