@@ -305,13 +305,11 @@ public class ScenarioGridModel extends BaseGridData {
         simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
     }
 
-    @Override
-    public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
-        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value));
+    public Range setNewCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
+        return setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value));
     }
 
-    @Override
-    public Range deleteCell(int rowIndex, int columnIndex) {
+    public Range deleteNewCell(int rowIndex, int columnIndex) {
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         simulation.getScenarioByIndex(rowIndex)
                 .removeFactMappingValueByIdentifiers(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());

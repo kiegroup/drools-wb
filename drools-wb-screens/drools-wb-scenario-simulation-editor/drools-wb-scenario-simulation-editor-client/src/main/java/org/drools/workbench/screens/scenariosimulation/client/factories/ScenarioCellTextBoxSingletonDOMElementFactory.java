@@ -30,7 +30,7 @@ public class ScenarioCellTextBoxSingletonDOMElementFactory extends AbstractTextB
 
     @Override
     protected TextBoxDOMElement internalCreateDomElement(TextBox widget, GridLayer gridLayer, GridWidget gridWidget) {
-        return new TextBoxDOMElement(widget, gridLayer, gridWidget);
+        return new ScenarioCellTextBoxDOMElement(widget, gridLayer, gridWidget);
     }
 }
 
