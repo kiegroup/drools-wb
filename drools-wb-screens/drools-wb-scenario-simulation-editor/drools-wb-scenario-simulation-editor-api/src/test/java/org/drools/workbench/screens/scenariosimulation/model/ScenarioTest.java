@@ -80,6 +80,17 @@ public class ScenarioTest {
         scenario.getDescription();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void getIndexTestFail() {
+        scenario.getIndex();
+    }
+
+    @Test
+    public void getIndexTest() {
+        scenario.addMappingValue(FactIdentifier.INDEX, ExpressionIdentifier.INDEX, 1);
+        scenario.getIndex();
+    }
+
     @Test
     public void addOrUpdateMappingValue() {
         Object value1 = "Test 1";

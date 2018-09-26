@@ -48,7 +48,7 @@ public class Scenario {
 
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
-
+     * <p>
      * NOTE: list order could not be aligned to factMapping order. Use {@link Scenario#sort()} before call this method
      * to ensure the order.
      * Best way to have ordered factMappingValues is to iterate over {@link SimulationDescriptor#factMappings} and use
@@ -104,6 +104,17 @@ public class Scenario {
 
     public List<FactMappingValue> getFactMappingValuesByFactIdentifier(FactIdentifier factIdentifier) {
         return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier)).collect(toList());
+    }
+
+    public void setIndex(int index) {
+        addOrUpdateMappingValue(FactIdentifier.INDEX, ExpressionIdentifier.INDEX, index);
+    }
+
+    public int getIndex() {
+        return factMappingValues.stream()
+                .filter(e -> e.getExpressionIdentifier().equals(ExpressionIdentifier.INDEX) &&
+                        e.getFactIdentifier().equals(FactIdentifier.INDEX)).map(e -> (Integer) e.getRawValue())
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("No index available"));
     }
 
     public void setDescription(String name) {

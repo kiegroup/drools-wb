@@ -136,7 +136,7 @@ public class ScenarioGridModelTest {
         when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
         when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
         gridCellSupplier = () -> mockGridCell;
-        scenarioGridModel = spy(new ScenarioGridModel() {
+        scenarioGridModel = spy(new ScenarioGridModel(false) {
             {
                 this.simulation = mockSimulation;
                 this.eventBus = mockEventBus;
