@@ -106,17 +106,6 @@ public class Scenario {
         return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier)).collect(toList());
     }
 
-    public void setIndex(int index) {
-        addOrUpdateMappingValue(FactIdentifier.INDEX, ExpressionIdentifier.INDEX, index);
-    }
-
-    public int getIndex() {
-        return factMappingValues.stream()
-                .filter(e -> e.getExpressionIdentifier().equals(ExpressionIdentifier.INDEX) &&
-                        e.getFactIdentifier().equals(FactIdentifier.INDEX)).map(e -> (Integer) e.getRawValue())
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No index available"));
-    }
-
     public void setDescription(String name) {
         addOrUpdateMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, name);
     }

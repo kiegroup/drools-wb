@@ -30,8 +30,6 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     void setContent(final Simulation simulation);
 
-    void clear();
-
     MenuItem getRunScenarioMenuItem();
 
     void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);

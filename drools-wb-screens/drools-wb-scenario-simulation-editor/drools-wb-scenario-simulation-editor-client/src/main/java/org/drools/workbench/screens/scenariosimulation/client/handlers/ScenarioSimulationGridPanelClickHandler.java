@@ -121,6 +121,9 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         final int canvasY = getRelativeY(event);
         final boolean isShiftKeyDown = event.getNativeEvent().getShiftKey();
         final boolean isControlKeyDown = event.getNativeEvent().getCtrlKey();
+        // Workaround to differentiate click and double click on the same element
+        // we wait 300 ms to see  if another click happen in the meantime: if so, it is a double click,
+        // and we ignore it
         Timer t = new Timer() {
             @Override
             public void run() {

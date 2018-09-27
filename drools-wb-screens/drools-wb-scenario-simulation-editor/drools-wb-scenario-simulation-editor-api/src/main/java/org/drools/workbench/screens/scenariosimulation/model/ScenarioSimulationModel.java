@@ -43,7 +43,6 @@ public class ScenarioSimulationModel
 
         Scenario scenario = simulation.addScenario();
         int row = simulation.getUnmodifiableScenarios().indexOf(scenario);
-        scenario.setIndex(1);
         scenario.setDescription(FactMappingValue.getPlaceHolder(0, 1));
 
         // Add GIVEN Facts

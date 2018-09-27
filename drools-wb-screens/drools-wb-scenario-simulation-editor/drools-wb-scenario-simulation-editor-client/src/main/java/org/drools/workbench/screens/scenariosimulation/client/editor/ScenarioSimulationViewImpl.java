@@ -65,10 +65,6 @@ public class ScenarioSimulationViewImpl
         scenarioGridPanel.getScenarioGrid().setContent(simulation);
     }
 
-    @Override
-    public void clear() {
-        //
-    }
 
     @Override
     public MenuItem getRunScenarioMenuItem() {
