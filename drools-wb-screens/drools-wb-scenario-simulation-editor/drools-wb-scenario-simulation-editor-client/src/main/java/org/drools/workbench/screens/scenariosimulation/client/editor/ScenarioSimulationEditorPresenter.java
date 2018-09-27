@@ -44,6 +44,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
@@ -161,13 +162,12 @@ public class ScenarioSimulationEditorPresenter
             placeManager.closePlace(rightPanelRequest);
             this.view.showLoading();
         }
-        this.view.clear();
         scenarioGridPanel.unregister();
     }
 
     @OnMayClose
     public boolean mayClose() {
-        return super.mayClose(model);
+        return !isDirty();
     }
 
     @WorkbenchPartTitle
@@ -264,7 +264,7 @@ public class ScenarioSimulationEditorPresenter
 
     @Override
     protected void save(final String commitMessage) {
-        service.call(getSaveSuccessCallback(model.hashCode()),
+        service.call(getSaveSuccessCallback(getJsonModel(model).hashCode()),
                      new HasBusyIndicatorDefaultErrorCallback(baseView)).save(versionRecordManager.getCurrentPath(),
                                                                               model,
                                                                               metadata,
@@ -323,13 +323,16 @@ public class ScenarioSimulationEditorPresenter
         getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
     }
 
+    String getJsonModel(ScenarioSimulationModel model) {
+        return MarshallingWrapper.toJSON(model);
+    }
+
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
         return content -> {
             //Path is set to null when the Editor is closed (which can happen before async calls complete).
             if (versionRecordManager.getCurrentPath() == null) {
                 return;
             }
-
             packageName = content.getDataModel().getPackageName();
             resetEditorPages(content.getOverview());
             model = content.getModel();
@@ -343,7 +346,7 @@ public class ScenarioSimulationEditorPresenter
             addImportsTab(importsWidget);
             baseView.hideBusyIndicator();
             view.setContent(model.getSimulation());
-            createOriginalHash(model.hashCode());
+            setOriginalHash(getJsonModel(model).hashCode());
         };
     }
 
@@ -416,5 +419,10 @@ public class ScenarioSimulationEditorPresenter
 
     private Command getPopulateRightPanelCommand() {
         return this::populateRightPanel;
+    }
+
+    private boolean isDirty() {
+        int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
+        return originalHash != currentHashcode;
     }
 }

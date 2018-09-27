@@ -203,8 +203,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             void clearRightPanelStatus() {
 
             }
-        };
 
+            @Override
+            String getJsonModel(ScenarioSimulationModel model) {
+                return "";
+            }
+        };
         presenterSpy = spy(presenter);
     }
 
@@ -314,14 +318,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(mockVersionRecordManager, times(1)).clear();
         verify(mockPlaceManager, times(1)).closePlace(mockPlaceRequest);
         verify(presenter.getView()).showLoading();
-        verify(mockScenarioSimulationView, times(1)).clear();
         verify(mockScenarioGridPanel, times(1)).unregister();
     }
 
     private void onClosePlaceStatusClose() {
         verify(mockVersionRecordManager, times(1)).clear();
         verify(mockPlaceManager, times(0)).closePlace(mockPlaceRequest);
-        verify(mockScenarioSimulationView, times(1)).clear();
         verify(mockScenarioGridPanel, times(1)).unregister();
     }
 }
