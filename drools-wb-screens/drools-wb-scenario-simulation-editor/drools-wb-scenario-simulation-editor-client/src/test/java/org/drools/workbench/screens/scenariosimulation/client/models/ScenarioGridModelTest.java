@@ -168,50 +168,50 @@ public class ScenarioGridModelTest {
     }
 
     @Test
-    public void appendNewColumn() {
+    public void appendRow() {
         reset(scenarioGridModel);
-        scenarioGridModel.appendNewColumn(mockGridStringColumn);
-        verify(scenarioGridModel, times(1)).commonAddColumn(eq(-1), eq(mockGridStringColumn));
-    }
-
-    @Test
-    public void appendNewRow() {
-        reset(scenarioGridModel);
-        scenarioGridModel.appendNewRow(mockGridRow);
+        scenarioGridModel.appendRow(mockGridRow);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).commonAddRow(eq(ROW_COUNT - 1));
     }
 
     @Test
-    public void insertRow() {
+    public void insertRowGridOnly() {
         reset(scenarioGridModel);
-        scenarioGridModel.insertRow(ROW_INDEX, mockGridRow, mockScenario);
+        scenarioGridModel.insertRowGridOnly(ROW_INDEX, mockGridRow, mockScenario);
         verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX), eq(mockGridRow));
     }
 
     @Test
-    public void insertNewRow() {
+    public void insertRow() {
         reset(scenarioGridModel);
-        scenarioGridModel.insertNewRow(ROW_INDEX, mockGridRow);
+        scenarioGridModel.insertRow(ROW_INDEX, mockGridRow);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).commonAddRow(eq(ROW_INDEX));
     }
 
     @Test
-    public void deleteNewRow() {
+    public void deleteRow() {
         reset(scenarioGridModel);
-        scenarioGridModel.deleteNewRow(ROW_INDEX);
+        scenarioGridModel.deleteRow(ROW_INDEX);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(mockSimulation, times(1)).removeScenarioByIndex(eq(ROW_INDEX));
     }
 
     @Test
-    public void duplicateNewRow() {
+    public void duplicateRow() {
         reset(scenarioGridModel);
-        scenarioGridModel.duplicateNewRow(ROW_INDEX, mockGridRow);
-        verify(scenarioGridModel, times(2)).checkSimulation();
+        scenarioGridModel.duplicateRow(ROW_INDEX, mockGridRow);
+        verify(scenarioGridModel, times(3)).checkSimulation();
         verify(mockSimulation, times(1)).cloneScenario(eq(ROW_INDEX), eq(ROW_INDEX + 1));
-        verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX + 1), eq(mockGridRow), isA(Scenario.class));
+        verify(scenarioGridModel, times(1)).insertRowGridOnly(eq(ROW_INDEX + 1), eq(mockGridRow), isA(Scenario.class));
+    }
+
+    @Test
+    public void insertColumnGridOnly() {
+        reset(scenarioGridModel);
+        scenarioGridModel.insertColumnGridOnly(COLUMN_INDEX, mockGridStringColumn);
+        verify(scenarioGridModel, times(1)).checkSimulation();
     }
 
     @Test
@@ -219,19 +219,12 @@ public class ScenarioGridModelTest {
         reset(scenarioGridModel);
         scenarioGridModel.insertColumn(COLUMN_INDEX, mockGridStringColumn);
         verify(scenarioGridModel, times(1)).checkSimulation();
-    }
-
-    @Test
-    public void insertNewColumn() {
-        reset(scenarioGridModel);
-        scenarioGridModel.insertNewColumn(COLUMN_INDEX, mockGridStringColumn);
-        verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(mockGridStringColumn));
     }
 
     @Test
-    public void deleteNewColumn() {
-        scenarioGridModel.deleteNewColumn(COLUMN_INDEX);
+    public void deleteColumn() {
+        scenarioGridModel.deleteColumn(COLUMN_INDEX);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(mockSimulation, times(1)).removeFactMappingByIndex(eq(COLUMN_INDEX));
     }
@@ -241,21 +234,21 @@ public class ScenarioGridModelTest {
         reset(scenarioGridModel);
         scenarioGridModel.updateColumnType(COLUMN_INDEX, mockGridColumn, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
         verify(scenarioGridModel, times(2)).checkSimulation();
-        verify(scenarioGridModel, times(1)).deleteNewColumn(eq(COLUMN_INDEX));
+        verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(mockGridColumn), isA(FactIdentifier.class), isA(ExpressionIdentifier.class));
         verify(scenarioGridModel, times(1)).selectColumn(eq(COLUMN_INDEX));
 
     }
 
     @Test
-    public void setCell() {
-        scenarioGridModel.setCell(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
+    public void setCellGridOnly() {
+        scenarioGridModel.setCellGridOnly(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
         verify(scenarioGridModel, times(1)).checkSimulation();
     }
 
     @Test
-    public void setNewCell() {
-        scenarioGridModel.setNewCell(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
+    public void setCell() {
+        scenarioGridModel.setCell(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
         verify(scenarioGridModel, times(1)).setCell(eq(ROW_INDEX), eq(COLUMN_INDEX), eq(gridCellSupplier));
     }
 
