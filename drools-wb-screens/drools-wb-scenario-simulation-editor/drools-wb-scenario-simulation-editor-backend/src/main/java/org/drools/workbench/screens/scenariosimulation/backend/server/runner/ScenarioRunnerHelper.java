@@ -47,6 +47,7 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.uti
 public class ScenarioRunnerHelper {
 
     private static final Map<String, Class<?>> primitiveMap = new HashMap<>();
+
     static {
         primitiveMap.put("boolean", boolean.class);
         primitiveMap.put("int", int.class);
@@ -54,7 +55,6 @@ public class ScenarioRunnerHelper {
         primitiveMap.put("double", double.class);
         primitiveMap.put("float", float.class);
     }
-
 
     private ScenarioRunnerHelper() {
 
@@ -221,7 +221,7 @@ public class ScenarioRunnerHelper {
                     return cleanValue;
                 }
                 if (!isPrimitive(className) && cleanValue == null) {
-                    return cleanValue;
+                    return null;
                 }
                 throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
                                                            .append(" is not a String or an instance of ").append(className).toString());
@@ -252,7 +252,7 @@ public class ScenarioRunnerHelper {
     }
 
     private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-        if(primitiveMap.containsKey(className)) {
+        if (primitiveMap.containsKey(className)) {
             return primitiveMap.get(className);
         }
         return classLoader.loadClass(className);

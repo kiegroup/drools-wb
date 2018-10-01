@@ -86,14 +86,16 @@ public class FactMappingValue {
         String value = ((String) rawValue).trim();
 
         FactMappingValueOperator operator = FactMappingValueOperator.findOperator(value);
-        Optional<String> first = operator.getSymbols().stream().filter(value::startsWith).findFirst();
-        if (first.isPresent()) {
-            String symbolToRemove = first.get();
+        Optional<String> operatorSymbol = operator.getSymbols().stream().filter(value::startsWith).findFirst();
+        if (operatorSymbol.isPresent()) {
+            String symbolToRemove = operatorSymbol.get();
             int index = value.indexOf(symbolToRemove);
             value = value.substring(index + symbolToRemove.length()).trim();
         }
 
-        return value.trim();
+        String returnValue = value.trim();
+        // empty string is equivalent to null only if there is no operator symbol
+        return "".equals(returnValue) && !operatorSymbol.isPresent() ? null : returnValue;
     }
 
     public static FactMappingValueOperator extractOperator(Object rawValue) {

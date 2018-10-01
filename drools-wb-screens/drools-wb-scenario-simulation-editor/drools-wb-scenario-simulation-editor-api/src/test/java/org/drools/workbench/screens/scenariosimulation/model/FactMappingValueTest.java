@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.model;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FactMappingValueTest {
 
@@ -38,6 +39,18 @@ public class FactMappingValueTest {
 
         rawValue = new Object();
         assertEquals(rawValue, FactMappingValue.cleanValue(rawValue));
+    }
+
+    @Test
+    public void cleanValueEmptyAndNullString() {
+        Object rawValue = "";
+        assertNull(FactMappingValue.cleanValue(rawValue));
+
+        rawValue = null;
+        assertNull(FactMappingValue.cleanValue(rawValue));
+
+        rawValue = " =  ";
+        assertEquals("", FactMappingValue.cleanValue(rawValue));
     }
 
     @Test

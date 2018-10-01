@@ -33,10 +33,10 @@ public class ScenarioBeanUtil {
         Class<T> clazz = loadClass(className, classLoader);
 
         // if a direct mapping exists (no steps to reach the field) the value itself is the object
-        Optional<Object> noStepMapping = params.entrySet().stream()
+        Optional<Object> directMapping = params.entrySet().stream()
                 .filter(e -> e.getKey().isEmpty()).map(Map.Entry::getValue).findFirst();
-        if (noStepMapping.isPresent()) {
-            return (T) noStepMapping.get();
+        if (directMapping.isPresent()) {
+            return (T) directMapping.get();
         }
 
         T beanToFill = newInstance(clazz);
