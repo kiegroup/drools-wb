@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.OperatorEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
@@ -108,8 +109,16 @@ public class ScenarioRunnerHelper {
 
     public static List<ScenarioResult> verifyConditions(SimulationDescriptor simulationDescriptor,
                                                         List<ScenarioInput> inputData,
-                                                        List<ScenarioOutput> outputData) {
+                                                        List<ScenarioOutput> outputData, ClassLoader classLoader) {
         List<ScenarioResult> scenarioResult = new ArrayList<>();
+
+        List<FactIdentifier> inputIds = inputData.stream().map(ScenarioInput::getFactIdentifier).collect(Collectors.toList());
+
+        List<String> outputNotValidIds = outputData.stream().map(ScenarioOutput::getFactIdentifier)
+                .filter(output -> !inputIds.contains(output)).map(FactIdentifier::getName).collect(Collectors.toList());
+        if (outputNotValidIds.size() > 0) {
+            throw new ScenarioException("Some expected conditions are not linked to any given facts: " + String.join(", ", outputNotValidIds));
+        }
 
         for (ScenarioInput input : inputData) {
             FactIdentifier factIdentifier = input.getFactIdentifier();
@@ -120,13 +129,16 @@ public class ScenarioRunnerHelper {
                 continue;
             }
 
-            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, input));
+            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, input, classLoader));
         }
 
         return scenarioResult;
     }
 
-    public static List<ScenarioResult> getScenarioResults(SimulationDescriptor simulationDescriptor, List<ScenarioOutput> scenarioOutputsPerFact, ScenarioInput input) {
+    public static List<ScenarioResult> getScenarioResults(SimulationDescriptor simulationDescriptor,
+                                                          List<ScenarioOutput> scenarioOutputsPerFact,
+                                                          ScenarioInput input,
+                                                          ClassLoader classLoader) {
         FactIdentifier factIdentifier = input.getFactIdentifier();
         Object factInstance = input.getValue();
         List<ScenarioResult> scenarioResults = new ArrayList<>();
@@ -142,8 +154,8 @@ public class ScenarioRunnerHelper {
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
                 List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
-                Object expectedValue = expectedResult.getCleanValue();
-                Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue);
+                Object expectedValue = convertValue(factMapping.getClassName(), expectedResult.getCleanValue(), classLoader);
+                Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue, false);
 
                 Boolean conditionResult = new OperatorEvaluator().evaluate(operator, resultValue, expectedValue);
 

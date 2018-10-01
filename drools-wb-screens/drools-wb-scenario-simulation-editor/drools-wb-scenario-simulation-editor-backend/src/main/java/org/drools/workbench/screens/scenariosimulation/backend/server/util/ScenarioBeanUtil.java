@@ -59,7 +59,7 @@ public class ScenarioBeanUtil {
 
         Object currentObject = beanToFill;
         if (pathToProperty.size() > 0) {
-            currentObject = navigateToObject(beanToFill, pathToProperty);
+            currentObject = navigateToObject(beanToFill, pathToProperty, true);
         }
 
         Field last = currentObject.getClass().getDeclaredField(lastStep);
@@ -68,6 +68,10 @@ public class ScenarioBeanUtil {
     }
 
     public static Object navigateToObject(Object rootObject, List<String> steps) {
+        return navigateToObject(rootObject, steps, true);
+    }
+
+    public static Object navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
         if (steps.size() < 1) {
             throw new ScenarioException(new StringBuilder().append("Invalid path to a property: path='")
                                                 .append(String.join(".", steps)).append("'").toString());
@@ -79,6 +83,11 @@ public class ScenarioBeanUtil {
         for (String step : steps) {
             Field declaredField = null;
             try {
+                if(currentObject == null) {
+                    throw new ScenarioException(new StringBuilder().append("Impossible to reach field ")
+                                                        .append(step).append(" because a step is not instantiated")
+                                                        .toString());
+                }
                 declaredField = currentClass.getDeclaredField(step);
             } catch (NoSuchFieldException e) {
                 throw new ScenarioException(new StringBuilder().append("Impossible to find field with name '")
@@ -88,7 +97,7 @@ public class ScenarioBeanUtil {
             declaredField.setAccessible(true);
             currentClass = declaredField.getType();
             try {
-                currentObject = getOrCreate(declaredField, currentObject);
+                currentObject = getFieldValue(declaredField, currentObject, createIfNull);
             } catch (ReflectiveOperationException e) {
                 throw new ScenarioException(new StringBuilder().append("Impossible to get or create class ")
                                                     .append(currentClass.getCanonicalName()).toString());
@@ -98,9 +107,9 @@ public class ScenarioBeanUtil {
         return currentObject;
     }
 
-    private static Object getOrCreate(Field declaredField, Object currentObject) throws ReflectiveOperationException {
+    private static Object getFieldValue(Field declaredField, Object currentObject, boolean createIfNull) throws ReflectiveOperationException {
         Object value = declaredField.get(currentObject);
-        if (value == null) {
+        if (value == null && createIfNull) {
             value = newInstance(declaredField.getType());
             declaredField.set(currentObject, value);
         }

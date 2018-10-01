@@ -90,14 +90,14 @@ public class ScenarioBeanUtilTest {
         dispute.setCreator(creator);
         List<String> pathToProperty = Arrays.asList("creator", "firstName");
 
-        Object targetObject = ScenarioBeanUtil.navigateToObject(dispute, pathToProperty);
+        Object targetObject = ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, true);
 
         assertEquals(targetObject, FIRST_NAME);
     }
 
     @Test(expected = ScenarioException.class)
     public void navigateToObjectNoStepTest() {
-        ScenarioBeanUtil.navigateToObject(new Dispute(), new ArrayList<>());
+        ScenarioBeanUtil.navigateToObject(new Dispute(), new ArrayList<>(), true);
     }
 
     @Test(expected = ScenarioException.class)
@@ -105,6 +105,14 @@ public class ScenarioBeanUtilTest {
         Dispute dispute = new Dispute();
         List<String> pathToProperty = Arrays.asList("fakeField");
 
-        ScenarioBeanUtil.navigateToObject(dispute, pathToProperty);
+        ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, true);
+    }
+
+    @Test(expected = ScenarioException.class)
+    public void navigateToObjectNoStepCreationTest() {
+        Dispute dispute = new Dispute();
+        List<String> pathToProperty = Arrays.asList("creator", "firstName");
+
+        ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, false);
     }
 }

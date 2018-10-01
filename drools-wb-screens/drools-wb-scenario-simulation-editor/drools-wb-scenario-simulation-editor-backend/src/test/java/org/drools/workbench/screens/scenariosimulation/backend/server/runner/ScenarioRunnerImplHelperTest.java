@@ -139,14 +139,23 @@ public class ScenarioRunnerImplHelperTest {
         List<ScenarioInput> scenario1Inputs = extractGivenValues(simulation.getSimulationDescriptor(), scenario1.getUnmodifiableFactMappingValues(), classLoader);
         List<ScenarioOutput> scenario1Outputs = extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
 
-        List<ScenarioResult> scenario1Results = verifyConditions(simulation.getSimulationDescriptor(), scenario1Inputs, scenario1Outputs);
+        List<ScenarioResult> scenario1Results = verifyConditions(simulation.getSimulationDescriptor(), scenario1Inputs, scenario1Outputs, classLoader);
         assertEquals(1, scenario1Results.size());
 
         List<ScenarioInput> scenario2Inputs = extractGivenValues(simulation.getSimulationDescriptor(), scenario2.getUnmodifiableFactMappingValues(), classLoader);
         List<ScenarioOutput> scenario2Outputs = extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
 
-        List<ScenarioResult> scenario2Results = verifyConditions(simulation.getSimulationDescriptor(), scenario2Inputs, scenario2Outputs);
+        List<ScenarioResult> scenario2Results = verifyConditions(simulation.getSimulationDescriptor(), scenario2Inputs, scenario2Outputs, classLoader);
         assertEquals(2, scenario2Results.size());
+    }
+
+    @Test(expected = ScenarioException.class)
+    public void verifyConditionsFailTest() {
+        List<ScenarioInput> scenario1Inputs = extractGivenValues(simulation.getSimulationDescriptor(), scenario1.getUnmodifiableFactMappingValues(), classLoader);
+        List<ScenarioOutput> scenario1Outputs = extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
+        scenario1Outputs.add(new ScenarioOutput(FactIdentifier.create("NOT_EXISTING", String.class.getCanonicalName()), new ArrayList<>()));
+
+        verifyConditions(simulation.getSimulationDescriptor(), scenario1Inputs, scenario1Outputs, classLoader);
     }
 
     @Test
@@ -159,7 +168,7 @@ public class ScenarioRunnerImplHelperTest {
         ScenarioInput input1 = scenario1Inputs.get(0);
 
         scenario1Outputs = scenario1Outputs.stream().filter(elem -> elem.getFactIdentifier().equals(input1.getFactIdentifier())).collect(toList());
-        List<ScenarioResult> scenario1Results = getScenarioResults(simulation.getSimulationDescriptor(), scenario1Outputs, input1);
+        List<ScenarioResult> scenario1Results = getScenarioResults(simulation.getSimulationDescriptor(), scenario1Outputs, input1, classLoader);
 
         assertEquals(1, scenario1Results.size());
 
@@ -171,7 +180,7 @@ public class ScenarioRunnerImplHelperTest {
         ScenarioInput input2 = scenario2Inputs.get(0);
 
         scenario2Outputs = scenario2Outputs.stream().filter(elem -> elem.getFactIdentifier().equals(input2.getFactIdentifier())).collect(toList());
-        List<ScenarioResult> scenario2Results = getScenarioResults(simulation.getSimulationDescriptor(), scenario2Outputs, input2);
+        List<ScenarioResult> scenario2Results = getScenarioResults(simulation.getSimulationDescriptor(), scenario2Outputs, input2, classLoader);
 
         assertEquals(1, scenario2Results.size());
     }
