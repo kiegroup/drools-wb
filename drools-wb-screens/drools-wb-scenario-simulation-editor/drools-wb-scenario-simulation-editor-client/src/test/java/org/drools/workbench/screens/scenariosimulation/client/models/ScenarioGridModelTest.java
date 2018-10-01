@@ -153,7 +153,6 @@ public class ScenarioGridModelTest {
 
             @Override
             public void deleteColumn(GridColumn<?> column) {
-                //
             }
         });
     }

@@ -70,7 +70,6 @@ public class SetColumnValueCommand implements Command {
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-//        String columnGroup = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         model.updateColumnType(columnIndex,
                                getScenarioGridColumn(value,
