@@ -22,7 +22,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
@@ -65,15 +64,13 @@ public class SetColumnValueCommand implements Command {
 
     @Override
     public void execute() {
-        GridColumn<?> selectedColumn = model.getSelectedColumn();
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) model.getSelectedColumn();
         if (selectedColumn == null) {
             return;
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
-        String columnGroup = selectedColumn.getHeaderMetaData().get(1).getColumnGroup();
-
-        String columnGroup = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getColumnGroup();
-
+        String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
+//        String columnGroup = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         model.updateColumnType(columnIndex,
                                getScenarioGridColumn(value,
