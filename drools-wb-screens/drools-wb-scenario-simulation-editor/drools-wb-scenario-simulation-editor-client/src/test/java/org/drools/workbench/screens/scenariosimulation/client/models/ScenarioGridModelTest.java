@@ -138,7 +138,7 @@ public class ScenarioGridModelTest {
         when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
         when(mockSimulation.cloneScenario(ROW_INDEX, ROW_INDEX + 1)).thenReturn(mockScenario);
         gridCellSupplier = () -> mockGridCell;
-        scenarioGridModel = spy(new ScenarioGridModel() {
+        scenarioGridModel = spy(new ScenarioGridModel(false) {
             {
                 this.simulation = mockSimulation;
                 this.eventBus = mockEventBus;
@@ -182,6 +182,7 @@ public class ScenarioGridModelTest {
         scenarioGridModel.appendNewRow(mockGridRow);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).commonAddRow(eq(ROW_COUNT - 1));
+        verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
     @Test
@@ -189,6 +190,7 @@ public class ScenarioGridModelTest {
         reset(scenarioGridModel);
         scenarioGridModel.insertRow(ROW_INDEX, mockGridRow, mockScenario);
         verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX), eq(mockGridRow));
+        verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
     @Test
@@ -197,6 +199,7 @@ public class ScenarioGridModelTest {
         scenarioGridModel.insertNewRow(ROW_INDEX, mockGridRow);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).commonAddRow(eq(ROW_INDEX));
+        verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
     @Test
@@ -205,6 +208,7 @@ public class ScenarioGridModelTest {
         scenarioGridModel.deleteNewRow(ROW_INDEX);
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(mockSimulation, times(1)).removeScenarioByIndex(eq(ROW_INDEX));
+        verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
     @Test
@@ -214,6 +218,7 @@ public class ScenarioGridModelTest {
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(mockSimulation, times(1)).cloneScenario(eq(ROW_INDEX), eq(ROW_INDEX + 1));
         verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX + 1), eq(mockGridRow), isA(Scenario.class));
+        verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
     @Test
