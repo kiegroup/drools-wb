@@ -423,7 +423,6 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     protected void commonAddRow(int rowIndex) {
-        GWT.log("commonAddRow " + rowIndex);
         Scenario scenario = simulation.addScenario(rowIndex);
         final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
