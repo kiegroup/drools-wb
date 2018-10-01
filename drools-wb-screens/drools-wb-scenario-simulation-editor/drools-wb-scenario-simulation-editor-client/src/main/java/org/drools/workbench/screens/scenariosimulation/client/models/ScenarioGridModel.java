@@ -156,7 +156,6 @@ public class ScenarioGridModel extends BaseGridData {
      * @param index
      * @param column
      */
-    //@Override
     public void insertColumnGridOnly(final int index, final GridColumn<?> column) {
         checkSimulation();
         super.insertColumn(index, column);
