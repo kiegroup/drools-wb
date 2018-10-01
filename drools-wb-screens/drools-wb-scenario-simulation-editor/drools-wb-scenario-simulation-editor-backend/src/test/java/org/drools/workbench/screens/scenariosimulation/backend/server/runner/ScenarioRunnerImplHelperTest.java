@@ -48,6 +48,7 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.run
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.validateAssertion;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.verifyConditions;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.any;
@@ -225,6 +226,8 @@ public class ScenarioRunnerImplHelperTest {
     @Test
     public void convertValueTest() {
         assertEquals("Test", convertValue(String.class.getCanonicalName(), "Test", classLoader));
+        assertEquals(false, convertValue(boolean.class.getCanonicalName(), "false", classLoader));
+        assertEquals(true, convertValue(Boolean.class.getCanonicalName(), "true", classLoader));
         assertEquals(1, convertValue(int.class.getCanonicalName(), "1", classLoader));
         assertEquals(1, convertValue(Integer.class.getCanonicalName(), "1", classLoader));
         assertEquals(1L, convertValue(long.class.getCanonicalName(), "1", classLoader));
@@ -233,7 +236,7 @@ public class ScenarioRunnerImplHelperTest {
         assertEquals(1.0D, convertValue(Double.class.getCanonicalName(), "1.0", classLoader));
         assertEquals(1.0F, convertValue(float.class.getCanonicalName(), "1.0", classLoader));
         assertEquals(1.0F, convertValue(Float.class.getCanonicalName(), "1.0", classLoader));
-        assertEquals(null, convertValue(Float.class.getCanonicalName(), null, classLoader));
+        assertNull(convertValue(Float.class.getCanonicalName(), null, classLoader));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -48,6 +48,7 @@ public class ScenarioRunnerHelper {
 
     private static final Map<String, Class<?>> primitiveMap = new HashMap<>();
     static {
+        primitiveMap.put("boolean", boolean.class);
         primitiveMap.put("int", int.class);
         primitiveMap.put("long", long.class);
         primitiveMap.put("double", double.class);
@@ -230,6 +231,8 @@ public class ScenarioRunnerHelper {
 
             if (clazz.isAssignableFrom(String.class)) {
                 return value;
+            } else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
+                return Boolean.parseBoolean(value);
             } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
                 return Integer.parseInt(value);
             } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
