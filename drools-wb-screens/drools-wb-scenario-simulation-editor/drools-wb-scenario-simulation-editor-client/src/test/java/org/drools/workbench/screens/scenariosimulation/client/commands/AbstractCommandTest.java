@@ -62,7 +62,7 @@ public abstract class AbstractCommandTest {
     @Mock
     protected List<GridColumn.HeaderMetaData> mockHeaderMetaDatas;
     @Mock
-    protected /*GridColumn.HeaderMetaData */ ScenarioHeaderMetaData mockHeaderMetaData;
+    protected ScenarioHeaderMetaData mockHeaderMetaData;
 
     protected final String COLUMN_ID = "COLUMN ID";
 
