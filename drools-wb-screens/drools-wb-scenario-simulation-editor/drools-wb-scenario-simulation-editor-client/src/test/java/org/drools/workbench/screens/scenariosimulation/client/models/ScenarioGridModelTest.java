@@ -42,6 +42,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -179,7 +180,8 @@ public class ScenarioGridModelTest {
     public void insertRowGridOnly() {
         reset(scenarioGridModel);
         scenarioGridModel.insertRowGridOnly(ROW_INDEX, mockGridRow, mockScenario);
-        verify(scenarioGridModel, times(1)).insertRow(eq(ROW_INDEX), eq(mockGridRow));
+        verify(scenarioGridModel, times(1)).checkSimulation();
+        verify(scenarioGridModel, never()).insertRow(eq(ROW_INDEX), eq(mockGridRow));
     }
 
     @Test
@@ -202,9 +204,10 @@ public class ScenarioGridModelTest {
     public void duplicateRow() {
         reset(scenarioGridModel);
         scenarioGridModel.duplicateRow(ROW_INDEX, mockGridRow);
-        verify(scenarioGridModel, times(3)).checkSimulation();
+        verify(scenarioGridModel, times(2)).checkSimulation();
         verify(mockSimulation, times(1)).cloneScenario(eq(ROW_INDEX), eq(ROW_INDEX + 1));
         verify(scenarioGridModel, times(1)).insertRowGridOnly(eq(ROW_INDEX + 1), eq(mockGridRow), isA(Scenario.class));
+        verify(scenarioGridModel, never()).insertRow(eq(ROW_INDEX), eq(mockGridRow));
     }
 
     @Test
