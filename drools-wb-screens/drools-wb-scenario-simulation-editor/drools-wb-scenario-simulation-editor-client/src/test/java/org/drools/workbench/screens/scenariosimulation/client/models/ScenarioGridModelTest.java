@@ -60,9 +60,6 @@ public class ScenarioGridModelTest {
     @Mock
     private ScenarioGridColumn mockScenarioGridColumn;
 
-//    @Mock
-//    private GridColumn<?> mockGridColumn;
-
     @Mock
     private GridRow mockGridRow;
 
@@ -71,9 +68,6 @@ public class ScenarioGridModelTest {
 
     @Mock
     private ScenarioHeaderMetaData mockHeaderMetaData;
-
-//    @Mock
-//    private List<GridColumn<String>> mockGridStringColumns;
 
     @Mock
     private GridCell<String> mockGridCell;
