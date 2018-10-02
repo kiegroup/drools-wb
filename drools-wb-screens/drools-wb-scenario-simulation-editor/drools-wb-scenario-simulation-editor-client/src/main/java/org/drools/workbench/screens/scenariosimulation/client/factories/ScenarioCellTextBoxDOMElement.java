@@ -34,7 +34,7 @@ public class ScenarioCellTextBoxDOMElement extends TextBoxDOMElement {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         String actualValue = (value == null || value.trim().isEmpty()) ? null : value;
-        ((ScenarioGridModel) gridWidget.getModel()).setNewCellValue(rowIndex,
+        ((ScenarioGridModel) gridWidget.getModel()).setCellValue(rowIndex,
                                                                     columnIndex,
                                                                     new ScenarioGridCellValue(actualValue));
     }
