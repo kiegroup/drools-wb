@@ -245,7 +245,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     @Override
     public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
-        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value));
+        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value, ((ScenarioGridColumn) getColumns().get(columnIndex)).getPlaceHolder()));
     }
 
     @Override
@@ -307,10 +307,6 @@ public class ScenarioGridModel extends BaseGridData {
     public void updateHeader(int columnIndex, int rowIndex, String value) {
         getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex).setTitle(value);
         simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
-    }
-
-    public Range setNewCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
-        return setNewCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value, ((ScenarioGridColumn) getColumns().get(columnIndex)).getPlaceHolder()));
     }
 
     public void clear() {
