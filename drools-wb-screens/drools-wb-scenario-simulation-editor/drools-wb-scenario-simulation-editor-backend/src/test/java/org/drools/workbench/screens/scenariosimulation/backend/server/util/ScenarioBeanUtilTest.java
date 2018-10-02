@@ -122,7 +122,7 @@ public class ScenarioBeanUtilTest {
 
         String message = "Impossible to reach field firstName because a step is not instantiated";
         Assertions.assertThatThrownBy(() -> ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, false))
-                .isInstanceOf(ScenarioException.class).
-                hasMessage(message);
+                .isInstanceOf(ScenarioException.class)
+                .hasMessage(message);
     }
 }
