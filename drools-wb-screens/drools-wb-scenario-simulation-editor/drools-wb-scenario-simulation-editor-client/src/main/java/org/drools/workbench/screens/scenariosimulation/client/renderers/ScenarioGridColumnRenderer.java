@@ -15,8 +15,35 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.renderers;
 
+import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.Text;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
+import org.uberfire.ext.wires.core.grids.client.model.GridCell;
+import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.impl.StringColumnRenderer;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 
 public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
+    @Override
+    public Group renderCell(final GridCell<String> cell,
+                            final GridBodyCellRenderContext context) {
+        if (cell == null) { // nothing to render
+            return null;
+        }
+        if (!(cell instanceof ScenarioGridCell) || (cell.getValue() != null && cell.getValue().getValue() != null)) { // not a ScenarioGridCell or placeholder is null
+            return super.renderCell(cell, context);
+        }
+        // Render as placeholder
+        final GridRenderer renderer = context.getRenderer();
+        final ScenarioGridRendererTheme theme = (ScenarioGridRendererTheme) renderer.getTheme();
+        final Group g = new Group();
+        final Text t = theme.getPlaceholderText();
+        t.setText(((ScenarioGridCell) cell).getPlaceHolder());
+        t.setListening(false);
+        t.setX(context.getCellWidth() / 2);
+        t.setY(context.getCellHeight() / 2);
+        g.add(t);
+        return g;
+    }
 }

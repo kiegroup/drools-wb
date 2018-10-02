@@ -15,12 +15,24 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
 
 public class ScenarioGridCell extends BaseGridCell<String> {
 
-    public ScenarioGridCell(GridCellValue<String> value) {
+    final private String placeHolder;
+
+    public ScenarioGridCell(GridCellValue<String> value, String placeHolder) {
         super(value);
+        this.placeHolder = placeHolder;
+    }
+
+    public ScenarioGridCell(String placeHolder) {
+        this(new ScenarioGridCellValue(null), placeHolder);
+    }
+
+    public String getPlaceHolder() {
+        return placeHolder;
     }
 }
