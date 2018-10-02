@@ -73,8 +73,7 @@ public class ScenarioBeanUtil {
 
     public static Object navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
         if (steps.size() < 1) {
-            throw new ScenarioException(new StringBuilder().append("Invalid path to a property: path='")
-                                                .append(String.join(".", steps)).append("'").toString());
+            throw new ScenarioException(new StringBuilder().append("Invalid path to a property, no steps provided").toString());
         }
 
         Class<?> currentClass = rootObject.getClass();
@@ -83,7 +82,7 @@ public class ScenarioBeanUtil {
         for (String step : steps) {
             Field declaredField = null;
             try {
-                if(currentObject == null) {
+                if (currentObject == null) {
                     throw new ScenarioException(new StringBuilder().append("Impossible to reach field ")
                                                         .append(step).append(" because a step is not instantiated")
                                                         .toString());

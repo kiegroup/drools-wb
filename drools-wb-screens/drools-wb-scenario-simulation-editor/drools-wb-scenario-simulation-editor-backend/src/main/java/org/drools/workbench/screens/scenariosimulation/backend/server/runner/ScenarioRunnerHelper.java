@@ -109,7 +109,8 @@ public class ScenarioRunnerHelper {
 
     public static List<ScenarioResult> verifyConditions(SimulationDescriptor simulationDescriptor,
                                                         List<ScenarioInput> inputData,
-                                                        List<ScenarioOutput> outputData, ClassLoader classLoader) {
+                                                        List<ScenarioOutput> outputData,
+                                                        ClassLoader classLoader) {
         List<ScenarioResult> scenarioResult = new ArrayList<>();
 
         List<FactIdentifier> inputIds = inputData.stream().map(ScenarioInput::getFactIdentifier).collect(Collectors.toList());

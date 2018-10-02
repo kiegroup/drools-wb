@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.assertj.core.api.Assertions;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Dispute;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Person;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
@@ -57,12 +58,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ScenarioRunnerImplHelperTest {
+public class ScenarioRunnerHelperTest {
 
     private static final String NAME = "NAME";
     private static final double AMOUNT = 10;
     private static final String TEST_DESCRIPTION = "Test description";
-    private static final ClassLoader classLoader = ScenarioRunnerImplHelperTest.class.getClassLoader();
+    private static final ClassLoader classLoader = ScenarioRunnerHelperTest.class.getClassLoader();
 
     private Simulation simulation;
     private FactIdentifier personFactIdentifier;
@@ -149,13 +150,18 @@ public class ScenarioRunnerImplHelperTest {
         assertEquals(2, scenario2Results.size());
     }
 
-    @Test(expected = ScenarioException.class)
+    @Test
     public void verifyConditionsFailTest() {
         List<ScenarioInput> scenario1Inputs = extractGivenValues(simulation.getSimulationDescriptor(), scenario1.getUnmodifiableFactMappingValues(), classLoader);
         List<ScenarioOutput> scenario1Outputs = extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
         scenario1Outputs.add(new ScenarioOutput(FactIdentifier.create("NOT_EXISTING", String.class.getCanonicalName()), new ArrayList<>()));
 
-        verifyConditions(simulation.getSimulationDescriptor(), scenario1Inputs, scenario1Outputs, classLoader);
+
+        String expectedMessage = "Some expected conditions are not linked to any given facts: NOT_EXISTING";
+        Assertions.assertThatThrownBy(() -> verifyConditions(simulation.getSimulationDescriptor(),
+                                                             scenario1Inputs,
+                                                             scenario1Outputs,
+                                                             classLoader)).hasMessage(expectedMessage).isInstanceOf(ScenarioException.class);
     }
 
     @Test
@@ -255,7 +261,7 @@ public class ScenarioRunnerImplHelperTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailUnsupportedTest() {
-        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), "Test", classLoader);
+        convertValue(ScenarioRunnerHelperTest.class.getCanonicalName(), "Test", classLoader);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -265,6 +271,6 @@ public class ScenarioRunnerImplHelperTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailNotStringOrTypeTest() {
-        convertValue(ScenarioRunnerImplHelperTest.class.getCanonicalName(), 1, classLoader);
+        convertValue(ScenarioRunnerHelperTest.class.getCanonicalName(), 1, classLoader);
     }
 }
