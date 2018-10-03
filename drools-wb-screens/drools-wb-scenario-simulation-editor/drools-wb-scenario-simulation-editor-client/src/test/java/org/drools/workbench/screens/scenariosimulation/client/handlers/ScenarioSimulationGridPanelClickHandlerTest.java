@@ -16,14 +16,15 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Collections;
 import java.util.Set;
 
+import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.AbstractHeaderMenuPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
@@ -32,22 +33,43 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(GwtMockitoTestRunner.class)
+@RunWith(LienzoMockitoTestRunner.class)
 public class ScenarioSimulationGridPanelClickHandlerTest {
+
+    final Double GRID_WIDTH = 100.0;
+    final Double HEADER_HEIGHT = 10.0;
+    final Double HEADER_ROW_HEIGHT = 10.0;
+    final int UI_COLUMN_INDEX = 0;
+    final int CLICK_POINT_X = 5;
+    final int CLICK_POINT_Y = 5;
+    final boolean SHIFT_PRESSED = false;
+    final boolean CTRL_PRESSED = false;
 
     private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
 
@@ -56,6 +78,21 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
     @Mock
     private ScenarioGrid mockScenarioGrid;
+
+    @Mock
+    private ScenarioGridModel scenarioGridModel;
+
+    @Mock
+    private GridRenderer scenarioGridRenderer;
+
+    @Mock
+    private BaseGridRendererHelper scenarioGridRendererHelper;
+
+    @Mock
+    private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformation;
+
+    @Mock
+    private ScenarioHeaderMetaData headerMetaData;
 
     @Mock
     private OtherContextMenu mockOtherContextMenu;
@@ -93,6 +130,30 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
     @Before
     public void setUp() throws Exception {
         when(mockScenarioGridPanel.getScenarioGrid()).thenReturn(mockScenarioGrid);
+        when(mockScenarioGrid.getWidth()).thenReturn(GRID_WIDTH);
+        when(mockScenarioGrid.getModel()).thenReturn(scenarioGridModel);
+        when(mockScenarioGrid.getRenderer()).thenReturn(scenarioGridRenderer);
+        when(mockScenarioGrid.getRendererHelper()).thenReturn(scenarioGridRendererHelper);
+        when(scenarioGridRenderer.getHeaderHeight()).thenReturn(HEADER_HEIGHT);
+        when(scenarioGridRenderer.getHeaderRowHeight()).thenReturn(HEADER_ROW_HEIGHT);
+        when(scenarioGridRendererHelper.getRenderingInformation()).thenReturn(scenarioRenderingInformation);
+
+        // mock single column in grid
+        ScenarioGridColumn column = mock(ScenarioGridColumn.class);
+        when(scenarioGridModel.getColumns()).thenReturn(Collections.singletonList(column));
+        when(scenarioGridModel.getColumnCount()).thenReturn(1);
+
+        // presence of header metadata is prerequisite to handle header click
+        // to simplify test, return just one header metadata
+        // it simulates just one row in column header rows
+        when(column.getHeaderMetaData()).thenReturn(Collections.singletonList(headerMetaData));
+        when(headerMetaData.getColumnGroup()).thenReturn("GIVEN");
+
+        // mock that column to index 0
+        BaseGridRendererHelper.ColumnInformation columnInformation =
+                new BaseGridRendererHelper.ColumnInformation(column, UI_COLUMN_INDEX, 0);
+        when(scenarioGridRendererHelper.getColumnInformation(CLICK_POINT_X)).thenReturn(columnInformation);
+
         scenarioSimulationGridPanelClickHandler = spy(new ScenarioSimulationGridPanelClickHandler() {
             {
                 scenarioGrid = mockScenarioGrid;
@@ -114,11 +175,6 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
 
             @Override
             protected boolean manageRightClick(ContextMenuEvent event) {
-                return true;
-            }
-
-            @Override
-            protected boolean manageLeftClick(final int canvasX,  final int canvasY, final boolean isShiftKeyDown, final boolean isControlKeyDown) {
                 return true;
             }
         });
@@ -182,6 +238,7 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
         assertEquals(mockGridContextMenu, scenarioSimulationGridPanelClickHandler.gridContextMenu);
     }
 
+    @Test
     public void setUnmodifiableColumnGridContextMenu() {
         scenarioSimulationGridPanelClickHandler.setUnmodifiableColumnGridContextMenu(mockUnmodifiableColumnGridContextMenu);
         assertEquals(mockUnmodifiableColumnGridContextMenu, scenarioSimulationGridPanelClickHandler.unmodifiableColumnGridContextMenu);
@@ -229,6 +286,54 @@ public class ScenarioSimulationGridPanelClickHandlerTest {
         verify(mockContextMenuEvent, times(1)).preventDefault();
         verify(mockContextMenuEvent, times(1)).stopPropagation();
         commonCheck();
+    }
+
+    @Test
+    public void testManageLeftClick() {
+        scenarioSimulationGridPanelClickHandler.setEventBus(mockEventBus);
+        assertTrue("Click to only header cell of the only present column.",
+                   scenarioSimulationGridPanelClickHandler.manageLeftClick(CLICK_POINT_X,
+                                                                           CLICK_POINT_Y,
+                                                                           SHIFT_PRESSED,
+                                                                           CTRL_PRESSED));
+        verify(mockScenarioGrid).selectColumn(UI_COLUMN_INDEX);
+        verify(mockEventBus).fireEvent(any(EnableRightPanelEvent.class));
+    }
+
+    @Test
+    public void testManageLeftClick_ReadOnly() {
+        when(headerMetaData.isReadOnly()).thenReturn(true);
+
+        scenarioSimulationGridPanelClickHandler.setEventBus(mockEventBus);
+        assertFalse("Click to readonly header cell.",
+                    scenarioSimulationGridPanelClickHandler.manageLeftClick(CLICK_POINT_X,
+                                                                            CLICK_POINT_Y,
+                                                                            SHIFT_PRESSED,
+                                                                            CTRL_PRESSED));
+        verify(mockScenarioGrid, never()).selectColumn(anyInt());
+        verify(mockEventBus, never()).fireEvent(any(EnableRightPanelEvent.class));
+    }
+
+    @Test
+    public void testManageLeftClick_NextToGrid() {
+        assertFalse("Click to point next to table.",
+                    scenarioSimulationGridPanelClickHandler.manageLeftClick(GRID_WIDTH.intValue() + CLICK_POINT_X,
+                                                                            CLICK_POINT_Y,
+                                                                            SHIFT_PRESSED,
+                                                                            CTRL_PRESSED));
+        verify(mockScenarioGrid, never()).selectColumn(anyInt());
+        verify(mockEventBus, never()).fireEvent(any(EnableRightPanelEvent.class));
+    }
+
+    @Test
+    public void testManageLeftClick_BelowHeader() {
+        assertFalse("Click to point below header.",
+                    scenarioSimulationGridPanelClickHandler.manageLeftClick(CLICK_POINT_X,
+                                                                            HEADER_HEIGHT.intValue() + CLICK_POINT_X,
+                                                                            SHIFT_PRESSED,
+                                                                            CTRL_PRESSED));
+        verify(mockScenarioGrid, never()).selectColumn(anyInt());
+        verify(mockEventBus, never()).fireEvent(any(EnableRightPanelEvent.class));
     }
 
     private void commonCheck() {
