@@ -68,6 +68,8 @@ public class SetColumnValueCommand implements Command {
         if (selectedColumn == null) {
             return;
         }
+
+
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());

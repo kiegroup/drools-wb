@@ -51,6 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRo
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetColumnValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -81,6 +82,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
     ScenarioGridPanel scenarioGridPanel;
     ScenarioGridLayer scenarioGridLayer;
     RightPanelView.Presenter rightPanelPresenter;
+    ConfirmPopupPresenter confirmPopupPresenter;
 
     EventBus eventBus;
 
@@ -108,6 +110,10 @@ public class CommandExecutor implements AppendColumnEventHandler,
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
         this.model = scenarioGridLayer.getScenarioGrid().getModel();
+    }
+
+    public void setConfirmPopupPresenter(ConfirmPopupPresenter confirmPopupPresenter) {
+        this.confirmPopupPresenter = confirmPopupPresenter;
     }
 
     @PreDestroy
@@ -187,7 +193,15 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetColumnValueEvent event) {
-        commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer));
+        if (model.getSelectedColumn() == null) {
+            return;
+        }
+        if (model.isSelectedColumnEmpty()) {
+            commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer));
+        } else {
+            Command okCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer));
+            confirmPopupPresenter.show("SAVE", "OK", "THERE ARE DATA IN COLUMN. DO YOU WANT TO DELETE THEM ?", okCommand);
+        }
     }
 
     void commonExecute(Command toExecute) {

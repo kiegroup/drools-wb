@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 
 /**
@@ -30,16 +31,19 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanel
 public class ScenarioSimulationProducer {
 
     @Inject
-    private RightPanelMenuItemProducer rightPanelMenuItemProducer;
+    RightPanelMenuItemProducer rightPanelMenuItemProducer;
 
     @Inject
-    private EventBusProducer eventBusProducer;
+    EventBusProducer eventBusProducer;
 
     @Inject
-    private ScenarioSimulationViewProducer scenarioSimulationViewProducer;
+    ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 
     @Inject
-    private CommandExecutor commandExecutor;
+    ConfirmPopupPresenter confirmPopupPresenter;
+
+    @Inject
+    CommandExecutor commandExecutor;
 
     public RightPanelMenuItem getRightPanelMenuItem() {
         return rightPanelMenuItemProducer.getRightPanelMenuItem();
@@ -56,6 +60,7 @@ public class ScenarioSimulationProducer {
     public CommandExecutor getCommandExecutor() {
         commandExecutor.setEventBus(getEventBus());
         commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
+        commandExecutor.setConfirmPopupPresenter(confirmPopupPresenter);
         return commandExecutor;
     }
 }

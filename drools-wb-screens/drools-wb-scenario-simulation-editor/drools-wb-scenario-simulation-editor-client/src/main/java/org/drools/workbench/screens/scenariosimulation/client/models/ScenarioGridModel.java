@@ -189,7 +189,6 @@ public class ScenarioGridModel extends BaseGridData {
         deleteColumn(columnIndex);
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
-
         String[] elements = value.split("\\.");
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
@@ -360,6 +359,28 @@ public class ScenarioGridModel extends BaseGridData {
 
     public Optional<Simulation> getSimulation() {
         return Optional.ofNullable(simulation);
+    }
+
+    /**
+     * Returns <code>true</code> if all the grid cells of the selected column are empty, i.e. the GridCell.getValue() == null OR
+     * GridCell.getValue().getValue() == null
+     * @return
+     */
+    public boolean isSelectedColumnEmpty() {
+        return selectedColumn == null ? true : isColumnEmpty(getColumns().indexOf(selectedColumn));
+    }
+
+    /**
+     * Returns <code>true</code> if all the grid cells of the column at given index are empty, i.e. the GridCell.getValue() == null OR
+     * GridCell.getValue().getValue() == null
+     * @param columnIndex
+     * @return
+     */
+    public boolean isColumnEmpty(int columnIndex) {
+        return !IntStream.range(0, getRowCount())
+                .filter(rowIndex -> getCellValue(getCell(rowIndex, columnIndex)).isPresent())
+                .findFirst()
+                .isPresent();
     }
 
     /**
