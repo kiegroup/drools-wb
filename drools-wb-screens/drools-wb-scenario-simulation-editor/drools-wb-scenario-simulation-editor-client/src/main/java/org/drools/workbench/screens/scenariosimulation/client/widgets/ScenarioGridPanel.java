@@ -69,6 +69,10 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
         getScenarioGrid().getModel().setEventBus(eventBus);
     }
 
+    public void select() {
+        getDefaultGridLayer().select(getScenarioGrid()); // This is to have "floatable" header, ie. not moving
+    }
+
     @Override
     public void onNodeMouseOut(NodeMouseOutEvent event) {
         final int height = getScenarioGridLayer().getHeight();

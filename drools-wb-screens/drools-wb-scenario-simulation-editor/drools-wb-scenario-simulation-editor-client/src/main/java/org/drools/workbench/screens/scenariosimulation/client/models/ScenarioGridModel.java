@@ -443,7 +443,6 @@ public class ScenarioGridModel extends BaseGridData {
                         setCellValue(rowIndex, indexOfColumn, new ScenarioGridCellValue(value));
                     });
         });
-
     }
 
     void checkSimulation() {
