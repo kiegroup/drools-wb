@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -37,8 +38,8 @@ public class FactMappingValue {
     }
 
     public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue) {
-        this.factIdentifier = factIdentifier;
-        this.expressionIdentifier = expressionIdentifier;
+        this.factIdentifier = Objects.requireNonNull(factIdentifier, "FactIdentifier has to be not null");
+        this.expressionIdentifier = Objects.requireNonNull(expressionIdentifier, "ExpressionIdentifier has to be not null");
         this.rawValue = rawValue;
     }
 
@@ -64,7 +65,8 @@ public class FactMappingValue {
     }
 
     public FactMappingValueOperator getOperator() {
-        return operator != null ? operator : extractOperator(rawValue);
+        this.operator = extractOperator(rawValue);
+        return operator;
     }
 
     public Object getCleanValue() {
