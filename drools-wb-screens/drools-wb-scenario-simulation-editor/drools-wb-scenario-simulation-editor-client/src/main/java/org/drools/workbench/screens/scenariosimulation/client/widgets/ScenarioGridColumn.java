@@ -70,6 +70,6 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         if (cell != null) {
             return cell;
         }
-        return new ScenarioGridCell(new ScenarioGridCellValue(""), placeHolder);
+        return new ScenarioGridCell(new ScenarioGridCellValue("", placeHolder));
     }
 }

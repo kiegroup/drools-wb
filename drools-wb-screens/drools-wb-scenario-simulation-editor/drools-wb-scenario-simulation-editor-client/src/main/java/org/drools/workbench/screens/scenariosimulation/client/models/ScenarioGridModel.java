@@ -103,7 +103,7 @@ public class ScenarioGridModel extends BaseGridData {
             if (value.getRawValue() == null || value.getRawValue() instanceof String) { // Let' put a placeholder
                 String stringValue = (String) value.getRawValue();
                 int columnIndex = simulation.getSimulationDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
-                setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue), ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
+                setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(stringValue, ScenarioSimulationEditorConstants.INSTANCE.insertValue())));
             } else {
                 throw new UnsupportedOperationException("Only string is supported at the moment");
             }
@@ -245,7 +245,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     @Override
     public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
-        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((GridCellValue<String>) value, ((ScenarioGridColumn) getColumns().get(columnIndex)).getPlaceHolder()));
+        return setCell(rowIndex, columnIndex, () -> new ScenarioGridCell((ScenarioGridCellValue) value));
     }
 
     @Override
@@ -401,9 +401,7 @@ public class ScenarioGridModel extends BaseGridData {
         }
         final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
         IntStream.range(0, scenarios.size())
-                .forEach(rowIndex -> {
-                    setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-                });
+                .forEach(rowIndex -> setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(null, ScenarioSimulationEditorConstants.INSTANCE.insertValue()))));
     }
 
     protected void commonAddRow(int rowIndex) {
@@ -412,7 +410,7 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
-            setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
+            setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(null, ScenarioSimulationEditorConstants.INSTANCE.insertValue())));
         });
         updateIndexColumn();
     }
@@ -428,8 +426,6 @@ public class ScenarioGridModel extends BaseGridData {
     void checkSimulation() {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
     }
-
-
 
     // Helper method to avoid potential NPE
     private Optional<?> getCellValue(GridCell<?> gridCell) {
