@@ -156,7 +156,6 @@ public class ScenarioRunnerHelperTest {
         List<ScenarioOutput> scenario1Outputs = extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
         scenario1Outputs.add(new ScenarioOutput(FactIdentifier.create("NOT_EXISTING", String.class.getCanonicalName()), new ArrayList<>()));
 
-
         String expectedMessage = "Some expected conditions are not linked to any given facts: NOT_EXISTING";
         Assertions.assertThatThrownBy(() -> verifyConditions(simulation.getSimulationDescriptor(),
                                                              scenario1Inputs,
@@ -234,7 +233,7 @@ public class ScenarioRunnerHelperTest {
     @Test(expected = IllegalArgumentException.class)
     public void groupByFactIdentifierAndFilterFailTest() {
         List<FactMappingValue> fail = new ArrayList<>();
-        fail.add(new FactMappingValue(personFactIdentifier, null, null));
+        fail.add(new FactMappingValue());
         groupByFactIdentifierAndFilter(fail, FactMappingType.GIVEN);
     }
 
