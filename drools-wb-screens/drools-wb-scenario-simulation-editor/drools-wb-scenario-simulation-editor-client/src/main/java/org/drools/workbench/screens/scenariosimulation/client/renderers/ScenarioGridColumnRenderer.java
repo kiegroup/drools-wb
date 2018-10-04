@@ -42,7 +42,7 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
         }
     }
 
-    private Group renderPlaceholderCell(final ScenarioGridCell cell,
+    Group renderPlaceholderCell(final ScenarioGridCell cell,
                                         final GridBodyCellRenderContext context) {
         final GridRenderer renderer = context.getRenderer();
         final ScenarioGridRendererTheme theme = (ScenarioGridRendererTheme) renderer.getTheme();

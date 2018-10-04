@@ -273,6 +273,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
         commandExecutor.commonExecute(mockCommand);
         verify(mockCommand, times(1)).execute();
         verify(mockScenarioGridPanel, times(1)).onResize();
+        verify(mockScenarioGridPanel, times(1)).select();
     }
 
     @Test

@@ -217,6 +217,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
     void commonExecute(Command toExecute) {
         toExecute.execute();
         scenarioGridPanel.onResize();
+        scenarioGridPanel.select();
     }
 
     void registerHandlers() {

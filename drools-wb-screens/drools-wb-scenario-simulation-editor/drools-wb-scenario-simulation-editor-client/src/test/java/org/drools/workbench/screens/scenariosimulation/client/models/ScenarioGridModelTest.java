@@ -26,6 +26,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
+import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
@@ -303,5 +304,18 @@ public class ScenarioGridModelTest {
     @Test
     public void commonAddRow() {
         scenarioGridModel.commonAddRow(ROW_INDEX);
+    }
+
+    @Test
+    public void updateIndexColumn() {
+        reset(scenarioGridModel);
+        scenarioGridModel.updateIndexColumn();
+        verify(scenarioGridModel, never()).setCellValue(anyInt(), anyInt(), isA(ScenarioGridCellValue.class));
+        reset(scenarioGridModel);
+        when(scenarioGridModel.getRowCount()).thenReturn(3);
+        int indexColumnPosition = 0;
+        gridColumns.add(indexColumnPosition, mockScenarioIndexGridColumn);
+        scenarioGridModel.updateIndexColumn();
+        verify(scenarioGridModel, times(3)).setCellValue(anyInt(), eq(indexColumnPosition), isA(ScenarioGridCellValue.class));
     }
 }
