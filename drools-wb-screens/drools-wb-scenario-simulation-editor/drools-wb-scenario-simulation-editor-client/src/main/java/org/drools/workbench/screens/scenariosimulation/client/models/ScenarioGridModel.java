@@ -184,8 +184,13 @@ public class ScenarioGridModel extends BaseGridData {
      * @param columnIndex
      * @param value
      */
-    public void updateColumnType(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName) {
+    public void updateColumnType(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName, boolean keepData) {
         checkSimulation();
+        List<GridCellValue<?>> originalValues = new ArrayList<>();
+        if (keepData) {
+            IntStream.range(0, getRowCount())
+                    .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
+        }
         deleteColumn(columnIndex);
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
@@ -202,6 +207,11 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, elements.length)
                 .forEach(stepIndex ->
                                  factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
+        if (keepData) {
+            IntStream.range(0, getRowCount())
+                    .forEach(rowIndex ->
+                                     setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
+        }
         selectColumn(columnIndex);
     }
 
@@ -381,6 +391,48 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(rowIndex -> getCellValue(getCell(rowIndex, columnIndex)).isPresent())
                 .findFirst()
                 .isPresent();
+    }
+
+    /**
+     * Returns <code>true</code> if property mapped to the selected column is the same as the provided one
+     * @param propertyName
+     * @return
+     */
+    public boolean isSameSelectedColumnProperty(String propertyName) {
+        return selectedColumn == null ? true : isSameSelectedColumnProperty(getColumns().indexOf(selectedColumn), propertyName);
+    }
+
+    /**
+     * Returns <code>true</code> if property mapped to the column at given index is the same as the provided one
+     * @param columnIndex
+     * @param propertyName
+     * @return
+     */
+    public boolean isSameSelectedColumnProperty(int columnIndex, String propertyName) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        return factMappingByIndex.getClassName().equals(propertyName);
+    }
+
+    /**
+     * Returns <code>true</code> if type mapped to the selected column is the same as the provided one
+     * @param className
+     * @return
+     */
+    public boolean isSameSelectedColumnType(String className) {
+        return selectedColumn == null ? true : isSameSelectedColumnType(getColumns().indexOf(selectedColumn), className);
+    }
+
+    /**
+     * Returns <code>true</code> if type mapped to the column at given index is the same as the provided one
+     * @param columnIndex
+     * @param className
+     * @return
+     */
+    public boolean isSameSelectedColumnType(int columnIndex, String className) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        return factMappingByIndex.getClassName().equals(className);
     }
 
     /**

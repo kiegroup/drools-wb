@@ -39,6 +39,7 @@ public class SetColumnValueCommand implements Command {
     private String valueClassName;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
+    private boolean keepData;
 
     public SetColumnValueCommand() {
     }
@@ -52,7 +53,7 @@ public class SetColumnValueCommand implements Command {
      * @param scenarioGridPanel
      * @param scenarioGridLayer
      */
-    public SetColumnValueCommand(ScenarioGridModel model, String columnId, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public SetColumnValueCommand(ScenarioGridModel model, String columnId, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData) {
         this.model = model;
         this.columnId = columnId;
         this.fullPackage = fullPackage;
@@ -60,6 +61,7 @@ public class SetColumnValueCommand implements Command {
         this.valueClassName = valueClassName;
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridLayer;
+        this.keepData = keepData;
     }
 
     @Override
@@ -68,8 +70,6 @@ public class SetColumnValueCommand implements Command {
         if (selectedColumn == null) {
             return;
         }
-
-
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
@@ -82,6 +82,6 @@ public class SetColumnValueCommand implements Command {
                                                      scenarioGridLayer),
                                fullPackage,
                                value,
-                               valueClassName);
+                               valueClassName, keepData);
     }
 }

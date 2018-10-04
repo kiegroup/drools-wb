@@ -51,10 +51,11 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRo
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetColumnValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.YesNoConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
 
@@ -82,7 +83,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
     ScenarioGridPanel scenarioGridPanel;
     ScenarioGridLayer scenarioGridLayer;
     RightPanelView.Presenter rightPanelPresenter;
-    ConfirmPopupPresenter confirmPopupPresenter;
+    YesNoConfirmPopupPresenter yesNoConfirmPopupPresenter;
 
     EventBus eventBus;
 
@@ -112,8 +113,8 @@ public class CommandExecutor implements AppendColumnEventHandler,
         this.model = scenarioGridLayer.getScenarioGrid().getModel();
     }
 
-    public void setConfirmPopupPresenter(ConfirmPopupPresenter confirmPopupPresenter) {
-        this.confirmPopupPresenter = confirmPopupPresenter;
+    public void setYesNoConfirmPopupPresenter(YesNoConfirmPopupPresenter yesNoConfirmPopupPresenter) {
+        this.yesNoConfirmPopupPresenter = yesNoConfirmPopupPresenter;
     }
 
     @PreDestroy
@@ -197,10 +198,19 @@ public class CommandExecutor implements AppendColumnEventHandler,
             return;
         }
         if (model.isSelectedColumnEmpty()) {
-            commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer));
+            commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
+        } else if (model.isSameSelectedColumnProperty(event.getValue())) {
+            return;
+        } else if (model.isSameSelectedColumnType(event.getValueClassName())) {
+            Command yesCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
+            Command noCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, true));
+            yesNoConfirmPopupPresenter.show(CommonConstants.INSTANCE.SavePopupTitle(), "RESET DATA", "KEEP DATA", "THERE ARE DATA IN COLUMN. DO YOU WANT TO KEEP OR DELETE THEM ?", yesCommand, noCommand);
+        } else if (!model.isSameSelectedColumnType(event.getValueClassName())) {
+            Command okCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
+            yesNoConfirmPopupPresenter.show(CommonConstants.INSTANCE.SavePopupTitle(), CommonConstants.INSTANCE.OK(), "THE DATA IN COLUMN WILL BE DELETED. AGREE ?", okCommand);
         } else {
-            Command okCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer));
-            confirmPopupPresenter.show("SAVE", "OK", "THERE ARE DATA IN COLUMN. DO YOU WANT TO DELETE THEM ?", okCommand);
+            Command okCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
+            yesNoConfirmPopupPresenter.show(CommonConstants.INSTANCE.SavePopupTitle(), CommonConstants.INSTANCE.OK(), "THERE ARE DATA IN COLUMN. DO YOU WANT TO DELETE THEM ?", okCommand);
         }
     }
 

@@ -33,17 +33,23 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetColumnValueEvent;
+import org.drools.workbench.screens.scenariosimulation.client.popup.YesNoConfirmPopupPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.mockito.Mock;
 import org.uberfire.mvp.Command;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -81,6 +87,9 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Mock
     private HandlerRegistration mockSetColumnValueEventHandler;
 
+    @Mock
+    private YesNoConfirmPopupPresenter mockYesNoConfirmPopupPresenter;
+
     private CommandExecutor commandExecutor;
 
     @Before
@@ -107,6 +116,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
                 this.scenarioGridPanel = mockScenarioGridPanel;
                 this.scenarioGridLayer = mockScenarioGridLayer;
                 this.rightPanelPresenter = mockRightPanelPresenter;
+                this.yesNoConfirmPopupPresenter = mockYesNoConfirmPopupPresenter;
             }
         });
     }
@@ -227,8 +237,33 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Test
     public void onSetColumnValueEvent() {
         SetColumnValueEvent event = new SetColumnValueEvent(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
+        when(mockScenarioGridModel.getSelectedColumn()).thenReturn(null);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, never()).commonExecute(isA(SetColumnValueCommand.class));
+
+        doReturn(mockGridColumn).when(mockScenarioGridModel).getSelectedColumn();
+        reset(commandExecutor);
+        when(mockScenarioGridModel.isSelectedColumnEmpty()).thenReturn(true);
         commandExecutor.onEvent(event);
         verify(commandExecutor, times(1)).commonExecute(isA(SetColumnValueCommand.class));
+
+        when(mockScenarioGridModel.isSelectedColumnEmpty()).thenReturn(false);
+        reset(commandExecutor);
+        when(mockScenarioGridModel.isSameSelectedColumnProperty(VALUE)).thenReturn(true);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, never()).commonExecute(isA(SetColumnValueCommand.class));
+
+        when(mockScenarioGridModel.isSameSelectedColumnProperty(VALUE)).thenReturn(false);
+        reset(commandExecutor);
+        when(mockScenarioGridModel.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(true);
+        commandExecutor.onEvent(event);
+        verify(mockYesNoConfirmPopupPresenter, times(1)).show(CommonConstants.INSTANCE.SavePopupTitle(), anyString(), anyString(), anyString(), isA(Command.class), isA(Command.class));
+
+        when(mockScenarioGridModel.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(false);
+        reset(commandExecutor);
+        reset(mockYesNoConfirmPopupPresenter);
+        commandExecutor.onEvent(event);
+        verify(mockYesNoConfirmPopupPresenter, times(1)).show(CommonConstants.INSTANCE.SavePopupTitle(), CommonConstants.INSTANCE.OK(), anyString(), isA(Command.class));
     }
 
     @Test

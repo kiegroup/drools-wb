@@ -42,7 +42,7 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         scenarioSimulationProducer = spy(new ScenarioSimulationProducer() {
             {
                 this.commandExecutor = commandExecutorMock;
-                this.confirmPopupPresenter = confirmPopupPresenterMock;
+                this.yesNoConfirmPopupPresenter = yesNoConfirmPopupPresenterMock;
                 this.eventBusProducer = eventBusProducerMock;
                 this.rightPanelMenuItemProducer = rightPanelMenuItemProducerMock;
                 this.scenarioSimulationViewProducer = scenarioSimulationViewProducerMock;
@@ -79,6 +79,6 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         assertEquals(retrieved, commandExecutorMock);
         verify(commandExecutorMock, times(1)).setEventBus(eq(eventBusMock));
         verify(commandExecutorMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
-        verify(commandExecutorMock, times(1)).setConfirmPopupPresenter(eq(confirmPopupPresenterMock));
+        verify(commandExecutorMock, times(1)).setYesNoConfirmPopupPresenter(eq(yesNoConfirmPopupPresenterMock));
     }
 }

@@ -20,16 +20,16 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.uberfire.client.views.pfly.widgets.Button;
-import org.uberfire.client.views.pfly.widgets.ConfirmPopup;
 import org.uberfire.client.views.pfly.widgets.InlineNotification;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class ConfirmPopupPresenter implements Popup {
+public class YesNoConfirmPopupPresenter implements YesNoConfirmPopup.Presenter {
 
     @Inject
-    ConfirmPopup confirmPopup;
+    YesNoConfirmPopupView yesNoConfirmPopupView;
 
+    @Override
     public void show(final String title,
                      final String okButtonText,
                      final String confirmMessage,
@@ -51,11 +51,21 @@ public class ConfirmPopupPresenter implements Popup {
                      final Button.ButtonStyleType okButtonType,
                      final String confirmMessage,
                      final Command okCommand) {
-        confirmPopup.show(title, inlineNotificationMessage, inlineNotificationType, okButtonText, okButtonType, confirmMessage, okCommand);
+        yesNoConfirmPopupView.show(title, inlineNotificationMessage, inlineNotificationType, okButtonText, okButtonType, confirmMessage, okCommand);
+    }
+
+    @Override
+    public void show(String title, String yesButtonText, String noButtonText, String confirmMessage, Command yesCommand, Command noCommand) {
+        show(title, null, null, yesButtonText, noButtonText, org.uberfire.client.views.pfly.widgets.Button.ButtonStyleType.DANGER, confirmMessage, yesCommand, noCommand);
+    }
+
+    @Override
+    public void show(String title, String inlineNotificationMessage, InlineNotification.InlineNotificationType inlineNotificationType, String yesButtonText, String noButtonText, Button.ButtonStyleType buttonType, String confirmMessage, Command yesCommand, Command noCommand) {
+        yesNoConfirmPopupView.show(title, inlineNotificationMessage, inlineNotificationType, yesButtonText, noButtonText, buttonType, confirmMessage, yesCommand, noCommand);
     }
 
     @Override
     public void hide() {
-        confirmPopup.hide();
+        yesNoConfirmPopupView.hide();
     }
 }

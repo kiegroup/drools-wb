@@ -47,12 +47,19 @@ public class SetColumnValueCommandTest extends AbstractCommandTest {
         when(mockGridColumns.indexOf(mockGridColumn)).thenReturn(COLUMN_INDEX);
         when(mockScenarioGridModel.getColumns()).thenReturn(mockGridColumns);
         doReturn(mockGridColumn).when(mockScenarioGridModel).getSelectedColumn();
-        setColumnValueCommand = new SetColumnValueCommand(mockScenarioGridModel, COLUMN_ID, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer);
     }
 
     @Test
-    public void execute() {
+    public void executeFalse() {
+        setColumnValueCommand = new SetColumnValueCommand(mockScenarioGridModel, COLUMN_ID, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer, false);
         setColumnValueCommand.execute();
-        verify(mockScenarioGridModel, times(1)).updateColumnType(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME));
+        verify(mockScenarioGridModel, times(1)).updateColumnType(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+    }
+
+    @Test
+    public void executeTrue() {
+        setColumnValueCommand = new SetColumnValueCommand(mockScenarioGridModel, COLUMN_ID, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer, true);
+        setColumnValueCommand.execute();
+        verify(mockScenarioGridModel, times(1)).updateColumnType(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq( true));
     }
 }
