@@ -29,9 +29,9 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.GridRendererTheme;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -44,7 +44,8 @@ import static org.mockito.Mockito.when;
 @RunWith(LienzoMockitoTestRunner.class)
 public class ScenarioGridColumnRendererTest {
 
-
+    private static final String PLACEHOLDER = "PLACEHOLDER";
+    private static final String VALUE = "VALUE";
     @Mock
     private GridBodyCellRenderContext contextMock;
     @Mock
@@ -82,15 +83,15 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
         verify(scenarioGridColumnRenderer, never()).renderPlaceholderCell(any(), eq(contextMock));
-        cell = new ScenarioGridCell(new ScenarioGridCellValue("TEST"));
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(VALUE));
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, never()).renderPlaceholderCell(any(), eq(contextMock));
-        ScenarioGridCell scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue("TEXT", "PLACEHOLDER"));
+        ScenarioGridCell scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(VALUE, PLACEHOLDER));
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, never()).renderPlaceholderCell(eq(scenarioGridCell), eq(contextMock));
-        scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(null, "PLACEHOLDER"));
+        scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(null, PLACEHOLDER));
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).renderPlaceholderCell(eq(scenarioGridCell), eq(contextMock));
@@ -98,5 +99,9 @@ public class ScenarioGridColumnRendererTest {
 
     @Test
     public void renderPlaceholderCell() {
+        ScenarioGridCell scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(VALUE, PLACEHOLDER));
+        Group retrieved = scenarioGridColumnRenderer.renderPlaceholderCell(scenarioGridCell, contextMock);
+        assertNotNull(retrieved);
+        verify(themeMock, times(1)).getPlaceholderText();
     }
 }

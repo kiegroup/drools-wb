@@ -17,8 +17,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Element;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
