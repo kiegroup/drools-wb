@@ -89,4 +89,12 @@ public interface ScenarioSimulationEditorConstants
     String description();
 
     String insertValue();
+
+    String dataInColumnKeepOrDelete();
+
+    String dataInColumnWillDelete();
+
+    String keep();
+
+    String updateColumn();
 }

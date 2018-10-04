@@ -411,7 +411,7 @@ public class ScenarioGridModel extends BaseGridData {
     public boolean isSameSelectedColumnProperty(int columnIndex, String propertyName) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        return factMappingByIndex.getClassName().equals(propertyName);
+        return factMappingByIndex.getExpressionAlias().equals(propertyName);
     }
 
     /**

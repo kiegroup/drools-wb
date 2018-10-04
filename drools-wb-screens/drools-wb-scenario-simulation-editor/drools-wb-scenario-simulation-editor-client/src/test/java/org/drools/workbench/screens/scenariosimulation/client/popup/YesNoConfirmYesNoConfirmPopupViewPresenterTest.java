@@ -60,13 +60,13 @@ public class YesNoConfirmYesNoConfirmPopupViewPresenterTest extends AbstractYesN
     @Test
     public void showYesNoCancel() {
         yesNoConfirmPopupPresenter.show(TITLE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
-        verify(yesNoConfirmPopupPresenter, times(1)).show(TITLE, null, null, YES_BUTTON_TEXT, NO_BUTTON_TEXT, Button.ButtonStyleType.DANGER, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
+        verify(yesNoConfirmPopupPresenter, times(1)).show(TITLE, null, null, YES_BUTTON_TEXT, NO_BUTTON_TEXT, Button.ButtonStyleType.DANGER, Button.ButtonStyleType.DEFAULT, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
     }
 
     @Test
     public void showYesNoCancelFull() {
-        yesNoConfirmPopupPresenter.show(TITLE, INLINE_NOTIFICATION_MESSAGE, INLINE_NOTIFICATION_TYPE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, BUTTON_STYLE_TYPE, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
-        verify(yesNoConfirmPopupViewMock, times(1)).show(eq(TITLE), eq(INLINE_NOTIFICATION_MESSAGE), eq(INLINE_NOTIFICATION_TYPE), eq(YES_BUTTON_TEXT), eq(NO_BUTTON_TEXT), eq(BUTTON_STYLE_TYPE), eq(CONFIRM_MESSAGE), eq(yesCommandMock), eq(noCommandMock));
+        yesNoConfirmPopupPresenter.show(TITLE, INLINE_NOTIFICATION_MESSAGE, INLINE_NOTIFICATION_TYPE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, BUTTON_STYLE_TYPE, BUTTON_STYLE_TYPE, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
+        verify(yesNoConfirmPopupViewMock, times(1)).show(eq(TITLE), eq(INLINE_NOTIFICATION_MESSAGE), eq(INLINE_NOTIFICATION_TYPE), eq(YES_BUTTON_TEXT), eq(NO_BUTTON_TEXT), eq(BUTTON_STYLE_TYPE), eq(BUTTON_STYLE_TYPE), eq(CONFIRM_MESSAGE), eq(yesCommandMock), eq(noCommandMock));
     }
 
     @Test

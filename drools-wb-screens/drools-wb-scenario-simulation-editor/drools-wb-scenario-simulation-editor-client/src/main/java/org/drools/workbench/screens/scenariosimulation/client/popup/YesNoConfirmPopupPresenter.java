@@ -56,12 +56,12 @@ public class YesNoConfirmPopupPresenter implements YesNoConfirmPopup.Presenter {
 
     @Override
     public void show(String title, String yesButtonText, String noButtonText, String confirmMessage, Command yesCommand, Command noCommand) {
-        show(title, null, null, yesButtonText, noButtonText, org.uberfire.client.views.pfly.widgets.Button.ButtonStyleType.DANGER, confirmMessage, yesCommand, noCommand);
+        show(title, null, null, yesButtonText, noButtonText, Button.ButtonStyleType.DANGER,  Button.ButtonStyleType.DEFAULT, confirmMessage, yesCommand, noCommand);
     }
 
     @Override
-    public void show(String title, String inlineNotificationMessage, InlineNotification.InlineNotificationType inlineNotificationType, String yesButtonText, String noButtonText, Button.ButtonStyleType buttonType, String confirmMessage, Command yesCommand, Command noCommand) {
-        yesNoConfirmPopupView.show(title, inlineNotificationMessage, inlineNotificationType, yesButtonText, noButtonText, buttonType, confirmMessage, yesCommand, noCommand);
+    public void show(String title, String inlineNotificationMessage, InlineNotification.InlineNotificationType inlineNotificationType, String yesButtonText, String noButtonText, Button.ButtonStyleType yesButtonType, Button.ButtonStyleType noButtonType, String confirmMessage, Command yesCommand, Command noCommand) {
+        yesNoConfirmPopupView.show(title, inlineNotificationMessage, inlineNotificationType, yesButtonText, noButtonText, yesButtonType,  noButtonType, confirmMessage, yesCommand, noCommand);
     }
 
     @Override

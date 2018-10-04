@@ -109,6 +109,7 @@ public class YesNoConfirmYesNoConfirmPopupViewTest extends AbstractYesNoConfirmY
     public void showOkCancelFull() {
         yesNoConfirmPopupView.show(TITLE, INLINE_NOTIFICATION_MESSAGE, INLINE_NOTIFICATION_TYPE, OK_BUTTON_TEXT, BUTTON_STYLE_TYPE, CONFIRM_MESSAGE, okCommandMock);
         verify(okButtonMock, never()).hide();
+        verify(okButtonMock, times(1)).show();
         verify(yesButtonMock, times(1)).hide();
         verify(noButtonMock, times(1)).hide();
         verify(okButtonMock, times(1)).setText(eq(OK_BUTTON_TEXT));
@@ -119,14 +120,16 @@ public class YesNoConfirmYesNoConfirmPopupViewTest extends AbstractYesNoConfirmY
     @Test
     public void showYesNoCancel() {
         yesNoConfirmPopupView.show(TITLE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
-        verify(yesNoConfirmPopupView, times(1)).show(TITLE, null, null, YES_BUTTON_TEXT, NO_BUTTON_TEXT, Button.ButtonStyleType.DANGER, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
+        verify(yesNoConfirmPopupView, times(1)).show(TITLE, null, null, YES_BUTTON_TEXT, NO_BUTTON_TEXT, Button.ButtonStyleType.DANGER, Button.ButtonStyleType.DEFAULT, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
         verify(yesNoConfirmPopupView, times(1)).commonShow(eq(TITLE), any(), any(), eq(CONFIRM_MESSAGE));
     }
 
     @Test
     public void showYesNoCancelFull() {
-        yesNoConfirmPopupView.show(TITLE, INLINE_NOTIFICATION_MESSAGE, INLINE_NOTIFICATION_TYPE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, BUTTON_STYLE_TYPE, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
+        yesNoConfirmPopupView.show(TITLE, INLINE_NOTIFICATION_MESSAGE, INLINE_NOTIFICATION_TYPE, YES_BUTTON_TEXT, NO_BUTTON_TEXT, BUTTON_STYLE_TYPE, BUTTON_STYLE_TYPE, CONFIRM_MESSAGE, yesCommandMock, noCommandMock);
         verify(okButtonMock, times(1)).hide();
+        verify(yesButtonMock, times(1)).show();
+        verify(noButtonMock, times(1)).show();
         verify(yesButtonMock, never()).hide();
         verify(noButtonMock, never()).hide();
         verify(yesButtonMock, times(1)).setText(eq(YES_BUTTON_TEXT));

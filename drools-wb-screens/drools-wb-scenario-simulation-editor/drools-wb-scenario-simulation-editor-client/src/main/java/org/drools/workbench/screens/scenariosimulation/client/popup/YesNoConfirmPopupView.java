@@ -106,6 +106,7 @@ public class YesNoConfirmPopupView implements YesNoConfirmPopup {
                      final String confirmMessage,
                      final Command okCommand) {
         this.okCommand = okCommand;
+        okButton.show();
         yesButton.hide();
         noButton.hide();
         okButton.setText(okButtonText);
@@ -128,6 +129,7 @@ public class YesNoConfirmPopupView implements YesNoConfirmPopup {
              yesButtonText,
              noButtonText,
              Button.ButtonStyleType.DANGER,
+             Button.ButtonStyleType.DEFAULT,
              confirmMessage,
              yesCommand,
              noCommand);
@@ -139,18 +141,23 @@ public class YesNoConfirmPopupView implements YesNoConfirmPopup {
                      final InlineNotification.InlineNotificationType inlineNotificationType,
                      final String yesButtonText,
                      final String noButtonText,
-                     final Button.ButtonStyleType buttonType,
+                     final Button.ButtonStyleType yesButtonType,
+                     final Button.ButtonStyleType noButtonType,
                      final String confirmMessage,
                      final Command yesCommand,
                      final Command noCommand) {
         this.yesCommand = yesCommand;
         this.noCommand = noCommand;
         okButton.hide();
+        yesButton.show();
+        noButton.show();
         yesButton.setText(yesButtonText);
         noButton.setText(noButtonText);
-        if (buttonType != null) {
-            yesButton.setButtonStyleType(buttonType);
-            noButton.setButtonStyleType(buttonType);
+        if (yesButtonType != null) {
+            yesButton.setButtonStyleType(yesButtonType);
+        }
+        if (noButtonType != null) {
+            noButton.setButtonStyleType(noButtonType);
         }
         commonShow(title, inlineNotificationMessage, inlineNotificationType, confirmMessage);
     }

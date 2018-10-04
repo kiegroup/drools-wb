@@ -72,12 +72,14 @@ public interface YesNoConfirmPopup {
 
         /**
          * Makes the YesNoConfirmPopupView visible with YES/NO/Cancel buttons.
+         *
          * @param title
          * @param inlineNotificationMessage
          * @param inlineNotificationType
          * @param yesButtonText
          * @param noButtonText
-         * @param buttonType
+         * @param yesButtonType
+         * @param noButtonType
          * @param confirmMessage
          * @param yesCommand
          * @param noCommand
@@ -87,7 +89,8 @@ public interface YesNoConfirmPopup {
                   final InlineNotification.InlineNotificationType inlineNotificationType,
                   final String yesButtonText,
                   final String noButtonText,
-                  final Button.ButtonStyleType buttonType,
+                  final Button.ButtonStyleType yesButtonType,
+                  final Button.ButtonStyleType noButtonType,
                   final String confirmMessage,
                   final Command yesCommand,
                   final Command noCommand);
@@ -147,12 +150,14 @@ public interface YesNoConfirmPopup {
 
     /**
      * Makes the YesNoConfirmPopupView visible with YES/NO/Cancel buttons.
+     *
      * @param title
      * @param inlineNotificationMessage
      * @param inlineNotificationType
      * @param yesButtonText
      * @param noButtonText
-     * @param buttonType
+     * @param yesButtonType
+     * @param noButtonType
      * @param confirmMessage
      * @param yesCommand
      * @param noCommand
@@ -162,7 +167,8 @@ public interface YesNoConfirmPopup {
               final InlineNotification.InlineNotificationType inlineNotificationType,
               final String yesButtonText,
               final String noButtonText,
-              final Button.ButtonStyleType buttonType,
+              final Button.ButtonStyleType yesButtonType,
+              final Button.ButtonStyleType noButtonType,
               final String confirmMessage,
               final Command yesCommand,
               final Command noCommand);

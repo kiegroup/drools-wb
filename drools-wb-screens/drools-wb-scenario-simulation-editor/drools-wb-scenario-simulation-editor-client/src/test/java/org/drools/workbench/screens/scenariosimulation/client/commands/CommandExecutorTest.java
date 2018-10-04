@@ -34,16 +34,18 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowE
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetColumnValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.popup.YesNoConfirmPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.mockito.Mock;
+import org.uberfire.client.views.pfly.widgets.Button;
+import org.uberfire.client.views.pfly.widgets.InlineNotification;
 import org.uberfire.mvp.Command;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
@@ -257,13 +259,28 @@ public class CommandExecutorTest extends AbstractCommandTest {
         reset(commandExecutor);
         when(mockScenarioGridModel.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(mockYesNoConfirmPopupPresenter, times(1)).show(CommonConstants.INSTANCE.SavePopupTitle(), anyString(), anyString(), anyString(), isA(Command.class), isA(Command.class));
+        verify(mockYesNoConfirmPopupPresenter, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.updateColumn()),
+                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.dataInColumnKeepOrDelete()),
+                                                              eq(InlineNotification.InlineNotificationType.WARNING),
+                                                              eq(CommonConstants.INSTANCE.Delete()),
+                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
+                                                              eq(Button.ButtonStyleType.DANGER),
+                                                              eq(Button.ButtonStyleType.DANGER),
+                                                              eq(null),
+                                                              isA(Command.class),
+                                                              isA(Command.class));
 
         when(mockScenarioGridModel.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(false);
         reset(commandExecutor);
         reset(mockYesNoConfirmPopupPresenter);
         commandExecutor.onEvent(event);
-        verify(mockYesNoConfirmPopupPresenter, times(1)).show(CommonConstants.INSTANCE.SavePopupTitle(), CommonConstants.INSTANCE.OK(), anyString(), isA(Command.class));
+        verify(mockYesNoConfirmPopupPresenter, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.updateColumn()),
+                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.dataInColumnWillDelete()),
+                                                              eq(InlineNotification.InlineNotificationType.WARNING),
+                                                              eq(CommonConstants.INSTANCE.OK()),
+                                                              eq(Button.ButtonStyleType.DANGER),
+                                                              eq(null),
+                                                              isA(Command.class));
     }
 
     @Test
