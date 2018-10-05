@@ -20,6 +20,5 @@ public interface ExpressionEvaluator {
 
     boolean evaluate(Object rawExpression, Object resultValue);
 
-    // FIXME to test
     Object extractSingleValue(Object raw);
 }

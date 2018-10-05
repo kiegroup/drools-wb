@@ -18,20 +18,62 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.expressio
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+
+import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil.convertValue;
 
 public enum BaseExpressionOperator {
 
-    EQUALS("="),
-    NOT_EQUALS("!", "!=", "<>"),
-    // FIXME
-    RANGE {
+    EQUALS("=") {
+        @SuppressWarnings("unchecked")
         @Override
-        protected Optional<String> match(String value) {
-            return Optional.empty();
+        public boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader) {
+            Object parsedResults = rawValue;
+            if (parsedResults instanceof String) {
+                Optional<Object> firstValue = cleanValue((String) rawValue).stream()
+                        .map(elem -> convertValue(resultValue.getClass().getCanonicalName(), elem, classLoader))
+                        .findFirst();
+                parsedResults = convertValue(resultValue.getClass().getCanonicalName(), firstValue.orElse(null), classLoader);
+            }
+            if (parsedResults == null) {
+                return resultValue == null;
+            }
+            if (areComparable(resultValue, parsedResults)) {
+                return ((Comparable) resultValue).compareTo(parsedResults) == 0;
+            }
+            return Objects.equals(resultValue, parsedResults);
         }
     },
-    LIST_OF_VALUES;
+    NOT_EQUALS("!", "!=", "<>") {
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader) {
+            Object parsedResults = rawValue;
+            if (parsedResults instanceof String) {
+                Optional<Object> firstValue = cleanValue((String) rawValue).stream()
+                        .map(elem -> convertValue(resultValue.getClass().getCanonicalName(), elem, classLoader))
+                        .findFirst();
+                parsedResults = convertValue(resultValue.getClass().getCanonicalName(), firstValue.orElse(null), classLoader);
+            }
+            if (parsedResults == null) {
+                return resultValue == null;
+            }
+            if (areComparable(resultValue, parsedResults)) {
+                return ((Comparable) resultValue).compareTo(parsedResults) != 0;
+            }
+            return !Objects.equals(resultValue, parsedResults);
+        }
+    };
+//    ,
+//    // FIXME
+//    RANGE {
+//        @Override
+//        protected Optional<String> match(String value) {
+//            return Optional.empty();
+//        }
+//    },
+//    LIST_OF_VALUES;
 
     final List<String> symbols;
 
@@ -40,6 +82,8 @@ public enum BaseExpressionOperator {
         // sort symbols by descending length to match longer symbols first
         this.symbols.sort((a, b) -> Integer.compare(a.length(), b.length()) * -1);
     }
+
+    public abstract boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader);
 
     protected Optional<String> match(String value) {
         return getSymbols().stream().filter(value::startsWith).findFirst();
@@ -55,16 +99,19 @@ public enum BaseExpressionOperator {
 
         String returnValue = value.trim();
         // empty string is equivalent to null only if there is no operator symbol
-        return "".equals(returnValue) && !operatorSymbol.isPresent() ? null : Collections.singletonList(returnValue);
+        return "".equals(returnValue) && !operatorSymbol.isPresent() ? Collections.emptyList() : Collections.singletonList(returnValue);
     }
 
     public static List<String> cleanValueFromOperator(String rawValue) {
+        if (rawValue == null) {
+            return Collections.emptyList();
+        }
         String value = rawValue.trim();
         BaseExpressionOperator operator = findOperator(value);
         return operator.cleanValue(value);
     }
 
-    protected List<String> getSymbols() {
+    private List<String> getSymbols() {
         return symbols;
     }
 
@@ -78,5 +125,9 @@ public enum BaseExpressionOperator {
 
         // Equals is the default
         return BaseExpressionOperator.EQUALS;
+    }
+
+    private static boolean areComparable(Object a, Object b) {
+        return a instanceof Comparable && b instanceof Comparable;
     }
 }

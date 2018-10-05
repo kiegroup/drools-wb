@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
 
 import java.util.List;
-import java.util.Objects;
 
 public class BaseExpressionEvaluator implements ExpressionEvaluator {
 
@@ -29,58 +28,25 @@ public class BaseExpressionEvaluator implements ExpressionEvaluator {
     @SuppressWarnings("unchecked")
     @Override
     public boolean evaluate(Object raw, Object resultValue) {
-        if(!(raw instanceof String)) {
-            if (areComparable(resultValue, raw)) {
-                return ((Comparable) resultValue).compareTo(raw) == 0;
-            }
-            return Objects.equals(resultValue, raw);
+        if (!(raw instanceof String)) {
+            return BaseExpressionOperator.EQUALS.eval(raw, resultValue, classLoader);
         }
 
-
-        // FIXME
-        return true;
-
-
-
-        /*
-        String rawExpression = (String) raw;
-        BaseExpressionOperator operator = BaseExpressionOperator.findOperator(rawExpression);
-        List<String> expectedValueList = BaseExpressionOperator.cleanValueFromOperator(rawExpression);
-
-        switch (operator) {
-            case EQUALS:
-                if (areComparable(resultValue, raw)) {
-                    return ((Comparable) resultValue).compareTo(expectedValueList.get(0)) == 0;
-                }
-                return Objects.equals(resultValue, expectedValueList.get(0));
-            case NOT_EQUALS:
-                if (areComparable(resultValue, expectedValueList.get(0))) {
-                    return ((Comparable) resultValue).compareTo(expectedValueList.get(0)) != 0;
-                }
-                return !Objects.equals(resultValue, expectedValueList.get(0));
-            default:
-                throw new UnsupportedOperationException(new StringBuilder().append("Operator ").append(operator.name())
-                                                                .append(" is not supported").toString());
-        }
-        */
+        String rawValue = (String) raw;
+        return BaseExpressionOperator.findOperator(rawValue).eval(rawValue, resultValue, classLoader);
     }
 
-    // FIXME to test
     @Override
     public Object extractSingleValue(Object raw) {
-        if(!(raw instanceof String)) {
+        if (!(raw instanceof String)) {
             return raw;
         }
         String rawValue = (String) raw;
         List<String> values = BaseExpressionOperator.cleanValueFromOperator(rawValue);
-        if(values.size() != 1) {
-            throw new IllegalArgumentException(new StringBuilder().append("Impossible to extract a single value from ")
+        if (values.size() > 1) {
+            throw new IllegalArgumentException(new StringBuilder().append("Too many values extracted from ")
                                                        .append(rawValue).toString());
         }
-        return values.get(0);
-    }
-
-    private boolean areComparable(Object a, Object b) {
-        return a instanceof Comparable && b instanceof Comparable;
+        return values.size() == 0 ? null : values.get(0);
     }
 }

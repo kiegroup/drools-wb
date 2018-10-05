@@ -46,16 +46,6 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.uti
 
 public class ScenarioRunnerHelper {
 
-    private static final Map<String, Class<?>> primitiveMap = new HashMap<>();
-
-    static {
-        primitiveMap.put("boolean", boolean.class);
-        primitiveMap.put("int", int.class);
-        primitiveMap.put("long", long.class);
-        primitiveMap.put("double", double.class);
-        primitiveMap.put("float", float.class);
-    }
-
     private ScenarioRunnerHelper() {
 
     }
@@ -200,7 +190,7 @@ public class ScenarioRunnerHelper {
                     .map(ExpressionElement::getStep).collect(toList());
 
             Object value = expressionEvaluator.extractSingleValue(factMappingValue.getRawValue());
-            Object parsedValue = convertValue(factMapping.getClassName(), value, classLoader);
+            Object parsedValue = ScenarioBeanUtil.convertValue(factMapping.getClassName(), value, classLoader);
             paramsForBean.put(pathToField, parsedValue);
         }
 
@@ -225,56 +215,5 @@ public class ScenarioRunnerHelper {
                     .add(factMappingValue);
         }
         return groupByFactIdentifier;
-    }
-
-    public static Object convertValue(String className, Object cleanValue, ClassLoader classLoader) {
-        try {
-            Class<?> clazz = loadClass(className, classLoader);
-
-            // if it is not a String, it has to be an instance of the desired type
-            if (!(cleanValue instanceof String)) {
-                if (clazz.isInstance(cleanValue)) {
-                    return cleanValue;
-                }
-                if (!isPrimitive(className) && cleanValue == null) {
-                    return null;
-                }
-                throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
-                                                           .append(" is not a String or an instance of ").append(className).toString());
-            }
-
-            String value = (String) cleanValue;
-
-            if (clazz.isAssignableFrom(String.class)) {
-                return value;
-            } else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
-                return Boolean.parseBoolean(value);
-            } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
-                return Integer.parseInt(value);
-            } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
-                return Long.parseLong(value);
-            } else if (clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(double.class)) {
-                return Double.parseDouble(value);
-            } else if (clazz.isAssignableFrom(Float.class) || clazz.isAssignableFrom(float.class)) {
-                return Float.parseFloat(value);
-            }
-
-            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
-                                                       .append(" is not supported").toString());
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
-                                                       .append(" cannot be resolved").toString(), e);
-        }
-    }
-
-    private static Class<?> loadClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-        if (primitiveMap.containsKey(className)) {
-            return primitiveMap.get(className);
-        }
-        return classLoader.loadClass(className);
-    }
-
-    private static boolean isPrimitive(String className) {
-        return primitiveMap.containsKey(className);
     }
 }
