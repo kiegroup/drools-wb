@@ -207,10 +207,25 @@ public class CommandExecutor implements AppendColumnEventHandler,
         } else if (model.isSameSelectedColumnType(event.getValueClassName())) {
             Command yesCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
             Command noCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, true));
-            yesNoConfirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.updateColumn(), ScenarioSimulationEditorConstants.INSTANCE.dataInColumnKeepOrDelete(), InlineNotification.InlineNotificationType.WARNING, CommonConstants.INSTANCE.Delete(), ScenarioSimulationEditorConstants.INSTANCE.keep(), Button.ButtonStyleType.DANGER, Button.ButtonStyleType.DANGER, null, yesCommand, noCommand);
+            yesNoConfirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.updateColumn(),
+                                            ScenarioSimulationEditorConstants.INSTANCE.dataInColumnKeepOrDelete(),
+                                            InlineNotification.InlineNotificationType.WARNING,
+                                            CommonConstants.INSTANCE.Delete(),
+                                            ScenarioSimulationEditorConstants.INSTANCE.keep(),
+                                            Button.ButtonStyleType.DANGER,
+                                            Button.ButtonStyleType.DANGER,
+                                            null,
+                                            yesCommand,
+                                            noCommand);
         } else if (!model.isSameSelectedColumnType(event.getValueClassName())) {
             Command okCommand = () -> commonExecute(new SetColumnValueCommand(model, String.valueOf(new Date().getTime()), event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
-            yesNoConfirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.updateColumn(), ScenarioSimulationEditorConstants.INSTANCE.dataInColumnWillDelete(), InlineNotification.InlineNotificationType.WARNING, CommonConstants.INSTANCE.OK(), Button.ButtonStyleType.DANGER, null, okCommand);
+            yesNoConfirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.updateColumn(),
+                                            ScenarioSimulationEditorConstants.INSTANCE.dataInColumnWillDelete(),
+                                            InlineNotification.InlineNotificationType.WARNING,
+                                            CommonConstants.INSTANCE.OK(),
+                                            Button.ButtonStyleType.DANGER,
+                                            null,
+                                            okCommand);
         }
     }
 

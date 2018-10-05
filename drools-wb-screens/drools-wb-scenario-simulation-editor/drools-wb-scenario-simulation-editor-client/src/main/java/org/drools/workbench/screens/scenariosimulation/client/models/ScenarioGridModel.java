@@ -205,12 +205,10 @@ public class ScenarioGridModel extends BaseGridData {
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         factMappingByIndex.setExpressionAlias(value);
         IntStream.range(1, elements.length)
-                .forEach(stepIndex ->
-                                 factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
+                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
         if (keepData) {
             IntStream.range(0, getRowCount())
-                    .forEach(rowIndex ->
-                                     setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
+                    .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
         }
         selectColumn(columnIndex);
     }
