@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.OperatorEvaluator;
+import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
@@ -34,7 +34,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueOperator;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -61,7 +60,10 @@ public class ScenarioRunnerHelper {
 
     }
 
-    public static List<ScenarioInput> extractGivenValues(SimulationDescriptor simulationDescriptor, List<FactMappingValue> factMappingValues, ClassLoader classLoader) {
+    public static List<ScenarioInput> extractGivenValues(SimulationDescriptor simulationDescriptor,
+                                                         List<FactMappingValue> factMappingValues,
+                                                         ClassLoader classLoader,
+                                                         ExpressionEvaluator expressionEvaluator) {
         List<ScenarioInput> scenarioInput = new ArrayList<>();
 
         Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifier =
@@ -75,7 +77,8 @@ public class ScenarioRunnerHelper {
             Map<List<String>, Object> paramsForBean = getParamsForBean(simulationDescriptor,
                                                                        factIdentifier,
                                                                        entry.getValue(),
-                                                                       classLoader);
+                                                                       classLoader,
+                                                                       expressionEvaluator);
 
             Object bean = fillBean(factIdentifier.getClassName(), paramsForBean, classLoader);
 
@@ -110,7 +113,7 @@ public class ScenarioRunnerHelper {
     public static List<ScenarioResult> verifyConditions(SimulationDescriptor simulationDescriptor,
                                                         List<ScenarioInput> inputData,
                                                         List<ScenarioOutput> outputData,
-                                                        ClassLoader classLoader) {
+                                                        ExpressionEvaluator expressionEvaluator) {
         List<ScenarioResult> scenarioResult = new ArrayList<>();
 
         List<FactIdentifier> inputIds = inputData.stream().map(ScenarioInput::getFactIdentifier).collect(Collectors.toList());
@@ -130,7 +133,7 @@ public class ScenarioRunnerHelper {
                 continue;
             }
 
-            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, input, classLoader));
+            scenarioResult.addAll(getScenarioResults(simulationDescriptor, assertionOnFact, input, expressionEvaluator));
         }
 
         return scenarioResult;
@@ -139,7 +142,7 @@ public class ScenarioRunnerHelper {
     public static List<ScenarioResult> getScenarioResults(SimulationDescriptor simulationDescriptor,
                                                           List<ScenarioOutput> scenarioOutputsPerFact,
                                                           ScenarioInput input,
-                                                          ClassLoader classLoader) {
+                                                          ExpressionEvaluator expressionEvaluator) {
         FactIdentifier factIdentifier = input.getFactIdentifier();
         Object factInstance = input.getValue();
         List<ScenarioResult> scenarioResults = new ArrayList<>();
@@ -147,7 +150,6 @@ public class ScenarioRunnerHelper {
             List<FactMappingValue> expectedResults = scenarioOutput.getExpectedResult();
 
             for (FactMappingValue expectedResult : expectedResults) {
-                FactMappingValueOperator operator = expectedResult.getOperator();
 
                 ExpressionIdentifier expressionIdentifier = expectedResult.getExpressionIdentifier();
 
@@ -155,10 +157,9 @@ public class ScenarioRunnerHelper {
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
                 List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
-                Object expectedValue = convertValue(factMapping.getClassName(), expectedResult.getCleanValue(), classLoader);
                 Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue, false);
 
-                Boolean conditionResult = new OperatorEvaluator().evaluate(operator, resultValue, expectedValue);
+                Boolean conditionResult = expressionEvaluator.evaluate(resultValue, expectedResult.getRawValue());
 
                 scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue, conditionResult));
             }
@@ -185,7 +186,8 @@ public class ScenarioRunnerHelper {
     public static Map<List<String>, Object> getParamsForBean(SimulationDescriptor simulationDescriptor,
                                                              FactIdentifier factIdentifier,
                                                              List<FactMappingValue> factMappingValues,
-                                                             ClassLoader classLoader) {
+                                                             ClassLoader classLoader,
+                                                             ExpressionEvaluator expressionEvaluator) {
         Map<List<String>, Object> paramsForBean = new HashMap<>();
 
         for (FactMappingValue factMappingValue : factMappingValues) {
@@ -197,7 +199,8 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            Object parsedValue = convertValue(factMapping.getClassName(), factMappingValue.getCleanValue(), classLoader);
+            Object value = expressionEvaluator.extractSingleValue(factMappingValue.getRawValue());
+            Object parsedValue = convertValue(factMapping.getClassName(), value, classLoader);
             paramsForBean.put(pathToField, parsedValue);
         }
 
