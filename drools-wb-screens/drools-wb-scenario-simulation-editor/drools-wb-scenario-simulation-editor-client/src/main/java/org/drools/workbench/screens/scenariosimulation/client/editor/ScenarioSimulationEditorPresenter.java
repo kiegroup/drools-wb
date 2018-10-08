@@ -372,12 +372,10 @@ public class ScenarioSimulationEditorPresenter
                     simpleProperties.put(modelField.getName(), modelField.getClassName());
                 }
             }
-            String factPackageName;
+            String factPackageName = packageName;
             String fullFactClassName = oracle.getFQCNByFactName(factName);
-            if (fullFactClassName != null &&  fullFactClassName.contains(".")) {
+            if (fullFactClassName != null && fullFactClassName.contains(".")) {
                 factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
-            } else {
-                factPackageName = packageName;
             }
             FactModelTree toSend = new FactModelTree(factName, factPackageName, simpleProperties);
             aggregatorCallback.callback(toSend);
