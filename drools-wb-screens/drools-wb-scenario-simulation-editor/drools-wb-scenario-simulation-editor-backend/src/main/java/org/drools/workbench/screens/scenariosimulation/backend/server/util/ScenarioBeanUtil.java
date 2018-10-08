@@ -177,7 +177,7 @@ public class ScenarioBeanUtil {
         }
         try {
             return (Class<T>) classLoader.loadClass(className);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | NullPointerException e) {
             throw new ScenarioException(new StringBuilder().append("Impossible to load class ").append(className).toString(), e);
         }
     }

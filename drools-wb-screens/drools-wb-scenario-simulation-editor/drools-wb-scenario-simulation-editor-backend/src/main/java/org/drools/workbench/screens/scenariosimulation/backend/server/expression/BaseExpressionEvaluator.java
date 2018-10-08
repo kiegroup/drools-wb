@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
 
-import java.util.List;
-
 public class BaseExpressionEvaluator implements ExpressionEvaluator {
 
     private final ClassLoader classLoader;
@@ -37,16 +35,11 @@ public class BaseExpressionEvaluator implements ExpressionEvaluator {
     }
 
     @Override
-    public Object extractSingleValue(Object raw) {
+    public Object getValueForGiven(String className, Object raw, ClassLoader classLoader) {
         if (!(raw instanceof String)) {
             return raw;
         }
         String rawValue = (String) raw;
-        List<String> values = BaseExpressionOperator.cleanValueFromOperator(rawValue);
-        if (values.size() > 1) {
-            throw new IllegalArgumentException(new StringBuilder().append("Too many values extracted from ")
-                                                       .append(rawValue).toString());
-        }
-        return values.size() == 0 ? null : values.get(0);
+        return BaseExpressionOperator.findOperator(rawValue).getValueForGiven(className, rawValue, classLoader);
     }
 }

@@ -32,5 +32,4 @@ public class FactMappingValueTest {
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("ExpressionIdentifier has to be not null");
     }
-
 }

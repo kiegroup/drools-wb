@@ -19,40 +19,25 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.expressio
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class BaseExpressionEvaluatorTest {
 
-    private final static ClassLoader classLoader = BaseExpressionEvaluatorTest.class.getClassLoader();
+    private final static ClassLoader classLoader = ParameterizedBaseExpressionEvaluatorTest.class.getClassLoader();
 
     @Test
-    public void evaluate() {
-        BaseExpressionEvaluator baseExpressionEvaluator = new BaseExpressionEvaluator(classLoader);
-
-        assertTrue(baseExpressionEvaluator.evaluate(1, 1));
-        assertTrue(baseExpressionEvaluator.evaluate("1", 1));
-        assertTrue(baseExpressionEvaluator.evaluate("!= 1", 2));
-        assertFalse(baseExpressionEvaluator.evaluate("<> Test", "Test"));
-        assertTrue(baseExpressionEvaluator.evaluate("= Test", "Test"));
-    }
-
-    @Test
-    public void extractSingleValueTest() {
+    public void getValueForGiven() {
         BaseExpressionEvaluator baseExpressionEvaluator = new BaseExpressionEvaluator(classLoader);
 
         Object raw = new Object();
-        assertEquals(raw, baseExpressionEvaluator.extractSingleValue(raw));
+        assertEquals(raw, baseExpressionEvaluator.getValueForGiven(Object.class.getCanonicalName(), raw, classLoader));
 
         raw = "SimpleString";
-        assertEquals(raw, baseExpressionEvaluator.extractSingleValue(raw));
+        assertEquals(raw, baseExpressionEvaluator.getValueForGiven(String.class.getCanonicalName(), raw, classLoader));
 
         raw = "= SimpleString";
-        assertEquals("SimpleString", baseExpressionEvaluator.extractSingleValue(raw));
+        assertEquals("SimpleString", baseExpressionEvaluator.getValueForGiven(String.class.getCanonicalName(), raw, classLoader));
 
-        assertNull(baseExpressionEvaluator.extractSingleValue(null));
-
-        // FIXME test operator with multiple results
+        assertNull(baseExpressionEvaluator.getValueForGiven(String.class.getCanonicalName(), null, classLoader));
     }
 }

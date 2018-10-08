@@ -16,10 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
 
-import java.util.Collections;
+import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -29,36 +31,19 @@ public class BaseExpressionOperatorTest {
     private static final ClassLoader classLoader = BaseExpressionOperatorTest.class.getClassLoader();
 
     @Test
-    public void cleanValueFromOperator() {
-        String rawValue = "Test";
-        assertEquals(1, BaseExpressionOperator.cleanValueFromOperator(rawValue).size());
-        assertEquals(rawValue, BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
+    public void getValueForGivenTest() {
 
-        rawValue = " Test ";
-        assertEquals(rawValue.trim(), BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
+        Arrays.stream(BaseExpressionOperator.values())
+                .filter(e -> !BaseExpressionOperator.EQUALS.equals(e))
+                .forEach(operator -> {
+                    assertThatThrownBy(() -> operator.getValueForGiven(String.class.getCanonicalName(), " Test ", classLoader))
+                            .isInstanceOf(IllegalStateException.class)
+                            .hasMessage("This operator cannot be used into a Given clause");
+                });
 
-        rawValue = "= Test ";
-        assertEquals("Test", BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
-
-        rawValue = " != Test ";
-        assertEquals("Test", BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
-
-        rawValue = " ";
-        assertEquals(0, BaseExpressionOperator.cleanValueFromOperator(rawValue).size());
-
-        rawValue = "= ";
-        assertEquals("", BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
-    }
-
-    @Test
-    public void cleanValueEmptyAndNullString() {
-        String rawValue = "";
-        assertEquals(Collections.emptyList(), BaseExpressionOperator.cleanValueFromOperator(rawValue));
-
-        assertEquals(0, BaseExpressionOperator.cleanValueFromOperator(null).size());
-
-        rawValue = " =  ";
-        assertEquals("", BaseExpressionOperator.cleanValueFromOperator(rawValue).get(0));
+        Assert.assertEquals("Test", BaseExpressionOperator.EQUALS.getValueForGiven(String.class.getCanonicalName(), "= Test", classLoader));
+        Assert.assertEquals("", BaseExpressionOperator.EQUALS.getValueForGiven(String.class.getCanonicalName(), "= ", classLoader));
+        Assert.assertEquals(null, BaseExpressionOperator.EQUALS.getValueForGiven(String.class.getCanonicalName(), "", classLoader));
     }
 
     @Test
@@ -89,6 +74,8 @@ public class BaseExpressionOperatorTest {
         assertTrue(BaseExpressionOperator.EQUALS.eval(comparableTest1, comparableTest1, classLoader));
 
         assertTrue(BaseExpressionOperator.EQUALS.eval("1", 1, classLoader));
+
+        assertTrue(BaseExpressionOperator.EQUALS.eval(null, null, classLoader));
     }
 
     @Test
@@ -104,6 +91,34 @@ public class BaseExpressionOperatorTest {
         assertFalse(BaseExpressionOperator.NOT_EQUALS.eval(comparableTest1, comparableTest1, classLoader));
 
         assertTrue(BaseExpressionOperator.NOT_EQUALS.eval("<> 1", 2, classLoader));
+
+        assertFalse(BaseExpressionOperator.NOT_EQUALS.eval(null, null, classLoader));
+
+        // NOT_EQUALS can be composed
+        assertTrue(BaseExpressionOperator.NOT_EQUALS.eval("! <1", 2, classLoader));
+        assertTrue(BaseExpressionOperator.NOT_EQUALS.eval("! [1, 3]", 2, classLoader));
+    }
+
+    @Test
+    public void rangeTest() {
+        assertFalse(BaseExpressionOperator.RANGE.eval(new Object(), "", classLoader));
+
+        assertThatThrownBy(() -> BaseExpressionOperator.RANGE.eval("<2 , ,", "", classLoader))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Impossible to find the operator in expression ");
+
+        assertTrue(BaseExpressionOperator.RANGE.eval(">2, <=3", 3, classLoader));
+    }
+
+    @Test
+    public void listOfValuesTest() {
+        assertFalse(BaseExpressionOperator.LIST_OF_VALUES.eval(new Object(), "", classLoader));
+
+        assertThatThrownBy(() -> BaseExpressionOperator.LIST_OF_VALUES.eval("[ 2", "", classLoader))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Malformed expression: [ 2");
+
+        assertTrue(BaseExpressionOperator.LIST_OF_VALUES.eval("[ Test, Another Test]", "Another Test", classLoader));
     }
 
     private class MyTestClass {

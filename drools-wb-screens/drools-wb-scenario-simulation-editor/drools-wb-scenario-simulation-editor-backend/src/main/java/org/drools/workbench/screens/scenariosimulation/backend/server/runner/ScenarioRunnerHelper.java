@@ -189,9 +189,8 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            Object value = expressionEvaluator.extractSingleValue(factMappingValue.getRawValue());
-            Object parsedValue = ScenarioBeanUtil.convertValue(factMapping.getClassName(), value, classLoader);
-            paramsForBean.put(pathToField, parsedValue);
+            Object value = expressionEvaluator.getValueForGiven(factMapping.getClassName(), factMappingValue.getRawValue(), classLoader);
+            paramsForBean.put(pathToField, value);
         }
 
         return paramsForBean;

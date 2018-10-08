@@ -78,6 +78,14 @@ public class ScenarioBeanUtilTest {
         ScenarioBeanUtil.fillBean(Dispute.class.getCanonicalName(), paramsToSet, classLoader);
     }
 
+    @Test(expected = ScenarioException.class)
+    public void fillBeanFailNullClassTest() {
+        Map<List<String>, Object> paramsToSet = new HashMap<>();
+        paramsToSet.put(Arrays.asList("fakeField"), null);
+
+        ScenarioBeanUtil.fillBean(null, paramsToSet, classLoader);
+    }
+
     @Test
     public void fillBeanSimpleObjectTest() {
         Map<List<String>, Object> paramsToSet = new HashMap<>();

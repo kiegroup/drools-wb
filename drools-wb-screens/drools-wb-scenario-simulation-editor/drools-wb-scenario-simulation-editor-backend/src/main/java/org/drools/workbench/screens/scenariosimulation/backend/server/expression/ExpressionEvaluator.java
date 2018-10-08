@@ -20,5 +20,5 @@ public interface ExpressionEvaluator {
 
     boolean evaluate(Object rawExpression, Object resultValue);
 
-    Object extractSingleValue(Object raw);
+    Object getValueForGiven(String className, Object raw, ClassLoader classLoader);
 }
