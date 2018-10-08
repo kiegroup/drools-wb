@@ -69,15 +69,13 @@ public class ScenarioTest {
         scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getDescriptionTestFail() {
-        scenario.getDescription();
-    }
-
     @Test
     public void getDescriptionTest() {
-        scenario.addMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, "Test Description");
-        scenario.getDescription();
+        assertEquals("", scenario.getDescription());
+
+        String description = "Test Description";
+        scenario.addMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, description);
+        assertEquals(description, scenario.getDescription());
     }
 
     @Test

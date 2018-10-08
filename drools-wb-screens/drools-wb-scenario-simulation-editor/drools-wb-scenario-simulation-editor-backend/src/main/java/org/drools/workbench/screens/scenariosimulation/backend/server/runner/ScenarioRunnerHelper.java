@@ -149,7 +149,7 @@ public class ScenarioRunnerHelper {
                 List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
                 Object resultValue = ScenarioBeanUtil.navigateToObject(factInstance, pathToValue, false);
 
-                Boolean conditionResult = expressionEvaluator.evaluate(resultValue, expectedResult.getRawValue());
+                Boolean conditionResult = expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue);
 
                 scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue, conditionResult));
             }

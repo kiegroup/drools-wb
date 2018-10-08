@@ -114,7 +114,7 @@ public class Scenario {
         return factMappingValues.stream()
                 .filter(e -> e.getExpressionIdentifier().equals(ExpressionIdentifier.DESCRIPTION) &&
                         e.getFactIdentifier().equals(FactIdentifier.DESCRIPTION)).map(e -> (String) e.getRawValue())
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No description available"));
+                .findFirst().orElse("");
     }
 
     public Collection<String> getFactNames() {
