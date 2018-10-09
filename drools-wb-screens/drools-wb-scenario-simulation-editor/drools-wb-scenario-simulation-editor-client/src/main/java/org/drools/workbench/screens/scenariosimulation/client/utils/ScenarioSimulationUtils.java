@@ -178,8 +178,7 @@ public class ScenarioSimulationUtils {
     public static ScenarioSimulationBuilders.ScenarioGridColumnBuilder getScenarioGridColumnBuilder(ScenarioCellTextBoxSingletonDOMElementFactory factoryCell,
                                                                                                     ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
                                                                                                     String placeHolder) {
-        ScenarioSimulationBuilders.ScenarioGridColumnBuilder toReturn = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(factoryCell);
-        toReturn.setHeaderBuilder(headerBuilder);
+        ScenarioSimulationBuilders.ScenarioGridColumnBuilder toReturn = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(factoryCell, headerBuilder);
         toReturn.setPlaceHolder(placeHolder);
         return toReturn;
     }

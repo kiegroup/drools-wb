@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
@@ -98,16 +99,6 @@ public class ScenarioGrid extends BaseGridWidget {
         IntStream.range(0, factMappings.size())
                 .forEach(columnIndex -> {
                     setHeaderColumn(columnIndex, factMappings.get(columnIndex));
-//                    FactMapping factMapping = factMappings.get(index);
-//                    String columnId = factMapping.getExpressionIdentifier().getName();
-//                    String columnTitle = factMapping.getExpressionAlias();
-//                    String columnGroup = factMapping.getExpressionIdentifier().getType().name();
-//                    ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
-//                    ScenarioSimulationBuilders.HeaderBuilder headerBuilder = ScenarioSimulationUtils.getHeaderBuilder(columnTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), factoryHeader);
-//                    boolean readOnly = FactIdentifier.EMPTY.equals(factMapping.getFactIdentifier());
-//                    String placeHolder = readOnly ? ScenarioSimulationEditorConstants.INSTANCE.defineValidType() : ScenarioSimulationEditorConstants.INSTANCE.insertValue();
-//                    ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, readOnly, placeHolder);
-//                    ((ScenarioGridModel) model).insertColumnGridOnly(index, scenarioGridColumn);
                 });
     }
 
@@ -115,12 +106,24 @@ public class ScenarioGrid extends BaseGridWidget {
         String columnId = factMapping.getExpressionIdentifier().getName();
         String columnTitle = factMapping.getExpressionAlias();
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = ScenarioSimulationUtils.getHeaderBuilder(columnTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), factoryHeader);
+        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getScenarioHeaderTextBoxSingletonDOMElementFactory();
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), factoryHeader);
         boolean readOnly = FactIdentifier.EMPTY.equals(factMapping.getFactIdentifier());
         String placeHolder = readOnly ? ScenarioSimulationEditorConstants.INSTANCE.defineValidType() : ScenarioSimulationEditorConstants.INSTANCE.insertValue();
-        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, readOnly, placeHolder);
+        ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(headerBuilder, readOnly, placeHolder);
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
+    }
+
+    protected ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
+        return FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
+    }
+
+    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+        return ScenarioSimulationUtils.getHeaderBuilder(columnTitle, columnId, columnGroup, factMappingType, factoryHeader);
+    }
+
+    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, boolean readOnly, String placeHolder) {
+        return ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, readOnly, placeHolder);
     }
 
     protected void appendRows(Simulation simulation) {
@@ -129,6 +132,6 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected void appendRow(int rowIndex, Scenario scenario) {
-        ((ScenarioGridModel) model).insertRowGridOnly(rowIndex, new ScenarioGridRow(),scenario);
+        ((ScenarioGridModel) model).insertRowGridOnly(rowIndex, new ScenarioGridRow(), scenario);
     }
 }
