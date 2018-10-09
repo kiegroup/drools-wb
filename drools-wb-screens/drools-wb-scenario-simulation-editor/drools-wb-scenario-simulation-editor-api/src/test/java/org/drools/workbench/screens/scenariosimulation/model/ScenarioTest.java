@@ -76,6 +76,10 @@ public class ScenarioTest {
         String description = "Test Description";
         scenario.addMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, description);
         assertEquals(description, scenario.getDescription());
+
+        Scenario scenarioWithDescriptionNull = simulation.addScenario();
+        scenarioWithDescriptionNull.setDescription(null);
+        assertEquals("", scenarioWithDescriptionNull.getDescription());
     }
 
     @Test
