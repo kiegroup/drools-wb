@@ -38,19 +38,19 @@ public class ScenarioSimulationUtilsTest {
         String alias = "Alias";
         String factName = "FactName";
 
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderOther =
-                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.OTHER.name(), FactMappingType.OTHER);
-        assertEquals(1, columnBuilderOther.build(factory).size());
-        assertEquals(FactMappingType.OTHER.name(), columnBuilderOther.columnGroup);
-        assertNull(columnBuilderOther.nestedLevel);
-        assertEquals(alias, columnBuilderOther.columnTitle);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilderOther =
+                ScenarioSimulationUtils.getHeaderBuilder(alias, factName, FactMappingType.OTHER.name(), FactMappingType.OTHER, factory);
+        assertEquals(1, headerBuilderOther.build().size());
+        assertEquals(FactMappingType.OTHER.name(), headerBuilderOther.columnGroup);
+        assertNull(headerBuilderOther.nestedLevel);
+        assertEquals(alias, headerBuilderOther.columnTitle);
 
-        ScenarioSimulationUtils.ColumnBuilder columnBuilderGiven =
-                ScenarioSimulationUtils.getTwoLevelHeaderBuilder(alias, factName, FactMappingType.GIVEN.name(), FactMappingType.GIVEN);
-        assertEquals(2, columnBuilderGiven.build(factory).size());
-        assertEquals("", columnBuilderGiven.columnGroup);
-        assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.columnTitle);
-        assertEquals(alias, columnBuilderGiven.nestedLevel.columnTitle);
-        assertEquals(FactMappingType.GIVEN.name(), columnBuilderGiven.nestedLevel.columnGroup);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilderGiven =
+                ScenarioSimulationUtils.getHeaderBuilder(alias, factName, FactMappingType.GIVEN.name(), FactMappingType.GIVEN, factory);
+        assertEquals(2, headerBuilderGiven.build().size());
+        assertEquals("", headerBuilderGiven.columnGroup);
+        assertEquals(FactMappingType.GIVEN.name(), headerBuilderGiven.columnTitle);
+        assertEquals(alias, headerBuilderGiven.nestedLevel.columnTitle);
+        assertEquals(FactMappingType.GIVEN.name(), headerBuilderGiven.nestedLevel.columnGroup);
     }
 }

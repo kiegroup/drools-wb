@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
@@ -115,5 +116,30 @@ public class ScenarioSimulationGridPanelDoubleClickHandler extends BaseGridWidge
                                                                                                         uiHeaderRowIndex);
         headerMetaData.edit(context);
         return true;
+    }
+
+    /**
+     * Check if a MouseDoubleClickEvent happened within a cell and delegate a response
+     * to sub-classes {code}doeEdit(){code} method, passing a context object that can
+     * be used to determine the cell that was double-clicked.
+     * @param event
+     */
+
+    @Override
+    protected boolean handleBodyCellDoubleClick(final NodeMouseDoubleClickEvent event) {
+        //Convert Canvas co-ordinate to Grid co-ordinate
+        final Point2D rp = CoordinateUtilities.convertDOMToGridCoordinate(gridWidget,
+                                                                          new Point2D(event.getX(),
+                                                                                      event.getY()));
+        final Integer uiColumnIndex = CoordinateUtilities.getUiColumnIndex(gridWidget,
+                                                                           rp.getX());
+        if (uiColumnIndex == null) {
+            return false;
+        }
+        ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) gridWidget.getModel().getColumns().get(uiColumnIndex);
+        if (scenarioGridColumn == null) {
+            return false;
+        }
+        return scenarioGridColumn.isReadOnly() || gridWidget.startEditingCell(rp);
     }
 }
