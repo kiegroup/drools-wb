@@ -103,11 +103,7 @@ public class BaseExpressionOperatorTest {
     public void rangeTest() {
         assertFalse(BaseExpressionOperator.RANGE.eval(new Object(), "", classLoader));
 
-        assertThatThrownBy(() -> BaseExpressionOperator.RANGE.eval("<2 , ,", "", classLoader))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Impossible to find the operator in expression ");
-
-        assertTrue(BaseExpressionOperator.RANGE.eval(">2, <=3", 3, classLoader));
+        assertTrue(BaseExpressionOperator.RANGE.eval(">2", 3, classLoader));
     }
 
     @Test
@@ -119,6 +115,13 @@ public class BaseExpressionOperatorTest {
                 .hasMessage("Malformed expression: [ 2");
 
         assertTrue(BaseExpressionOperator.LIST_OF_VALUES.eval("[ Test, Another Test]", "Another Test", classLoader));
+    }
+
+    @Test
+    public void listOfConditionsTest() {
+        assertFalse(BaseExpressionOperator.LIST_OF_CONDITION.eval(new Object(), "", classLoader));
+
+        assertTrue(BaseExpressionOperator.LIST_OF_CONDITION.eval("=1; ![2, 3]; <10", 1, classLoader));
     }
 
     private class MyTestClass {

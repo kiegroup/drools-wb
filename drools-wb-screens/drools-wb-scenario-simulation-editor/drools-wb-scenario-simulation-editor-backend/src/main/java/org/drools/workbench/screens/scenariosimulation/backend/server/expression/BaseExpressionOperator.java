@@ -23,11 +23,50 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparingInt;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil.convertValue;
 
 public enum BaseExpressionOperator {
 
-    EQUALS("=") {
+    LIST_OF_CONDITION(0, ";") {
+        @Override
+        protected Optional<String> match(String value) {
+            return symbols.stream().filter(value::contains).findFirst();
+        }
+
+        @Override
+        protected boolean eval(Object raw, Object resultValue, ClassLoader classLoader) {
+            if (!(raw instanceof String) || !match((String) raw).isPresent()) {
+                return false;
+            }
+            String rawValue = (String) raw;
+            List<Boolean> results = Arrays.stream(rawValue.split(symbols.get(0)))
+                    .map(elem -> findOperator(elem.trim()).eval(elem.trim(), resultValue, classLoader))
+                    .collect(Collectors.toList());
+            return results.stream().allMatch(a -> a);
+        }
+    },
+    LIST_OF_VALUES(1, "[") {
+        @Override
+        public boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader) {
+            List<Boolean> results = getValues(rawValue).stream().map(e -> EQUALS.eval(e, resultValue, classLoader)).collect(Collectors.toList());
+            return results.stream().anyMatch(a -> a);
+        }
+
+        private List<String> getValues(Object raw) {
+            if (!(raw instanceof String) || !match((String) raw).isPresent()) {
+                return Collections.emptyList();
+            }
+            String rawValue = ((String) raw).trim();
+            if (!rawValue.endsWith("]")) {
+                throw new IllegalArgumentException(new StringBuilder().append("Malformed expression: ").append(rawValue).toString());
+            }
+            return Stream.of(rawValue.substring(1, ((String) raw).length() - 1).split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toList());
+        }
+    },
+    EQUALS(2, "=") {
         @Override
         protected Object getValueForGiven(String className, String value, ClassLoader classLoader) {
             String returnValue = removeOperator(value);
@@ -54,7 +93,7 @@ public enum BaseExpressionOperator {
             return Objects.equals(resultValue, parsedResults);
         }
     },
-    NOT_EQUALS("!", "!=", "<>") {
+    NOT_EQUALS(3, "!", "!=", "<>") {
         @SuppressWarnings("unchecked")
         @Override
         public boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader) {
@@ -70,25 +109,16 @@ public enum BaseExpressionOperator {
             return !operator.eval(valueToTest, resultValue, classLoader);
         }
     },
-    RANGE("<", ">", "<=", ">=") {
+    RANGE(4, "<", ">", "<=", ">=") {
         @Override
         public boolean eval(Object raw, Object resultValue, ClassLoader classLoader) {
             if (!(raw instanceof String) || !match((String) raw).isPresent()) {
                 return false;
             }
-            String rawValue = (String) raw;
-            return Arrays.stream(rawValue.split(",")).allMatch(elem -> checkStep(elem.trim(), resultValue, classLoader));
-        }
 
-        @SuppressWarnings("unchecked")
-        boolean checkStep(String stepToCheck, Object resultValue, ClassLoader classLoader) {
-            Optional<String> operatorSymbol = match(stepToCheck);
-            if (!operatorSymbol.isPresent()) {
-                throw new IllegalArgumentException(
-                        new StringBuilder().append("Impossible to find the operator in expression ").append(stepToCheck).toString());
-            }
-            String operator = operatorSymbol.get();
-            String cleanValue = removeOperator(stepToCheck);
+            String rawValue = (String) raw;
+            String operator = match(rawValue).get();
+            String cleanValue = removeOperator(rawValue);
             Object stepValue = convertValue(resultValue.getClass().getCanonicalName(), cleanValue, classLoader);
             if (!areComparable(stepValue, resultValue)) {
                 return false;
@@ -108,30 +138,13 @@ public enum BaseExpressionOperator {
                     throw new IllegalStateException(new StringBuilder().append("This should not happen ").append(operator).toString());
             }
         }
-    },
-    LIST_OF_VALUES("[") {
-        @Override
-        public boolean eval(Object rawValue, Object resultValue, ClassLoader classLoader) {
-            return getValues(rawValue).stream().anyMatch(e -> EQUALS.eval(e, resultValue, classLoader));
-        }
-
-        private List<String> getValues(Object raw) {
-            if (!(raw instanceof String) || !match((String) raw).isPresent()) {
-                return Collections.emptyList();
-            }
-            String rawValue = ((String) raw).trim();
-            if (!rawValue.endsWith("]")) {
-                throw new IllegalArgumentException(new StringBuilder().append("Malformed expression: ").append(rawValue).toString());
-            }
-            return Stream.of(rawValue.substring(1, ((String) raw).length() - 1).split(","))
-                    .map(String::trim)
-                    .collect(Collectors.toList());
-        }
     };
 
     final List<String> symbols;
+    final int precedence;
 
-    BaseExpressionOperator(String... symbols) {
+    BaseExpressionOperator(int precedence, String... symbols) {
+        this.precedence = precedence;
         this.symbols = Arrays.asList(symbols);
         // sort symbols by descending length to match longer symbols first
         this.symbols.sort((a, b) -> Integer.compare(a.length(), b.length()) * -1);
@@ -139,7 +152,9 @@ public enum BaseExpressionOperator {
 
     public static BaseExpressionOperator findOperator(String rawValue) {
         String value = rawValue.trim();
-        for (BaseExpressionOperator factMappingValueOperator : BaseExpressionOperator.values()) {
+        List<BaseExpressionOperator> sortedOperators = Arrays.stream(values()).sorted(comparingInt(BaseExpressionOperator::getPrecedence))
+                .collect(Collectors.toList());
+        for (BaseExpressionOperator factMappingValueOperator : sortedOperators) {
             if (factMappingValueOperator.match(value).isPresent()) {
                 return factMappingValueOperator;
             }
@@ -173,5 +188,9 @@ public enum BaseExpressionOperator {
 
     private static boolean areComparable(Object a, Object b) {
         return a instanceof Comparable && b instanceof Comparable;
+    }
+
+    private int getPrecedence() {
+        return precedence;
     }
 }
