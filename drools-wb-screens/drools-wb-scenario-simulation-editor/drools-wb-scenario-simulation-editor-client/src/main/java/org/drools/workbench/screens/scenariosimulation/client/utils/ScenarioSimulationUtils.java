@@ -39,6 +39,7 @@ public class ScenarioSimulationUtils {
      * </p>
      * <p>
      * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
+     * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
@@ -72,6 +73,7 @@ public class ScenarioSimulationUtils {
      * <p>
      * isReadOnly: <code>true</code>;
      * </p>
+     * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
      * @param title
@@ -107,6 +109,7 @@ public class ScenarioSimulationUtils {
      * </p>
      * <p>
      * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
+     * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
