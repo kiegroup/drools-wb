@@ -108,7 +108,7 @@ public class ScenarioGrid extends BaseGridWidget {
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getScenarioHeaderTextBoxSingletonDOMElementFactory();
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), factoryHeader);
-        boolean readOnly = FactIdentifier.EMPTY.equals(factMapping.getFactIdentifier());
+        boolean readOnly = FactIdentifier.EMPTY.equals(factMapping.getFactIdentifier()) || FactIdentifier.INDEX.equals(factMapping.getFactIdentifier());
         String placeHolder = readOnly ? ScenarioSimulationEditorConstants.INSTANCE.defineValidType() : ScenarioSimulationEditorConstants.INSTANCE.insertValue();
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(headerBuilder, readOnly, placeHolder);
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
