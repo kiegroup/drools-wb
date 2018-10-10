@@ -62,6 +62,7 @@ public abstract class AbstractCommand implements Command {
      * <p>
      * isReadOnly: <code>true</code>;
      * </p>
+     * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
      * @param title
