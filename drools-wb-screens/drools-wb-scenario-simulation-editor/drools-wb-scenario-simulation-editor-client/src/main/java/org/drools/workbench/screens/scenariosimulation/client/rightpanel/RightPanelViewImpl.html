@@ -101,23 +101,23 @@
         <div id="kieScenarioCheatsheetTabContent"
              class="tab-pane fade"
              aria-labelledby="Scenario Cheatsheet" style="padding: 1em">
-            <p>Use contextual menu to add/remove columns and rows</p>
+            <p>Use contextual menu to add/remove columns and rows.</p>
 
-            <p>Left click on the header of a column and then edit the mapping with a field through the right panel</p>
+            <p>Left click on the header of a column and then edit the mapping with a field using the Test Editor tab.</p>
 
-            <p>Double click on the field to set the mapping</p>
+            <p>Double click on the field to set the mapping.</p>
 
-            <p>Each cell can contain an expression using the following syntax</p>
+            <p>Each cell can contain an expression using the following syntax:</p>
 
             <ul>
                 <li><i>= value (or no symbol)</i>: to specify equals to a value. This is the only operator supported under GIVEN section and it is the default</li>
-                <li><i>! value</i>: to specify not equals to a value. It can be composed with other operator</li>
-                <li><i>< / > / <= / >= value</i>: to specify a comparison</li>
-                <li><i>[ value1, value2, value3 ]</i>: to a list of values. The semantic is "one of them"</li>
-                <li><i>expression1 ; expression2 ; expression3</i>: to specify a list of expressions. The semantic is "all of them"</li>
+                <li><i>! or != or <> value</i>: to specify not equals to a value. It can be composed with other operator</li>
+                <li><i>< or > or <= or >= value</i>: to specify a comparison</li>
+                <li><i>[ value1, value2, value3 ]</i>: to a list of values. The semantic is "one of them must hold"</li>
+                <li><i>expression1 ; expression2 ; expression3</i>: to specify a list of expressions. The semantic is "all of them must hold"</li>
             </ul>
 
-            <p>Example of expressions</p>
+            <p>Example of expressions:</p>
 
             <ul>
                 <li><i>< 3</i></li>
