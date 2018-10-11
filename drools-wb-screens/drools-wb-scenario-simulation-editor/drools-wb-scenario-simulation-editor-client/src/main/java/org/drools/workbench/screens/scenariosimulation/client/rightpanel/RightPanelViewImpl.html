@@ -42,7 +42,7 @@
         <!-- content for the test editor tab -->
         <div id="kieTestEditorTabContent"
              class="tab-pane fade in active"
-             aria-labelledby="Test Editor">
+             aria-labelledby="Test Editor" style="padding: 1em">
             <br/>
             <p>To create a test template, define "Given" and "Expect" columns by entering an expression or use the expression editor below.</p>
 
@@ -100,8 +100,31 @@
         <!-- content for cheatsheet tab -->
         <div id="kieScenarioCheatsheetTabContent"
              class="tab-pane fade"
-             aria-labelledby="Scenario Cheatsheet">
-            <p>Create a row for each scenario, and input values using the following syntax.</p>
+             aria-labelledby="Scenario Cheatsheet" style="padding: 1em">
+            <p>Use contextual menu to add/remove columns and rows</p>
+
+            <p>Left click on the header of a column and then edit the mapping with a field through the right panel</p>
+
+            <p>Double click on the field to set the mapping</p>
+
+            <p>Each cell can contain an expression using the following syntax</p>
+
+            <ul>
+                <li><i>= value (or no symbol)</i>: to specify equals to a value. This is the only operator supported under GIVEN section and it is the default</li>
+                <li><i>! value</i>: to specify not equals to a value. It can be composed with other operator</li>
+                <li><i>< / > / <= / >= value</i>: to specify a comparison</li>
+                <li><i>[ value1, value2, value3 ]</i>: to a list of values. The semantic is "one of them"</li>
+                <li><i>expression1 ; expression2 ; expression3</i>: to specify a list of expressions. The semantic is "all of them"</li>
+            </ul>
+
+            <p>Example of expressions</p>
+
+            <ul>
+                <li><i>< 3</i></li>
+                <li><i>< 3 ; ! [0,-1]</i></li>
+                <li><i>[MyString, My second string]</i></li>
+                <li><i>= 3; > 2</i></li>
+            </ul>
         </div>
     </div>
 </div>
