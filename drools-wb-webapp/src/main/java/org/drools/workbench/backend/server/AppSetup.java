@@ -120,8 +120,6 @@ public class AppSetup extends BaseAppSetup {
                                                                       "");
         group.addConfigItem(configurationFactory.newConfigItem("drools.dateformat",
                                                                "dd-MMM-yyyy"));
-        group.addConfigItem(configurationFactory.newConfigItem("drools.datetimeformat",
-                                                               "dd-MMM-yyyy hh:mm:ss"));
         group.addConfigItem(configurationFactory.newConfigItem("drools.defaultlanguage",
                                                                "en"));
         group.addConfigItem(configurationFactory.newConfigItem("drools.defaultcountry",
