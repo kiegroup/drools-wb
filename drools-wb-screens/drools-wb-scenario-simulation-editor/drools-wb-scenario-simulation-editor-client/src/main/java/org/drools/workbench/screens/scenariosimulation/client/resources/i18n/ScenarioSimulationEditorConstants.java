@@ -115,4 +115,6 @@ public interface ScenarioSimulationEditorConstants
     String preserveDeleteScenarioTextOption2();
 
     String preserveValues();
+
+    String defineValidType();
 }
