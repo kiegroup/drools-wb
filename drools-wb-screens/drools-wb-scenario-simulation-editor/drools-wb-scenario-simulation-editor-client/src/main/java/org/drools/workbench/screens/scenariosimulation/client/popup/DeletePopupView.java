@@ -15,14 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.ParagraphElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.client.views.pfly.resources.i18n.Constants;
 import org.uberfire.mvp.Command;
 
 @Dependent
@@ -32,11 +30,6 @@ public class DeletePopupView extends ScenarioConfirmationPopupView implements De
     @Inject
     @DataField("text-danger")
     protected ParagraphElement textDanger;
-
-    @PostConstruct
-    public void init() {
-        cancelButton.setText(translationService.getTranslation(Constants.ConfirmPopup_Cancel));
-    }
 
     @Override
     public void show(final String mainTitleText,

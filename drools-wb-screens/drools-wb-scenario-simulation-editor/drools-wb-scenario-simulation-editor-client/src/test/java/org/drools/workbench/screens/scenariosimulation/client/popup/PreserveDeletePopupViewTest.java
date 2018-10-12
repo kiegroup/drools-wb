@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +50,7 @@ public class PreserveDeletePopupViewTest extends ScenarioConfirmationPopupViewTe
         super.commonSetup();
         popupView = spy(new PreserveDeletePopupView() {
             {
-                this.mainTitle = mainTitleMock;
+                this.mainTitle = (HeadingElement) mainTitleMock;
                 this.mainQuestion = mainQuestionMock;
                 this.text1 = text1Mock;
                 this.textQuestion = textQuestionMock;

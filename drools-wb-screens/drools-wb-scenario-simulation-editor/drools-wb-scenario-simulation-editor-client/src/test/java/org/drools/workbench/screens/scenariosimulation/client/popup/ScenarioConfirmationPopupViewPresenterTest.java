@@ -16,10 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.eq;
@@ -27,8 +25,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(LienzoMockitoTestRunner.class)
-public class ScenarioConfirmationPopupViewPresenterTest extends AbstractDeletePopupViewTest {
+//@RunWith(LienzoMockitoTestRunner.class)
+public abstract class ScenarioConfirmationPopupViewPresenterTest extends AbstractDeletePopupViewTest {
 
     @Mock
     private ScenarioConfirmationPopupView scenarioConfirmationPopupViewMock;

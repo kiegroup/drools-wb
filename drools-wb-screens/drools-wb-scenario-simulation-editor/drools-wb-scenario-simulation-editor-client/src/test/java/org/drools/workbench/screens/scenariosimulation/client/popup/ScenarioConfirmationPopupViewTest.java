@@ -16,14 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.ParagraphElement;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.common.client.dom.MouseEvent;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.client.views.pfly.widgets.Button;
 
@@ -33,20 +31,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(LienzoMockitoTestRunner.class)
-public class ScenarioConfirmationPopupViewTest extends AbstractDeletePopupViewTest {
+public abstract class ScenarioConfirmationPopupViewTest extends AbstractDeletePopupViewTest {
 
     protected ScenarioConfirmationPopupView popupView;
-
-    @Mock
-    protected HTMLElement mainTitleMock;
-
-    @Mock
-    protected HTMLElement mainQuestionMock;
 
     @Mock
     protected ParagraphElement text1Mock;
@@ -72,18 +62,18 @@ public class ScenarioConfirmationPopupViewTest extends AbstractDeletePopupViewTe
     @Before
     public void setup() {
         super.commonSetup();
-        popupView = spy(new ScenarioConfirmationPopupView() {
-            {
-                this.mainTitle = mainTitleMock;
-                this.mainQuestion = mainQuestionMock;
-                this.text1 = text1Mock;
-                this.textQuestion = textQuestionMock;
-                this.cancelButton = cancelButtonMock;
-                this.okDeleteButton = okDeleteButtonMock;
-                this.modal = modalMock;
-                this.translationService = translationServiceMock;
-            }
-        });
+//        popupView = spy(new ScenarioConfirmationPopupView() {
+//            {
+//                this.mainTitle = (HeadingElement) mainTitleMock;
+//                this.mainQuestion = mainQuestionMock;
+//                this.text1 = text1Mock;
+//                this.textQuestion = textQuestionMock;
+//                this.cancelButton = cancelButtonMock;
+//                this.okDeleteButton = okDeleteButtonMock;
+//                this.modal = modalMock;
+//                this.translationService = translationServiceMock;
+//            }
+//        });
     }
 
     @Test
@@ -136,8 +126,8 @@ public class ScenarioConfirmationPopupViewTest extends AbstractDeletePopupViewTe
     }
 
     protected void verifyShow() {
-        verify(mainTitleMock, times(1)).setTextContent(eq(MAIN_TITLE_TEXT));
-        verify(mainQuestionMock, times(1)).setTextContent(eq(MAIN_QUESTION_TEXT));
+        verify(mainTitleMock, times(1)).setInnerHTML(eq(MAIN_TITLE_TEXT));
+        verify(mainQuestionMock, times(1)).setInnerHTML(eq(MAIN_QUESTION_TEXT));
         verify(text1Mock, times(1)).setInnerText(eq(TEXT1_TEXT));
         verify(textQuestionMock, times(1)).setInnerText(eq(TEXT_QUESTION_TEXT));
         verify(okDeleteButtonMock, times(1)).setText(eq(OKDELETE_BUTTON_TEXT));

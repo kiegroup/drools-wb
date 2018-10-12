@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
+import com.google.gwt.dom.client.HeadingElement;
 import org.jboss.errai.common.client.dom.CSSStyleDeclaration;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
@@ -45,6 +46,12 @@ public abstract class AbstractDeletePopupViewTest {
 
     @Mock
     protected CSSStyleDeclaration styleMock;
+
+    @Mock
+    protected HeadingElement mainTitleMock;
+
+    @Mock
+    protected HeadingElement mainQuestionMock;
 
     protected final String MAIN_TITLE_TEXT = "MAIN_TITLE_TEXT";
     protected final String MAIN_QUESTION_TEXT = "MAIN_QUESTION_TEXT";

@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -25,7 +24,6 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.ForEvent;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.client.views.pfly.resources.i18n.Constants;
 import org.uberfire.client.views.pfly.widgets.Button;
 import org.uberfire.mvp.Command;
 
@@ -46,11 +44,6 @@ public class PreserveDeletePopupView extends ScenarioConfirmationPopupView imple
     protected Button okPreserveButton;
 
     protected Command okPreserveCommand;
-
-    @PostConstruct
-    public void init() {
-        cancelButton.setText(translationService.getTranslation(Constants.ConfirmPopup_Cancel));
-    }
 
     @Override
     public void show(final String mainTitleText,

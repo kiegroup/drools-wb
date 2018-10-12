@@ -16,9 +16,10 @@
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.common.client.dom.MouseEvent;
@@ -26,23 +27,18 @@ import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.ForEvent;
-import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.client.views.pfly.resources.i18n.Constants;
 import org.uberfire.client.views.pfly.widgets.Button;
 import org.uberfire.client.views.pfly.widgets.Modal;
 import org.uberfire.mvp.Command;
 
-@Dependent
-@Templated
-public class ScenarioConfirmationPopupView implements ScenarioConfirmationPopup {
+public abstract class ScenarioConfirmationPopupView implements ScenarioConfirmationPopup {
 
-    @Inject
     @DataField("main-title")
-    protected HTMLElement mainTitle;
+    protected HeadingElement mainTitle = Document.get().createHElement(4);
 
-    @Inject
     @DataField("main-question")
-    protected HTMLElement mainQuestion;
+    protected HeadingElement mainQuestion = Document.get().createHElement(2);
 
     @Inject
     @DataField("text-1")
@@ -82,8 +78,8 @@ public class ScenarioConfirmationPopupView implements ScenarioConfirmationPopup 
                      final String okDeleteButtonText,
                      final Command okDeleteCommand) {
         this.okDeleteCommand = okDeleteCommand;
-        mainTitle.setTextContent(mainTitleText);
-        mainQuestion.setTextContent(mainQuestionText);
+        mainTitle.setInnerHTML(mainTitleText);
+        mainQuestion.setInnerHTML(mainQuestionText);
         text1.setInnerText(text1Text);
         textQuestion.setInnerText(textQuestionText);
         okDeleteButton.setText(okDeleteButtonText);

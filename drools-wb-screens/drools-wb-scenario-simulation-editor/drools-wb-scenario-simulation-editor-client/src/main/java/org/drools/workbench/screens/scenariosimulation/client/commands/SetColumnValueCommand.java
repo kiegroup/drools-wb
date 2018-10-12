@@ -40,7 +40,7 @@ public class SetColumnValueCommand extends AbstractCommand {
     private String valueClassName;
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGridLayer scenarioGridLayer;
-    private boolean keepData;
+    protected boolean keepData;
 
     public SetColumnValueCommand() {
     }
