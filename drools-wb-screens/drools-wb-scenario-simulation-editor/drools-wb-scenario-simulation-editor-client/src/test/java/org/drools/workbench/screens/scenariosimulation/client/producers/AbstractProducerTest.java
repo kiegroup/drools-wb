@@ -19,7 +19,8 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.popup.YesNoConfirmPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.junit.Before;
@@ -43,7 +44,9 @@ public abstract class AbstractProducerTest {
     protected EventBus eventBusMock;
 
     @Mock
-    protected YesNoConfirmPopupPresenter yesNoConfirmPopupPresenterMock;
+    protected DeletePopupPresenter deletePopupPresenterMock;
+    @Mock
+    protected PreserveDeletePopupPresenter preserveDeletePopupPresenterMock;
 
     @Mock
     protected CommandExecutor commandExecutorMock;

@@ -90,11 +90,29 @@ public interface ScenarioSimulationEditorConstants
 
     String insertValue();
 
-    String dataInColumnKeepOrDelete();
+    String deleteValues();
 
-    String dataInColumnWillDelete();
+    String deleteScenarioMainTitle();
 
-    String keep();
+    String deleteScenarioMainQuestion();
 
-    String updateColumn();
+    String deleteScenarioText1();
+
+    String deleteScenarioTextQuestion();
+
+    String deleteScenarioTextDanger();
+
+    String preserveDeleteScenarioMainTitle();
+
+    String preserveDeleteScenarioMainQuestion();
+
+    String preserveDeleteScenarioText1();
+
+    String preserveDeleteScenarioTextQuestion();
+
+    String preserveDeleteScenarioTextOption1();
+
+    String preserveDeleteScenarioTextOption2();
+
+    String preserveValues();
 }
