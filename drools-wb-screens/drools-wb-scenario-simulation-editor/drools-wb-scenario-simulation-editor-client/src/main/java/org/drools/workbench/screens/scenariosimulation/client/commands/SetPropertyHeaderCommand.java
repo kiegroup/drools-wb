@@ -39,7 +39,6 @@ public class SetPropertyHeaderCommand extends AbstractCommand {
 
     /**
      * @param model
-     * @param columnId
      * @param fullPackage
      * @param value
      * @param valueClassName
@@ -62,25 +61,15 @@ public class SetPropertyHeaderCommand extends AbstractCommand {
             return;
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
+        String title = value.substring(value.indexOf(".")+1);
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-//        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-//        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getHeaderTextBoxFactoryLocal();
-//        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnGroup, factMappingType, factoryHeader);
-
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(columnGroup);
-        selectedColumn.getPropertyHeaderMetaData().setTitle(value);
-
+        selectedColumn.getPropertyHeaderMetaData().setTitle(title);
+        selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
         model.updateColumnProperty(columnIndex,
-                                   selectedColumn
-                               /*getScenarioGridColumnLocal(headerBuilder)*/,
+                                   selectedColumn,
                                    fullPackage,
                                    value,
                                    valueClassName, keepData);
     }
-
-//    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
-//        // indirection add for test
-//        return getHeaderBuilder(value, columnId, columnGroup, factMappingType, factoryHeader);
-//    }
-
 }

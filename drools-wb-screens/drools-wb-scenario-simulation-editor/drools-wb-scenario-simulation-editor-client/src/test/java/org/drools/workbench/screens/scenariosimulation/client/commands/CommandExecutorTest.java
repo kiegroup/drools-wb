@@ -112,7 +112,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
         when(mockEventBus.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependColumnHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockScenarioGridReloadHandlerRegistration);
-        when(mockEventBus.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetInstanceHeaderEventHandler);
+        when(mockEventBus.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetInstanceHeaderEventHandler);
         when(mockEventBus.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetPropertyHeaderEventHandler);
         commandExecutor = spy(new CommandExecutor() {
             {

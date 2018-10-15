@@ -231,12 +231,13 @@ public class ScenarioGridModel extends BaseGridData {
         deleteColumn(columnIndex);
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
+        String instance = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
         String[] elements = value.split("\\.");
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
         String canonicalClassName = fullPackage + elements[0];
-        FactIdentifier factIdentifier = FactIdentifier.create(canonicalClassName, canonicalClassName);
+        FactIdentifier factIdentifier = FactIdentifier.create(instance, canonicalClassName);
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, factIdentifier, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);

@@ -68,6 +68,7 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         setPropertyHeaderCommand.execute();
         verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
+        verify(mockPropertyHeaderMetaData, times(1)).setReadOnly(false);
         verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
     }
 
@@ -77,6 +78,7 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         setPropertyHeaderCommand.execute();
         verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
+        verify(mockPropertyHeaderMetaData, times(1)).setReadOnly(false);
         verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), eq(mockGridColumn), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
     }
 }
