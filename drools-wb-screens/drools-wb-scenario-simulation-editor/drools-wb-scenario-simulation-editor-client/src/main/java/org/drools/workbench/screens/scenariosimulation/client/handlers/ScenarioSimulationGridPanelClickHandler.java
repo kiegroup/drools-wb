@@ -305,8 +305,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             final Integer uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, ap.getY());
             if (uiRowIndex == null) {
                 return false;
-            } else {
-                return manageGridLeftClick(scenarioGrid, uiRowIndex, uiColumnIndex, scenarioGridColumn);
+            } else { return manageGridLeftClick(scenarioGrid, uiRowIndex, uiColumnIndex, scenarioGridColumn);
             }
         } else {
             return true;
@@ -364,7 +363,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     /**
      * This method check if the click happened on an <i>writable</i> column of a <b>grid row</b>. If it is so, start editing the cell,
      * otherwise returns <code>false</code>
-     *
      * @param scenarioGrid
      * @param uiRowIndex
      * @param uiColumnIndex
@@ -379,7 +377,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (((ScenarioGridCell) cell).isEditing()) {
             return true;
         }
-        ((ScenarioGridCell) cell).setEditing(scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex));
-        return scenarioGridColumn.isReadOnly() || ((ScenarioGridCell) cell).isEditing();
+        ((ScenarioGridCell) cell).setEditing((!scenarioGridColumn.isReadOnly()) && scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex));
+        return ((ScenarioGridCell) cell).isEditing();
     }
 }
