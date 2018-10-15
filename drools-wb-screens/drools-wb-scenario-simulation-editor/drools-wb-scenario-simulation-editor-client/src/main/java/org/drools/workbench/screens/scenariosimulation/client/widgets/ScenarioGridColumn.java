@@ -32,6 +32,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     private final ScenarioCellTextBoxSingletonDOMElementFactory factory;
 
     final ScenarioHeaderMetaData informationHeaderMetaData;
+    final ScenarioHeaderMetaData propertyHeaderMetaData;
 
     boolean readOnly = false;
 
@@ -40,6 +41,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextBoxSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);
         this.informationHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData;
+        propertyHeaderMetaData = null;
         this.setMovable(isMovable);
         this.factory = factory;
         this.placeHolder = placeHolder;
@@ -47,7 +49,8 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
 
     public ScenarioGridColumn(List<HeaderMetaData> headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextBoxSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);
-        this.informationHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> ((ScenarioHeaderMetaData) hdm).isInformationHeader()).findFirst().orElse(headerMetaData.get(0));
+        this.informationHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> ((ScenarioHeaderMetaData) hdm).isInstanceHeader()).findFirst().orElse(headerMetaData.get(0));
+        this.propertyHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> ((ScenarioHeaderMetaData) hdm).isPropertyHeader()).findFirst().orElse(null);
         this.setMovable(isMovable);
         this.factory = factory;
         this.placeHolder = placeHolder;
@@ -70,6 +73,10 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
 
     public ScenarioHeaderMetaData getInformationHeaderMetaData() {
         return informationHeaderMetaData;
+    }
+
+    public ScenarioHeaderMetaData getPropertyHeaderMetaData() {
+        return propertyHeaderMetaData;
     }
 
     public String getPlaceHolder() {

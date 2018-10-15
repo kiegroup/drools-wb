@@ -97,7 +97,13 @@ public interface RightPanelView
         void onDisableEditorTab();
 
         /**
-         * Method to fire a <code>SetColumnValueCommand</code>
+         * Method to fire a <code>SetPropertyHeaderCommand</code> - use this to set the <i>instance</i> level header
+         * @param fullClassName
+         */
+        void onModifyColumn(String fullClassName);
+
+        /**
+         * Method to fire a <code>SetPropertyHeaderCommand</code> - use this to set the <i>property</i> level header
          * @param factName
          * @param fieldName
          * @param className

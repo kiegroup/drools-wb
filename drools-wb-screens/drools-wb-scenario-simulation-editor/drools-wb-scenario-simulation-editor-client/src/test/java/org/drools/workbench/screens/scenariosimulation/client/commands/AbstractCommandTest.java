@@ -64,7 +64,9 @@ public abstract class AbstractCommandTest {
     @Mock
     protected List<GridColumn.HeaderMetaData> mockHeaderMetaDatas;
     @Mock
-    protected ScenarioHeaderMetaData mockHeaderMetaData;
+    protected ScenarioHeaderMetaData mockInformationHeaderMetaData;
+    @Mock
+    protected ScenarioHeaderMetaData mockPropertyHeaderMetaData;
     @Mock
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
     @Mock
@@ -79,6 +81,8 @@ public abstract class AbstractCommandTest {
 
     protected final String VALUE = "VALUE";
 
+    protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
+
     protected final String VALUE_CLASS_NAME = String.class.getName();
 
     protected final int ROW_INDEX = 2;
@@ -90,10 +94,11 @@ public abstract class AbstractCommandTest {
 
     @Before
     public void setup() {
-        when(mockHeaderMetaData.getColumnGroup()).thenReturn(COLUMN_GROUP);
-        when(mockHeaderMetaDatas.get(1)).thenReturn(mockHeaderMetaData);
+        when(mockInformationHeaderMetaData.getColumnGroup()).thenReturn(COLUMN_GROUP);
+        when(mockHeaderMetaDatas.get(1)).thenReturn(mockInformationHeaderMetaData);
         when(mockGridColumn.getHeaderMetaData()).thenReturn(mockHeaderMetaDatas);
-        when(mockGridColumn.getInformationHeaderMetaData()).thenReturn(mockHeaderMetaData);
+        when(mockGridColumn.getInformationHeaderMetaData()).thenReturn(mockInformationHeaderMetaData);
+        when(mockGridColumn.getPropertyHeaderMetaData()).thenReturn(mockPropertyHeaderMetaData);
         when(mockColumns.get(COLUMN_INDEX)).thenReturn(mockGridColumn);
         doReturn(mockColumns).when(mockScenarioGridModel).getColumns();
         when(mockScenarioGrid.getModel()).thenReturn(mockScenarioGridModel);

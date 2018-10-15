@@ -111,6 +111,10 @@ public interface ListGroupItemView extends IsWidget,
 
         void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
 
+        void onFullClassNameDoubleClick(String fullClassName);
+
         void init(RightPanelView.Presenter rightPanelPresenter);
+
+
     }
 }

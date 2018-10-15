@@ -347,7 +347,8 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                     columnMetadata.edit(context);
                 }
                 scenarioGrid.selectColumn(uiColumnIndex);
-                eventBus.fireEvent(new EnableRightPanelEvent());
+                EnableRightPanelEvent toFire = columnMetadata.isPropertyHeader() ? new EnableRightPanelEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle()) : new EnableRightPanelEvent();
+                eventBus.fireEvent(toFire);
                 break;
             default:
                 return false;

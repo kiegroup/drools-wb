@@ -26,6 +26,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -75,8 +76,14 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
         return null;
     }
 
-    @EventHandler("listGroupItemHeader")
-    public void onListGroupItemHeaderClick(ClickEvent event) {
+    @EventHandler("fullClassName")
+    public void onFullClassNameDoubleClick(DoubleClickEvent event) {
+        String fullClassName = parentPath.isEmpty() ? factName : parentPath + "." + factName;
+        presenter.onFullClassNameDoubleClick(fullClassName);
+    }
+
+    @EventHandler("faAngleRight")
+    public void onFaAngleRightClick(ClickEvent event) {
         presenter.onToggleRowExpansion(this, listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE));
     }
 

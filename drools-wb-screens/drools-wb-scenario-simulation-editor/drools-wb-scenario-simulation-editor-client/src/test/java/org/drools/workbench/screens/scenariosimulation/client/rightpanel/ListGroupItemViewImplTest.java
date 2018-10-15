@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -84,13 +86,28 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
     }
 
     @Test
-    public void onListGroupItemHeaderClick() {
+    public void onFullClassNameDoubleClick() {
+        String factName = "Person";
+        listGroupItemView.parentPath = "";
+        listGroupItemView.factName = factName;
+        listGroupItemView.onFullClassNameDoubleClick(mock(DoubleClickEvent.class));
+        verify(mockListGroupItemPresenter, times(1)).onFullClassNameDoubleClick(eq(factName));
+        reset(mockListGroupItemPresenter);
+        String parentPath = "test.scesim";
+        listGroupItemView.parentPath = parentPath;
+        String expected = parentPath + "." + factName;
+        listGroupItemView.onFullClassNameDoubleClick(mock(DoubleClickEvent.class));
+        verify(mockListGroupItemPresenter, times(1)).onFullClassNameDoubleClick(eq(expected));
+    }
+
+    @Test
+    public void onFaAngleRightClick() {
         String toReturn =  LIST_GROUP_ITEM + " " + LIST_VIEW_PF_EXPAND_ACTIVE;
         when(mockListGroupItemHeader.getClassName()).thenReturn(toReturn);
-        listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
+        listGroupItemView.onFaAngleRightClick(mock(ClickEvent.class));
         verify(mockListGroupItemPresenter, times(1)).onToggleRowExpansion(eq(listGroupItemView), eq(true));
         when(mockListGroupItemHeader.getClassName()).thenReturn(LIST_GROUP_ITEM);
-        listGroupItemView.onListGroupItemHeaderClick(mock(ClickEvent.class));
+        listGroupItemView.onFaAngleRightClick(mock(ClickEvent.class));
         verify(mockListGroupItemPresenter, times(1)).onToggleRowExpansion(eq(listGroupItemView), eq(false));
     }
 

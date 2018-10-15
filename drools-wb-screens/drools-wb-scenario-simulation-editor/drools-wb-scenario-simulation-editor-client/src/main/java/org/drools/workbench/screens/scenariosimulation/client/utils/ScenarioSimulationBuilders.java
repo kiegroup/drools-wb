@@ -124,7 +124,7 @@ public class ScenarioSimulationBuilders {
      * isReadOnly: <code>false</code>;
      * </p>
      * <p>
-     * informationHeader: <code>false</code>;
+     * instanceHeader: <code>false</code>;
      * </p>
      * </p>
      */
@@ -134,7 +134,8 @@ public class ScenarioSimulationBuilders {
         String columnTitle;
         String columnGroup = "";
         boolean readOnly = false;
-        boolean informationHeader = false;
+        boolean instanceHeader = false;
+        boolean propertyHeader = false;
         HeaderBuilder nestedLevel;
         final ScenarioHeaderTextBoxSingletonDOMElementFactory factory;
 
@@ -166,8 +167,13 @@ public class ScenarioSimulationBuilders {
             return this;
         }
 
-        public HeaderBuilder setInformationHeader(boolean informationHeader) {
-            this.informationHeader = informationHeader;
+        public HeaderBuilder setInstanceHeader(boolean instanceHeader) {
+            this.instanceHeader = instanceHeader;
+            return this;
+        }
+
+        public HeaderBuilder setPropertyHeader(boolean propertyHeader) {
+            this.propertyHeader = propertyHeader;
             return this;
         }
 
@@ -191,7 +197,7 @@ public class ScenarioSimulationBuilders {
         }
 
         private GridColumn.HeaderMetaData internalBuild() {
-            return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly, informationHeader);
+            return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly, instanceHeader, propertyHeader);
         }
     }
 }

@@ -181,11 +181,47 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * This method update the instance mapped inside a given column
+     * @param columnIndex
+     * @param column
+     */
+    public void updateColumnInstance(int columnIndex, final GridColumn<?> column) {
+        checkSimulation();
+//        List<GridCellValue<?>> originalValues = new ArrayList<>();
+//        if (keepData) {
+//            IntStream.range(0, getRowCount())
+//                    .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
+//        }
+        deleteColumn(columnIndex);
+        insertColumn(columnIndex, column);
+//        String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
+//        String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
+//        String[] elements = value.split("\\.");
+//        if (!fullPackage.endsWith(".")) {
+//            fullPackage += ".";
+//        }
+//        String canonicalClassName = fullPackage + elements[0];
+//        FactIdentifier factIdentifier = FactIdentifier.create(canonicalClassName, canonicalClassName);
+//        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
+//        commonAddColumn(columnIndex, column, factIdentifier, ei);
+//        final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+//        factMappingByIndex.setExpressionAlias(value);
+//        IntStream.range(1, elements.length)
+//                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
+//        if (keepData) {
+//            IntStream.range(0, getRowCount())
+//                    .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
+//        }
+        selectColumn(columnIndex);
+    }
+
+
+    /**
      * This method update the type mapped inside a give column and updates the underlying model
      * @param columnIndex
      * @param value
      */
-    public void updateColumnType(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName, boolean keepData) {
+    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName, boolean keepData) {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
         if (keepData) {

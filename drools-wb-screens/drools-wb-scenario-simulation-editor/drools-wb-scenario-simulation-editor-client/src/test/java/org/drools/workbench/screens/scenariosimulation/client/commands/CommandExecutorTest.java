@@ -32,7 +32,8 @@ import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.SetColumnValueEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -85,7 +86,9 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Mock
     private HandlerRegistration mockScenarioGridReloadHandlerRegistration;
     @Mock
-    private HandlerRegistration mockSetColumnValueEventHandler;
+    private HandlerRegistration mockSetInstanceHeaderEventHandler;
+    @Mock
+    private HandlerRegistration mockSetPropertyHeaderEventHandler;
 
     @Mock
     private DeletePopupPresenter deletePopupPresenterMock;
@@ -109,7 +112,8 @@ public class CommandExecutorTest extends AbstractCommandTest {
         when(mockEventBus.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependColumnHandlerRegistration);
         when(mockEventBus.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependRowHandlerRegistration);
         when(mockEventBus.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockScenarioGridReloadHandlerRegistration);
-        when(mockEventBus.addHandler(eq(SetColumnValueEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetColumnValueEventHandler);
+        when(mockEventBus.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetInstanceHeaderEventHandler);
+        when(mockEventBus.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetPropertyHeaderEventHandler);
         commandExecutor = spy(new CommandExecutor() {
             {
                 this.eventBus = mockEventBus;
@@ -244,23 +248,36 @@ public class CommandExecutorTest extends AbstractCommandTest {
     }
 
     @Test
-    public void onSetColumnValueEvent() {
-        SetColumnValueEvent event = new SetColumnValueEvent(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
+    public void onSetInstanceHeaderEvent() {
+        SetInstanceHeaderEvent event = new SetInstanceHeaderEvent(FULL_CLASS_NAME);
         when(mockScenarioGridModel.getSelectedColumn()).thenReturn(null);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetColumnValueCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderCommand.class));
+        doReturn(mockGridColumn).when(mockScenarioGridModel).getSelectedColumn();
+        reset(commandExecutor);
+        when(mockScenarioGridModel.isSelectedColumnEmpty()).thenReturn(true);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, times(1)).commonExecute(isA(SetInstanceHeaderCommand.class));
+    }
+
+    @Test
+    public void onSetPropertyHeaderEvent() {
+        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
+        when(mockScenarioGridModel.getSelectedColumn()).thenReturn(null);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderCommand.class));
 
         doReturn(mockGridColumn).when(mockScenarioGridModel).getSelectedColumn();
         reset(commandExecutor);
         when(mockScenarioGridModel.isSelectedColumnEmpty()).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(SetColumnValueCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(SetPropertyHeaderCommand.class));
 
         when(mockScenarioGridModel.isSelectedColumnEmpty()).thenReturn(false);
         reset(commandExecutor);
         when(mockScenarioGridModel.isSameSelectedColumnProperty(VALUE)).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetColumnValueCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderCommand.class));
 
         when(mockScenarioGridModel.isSameSelectedColumnProperty(VALUE)).thenReturn(false);
         reset(commandExecutor);
@@ -326,7 +343,9 @@ public class CommandExecutorTest extends AbstractCommandTest {
         verify(mockHandlerRegistrationList, times(1)).add(eq(mockPrependRowHandlerRegistration));
         verify(mockEventBus, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class));
         verify(mockHandlerRegistrationList, times(1)).add(eq(mockScenarioGridReloadHandlerRegistration));
-        verify(mockEventBus, times(1)).addHandler(eq(SetColumnValueEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockSetColumnValueEventHandler));
+        verify(mockEventBus, times(1)).addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(CommandExecutor.class));
+        verify(mockHandlerRegistrationList, times(1)).add(eq(mockSetInstanceHeaderEventHandler));
+        verify(mockEventBus, times(1)).addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class));
+        verify(mockHandlerRegistrationList, times(1)).add(eq(mockSetPropertyHeaderEventHandler));
     }
 }

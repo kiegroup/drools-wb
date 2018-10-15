@@ -108,6 +108,11 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         }
     }
 
+    @Override
+    public void onFullClassNameDoubleClick(String fullClassName) {
+        rightPanelPresenter.onModifyColumn(fullClassName);
+    }
+
     /**
      * Populate the "Assets" list. When
      * @param toPopulate

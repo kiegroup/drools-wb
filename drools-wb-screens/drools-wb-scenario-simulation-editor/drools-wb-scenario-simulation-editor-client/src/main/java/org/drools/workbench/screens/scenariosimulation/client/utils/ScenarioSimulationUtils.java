@@ -215,11 +215,11 @@ public class ScenarioSimulationUtils {
         headerBuilder.setColumnTitle(columnGroup);
         headerBuilder.setReadOnly(true);
 
-        boolean informationHeader = isOther(factMappingType) || isExpected(factMappingType) || isGiven(factMappingType);
+       // boolean instanceHeader = isOther(factMappingType) || isExpected(factMappingType) || isGiven(factMappingType);
         if (isOther(factMappingType)) {
             headerBuilder.setColumnTitle(title);
             headerBuilder.setColumnGroup(columnGroup);
-            headerBuilder.setInformationHeader(true);
+            headerBuilder.setInstanceHeader(true);
             return headerBuilder;
         }
 
@@ -228,14 +228,16 @@ public class ScenarioSimulationUtils {
                 .setColumnTitle(title)
                 .setColumnGroup(columnGroup)
                 .setReadOnly(false)
-                .setInformationHeader(true);
+                .setInstanceHeader(true)
+                .setPropertyHeader(false);
 
         // The "property" header
         instanceHeader.newLevel()
                 .setColumnTitle("")
                 .setColumnGroup(columnGroup)
                 .setReadOnly(true)
-                .setInformationHeader(false);
+                .setInstanceHeader(false)
+                .setPropertyHeader(true);
 
         return headerBuilder;
     }

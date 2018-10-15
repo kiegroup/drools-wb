@@ -22,7 +22,6 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +36,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class SetColumnValueCommandTest extends AbstractCommandTest {
+public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
 
-    private SetColumnValueCommand setColumnValueCommand;
+    private SetPropertyHeaderCommand setPropertyHeaderCommand;
 
     @Mock
     private List<GridColumn<?>> mockGridColumns;
@@ -49,16 +48,11 @@ public class SetColumnValueCommandTest extends AbstractCommandTest {
         super.setup();
         when(mockGridColumns.indexOf(mockGridColumn)).thenReturn(COLUMN_INDEX);
         when(mockScenarioGridModel.getColumns()).thenReturn(mockGridColumns);
-        setColumnValueCommand = spy(new SetColumnValueCommand(mockScenarioGridModel, COLUMN_ID, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer, true) {
+        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(mockScenarioGridModel, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer, true) {
 
             @Override
             protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
                 return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
-            }
-
-            @Override
-            protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
-                return headerBuilderMock;
             }
 
             @Override
@@ -70,18 +64,19 @@ public class SetColumnValueCommandTest extends AbstractCommandTest {
 
     @Test
     public void executeFalse() {
-        setColumnValueCommand.keepData = false;
-        setColumnValueCommand.execute();
-        verify(mockScenarioGridModel, times(1)).updateColumnType(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+        setPropertyHeaderCommand.keepData = false;
+        setPropertyHeaderCommand.execute();
+        verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
+        verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
+        verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
     }
 
     @Test
     public void executeTrue() {
-        setColumnValueCommand.keepData = true;
-        setColumnValueCommand.execute();
-        verify(setColumnValueCommand, times(1)).getHeaderTextBoxFactoryLocal();
-        verify(setColumnValueCommand, times(1)).getHeaderBuilderLocal(eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryMock));
-        verify(setColumnValueCommand, times(1)).getScenarioGridColumnLocal(eq(headerBuilderMock));
-        verify(mockScenarioGridModel, times(1)).updateColumnType(eq(COLUMN_INDEX), eq(mockGridColumn), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq( true));
+        setPropertyHeaderCommand.keepData = true;
+        setPropertyHeaderCommand.execute();
+        verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
+        verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
+        verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), eq(mockGridColumn), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
     }
 }

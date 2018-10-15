@@ -262,7 +262,7 @@ public class ScenarioGridModelTest {
     @Test
     public void updateColumnTypeFalse() {
         reset(scenarioGridModel);
-        scenarioGridModel.updateColumnType(COLUMN_INDEX, mockScenarioGridColumn, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, false);
+        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, mockScenarioGridColumn, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, false);
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(mockScenarioGridColumn), isA(FactIdentifier.class), isA(ExpressionIdentifier.class));
@@ -272,7 +272,7 @@ public class ScenarioGridModelTest {
     @Test
     public void updateColumnTypeTrue() {
         reset(scenarioGridModel);
-        scenarioGridModel.updateColumnType(COLUMN_INDEX, mockScenarioGridColumn, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, true);
+        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, mockScenarioGridColumn, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, true);
         verify(scenarioGridModel, atLeast(2)).checkSimulation();
         verify(scenarioGridModel, atLeast(ROW_COUNT - 1)).getCell(anyInt(), eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));

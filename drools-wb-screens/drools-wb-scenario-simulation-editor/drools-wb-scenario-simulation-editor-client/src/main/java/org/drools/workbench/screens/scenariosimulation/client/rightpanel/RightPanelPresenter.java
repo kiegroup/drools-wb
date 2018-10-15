@@ -26,7 +26,8 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
-import org.drools.workbench.screens.scenariosimulation.client.events.SetColumnValueEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.uberfire.client.annotations.DefaultPosition;
@@ -154,6 +155,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onEnableEditorTab() {
+        onSearchedEvent("");
         listGroupItemPresenter.enable();
         editingColumnEnabled = true;
         view.enableEditorTab();
@@ -175,12 +177,19 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public void onModifyColumn(String fullClassName) {
+        if (editingColumnEnabled) {
+            eventBus.fireEvent(new SetInstanceHeaderEvent(fullClassName));
+        }
+    }
+
+    @Override
     public void onModifyColumn(String factName, String fieldName, String valueClassName) {
         if (editingColumnEnabled) {
             String value = factName + "." + fieldName;
             String baseClass = factName.split("\\.")[0];
             String fullPackage = getFactModelTree(baseClass).getFullPackage();
-            eventBus.fireEvent(new SetColumnValueEvent(fullPackage, value, valueClassName));
+            eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, valueClassName));
         }
     }
 }

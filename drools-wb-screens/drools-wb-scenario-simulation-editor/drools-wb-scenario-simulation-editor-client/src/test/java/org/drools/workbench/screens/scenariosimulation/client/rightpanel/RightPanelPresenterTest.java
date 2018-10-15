@@ -19,7 +19,8 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.events.SetColumnValueEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
@@ -34,6 +35,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,17 +56,18 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     private EventBus mockEventBus;
 
     private RightPanelPresenter rightPanelPresenter;
-    private RightPanelPresenter rightPanelPresenterSpy;
 
     @Before
     public void setup() {
         super.setup();
         when(mockRightPanelView.getListContainer()).thenReturn(mockListContainer);
         when(mockListGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(mockListContainer);
-        this.rightPanelPresenter = new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter);
-        rightPanelPresenter.factTypeFieldsMap = mockTopLevelMap;
-        rightPanelPresenter.eventBus = mockEventBus;
-        rightPanelPresenterSpy = spy(rightPanelPresenter);
+        this.rightPanelPresenter = spy(new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter) {
+            {
+                this.factTypeFieldsMap = mockTopLevelMap;
+                this.eventBus = mockEventBus;
+            }
+        });
     }
 
     @Test
@@ -80,23 +83,23 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void onClearSearch() {
-        rightPanelPresenterSpy.onClearSearch();
+        rightPanelPresenter.onClearSearch();
         verify(mockRightPanelView, times(1)).clearInputSearch();
         verify(mockRightPanelView, times(1)).hideClearButton();
     }
 
     @Test
     public void onClearNameField() {
-        rightPanelPresenterSpy.onClearNameField();
+        rightPanelPresenter.onClearNameField();
         verify(mockRightPanelView, times(1)).clearNameField();
     }
 
     @Test
     public void onClearStatus() {
-        rightPanelPresenterSpy.onClearStatus();
-        verify(rightPanelPresenterSpy, times(1)).onClearSearch();
-        verify(rightPanelPresenterSpy, times(1)).onClearNameField();
-        verify(rightPanelPresenterSpy, times(1)).clearList();
+        rightPanelPresenter.onClearStatus();
+        verify(rightPanelPresenter, times(1)).onClearSearch();
+        verify(rightPanelPresenter, times(1)).onClearNameField();
+        verify(rightPanelPresenter, times(1)).clearList();
     }
 
     @Test
@@ -110,8 +113,8 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void setFactTypeFieldsMap() {
-        rightPanelPresenterSpy.setFactTypeFieldsMap(mockTopLevelMap);
-        verify(rightPanelPresenterSpy, times(mockTopLevelMap.size())).addListGroupItemView(anyString(), anyObject());
+        rightPanelPresenter.setFactTypeFieldsMap(mockTopLevelMap);
+        verify(rightPanelPresenter, times(mockTopLevelMap.size())).addListGroupItemView(anyString(), anyObject());
     }
 
     @Test
@@ -122,8 +125,8 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void setEventBus() {
-        rightPanelPresenterSpy.setEventBus(mockEventBus);
-        assertEquals(mockEventBus, rightPanelPresenterSpy.eventBus);
+        rightPanelPresenter.setEventBus(mockEventBus);
+        assertEquals(mockEventBus, rightPanelPresenter.eventBus);
     }
 
     @Test
@@ -137,6 +140,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     @Test
     public void onEnableEditorTabWithoutFactName() {
         rightPanelPresenter.onEnableEditorTab();
+        verify(rightPanelPresenter, times(1)).onSearchedEvent(eq(""));
         verify(mockListGroupItemPresenter, times(1)).enable();
         verify(mockListGroupItemPresenter, never()).enable(anyString());
         verify(mockListGroupItemPresenter, never()).disable();
@@ -146,6 +150,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     @Test
     public void onEnableEditorTabWithFactName() {
         rightPanelPresenter.onEnableEditorTab(FACT_NAME);
+        verify(rightPanelPresenter, times(1)).onSearchedEvent(eq(FACT_NAME));
         verify(mockListGroupItemPresenter, times(1)).enable(eq(FACT_NAME));
         verify(mockListGroupItemPresenter, never()).enable();
         verify(mockListGroupItemPresenter, never()).disable();
@@ -164,6 +169,11 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     public void onModifyColumn() {
         rightPanelPresenter.editingColumnEnabled = true;
         rightPanelPresenter.onModifyColumn(FACT_NAME, VALUE, VALUE_CLASS_NAME);
-        verify(mockEventBus, times(1)).fireEvent(isA(SetColumnValueEvent.class));
+        verify(mockEventBus, times(1)).fireEvent(isA(SetPropertyHeaderEvent.class));
+        verify(mockEventBus, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
+        reset(mockEventBus);
+        rightPanelPresenter.onModifyColumn(FACT_NAME);
+        verify(mockEventBus, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
+        verify(mockEventBus, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
     }
 }

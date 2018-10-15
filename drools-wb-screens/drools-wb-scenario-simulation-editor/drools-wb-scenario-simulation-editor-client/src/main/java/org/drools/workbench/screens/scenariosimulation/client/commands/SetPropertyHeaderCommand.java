@@ -17,32 +17,24 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getHeaderBuilder;
 
 /**
- * <code>Command</code> to <b>enable</b> the <code>RightPanelView</code>
+ * <code>Command</code> to to set the <i>property</i> level header for a given column
  */
 @Dependent
-public class SetColumnValueCommand extends AbstractCommand {
+public class SetPropertyHeaderCommand extends AbstractCommand {
 
     private ScenarioGridModel model;
-    private String columnId;
     private String fullPackage;
     private String value;
     private String valueClassName;
-    private ScenarioGridPanel scenarioGridPanel;
-    private ScenarioGridLayer scenarioGridLayer;
     protected boolean keepData;
 
-    public SetColumnValueCommand() {
+    public SetPropertyHeaderCommand() {
     }
 
     /**
@@ -54,15 +46,12 @@ public class SetColumnValueCommand extends AbstractCommand {
      * @param scenarioGridPanel
      * @param scenarioGridLayer
      */
-    public SetColumnValueCommand(ScenarioGridModel model, String columnId, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData) {
+    public SetPropertyHeaderCommand(ScenarioGridModel model, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData) {
         super(scenarioGridPanel, scenarioGridLayer);
         this.model = model;
-        this.columnId = columnId;
         this.fullPackage = fullPackage;
         this.value = value;
         this.valueClassName = valueClassName;
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridLayer;
         this.keepData = keepData;
     }
 
@@ -74,19 +63,24 @@ public class SetColumnValueCommand extends AbstractCommand {
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getHeaderTextBoxFactoryLocal();
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnGroup, factMappingType, factoryHeader);
-        model.updateColumnType(columnIndex,
-                               getScenarioGridColumnLocal(headerBuilder),
-                               fullPackage,
-                               value,
-                               valueClassName, keepData);
+//        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
+//        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getHeaderTextBoxFactoryLocal();
+//        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnGroup, factMappingType, factoryHeader);
+
+        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(columnGroup);
+        selectedColumn.getPropertyHeaderMetaData().setTitle(value);
+
+        model.updateColumnProperty(columnIndex,
+                                   selectedColumn
+                               /*getScenarioGridColumnLocal(headerBuilder)*/,
+                                   fullPackage,
+                                   value,
+                                   valueClassName, keepData);
     }
 
-    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
-        // indirection add for test
-        return getHeaderBuilder(value, columnId, columnGroup, factMappingType, factoryHeader);
-    }
+//    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+//        // indirection add for test
+//        return getHeaderBuilder(value, columnId, columnGroup, factMappingType, factoryHeader);
+//    }
 
 }
