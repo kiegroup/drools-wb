@@ -154,14 +154,22 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onEnableEditorTab() {
-        listGroupItemPresenter.setDisabled(false);
+        listGroupItemPresenter.enable();
+        editingColumnEnabled = true;
+        view.enableEditorTab();
+    }
+
+    @Override
+    public void onEnableEditorTab(String factName) {
+        onSearchedEvent(factName);
+        listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
     }
 
     @Override
     public void onDisableEditorTab() {
-        listGroupItemPresenter.setDisabled(true);
+        listGroupItemPresenter.disable();
         editingColumnEnabled = false;
         view.disableEditorTab();
     }

@@ -30,6 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -79,8 +80,24 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     }
 
     @Test
-    public void onToggleRowExpansion() {
-        listGroupItemPresenter.setDisabled(false);
+    public void onToggleRowExpansionDisabled() {
+        listGroupItemPresenter.disable();
+        reset(mockListGroupItemViewList);
+        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
+        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
+        verify(mockListGroupItemViewList,never()).contains(eq(mockListGroupItemView));
+        verify(mockListGroupItemView,never()).closeRow();
+        reset(mockListGroupItemViewList);
+        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
+        reset(mockListGroupItemView);
+        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
+        verify(mockListGroupItemViewList,never()).contains(eq(mockListGroupItemView));
+        verify(mockListGroupItemView,never()).expandRow();
+    }
+
+    @Test
+    public void onToggleRowExpansionWithoutFactName() {
+        listGroupItemPresenter.enable();
         reset(mockListGroupItemViewList);
         when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
         listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
@@ -92,19 +109,22 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
         listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
         verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
         verify(mockListGroupItemView, times(1)).expandRow();
-        //
-        listGroupItemPresenter.setDisabled(true);
+    }
+
+    @Test
+    public void onToggleRowExpansionWithFactName() {
+        listGroupItemPresenter.enable(FACT_NAME);
         reset(mockListGroupItemViewList);
         when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
         listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
-        verify(mockListGroupItemViewList, times(0)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(0)).closeRow();
+        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
+        verify(mockListGroupItemView, times(1)).closeRow();
         reset(mockListGroupItemViewList);
         when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
         reset(mockListGroupItemView);
         listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
-        verify(mockListGroupItemViewList, times(0)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(0)).expandRow();
+        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
+        verify(mockListGroupItemView, times(1)).expandRow();
     }
 
     @Test

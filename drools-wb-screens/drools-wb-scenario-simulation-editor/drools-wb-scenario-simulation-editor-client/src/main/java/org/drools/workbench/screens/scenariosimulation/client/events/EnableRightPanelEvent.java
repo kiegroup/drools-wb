@@ -25,8 +25,24 @@ public class EnableRightPanelEvent extends GwtEvent<EnableRightPanelEventHandler
 
     public static Type<EnableRightPanelEventHandler> TYPE = new Type<>();
 
+    private final String factName;
 
+    /**
+     * Fire this event to show all the first-level data models <b>enabled</b> (i.e. <b>double-clickable</b> to map to an <i>instance</i> header/column)
+     * and their properties <b>disabled</b> (i.e. <b>not double-clickable</b>)
+     */
     public EnableRightPanelEvent() {
+        factName = null;
+    }
+
+    /**
+     * Fire this event to show only the data model with the given name, <b>disabled</b> (i.e. <b>not double-clickable</b>)
+     * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
+     *
+     * @param factName
+     */
+    public EnableRightPanelEvent(String factName) {
+        this.factName = factName;
     }
 
     @Override
@@ -34,10 +50,12 @@ public class EnableRightPanelEvent extends GwtEvent<EnableRightPanelEventHandler
         return TYPE;
     }
 
+    public String getFactName() {
+        return factName;
+    }
+
     @Override
     protected void dispatch(EnableRightPanelEventHandler handler) {
         handler.onEvent(this);
     }
-
-
 }

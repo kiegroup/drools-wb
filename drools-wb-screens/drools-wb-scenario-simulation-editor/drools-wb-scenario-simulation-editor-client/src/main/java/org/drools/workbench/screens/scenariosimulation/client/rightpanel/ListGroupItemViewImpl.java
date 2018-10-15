@@ -15,10 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.stream.IntStream;
+
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
@@ -90,6 +93,36 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     @Override
     public boolean isToExpand() {
         return toExpand;
+    }
+
+    @Override
+    public void enable() {
+        fullClassName.addClassName("disabled");
+        factProperties.removeClassName("disabled");
+        IntStream.range(0, factProperties.getChildNodes().getLength())
+                .forEach(index -> {
+                    ((Element) factProperties.getChild(index)).removeClassName("disabled");
+                });
+        listGroupItemContainer.removeClassName("disabled");
+        IntStream.range(0, listGroupItemContainer.getChildNodes().getLength())
+                .forEach(index -> {
+                    ((Element) listGroupItemContainer.getChild(index)).removeClassName("disabled");
+                });
+    }
+
+    @Override
+    public void disable() {
+        fullClassName.removeClassName("disabled");
+        factProperties.addClassName("disabled");
+        IntStream.range(0, factProperties.getChildNodes().getLength())
+                .forEach(index -> {
+                    ((Element) factProperties.getChild(index)).addClassName("disabled");
+                });
+        listGroupItemContainer.addClassName("disabled");
+        IntStream.range(0, listGroupItemContainer.getChildNodes().getLength())
+                .forEach(index -> {
+                    ((Element) listGroupItemContainer.getChild(index)).addClassName("disabled");
+                });
     }
 
     @Override

@@ -28,18 +28,40 @@ public class EnableRightPanelCommand implements Command {
 
     private RightPanelView.Presenter rightPanelPresenter;
 
+    private final String factName;
+
     public EnableRightPanelCommand() {
+        this.factName = null;
     }
 
     /**
+     * Execute this command to show all the first-level data models <b>enabled</b> (i.e. <b>double-clickable</b> to map to an <i>instance</i> header/column)
+     * and their properties <b>disabled</b> (i.e. <b>not double-clickable</b>)
      * @param rightPanelPresenter
      */
     public EnableRightPanelCommand(RightPanelView.Presenter rightPanelPresenter) {
         this.rightPanelPresenter = rightPanelPresenter;
+        this.factName = null;
+    }
+
+    /**
+     * Execute this command to to show only the data model with the given name, <b>disabled</b> (i.e. <b>not double-clickable</b>)
+     * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
+     *
+     * @param rightPanelPresenter
+     * @param factName
+     */
+    public EnableRightPanelCommand(RightPanelView.Presenter rightPanelPresenter, String factName) {
+        this.rightPanelPresenter = rightPanelPresenter;
+        this.factName = factName;
     }
 
     @Override
     public void execute() {
-        rightPanelPresenter.onEnableEditorTab();
+        if (factName == null) {
+            rightPanelPresenter.onEnableEditorTab();
+        } else {
+            rightPanelPresenter.onEnableEditorTab(factName);
+        }
     }
 }

@@ -41,11 +41,27 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
 
     private AtomicBoolean disabled = new AtomicBoolean(true);
 
-    public void setDisabled(boolean disabled) {
-        this.disabled.set(disabled);
-        if (disabled) {
-            listGroupItemViewList.forEach(ListGroupItemView::closeRow);
-        }
+    private String factName = null;
+
+    @Override
+    public void enable() {
+        this.disabled.set(false);
+        factName = null;
+        listGroupItemViewList.forEach(ListGroupItemView::disable);
+    }
+
+    @Override
+    public void enable(String factName) {
+        this.disabled.set(false);
+        this.factName = factName;
+        listGroupItemViewList.forEach(ListGroupItemView::enable);
+    }
+
+    @Override
+    public void disable() {
+        this.disabled.set(true);
+        factName = null;
+        listGroupItemViewList.forEach(ListGroupItemView::closeRow);
     }
 
     @Override
@@ -81,6 +97,11 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
                     FactModelTree factModelTree = rightPanelPresenter.getFactModelTree(listGroupItemView.getFactType());
                     populateListGroupItemView(listGroupItemView, listGroupItemView.getParentPath(), listGroupItemView.getFactName(), factModelTree);
                     listGroupItemView.setToExpand(false);
+                    if (factName != null) {
+                        listGroupItemView.disable();
+                    } else {
+                        listGroupItemView.enable();
+                    }
                 }
                 listGroupItemView.expandRow();
             }

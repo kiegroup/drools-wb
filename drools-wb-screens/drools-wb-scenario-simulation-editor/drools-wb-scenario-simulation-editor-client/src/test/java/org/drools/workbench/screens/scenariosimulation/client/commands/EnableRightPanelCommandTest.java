@@ -21,6 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -31,15 +34,26 @@ public class EnableRightPanelCommandTest extends AbstractCommandTest {
 
     private EnableRightPanelCommand enableRightPanelCommand;
 
+    private static final String FACT_NAME = "FACT_NAME";
+
     @Before
     public void setup() {
         super.setup();
-        enableRightPanelCommand = new EnableRightPanelCommand(mockRightPanelPresenter);
     }
 
     @Test
-    public void execute() {
+    public void executeWithoutFactName() {
+        enableRightPanelCommand = new EnableRightPanelCommand(mockRightPanelPresenter);
         enableRightPanelCommand.execute();
         verify(mockRightPanelPresenter, times(1)).onEnableEditorTab();
+        verify(mockRightPanelPresenter, never()).onEnableEditorTab(anyString());
+    }
+
+    @Test
+    public void executeWithFactName() {
+        enableRightPanelCommand = new EnableRightPanelCommand(mockRightPanelPresenter, FACT_NAME);
+        enableRightPanelCommand.execute();
+        verify(mockRightPanelPresenter, times(1)).onEnableEditorTab(eq(FACT_NAME));
+        verify(mockRightPanelPresenter, never()).onEnableEditorTab();
     }
 }

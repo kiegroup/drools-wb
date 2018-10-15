@@ -187,13 +187,13 @@ public class ScenarioSimulationUtils {
     }
 
     /**
-     * Retrieve a <b>single</b> or <b>double</b> level Header metadata, i.e. a <code>List&lt;GridColumn.HeaderMetaData&gt;</code> with one  or two elements,
+     * Retrieve a <b>single</b> or <b>triple</b> level Header metadata, i.e. a <code>List&lt;GridColumn.HeaderMetaData&gt;</code> with one  or three elements,
      * depending on the column <b>Group</b>:
      * <p>
      * OTHER: single level
      * </p>
      * <p>
-     * EXPECTED/GIVEN: double level
+     * EXPECTED/GIVEN: triple level
      * </p>
      * @param title
      * @param columnId
@@ -219,15 +219,23 @@ public class ScenarioSimulationUtils {
         if (isOther(factMappingType)) {
             headerBuilder.setColumnTitle(title);
             headerBuilder.setColumnGroup(columnGroup);
-            headerBuilder.setInformationHeader(informationHeader);
+            headerBuilder.setInformationHeader(true);
             return headerBuilder;
         }
 
-        headerBuilder.newLevel()
+        // The "instance" header
+        final ScenarioSimulationBuilders.HeaderBuilder instanceHeader = headerBuilder.newLevel()
                 .setColumnTitle(title)
                 .setColumnGroup(columnGroup)
                 .setReadOnly(false)
-                .setInformationHeader(informationHeader);
+                .setInformationHeader(true);
+
+        // The "property" header
+        instanceHeader.newLevel()
+                .setColumnTitle("")
+                .setColumnGroup(columnGroup)
+                .setReadOnly(true)
+                .setInformationHeader(false);
 
         return headerBuilder;
     }

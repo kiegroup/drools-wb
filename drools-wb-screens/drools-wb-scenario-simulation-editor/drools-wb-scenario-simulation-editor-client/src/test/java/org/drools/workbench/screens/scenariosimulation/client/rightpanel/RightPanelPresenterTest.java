@@ -33,6 +33,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -134,16 +135,28 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     }
 
     @Test
-    public void onEnableEditorTab() {
+    public void onEnableEditorTabWithoutFactName() {
         rightPanelPresenter.onEnableEditorTab();
-        verify(mockListGroupItemPresenter, times(1)).setDisabled(eq(false));
+        verify(mockListGroupItemPresenter, times(1)).enable();
+        verify(mockListGroupItemPresenter, never()).enable(anyString());
+        verify(mockListGroupItemPresenter, never()).disable();
+        verify(mockRightPanelView, times(1)).enableEditorTab();
+    }
+
+    @Test
+    public void onEnableEditorTabWithFactName() {
+        rightPanelPresenter.onEnableEditorTab(FACT_NAME);
+        verify(mockListGroupItemPresenter, times(1)).enable(eq(FACT_NAME));
+        verify(mockListGroupItemPresenter, never()).enable();
+        verify(mockListGroupItemPresenter, never()).disable();
         verify(mockRightPanelView, times(1)).enableEditorTab();
     }
 
     @Test
     public void onDisableEditorTab() {
         rightPanelPresenter.onDisableEditorTab();
-        verify(mockListGroupItemPresenter, times(1)).setDisabled(eq(true));
+        verify(mockListGroupItemPresenter, times(1)).disable();
+        verify(mockListGroupItemPresenter, never()).enable();
         verify(mockRightPanelView, times(1)).disableEditorTab();
     }
 
