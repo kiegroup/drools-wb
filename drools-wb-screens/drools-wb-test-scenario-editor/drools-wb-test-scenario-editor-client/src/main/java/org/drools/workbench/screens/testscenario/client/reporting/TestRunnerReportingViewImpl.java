@@ -16,22 +16,21 @@
 
 package org.drools.workbench.screens.testscenario.client.reporting;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Widget;
+import elemental2.dom.HTMLAnchorElement;
 import elemental2.dom.HTMLDivElement;
-import org.drools.workbench.screens.testscenario.client.resources.i18n.TestScenarioConstants;
-import org.drools.workbench.screens.testscenario.client.service.TestRuntimeReportingService;
-import org.guvnor.common.services.shared.message.Level;
-import org.guvnor.common.services.shared.test.Failure;
-import org.guvnor.messageconsole.client.console.widget.MessageTableWidget;
-import org.gwtbootstrap3.client.ui.constants.ColumnSize;
-import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
+import org.guvnor.messageconsole.events.PublishBatchMessagesEvent;
+import org.guvnor.messageconsole.events.SystemMessage;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Templated
@@ -40,68 +39,55 @@ public class TestRunnerReportingViewImpl
 
     private Presenter presenter;
 
+    @Inject
+    private Event<PublishBatchMessagesEvent> publishBatchMessagesEvent;
+
     @DataField
     private HTMLDivElement resultPanel;
 
     @DataField
-    private HTMLDivElement resultTitle;
+    private HTMLDivElement testResultIcon;
 
     @DataField
-    private HTMLDivElement resultStats;
+    private HTMLDivElement testResultText;
 
     @DataField
-    private HTMLDivElement resultDetails;
+    private HTMLDivElement scenariosRun;
 
-    protected final MessageTableWidget<Failure> dataGrid = new MessageTableWidget<Failure>() {{
-        setToolBarVisible(false);
-    }};
+    @DataField
+    private HTMLDivElement completedAt;
+
+    @DataField
+    private HTMLDivElement duration;
+
+    @DataField
+    private HTMLAnchorElement viewAlerts;
+
+    List<SystemMessage> systemMessages = new ArrayList<>();
 
     @Inject
     public TestRunnerReportingViewImpl(HTMLDivElement resultPanel,
-                                       HTMLDivElement resultTitle,
-                                       HTMLDivElement resultStats,
-                                       HTMLDivElement resultDetails,
-                                       Elemental2DomUtil domUtils) {
+                                       HTMLDivElement testResultIcon,
+                                       HTMLDivElement testResultText,
+                                       HTMLDivElement scenariosRun,
+                                       HTMLDivElement completedAt,
+                                       HTMLDivElement duration,
+                                       HTMLAnchorElement viewAlerts) {
         this.resultPanel = resultPanel;
-        this.resultTitle = resultTitle;
-        this.resultStats = resultStats;
-        this.resultDetails = resultDetails;
-
-        domUtils.appendWidgetToElement(resultDetails,
-                                       dataGrid);
-
-        addSuccessColumn();
-        addTextColumn();
-
-        dataGrid.addStyleName(ColumnSize.MD_12.getCssName());
+        this.testResultIcon = testResultIcon;
+        this.testResultText = testResultText;
+        this.scenariosRun = scenariosRun;
+        this.completedAt = completedAt;
+        this.duration = duration;
+        this.viewAlerts = viewAlerts;
     }
 
-    private void addSuccessColumn() {
-        dataGrid.addLevelColumn(10,
-                                new MessageTableWidget.ColumnExtractor<Level>() {
-                                    @Override
-                                    public Level getValue(final Object row) {
-                                        presenter.onAddingFailure((Failure) row);
-                                        return Level.ERROR;
-                                    }
-                                });
-    }
-
-    private void addTextColumn() {
-        dataGrid.addTextColumn(90,
-                               new MessageTableWidget.ColumnExtractor<String>() {
-                                   @Override
-                                   public String getValue(final Object row) {
-
-                                       return makeMessage((Failure) row);
-                                   }
-                               });
-    }
-
-    private String makeMessage(Failure failure) {
-        final String displayName = failure.getDisplayName();
-        final String message = failure.getMessage();
-        return displayName + (!(message == null || message.isEmpty()) ? " : " + message : "");
+    @EventHandler("viewAlerts")
+    public void onClickEvent(ClickEvent event) {
+        PublishBatchMessagesEvent messagesEvent = new PublishBatchMessagesEvent();
+        messagesEvent.setCleanExisting(true);
+        messagesEvent.setMessagesToPublish(systemMessages);
+        publishBatchMessagesEvent.fire(messagesEvent);
     }
 
     @Override
@@ -110,36 +96,29 @@ public class TestRunnerReportingViewImpl
     }
 
     @Override
-    public void bindDataGridToService(TestRuntimeReportingService testRuntimeReportingService) {
-        testRuntimeReportingService.addDataDisplay(dataGrid);
+    public void setSystemMessages(List<SystemMessage> systemMessages){
+        this.systemMessages = systemMessages;
     }
 
     @Override
     public void showSuccess() {
-        resultTitle.textContent = TestScenarioConstants.INSTANCE.Success();
-        resultTitle.className = "label col-md-12 label-success";
+        testResultIcon.className = "pficon pficon-ok";
+        testResultText.textContent = "PASSED";
     }
 
     @Override
     public void showFailure() {
-        resultTitle.textContent = TestScenarioConstants.INSTANCE.ThereWereTestFailures();
-        resultTitle.className = "label col-md-12 label-danger";
+        testResultIcon.className = "pficon pficon-error-circle-o";
+        testResultText.textContent = "FAILED";
     }
 
     @Override
-    public void setExplanation(String explanation) {
-    }
-
-    @Override
-    public void setRunStatus(int runCount,
-                             long runTime) {
-        Date date = new Date(runTime);
-        DateTimeFormat minutesFormat = DateTimeFormat.getFormat("m");
-        DateTimeFormat secondsFormat = DateTimeFormat.getFormat("s");
-
-        resultStats.textContent = TestScenarioConstants.INSTANCE.XTestsRanInYMinutesZSeconds(runCount,
-                                                                                             minutesFormat.format(date),
-                                                                                             secondsFormat.format(date));
+    public void setRunStatus(String completedAt,
+                             String scenariosRun,
+                             String duration) {
+        this.completedAt.textContent = completedAt;
+        this.scenariosRun.textContent = scenariosRun;
+        this.duration.textContent = duration;
     }
 
     @Override

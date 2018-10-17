@@ -18,16 +18,53 @@
 
 <div data-field="resultPanel" class="container-fluid">
     <div class="row">
-        <div data-field="resultTitle"></div>
-    </div>
+        <!-- Content - filters -->
+        <div class="col-xs-9 tab-content kie-tab-content--filters" style="width: 100%;">
+            <!-- GENERAL -->
+            <div class="tab-pane kie__dock active" id="kieDockPanel1">
+                <h3 class="kie-dock__heading">
+                    Test Report
+                </h3>
+                <hr class="kie-dock__divider"/>
 
-    <div class="row" style="text-align: center;">
-        <div class="col-md-12">
-            <div data-field="resultStats"></div>
+                <h5 class="kie-dock__heading--section">Overview</h5>
+
+                <dl class="dl-horizontal kie-dl-horizontal clearfix">
+                    <dt>
+                        Test Results:
+                    </dt>
+                    <dd>
+                        <span data-field="testResultIcon"></span> TEST
+                        <span data-field="testResultText" style="display: inline;"></span>
+                    </dd>
+                    <dt>
+                        Completed at:
+                    </dt>
+                    <dd>
+                        <span data-field="completedAt"></span>
+                    </dd>
+                    <dt>
+                        Scenarios run:
+                    </dt>
+                    <dd>
+                        <span data-field="scenariosRun"></span>
+                    </dd>
+                    <dt>
+                        Duration:
+                    </dt>
+                    <dd>
+                        <span data-field="duration"></span>
+                    </dd>
+                </dl>
+
+                <a data-field="viewAlerts">View Alerts</a>
+
+                <hr class="kie-dock__divider"/>
+                <h5 class="kie-dock__heading--section">Scenario Status</h5>
+
+                <br/>
+            </div>
         </div>
     </div>
-
-    <div class="row">
-        <div data-field="resultDetails"></div>
-    </div>
 </div>
+

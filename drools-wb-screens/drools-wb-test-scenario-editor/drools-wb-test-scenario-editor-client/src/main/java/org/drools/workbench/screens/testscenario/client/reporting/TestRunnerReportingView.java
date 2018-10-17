@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,27 @@
 
 package org.drools.workbench.screens.testscenario.client.reporting;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.testscenario.client.service.TestRuntimeReportingService;
-import org.guvnor.common.services.shared.test.Failure;
+import org.guvnor.messageconsole.events.SystemMessage;
 
 public interface TestRunnerReportingView
         extends IsWidget {
 
-
     interface Presenter {
 
-        void onMessageSelected(Failure failure);
-
-        void onAddingFailure(Failure failure);
-
     }
+
     void setPresenter(Presenter presenter);
 
-    void bindDataGridToService(TestRuntimeReportingService testRuntimeReportingService);
+    void setSystemMessages(List<SystemMessage> systemMessages);
 
     void showSuccess();
 
     void showFailure();
 
-    void setExplanation(String explanation);
-
-    void setRunStatus(int runCount, long runTime);
-
+    void setRunStatus(String completedAt,
+                      String ScenariosRun,
+                      String duration);
 }
