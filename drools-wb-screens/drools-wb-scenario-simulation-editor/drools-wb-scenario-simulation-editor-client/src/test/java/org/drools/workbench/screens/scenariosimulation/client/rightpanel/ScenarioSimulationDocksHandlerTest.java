@@ -15,10 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationDocksHandlerTest {
 
     @Test
