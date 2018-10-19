@@ -1374,6 +1374,11 @@
       <artifactId>errai-jaxrs-client</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.appformer</groupId>
+      <artifactId>appformer-js</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
+    </dependency>
 
   </dependencies>
 
@@ -1406,13 +1411,6 @@
               </properties>
             </configuration>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0.0</version>
-        <executions>
           <execution>
             <id>set-ts-exporter-all</id>
             <phase>validate</phase>

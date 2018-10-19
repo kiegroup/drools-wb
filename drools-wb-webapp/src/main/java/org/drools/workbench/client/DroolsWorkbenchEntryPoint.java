@@ -21,6 +21,7 @@ import org.drools.workbench.client.resources.i18n.AppConstants;
 import org.guvnor.common.services.shared.config.AppConfigService;
 import org.guvnor.common.services.shared.preferences.GuvnorPreferenceScopes;
 import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.kie.workbench.common.widgets.client.handlers.workbench.configuration.LanguageConfigurationHandler;
 import org.kie.workbench.common.widgets.client.handlers.workbench.configuration.WorkbenchConfigurationPresenter;
@@ -32,6 +33,7 @@ import org.uberfire.client.mvp.ActivityBeansCache;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.widgets.menu.megamenu.WorkbenchMegaMenuPresenter;
 import org.uberfire.ext.preferences.client.admin.page.AdminPage;
+import org.uberfire.jsbridge.client.AppFormerJsBridge;
 import org.uberfire.preferences.shared.PreferenceScopeFactory;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
@@ -56,8 +58,7 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
     protected WorkbenchConfigurationPresenter workbenchConfigurationPresenter;
 
     protected LanguageConfigurationHandler languageConfigurationHandler;
-
-
+    private final AppFormerJsBridge appFormerJsBridge;
 
     @Inject
     public DroolsWorkbenchEntryPoint(final Caller<AppConfigService> appConfigService,
@@ -70,7 +71,8 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
                                      final PreferenceScopeFactory scopeFactory,
                                      final WorkbenchConfigurationPresenter workbenchConfigurationPresenter,
                                      final LanguageConfigurationHandler languageConfigurationHandler,
-                                     final DefaultWorkbenchErrorCallback defaultWorkbenchErrorCallback) {
+                                     final DefaultWorkbenchErrorCallback defaultWorkbenchErrorCallback,
+                                     final AppFormerJsBridge appFormerJsBridge) {
         super(appConfigService,
               activityBeansCache,
               defaultWorkbenchErrorCallback);
@@ -82,6 +84,14 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
         this.scopeFactory = scopeFactory;
         this.workbenchConfigurationPresenter = workbenchConfigurationPresenter;
         this.languageConfigurationHandler = languageConfigurationHandler;
+        this.appFormerJsBridge = appFormerJsBridge;
+    }
+
+    @Override
+    @AfterInitialization
+    public void startDefaultWorkbench() {
+        super.startDefaultWorkbench();
+        appFormerJsBridge.init("org.drools.workbench.DroolsWorkbench");
     }
 
     @Override

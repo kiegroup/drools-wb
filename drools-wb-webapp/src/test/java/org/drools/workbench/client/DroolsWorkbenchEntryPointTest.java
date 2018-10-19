@@ -100,7 +100,7 @@ public class DroolsWorkbenchEntryPointTest {
                                                                       scopeFactory,
                                                                       workbenchConfigurationPresenter,
                                                                       languageConfigurationHandler,
-                                                                      defaultWorkbenchErrorCallback));
+                                                                      defaultWorkbenchErrorCallback, null));
         mockMenuHelper();
         mockConstants();
     }
