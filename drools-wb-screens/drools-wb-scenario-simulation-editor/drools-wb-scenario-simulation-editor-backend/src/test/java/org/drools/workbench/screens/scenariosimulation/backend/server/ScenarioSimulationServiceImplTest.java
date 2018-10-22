@@ -15,15 +15,24 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import org.assertj.core.api.Assertions;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.metadata.MetadataServerSideService;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
+import org.guvnor.common.services.project.model.Dependencies;
+import org.guvnor.common.services.project.model.GAV;
+import org.guvnor.common.services.project.model.POM;
+import org.guvnor.common.services.project.model.Package;
+import org.guvnor.common.services.project.service.POMService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.security.shared.api.identity.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.backend.service.KieServiceOverviewLoader;
+import org.kie.workbench.common.services.shared.project.KieModule;
+import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -37,6 +46,7 @@ import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
+import org.uberfire.java.nio.file.OpenOption;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
@@ -44,7 +54,10 @@ import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScenarioSimulationServiceImplTest {
@@ -82,10 +95,47 @@ public class ScenarioSimulationServiceImplTest {
     @Mock
     private ScenarioRunnerServiceImpl scenarioRunnerService;
 
+    @Mock
+    private POMService pomService;
+
+    @Mock
+    private org.uberfire.java.nio.file.Path activatorPath;
+
+    @Mock
+    private KieModuleService kieModuleService;
+
+    @Mock
+    private KieModule module;
+
+    @Mock
+    private POM projectPom;
+
+    @Mock
+    private Dependencies dependencies;
+
+    @Mock
+    private Package mockedPackage;
+
     @InjectMocks
-    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
+    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class)) {
+        @Override
+        org.uberfire.java.nio.file.Path getActivatorPath(Package projectPackage) {
+            return activatorPath;
+        }
+    };
 
     private Path path = PathFactory.newPath("contextpath", "file:///contextpath");
+
+    @Before
+    public void setuo() {
+        when(kieModuleService.resolveModule(any())).thenReturn(module);
+        when(kieModuleService.resolveDefaultPackage(any())).thenReturn(mockedPackage);
+        when(ioService.exists(activatorPath)).thenReturn(false);
+
+        when(kieModuleService.resolveModule(any())).thenReturn(module);
+        when(module.getPom()).thenReturn(projectPom);
+        when(projectPom.getDependencies()).thenReturn(dependencies);
+    }
 
     @Test
     public void init() throws Exception {
@@ -176,9 +226,10 @@ public class ScenarioSimulationServiceImplTest {
                                                "Commit comment");
 
         assertNotNull(returnPath);
-        verify(ioService).write(any(org.uberfire.java.nio.file.Path.class),
-                                anyString(),
-                                any(CommentedOption.class));
+
+        verify(ioService, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
+                                          anyString(),
+                                          any(CommentedOption.class));
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -203,5 +254,58 @@ public class ScenarioSimulationServiceImplTest {
         verify(scenarioRunnerService).runTest("test user",
                                               path,
                                               model);
+    }
+
+    @Test
+    public void createActivatorIfNotExistTest() {
+        service.createActivatorIfNotExist(path);
+
+        verify(ioService, times(1))
+                .write(any(org.uberfire.java.nio.file.Path.class),
+                       anyString(),
+                       any(OpenOption.class));
+
+        when(kieModuleService.resolveDefaultPackage(any())).thenReturn(null);
+        Assertions.assertThatThrownBy(() -> service.createActivatorIfNotExist(path))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Impossible to retrieve package information from path: file:///contextpath");
+    }
+
+    @Test
+    public void ensureDependenciesTest() {
+        service.ensureDependencies(module);
+
+        int expectedCalls = service.getDependecies(null).size();
+        verify(pomService, times(expectedCalls)).save(any(Path.class),
+                                          any(POM.class),
+                                          any(Metadata.class),
+                                          anyString());
+    }
+
+    @Test
+    public void editPomIfNecessaryTest() {
+        String groupId = "groupId";
+        String artifactId = "artifactId";
+        String version = "version";
+        POM pom = new POM();
+        GAV gav = new GAV(groupId, artifactId, version);
+        Dependencies dependencies = new Dependencies();
+
+        service.editPomIfNecessary(path, pom, dependencies, gav);
+
+        verify(pomService, times(1))
+                .save(any(Path.class),
+                      any(POM.class),
+                      any(Metadata.class),
+                      anyString());
+
+        reset(pomService);
+;
+        service.editPomIfNecessary(path, pom, dependencies, gav);
+        verify(pomService, times(0))
+                .save(any(Path.class),
+                      any(POM.class),
+                      any(Metadata.class),
+                      anyString());
     }
 }
