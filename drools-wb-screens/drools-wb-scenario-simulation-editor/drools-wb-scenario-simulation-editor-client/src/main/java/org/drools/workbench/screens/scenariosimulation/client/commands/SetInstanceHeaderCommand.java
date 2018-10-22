@@ -17,15 +17,11 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getHeaderBuilder;
 
 /**
  * <code>Command</code> to set the <i>instance</i> level header for a given column
@@ -34,25 +30,24 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 public class SetInstanceHeaderCommand extends AbstractCommand {
 
     private ScenarioGridModel model;
-    private String columnId;
-    private String fullClassName;
+    private String fullPackage;
+    private String className;
 
     public SetInstanceHeaderCommand() {
     }
 
     /**
-     *
      * @param model
-     * @param columnId
-     * @param fullClassName
+     * @param fullPackage
+     * @param className
      * @param scenarioGridPanel
      * @param scenarioGridLayer
      */
-    public SetInstanceHeaderCommand(ScenarioGridModel model, String columnId, String fullClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public SetInstanceHeaderCommand(ScenarioGridModel model, String fullPackage, String className, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         super(scenarioGridPanel, scenarioGridLayer);
         this.model = model;
-        this.columnId = columnId;
-        this.fullClassName = fullClassName;
+        this.fullPackage = fullPackage;
+        this.className = className;
     }
 
     @Override
@@ -62,19 +57,11 @@ public class SetInstanceHeaderCommand extends AbstractCommand {
             return;
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
-        String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getHeaderTextBoxFactoryLocal();
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(columnGroup, factMappingType, factoryHeader);
-        final ScenarioGridColumn newColumn = getScenarioGridColumnLocal(headerBuilder);
-        //selectedColumn.getInformationHeaderMetaData().setTitle(fullClassName);
-        newColumn.getPropertyHeaderMetaData().setReadOnly(false);
-        model.updateColumnInstance(columnIndex,
-                                   newColumn);
-    }
-
-    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
-        // indirection add for test
-        return getHeaderBuilder(fullClassName, columnId, columnGroup, factMappingType, factoryHeader);
+        final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+        informationHeaderMetaData.setTitle(className);
+        selectedColumn.setInstanceAssigned(true);
+        final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
+        propertyHeaderMetaData.setReadOnly(false);
+        model.updateColumnInstance(columnIndex, selectedColumn, fullPackage, className);
     }
 }

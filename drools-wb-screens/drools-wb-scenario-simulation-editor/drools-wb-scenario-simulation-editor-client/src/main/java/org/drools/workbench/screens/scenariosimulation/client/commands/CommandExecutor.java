@@ -178,7 +178,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(InsertColumnEvent event) {
-        commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), scenarioGridPanel, scenarioGridLayer));
+        commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), event.isAsProperty(), scenarioGridPanel, scenarioGridLayer));
     }
 
     @Override
@@ -206,7 +206,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
         if (model.getSelectedColumn() == null) {
             return;
         }
-        commonExecute(new SetInstanceHeaderCommand(model, String.valueOf(new Date().getTime()), event.getFullClassName(), scenarioGridPanel, scenarioGridLayer));
+        commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
     }
 
     @Override

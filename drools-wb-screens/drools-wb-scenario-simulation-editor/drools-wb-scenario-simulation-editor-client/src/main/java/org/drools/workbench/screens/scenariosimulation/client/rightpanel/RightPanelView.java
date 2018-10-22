@@ -52,6 +52,12 @@ public interface RightPanelView
      */
     void disableEditorTab();
 
+    /**
+     * By default the <b>Add</b> button is disabled (no user interaction allowed).
+     * It is enabled only by selection of a property/data object
+     */
+    void enableAddButton();
+
     interface Presenter {
 
         void onClearSearch();
@@ -87,6 +93,8 @@ public interface RightPanelView
          * Use this when click on grid' <i>property</i> header.
          * Call this method to show only the data model with the given name, <b>disabled</b> (i.e. <b>not double-clickable</b>)
          * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
+         *
+         * @param factName
          */
         void onEnableEditorTab(String factName);
 
@@ -97,17 +105,21 @@ public interface RightPanelView
         void onDisableEditorTab();
 
         /**
-         * Method to fire a <code>SetPropertyHeaderCommand</code> - use this to set the <i>instance</i> level header
-         * @param fullClassName
+         * Method to fire a <code>SetPropertyHeaderCommand</code>  or <code>SetPropertyHeaderCommand</code>,
+         * depending on the element currently selected
          */
-        void onModifyColumn(String fullClassName);
+        void onModifyColumn();
 
         /**
-         * Method to fire a <code>SetPropertyHeaderCommand</code> - use this to set the <i>property</i> level header
-         * @param factName
-         * @param fieldName
-         * @param className
+         * Method to set the "selected" information - use this to set the <i>instance</i> level header
+         * @param selected
          */
-        void onModifyColumn(String factName, String fieldName, String className);
+        void setSelectedElement(ListGroupItemView selected);
+
+        /**
+         * Method to set the "selected" information - use this to set the <i>property</i> level header
+         * @param selected
+         */
+        void setSelectedElement(FieldItemView selected);
     }
 }

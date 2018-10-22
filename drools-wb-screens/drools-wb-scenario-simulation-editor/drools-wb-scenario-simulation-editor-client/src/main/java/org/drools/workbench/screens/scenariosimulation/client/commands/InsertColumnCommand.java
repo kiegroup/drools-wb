@@ -15,6 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -24,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 /**
  * <code>Command</code> to <b>insert</b> a column.
@@ -34,7 +39,8 @@ public class InsertColumnCommand extends AbstractCommand {
     private ScenarioGridModel model;
     private String columnId;
     private int columnIndex;
-    boolean isRight;
+    protected boolean isRight;
+    private boolean asProperty;
 
     public InsertColumnCommand() {
     }
@@ -44,29 +50,44 @@ public class InsertColumnCommand extends AbstractCommand {
      * @param columnId
      * @param columnIndex
      * @param isRight when <code>true</code>, column will be inserted to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
+     * @param asProperty when <code>true</code>, column will use the <b>instance</b> header of the original one, so to create a new "property" header under the same instance
      * @param scenarioGridPanel
      * @param scenarioGridLayer
      */
-    public InsertColumnCommand(ScenarioGridModel model, String columnId, int columnIndex, boolean isRight, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
+    public InsertColumnCommand(ScenarioGridModel model, String columnId, int columnIndex, boolean isRight, boolean asProperty, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         super(scenarioGridPanel, scenarioGridLayer);
         this.model = model;
         this.columnId = columnId;
         this.columnIndex = columnIndex;
         this.isRight = isRight;
+        this.asProperty = asProperty;
     }
 
     @Override
     public void execute() {
         String columnGroup = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getColumnGroup();
-        int columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        String originalColumnTitle = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String columnTitle = FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-        model.insertColumn(columnPosition, getScenarioGridColumnLocal(columnTitle,
-                                                                      columnId,
-                                                                      columnGroup,
-                                                                      factMappingType,
-                                                                      scenarioGridPanel,
-                                                                      scenarioGridLayer,
-                                                                      ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        String columnTitle = asProperty ? originalColumnTitle : FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
+        String placeHolder = asProperty ? ScenarioSimulationEditorConstants.INSTANCE.insertValue(): ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(columnTitle,
+                                                                                      columnId,
+                                                                                      columnGroup,
+                                                                                      factMappingType,
+                                                                                      scenarioGridPanel,
+                                                                                      scenarioGridLayer,
+                                                                                      placeHolder);
+        scenarioGridColumnLocal.setReadOnly(!asProperty);
+        final Stream<GridColumn<?>> filteredColumnStream = model.getColumns().stream().filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle));
+        int columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        final List<GridColumn<?>> collect = filteredColumnStream.collect(Collectors.toList());
+        if (!collect.isEmpty()) {
+            if (isRight) {
+                columnPosition = model.getColumns().indexOf(collect.get(collect.size()-1)) +1;
+            } else {
+                columnPosition = model.getColumns().indexOf(collect.get(0));
+            }
+        }
+        model.insertColumn(columnPosition, scenarioGridColumnLocal);
     }
 }

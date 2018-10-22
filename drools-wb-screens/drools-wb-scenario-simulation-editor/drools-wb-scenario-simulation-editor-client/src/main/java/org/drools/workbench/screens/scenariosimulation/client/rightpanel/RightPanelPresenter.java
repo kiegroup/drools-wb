@@ -58,6 +58,10 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     boolean editingColumnEnabled = false;
 
+
+    protected ListGroupItemView selectedListGroupItemView;
+    protected FieldItemView selectedFieldItemView;
+
     public RightPanelPresenter() {
         //Zero argument constructor for CDI
     }
@@ -177,19 +181,34 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void onModifyColumn(String fullClassName) {
-        if (editingColumnEnabled) {
-            eventBus.fireEvent(new SetInstanceHeaderEvent(fullClassName));
-        }
+    public void setSelectedElement(ListGroupItemView selected) {
+        selectedListGroupItemView = selected;
+        selectedFieldItemView = null;
+        //view.enableEditorTab();
+        view.enableAddButton();
     }
 
     @Override
-    public void onModifyColumn(String factName, String fieldName, String valueClassName) {
+    public void setSelectedElement(FieldItemView selected) {
+        selectedFieldItemView = selected;
+        selectedListGroupItemView = null;
+        view.enableAddButton();
+    }
+
+    @Override
+    public void onModifyColumn() {
         if (editingColumnEnabled) {
-            String value = factName + "." + fieldName;
-            String baseClass = factName.split("\\.")[0];
-            String fullPackage = getFactModelTree(baseClass).getFullPackage();
-            eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, valueClassName));
+            if (selectedListGroupItemView != null) {
+                String className = selectedListGroupItemView.getActualClassName();
+                String fullPackage = getFactModelTree(className).getFullPackage();
+                eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className));
+            } else if (selectedFieldItemView != null) {
+                String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
+                String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
+                String fullPackage = getFactModelTree(baseClass).getFullPackage();
+                eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName()));
+            }
         }
     }
+
 }

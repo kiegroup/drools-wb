@@ -57,26 +57,34 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     @Before
     public void setup() {
         super.setup();
-        when(mockViewsProvider.getListGroupItemView()).thenReturn(mockListGroupItemView);
-        when(mockListGroupItemView.getDivElement()).thenReturn(mockDivElement);
+        when(viewsProviderMOck.getListGroupItemView()).thenReturn(mockListGroupItemView);
+        when(mockListGroupItemView.getListGroupItem()).thenReturn(mockDivElement);
+        when(mockListGroupItemView.getListGroupExpansion()).thenReturn(mockDivElement);
         this.listGroupItemPresenter = spy(new ListGroupItemPresenter() {
             {
                 listGroupItemViewList = mockListGroupItemViewList;
                 fieldItemPresenter = mockFieldItemPresenter;
-                viewsProvider = mockViewsProvider;
+                viewsProvider = viewsProviderMOck;
             }
         });
     }
 
     @Test
-    public void getDivElement() {
+    public void getDivElementByFactModel() {
         DivElement retrieved = listGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE);
-        verify(mockViewsProvider, times(1)).getListGroupItemView();
-        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(""), eq(FACT_NAME), eq(FACT_MODEL_TREE));
-        verify(mockListGroupItemView, times(1)).init(eq(listGroupItemPresenter));
-        verify(mockListGroupItemViewList, times(1)).add(eq(mockListGroupItemView));
         assertNotNull(retrieved);
         assertEquals(mockDivElement, retrieved);
+        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(""), eq(false));
+        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(""), eq(FACT_NAME), eq(FACT_MODEL_TREE));
+    }
+
+    @Test
+    public void getDivElementByStrings() {
+        DivElement retrieved = listGroupItemPresenter.getDivElement(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
+        assertNotNull(retrieved);
+        assertEquals(mockDivElement, retrieved);
+        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(FULL_PACKAGE), eq(true));
+        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(VALUE), eq(VALUE_CLASS_NAME));
     }
 
     @Test

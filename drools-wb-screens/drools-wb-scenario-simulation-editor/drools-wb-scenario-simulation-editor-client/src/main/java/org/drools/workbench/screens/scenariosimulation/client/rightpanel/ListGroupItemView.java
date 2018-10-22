@@ -69,11 +69,17 @@ public interface ListGroupItemView extends IsWidget,
      */
     void addExpandableFactField(DivElement fieldElement);
 
-    DivElement getDivElement();
+    DivElement getListGroupExpansion();
+
+    DivElement getListGroupItem();
 
     void closeRow();
 
     void expandRow();
+
+    String getActualClassName();
+
+    void unselect();
 
     interface Presenter {
 
@@ -111,9 +117,21 @@ public interface ListGroupItemView extends IsWidget,
 
         void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
 
-        void onFullClassNameDoubleClick(String fullClassName);
-
         void init(RightPanelView.Presenter rightPanelPresenter);
+
+        /**
+         * Method to set the "selected" information - use this to set the <i>instance</i> level header
+         * @param selected
+         */
+        void onSelectedElement(ListGroupItemView selected);
+
+        /**
+         * Method to set the "selected" information - use this to set the <i>property</i> level header
+         * @param selected
+         */
+        void onSelectedElement(FieldItemView selected);
+
+        void unselectAll();
 
 
     }

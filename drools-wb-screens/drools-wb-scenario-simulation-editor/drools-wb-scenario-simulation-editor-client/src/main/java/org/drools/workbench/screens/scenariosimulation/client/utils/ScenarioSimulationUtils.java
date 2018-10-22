@@ -35,7 +35,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isReadOnly: <code>false</code>;
      * </p>
      * <p>
      * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
@@ -71,7 +71,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isReadOnly: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
@@ -93,7 +93,7 @@ public class ScenarioSimulationUtils {
                                                            String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, true, placeHolder);
+        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, false, placeHolder);
     }
 
     /**
@@ -168,7 +168,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isReadOnly: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
@@ -235,7 +235,7 @@ public class ScenarioSimulationUtils {
         instanceHeader.newLevel()
                 .setColumnTitle("")
                 .setColumnGroup(columnGroup)
-                .setReadOnly(true)
+                .setReadOnly(false)
                 .setInstanceHeader(false)
                 .setPropertyHeader(true);
 

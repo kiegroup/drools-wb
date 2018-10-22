@@ -43,17 +43,17 @@ public class EnableRightPanelCommandTest extends AbstractCommandTest {
 
     @Test
     public void executeWithoutFactName() {
-        enableRightPanelCommand = new EnableRightPanelCommand(mockRightPanelPresenter);
+        enableRightPanelCommand = new EnableRightPanelCommand(rightPanelPresenterMock);
         enableRightPanelCommand.execute();
-        verify(mockRightPanelPresenter, times(1)).onEnableEditorTab();
-        verify(mockRightPanelPresenter, never()).onEnableEditorTab(anyString());
+        verify(rightPanelPresenterMock, times(1)).onEnableEditorTab();
+        verify(rightPanelPresenterMock, never()).onEnableEditorTab(anyString());
     }
 
     @Test
     public void executeWithFactName() {
-        enableRightPanelCommand = new EnableRightPanelCommand(mockRightPanelPresenter, FACT_NAME);
+        enableRightPanelCommand = new EnableRightPanelCommand(rightPanelPresenterMock, FACT_NAME);
         enableRightPanelCommand.execute();
-        verify(mockRightPanelPresenter, times(1)).onEnableEditorTab(eq(FACT_NAME));
-        verify(mockRightPanelPresenter, never()).onEnableEditorTab();
+        verify(rightPanelPresenterMock, times(1)).onEnableEditorTab(eq(FACT_NAME));
+        verify(rightPanelPresenterMock, never()).onEnableEditorTab();
     }
 }

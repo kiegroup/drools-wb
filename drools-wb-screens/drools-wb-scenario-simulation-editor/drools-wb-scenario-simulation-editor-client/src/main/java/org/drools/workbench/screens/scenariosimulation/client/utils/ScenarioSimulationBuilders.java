@@ -38,7 +38,7 @@ public class ScenarioSimulationBuilders {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isReadOnly: <code>false</code>;
      * </p>
      * <p>
      * placeHolder: "";
@@ -55,7 +55,7 @@ public class ScenarioSimulationBuilders {
 
         private double width = 150;
         private boolean isMovable = false;
-        private boolean isReadOnly = true;
+        private boolean isReadOnly = false;
         private String placeHolder = "";
         private final HeaderBuilder headerBuilder;
         private ScenarioGridColumnRenderer scenarioGridColumnRenderer;

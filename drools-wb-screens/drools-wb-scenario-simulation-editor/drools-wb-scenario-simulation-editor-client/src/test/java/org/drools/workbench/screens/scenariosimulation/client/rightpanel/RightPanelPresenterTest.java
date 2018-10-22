@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.ArrayList;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -52,6 +54,12 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Mock
     private ListGroupItemPresenter mockListGroupItemPresenter;
+
+    @Mock
+    private  ListGroupItemView selectedListGroupItemViewMock;
+    @Mock
+    private  FieldItemView selectedFieldItemViewMock;
+
     @Mock
     private EventBus mockEventBus;
 
@@ -60,11 +68,22 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     @Before
     public void setup() {
         super.setup();
+        final String firstKey = factTreeMap.firstKey();
+        final FactModelTree factModelTree = factTreeMap.get(firstKey);
+        final String firstPropertyKey = (String) new ArrayList(factModelTree.getSimpleProperties().keySet()).get(0);
+        final String firstPropertyClass = factModelTree.getSimpleProperties().get(firstPropertyKey);
+
+        when(selectedListGroupItemViewMock.getActualClassName()).thenReturn(firstKey);
+
+        when(selectedFieldItemViewMock.getFullPath()).thenReturn(firstKey/* + "." + firstPropertyKey*/);
+        when(selectedFieldItemViewMock.getFieldName()).thenReturn(firstPropertyKey);
+        when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass);
+
         when(mockRightPanelView.getListContainer()).thenReturn(mockListContainer);
         when(mockListGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(mockListContainer);
         this.rightPanelPresenter = spy(new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter) {
             {
-                this.factTypeFieldsMap = mockTopLevelMap;
+                this.factTypeFieldsMap = factTreeMap;
                 this.eventBus = mockEventBus;
             }
         });
@@ -104,17 +123,17 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void getFactModelTree() {
-        rightPanelPresenter.setFactTypeFieldsMap(mockTopLevelMap);
-        String factName = getRandomFactModelTree(mockTopLevelMap, 0);
+        rightPanelPresenter.setFactTypeFieldsMap(factTreeMap);
+        String factName = getRandomFactModelTree(factTreeMap, 0);
         FactModelTree retrieved = rightPanelPresenter.getFactModelTree(factName);
         assertNotNull(retrieved);
-        assertEquals(mockTopLevelMap.get(factName), retrieved);
+        assertEquals(factTreeMap.get(factName), retrieved);
     }
 
     @Test
     public void setFactTypeFieldsMap() {
-        rightPanelPresenter.setFactTypeFieldsMap(mockTopLevelMap);
-        verify(rightPanelPresenter, times(mockTopLevelMap.size())).addListGroupItemView(anyString(), anyObject());
+        rightPanelPresenter.setFactTypeFieldsMap(factTreeMap);
+        verify(rightPanelPresenter, times(factTreeMap.size())).addListGroupItemView(anyString(), anyObject());
     }
 
     @Test
@@ -168,12 +187,25 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     @Test
     public void onModifyColumn() {
         rightPanelPresenter.editingColumnEnabled = true;
-        rightPanelPresenter.onModifyColumn(FACT_NAME, VALUE, VALUE_CLASS_NAME);
+        rightPanelPresenter.selectedFieldItemView = null;
+        rightPanelPresenter.selectedListGroupItemView = null;
+        rightPanelPresenter.onModifyColumn();
+        verify(mockEventBus, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
+        verify(mockEventBus, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
+
+        reset(mockEventBus);
+        rightPanelPresenter.selectedListGroupItemView = null;
+        rightPanelPresenter.selectedFieldItemView = selectedFieldItemViewMock;
+        rightPanelPresenter.onModifyColumn();
         verify(mockEventBus, times(1)).fireEvent(isA(SetPropertyHeaderEvent.class));
         verify(mockEventBus, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
+
         reset(mockEventBus);
-        rightPanelPresenter.onModifyColumn(FACT_NAME);
-        verify(mockEventBus, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
+        rightPanelPresenter.selectedListGroupItemView = selectedListGroupItemViewMock;
+        rightPanelPresenter.selectedFieldItemView = null;
+        rightPanelPresenter.onModifyColumn();
         verify(mockEventBus, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
+        verify(mockEventBus, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
+
     }
 }

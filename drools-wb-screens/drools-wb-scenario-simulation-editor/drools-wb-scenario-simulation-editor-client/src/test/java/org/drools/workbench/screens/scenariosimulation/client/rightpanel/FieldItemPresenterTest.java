@@ -39,11 +39,11 @@ public class FieldItemPresenterTest extends AbstractRightPanelTest {
     @Before
     public void setup() {
         super.setup();
-        when(mockViewsProvider.getFieldItemView()).thenReturn(mockFieldItemView);
-        when(mockFieldItemView.getLIElement()).thenReturn(mockLIElement);
+        when(viewsProviderMOck.getFieldItemView()).thenReturn(mockFieldItemView);
+        when(mockFieldItemView.getLIElement()).thenReturn(lIElementMock);
         this.fieldItemPresenter = spy(new FieldItemPresenter() {
             {
-                viewsProvider = mockViewsProvider;
+                viewsProvider = viewsProviderMOck;
             }
         });
     }
@@ -51,7 +51,7 @@ public class FieldItemPresenterTest extends AbstractRightPanelTest {
     @Test
     public void getLIElement() {
         fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
-        verify(mockViewsProvider, times(1)).getFieldItemView();
+        verify(viewsProviderMOck, times(1)).getFieldItemView();
         verify(mockFieldItemView, times(1)).setFieldData(eq(""), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()));
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }

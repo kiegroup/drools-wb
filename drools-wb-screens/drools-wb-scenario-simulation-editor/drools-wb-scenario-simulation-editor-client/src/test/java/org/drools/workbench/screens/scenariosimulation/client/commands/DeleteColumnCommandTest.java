@@ -45,25 +45,25 @@ public class DeleteColumnCommandTest extends AbstractCommandTest {
     @Before
     public void setup() {
         super.setup();
-        deleteColumnCommand = spy(new DeleteColumnCommand(mockScenarioGridModel, COLUMN_INDEX, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer) {
+        deleteColumnCommand = spy(new DeleteColumnCommand(scenarioGridModelMock, COLUMN_INDEX, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String title, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
-                return mockGridColumn;
+                return gridColumnMock;
             }
         });
     }
 
     @Test
     public void execute() {
-        when(mockScenarioGridModel.getGroupSize(COLUMN_GROUP)).thenReturn(4L);
+        when(scenarioGridModelMock.getGroupSize(COLUMN_GROUP)).thenReturn(4L);
         deleteColumnCommand.execute();
-        verify(mockScenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
-        verify(mockScenarioGridModel, never()).insertColumn(anyInt(), anyObject());
-        reset(mockScenarioGridModel);
-        when(mockScenarioGridModel.getGroupSize(COLUMN_GROUP)).thenReturn(0L);
+        verify(scenarioGridModelMock, times(1)).deleteColumn(eq(COLUMN_INDEX));
+        verify(scenarioGridModelMock, never()).insertColumn(anyInt(), anyObject());
+        reset(scenarioGridModelMock);
+        when(scenarioGridModelMock.getGroupSize(COLUMN_GROUP)).thenReturn(0L);
         deleteColumnCommand.execute();
-        verify(deleteColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(mockScenarioGridPanel), eq(mockScenarioGridLayer), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(mockScenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
-        verify(mockScenarioGridModel, times(1)).insertColumn(eq(COLUMN_INDEX), eq(mockGridColumn));
+        verify(deleteColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        verify(scenarioGridModelMock, times(1)).deleteColumn(eq(COLUMN_INDEX));
+        verify(scenarioGridModelMock, times(1)).insertColumn(eq(COLUMN_INDEX), eq(gridColumnMock));
     }
 }

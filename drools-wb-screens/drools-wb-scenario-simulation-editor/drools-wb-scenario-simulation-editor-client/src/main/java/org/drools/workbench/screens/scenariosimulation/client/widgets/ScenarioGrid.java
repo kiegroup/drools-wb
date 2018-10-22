@@ -113,16 +113,18 @@ public class ScenarioGrid extends BaseGridWidget {
         String placeHolder = getPlaceholder(readOnly);
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(columnTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), readOnly, placeHolder);
         conditionalPopulatePropertyHeader(factIdentifier, factMapping, scenarioGridColumn);
+        scenarioGridColumn.setInstanceAssigned(!FactIdentifier.EMPTY.equals(factIdentifier));
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
 
     protected void conditionalPopulatePropertyHeader(FactIdentifier factIdentifier, FactMapping factMapping, ScenarioGridColumn scenarioGridColumn) {
-        if ((!FactIdentifier.INDEX.equals(factIdentifier)) && (!FactIdentifier.DESCRIPTION.equals(factIdentifier)) && (!FactIdentifier.EMPTY.equals(factIdentifier))) {
-            final List<ExpressionElement> expressionElements = factMapping.getExpressionElements();
-            String title = expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
-            scenarioGridColumn.getPropertyHeaderMetaData().setTitle(title);
-            scenarioGridColumn.getPropertyHeaderMetaData().setReadOnly(false);
+        if (FactIdentifier.INDEX.equals(factIdentifier) || FactIdentifier.DESCRIPTION.equals(factIdentifier) || FactIdentifier.EMPTY.equals(factIdentifier)) {
+            return;
         }
+        final List<ExpressionElement> expressionElements = factMapping.getExpressionElements();
+        String title = expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
+        scenarioGridColumn.getPropertyHeaderMetaData().setTitle(title);
+        scenarioGridColumn.getPropertyHeaderMetaData().setReadOnly(false);
     }
 
     protected String getTitle(FactIdentifier factIdentifier, FactMapping factMapping) {

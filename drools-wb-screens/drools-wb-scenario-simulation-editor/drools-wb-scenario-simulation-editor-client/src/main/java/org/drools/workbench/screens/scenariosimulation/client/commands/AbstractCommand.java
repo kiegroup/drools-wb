@@ -60,7 +60,7 @@ public abstract class AbstractCommand implements Command {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isReadOnly: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
@@ -82,7 +82,7 @@ public abstract class AbstractCommand implements Command {
                                                            String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, true, placeHolder);
+        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, false, placeHolder);
     }
 
     protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {

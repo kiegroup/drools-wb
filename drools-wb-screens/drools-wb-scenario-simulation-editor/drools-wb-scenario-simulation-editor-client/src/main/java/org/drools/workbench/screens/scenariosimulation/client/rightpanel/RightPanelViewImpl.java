@@ -61,6 +61,9 @@ public class RightPanelViewImpl
     @DataField("conditionsButton")
     ButtonElement conditionsButton = Document.get().createButtonElement();
 
+    @DataField("addButton")
+    ButtonElement addButton = Document.get().createButtonElement();
+
     public RightPanelViewImpl() {
 
     }
@@ -69,6 +72,7 @@ public class RightPanelViewImpl
     public void init(Presenter presenter) {
         this.presenter = presenter;
         disableEditorTab();
+        addButton.setDisabled(true);
     }
 
     @Override
@@ -96,6 +100,12 @@ public class RightPanelViewImpl
     @EventHandler("searchButton")
     public void onSearchButtonClicked(ClickEvent event) {
         presenter.onSearchedEvent(inputSearch.getValue());
+    }
+
+    @EventHandler("addButton")
+    public void onAddButtonClicked(ClickEvent event) {
+        presenter.onModifyColumn();
+        addButton.setDisabled(true);
     }
 
     @Override
@@ -135,13 +145,18 @@ public class RightPanelViewImpl
         setDisabledStatus(true);
     }
 
+    @Override
+    public void enableAddButton() {
+        addButton.setDisabled(false);
+    }
+
     protected void setDisabledStatus(boolean disabled) {
         clearSearchButton.setDisabled(disabled);
         searchButton.setDisabled(disabled);
         inputSearch.setDisabled(disabled);
         nameField.setDisabled(disabled);
         conditionsButton.setDisabled(disabled);
-        setListContainerDisabledStatus(disabled);
+       // setListContainerDisabledStatus(disabled);
     }
 
     protected void setListContainerDisabledStatus(boolean disabled) {

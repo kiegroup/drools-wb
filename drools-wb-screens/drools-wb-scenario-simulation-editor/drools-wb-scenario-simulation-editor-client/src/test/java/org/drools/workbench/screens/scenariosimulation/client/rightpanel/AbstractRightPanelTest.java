@@ -33,12 +33,12 @@ import org.mockito.Mock;
 abstract class AbstractRightPanelTest {
 
     @Mock
-    protected LIElement mockLIElement;
+    protected LIElement lIElementMock;
 
     @Mock
-    protected ViewsProvider mockViewsProvider;
+    protected ViewsProvider viewsProviderMOck;
 
-    protected SortedMap<String, FactModelTree> mockTopLevelMap;
+    protected SortedMap<String, FactModelTree> factTreeMap;
     protected String FACT_NAME;
     protected String FACT_PACKAGE = "test.scesim.package";
     protected final String GRID_COLUMN_TITLE = "GRID_COLUMN_TITLE";
@@ -55,16 +55,16 @@ abstract class AbstractRightPanelTest {
 
     @Before
     public void setup() {
-        mockTopLevelMap = getMockTopLevelMap();
-        FACT_NAME = new ArrayList<>(mockTopLevelMap.keySet()).get(0);
-        FACT_MODEL_TREE = mockTopLevelMap.get(FACT_NAME);
+        factTreeMap = getFactTreeMap();
+        FACT_NAME = new ArrayList<>(factTreeMap.keySet()).get(0);
+        FACT_MODEL_TREE = factTreeMap.get(FACT_NAME);
     }
 
     protected String getRandomFactModelTree(Map<String, FactModelTree> source, int position) {
         return new ArrayList<>(source.keySet()).get(position);
     }
 
-    protected SortedMap<String, FactModelTree> getMockTopLevelMap() {
+    protected SortedMap<String, FactModelTree> getFactTreeMap() {
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
         IntStream
                 .range(0, 3)

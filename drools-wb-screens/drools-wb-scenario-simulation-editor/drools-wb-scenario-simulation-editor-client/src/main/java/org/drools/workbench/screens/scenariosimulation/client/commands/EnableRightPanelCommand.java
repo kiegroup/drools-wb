@@ -35,7 +35,7 @@ public class EnableRightPanelCommand implements Command {
     }
 
     /**
-     * Execute this command to show all the first-level data models <b>enabled</b> (i.e. <b>double-clickable</b> to map to an <i>instance</i> header/column)
+     * Execute this command to show all the first-level data models <b>enabled</b> (i.e. <b>selectable</b> to map to an <i>instance</i> header/column)
      * and their properties <b>disabled</b> (i.e. <b>not double-clickable</b>)
      * @param rightPanelPresenter
      */
@@ -45,9 +45,8 @@ public class EnableRightPanelCommand implements Command {
     }
 
     /**
-     * Execute this command to to show only the data model with the given name, <b>disabled</b> (i.e. <b>not double-clickable</b>)
-     * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
-     *
+     * Execute this command to to show only the data model with the given name, <b>disabled</b> (i.e. <b>not selectable</b>)
+     * and their properties <b>enabled</b> (i.e. <b>selectable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
      * @param rightPanelPresenter
      * @param factName
      */

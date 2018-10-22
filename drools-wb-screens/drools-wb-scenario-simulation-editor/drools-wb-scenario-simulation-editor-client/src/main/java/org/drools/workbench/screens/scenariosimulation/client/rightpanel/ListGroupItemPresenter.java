@@ -58,6 +58,11 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
+    public void unselectAll() {
+        listGroupItemViewList.forEach(ListGroupItemView::unselect);
+    }
+
+    @Override
     public void disable() {
         this.disabled.set(true);
         factName = null;
@@ -67,21 +72,21 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Override
     public void init(RightPanelView.Presenter rightPanelPresenter) {
         this.rightPanelPresenter = rightPanelPresenter;
-        fieldItemPresenter.setRightPanelPresenter(rightPanelPresenter);
+        fieldItemPresenter.setListGroupItemPresenter(this);
     }
 
     @Override
     public DivElement getDivElement(String factName, FactModelTree factModelTree) {
         ListGroupItemView listGroupItemView = commonGetListGroupItemView("", false);
         populateListGroupItemView(listGroupItemView, "", factName, factModelTree);
-        return listGroupItemView.getDivElement();
+        return listGroupItemView.getListGroupItem();
     }
 
     @Override
     public DivElement getDivElement(String fullPath, String factName, String factModelTreeClass) {
         ListGroupItemView listGroupItemView = commonGetListGroupItemView(fullPath, true);
         populateListGroupItemView(listGroupItemView, factName, factModelTreeClass);
-        return listGroupItemView.getDivElement();
+        return listGroupItemView.getListGroupExpansion();
     }
 
     @Override
@@ -109,9 +114,19 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
-    public void onFullClassNameDoubleClick(String fullClassName) {
-        rightPanelPresenter.onModifyColumn(fullClassName);
+    public void onSelectedElement(ListGroupItemView selected) {
+        rightPanelPresenter.setSelectedElement(selected);
+        listGroupItemViewList.stream().filter(listGroupItemView -> !listGroupItemView.equals(selected)).forEach(ListGroupItemView::unselect);
+        fieldItemPresenter.unselectAll();
     }
+
+    @Override
+    public void onSelectedElement(FieldItemView selected) {
+        rightPanelPresenter.setSelectedElement(selected);
+        listGroupItemViewList.forEach(ListGroupItemView::unselect);
+    }
+
+
 
     /**
      * Populate the "Assets" list. When

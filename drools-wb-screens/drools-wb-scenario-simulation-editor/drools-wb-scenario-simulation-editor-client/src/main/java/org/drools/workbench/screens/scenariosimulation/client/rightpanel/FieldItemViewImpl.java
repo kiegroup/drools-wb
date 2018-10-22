@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -42,9 +42,9 @@ public class FieldItemViewImpl implements FieldItemView {
     @Override
     public void setFieldData(String fullPath, String factName, String fieldName, String className) {
         String innerHtml = new StringBuilder()
-                .append("<b>")
+                .append("<a>")
                 .append(fieldName)
-                .append("</b> [")
+                .append("</a> [")
                 .append(className)
                 .append("]")
                 .toString();
@@ -60,6 +60,21 @@ public class FieldItemViewImpl implements FieldItemView {
     }
 
     @Override
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    @Override
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    @Override
+    public String getClassName() {
+        return className;
+    }
+
+    @Override
     public void setPresenter(Presenter fieldItemPresenter) {
         this.fieldItemPresenter = fieldItemPresenter;
     }
@@ -70,7 +85,13 @@ public class FieldItemViewImpl implements FieldItemView {
     }
 
     @EventHandler("fieldElement")
-    public void onFieldElementDoubleClick(DoubleClickEvent clickEvent) {
-        fieldItemPresenter.onFieldElementDoubleClick(fullPath, fieldName, className);
+    public void onFieldElementClick(ClickEvent clickEvent) {
+        fieldElement.addClassName("selected");
+        fieldItemPresenter.onFieldElementClick(this);
     }
+    @Override
+    public void unselect() {
+        fieldElement.removeClassName("selected");
+    }
+
 }

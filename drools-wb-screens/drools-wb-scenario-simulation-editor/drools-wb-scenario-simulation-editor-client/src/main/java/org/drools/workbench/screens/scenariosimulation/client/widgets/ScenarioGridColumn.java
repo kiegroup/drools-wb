@@ -31,12 +31,16 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
 
     private final ScenarioCellTextBoxSingletonDOMElementFactory factory;
 
-    final ScenarioHeaderMetaData informationHeaderMetaData;
-    final ScenarioHeaderMetaData propertyHeaderMetaData;
+    protected final ScenarioHeaderMetaData informationHeaderMetaData;
+    protected final ScenarioHeaderMetaData propertyHeaderMetaData;
 
-    boolean readOnly = false;
+    protected boolean readOnly = false;
 
-    final String placeHolder;
+    protected String placeHolder;
+    /**
+     * flag to know if aniunstance has been already assigned to this column; <code>false</code> on instantiation
+     */
+    protected boolean instanceAssigned = false;
 
     public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextBoxSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);
@@ -71,6 +75,18 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         this.readOnly = readOnly;
     }
 
+    public boolean isInstanceAssigned() {
+        return instanceAssigned;
+    }
+
+    public void setInstanceAssigned(boolean instanceAssigned) {
+        this.instanceAssigned = instanceAssigned;
+    }
+
+    public void setPlaceHolder(String placeHolder) {
+        this.placeHolder = placeHolder;
+    }
+
     public ScenarioHeaderMetaData getInformationHeaderMetaData() {
         return informationHeaderMetaData;
     }
@@ -82,6 +98,8 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     public String getPlaceHolder() {
         return placeHolder;
     }
+
+
 
     private GridCell<String> assertCell(final GridCell<String> cell) {
         if (cell != null) {

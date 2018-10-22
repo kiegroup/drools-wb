@@ -23,6 +23,12 @@ import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMEl
 
 public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
+
+    /*
+    `HeaderMetaData` now has a `CellSelectionStrategy` method (default is to select single cells)
+    you'd be able to add your own `CellSelectionStrategy` to your `HeaderMetaData` and do was you wish (e.g. select whole column)
+     */
+
     final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory;
     final String columnId;
     private boolean readOnly;
@@ -55,7 +61,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
     }
 
     /**
-     * Constructor for ScenarioHeaderMetaData
+     * Constructor for ScenarioHeaderMetaData - readonly default to <code>false</code>
      *
      * @param columnId
      * @param columnTitle

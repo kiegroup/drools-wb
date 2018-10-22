@@ -46,9 +46,9 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
     @Before
     public void setup() {
         super.setup();
-        when(mockGridColumns.indexOf(mockGridColumn)).thenReturn(COLUMN_INDEX);
-        when(mockScenarioGridModel.getColumns()).thenReturn(mockGridColumns);
-        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(mockScenarioGridModel, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, mockScenarioGridPanel, mockScenarioGridLayer, true) {
+        when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
+        when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
+        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(scenarioGridModelMock, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, scenarioGridPanelMock, scenarioGridLayerMock, true) {
 
             @Override
             protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
@@ -57,7 +57,7 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
-                return mockGridColumn;
+                return gridColumnMock;
             }
         });
     }
@@ -66,19 +66,19 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
     public void executeFalse() {
         setPropertyHeaderCommand.keepData = false;
         setPropertyHeaderCommand.execute();
-        verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
-        verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
-        verify(mockPropertyHeaderMetaData, times(1)).setReadOnly(false);
-        verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
     }
 
     @Test
     public void executeTrue() {
         setPropertyHeaderCommand.keepData = true;
         setPropertyHeaderCommand.execute();
-        verify(mockPropertyHeaderMetaData, times(1)).setColumnGroup(COLUMN_GROUP);
-        verify(mockPropertyHeaderMetaData, times(1)).setTitle(VALUE);
-        verify(mockPropertyHeaderMetaData, times(1)).setReadOnly(false);
-        verify(mockScenarioGridModel, times(1)).updateColumnProperty(eq(COLUMN_INDEX), eq(mockGridColumn), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(eq(COLUMN_INDEX), eq(gridColumnMock), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
     }
 }

@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -62,7 +63,12 @@ public class SetPropertyHeaderCommand extends AbstractCommand {
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String title = value.substring(value.indexOf(".")+1);
-        String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
+        final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+        String columnGroup = informationHeaderMetaData.getColumnGroup();
+        if (!selectedColumn.isInstanceAssigned()) { // We have not defined the instance, yet
+            informationHeaderMetaData.setTitle(value.split("\\.")[0]);
+            selectedColumn.setInstanceAssigned(true);
+        }
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(columnGroup);
         selectedColumn.getPropertyHeaderMetaData().setTitle(title);
         selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);

@@ -71,14 +71,14 @@
                 <!-- end list expansion -->
             </div><!-- end outlined data object box -->
 
-            <div style="display: none">
-                <label for="kie-name">Name Field</label>
-                <input id="kie-name" type="text" class="form-control" placeholder="Name" data-field="nameField">
+            <div>
+                <label for="kie-name" style="display: none">Name Field</label>
+                <input id="kie-name" type="text" class="form-control" placeholder="Name" data-field="nameField" style="display: none">
 
                 <br/>
 
-                <label for="kieDropdownConditions">Set Conditions</label>
-                <div class="dropdown">
+                <label for="kieDropdownConditions" style="display: none">Set Conditions</label>
+                <div class="dropdown" style="display: none">
                     <button class="btn btn-default dropdown-toggle" type="button" id="kieDropdownConditions" data-toggle="dropdown" data-field="conditionsButton">
                         Condition
                         <span class="caret"></span>
@@ -91,9 +91,8 @@
                 </div>
 
                 <hr/>
-                <button class="btn btn-default" type="button">Add</button>
-                &nbsp;&nbsp;&nbsp;
-                <a href="#0" role="button">Clear</a>
+                <button class="btn btn-default" type="button" data-field="addButton">Add</button>
+                <a href="#0" role="button" style="display: none">Clear</a>
             </div>
         </div>
         <br/>
