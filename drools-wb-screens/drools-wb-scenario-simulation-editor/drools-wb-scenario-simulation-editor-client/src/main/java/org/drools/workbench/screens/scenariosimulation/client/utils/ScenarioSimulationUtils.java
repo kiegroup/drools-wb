@@ -183,6 +183,7 @@ public class ScenarioSimulationUtils {
                                                                                                     String placeHolder) {
         ScenarioSimulationBuilders.ScenarioGridColumnBuilder toReturn = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(factoryCell, headerBuilder);
         toReturn.setPlaceHolder(placeHolder);
+        toReturn.setWidth(getColumnWidth(headerBuilder.getColumnId()));
         return toReturn;
     }
 
@@ -230,6 +231,17 @@ public class ScenarioSimulationUtils {
                 .setInformationHeader(informationHeader);
 
         return headerBuilder;
+    }
+
+    protected static double getColumnWidth(String columnId) {
+        switch (columnId) {
+            case "Index":
+                return 70;
+            case "Description":
+                return 230;
+            default:
+                return 150;
+        }
     }
 
     private static boolean isOther(FactMappingType factMappingType) {

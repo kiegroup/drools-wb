@@ -21,6 +21,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -60,6 +61,15 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
     public void getHeaderBuilder() {
         final ScenarioSimulationBuilders.HeaderBuilder retrieved = ScenarioSimulationUtils.getHeaderBuilder(COLUMN_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock);
         assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getColumnWidth() {
+        assertEquals(70, ScenarioSimulationUtils.getColumnWidth("Index"), 0);
+        assertEquals(230, ScenarioSimulationUtils.getColumnWidth("Description"), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Given"), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Expected"), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Whatever"), 0);
     }
 
 }
