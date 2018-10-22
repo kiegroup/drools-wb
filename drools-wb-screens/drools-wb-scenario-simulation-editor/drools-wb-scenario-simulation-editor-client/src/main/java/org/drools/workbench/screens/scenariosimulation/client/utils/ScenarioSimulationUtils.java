@@ -215,8 +215,7 @@ public class ScenarioSimulationUtils {
         headerBuilder.setColumnTitle(columnGroup);
         headerBuilder.setReadOnly(true);
 
-       // boolean instanceHeader = isOther(factMappingType) || isExpected(factMappingType) || isGiven(factMappingType);
-        if (isOther(factMappingType)) {
+       if (isOther(factMappingType)) {
             headerBuilder.setColumnTitle(title);
             headerBuilder.setColumnGroup(columnGroup);
             headerBuilder.setInstanceHeader(true);
