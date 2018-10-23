@@ -171,8 +171,8 @@ public class ScenarioBeanUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Class<T> loadClass(String className, ClassLoader classLoader) {
-        if (primitiveMap.containsKey(className)) {
+    public static <T> Class<T> loadClass(String className, ClassLoader classLoader) {
+        if (isPrimitive(className)) {
             return (Class<T>) primitiveMap.get(className);
         }
         try {
