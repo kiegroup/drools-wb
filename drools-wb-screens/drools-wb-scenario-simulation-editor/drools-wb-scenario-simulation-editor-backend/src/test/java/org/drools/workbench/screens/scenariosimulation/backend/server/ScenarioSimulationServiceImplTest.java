@@ -15,7 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import javax.inject.Named;
+
 import org.assertj.core.api.Assertions;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioJunitActivator;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.metadata.MetadataServerSideService;
@@ -49,6 +52,7 @@ import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.java.nio.file.OpenOption;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -63,6 +67,7 @@ import static org.mockito.Mockito.when;
 public class ScenarioSimulationServiceImplTest {
 
     @Mock
+    @Named("ioStrategy")
     private IOService ioService;
 
     @Mock
@@ -117,12 +122,7 @@ public class ScenarioSimulationServiceImplTest {
     private Package mockedPackage;
 
     @InjectMocks
-    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class)) {
-        @Override
-        org.uberfire.java.nio.file.Path getActivatorPath(Package projectPackage) {
-            return activatorPath;
-        }
-    };
+    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
 
     private Path path = PathFactory.newPath("contextpath", "file:///contextpath");
 
@@ -135,6 +135,8 @@ public class ScenarioSimulationServiceImplTest {
         when(kieModuleService.resolveModule(any())).thenReturn(module);
         when(module.getPom()).thenReturn(projectPom);
         when(projectPom.getDependencies()).thenReturn(dependencies);
+        when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(false);
+        when(mockedPackage.getPackageTestSrcPath()).thenReturn(path);
     }
 
     @Test
@@ -277,9 +279,9 @@ public class ScenarioSimulationServiceImplTest {
 
         int expectedCalls = service.getDependecies(null).size();
         verify(pomService, times(expectedCalls)).save(any(Path.class),
-                                          any(POM.class),
-                                          any(Metadata.class),
-                                          anyString());
+                                                      any(POM.class),
+                                                      any(Metadata.class),
+                                                      anyString());
     }
 
     @Test
@@ -300,12 +302,25 @@ public class ScenarioSimulationServiceImplTest {
                       anyString());
 
         reset(pomService);
-;
+        ;
         service.editPomIfNecessary(path, pom, dependencies, gav);
         verify(pomService, times(0))
                 .save(any(Path.class),
                       any(POM.class),
                       any(Metadata.class),
                       anyString());
+    }
+
+    @Test
+    public void getActivatorPathTest() {
+        assertTrue(service.getActivatorPath(mockedPackage).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
+
+        verify(kieModuleService, times(1)).newPackage(any(Package.class), anyString());
+
+        reset(kieModuleService);
+        when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(true);
+        assertTrue(service.getActivatorPath(mockedPackage).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
+
+        verify(kieModuleService, times(0)).newPackage(any(Package.class), anyString());
     }
 }

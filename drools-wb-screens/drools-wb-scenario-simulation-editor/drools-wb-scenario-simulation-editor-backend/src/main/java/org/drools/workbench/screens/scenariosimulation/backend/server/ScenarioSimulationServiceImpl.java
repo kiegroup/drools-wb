@@ -342,9 +342,11 @@ public class ScenarioSimulationServiceImpl
     }
 
     org.uberfire.java.nio.file.Path getActivatorPath(Package projectPackage) {
-        Package activatorPackage = kieModuleService.newPackage(projectPackage, ScenarioJunitActivator.ACTIVATOR_PACKAGE);
-        return Paths.convert(activatorPackage.getPackageTestSrcPath())
-                .resolve(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
+        org.uberfire.java.nio.file.Path packagePath = Paths.convert(projectPackage.getPackageTestSrcPath()).resolve(ScenarioJunitActivator.ACTIVATOR_PACKAGE);
+        if(!ioService.exists(packagePath)) {
+            kieModuleService.newPackage(projectPackage, ScenarioJunitActivator.ACTIVATOR_PACKAGE);
+        }
+        return packagePath.resolve(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
     }
 
     List<GAV> getDependecies(String kieVersion) {
