@@ -342,7 +342,8 @@ public class ScenarioSimulationServiceImpl
     }
 
     org.uberfire.java.nio.file.Path getActivatorPath(Package projectPackage) {
-        return Paths.convert(projectPackage.getPackageTestSrcPath())
+        Package activatorPackage = kieModuleService.newPackage(projectPackage, ScenarioJunitActivator.ACTIVATOR_PACKAGE);
+        return Paths.convert(activatorPackage.getPackageTestSrcPath())
                 .resolve(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
     }
 

@@ -41,7 +41,10 @@ public class ScenarioJunitActivator extends ParentRunner<Simulation> {
 
     public static final String ACTIVATOR_CLASS_NAME = "ScenarioJunitActivatorTest";
 
-    public static final String ACTIVATOR_CLASS_CODE = "/**\n" +
+    public static final String ACTIVATOR_PACKAGE = "test";
+
+    public static final String ACTIVATOR_CLASS_CODE = "package " + ACTIVATOR_PACKAGE + ";\n" +
+            "/**\n" +
             "* Do not remove this file\n" +
             "*/\n" +
             "@" + RunWith.class.getCanonicalName() + "(" + ScenarioJunitActivator.class.getCanonicalName() + ".class)\n" +
