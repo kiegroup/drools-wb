@@ -40,6 +40,9 @@ public interface ScenarioSimulationEditorStylesCss extends CssResource {
     @ClassName("list-group-item")
     String listGroupItem();
 
+    @ClassName("ul--plain")
+    String ulPlain();
+
     @ClassName("list-view-pf-expand")
     String listViewPfExpand();
 
