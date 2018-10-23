@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -65,11 +66,11 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
 
     @Test
     public void getColumnWidth() {
-        assertEquals(70, ScenarioSimulationUtils.getColumnWidth("Index"), 0);
-        assertEquals(230, ScenarioSimulationUtils.getColumnWidth("Description"), 0);
-        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Given"), 0);
-        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Expected"), 0);
-        assertEquals(150, ScenarioSimulationUtils.getColumnWidth("Whatever"), 0);
+        assertEquals(70, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Index.name()), 0);
+        assertEquals(230, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Description.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Given.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Expected.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Other.name()), 0);
     }
 
 }

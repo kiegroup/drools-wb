@@ -22,6 +22,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
 public class ScenarioSimulationUtils {
@@ -234,10 +235,16 @@ public class ScenarioSimulationUtils {
     }
 
     protected static double getColumnWidth(String columnId) {
-        switch (columnId) {
-            case "Index":
+        ExpressionIdentifier.NAME expressionName = ExpressionIdentifier.NAME.Other;
+        try {
+            expressionName = ExpressionIdentifier.NAME.valueOf(columnId);
+        } catch (IllegalArgumentException e) {
+            // ColumnId not recognized
+        }
+        switch(expressionName) {
+            case Index:
                 return 70;
-            case "Description":
+            case Description:
                 return 230;
             default:
                 return 150;
