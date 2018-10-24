@@ -52,11 +52,13 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     private ListGroupItemPresenter listGroupItemPresenter;
 
-    Map<String, FactModelTree> factTypeFieldsMap;
+    protected Map<String, FactModelTree> factTypeFieldsMap;
 
-    EventBus eventBus;
+    protected Map<String, FactModelTree> instanceFieldsMap;
 
-    boolean editingColumnEnabled = false;
+    protected EventBus eventBus;
+
+    protected boolean editingColumnEnabled = false;
 
 
     protected ListGroupItemView selectedListGroupItemView;
@@ -112,20 +114,37 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void clearList() {
-        view.getListContainer().removeAllChildren();
+    public void clearDataObjectList() {
+        view.getDataObjectListContainer().removeAllChildren();
     }
 
     @Override
-    public FactModelTree getFactModelTree(String factName) {
+    public void clearInstanceList() {
+        view.getInstanceListContainer().removeAllChildren();
+    }
+
+    @Override
+    public FactModelTree getFactModelTreeFromFactTypeMap(String factName) {
         return factTypeFieldsMap.get(factName);
     }
 
     @Override
+    public FactModelTree getFactModelTreeFromInstanceMap(String factName) {
+        return instanceFieldsMap.get(factName);
+    }
+
+    @Override
     public void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap) {
-        clearList();
+        clearDataObjectList();
         this.factTypeFieldsMap = factTypeFieldsMap;
-        this.factTypeFieldsMap.forEach(this::addListGroupItemView);
+        this.factTypeFieldsMap.forEach(this::addDataObjectListGroupItemView);
+    }
+
+    @Override
+    public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
+        clearInstanceList();
+        this.instanceFieldsMap = instanceFieldsMap;
+        this.instanceFieldsMap.forEach(this::addInstanceListGroupItemView);
     }
 
     @Override
@@ -140,7 +159,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onSearchedEvent(String search) {
-        clearList();
+        clearDataObjectList();
         if (factTypeFieldsMap.isEmpty()) {
             return;
         }
@@ -148,13 +167,19 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
-                .forEach(filteredEntry -> addListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+                .forEach(filteredEntry -> addDataObjectListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
     }
 
     @Override
-    public void addListGroupItemView(String factName, FactModelTree factModelTree) {
+    public void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree) {
         DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
-        view.getListContainer().appendChild(toAdd);
+        view.getDataObjectListContainer().appendChild(toAdd);
+    }
+
+    @Override
+    public void addInstanceListGroupItemView(String instanceName, FactModelTree factModelTree) {
+        DivElement toAdd = listGroupItemPresenter.getDivElement(instanceName, factModelTree);
+        view.getInstanceListContainer().appendChild(toAdd);
     }
 
     @Override
@@ -200,12 +225,16 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                String fullPackage = getFactModelTree(className).getFullPackage();
+                FactModelTree factModelTree = getFactModelTreeFromFactTypeMap(className);
+                if (factModelTree == null) {
+                    factModelTree = getFactModelTreeFromInstanceMap(className);
+                }
+                String fullPackage = factModelTree.getFullPackage();
                 eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className));
             } else if (selectedFieldItemView != null) {
                 String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
-                String fullPackage = getFactModelTree(baseClass).getFullPackage();
+                String fullPackage = getFactModelTreeFromFactTypeMap(baseClass).getFullPackage();
                 eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName()));
             }
         }

@@ -36,7 +36,9 @@ public interface RightPanelView
 
     void showClearButton();
 
-    DivElement getListContainer();
+    DivElement getDataObjectListContainer();
+
+    DivElement getInstanceListContainer();
 
     Presenter getPresenter();
 
@@ -70,15 +72,23 @@ public interface RightPanelView
 
         void onSearchedEvent(String search);
 
-        void clearList();
+        void clearDataObjectList();
 
-        void addListGroupItemView(String factName, FactModelTree factModelTree);
+        void clearInstanceList();
+
+        void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree);
+
+        void addInstanceListGroupItemView(String factName, FactModelTree factModelTree);
 
         void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
+        void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
+
         void setEventBus(EventBus eventBus);
 
-        FactModelTree getFactModelTree(String factName);
+        FactModelTree getFactModelTreeFromFactTypeMap(String factName);
+
+        FactModelTree getFactModelTreeFromInstanceMap(String factName);
 
         /**
          * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).

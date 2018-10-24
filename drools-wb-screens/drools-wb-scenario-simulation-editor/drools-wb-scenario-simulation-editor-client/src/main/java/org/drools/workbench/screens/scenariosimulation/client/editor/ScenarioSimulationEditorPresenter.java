@@ -29,6 +29,7 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
@@ -41,6 +42,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanel
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -82,6 +84,21 @@ public class ScenarioSimulationEditorPresenter
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
+    protected AsyncPackageDataModelOracle oracle;
+
+    //Package for which this Scenario Simulation relates
+    protected String packageName = "";
+
+    protected RightPanelMenuItem rightPanelMenuItem;
+
+    protected PlaceRequest rightPanelRequest;
+
+    protected ObservablePath path;
+
+    protected EventBus eventBus;
+
+    protected ScenarioGridPanel scenarioGridPanel;
+
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
@@ -92,26 +109,11 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationResourceType type;
 
-    AsyncPackageDataModelOracle oracle;
-
     private ScenarioSimulationView view;
 
     private CommandExecutor commandExecutor;
 
     private Command populateRightPanelCommand;
-
-    //Package for which this Scenario Simulation relates
-    String packageName = "";
-
-    RightPanelMenuItem rightPanelMenuItem;
-
-    PlaceRequest rightPanelRequest;
-
-    ObservablePath path;
-
-    EventBus eventBus;
-
-    ScenarioGridPanel scenarioGridPanel;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -134,14 +136,10 @@ public class ScenarioSimulationEditorPresenter
         this.rightPanelMenuItem = scenarioSimulationProducer.getRightPanelMenuItem();
         this.commandExecutor = scenarioSimulationProducer.getCommandExecutor();
         this.eventBus = scenarioSimulationProducer.getEventBus();
-
         scenarioGridPanel = view.getScenarioGridPanel();
         commandExecutor.setScenarioGridPanel(scenarioGridPanel);
-
         view.init(this);
-
         populateRightPanelCommand = getPopulateRightPanelCommand();
-
         scenarioGridPanel.select();
     }
 
@@ -233,8 +231,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(),
-                                   model);
+        service.call().runScenario(versionRecordManager.getCurrentPath(), model);
     }
 
     protected void registerRightPanelCallback() {
@@ -407,6 +404,23 @@ public class ScenarioSimulationEditorPresenter
             if (factTypeFieldsMap.size() == expectedElements) {
                 factTypeFieldsMap.values().forEach(factModelTree -> populateFactModel(factModelTree, factTypeFieldsMap));
                 rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                SortedMap<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
+                // map instance name top data model class
+                if (model != null) {
+                    final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
+                    simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
+                        final String dataObjectName = factMapping.getFactIdentifier().getName();
+                        final String instanceName = factMapping.getExpressionAlias();
+                        GWT.log(instanceName + " -> " + dataObjectName);
+                        if (!instanceName.equals(dataObjectName)) {
+                            final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
+                            if (factModelTree != null) {
+                                instanceFieldsMap.put(instanceName, factModelTree);
+                            }
+                        }
+                    });
+                }
+                rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
             }
         };
     }

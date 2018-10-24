@@ -79,7 +79,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         when(selectedFieldItemViewMock.getFieldName()).thenReturn(firstPropertyKey);
         when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass);
 
-        when(mockRightPanelView.getListContainer()).thenReturn(mockListContainer);
+        when(mockRightPanelView.getDataObjectListContainer()).thenReturn(mockListContainer);
         when(mockListGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(mockListContainer);
         this.rightPanelPresenter = spy(new RightPanelPresenter(mockRightPanelView, mockListGroupItemPresenter) {
             {
@@ -118,14 +118,14 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         rightPanelPresenter.onClearStatus();
         verify(rightPanelPresenter, times(1)).onClearSearch();
         verify(rightPanelPresenter, times(1)).onClearNameField();
-        verify(rightPanelPresenter, times(1)).clearList();
+        verify(rightPanelPresenter, times(1)).clearDataObjectList();
     }
 
     @Test
     public void getFactModelTree() {
         rightPanelPresenter.setFactTypeFieldsMap(factTreeMap);
         String factName = getRandomFactModelTree(factTreeMap, 0);
-        FactModelTree retrieved = rightPanelPresenter.getFactModelTree(factName);
+        FactModelTree retrieved = rightPanelPresenter.getFactModelTreeFromFactTypeMap(factName);
         assertNotNull(retrieved);
         assertEquals(factTreeMap.get(factName), retrieved);
     }
@@ -133,7 +133,7 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     @Test
     public void setFactTypeFieldsMap() {
         rightPanelPresenter.setFactTypeFieldsMap(factTreeMap);
-        verify(rightPanelPresenter, times(factTreeMap.size())).addListGroupItemView(anyString(), anyObject());
+        verify(rightPanelPresenter, times(factTreeMap.size())).addDataObjectListGroupItemView(anyString(), anyObject());
     }
 
     @Test
@@ -150,8 +150,8 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void addListGroupItemView() {
-        rightPanelPresenter.addListGroupItemView(FACT_NAME, FACT_MODEL_TREE);
-        verify(mockRightPanelView, times(1)).getListContainer();
+        rightPanelPresenter.addDataObjectListGroupItemView(FACT_NAME, FACT_MODEL_TREE);
+        verify(mockRightPanelView, times(1)).getDataObjectListContainer();
         verify(mockListGroupItemPresenter, times(1)).getDivElement(eq(FACT_NAME), eq(FACT_MODEL_TREE));
         verify(mockListContainer, times(1)).appendChild(anyObject());
     }

@@ -225,7 +225,6 @@ public class ScenarioGridModel extends BaseGridData {
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, factIdentifier, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        factMappingByIndex.setExpressionAlias(value);
         IntStream.range(1, elements.length)
                 .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
         if (keepData) {

@@ -128,7 +128,8 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected String getTitle(FactIdentifier factIdentifier, FactMapping factMapping) {
-        return FactIdentifier.EMPTY.equals(factIdentifier) ? factMapping.getExpressionAlias() : factIdentifier.getName();
+        return factMapping.getExpressionAlias();
+        //return FactIdentifier.EMPTY.equals(factIdentifier) ? factMapping.getExpressionAlias() : factIdentifier.getName();
     }
 
     protected boolean isReadOnly(FactIdentifier factIdentifier) {

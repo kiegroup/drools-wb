@@ -99,7 +99,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
                 listGroupItemView.closeRow();
             } else {
                 if (listGroupItemView.isToExpand()) {
-                    FactModelTree factModelTree = rightPanelPresenter.getFactModelTree(listGroupItemView.getFactType());
+                    FactModelTree factModelTree = rightPanelPresenter.getFactModelTreeFromFactTypeMap(listGroupItemView.getFactType());
                     populateListGroupItemView(listGroupItemView, listGroupItemView.getParentPath(), listGroupItemView.getFactName(), factModelTree);
                     listGroupItemView.setToExpand(false);
                     if (factName != null) {
