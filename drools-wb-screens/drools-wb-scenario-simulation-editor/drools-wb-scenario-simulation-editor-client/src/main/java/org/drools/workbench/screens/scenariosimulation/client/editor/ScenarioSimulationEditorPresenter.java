@@ -121,7 +121,6 @@ public class ScenarioSimulationEditorPresenter
         //Zero-parameter constructor for CDI proxies
     }
 
-
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
                                              final ScenarioSimulationProducer scenarioSimulationProducer,
@@ -219,8 +218,8 @@ public class ScenarioSimulationEditorPresenter
                 && placeRequest.getPath().equals(this.path)) {
             hideScenarioSimulationDockEvent.fire(new OnHideScenarioSimulationDockEvent());
             view.getScenarioGridLayer().getScenarioGrid().clearSelections();
-                unRegisterRightPanelCallback();
-                clearRightPanelStatus();
+            unRegisterRightPanelCallback();
+            clearRightPanelStatus();
             testRunnerReportingScreen.reset();
         }
     }
@@ -234,8 +233,10 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(),
-                                   model);
+        // FIXME to test
+        service.call(result -> view.refreshErrors())
+                .runScenario(versionRecordManager.getCurrentPath(),
+                             model);
     }
 
     protected void registerRightPanelCallback() {

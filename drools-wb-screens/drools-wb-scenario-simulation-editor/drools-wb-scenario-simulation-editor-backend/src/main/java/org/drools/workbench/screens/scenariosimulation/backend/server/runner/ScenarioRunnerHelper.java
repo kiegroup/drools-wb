@@ -151,6 +151,9 @@ public class ScenarioRunnerHelper {
 
                 Boolean conditionResult = expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue);
 
+                // FIXME to test
+                expectedResult.setError(conditionResult);
+
                 scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue, conditionResult));
             }
         }
@@ -189,8 +192,14 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            Object value = expressionEvaluator.getValueForGiven(factMapping.getClassName(), factMappingValue.getRawValue(), classLoader);
-            paramsForBean.put(pathToField, value);
+            // FIXME error also for parsing error
+            try {
+                Object value = expressionEvaluator.getValueForGiven(factMapping.getClassName(), factMappingValue.getRawValue(), classLoader);
+                paramsForBean.put(pathToField, value);
+            } catch(IllegalArgumentException e) {
+                factMappingValue.setError(true);
+                throw new ScenarioException(e.getMessage(), e);
+            }
         }
 
         return paramsForBean;

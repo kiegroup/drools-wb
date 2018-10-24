@@ -24,6 +24,7 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.lienzo.shared.core.types.TextAlign;
 import com.ait.lienzo.shared.core.types.TextBaseLine;
 import com.ait.lienzo.shared.core.types.TextUnit;
+import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
@@ -174,5 +175,13 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
                 .setStrokeColor(GRID_STROKE_COLOUR)
                 .setStrokeWidth(STROKE_WIDTH)
                 .setVisible(true);
+    }
+
+    @Override
+    public Rectangle getBodyErrorBackground(GridCell<?> cell) {
+        final Rectangle header = new Rectangle(0,
+                                               0)
+                .setFillColor(ColorName.LIGHTSALMON);
+        return header;
     }
 }

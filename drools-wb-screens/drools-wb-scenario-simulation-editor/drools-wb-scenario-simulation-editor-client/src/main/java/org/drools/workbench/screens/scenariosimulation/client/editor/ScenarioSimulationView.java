@@ -40,4 +40,6 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     ScenarioGridLayer getScenarioGridLayer();
 
+    void refreshErrors();
+
 }
