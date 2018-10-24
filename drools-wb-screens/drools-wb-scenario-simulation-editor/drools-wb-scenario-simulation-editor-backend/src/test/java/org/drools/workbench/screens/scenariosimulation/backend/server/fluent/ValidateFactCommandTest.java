@@ -23,6 +23,7 @@ import java.util.function.Function;
 import org.drools.core.command.RequestContextImpl;
 import org.drools.core.command.impl.RegistryContext;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieSession;
@@ -47,6 +48,9 @@ public class ValidateFactCommandTest {
     @Mock
     private ScenarioResult scenarioResult;
 
+    @Mock
+    private FactMappingValue factMappingValue;
+
     @Test
     public void executeTest() {
         Function<Object, Optional<Object>> alwaysMatchFunction = Optional::of;
@@ -62,8 +66,11 @@ public class ValidateFactCommandTest {
 
         reset(scenarioResult);
 
+        boolean expectedResult = true;
         when(kieSession.getObjects(any(ObjectFilter.class))).thenReturn(Collections.emptyList());
+        when(scenarioResult.getFactMappingValue()).thenReturn(factMappingValue);
+        when(factMappingValue.isError()).thenReturn(expectedResult);
         validateFactCommand.execute(registryContext);
-        verify(scenarioResult, times(0)).setResult(anyBoolean());
+        verify(scenarioResult, times(0)).setResult(expectedResult);
     }
 }

@@ -233,7 +233,6 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        // FIXME to test
         service.call(result -> view.refreshErrors())
                 .runScenario(versionRecordManager.getCurrentPath(),
                              model);

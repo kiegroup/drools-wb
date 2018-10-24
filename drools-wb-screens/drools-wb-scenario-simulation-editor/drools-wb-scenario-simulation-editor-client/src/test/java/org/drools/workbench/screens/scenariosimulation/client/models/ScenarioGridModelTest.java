@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -45,11 +46,13 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -316,5 +319,19 @@ public class ScenarioGridModelTest {
         gridColumns.add(indexColumnPosition, mockScenarioIndexGridColumn);
         scenarioGridModel.updateIndexColumn();
         verify(scenarioGridModel, times(3)).setCellValue(anyInt(), eq(indexColumnPosition), isA(ScenarioGridCellValue.class));
+    }
+
+    @Test
+    public void refreshErrorsRow() {
+        FactMappingValue factMappingValue = mock(FactMappingValue.class);
+        when(factMappingValue.isError()).thenReturn(true);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.empty());
+        scenarioGridModel.refreshErrorsRow(0);
+        verify(mockGridCell, times(6)).setError(false);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
+        scenarioGridModel.refreshErrorsRow(0);
+        verify(mockGridCell, times(6)).setError(true);
     }
 }

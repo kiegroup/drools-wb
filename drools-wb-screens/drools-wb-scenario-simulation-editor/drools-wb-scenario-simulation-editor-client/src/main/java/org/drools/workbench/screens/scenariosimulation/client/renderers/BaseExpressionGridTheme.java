@@ -31,6 +31,8 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
     public static final String BACKGROUND_FILL_COLOUR = "#c7ffca";
 
+    public static final String BACKGROUND_ERROR_FILL_COLOUR = "fff5f6";
+
     public static final String LABEL_BACKGROUND_FILL_COLOUR = "#c7ffca";
 
     public static final String HOVER_STATE_STROKE_COLOUR = "#008acd";
@@ -181,7 +183,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     public Rectangle getBodyErrorBackground(GridCell<?> cell) {
         final Rectangle header = new Rectangle(0,
                                                0)
-                .setFillColor(ColorName.LIGHTSALMON);
+                .setFillColor(BACKGROUND_ERROR_FILL_COLOUR);
         return header;
     }
 }

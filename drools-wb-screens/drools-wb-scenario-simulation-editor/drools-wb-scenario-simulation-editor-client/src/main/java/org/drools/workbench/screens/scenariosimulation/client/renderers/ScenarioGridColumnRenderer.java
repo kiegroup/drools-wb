@@ -32,7 +32,6 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.columns.im
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
-// FIXME to test
 public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
     @Override
@@ -44,27 +43,30 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
         final ScenarioGridRendererTheme theme = (ScenarioGridRendererTheme) context.getRenderer().getTheme();
 
+        Text text;
+        String value;
+
         // Show placeholder only if the following conditions are met
         if ((cell instanceof ScenarioGridCell) && cell.getValue() != null && cell.getValue().getValue() == null && ((ScenarioGridCellValue) cell.getValue()).getPlaceHolder() != null) {
             // Render as placeholder
-            return internalRenderCell((ScenarioGridCell) cell,
-                                      context,
-                                      theme.getPlaceholderText(),
-                                      ((ScenarioGridCellValue) cell.getValue()).getPlaceHolder());
+            text = theme.getPlaceholderText();
+            value = ((ScenarioGridCellValue) cell.getValue()).getPlaceHolder();
         } else {
-            // Otherwise render with default text style
-            return internalRenderCell((ScenarioGridCell) cell,
-                                      context,
-                                      theme.getBodyText(),
-                                      cell.getValue().getValue());
+            text = theme.getBodyText();
+            value = cell.getValue() != null ? cell.getValue().getValue() : null;
         }
+
+        return internalRenderCell((ScenarioGridCell) cell,
+                                  context,
+                                  text,
+                                  value);
     }
 
     Group internalRenderCell(final ScenarioGridCell cell,
                              final GridBodyCellRenderContext context,
-                             final Text t,
+                             final Text text,
                              final String value) {
-        if (cell == null || cell.getValue() == null || cell.getValue().getValue() == null) {
+        if (value == null) {
             return null;
         }
 
@@ -73,14 +75,14 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
         final Group g = new Group();
 
-        t.setText(value);
-        t.setListening(false);
-        t.setX(context.getCellWidth() / 2);
-        t.setY(context.getCellHeight() / 2);
+        text.setText(value);
+        text.setListening(false);
+        text.setX(context.getCellWidth() / 2);
+        text.setY(context.getCellHeight() / 2);
 
         applyBackgroundColor(cell, context, g, theme);
 
-        g.add(t);
+        g.add(text);
         return g;
     }
 
@@ -90,8 +92,8 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
                               ScenarioGridRendererTheme theme) {
         if (cell.isError()) {
             final Rectangle bodyErrorBackground = theme.getBodyErrorBackground(cell);
-            bodyErrorBackground.setWidth(context.getCellWidth())
-                    .setHeight(context.getCellHeight());
+            bodyErrorBackground.setWidth(context.getCellWidth());
+            bodyErrorBackground.setHeight(context.getCellHeight());
             group.add(bodyErrorBackground);
         }
     }

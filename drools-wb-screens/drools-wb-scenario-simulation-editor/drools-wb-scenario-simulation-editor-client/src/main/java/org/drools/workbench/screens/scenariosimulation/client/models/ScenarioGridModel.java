@@ -246,8 +246,7 @@ public class ScenarioGridModel extends BaseGridData {
             ExpressionIdentifier expressionIdentifier = factMappingByIndex.getExpressionIdentifier();
             scenarioByIndex.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, cellValue);
 
-            // FIXME to test
-            resetErrorsRow(rowIndex);
+            refreshErrorsRow(rowIndex);
         } catch (Throwable t) {
             toReturn = super.deleteCell(rowIndex, columnIndex);
             eventBus.fireEvent(new ScenarioGridReloadEvent());
@@ -513,13 +512,11 @@ public class ScenarioGridModel extends BaseGridData {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
     }
 
-    // FIXME to test
     public void refreshErrors() {
-        IntStream.range(0, getRowCount()).forEach(this::resetErrorsRow);
+        IntStream.range(0, getRowCount()).forEach(this::refreshErrorsRow);
     }
 
-    // FIXME to test
-    private void resetErrorsRow(int rowIndex) {
+    void refreshErrorsRow(int rowIndex) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {

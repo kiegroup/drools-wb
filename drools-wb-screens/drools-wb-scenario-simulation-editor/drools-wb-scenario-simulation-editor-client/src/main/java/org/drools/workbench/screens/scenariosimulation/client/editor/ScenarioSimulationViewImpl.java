@@ -82,7 +82,6 @@ public class ScenarioSimulationViewImpl
         return scenarioGridLayer;
     }
 
-    // FIXME to test
     @Override
     public void refreshErrors() {
         scenarioGridPanel.getScenarioGrid().getModel().refreshErrors();

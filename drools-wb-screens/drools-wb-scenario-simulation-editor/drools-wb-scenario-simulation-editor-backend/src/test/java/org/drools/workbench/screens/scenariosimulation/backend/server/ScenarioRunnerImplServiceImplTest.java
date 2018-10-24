@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ import org.uberfire.mocks.EventSourceMock;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -81,9 +83,11 @@ public class ScenarioRunnerImplServiceImplTest {
     public void runTest() throws Exception {
         when(buildInfoService.getBuildInfo(any())).thenReturn(buildInfo);
         when(buildInfo.getKieContainer()).thenReturn(kieContainer);
-        final ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
-        scenarioSimulationModel.getSimulation().getScenarioByIndex(0).setDescription("testDescription"); // fix the getScenarioByIndex(1)
+        final ScenarioSimulationModel scenarioSimulationModel = mock(ScenarioSimulationModel.class);
+        when(scenarioSimulationModel.getSimulation()).thenReturn(mock(Simulation.class));
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
+
+        verify(scenarioSimulationModel.getSimulation(), times(1)).resetErrors();
         verify(defaultTestResultMessageEvent).fire(any());
     }
 

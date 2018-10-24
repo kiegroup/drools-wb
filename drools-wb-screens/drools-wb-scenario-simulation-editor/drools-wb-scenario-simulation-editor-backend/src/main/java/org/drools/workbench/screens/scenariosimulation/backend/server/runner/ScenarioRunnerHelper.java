@@ -159,8 +159,8 @@ public class ScenarioRunnerHelper {
             for (FactMappingValue expectedResult : scenarioOutput.getExpectedResult()) {
 
                 Optional<Object> resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
-                // FIXME to test
-                expectedResult.setError(resultValue.isPresent());
+
+                expectedResult.setError(!resultValue.isPresent());
 
                 scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue).setResult(resultValue.isPresent()));
             }
@@ -200,7 +200,6 @@ public class ScenarioRunnerHelper {
             List<String> pathToField = factMapping.getExpressionElements().stream()
                     .map(ExpressionElement::getStep).collect(toList());
 
-            // FIXME error also for parsing error
             try {
                 Object value = expressionEvaluator.getValueForGiven(factMapping.getClassName(), factMappingValue.getRawValue(), classLoader);
                 paramsForBean.put(pathToField, value);

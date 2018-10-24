@@ -38,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.internal.runners.model.EachTestNotifier;
@@ -49,6 +50,7 @@ import static java.util.stream.Collectors.toList;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.createExtractorFunction;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.extractExpectedValues;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.extractGivenValues;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.getParamsForBean;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.getScenarioResultsFromGivenFacts;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.groupByFactIdentifierAndFilter;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerHelper.validateAssertion;
@@ -196,6 +198,7 @@ public class ScenarioRunnerHelperTest {
         List<ScenarioResult> scenario1Results = getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, input1, expressionEvaluator);
 
         assertEquals(1, scenario1Results.size());
+        assertFalse(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
 
         List<ScenarioInput> scenario2Inputs = extractGivenValues(simulation.getSimulationDescriptor(),
                                                                  scenario2.getUnmodifiableFactMappingValues(),
@@ -211,12 +214,21 @@ public class ScenarioRunnerHelperTest {
         List<ScenarioResult> scenario2Results = getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario2Outputs, input2, expressionEvaluator);
 
         assertEquals(1, scenario2Results.size());
+        assertFalse(scenario2Outputs.get(0).getExpectedResult().get(0).isError());
 
         List<ScenarioOutput> newFact = Collections.singletonList(new ScenarioOutput(personFactIdentifier, Collections.emptyList(), true));
         List<ScenarioResult> scenario2NoResults = getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), newFact, input2, expressionEvaluator);
 
         assertEquals(0, scenario2NoResults.size());
 
+        Person person = new Person();
+        person.setFirstName("ANOTHER STRING");
+        ScenarioInput newInput = new ScenarioInput(personFactIdentifier, person);
+
+        List<ScenarioResult> scenario3Results = getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, newInput, expressionEvaluator);
+        assertTrue(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
+
+        assertEquals(1, scenario3Results.size());
     }
 
     @Test
@@ -278,5 +290,20 @@ public class ScenarioRunnerHelperTest {
 
         person.setFirstName("OtherString");
         assertFalse(extractorFunction.apply(person).isPresent());
+    }
+
+    @Test
+    public void getParamsForBeanTest() {
+        List<FactMappingValue> factMappingValues = new ArrayList<>();
+        FactMappingValue factMappingValue = new FactMappingValue(disputeFactIdentifier, amountGivenExpressionIdentifier, "NOT PARSABLE");
+        factMappingValues.add(factMappingValue);
+
+        try {
+            getParamsForBean(simulation.getSimulationDescriptor(), disputeFactIdentifier, factMappingValues, classLoader, expressionEvaluator);
+            fail();
+        } catch(ScenarioException ignored) {
+
+        }
+        Assert.assertTrue(factMappingValue.isError());
     }
 }

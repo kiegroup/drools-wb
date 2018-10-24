@@ -315,6 +315,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.onRunScenario();
 
         verify(scenarioSimulationService).runScenario(any(), eq(model));
+
+        verify(mockScenarioSimulationView, times(1)).refreshErrors();
     }
 
     @Test
