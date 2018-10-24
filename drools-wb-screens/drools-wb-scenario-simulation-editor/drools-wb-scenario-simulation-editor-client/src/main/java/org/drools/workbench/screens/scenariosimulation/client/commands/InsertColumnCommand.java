@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -65,11 +66,15 @@ public class InsertColumnCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        String columnGroup = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getColumnGroup();
-        String originalColumnTitle = ((ScenarioGridColumn) model.getColumns().get(columnIndex)).getInformationHeaderMetaData().getTitle();
+        final List<GridColumn<?>> columns = model.getColumns();
+        final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
+        final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+
+        String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
+        String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         String columnTitle = asProperty ? originalColumnTitle : FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-        String placeHolder = asProperty ? ScenarioSimulationEditorConstants.INSTANCE.insertValue(): ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        String placeHolder = asProperty ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(columnTitle,
                                                                                       columnId,
                                                                                       columnGroup,
@@ -78,12 +83,21 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
         scenarioGridColumnLocal.setReadOnly(!asProperty);
+        int leftPosition = columnIndex;
+        int rightPosition = columnIndex;
+        while (((ScenarioGridColumn) columns.get(leftPosition)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle) && leftPosition > 1) {
+            leftPosition --;
+        }
+        while (((ScenarioGridColumn) columns.get(rightPosition)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle) && rightPosition < columns.size()) {
+            rightPosition ++;
+        }
+
         final Stream<GridColumn<?>> filteredColumnStream = model.getColumns().stream().filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle));
         int columnPosition = isRight ? columnIndex + 1 : columnIndex;
         final List<GridColumn<?>> collect = filteredColumnStream.collect(Collectors.toList());
         if (!collect.isEmpty()) {
             if (isRight) {
-                columnPosition = model.getColumns().indexOf(collect.get(collect.size()-1)) +1;
+                columnPosition = model.getColumns().indexOf(collect.get(collect.size() - 1)) + 1;
             } else {
                 columnPosition = model.getColumns().indexOf(collect.get(0));
             }

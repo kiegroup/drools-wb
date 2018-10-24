@@ -23,8 +23,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -257,8 +259,8 @@ public class ScenarioGridModel extends BaseGridData {
         Range toReturn = super.setCell(rowIndex, columnIndex, cellSupplier);
         try {
             Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
-            Object rawValue = optionalValue.isPresent() ? optionalValue.get() : null;
-            String cellValue = (rawValue != null && rawValue instanceof String) ? (String) rawValue : null;
+            Object rawValue = optionalValue.orElse(null);
+            String cellValue = (rawValue instanceof String) ? (String) rawValue : null;
             Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
             FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             FactIdentifier factIdentifier = factMappingByIndex.getFactIdentifier();
@@ -291,12 +293,16 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public int getFirstIndexLeftOfGroup(String groupName) {
         // HORRIBLE TRICK BECAUSE gridColumn.getIndex() DOES NOT REFLECT ACTUAL POSITION, BUT ONLY ORDER OF INSERTION
-        final Optional<Integer> first = this.getColumns()    // Retrieving the column list
+        final List<GridColumn<?>> columns = this.getColumns();
+
+
+
+        final Optional<Integer> first = columns    // Retrieving the column list
                 .stream()  // streaming
                 .filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getColumnGroup().equals(groupName))  // filtering by group name
                 .findFirst()
                 .map(gridColumn -> {
-                    int indexOfColumn = this.getColumns().indexOf(gridColumn);
+                    int indexOfColumn = columns.indexOf(gridColumn);
                     return indexOfColumn > -1 ? indexOfColumn : 0;   // mapping the retrieved column to its index inside the list, or 0
                 });
         return first.orElseGet(() -> 0); // returning the retrieved value or, if null, 0
@@ -333,7 +339,14 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public void updateHeader(int columnIndex, int rowIndex, String value) {
-        getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex).setTitle(value);
+        final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
+        if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
+            String originalGroup = editedMetadata.getTitle();
+            final int firstIndexLeftOfGroup = getFirstIndexLeftOfGroup(originalGroup) +1;
+            final int firstIndexRightOfGroup = getFirstIndexRightOfGroup(originalGroup) -1;
+            GWT.log(" firstIndexLeftOfGroup " + firstIndexLeftOfGroup + " firstIndexRightOfGroup " + firstIndexRightOfGroup);
+        }
+        editedMetadata.setTitle(value);
         simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
     }
 
