@@ -92,8 +92,6 @@ public class ScenarioSimulationEditorPresenter
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
 
-    protected RightPanelMenuItem rightPanelMenuItem;
-
     protected PlaceRequest rightPanelRequest;
 
     protected ObservablePath path;
@@ -123,21 +121,6 @@ public class ScenarioSimulationEditorPresenter
     private Command populateRightPanelCommand;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
-
-
-
-    //Package for which this Scenario Simulation relates
-    String packageName = "";
-
-    RightPanelMenuItem rightPanelMenuItem;
-
-    PlaceRequest rightPanelRequest;
-
-    ObservablePath path;
-
-    EventBus eventBus;
-
-    ScenarioGridPanel scenarioGridPanel;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies

@@ -60,7 +60,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     protected boolean editingColumnEnabled = false;
 
-
     protected ListGroupItemView selectedListGroupItemView;
     protected FieldItemView selectedFieldItemView;
 
@@ -234,10 +233,13 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
             } else if (selectedFieldItemView != null) {
                 String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
-                String fullPackage = getFactModelTreeFromFactTypeMap(baseClass).getFullPackage();
+                FactModelTree factModelTree = getFactModelTreeFromFactTypeMap(baseClass);
+                if (factModelTree == null) {
+                    factModelTree = getFactModelTreeFromInstanceMap(baseClass);
+                }
+                String fullPackage = factModelTree.getFullPackage();
                 eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName()));
             }
         }
     }
-
 }
