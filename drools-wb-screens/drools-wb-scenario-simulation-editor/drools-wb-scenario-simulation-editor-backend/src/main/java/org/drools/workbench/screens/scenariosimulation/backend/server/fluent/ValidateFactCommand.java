@@ -39,6 +39,9 @@ public class ValidateFactCommand implements ExecutableCommand<Void> {
         if(objects.size() > 0) {
             factToCheck.forEach(fact -> fact.getScenarioResult().setResult(true));
         }
+        else {
+            factToCheck.forEach(fact -> fact.getScenarioResult().getFactMappingValue().setError(true));
+        }
         return null;
     }
 }

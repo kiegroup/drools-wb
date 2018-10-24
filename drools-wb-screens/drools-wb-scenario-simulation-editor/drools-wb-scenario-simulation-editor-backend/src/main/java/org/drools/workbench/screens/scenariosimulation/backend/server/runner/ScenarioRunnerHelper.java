@@ -160,7 +160,7 @@ public class ScenarioRunnerHelper {
 
                 Optional<Object> resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
                 // FIXME to test
-                expectedResult.setError(conditionResult);
+                expectedResult.setError(resultValue.isPresent());
 
                 scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue).setResult(resultValue.isPresent()));
             }

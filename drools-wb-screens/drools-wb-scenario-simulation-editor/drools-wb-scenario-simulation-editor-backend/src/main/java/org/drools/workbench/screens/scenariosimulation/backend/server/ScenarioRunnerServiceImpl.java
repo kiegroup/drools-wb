@@ -87,6 +87,8 @@ public class ScenarioRunnerServiceImpl
                         final Path path,
                         final ScenarioSimulationModel model) {
 
+        // FIXME to test
+        model.getSimulation().resetErrors();
         KieModule kieModule = getKieModule(path);
         KieContainer kieContainer = getKieContainer(kieModule);
         ClassLoader rootClassLoader = kieContainer.getClassLoader();
