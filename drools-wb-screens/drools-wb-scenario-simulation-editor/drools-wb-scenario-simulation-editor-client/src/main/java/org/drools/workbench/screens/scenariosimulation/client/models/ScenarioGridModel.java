@@ -248,8 +248,6 @@ public class ScenarioGridModel extends BaseGridData {
             FactIdentifier factIdentifier = factMappingByIndex.getFactIdentifier();
             ExpressionIdentifier expressionIdentifier = factMappingByIndex.getExpressionIdentifier();
             scenarioByIndex.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, cellValue);
-
-            refreshErrorsRow(rowIndex);
         } catch (Throwable t) {
             toReturn = super.deleteCell(rowIndex, columnIndex);
             eventBus.fireEvent(new ScenarioGridReloadEvent());
@@ -515,6 +513,16 @@ public class ScenarioGridModel extends BaseGridData {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
     }
 
+    public void resetErrors() {
+        IntStream.range(0, getRowCount()).forEach(this::resetErrors);
+    }
+
+    public void resetErrors(int rowIndex) {
+        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        scenarioByIndex.resetErrors();
+        refreshErrors();
+    }
+
     public void refreshErrors() {
         IntStream.range(0, getRowCount()).forEach(this::refreshErrorsRow);
     }
@@ -524,12 +532,14 @@ public class ScenarioGridModel extends BaseGridData {
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {
             ScenarioGridCell cell = (ScenarioGridCell) getCell(rowIndex, columnIndex);
+            if (cell == null) {
+                return;
+            }
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
-            if(factMappingValue.isPresent()) {
+            if (factMappingValue.isPresent()) {
                 cell.setError(factMappingValue.get().isError());
-            }
-            else {
+            } else {
                 cell.setError(false);
             }
         });

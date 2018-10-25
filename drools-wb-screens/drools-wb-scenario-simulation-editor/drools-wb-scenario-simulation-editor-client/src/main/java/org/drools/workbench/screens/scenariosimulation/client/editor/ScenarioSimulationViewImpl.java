@@ -67,6 +67,12 @@ public class ScenarioSimulationViewImpl
     }
 
     @Override
+    public void refreshContent(Simulation simulation) {
+        scenarioGridPanel.getScenarioGrid().getModel().bindContent(simulation);
+        refreshErrors();
+    }
+
+    @Override
     public MenuItem getRunScenarioMenuItem() {
         return new RunScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
                                        () -> presenter.onRunScenario());
@@ -82,9 +88,9 @@ public class ScenarioSimulationViewImpl
         return scenarioGridLayer;
     }
 
-    @Override
-    public void refreshErrors() {
+    private void refreshErrors() {
         scenarioGridPanel.getScenarioGrid().getModel().refreshErrors();
+        onResize();
     }
 
     @Override

@@ -32,6 +32,8 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     void setContent(final Simulation simulation);
 
+    void refreshContent(final Simulation simulation);
+
     MenuItem getRunScenarioMenuItem();
 
     void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
@@ -39,7 +41,4 @@ public interface ScenarioSimulationView extends KieEditorView,
     ScenarioGridPanel getScenarioGridPanel();
 
     ScenarioGridLayer getScenarioGridLayer();
-
-    void refreshErrors();
-
 }

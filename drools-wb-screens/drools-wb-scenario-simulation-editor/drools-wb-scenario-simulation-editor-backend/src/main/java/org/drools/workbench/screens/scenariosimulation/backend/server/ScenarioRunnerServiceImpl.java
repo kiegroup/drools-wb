@@ -83,11 +83,10 @@ public class ScenarioRunnerServiceImpl
     }
 
     @Override
-    public void runTest(final String identifier,
-                        final Path path,
-                        final ScenarioSimulationModel model) {
+    public ScenarioSimulationModel runTest(final String identifier,
+                                           final Path path,
+                                           final ScenarioSimulationModel model) {
 
-        model.getSimulation().resetErrors();
         KieModule kieModule = getKieModule(path);
         KieContainer kieContainer = getKieContainer(kieModule);
         ClassLoader rootClassLoader = kieContainer.getClassLoader();
@@ -107,6 +106,8 @@ public class ScenarioRunnerServiceImpl
                         result.getRunCount(),
                         result.getRunTime(),
                         failures));
+
+        return model;
     }
 
     protected KieModule getKieModule(Path path) {

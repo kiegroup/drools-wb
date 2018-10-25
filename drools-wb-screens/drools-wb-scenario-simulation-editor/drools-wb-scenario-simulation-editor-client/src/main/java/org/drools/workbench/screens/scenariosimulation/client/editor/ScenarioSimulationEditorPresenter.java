@@ -233,9 +233,17 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        service.call(result -> view.refreshErrors())
+        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+        service.call(refreshModel())
                 .runScenario(versionRecordManager.getCurrentPath(),
                              model);
+    }
+
+    RemoteCallback<ScenarioSimulationModel> refreshModel() {
+        return newModel -> {
+            this.model = newModel;
+            view.refreshContent(newModel.getSimulation());
+        };
     }
 
     protected void registerRightPanelCallback() {
@@ -433,6 +441,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     private boolean isDirty() {
+        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
         return originalHash != currentHashcode;
     }

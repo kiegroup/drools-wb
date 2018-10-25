@@ -36,7 +36,6 @@ import org.uberfire.mocks.EventSourceMock;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -87,7 +86,6 @@ public class ScenarioRunnerImplServiceImplTest {
         when(scenarioSimulationModel.getSimulation()).thenReturn(mock(Simulation.class));
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
 
-        verify(scenarioSimulationModel.getSimulation(), times(1)).resetErrors();
         verify(defaultTestResultMessageEvent).fire(any());
     }
 

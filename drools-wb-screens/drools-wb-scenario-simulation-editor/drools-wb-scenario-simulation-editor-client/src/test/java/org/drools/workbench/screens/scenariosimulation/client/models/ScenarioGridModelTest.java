@@ -107,6 +107,9 @@ public class ScenarioGridModelTest {
     @Mock
     private List<FactMappingValue> mockFactMappingValues;
 
+    @Mock
+    private FactMappingValue mockFactMappingValue;
+
     private List<GridRow> gridRows = new ArrayList<>();
 
     private List<GridColumn<?>> gridColumns = new ArrayList<>();
@@ -158,6 +161,9 @@ public class ScenarioGridModelTest {
         when(mockSimulation.addScenario(ROW_COUNT)).thenReturn(mockScenario);
         when(mockSimulation.getScenarioByIndex(ROW_COUNT)).thenReturn(mockScenario);
         when(mockSimulation.cloneScenario(ROW_COUNT, ROW_COUNT + 1)).thenReturn(mockScenario);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(mockFactMappingValue));
+        when(mockFactMappingValue.isError()).thenReturn(true);
 
         gridCellSupplier = () -> mockGridCell;
         scenarioGridModel = spy(new ScenarioGridModel(false) {
@@ -319,6 +325,17 @@ public class ScenarioGridModelTest {
         gridColumns.add(indexColumnPosition, mockScenarioIndexGridColumn);
         scenarioGridModel.updateIndexColumn();
         verify(scenarioGridModel, times(3)).setCellValue(anyInt(), eq(indexColumnPosition), isA(ScenarioGridCellValue.class));
+    }
+
+    @Test
+    public void refreshErrorsTest() {
+        scenarioGridModel.refreshErrors();
+        verify(mockGridCell, times(24)).setError(eq(true));
+
+        reset(mockGridCell);
+        when(mockFactMappingValue.isError()).thenReturn(false);
+        scenarioGridModel.refreshErrors();
+        verify(mockGridCell, times(24)).setError(eq(false));
     }
 
     @Test

@@ -145,8 +145,12 @@ public class ScenarioRunnerHelperTest {
         List<ScenarioOutput> scenario1Outputs = extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
         assertEquals(1, scenario1Outputs.size());
 
+        scenario2.addOrUpdateMappingValue(FactIdentifier.create("TEST", String.class.getCanonicalName()),
+                                          ExpressionIdentifier.create("TEST", FactMappingType.EXPECTED),
+                                          "TEST");
         List<ScenarioOutput> scenario2Outputs = extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
-        assertEquals(2, scenario2Outputs.size());
+        assertEquals(3, scenario2Outputs.size());
+        assertEquals(1, scenario2Outputs.stream().filter(ScenarioOutput::isNewFact).count());
     }
 
     @Test

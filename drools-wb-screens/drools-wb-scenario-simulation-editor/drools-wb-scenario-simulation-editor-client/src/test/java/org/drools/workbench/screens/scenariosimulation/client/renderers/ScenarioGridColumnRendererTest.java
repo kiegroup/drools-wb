@@ -62,6 +62,10 @@ public class ScenarioGridColumnRendererTest {
     @Mock
     private Text placeholderMock;
     @Mock
+    private Text errorTextMock;
+    @Mock
+    private Rectangle rectangle;
+    @Mock
     private ScenarioGridCell scenarioGridCell;
     @Mock
     private Node<?> nodeMock;
@@ -72,10 +76,14 @@ public class ScenarioGridColumnRendererTest {
     public void setUp() {
         doReturn(nodeMock).when(textMock).asNode();
         doReturn(nodeMock).when(placeholderMock).asNode();
+        doReturn(nodeMock).when(errorTextMock).asNode();
+        doReturn(nodeMock).when(rectangle).asNode();
         when(themeMock.getPlaceholderText()).thenReturn(placeholderMock);
         when(themeMock.getBodyText()).thenReturn(textMock);
         when(rendererMock.getTheme()).thenReturn(themeMock);
         when(contextMock.getRenderer()).thenReturn(rendererMock);
+        when(themeMock.getErrorText()).thenReturn(errorTextMock);
+        when(themeMock.getBodyErrorBackground(any())).thenReturn(rectangle);
         scenarioGridColumnRenderer = spy(new ScenarioGridColumnRenderer());
     }
 
@@ -114,6 +122,14 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(placeholderMock), eq(PLACEHOLDER));
+        reset(scenarioGridColumnRenderer);
+
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(VALUE));
+        ((ScenarioGridCell) cell).setError(true);
+        retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
+        assertNotNull(retrieved);
+        verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(errorTextMock), eq(VALUE));
+        reset(scenarioGridColumnRenderer);
     }
 
     @Test
@@ -127,7 +143,6 @@ public class ScenarioGridColumnRendererTest {
     @Test
     public void applyBackgroundColor() {
         Group group = mock(Group.class);
-        when(themeMock.getBodyErrorBackground(any())).thenReturn(mock(Rectangle.class));
 
         when(scenarioGridCell.isError()).thenReturn(true);
         scenarioGridColumnRenderer.applyBackgroundColor(scenarioGridCell, contextMock, group, themeMock);

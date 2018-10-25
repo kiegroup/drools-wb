@@ -31,7 +31,9 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
     public static final String BACKGROUND_FILL_COLOUR = "#c7ffca";
 
-    public static final String BACKGROUND_ERROR_FILL_COLOUR = "fff5f6";
+    public static final String BACKGROUND_ERROR_FILL_COLOUR = "#ffe6e6";
+
+    public static final String OUTLINE_ERROR_COLOUR = "#cc0000";
 
     public static final String LABEL_BACKGROUND_FILL_COLOUR = "#c7ffca";
 
@@ -62,6 +64,8 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     public static final String FONT_FAMILY_EXPRESSION = "Courier New";
 
     public static final String FONT_STYLE_ITALIC = "italic";
+
+    public static final String FONT_STYLE_BOLD = "bold";
 
     public static final double SELECTOR_STROKE_WIDTH = 2.0;
 
@@ -126,6 +130,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Rectangle getBodyBackground(final GridColumn<?> column) {
         final Rectangle background = new Rectangle(0, 0);
+        background.setFillColor(ColorName.TRANSPARENT);
         // to customize background on column-type base, set the fill color (e.g. background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR); ) based on the column type
         return background;
     }
@@ -185,5 +190,18 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
                                                0)
                 .setFillColor(BACKGROUND_ERROR_FILL_COLOUR);
         return header;
+    }
+
+    @Override
+    public Text getErrorText() {
+        return new Text("")
+                .setFillColor(OUTLINE_ERROR_COLOUR)
+                .setFontSize(FONT_SIZE)
+                .setFontFamily(FONT_FAMILY_LABEL)
+                .setFontStyle(FONT_STYLE_BOLD)
+                .setTextUnit(TextUnit.PT)
+                .setListening(false)
+                .setTextBaseLine(TextBaseLine.MIDDLE)
+                .setTextAlign(TextAlign.CENTER);
     }
 }

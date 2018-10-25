@@ -52,7 +52,7 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
             text = theme.getPlaceholderText();
             value = ((ScenarioGridCellValue) cell.getValue()).getPlaceHolder();
         } else {
-            text = theme.getBodyText();
+            text = ((ScenarioGridCell) cell).isError() ? theme.getErrorText() : theme.getBodyText();
             value = cell.getValue() != null ? cell.getValue().getValue() : null;
         }
 

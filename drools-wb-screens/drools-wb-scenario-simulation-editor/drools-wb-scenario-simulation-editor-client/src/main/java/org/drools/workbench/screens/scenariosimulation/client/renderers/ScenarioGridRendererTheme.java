@@ -26,4 +26,6 @@ public interface ScenarioGridRendererTheme extends GridRendererTheme {
 
     Rectangle getBodyErrorBackground(final GridCell<?> column);
 
+    Text getErrorText();
+
 }
