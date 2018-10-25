@@ -46,6 +46,8 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
 public class ScenarioGridModel extends BaseGridData {
 
+    public static final int HEADER_ROW_COUNT = 2;
+
     Simulation simulation;
 
     EventBus eventBus;
@@ -59,6 +61,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     public ScenarioGridModel(boolean isMerged) {
         super(isMerged);
+        setHeaderRowCount(HEADER_ROW_COUNT);
     }
 
     /**
