@@ -16,8 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 
@@ -30,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 /**
  * <code>Command</code> to <b>insert</b> a column.
@@ -69,7 +68,6 @@ public class InsertColumnCommand extends AbstractCommand {
         final List<GridColumn<?>> columns = model.getColumns();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
-
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
@@ -83,23 +81,16 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
         scenarioGridColumnLocal.setReadOnly(!asProperty);
-        int leftPosition = columnIndex;
-        int rightPosition = columnIndex;
-        while (((ScenarioGridColumn) columns.get(leftPosition)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle) && leftPosition > 1) {
-            leftPosition --;
-        }
-        while (((ScenarioGridColumn) columns.get(rightPosition)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle) && rightPosition < columns.size()) {
-            rightPosition ++;
-        }
-
-        final Stream<GridColumn<?>> filteredColumnStream = model.getColumns().stream().filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle));
-        int columnPosition = isRight ? columnIndex + 1 : columnIndex;
-        final List<GridColumn<?>> collect = filteredColumnStream.collect(Collectors.toList());
-        if (!collect.isEmpty()) {
-            if (isRight) {
-                columnPosition = model.getColumns().indexOf(collect.get(collect.size() - 1)) + 1;
-            } else {
-                columnPosition = model.getColumns().indexOf(collect.get(0));
+        GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
+        int columnPosition = columnIndex;
+        if (isRight) {
+            while (columnPosition < columns.size() - 1 && ((ScenarioGridColumn) columns.get(columnPosition + 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+                columnPosition++;
+            }
+            columnPosition++;
+        } else {
+            while (columnPosition > 1 && ((ScenarioGridColumn) columns.get(columnPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+                columnPosition--;
             }
         }
         model.insertColumn(columnPosition, scenarioGridColumnLocal);

@@ -287,6 +287,28 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * This methods returns the <code>Range</code> of a <b>single</b> block of columns of the same instance/data object.
+     * A <code>single</code> block is made of all the columns immediately to the left and right of the selected one with the same "label".
+     * If there is another column with the same "label" but separated by a different column, it is not part of the group.
+     * @param columnIndex
+     * @return
+     */
+    public Range getInstanceLimits(int columnIndex) {
+        final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
+        final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+        String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
+        int leftPosition = columnIndex;
+        while (leftPosition > 1 && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+            leftPosition--;
+        }
+        int rightPosition = columnIndex;
+        while (rightPosition < columns.size() - 1 && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+            rightPosition++;
+        }
+        return new Range(leftPosition, rightPosition);
+    }
+
+    /**
      * Return the first index to the left of the given group, i.e. <b>excluded</b> the left-most index of <b>that</b> group
      * @param groupName
      * @return
@@ -294,9 +316,6 @@ public class ScenarioGridModel extends BaseGridData {
     public int getFirstIndexLeftOfGroup(String groupName) {
         // HORRIBLE TRICK BECAUSE gridColumn.getIndex() DOES NOT REFLECT ACTUAL POSITION, BUT ONLY ORDER OF INSERTION
         final List<GridColumn<?>> columns = this.getColumns();
-
-
-
         final Optional<Integer> first = columns    // Retrieving the column list
                 .stream()  // streaming
                 .filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getColumnGroup().equals(groupName))  // filtering by group name
