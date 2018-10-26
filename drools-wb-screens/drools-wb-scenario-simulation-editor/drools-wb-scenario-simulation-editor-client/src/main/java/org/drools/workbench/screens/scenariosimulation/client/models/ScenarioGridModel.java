@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -364,14 +363,11 @@ public class ScenarioGridModel extends BaseGridData {
         final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
         if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
             Range instanceLimits = getInstanceLimits(columnIndex);
-
-            String originalGroup = editedMetadata.getTitle();
             final int firstIndexOfGroup = instanceLimits.getMinRowIndex();
-            final int latIndexOfGroup = instanceLimits.getMaxRowIndex();
-            GWT.log(" firstIndexOfGroup " + firstIndexOfGroup + " latIndexOfGroup " + latIndexOfGroup);
-            IntStream.range(latIndexOfGroup, latIndexOfGroup +1).forEach(index -> {
+            final int lastIndexOfGroup = instanceLimits.getMaxRowIndex();
+            IntStream.range(firstIndexOfGroup, lastIndexOfGroup +1).forEach(index -> {
                 ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-                simulation.getSimulationDescriptor().getFactMappingByIndex(index).setExpressionAlias(value);
+                simulation.getSimulationDescriptor().getFactMappingByIndex(index).setFactAlias(value);
             });
         } else {
             editedMetadata.setTitle(value);

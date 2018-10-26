@@ -405,7 +405,7 @@ public class ScenarioSimulationEditorPresenter
                     final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
                     simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
                         final String dataObjectName = factMapping.getFactIdentifier().getName();
-                        final String instanceName = factMapping.getExpressionAlias();
+                        final String instanceName = factMapping.getFactAlias();
                         GWT.log(instanceName + " -> " + dataObjectName);
                         if (!instanceName.equals(dataObjectName)) {
                             final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);

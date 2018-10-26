@@ -343,6 +343,16 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         switch (group) {
             case "GIVEN":
             case "EXPECTED":
+                scenarioGrid.selectColumn(uiColumnIndex);
+                EnableRightPanelEvent toFire;
+                if (!scenarioGridColumn.isInstanceAssigned()) {
+                    toFire = new EnableRightPanelEvent();
+                } else if (clickedScenarioHeaderMetadata.isPropertyHeader()) {
+                    toFire = new EnableRightPanelEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
+                } else {
+                    toFire = new EnableRightPanelEvent();
+                }
+                eventBus.fireEvent(toFire);
                 final ScenarioHeaderMetaData propertyHeaderMetaData = scenarioGridColumn.getPropertyHeaderMetaData();
                 if (scenarioGridColumn.isInstanceAssigned() && clickedScenarioHeaderMetadata.isInstanceHeader() && (propertyHeaderMetaData != null && propertyHeaderMetaData.getTitle() != null && !propertyHeaderMetaData.getTitle().isEmpty()) ) {
                     return true;
@@ -356,16 +366,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                                                                                     rp, uiHeaderRowIndex);
                     clickedScenarioHeaderMetadata.edit(context);
                 }
-                scenarioGrid.selectColumn(uiColumnIndex);
-                EnableRightPanelEvent toFire;
-                if (!scenarioGridColumn.isInstanceAssigned()) {
-                    toFire = new EnableRightPanelEvent();
-                } else if (clickedScenarioHeaderMetadata.isPropertyHeader()) {
-                    toFire = new EnableRightPanelEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
-                } else {
-                    toFire = new EnableRightPanelEvent();
-                }
-                eventBus.fireEvent(toFire);
                 break;
             default:
                 return false;
