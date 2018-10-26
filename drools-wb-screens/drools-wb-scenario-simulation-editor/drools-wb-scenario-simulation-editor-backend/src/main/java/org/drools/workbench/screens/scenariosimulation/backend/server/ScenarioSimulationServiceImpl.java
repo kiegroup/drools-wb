@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -305,16 +306,19 @@ public class ScenarioSimulationServiceImpl
 
     void createActivatorIfNotExist(Path context) {
         KieModule kieModule = kieModuleService.resolveModule(context);
-        Package projectPackage = kieModuleService.resolveDefaultPackage(kieModule);
-        if (projectPackage == null) {
+        String groupId = kieModule.getPom().getGav().getGroupId();
+        Optional<Package> packageFound = kieModuleService.resolvePackages(kieModule).stream()
+                .filter(elem -> groupId.equals(elem.getPackageName()))
+                .findFirst();
+        if (!packageFound.isPresent()) {
             throw new IllegalArgumentException("Impossible to retrieve package information from path: " + context.toURI());
         }
-
-        final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(projectPackage);
+        Package targetPackage = packageFound.get();
+        final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(targetPackage);
 
         if (!ioService.exists(activatorPath)) {
             ioService.write(activatorPath,
-                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE,
+                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(groupId),
                             commentedOptionFactory.makeCommentedOption(""));
         }
 
@@ -341,11 +345,8 @@ public class ScenarioSimulationServiceImpl
         }
     }
 
-    org.uberfire.java.nio.file.Path getActivatorPath(Package projectPackage) {
-        org.uberfire.java.nio.file.Path packagePath = Paths.convert(projectPackage.getPackageTestSrcPath()).resolve(ScenarioJunitActivator.ACTIVATOR_PACKAGE);
-        if(!ioService.exists(packagePath)) {
-            kieModuleService.newPackage(projectPackage, ScenarioJunitActivator.ACTIVATOR_PACKAGE);
-        }
+    org.uberfire.java.nio.file.Path getActivatorPath(Package rootModulePackage) {
+        org.uberfire.java.nio.file.Path packagePath = Paths.convert(rootModulePackage.getPackageTestSrcPath());
         return packagePath.resolve(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
     }
 

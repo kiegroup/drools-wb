@@ -15,6 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.inject.Named;
 
 import org.assertj.core.api.Assertions;
@@ -116,6 +120,9 @@ public class ScenarioSimulationServiceImplTest {
     private POM projectPom;
 
     @Mock
+    private GAV gav;
+
+    @Mock
     private Dependencies dependencies;
 
     @Mock
@@ -128,12 +135,16 @@ public class ScenarioSimulationServiceImplTest {
 
     @Before
     public void setuo() {
+        Set<Package> packages = new HashSet<>();
+        packages.add(new Package(path, path, path, path, path, "Test", "", ""));
         when(kieModuleService.resolveModule(any())).thenReturn(module);
-        when(kieModuleService.resolveDefaultPackage(any())).thenReturn(mockedPackage);
+        when(kieModuleService.resolvePackages(any(KieModule.class))).thenReturn(packages);
         when(ioService.exists(activatorPath)).thenReturn(false);
 
         when(kieModuleService.resolveModule(any())).thenReturn(module);
         when(module.getPom()).thenReturn(projectPom);
+        when(projectPom.getGav()).thenReturn(gav);
+        when(gav.getGroupId()).thenReturn("Test");
         when(projectPom.getDependencies()).thenReturn(dependencies);
         when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(false);
         when(mockedPackage.getPackageTestSrcPath()).thenReturn(path);
@@ -267,7 +278,7 @@ public class ScenarioSimulationServiceImplTest {
                        anyString(),
                        any(OpenOption.class));
 
-        when(kieModuleService.resolveDefaultPackage(any())).thenReturn(null);
+        when(kieModuleService.resolvePackages(any(KieModule.class))).thenReturn(Collections.emptySet());
         Assertions.assertThatThrownBy(() -> service.createActivatorIfNotExist(path))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Impossible to retrieve package information from path: file:///contextpath");
@@ -314,13 +325,5 @@ public class ScenarioSimulationServiceImplTest {
     @Test
     public void getActivatorPathTest() {
         assertTrue(service.getActivatorPath(mockedPackage).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
-
-        verify(kieModuleService, times(1)).newPackage(any(Package.class), anyString());
-
-        reset(kieModuleService);
-        when(ioService.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(true);
-        assertTrue(service.getActivatorPath(mockedPackage).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
-
-        verify(kieModuleService, times(0)).newPackage(any(Package.class), anyString());
     }
 }

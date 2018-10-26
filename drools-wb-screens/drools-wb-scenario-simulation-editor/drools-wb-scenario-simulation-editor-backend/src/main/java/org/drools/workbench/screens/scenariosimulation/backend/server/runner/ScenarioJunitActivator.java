@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,15 +42,12 @@ public class ScenarioJunitActivator extends ParentRunner<Simulation> {
 
     public static final String ACTIVATOR_CLASS_NAME = "ScenarioJunitActivatorTest";
 
-    public static final String ACTIVATOR_PACKAGE = "test";
-
-    public static final String ACTIVATOR_CLASS_CODE = "package " + ACTIVATOR_PACKAGE + ";\n" +
-            "/**\n" +
-            "* Do not remove this file\n" +
-            "*/\n" +
-            "@" + RunWith.class.getCanonicalName() + "(" + ScenarioJunitActivator.class.getCanonicalName() + ".class)\n" +
-            "public class " + ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + " {\n" +
-            "}";
+    public static final Function<String, String> ACTIVATOR_CLASS_CODE = modulePackage ->
+            String.format("package %s;\n/**\n* Do not remove this file\n*/\n@%s(%s.class)\npublic class %s {\n}",
+                          modulePackage,
+                          RunWith.class.getCanonicalName(),
+                          ScenarioJunitActivator.class.getCanonicalName(),
+                          ScenarioJunitActivator.ACTIVATOR_CLASS_NAME);
 
     public ScenarioJunitActivator(Class<?> testClass) throws InitializationError {
         super(testClass);
