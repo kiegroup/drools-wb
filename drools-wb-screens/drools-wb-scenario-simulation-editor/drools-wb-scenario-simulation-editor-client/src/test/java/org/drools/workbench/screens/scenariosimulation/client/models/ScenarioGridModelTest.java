@@ -23,6 +23,7 @@ import java.util.stream.IntStream;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -45,6 +46,7 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -135,10 +137,12 @@ public class ScenarioGridModelTest {
 
         doReturn(gridCellValueMock).when(gridCellMock).getValue();
 
+        when(informationHeaderMetaDataMock.isInstanceHeader()).thenReturn(true);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
+        when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
         when(propertyHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(propertyHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
@@ -304,6 +308,16 @@ public class ScenarioGridModelTest {
     public void setCell() {
         scenarioGridModel.setCell(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
         verify(scenarioGridModel, times(1)).setCell(eq(ROW_INDEX), eq(COLUMN_INDEX), eq(gridCellSupplier));
+    }
+
+    @Test
+    public void updateHeader() {
+        String newValue = "NEW_VALUE";
+        scenarioGridModel.updateHeader(COLUMN_INDEX, 1, newValue); // This is instance header
+        verify(eventBusMock, times(1)).fireEvent(isA(ReloadRightPanelEvent.class));
+        reset(eventBusMock);
+        scenarioGridModel.updateHeader(COLUMN_INDEX, 2, newValue); // This is property header
+        verify(eventBusMock, never()).fireEvent(any());
     }
 
     @Test

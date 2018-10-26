@@ -52,7 +52,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     private ListGroupItemPresenter listGroupItemPresenter;
 
-    protected Map<String, FactModelTree> factTypeFieldsMap;
+    protected Map<String, FactModelTree> dataObjectFieldsMap;
 
     protected Map<String, FactModelTree> instanceFieldsMap;
 
@@ -124,7 +124,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public FactModelTree getFactModelTreeFromFactTypeMap(String factName) {
-        return factTypeFieldsMap.get(factName);
+        return dataObjectFieldsMap.get(factName);
     }
 
     @Override
@@ -133,10 +133,10 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap) {
+    public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
         clearDataObjectList();
-        this.factTypeFieldsMap = factTypeFieldsMap;
-        this.factTypeFieldsMap.forEach(this::addDataObjectListGroupItemView);
+        this.dataObjectFieldsMap = dataObjectFieldsMap;
+        this.dataObjectFieldsMap.forEach(this::addDataObjectListGroupItemView);
     }
 
     @Override
@@ -159,14 +159,20 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onSearchedEvent(String search) {
         clearDataObjectList();
-        if (factTypeFieldsMap.isEmpty()) {
+        clearInstanceList();
+        if (dataObjectFieldsMap.isEmpty()) {
             return;
         }
-        factTypeFieldsMap
+        dataObjectFieldsMap
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addDataObjectListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        instanceFieldsMap
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
+                .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
     }
 
     @Override

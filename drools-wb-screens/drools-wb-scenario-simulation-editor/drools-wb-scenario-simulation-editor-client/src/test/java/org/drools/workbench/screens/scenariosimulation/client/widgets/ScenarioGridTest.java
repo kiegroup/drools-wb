@@ -139,14 +139,13 @@ public class ScenarioGridTest {
     @Test
     public void setHeaderColumn() {
         String columnId = factMapping.getExpressionIdentifier().getName();
-        String columnTitle = factMapping.getFactIdentifier().getName();
         final FactMappingType type = factMapping.getExpressionIdentifier().getType();
         String columnGroup = type.name();
         scenarioGrid.setHeaderColumn(1, factMapping);
         verify(scenarioGrid, times(1)).getTitle(eq(factMapping.getFactIdentifier()), eq(factMapping));
         verify(scenarioGrid, times(1)).isReadOnly(eq(factMapping.getFactIdentifier()));
         verify(scenarioGrid, times(1)).getPlaceholder(eq(false));
-        verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(columnTitle),
+        verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS),
                                                                   eq(columnId),
                                                                   eq(columnGroup),
                                                                   eq(type),
@@ -200,9 +199,7 @@ public class ScenarioGridTest {
     @Test
     public void getTitle() {
         FactIdentifier toTest = FactIdentifier.EMPTY;
-        assertEquals(factMapping.getExpressionAlias(), scenarioGrid.getTitle(toTest, factMapping));
-        toTest = FactIdentifier.DESCRIPTION;
-        assertEquals(toTest.getName(), scenarioGrid.getTitle(toTest, factMapping));
+        assertEquals(EXPRESSION_ALIAS, scenarioGrid.getTitle(toTest, factMapping));
     }
 
     @Test

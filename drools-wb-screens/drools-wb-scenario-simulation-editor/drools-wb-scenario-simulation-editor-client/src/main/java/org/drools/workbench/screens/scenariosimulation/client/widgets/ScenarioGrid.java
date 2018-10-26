@@ -72,11 +72,13 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     /**
-     * Select all the cells of the given column
+     * Set the <b>selectedColumn</b> status of the model and select the header cell actually clicked
+     *
      * @param columnIndex
      */
-    public void selectColumn(int columnIndex) {
+    public void setSelectedColumnAndHeader(int headerRowIndex, int columnIndex) {
         ((ScenarioGridModel) model).selectColumn(columnIndex);
+        model.selectHeaderCell(headerRowIndex, columnIndex);
     }
 
     /**

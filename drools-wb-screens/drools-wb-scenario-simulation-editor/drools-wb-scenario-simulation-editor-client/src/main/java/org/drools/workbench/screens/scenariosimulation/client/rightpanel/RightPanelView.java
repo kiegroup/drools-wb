@@ -80,7 +80,7 @@ public interface RightPanelView
 
         void addInstanceListGroupItemView(String factName, FactModelTree factModelTree);
 
-        void setFactTypeFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
+        void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap);
 
         void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 

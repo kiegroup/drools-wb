@@ -38,7 +38,8 @@ abstract class AbstractRightPanelTest {
     @Mock
     protected ViewsProvider viewsProviderMOck;
 
-    protected SortedMap<String, FactModelTree> factTreeMap;
+    protected SortedMap<String, FactModelTree> dataObjectFactTreeMap;
+    protected SortedMap<String, FactModelTree> instanceFactTreeMap;
     protected String FACT_NAME;
     protected String FACT_PACKAGE = "test.scesim.package";
     protected final String GRID_COLUMN_TITLE = "GRID_COLUMN_TITLE";
@@ -55,16 +56,19 @@ abstract class AbstractRightPanelTest {
 
     @Before
     public void setup() {
-        factTreeMap = getFactTreeMap();
-        FACT_NAME = new ArrayList<>(factTreeMap.keySet()).get(0);
-        FACT_MODEL_TREE = factTreeMap.get(FACT_NAME);
+        dataObjectFactTreeMap = getDataObjectFactTreeMap();
+        instanceFactTreeMap = new TreeMap<>();
+        dataObjectFactTreeMap.keySet().forEach(key -> instanceFactTreeMap.put(getRandomString(), dataObjectFactTreeMap.get(key)));
+
+        FACT_NAME = new ArrayList<>(dataObjectFactTreeMap.keySet()).get(0);
+        FACT_MODEL_TREE = dataObjectFactTreeMap.get(FACT_NAME);
     }
 
     protected String getRandomFactModelTree(Map<String, FactModelTree> source, int position) {
         return new ArrayList<>(source.keySet()).get(position);
     }
 
-    protected SortedMap<String, FactModelTree> getFactTreeMap() {
+    protected SortedMap<String, FactModelTree> getDataObjectFactTreeMap() {
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
         IntStream
                 .range(0, 3)

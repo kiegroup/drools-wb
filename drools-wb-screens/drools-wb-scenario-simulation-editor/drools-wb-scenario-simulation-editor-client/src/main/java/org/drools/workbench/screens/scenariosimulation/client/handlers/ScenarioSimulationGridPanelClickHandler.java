@@ -306,7 +306,8 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             final Integer uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, ap.getY());
             if (uiRowIndex == null) {
                 return false;
-            } else { return manageGridLeftClick(scenarioGrid, uiRowIndex, uiColumnIndex, scenarioGridColumn);
+            } else {
+                return manageGridLeftClick(scenarioGrid, uiRowIndex, uiColumnIndex, scenarioGridColumn);
             }
         } else {
             return true;
@@ -343,7 +344,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         switch (group) {
             case "GIVEN":
             case "EXPECTED":
-                scenarioGrid.selectColumn(uiColumnIndex);
+                scenarioGrid.setSelectedColumnAndHeader(scenarioGridColumn.getHeaderMetaData().indexOf(clickedScenarioHeaderMetadata), uiColumnIndex);
                 EnableRightPanelEvent toFire;
                 if (!scenarioGridColumn.isInstanceAssigned()) {
                     toFire = new EnableRightPanelEvent();
@@ -353,10 +354,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                     toFire = new EnableRightPanelEvent();
                 }
                 eventBus.fireEvent(toFire);
-                final ScenarioHeaderMetaData propertyHeaderMetaData = scenarioGridColumn.getPropertyHeaderMetaData();
-                if (scenarioGridColumn.isInstanceAssigned() && clickedScenarioHeaderMetadata.isInstanceHeader() && (propertyHeaderMetaData != null && propertyHeaderMetaData.getTitle() != null && !propertyHeaderMetaData.getTitle().isEmpty()) ) {
-                    return true;
-                }
                 if (rendererHelper != null) {
                     final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
                     final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(rp.getX());

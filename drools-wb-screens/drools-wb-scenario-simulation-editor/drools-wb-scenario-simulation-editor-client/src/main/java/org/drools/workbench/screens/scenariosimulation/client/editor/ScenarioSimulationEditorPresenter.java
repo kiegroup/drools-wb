@@ -30,7 +30,6 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
@@ -151,6 +150,7 @@ public class ScenarioSimulationEditorPresenter
         this.eventBus = scenarioSimulationProducer.getEventBus();
         scenarioGridPanel = view.getScenarioGridPanel();
         commandExecutor.setScenarioGridPanel(scenarioGridPanel);
+        commandExecutor.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateRightPanelCommand = getPopulateRightPanelCommand();
         scenarioGridPanel.select();
@@ -234,6 +234,13 @@ public class ScenarioSimulationEditorPresenter
         return model;
     }
 
+    /**
+     * To be called to force right panel reload
+     */
+    public void reloadRightPanel() {
+        populateRightPanelCommand.execute();
+    }
+
     public void onRunScenario() {
         service.call().runScenario(versionRecordManager.getCurrentPath(), model);
     }
@@ -297,7 +304,7 @@ public class ScenarioSimulationEditorPresenter
         // Execute only when oracle has been set
         if (oracle == null) {
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
             }
             return;
         }
@@ -305,7 +312,7 @@ public class ScenarioSimulationEditorPresenter
         String[] factTypes = oracle.getFactTypes();
         if (factTypes.length == 0) {  // We do not have to set nothing
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
             }
             return;
         }
@@ -398,7 +405,7 @@ public class ScenarioSimulationEditorPresenter
             factTypeFieldsMap.put(result.getFactName(), result);
             if (factTypeFieldsMap.size() == expectedElements) {
                 factTypeFieldsMap.values().forEach(factModelTree -> populateFactModel(factModelTree, factTypeFieldsMap));
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
                 SortedMap<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
                 // map instance name top data model class
                 if (model != null) {
@@ -406,7 +413,6 @@ public class ScenarioSimulationEditorPresenter
                     simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
                         final String dataObjectName = factMapping.getFactIdentifier().getName();
                         final String instanceName = factMapping.getFactAlias();
-                        GWT.log(instanceName + " -> " + dataObjectName);
                         if (!instanceName.equals(dataObjectName)) {
                             final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
                             if (factModelTree != null) {

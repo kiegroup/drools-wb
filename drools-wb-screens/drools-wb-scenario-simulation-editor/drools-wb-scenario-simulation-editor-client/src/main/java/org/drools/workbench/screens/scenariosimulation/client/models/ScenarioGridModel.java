@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -45,7 +46,7 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
 public class ScenarioGridModel extends BaseGridData {
 
-    public static final int HEADER_ROW_COUNT = 2;
+    public static final int HEADER_ROW_COUNT = 3;
 
     Simulation simulation;
 
@@ -359,16 +360,17 @@ public class ScenarioGridModel extends BaseGridData {
                 .count();
     }
 
-    public void updateHeader(int columnIndex, int rowIndex, String value) {
-        final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
+    public void updateHeader(int columnIndex, int headerRowIndex, String value) {
+        final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(headerRowIndex);
         if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
             Range instanceLimits = getInstanceLimits(columnIndex);
             final int firstIndexOfGroup = instanceLimits.getMinRowIndex();
             final int lastIndexOfGroup = instanceLimits.getMaxRowIndex();
-            IntStream.range(firstIndexOfGroup, lastIndexOfGroup +1).forEach(index -> {
+            IntStream.range(firstIndexOfGroup, lastIndexOfGroup + 1).forEach(index -> {
                 ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
                 simulation.getSimulationDescriptor().getFactMappingByIndex(index).setFactAlias(value);
             });
+            eventBus.fireEvent(new ReloadRightPanelEvent());
         } else {
             editedMetadata.setTitle(value);
             simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
@@ -404,8 +406,6 @@ public class ScenarioGridModel extends BaseGridData {
             return;
         }
         selectedColumn = getColumns().get(columnIndex);
-        int rows = getRowCount();
-        IntStream.range(0, rows).forEach(rowIndex -> selectCell(rowIndex, columnIndex));
     }
 
     /**

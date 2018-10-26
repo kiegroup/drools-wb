@@ -24,6 +24,7 @@ import javax.enterprise.context.Dependent;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
@@ -35,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.InsertColum
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
@@ -49,6 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertCol
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
@@ -79,16 +82,18 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                         InsertRowEventHandler,
                                         PrependColumnEventHandler,
                                         PrependRowEventHandler,
+                                        ReloadRightPanelEventHandler,
                                         ScenarioGridReloadEventHandler,
                                         SetInstanceHeaderEventHandler,
                                         SetPropertyHeaderEventHandler {
 
-    ScenarioGridModel model;
-    ScenarioGridPanel scenarioGridPanel;
-    ScenarioGridLayer scenarioGridLayer;
-    RightPanelView.Presenter rightPanelPresenter;
-    DeletePopupPresenter deletePopupPresenter;
-    PreserveDeletePopupPresenter preserveDeletePopupPresenter;
+    protected ScenarioGridModel model;
+    protected ScenarioGridPanel scenarioGridPanel;
+    protected ScenarioGridLayer scenarioGridLayer;
+    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
+    protected RightPanelView.Presenter rightPanelPresenter;
+    protected DeletePopupPresenter deletePopupPresenter;
+    protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
     EventBus eventBus;
 
@@ -101,6 +106,10 @@ public class CommandExecutor implements AppendColumnEventHandler,
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
         registerHandlers();
+    }
+
+    public void setScenarioSimulationEditorPresenter(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter) {
+        this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
     }
 
     public void setRightPanelPresenter(RightPanelView.Presenter rightPanelPresenter) {
@@ -197,6 +206,13 @@ public class CommandExecutor implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(ReloadRightPanelEvent event) {
+        if (scenarioSimulationEditorPresenter != null) {
+            scenarioSimulationEditorPresenter.reloadRightPanel();
+        }
+    }
+
+    @Override
     public void handle(ScenarioGridReloadEvent event) {
         scenarioGridPanel.onResize();
     }
@@ -261,6 +277,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(InsertRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ReloadRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetInstanceHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));

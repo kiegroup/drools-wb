@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -34,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -50,6 +52,9 @@ public abstract class AbstractCommandTest {
     protected ScenarioGridLayer scenarioGridLayerMock;
     @Mock
     protected ScenarioGrid scenarioGridMock;
+
+    @Mock
+    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
 
     @Mock
     protected RightPanelPresenter rightPanelPresenterMock;
@@ -94,8 +99,6 @@ public abstract class AbstractCommandTest {
 
     @Before
     public void setup() {
-        //  final Stream<GridColumn<?>> filteredColumnStream = model.getColumns().stream().filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle));
-
         IntStream.range(0, 4).forEach(index -> gridColumns.add(gridColumnMock));
 
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
@@ -110,8 +113,11 @@ public abstract class AbstractCommandTest {
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
 
         doReturn(gridColumns).when(scenarioGridModelMock).getColumns();
+        GridData.Range range =  new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT);
+        when(scenarioGridModelMock.getInstanceLimits(COLUMN_INDEX)).thenReturn(range);
         when(scenarioGridModelMock.getFirstIndexLeftOfGroup(eq(COLUMN_GROUP))).thenReturn(FIRST_INDEX_LEFT);
         when(scenarioGridModelMock.getFirstIndexRightOfGroup(eq(COLUMN_GROUP))).thenReturn(FIRST_INDEX_RIGHT);
+
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
     }
 }

@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.InsertColum
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
@@ -60,35 +61,37 @@ import static org.mockito.Mockito.when;
 public class CommandExecutorTest extends AbstractCommandTest {
 
     @Mock
-    private List<HandlerRegistration> mockHandlerRegistrationList;
+    private List<HandlerRegistration> handlerRegistrationListMock;
     @Mock
-    private HandlerRegistration mockAppendColumnHandlerRegistration;
+    private HandlerRegistration appendColumnHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockAppendRowHandlerRegistration;
+    private HandlerRegistration appendRowHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockDeleteColumnHandlerRegistration;
+    private HandlerRegistration deleteColumnHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockDeleteRowHandlerRegistration;
+    private HandlerRegistration deleteRowHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockDisableRightPanelEventHandler;
+    private HandlerRegistration disableRightPanelEventHandlerMock;
     @Mock
-    private HandlerRegistration mockDuplicateHandlerRegistration;
+    private HandlerRegistration duplicateHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockEnableRightPanelEventHandler;
+    private HandlerRegistration enableRightPanelEventHandlerMock;
     @Mock
-    private HandlerRegistration mockInsertColumnHandlerRegistration;
+    private HandlerRegistration insertColumnHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockInsertRowHandlerRegistration;
+    private HandlerRegistration insertRowHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockPrependColumnHandlerRegistration;
+    private HandlerRegistration prependColumnHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockPrependRowHandlerRegistration;
+    private HandlerRegistration prependRowHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockScenarioGridReloadHandlerRegistration;
+    private HandlerRegistration reloadRightPanelHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockSetInstanceHeaderEventHandler;
+    private HandlerRegistration scenarioGridReloadHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration mockSetPropertyHeaderEventHandler;
+    private HandlerRegistration setInstanceHeaderEventHandlerMock;
+    @Mock
+    private HandlerRegistration setPropertyHeaderEventHandlerMock;
 
     @Mock
     private DeletePopupPresenter deletePopupPresenterMock;
@@ -100,27 +103,29 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Before
     public void setup() {
         super.setup();
-        when(eventBusMock.addHandler(eq(AppendColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockAppendColumnHandlerRegistration);
-        when(eventBusMock.addHandler(eq(AppendRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockAppendRowHandlerRegistration);
-        when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDeleteColumnHandlerRegistration);
-        when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDeleteRowHandlerRegistration);
-        when(eventBusMock.addHandler(eq(DisableRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDisableRightPanelEventHandler);
-        when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockDuplicateHandlerRegistration);
-        when(eventBusMock.addHandler(eq(EnableRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockEnableRightPanelEventHandler);
-        when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertColumnHandlerRegistration);
-        when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockInsertRowHandlerRegistration);
-        when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependColumnHandlerRegistration);
-        when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockPrependRowHandlerRegistration);
-        when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockScenarioGridReloadHandlerRegistration);
-        when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetInstanceHeaderEventHandler);
-        when(eventBusMock.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(mockSetPropertyHeaderEventHandler);
+        when(eventBusMock.addHandler(eq(AppendColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(appendColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(AppendRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(appendRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(deleteColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(deleteRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DisableRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(disableRightPanelEventHandlerMock);
+        when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(duplicateHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(EnableRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(enableRightPanelEventHandlerMock);
+        when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(insertColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(insertRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class))).thenReturn(prependColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class))).thenReturn(prependRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ReloadRightPanelEvent.TYPE), isA(CommandExecutor.class))).thenReturn(reloadRightPanelHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(setInstanceHeaderEventHandlerMock);
+        when(eventBusMock.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class))).thenReturn(setPropertyHeaderEventHandlerMock);
         commandExecutor = spy(new CommandExecutor() {
             {
                 this.eventBus = eventBusMock;
-                this.handlerRegistrationList = mockHandlerRegistrationList;
+                this.handlerRegistrationList = handlerRegistrationListMock;
                 this.model = scenarioGridModelMock;
                 this.scenarioGridPanel = scenarioGridPanelMock;
                 this.scenarioGridLayer = scenarioGridLayerMock;
+                this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenterMock;
                 this.rightPanelPresenter = rightPanelPresenterMock;
                 this.deletePopupPresenter = deletePopupPresenterMock;
                 this.preserveDeletePopupPresenter = preserveDeletePopupPresenterMock;
@@ -133,6 +138,12 @@ public class CommandExecutorTest extends AbstractCommandTest {
         commandExecutor.setEventBus(eventBusMock);
         verify(commandExecutor, times(1)).registerHandlers();
         assertEquals(eventBusMock, commandExecutor.eventBus);
+    }
+
+    @Test
+    public void setScenarioSimulationEditorPresenter() {
+        commandExecutor.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        assertEquals(scenarioSimulationEditorPresenterMock, commandExecutor.scenarioSimulationEditorPresenter);
     }
 
     @Test
@@ -152,7 +163,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
     @Test
     public void unregisterHandlers() {
         commandExecutor.unregisterHandlers();
-        verify(mockHandlerRegistrationList, times(1)).forEach(anyObject());
+        verify(handlerRegistrationListMock, times(1)).forEach(anyObject());
     }
 
     @Test
@@ -240,7 +251,14 @@ public class CommandExecutorTest extends AbstractCommandTest {
     }
 
     @Test
-    public void handleScenarioGridReloadEvent() {
+    public void onReloadRightPanelEvent() {
+        ReloadRightPanelEvent event = new ReloadRightPanelEvent();
+        commandExecutor.onEvent(event);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel();
+    }
+
+    @Test
+    public void onScenarioGridReloadEvent() {
         commandExecutor.scenarioGridPanel = scenarioGridPanelMock;
         ScenarioGridReloadEvent event = new ScenarioGridReloadEvent();
         commandExecutor.handle(event);
@@ -320,32 +338,34 @@ public class CommandExecutorTest extends AbstractCommandTest {
     public void registerHandlers() {
         commandExecutor.registerHandlers();
         verify(eventBusMock, times(1)).addHandler(eq(AppendColumnEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockAppendColumnHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(appendColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(AppendRowEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockAppendRowHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(appendRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DeleteColumnEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockDeleteColumnHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(deleteColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DeleteRowEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockDeleteRowHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(deleteRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DisableRightPanelEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockDisableRightPanelEventHandler));
+        verify(handlerRegistrationListMock, times(1)).add(eq(disableRightPanelEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockDuplicateHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(EnableRightPanelEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockEnableRightPanelEventHandler));
+        verify(handlerRegistrationListMock, times(1)).add(eq(enableRightPanelEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockInsertColumnHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(insertColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockInsertRowHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(insertRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(PrependColumnEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockPrependColumnHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(prependColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(PrependRowEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockPrependRowHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(prependRowHandlerRegistrationMock));
+        verify(eventBusMock, times(1)).addHandler(eq(ReloadRightPanelEvent.TYPE), isA(CommandExecutor.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(reloadRightPanelHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockScenarioGridReloadHandlerRegistration));
+        verify(handlerRegistrationListMock, times(1)).add(eq(scenarioGridReloadHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockSetInstanceHeaderEventHandler));
+        verify(handlerRegistrationListMock, times(1)).add(eq(setInstanceHeaderEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(CommandExecutor.class));
-        verify(mockHandlerRegistrationList, times(1)).add(eq(mockSetPropertyHeaderEventHandler));
+        verify(handlerRegistrationListMock, times(1)).add(eq(setPropertyHeaderEventHandlerMock));
     }
 }

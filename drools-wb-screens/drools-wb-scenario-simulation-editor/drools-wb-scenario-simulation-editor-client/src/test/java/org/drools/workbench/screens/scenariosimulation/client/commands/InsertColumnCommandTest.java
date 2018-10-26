@@ -54,11 +54,11 @@ public class InsertColumnCommandTest extends AbstractCommandTest {
         insertColumnCommand.isRight = false;
         insertColumnCommand.execute();
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(0), eq(gridColumnMock));
+        verify(scenarioGridModelMock, times(1)).insertColumn(eq(2), eq(gridColumnMock));
         reset(insertColumnCommand);
         insertColumnCommand.isRight = true;
         insertColumnCommand.execute();
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(1), eq(gridColumnMock));
+        verify(scenarioGridModelMock, times(1)).insertColumn(eq(5), eq(gridColumnMock));
     }
 }
