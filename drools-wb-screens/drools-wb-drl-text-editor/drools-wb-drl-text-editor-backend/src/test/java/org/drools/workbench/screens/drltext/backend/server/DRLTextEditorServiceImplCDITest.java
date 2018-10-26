@@ -194,7 +194,7 @@ public class DRLTextEditorServiceImplCDITest extends CDITestSetup {
                                       .map(validationMessage -> validationMessage
                                               .getText()
                                               .replaceAll(regexpExpression, "")))
-                .contains(error102, error107, errorPackage);
+                .containsOnly(error102, error107, errorPackage);
     }
 
     private Path getPath(final String resource) throws Exception {
