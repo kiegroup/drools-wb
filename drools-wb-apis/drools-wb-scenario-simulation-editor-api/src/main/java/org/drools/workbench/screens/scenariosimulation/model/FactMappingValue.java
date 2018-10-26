@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Objects;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
@@ -26,23 +28,14 @@ public class FactMappingValue {
     private FactIdentifier factIdentifier;
     private ExpressionIdentifier expressionIdentifier;
     private Object rawValue;
-    /**
-     * Each mapping value is bound with an operator. Default is equals that can be used as assignment in an "GIVEN" value or as equality check with "EXPECTED"
-     */
-    private FactMappingValueOperator operator = FactMappingValueOperator.EQUALS;
 
     public FactMappingValue() {
     }
 
     public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue) {
-        this.factIdentifier = factIdentifier;
-        this.expressionIdentifier = expressionIdentifier;
+        this.factIdentifier = Objects.requireNonNull(factIdentifier, "FactIdentifier has to be not null");
+        this.expressionIdentifier = Objects.requireNonNull(expressionIdentifier, "ExpressionIdentifier has to be not null");
         this.rawValue = rawValue;
-    }
-
-    public FactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object rawValue, FactMappingValueOperator operator) {
-        this(factIdentifier, expressionIdentifier, rawValue);
-        this.operator = operator;
     }
 
     public void setRawValue(Object rawValue) {
@@ -61,7 +54,11 @@ public class FactMappingValue {
         return rawValue;
     }
 
-    public FactMappingValueOperator getOperator() {
-        return operator;
+    FactMappingValue cloneFactMappingValue() {
+        FactMappingValue cloned = new FactMappingValue();
+        cloned.expressionIdentifier = expressionIdentifier;
+        cloned.factIdentifier = factIdentifier;
+        cloned.rawValue = rawValue;
+        return cloned;
     }
 }

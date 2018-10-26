@@ -26,27 +26,34 @@ import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.OnHideScenarioSimulationDockEvent;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.OnShowScenarioSimulationDockEvent;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
@@ -78,59 +85,74 @@ public class ScenarioSimulationEditorPresenter
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
+    private Event<OnShowScenarioSimulationDockEvent> showScenarioSimulationDockEvent;
+    private Event<OnHideScenarioSimulationDockEvent> hideScenarioSimulationDockEvent;
+
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
 
     private ScenarioSimulationModel model;
+
     private Caller<ScenarioSimulationService> service;
 
     private ScenarioSimulationResourceType type;
 
-    private AsyncPackageDataModelOracle oracle;
+    AsyncPackageDataModelOracle oracle;
 
     private ScenarioSimulationView view;
 
-    private RightPanelMenuItem rightPanelMenuItem;
+    private CommandExecutor commandExecutor;
 
     private Command populateRightPanelCommand;
 
-    PlaceRequest rightPanelRequest;
+    private TestRunnerReportingScreen testRunnerReportingScreen;
+
+    //Package for which this Scenario Simulation relates
+    String packageName = "";
 
     ObservablePath path;
+
+    EventBus eventBus;
+
+    ScenarioGridPanel scenarioGridPanel;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
     }
 
+
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
-                                             final ScenarioSimulationView view,
+                                             final ScenarioSimulationProducer scenarioSimulationProducer,
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final RightPanelMenuItem rightPanelMenuItem,
-                                             final PlaceManager placeManager) {
-        super(view);
-        this.view = view;
-        this.baseView = view;
+                                             final PlaceManager placeManager,
+                                             final TestRunnerReportingScreen testRunnerReportingScreen,
+                                             final Event<OnShowScenarioSimulationDockEvent> showScenarioSimulationDockEvent,
+                                             final Event<OnHideScenarioSimulationDockEvent> hideScenarioSimulationDockEvent) {
+        super(scenarioSimulationProducer.getScenarioSimulationView());
+        this.testRunnerReportingScreen = testRunnerReportingScreen;
+        this.showScenarioSimulationDockEvent = showScenarioSimulationDockEvent;
+        this.hideScenarioSimulationDockEvent = hideScenarioSimulationDockEvent;
+        this.view = (ScenarioSimulationView) baseView;
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
-        this.rightPanelMenuItem = rightPanelMenuItem;
         this.placeManager = placeManager;
+        this.commandExecutor = scenarioSimulationProducer.getCommandExecutor();
+        this.eventBus = scenarioSimulationProducer.getEventBus();
 
-        addMenuItems();
+        scenarioGridPanel = view.getScenarioGridPanel();
+        commandExecutor.setScenarioGridPanel(scenarioGridPanel);
 
         view.init(this);
 
-        rightPanelRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
-        rightPanelRequest.addParameter("ScenarioSimulationEditorPresenter", this.toString());
-
-        rightPanelMenuItem.init(rightPanelRequest);
-
         populateRightPanelCommand = getPopulateRightPanelCommand();
+
+        scenarioGridPanel.select();
     }
 
     @OnStartup
@@ -145,16 +167,12 @@ public class ScenarioSimulationEditorPresenter
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            placeManager.closePlace(rightPanelRequest);
-            this.view.showLoading();
-        }
-        this.view.clear();
+        scenarioGridPanel.unregister();
     }
 
     @OnMayClose
     public boolean mayClose() {
-        return super.mayClose(model);
+        return !isDirty();
     }
 
     @WorkbenchPartTitle
@@ -184,10 +202,9 @@ public class ScenarioSimulationEditorPresenter
         }
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeGainFocusEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)
-                && PlaceStatus.CLOSE.equals(placeManager.getStatus(rightPanelRequest))) {
+                && placeRequest.getPath().equals(this.path)) {
+            showScenarioSimulationDockEvent.fire(new OnShowScenarioSimulationDockEvent());
             registerRightPanelCallback();
-            placeManager.goTo(rightPanelRequest);
             populateRightPanel();
         }
     }
@@ -199,11 +216,12 @@ public class ScenarioSimulationEditorPresenter
         }
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)
-                && PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            unRegisterRightPanelCallback();
-            clearRightPanelStatus();
-            placeManager.closePlace(rightPanelRequest);
+                && placeRequest.getPath().equals(this.path)) {
+            hideScenarioSimulationDockEvent.fire(new OnHideScenarioSimulationDockEvent());
+            view.getScenarioGridLayer().getScenarioGrid().clearSelections();
+                unRegisterRightPanelCallback();
+                clearRightPanelStatus();
+            testRunnerReportingScreen.reset();
         }
     }
 
@@ -221,15 +239,11 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void registerRightPanelCallback() {
-        placeManager.registerOnOpenCallback(rightPanelRequest, populateRightPanelCommand);
-        placeManager.registerOnOpenCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextTrue());
-        placeManager.registerOnCloseCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextFalse());
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER), populateRightPanelCommand);
     }
 
     protected void unRegisterRightPanelCallback() {
-        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(populateRightPanelCommand);
-        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextTrue());
-        placeManager.getOnCloseCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextFalse());
+        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER)).remove(populateRightPanelCommand);
     }
 
     /**
@@ -239,7 +253,6 @@ public class ScenarioSimulationEditorPresenter
     protected void makeMenuBar() {
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         super.makeMenuBar();
-        addRightPanelMenuItem(fileMenuBuilder);
     }
 
     @Override
@@ -249,7 +262,7 @@ public class ScenarioSimulationEditorPresenter
 
     @Override
     protected void save(final String commitMessage) {
-        service.call(getSaveSuccessCallback(model.hashCode()),
+        service.call(getSaveSuccessCallback(getJsonModel(model).hashCode()),
                      new HasBusyIndicatorDefaultErrorCallback(baseView)).save(versionRecordManager.getCurrentPath(),
                                                                               model,
                                                                               metadata,
@@ -270,11 +283,15 @@ public class ScenarioSimulationEditorPresenter
 
     void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
-        getRightPanelPresenter().ifPresent(this::populateRightPanel);
+        getRightPanelPresenter().ifPresent(presenter -> {
+            presenter.onDisableEditorTab();
+            commandExecutor.setRightPanelPresenter(presenter);
+            presenter.setEventBus(eventBus);
+            populateRightPanel(presenter);
+        });
     }
 
     void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
-        GWT.log("ScenarioSimulationPResenter " + this.toString() + " populateRightPanel rightPanelPresenter " + rightPanelPresenter.toString());
         // Instantiate a container map
         SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Execute only when oracle has been set
@@ -304,11 +321,45 @@ public class ScenarioSimulationEditorPresenter
         getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
     }
 
-    private void addMenuItems() {
-        view.addGridMenuItem("one", "ONE", "", () -> GWT.log("ONE COMMAND"));
-        view.addGridMenuItem("two", "TWO", "", () -> GWT.log("TWO COMMAND"));
-        view.addHeaderMenuItem("one", "HEADER-ONE", "", () -> GWT.log("HEADER-ONE COMMAND"));
-        view.addHeaderMenuItem("two", "HEADER-TWO", "", () -> GWT.log("HEADER-TWO COMMAND"));
+    String getJsonModel(ScenarioSimulationModel model) {
+        return MarshallingWrapper.toJSON(model);
+    }
+
+    /**
+     * This <code>Callback</code> will receive <code>ModelField[]</code> from <code>AsyncPackageDataModelOracleFactory.getFieldCompletions(final String,
+     * final Callback&lt;ModelField[]&gt;)</code>; build a <code>FactModelTree</code> from them, and send it to the
+     * given <code>Callback&lt;FactModelTree&gt;</code> aggregatorCallback
+     * @param factName
+     * @param aggregatorCallback
+     * @return
+     */
+    protected Callback<ModelField[]> fieldCompletionsCallback(String factName, Callback<FactModelTree> aggregatorCallback) {
+        return result -> {
+            FactModelTree toSend = getFactModelTree(factName, result);
+            aggregatorCallback.callback(toSend);
+        };
+    }
+
+    /**
+     * Create a <code>FactModelTree</code> for a given <b>factName</b> populating it with the given
+     * <code>ModelField[]</code>
+     * @param factName
+     * @param modelFields
+     * @return
+     */
+    protected FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
+        Map<String, String> simpleProperties = new HashMap<>();
+        for (ModelField modelField : modelFields) {
+            if (!modelField.getName().equals("this")) {
+                simpleProperties.put(modelField.getName(), modelField.getClassName());
+            }
+        }
+        String factPackageName = packageName;
+        String fullFactClassName = oracle.getFQCNByFactName(factName);
+        if (fullFactClassName != null && fullFactClassName.contains(".")) {
+            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
+        }
+        return new FactModelTree(factName, factPackageName, simpleProperties);
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
@@ -317,7 +368,7 @@ public class ScenarioSimulationEditorPresenter
             if (versionRecordManager.getCurrentPath() == null) {
                 return;
             }
-
+            packageName = content.getDataModel().getPackageName();
             resetEditorPages(content.getOverview());
             model = content.getModel();
             oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
@@ -330,32 +381,7 @@ public class ScenarioSimulationEditorPresenter
             addImportsTab(importsWidget);
             baseView.hideBusyIndicator();
             view.setContent(model.getSimulation());
-            createOriginalHash(model.hashCode());
-        };
-    }
-
-    private void addRightPanelMenuItem(final FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder.addNewTopLevelMenu(rightPanelMenuItem);
-    }
-
-    /**
-     * This <code>Callback</code> will receive <code>ModelField[]</code> from <code>AsyncPackageDataModelOracleFactory.getFieldCompletions(final String,
-     * final Callback&lt;ModelField[]&gt;)</code>; build a <code>FactModelTree</code> from them, and send it to the
-     * given <code>Callback&lt;FactModelTree&gt;</code> aggregatorCallback
-     * @param factName
-     * @param aggregatorCallback
-     * @return
-     */
-    private Callback<ModelField[]> fieldCompletionsCallback(String factName, Callback<FactModelTree> aggregatorCallback) {
-        return result -> {
-            Map<String, String> simpleProperties = new HashMap<>();
-            for (ModelField modelField : result) {
-                if (!modelField.getName().equals("this")) {
-                    simpleProperties.put(modelField.getName(), modelField.getClassName());
-                }
-            }
-            FactModelTree toSend = new FactModelTree(factName, simpleProperties);
-            aggregatorCallback.callback(toSend);
+            setOriginalHash(getJsonModel(model).hashCode());
         };
     }
 
@@ -389,8 +415,9 @@ public class ScenarioSimulationEditorPresenter
     }
 
     private Optional<RightPanelView> getRightPanelView() {
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(rightPanelRequest);
+        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
+            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
             return Optional.of((RightPanelView) rightPanelActivity.getWidget());
         } else {
             return Optional.empty();
@@ -403,5 +430,10 @@ public class ScenarioSimulationEditorPresenter
 
     private Command getPopulateRightPanelCommand() {
         return this::populateRightPanel;
+    }
+
+    private boolean isDirty() {
+        int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
+        return originalHash != currentHashcode;
     }
 }

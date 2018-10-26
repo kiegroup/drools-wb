@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,23 +34,42 @@ public class SimulationDescriptor {
 
     private final List<FactMapping> factMappings = new ArrayList<>();
 
-    public List<FactMapping> getFactMappings() {
-        return Collections.unmodifiableList(factMappings);
-    }
-
     /**
-     * Sort elements based on logicalPosition value
+     * Returns an <b>unmodifiable</b> list wrapping the backed one
+     * @return
      */
-    public void sortByLogicalPosition() {
-        factMappings.sort(Comparator.comparing(FactMapping::getLogicalPosition));
+    public List<FactMapping> getUnmodifiableFactMappings() {
+        return Collections.unmodifiableList(factMappings);
     }
 
     public Set<FactIdentifier> getFactIdentifiers() {
         return factMappings.stream().map(FactMapping::getFactIdentifier).collect(Collectors.toSet());
     }
 
+    public void moveFactMapping(int oldIndex, int newIndex) {
+        if (oldIndex < 0 || oldIndex >= factMappings.size()) {
+            throw new IllegalArgumentException(new StringBuilder().append("Index ").append(oldIndex)
+                                                       .append(" not found in the list").toString());
+        }
+        if (newIndex < 0 || newIndex >= factMappings.size()) {
+            throw new IllegalArgumentException(new StringBuilder().append("Index ").append(newIndex)
+                                                       .append(" out of range").toString());
+        }
+        FactMapping factMapping = factMappings.get(oldIndex);
+        factMappings.remove(oldIndex);
+        factMappings.add(newIndex, factMapping);
+    }
+
     public FactMapping getFactMappingByIndex(int index) {
         return factMappings.get(index);
+    }
+
+    void removeFactMappingByIndex(int index) {
+        factMappings.remove(index);
+    }
+
+    void removeFactMapping(FactMapping toRemove) {
+        factMappings.remove(toRemove);
     }
 
     public int getIndexByIdentifier(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
@@ -72,10 +90,6 @@ public class SimulationDescriptor {
         List<FactMapping> factMappings = internalFilter(e -> e.getExpressionIdentifier().equals(ei) &&
                 e.getFactIdentifier().equals(factIdentifier));
         return factMappings.stream().findFirst();
-    }
-
-    private List<FactMapping> internalFilter(Predicate<FactMapping> predicate) {
-        return factMappings.stream().filter(predicate).collect(Collectors.toList());
     }
 
     public FactMapping addFactMapping(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
@@ -101,12 +115,16 @@ public class SimulationDescriptor {
                     new StringBuilder().append("Impossible to add an element at position ").append(index)
                             .append(" because there are only ").append(factMappings.size()).append(" elements").toString());
         }
-        FactMapping factMapping = new FactMapping(expressionAlias, factIdentifier, expressionIdentifier, index);
+        FactMapping factMapping = new FactMapping(expressionAlias, factIdentifier, expressionIdentifier);
         factMappings.add(index, factMapping);
         return factMapping;
     }
 
     public void clear() {
         factMappings.clear();
+    }
+
+    private List<FactMapping> internalFilter(Predicate<FactMapping> predicate) {
+        return factMappings.stream().filter(predicate).collect(Collectors.toList());
     }
 }

@@ -28,7 +28,9 @@ public class FactIdentifier {
     private String name;
     private String className;
 
+    public static FactIdentifier INDEX = create("Index", Integer.class.getCanonicalName());
     public static FactIdentifier DESCRIPTION = create("Description", String.class.getCanonicalName());
+    public static FactIdentifier EMPTY = create("Empty", Void.class.getName());
 
     public FactIdentifier() {
     }

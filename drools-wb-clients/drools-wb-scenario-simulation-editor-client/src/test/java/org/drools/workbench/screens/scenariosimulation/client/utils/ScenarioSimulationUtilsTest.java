@@ -16,59 +16,61 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
-import java.util.List;
-
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationUtilsTest {
-
-    @Mock
-    private ScenarioGridPanel mockScenarioGridPanel;
-
-    @Mock
-    private ScenarioGridLayer mockScenarioGridLayer;
-
-    private final String COLUMN_ID = "COLUMN ID";
-
-    private final String COLUMN_TITLE = "COLUMN TITLE";
-
-    private final String COLUMN_GROUP = "COLUMN GROUP";
-
-    @Test
-    public void getScenarioGridColumn() {
-        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_ID, COLUMN_TITLE, COLUMN_GROUP, mockScenarioGridPanel, mockScenarioGridLayer);
-        assertNotNull(scenarioGridColumn);
-        List<GridColumn.HeaderMetaData> headerMetaData = scenarioGridColumn.getHeaderMetaData();
-        assertNotNull(headerMetaData);
-        assertEquals(2, headerMetaData.size());
-        // Top-level header should have COLUMN_GROUP as title, and "" as column group
-        assertEquals(COLUMN_GROUP, headerMetaData.get(0).getTitle());
-        assertEquals("", headerMetaData.get(0).getColumnGroup());
-        // Column header should have COLUMN_TITLE as title, and COLUMN_GROUP as column group
-        assertEquals(COLUMN_TITLE, headerMetaData.get(1).getTitle());
-        assertEquals(COLUMN_GROUP, headerMetaData.get(1).getColumnGroup());
-    }
+public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
 
     @Test
     public void getScenarioGridColumn1() {
-        ScenarioGridColumn scenarioGridColumn = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_ID, COLUMN_TITLE, mockScenarioGridPanel, mockScenarioGridLayer);
-        assertNotNull(scenarioGridColumn);
-        List<GridColumn.HeaderMetaData> headerMetaData = scenarioGridColumn.getHeaderMetaData();
-        assertNotNull(headerMetaData);
-        // Column header should have COLUMN_TITLE as title, and "" as column group
-        assertEquals(1, headerMetaData.size());
-        assertEquals("", headerMetaData.get(0).getColumnGroup());
-        assertEquals(COLUMN_TITLE, headerMetaData.get(0).getTitle());
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, mockScenarioGridPanel, mockScenarioGridLayer);
+        assertNotNull(retrieved);
     }
+
+    @Test
+    public void getScenarioGridColumn2() {
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, mockScenarioGridPanel, mockScenarioGridLayer, PLACEHOLDER);
+        assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getScenarioGridColumn3() {
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, mockScenarioGridPanel, mockScenarioGridLayer);
+        assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getScenarioGridColumn4() {
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, mockScenarioGridPanel, mockScenarioGridLayer, false, PLACEHOLDER);
+        assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getScenarioGridColumnBuilder() {
+        final ScenarioSimulationBuilders.ScenarioGridColumnBuilder retrieved = ScenarioSimulationUtils.getScenarioGridColumnBuilder(scenarioCellTextBoxSingletonDOMElementFactoryMock, headerBuilderMock, PLACEHOLDER);
+        assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getHeaderBuilder() {
+        final ScenarioSimulationBuilders.HeaderBuilder retrieved = ScenarioSimulationUtils.getHeaderBuilder(COLUMN_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock);
+        assertNotNull(retrieved);
+    }
+
+    @Test
+    public void getColumnWidth() {
+        assertEquals(70, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Index.name()), 0);
+        assertEquals(230, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Description.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Given.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Expected.name()), 0);
+        assertEquals(150, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Other.name()), 0);
+    }
+
 }

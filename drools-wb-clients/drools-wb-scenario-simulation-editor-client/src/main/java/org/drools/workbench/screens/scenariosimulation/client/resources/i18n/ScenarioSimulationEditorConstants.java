@@ -57,4 +57,64 @@ public interface ScenarioSimulationEditorConstants
     String scenarioCheatSheet();
 
     String runScenarioSimulation();
+
+    String expected();
+
+    String insertColumnLeft();
+
+    String insertColumnRight();
+
+    String deleteColumn();
+
+    String insertRowBelow();
+
+    String scenario();
+
+    String given();
+
+    String insertRowAbove();
+
+    String deleteRow();
+
+    String duplicateRow();
+
+    String prependRow();
+
+    String appendRow();
+
+    String insertLeftmostColumn();
+
+    String insertRightmostColumn();
+
+    String description();
+
+    String insertValue();
+
+    String deleteValues();
+
+    String deleteScenarioMainTitle();
+
+    String deleteScenarioMainQuestion();
+
+    String deleteScenarioText1();
+
+    String deleteScenarioTextQuestion();
+
+    String deleteScenarioTextDanger();
+
+    String preserveDeleteScenarioMainTitle();
+
+    String preserveDeleteScenarioMainQuestion();
+
+    String preserveDeleteScenarioText1();
+
+    String preserveDeleteScenarioTextQuestion();
+
+    String preserveDeleteScenarioTextOption1();
+
+    String preserveDeleteScenarioTextOption2();
+
+    String preserveValues();
+
+    String defineValidType();
 }

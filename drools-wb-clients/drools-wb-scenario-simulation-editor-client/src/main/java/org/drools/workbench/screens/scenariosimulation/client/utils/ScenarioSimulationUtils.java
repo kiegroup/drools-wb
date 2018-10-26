@@ -15,35 +15,251 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
-import org.drools.workbench.screens.scenariosimulation.client.interfaces.TetraFunction;
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
-import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridColumnRenderer;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.TextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
 public class ScenarioSimulationUtils {
 
-    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, ScenarioHeaderMetaData> SCENARIOHEADERMETADATA_FUNCTION =
-            ScenarioHeaderMetaData::new;
-    private static final TetraFunction<String, String, String, TextBoxSingletonDOMElementFactory, List<GridColumn.HeaderMetaData>> SCENARIOHEADERMETADATALIST_FUNCTION =
-            (columnId, columnTitle, columnGroup, factory) ->
-                    Arrays.asList(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnGroup, "", factory),
-                                  SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, columnGroup, factory));
-
-    public static ScenarioGridColumn getScenarioGridColumn(String columnId, String columnTitle, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
-        TextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(SCENARIOHEADERMETADATALIST_FUNCTION.apply(columnId, columnTitle, columnGroup, factory), new ScenarioGridColumnRenderer(), 100, false);
+    /**
+     * Returns a <code>ScenarioGridColumn</code> with the following default values:
+     * <p>
+     * width: 150
+     * </p>
+     * <p>
+     * isMovable: <code>false</code>;
+     * </p>
+     * <p>
+     * isReadOnly: <code>true</code>;
+     * </p>
+     * <p>
+     * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
+     * </p>
+     * <p>
+     * columnRenderer: new ScenarioGridColumnRenderer()
+     * </p>
+     * @param title
+     * @param columnId
+     * @param columnGroup
+     * @param factMappingType
+     * @param scenarioGridPanel
+     * @param gridLayer
+     * @return
+     */
+    public static ScenarioGridColumn getScenarioGridColumn(String title,
+                                                           String columnId,
+                                                           String columnGroup,
+                                                           FactMappingType factMappingType,
+                                                           ScenarioGridPanel scenarioGridPanel,
+                                                           ScenarioGridLayer gridLayer) {
+        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
+        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer);
     }
 
-    public static ScenarioGridColumn getScenarioGridColumn(String columnId, String columnTitle, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer) {
-        TextBoxSingletonDOMElementFactory factory = FactoryProvider.getHeaderHasNameTextBoxFactory(scenarioGridPanel, gridLayer);
-        return new ScenarioGridColumn(SCENARIOHEADERMETADATA_FUNCTION.apply(columnId, columnTitle, "", factory), new ScenarioGridColumnRenderer(), 100, false);
+    /**
+     * Returns a <code>ScenarioGridColumn</code> with the following default values:
+     * <p>
+     * width: 150
+     * </p>
+     * <p>
+     * isMovable: <code>false</code>;
+     * </p>
+     * <p>
+     * isReadOnly: <code>true</code>;
+     * </p>
+     * <p>
+     * columnRenderer: new ScenarioGridColumnRenderer()
+     * </p>
+     * @param title
+     * @param columnId
+     * @param columnGroup
+     * @param factMappingType
+     * @param scenarioGridPanel
+     * @param gridLayer
+     * @return
+     */
+    public static ScenarioGridColumn getScenarioGridColumn(String title,
+                                                           String columnId,
+                                                           String columnGroup,
+                                                           FactMappingType factMappingType,
+                                                           ScenarioGridPanel scenarioGridPanel,
+                                                           ScenarioGridLayer gridLayer,
+                                                           String placeHolder) {
+        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
+        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, true, placeHolder);
+    }
+
+    /**
+     * Returns a <code>ScenarioGridColumn</code> with the following default values:
+     * <p>
+     * width: 150
+     * </p>
+     * <p>
+     * isMovable: <code>false</code>;
+     * </p>
+     * <p>
+     * isReadOnly: <code>true</code>;
+     * </p>
+     * <p>
+     * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
+     * </p>
+     * <p>
+     * columnRenderer: new ScenarioGridColumnRenderer()
+     * </p>
+     * @param headerBuilder
+     * @param scenarioGridPanel
+     * @param gridLayer
+     * @return
+     */
+    public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
+                                                           ScenarioGridPanel scenarioGridPanel,
+                                                           ScenarioGridLayer gridLayer) {
+        ScenarioCellTextBoxSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
+        ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
+                                                                                                                      headerBuilder,
+                                                                                                                      ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+        return scenarioGridColumnBuilder.build();
+    }
+
+    /**
+     * Returns a <code>ScenarioGridColumn</code> with the following default values:
+     * <p>
+     * width: 150
+     * </p>
+     * <p>
+     * isMovable: <code>false</code>;
+     * </p>
+     * <p>
+     * columnRenderer: new ScenarioGridColumnRenderer()
+     * </p>
+     * @param headerBuilder
+     * @param scenarioGridPanel
+     * @param gridLayer
+     * @param readOnly
+     * @param placeHolder
+     * @return
+     */
+    public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
+                                                           ScenarioGridPanel scenarioGridPanel,
+                                                           ScenarioGridLayer gridLayer,
+                                                           boolean readOnly,
+                                                           String placeHolder) {
+        ScenarioCellTextBoxSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
+        ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
+                                                                                                                      headerBuilder,
+                                                                                                                      placeHolder);
+        scenarioGridColumnBuilder.setReadOnly(readOnly);
+        return scenarioGridColumnBuilder.build();
+    }
+
+    /**
+     * Returns a <code>ScenarioSimulationBuilders.ScenarioGridColumnBuilder</code> with the following default values:
+     * <p>
+     * width: 150
+     * </p>
+     * <p>
+     * isMovable: <code>false</code>;
+     * </p>
+     * <p>
+     * isReadOnly: <code>true</code>;
+     * </p>
+     * <p>
+     * columnRenderer: new ScenarioGridColumnRenderer()
+     * </p>
+     * @param factoryCell
+     * @param headerBuilder
+     * @param placeHolder
+     * @return
+     */
+    public static ScenarioSimulationBuilders.ScenarioGridColumnBuilder getScenarioGridColumnBuilder(ScenarioCellTextBoxSingletonDOMElementFactory factoryCell,
+                                                                                                    ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
+                                                                                                    String placeHolder) {
+        ScenarioSimulationBuilders.ScenarioGridColumnBuilder toReturn = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(factoryCell, headerBuilder);
+        toReturn.setPlaceHolder(placeHolder);
+        toReturn.setWidth(getColumnWidth(headerBuilder.getColumnId()));
+        return toReturn;
+    }
+
+    /**
+     * Retrieve a <b>single</b> or <b>double</b> level Header metadata, i.e. a <code>List&lt;GridColumn.HeaderMetaData&gt;</code> with one  or two elements,
+     * depending on the column <b>Group</b>:
+     * <p>
+     * OTHER: single level
+     * </p>
+     * <p>
+     * EXPECTED/GIVEN: double level
+     * </p>
+     * @param title
+     * @param columnId
+     * @param columnGroup
+     * @param factMappingType
+     * @param factoryHeader
+     * @return
+     */
+    public static ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilder(String title,
+                                                                            String columnId,
+                                                                            String columnGroup,
+                                                                            FactMappingType factMappingType,
+                                                                            ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = ScenarioSimulationBuilders.HeaderBuilder.get(factoryHeader);
+
+        headerBuilder.setColumnId(columnId);
+
+        headerBuilder.setColumnTitle(columnGroup);
+        headerBuilder.setReadOnly(true);
+
+        boolean informationHeader = isOther(factMappingType) || isExpected(factMappingType) || isGiven(factMappingType);
+        if (isOther(factMappingType)) {
+            headerBuilder.setColumnTitle(title);
+            headerBuilder.setColumnGroup(columnGroup);
+            headerBuilder.setInformationHeader(informationHeader);
+            return headerBuilder;
+        }
+
+        headerBuilder.newLevel()
+                .setColumnTitle(title)
+                .setColumnGroup(columnGroup)
+                .setReadOnly(false)
+                .setInformationHeader(informationHeader);
+
+        return headerBuilder;
+    }
+
+    protected static double getColumnWidth(String columnId) {
+        ExpressionIdentifier.NAME expressionName = ExpressionIdentifier.NAME.Other;
+        try {
+            expressionName = ExpressionIdentifier.NAME.valueOf(columnId);
+        } catch (IllegalArgumentException e) {
+            // ColumnId not recognized
+        }
+        switch(expressionName) {
+            case Index:
+                return 70;
+            case Description:
+                return 230;
+            default:
+                return 150;
+        }
+    }
+
+    private static boolean isOther(FactMappingType factMappingType) {
+        return FactMappingType.OTHER.equals(factMappingType);
+    }
+
+    private static boolean isExpected(FactMappingType factMappingType) {
+        return FactMappingType.EXPECTED.equals(factMappingType);
+    }
+
+    private static boolean isGiven(FactMappingType factMappingType) {
+        return FactMappingType.GIVEN.equals(factMappingType);
     }
 }

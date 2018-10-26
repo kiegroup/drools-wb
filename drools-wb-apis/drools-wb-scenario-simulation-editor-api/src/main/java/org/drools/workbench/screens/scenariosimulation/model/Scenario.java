@@ -35,7 +35,7 @@ public class Scenario {
     /**
      * List of values to be used to test this scenario
      */
-    private List<FactMappingValue> factMappingValues = new ArrayList<>();
+    private final List<FactMappingValue> factMappingValues = new ArrayList<>();
 
     private SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
 
@@ -46,8 +46,25 @@ public class Scenario {
         this.simulationDescriptor = simulationDescriptor;
     }
 
-    public List<FactMappingValue> getFactMappingValues() {
+    /**
+     * Returns an <b>unmodifiable</b> list wrapping the backed one
+     * <p>
+     * NOTE: list order could not be aligned to factMapping order. Use {@link Scenario#sort()} before call this method
+     * to ensure the order.
+     * Best way to have ordered factMappingValues is to iterate over {@link SimulationDescriptor#factMappings} and use
+     * {@link #getFactMappingValue(FactIdentifier, ExpressionIdentifier)}
+     * @return not modifiable list of FactMappingValues
+     */
+    public List<FactMappingValue> getUnmodifiableFactMappingValues() {
         return Collections.unmodifiableList(factMappingValues);
+    }
+
+    public void removeFactMappingValueByIdentifiers(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
+        getFactMappingValue(factIdentifier, expressionIdentifier).ifPresent(factMappingValues::remove);
+    }
+
+    public void removeFactMappingValue(FactMappingValue toRemove) {
+        factMappingValues.remove(toRemove);
     }
 
     public FactMappingValue addMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier, Object value) {
@@ -70,7 +87,7 @@ public class Scenario {
     }
 
     public Optional<FactMappingValue> getFactMappingValue(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
-        return factMappingValues.stream().filter(e -> e.getFactIdentifier().getName().equalsIgnoreCase(factIdentifier.getName()) &&
+        return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier) &&
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 
@@ -96,11 +113,27 @@ public class Scenario {
     public String getDescription() {
         return factMappingValues.stream()
                 .filter(e -> e.getExpressionIdentifier().equals(ExpressionIdentifier.DESCRIPTION) &&
-                        e.getFactIdentifier().equals(FactIdentifier.DESCRIPTION)).map(e -> (String) e.getRawValue())
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No description available"));
+                        e.getFactIdentifier().equals(FactIdentifier.DESCRIPTION) &&
+                        e.getRawValue() != null)
+                .map(e -> (String) e.getRawValue())
+                .findFirst().orElse("");
     }
 
     public Collection<String> getFactNames() {
         return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
+    }
+
+    public void sort() {
+        factMappingValues.sort((a, b) -> {
+            Integer aIndex = simulationDescriptor.getIndexByIdentifier(a.getFactIdentifier(), a.getExpressionIdentifier());
+            Integer bIndex = simulationDescriptor.getIndexByIdentifier(b.getFactIdentifier(), b.getExpressionIdentifier());
+            return aIndex.compareTo(bIndex);
+        });
+    }
+
+    Scenario cloneScenario() {
+        Scenario cloned = new Scenario(simulationDescriptor);
+        cloned.factMappingValues.addAll(factMappingValues.stream().map(FactMappingValue::cloneFactMappingValue).collect(toList()));
+        return cloned;
     }
 }

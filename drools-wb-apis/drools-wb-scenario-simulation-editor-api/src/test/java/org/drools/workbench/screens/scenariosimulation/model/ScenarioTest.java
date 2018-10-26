@@ -15,10 +15,15 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ScenarioTest {
 
@@ -26,13 +31,35 @@ public class ScenarioTest {
     Scenario scenario;
     FactIdentifier factIdentifier;
     ExpressionIdentifier expressionIdentifier;
+    Simulation simulation;
 
     @Before
     public void init() {
-        simulationDescriptor = new SimulationDescriptor();
-        scenario = new Scenario(simulationDescriptor);
+        simulation = new Simulation();
+        simulationDescriptor = simulation.getSimulationDescriptor();
+        scenario = simulation.addScenario();
         factIdentifier = FactIdentifier.create("test fact", String.class.getCanonicalName());
         expressionIdentifier = ExpressionIdentifier.create("test expression", FactMappingType.EXPECTED);
+    }
+
+    @Test
+    public void removeFactMappingValueByIdentifiersTest() {
+        scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
+        Optional<FactMappingValue> retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertTrue(retrieved.isPresent());
+        scenario.removeFactMappingValueByIdentifiers(factIdentifier, expressionIdentifier);
+        retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertFalse(retrieved.isPresent());
+    }
+
+    @Test
+    public void removeFactMappingValue() {
+        scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
+        Optional<FactMappingValue> retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertTrue(retrieved.isPresent());
+        scenario.removeFactMappingValue(retrieved.get());
+        retrieved = scenario.getFactMappingValue(factIdentifier, expressionIdentifier);
+        assertFalse(retrieved.isPresent());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -42,24 +69,17 @@ public class ScenarioTest {
         scenario.addMappingValue(factIdentifier, expressionIdentifier, "test value");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getFactMappingValueByIndexTest() {
-        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
-
-        scenario.getFactMappingValueByIndex(0);
-        // Should fail
-        scenario.getFactMappingValueByIndex(1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void getDescriptionTestFail() {
-        scenario.getDescription();
-    }
-
     @Test
     public void getDescriptionTest() {
-        scenario.addMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, "Test Description");
-        scenario.getDescription();
+        assertEquals("", scenario.getDescription());
+
+        String description = "Test Description";
+        scenario.addMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, description);
+        assertEquals(description, scenario.getDescription());
+
+        Scenario scenarioWithDescriptionNull = simulation.addScenario();
+        scenarioWithDescriptionNull.setDescription(null);
+        assertEquals("", scenarioWithDescriptionNull.getDescription());
     }
 
     @Test
@@ -71,5 +91,20 @@ public class ScenarioTest {
         FactMappingValue factMappingValue1 = scenario.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, value2);
         assertEquals(factMappingValue, factMappingValue1);
         assertEquals(factMappingValue1.getRawValue(), value2);
+    }
+
+    @Test
+    public void sortTest() {
+        ExpressionIdentifier expressionIdentifier2 = ExpressionIdentifier.create("Test expression 2", FactMappingType.GIVEN);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
+        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier2);
+        scenario.addMappingValue(factIdentifier, expressionIdentifier2, "Test 2");
+        FactMappingValue factMappingValue1 = scenario.addMappingValue(factIdentifier, this.expressionIdentifier, "Test");
+
+        assertEquals(scenario.getUnmodifiableFactMappingValues().get(1), factMappingValue1);
+
+        scenario.sort();
+        assertNotEquals(scenario.getUnmodifiableFactMappingValues().get(1), factMappingValue1);
+        assertEquals(scenario.getUnmodifiableFactMappingValues().get(0), factMappingValue1);
     }
 }

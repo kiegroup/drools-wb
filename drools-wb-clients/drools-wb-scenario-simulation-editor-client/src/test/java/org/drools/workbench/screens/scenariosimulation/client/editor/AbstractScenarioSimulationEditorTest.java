@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -60,7 +60,7 @@ public abstract class AbstractScenarioSimulationEditorTest {
     protected GridContextMenu mockGridContextMenu;
 
     @Mock
-    protected HeaderContextMenu mockHeaderContextMenu;
+    protected HeaderGivenContextMenu mockHeaderGivenContextMenu;
 
     @Mock
     protected BaseMenuView mockGridContextMenuView;
@@ -76,7 +76,7 @@ public abstract class AbstractScenarioSimulationEditorTest {
 
     public void setup() {
 
-//        //Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
+        // Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
         when(mockFileMenuBuilder.addSave(any(MenuItem.class))).thenReturn(mockFileMenuBuilder);
         when(mockFileMenuBuilder.addCopy(any(ObservablePath.class), any(DefaultFileNameValidator.class))).thenReturn(mockFileMenuBuilder);
         when(mockFileMenuBuilder.addRename(any(Command.class))).thenReturn(mockFileMenuBuilder);
@@ -90,7 +90,7 @@ public abstract class AbstractScenarioSimulationEditorTest {
         when(mockWorkbenchContext.getActiveWorkspaceProject()).thenReturn(Optional.empty());
 
         when(mockGridContextMenu.getView()).thenReturn(mockGridContextMenuView);
-        when(mockHeaderContextMenu.getView()).thenReturn(mockHeaderContextMenuView);
+        when(mockHeaderGivenContextMenu.getView()).thenReturn(mockHeaderContextMenuView);
 
         this.model = new ScenarioSimulationModel();
         this.content = new ScenarioSimulationModelContent(model,
