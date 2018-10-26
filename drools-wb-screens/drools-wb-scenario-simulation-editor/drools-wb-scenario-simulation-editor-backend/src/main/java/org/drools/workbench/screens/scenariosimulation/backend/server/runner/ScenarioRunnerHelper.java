@@ -245,7 +245,12 @@ public class ScenarioRunnerHelper {
             List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
             Object resultValue = ScenarioBeanUtil.navigateToObject(objectToCheck, pathToValue, false);
 
-            return expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue) ? Optional.of(resultValue) : Optional.empty();
+            try {
+                return expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue) ? Optional.of(resultValue) : Optional.empty();
+            } catch (Exception e) {
+                expectedResult.setError(true);
+                throw new ScenarioException(e.getMessage(), e);
+            }
         };
     }
 }

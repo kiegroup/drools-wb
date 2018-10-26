@@ -155,7 +155,7 @@ public class ScenarioBeanUtil {
         if (clazz.isAssignableFrom(String.class)) {
             return value;
         } else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
-            return Boolean.parseBoolean(value);
+            return parseBoolean(value);
         } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
             return Integer.parseInt(value);
         } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
@@ -184,5 +184,15 @@ public class ScenarioBeanUtil {
 
     private static boolean isPrimitive(String className) {
         return primitiveMap.containsKey(className);
+    }
+
+    private static boolean parseBoolean(String value) {
+        if ("true".equalsIgnoreCase(value)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return false;
+        } else {
+            throw new IllegalArgumentException("Impossible to parse as boolean " + value);
+        }
     }
 }
