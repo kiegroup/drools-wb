@@ -48,13 +48,16 @@ public class PrependColumnCommand extends AbstractCommand {
     public void execute() {
         final int index = model.getFirstIndexLeftOfGroup(columnGroup);
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String columnTitle = FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-        model.insertColumn(index, getScenarioGridColumnLocal(columnTitle,
-                                                        columnId,
-                                                        columnGroup,
-                                                        factMappingType,
-                                                        scenarioGridPanel,
-                                                        scenarioGridLayer,
-                                                        ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        final int nextColumnCount = model.nextColumnCount();
+        String instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
+        String propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
+        model.insertColumn(index, getScenarioGridColumnLocal(instanceTitle,
+                                                             propertyTitle,
+                                                             columnId,
+                                                             columnGroup,
+                                                             factMappingType,
+                                                             scenarioGridPanel,
+                                                             scenarioGridLayer,
+                                                             ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
     }
 }

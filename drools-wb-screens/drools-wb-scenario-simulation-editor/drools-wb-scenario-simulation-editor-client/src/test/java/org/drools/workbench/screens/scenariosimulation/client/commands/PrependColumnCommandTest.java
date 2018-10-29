@@ -42,7 +42,7 @@ public class PrependColumnCommandTest extends AbstractCommandTest {
         super.setup();
         prependColumnCommand = spy(new PrependColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
             @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(String title, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
+            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;
             }
         });

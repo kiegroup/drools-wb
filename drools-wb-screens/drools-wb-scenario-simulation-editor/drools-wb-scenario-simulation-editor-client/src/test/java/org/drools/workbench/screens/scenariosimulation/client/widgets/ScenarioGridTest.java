@@ -45,6 +45,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -104,7 +105,7 @@ public class ScenarioGridTest {
             }
 
             @Override
-            protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String columnTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+            protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
                 return headerBuilderMock;
             }
 
@@ -142,10 +143,10 @@ public class ScenarioGridTest {
         final FactMappingType type = factMapping.getExpressionIdentifier().getType();
         String columnGroup = type.name();
         scenarioGrid.setHeaderColumn(1, factMapping);
-        verify(scenarioGrid, times(1)).getTitle(eq(factMapping.getFactIdentifier()), eq(factMapping));
         verify(scenarioGrid, times(1)).isReadOnly(eq(factMapping.getFactIdentifier()));
         verify(scenarioGrid, times(1)).getPlaceholder(eq(false));
         verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS),
+                                                                  anyString(),
                                                                   eq(columnId),
                                                                   eq(columnGroup),
                                                                   eq(type),
@@ -153,12 +154,12 @@ public class ScenarioGridTest {
                                                                   eq(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
         verify(scenarioGrid, times(1)).conditionalPopulatePropertyHeader(eq(factMapping.getFactIdentifier()),
                                                                          eq(factMapping),
-                                                                         eq(scenarioGridColumnMock));
+                                                                         eq(scenarioGridColumnMock), anyInt());
     }
 
     @Test
     public void conditionalPopulatePropertyHeader() {
-        scenarioGrid.conditionalPopulatePropertyHeader(factMapping.getFactIdentifier(), factMapping, scenarioGridColumnMock);
+        scenarioGrid.conditionalPopulatePropertyHeader(factMapping.getFactIdentifier(), factMapping, scenarioGridColumnMock, 3);
         verify(scenarioGridColumnMock, never()).getPropertyHeaderMetaData();
         FactIdentifier testFactIdentifier = new FactIdentifier("TEST", String.class.getName());
         ExpressionIdentifier testExpressionIdentifier = new ExpressionIdentifier("TEST", FactMappingType.GIVEN);
@@ -166,7 +167,7 @@ public class ScenarioGridTest {
         toTest.getExpressionElements().add(0, new ExpressionElement("age"));
         reset(scenarioGridColumnMock);
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
-        scenarioGrid.conditionalPopulatePropertyHeader(toTest.getFactIdentifier(), toTest, scenarioGridColumnMock);
+        scenarioGrid.conditionalPopulatePropertyHeader(toTest.getFactIdentifier(), toTest, scenarioGridColumnMock, 3);
         verify(scenarioGridColumnMock, times(2)).getPropertyHeaderMetaData();
         verify(propertyHeaderMetadataMock, times(1)).setTitle(eq("age"));
         verify(propertyHeaderMetadataMock, times(1)).setReadOnly(eq(false));
@@ -175,7 +176,7 @@ public class ScenarioGridTest {
         reset(propertyHeaderMetadataMock);
         toTest.getExpressionElements().set(0, new ExpressionElement("address"));
         toTest.getExpressionElements().add(1, new ExpressionElement("street"));
-        scenarioGrid.conditionalPopulatePropertyHeader(toTest.getFactIdentifier(), toTest, scenarioGridColumnMock);
+        scenarioGrid.conditionalPopulatePropertyHeader(toTest.getFactIdentifier(), toTest, scenarioGridColumnMock, 3);
         verify(scenarioGridColumnMock, times(2)).getPropertyHeaderMetaData();
         verify(propertyHeaderMetadataMock, times(1)).setTitle(eq("address.street"));
         verify(propertyHeaderMetadataMock, times(1)).setReadOnly(eq(false));
@@ -184,22 +185,18 @@ public class ScenarioGridTest {
     @Test
     public void getScenarioGridColumnLocal() {
         String columnId = factMapping.getExpressionIdentifier().getName();
-        String columnTitle = factMapping.getFactIdentifier().getName();
+        String instanceTitle = factMapping.getFactIdentifier().getName();
+        String propertyTitle = "PROPERTY TITLE";
         final FactMappingType type = factMapping.getExpressionIdentifier().getType();
         String columnGroup = type.name();
-        scenarioGrid.getScenarioGridColumnLocal(columnTitle, columnId, columnGroup, type, false, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+        scenarioGrid.getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, type, false, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
         verify(scenarioGrid, times(1)).getScenarioHeaderTextBoxSingletonDOMElementFactory();
-        verify(scenarioGrid, times(1)).getHeaderBuilderLocal(eq(columnTitle),
+        verify(scenarioGrid, times(1)).getHeaderBuilderLocal(eq(instanceTitle),
+                                                             eq(propertyTitle),
                                                              eq(columnId),
                                                              eq(columnGroup),
                                                              eq(type),
                                                              eq(scenarioHeaderTextBoxSingletonDOMElementFactoryMock));
-    }
-
-    @Test
-    public void getTitle() {
-        FactIdentifier toTest = FactIdentifier.EMPTY;
-        assertEquals(EXPRESSION_ALIAS, scenarioGrid.getTitle(toTest, factMapping));
     }
 
     @Test
@@ -238,7 +235,7 @@ public class ScenarioGridTest {
         // Add GIVEN Facts
         IntStream.range(2, 4).forEach(id -> {
             ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
-            simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.GIVEN, id), FactIdentifier.EMPTY, givenExpression);
+            simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, givenExpression);
             scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
         });
 
@@ -246,7 +243,7 @@ public class ScenarioGridTest {
         IntStream.range(2, 4).forEach(id -> {
             id += 2; // This is to have consistent labels/names even when adding columns at runtime
             ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
-            simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.EXPECTED, id), FactIdentifier.EMPTY, expectedExpression);
+            simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
             scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
         });
         return toReturn;

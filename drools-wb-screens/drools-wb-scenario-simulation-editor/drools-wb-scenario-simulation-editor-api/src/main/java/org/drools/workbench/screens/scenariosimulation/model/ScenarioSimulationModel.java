@@ -46,13 +46,15 @@ public class ScenarioSimulationModel
         // Add GIVEN Fact
         int id = 1;
         ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
-        simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.GIVEN, id), FactIdentifier.EMPTY, givenExpression);
+        final FactMapping givenFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, givenExpression);
+        givenFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
 
         // Add EXPECTED Fact
         id = 2;
         ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
-        simulationDescriptor.addFactMapping(FactMapping.getPlaceHolder(FactMappingType.EXPECTED, id), FactIdentifier.EMPTY, expectedExpression);
+        final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
+        expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
     }
 

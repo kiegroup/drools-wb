@@ -30,6 +30,9 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
+import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getInstancePlaceHolder;
+import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
+
 /**
  * <code>Command</code> to <b>insert</b> a column.
  */
@@ -69,11 +72,14 @@ public class InsertColumnCommand extends AbstractCommand {
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
-        String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
+        String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String columnTitle = asProperty ? originalColumnTitle : FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
+        final int nextColumnCount = model.nextColumnCount();
+        String instanceTitle = asProperty ? originalInstanceTitle : getInstancePlaceHolder(nextColumnCount);
+        String propertyTitle = getPropertyPlaceHolder(nextColumnCount);
         String placeHolder = asProperty ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
-        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(columnTitle,
+        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
+                                                                                      propertyTitle,
                                                                                       columnId,
                                                                                       columnGroup,
                                                                                       factMappingType,
@@ -83,7 +89,7 @@ public class InsertColumnCommand extends AbstractCommand {
         scenarioGridColumnLocal.setReadOnly(!asProperty);
         scenarioGridColumnLocal.setInstanceAssigned(true);
         GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
-        int columnPosition = isRight ? instanceRange.getMaxRowIndex() +1 : instanceRange.getMinRowIndex();
+        int columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         model.insertColumn(columnPosition, scenarioGridColumnLocal);
     }
 }

@@ -119,4 +119,12 @@ public class FactMapping {
     public static String getPlaceHolder(FactMappingType factMappingType, int index) {
         return getPlaceHolder(factMappingType) + " " + index;
     }
+
+    public static String getInstancePlaceHolder(int index) {
+        return "INSTANCE " + index;
+    }
+
+    public static String getPropertyPlaceHolder(int index) {
+        return "PROPERTY " + index;
+    }
 }

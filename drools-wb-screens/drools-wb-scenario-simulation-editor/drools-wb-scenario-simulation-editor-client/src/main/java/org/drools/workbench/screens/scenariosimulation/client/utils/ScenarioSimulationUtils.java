@@ -44,7 +44,8 @@ public class ScenarioSimulationUtils {
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
-     * @param title
+     * @param instanceTitle
+     * @param propertyTitle
      * @param columnId
      * @param columnGroup
      * @param factMappingType
@@ -52,14 +53,15 @@ public class ScenarioSimulationUtils {
      * @param gridLayer
      * @return
      */
-    public static ScenarioGridColumn getScenarioGridColumn(String title,
+    public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
+                                                           String propertyTitle,
                                                            String columnId,
                                                            String columnGroup,
                                                            FactMappingType factMappingType,
                                                            ScenarioGridPanel scenarioGridPanel,
                                                            ScenarioGridLayer gridLayer) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
         return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer);
     }
 
@@ -77,7 +79,8 @@ public class ScenarioSimulationUtils {
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
-     * @param title
+     * @param instanceTitle
+     * @param propertyTitle
      * @param columnId
      * @param columnGroup
      * @param factMappingType
@@ -85,7 +88,8 @@ public class ScenarioSimulationUtils {
      * @param gridLayer
      * @return
      */
-    public static ScenarioGridColumn getScenarioGridColumn(String title,
+    public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
+                                                           String propertyTitle,
                                                            String columnId,
                                                            String columnGroup,
                                                            FactMappingType factMappingType,
@@ -93,7 +97,7 @@ public class ScenarioSimulationUtils {
                                                            ScenarioGridLayer gridLayer,
                                                            String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
         return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, false, placeHolder);
     }
 
@@ -197,14 +201,16 @@ public class ScenarioSimulationUtils {
      * <p>
      * EXPECTED/GIVEN: triple level
      * </p>
-     * @param title
+     * @param instanceTitle
+     * @param propertyTitle
      * @param columnId
      * @param columnGroup
      * @param factMappingType
      * @param factoryHeader
      * @return
      */
-    public static ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilder(String title,
+    public static ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilder(String instanceTitle,
+                                                                            String propertyTitle,
                                                                             String columnId,
                                                                             String columnGroup,
                                                                             FactMappingType factMappingType,
@@ -217,8 +223,8 @@ public class ScenarioSimulationUtils {
         headerBuilder.setColumnTitle(columnGroup);
         headerBuilder.setReadOnly(true);
 
-       if (isOther(factMappingType)) {
-            headerBuilder.setColumnTitle(title);
+        if (isOther(factMappingType)) {
+            headerBuilder.setColumnTitle(instanceTitle);
             headerBuilder.setColumnGroup(columnGroup);
             headerBuilder.setInstanceHeader(true);
             return headerBuilder;
@@ -226,7 +232,7 @@ public class ScenarioSimulationUtils {
 
         // The "instance" header
         final ScenarioSimulationBuilders.HeaderBuilder instanceHeader = headerBuilder.newLevel()
-                .setColumnTitle(title)
+                .setColumnTitle(instanceTitle)
                 .setColumnGroup(columnGroup)
                 .setReadOnly(false)
                 .setInstanceHeader(true)
@@ -234,7 +240,7 @@ public class ScenarioSimulationUtils {
 
         // The "property" header
         instanceHeader.newLevel()
-                .setColumnTitle("")
+                .setColumnTitle(propertyTitle)
                 .setColumnGroup(columnGroup)
                 .setReadOnly(false)
                 .setInstanceHeader(false)
@@ -250,7 +256,7 @@ public class ScenarioSimulationUtils {
         } catch (IllegalArgumentException e) {
             // ColumnId not recognized
         }
-        switch(expressionName) {
+        switch (expressionName) {
             case Index:
                 return 70;
             case Description:

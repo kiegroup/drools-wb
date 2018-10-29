@@ -49,8 +49,11 @@ public class AppendColumnCommand extends AbstractCommand  {
     public void execute() {
         final int index = model.getFirstIndexRightOfGroup(columnGroup);
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String columnTitle = FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-        model.insertColumn(index, getScenarioGridColumnLocal(columnTitle,
+        final int nextColumnCount = model.nextColumnCount();
+        String instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
+        String propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
+        model.insertColumn(index, getScenarioGridColumnLocal(instanceTitle,
+                                                             propertyTitle,
                                                         columnId,
                                                         columnGroup,
                                                         factMappingType,

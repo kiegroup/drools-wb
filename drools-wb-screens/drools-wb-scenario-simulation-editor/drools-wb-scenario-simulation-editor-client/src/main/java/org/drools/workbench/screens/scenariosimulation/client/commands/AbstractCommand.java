@@ -45,7 +45,6 @@ public abstract class AbstractCommand implements Command {
         this.scenarioGridLayer = scenarioGridLayer;
     }
 
-
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
         // indirection add for test
         return getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
@@ -65,7 +64,8 @@ public abstract class AbstractCommand implements Command {
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
-     * @param title
+     * @param instanceTitle
+     * @param propertyTitle
      * @param columnId
      * @param columnGroup
      * @param factMappingType
@@ -73,15 +73,16 @@ public abstract class AbstractCommand implements Command {
      * @param gridLayer
      * @return
      */
-    protected ScenarioGridColumn getScenarioGridColumnLocal(String title,
-                                                           String columnId,
-                                                           String columnGroup,
-                                                           FactMappingType factMappingType,
-                                                           ScenarioGridPanel scenarioGridPanel,
-                                                           ScenarioGridLayer gridLayer,
-                                                           String placeHolder) {
+    protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle,
+                                                            String propertyTitle,
+                                                            String columnId,
+                                                            String columnGroup,
+                                                            FactMappingType factMappingType,
+                                                            ScenarioGridPanel scenarioGridPanel,
+                                                            ScenarioGridLayer gridLayer,
+                                                            String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(title, columnId, columnGroup, factMappingType, factoryHeader);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
         return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, false, placeHolder);
     }
 

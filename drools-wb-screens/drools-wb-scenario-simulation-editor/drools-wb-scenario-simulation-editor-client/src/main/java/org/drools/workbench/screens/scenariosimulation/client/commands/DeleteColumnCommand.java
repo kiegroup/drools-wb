@@ -61,14 +61,17 @@ public class DeleteColumnCommand extends AbstractCommand {
         model.deleteColumn(columnIndex);
         if (model.getGroupSize(columnGroup) < 1) {
             FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-            String columnTitle = FactMapping.getPlaceHolder(factMappingType, model.nextColumnCount());
-            model.insertColumn(columnIndex, getScenarioGridColumnLocal(columnTitle,
-                                                                  String.valueOf(new Date().getTime()),
-                                                                  columnGroup,
-                                                                  factMappingType,
-                                                                  scenarioGridPanel,
-                                                                  scenarioGridLayer,
-                                                                  ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+            final int nextColumnCount = model.nextColumnCount();
+            String instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
+            String propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
+            model.insertColumn(columnIndex, getScenarioGridColumnLocal(instanceTitle,
+                                                                       propertyTitle,
+                                                                       String.valueOf(new Date().getTime()),
+                                                                       columnGroup,
+                                                                       factMappingType,
+                                                                       scenarioGridPanel,
+                                                                       scenarioGridLayer,
+                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
     }
 }
