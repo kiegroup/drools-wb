@@ -291,7 +291,7 @@ public class ScenarioSimulationEditorPresenter
     void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
         getRightPanelPresenter().ifPresent(presenter -> {
-            presenter.onDisableEditorTab();
+           // presenter.onDisableEditorTab();
             commandExecutor.setRightPanelPresenter(presenter);
             presenter.setEventBus(eventBus);
             populateRightPanel(presenter);

@@ -140,7 +140,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                     hideMenus();
                     scenarioGrid.clearSelections();
                     if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
-                       // eventBus.fireEvent(new DisableRightPanelEvent());
+
                     }
                 }
                 clickReceived.set(0);

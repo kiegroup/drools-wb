@@ -236,7 +236,6 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
         }
-        selectColumn(columnIndex);
     }
 
     /**
@@ -531,6 +530,8 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
+
+            selectColumn(columns.indexOf(column));
         } catch (Throwable t) {
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
