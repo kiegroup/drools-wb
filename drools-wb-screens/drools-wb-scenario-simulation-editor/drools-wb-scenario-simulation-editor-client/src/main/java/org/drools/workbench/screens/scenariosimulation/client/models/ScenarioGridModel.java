@@ -298,14 +298,15 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public Range getInstanceLimits(int columnIndex) {
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
+        final String originalColumnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
         String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
         int leftPosition = columnIndex;
-        while (leftPosition > 1 && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+        while (leftPosition > 1 && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getColumnGroup().equals(originalColumnGroup) && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
             leftPosition--;
         }
         int rightPosition = columnIndex;
-        while (rightPosition < columns.size() - 1 && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
+        while (rightPosition < columns.size() - 1 && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getColumnGroup().equals(originalColumnGroup) && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
             rightPosition++;
         }
         return new Range(leftPosition, rightPosition);
