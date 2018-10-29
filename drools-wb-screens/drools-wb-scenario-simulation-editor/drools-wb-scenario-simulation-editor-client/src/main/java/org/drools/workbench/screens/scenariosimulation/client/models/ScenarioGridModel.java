@@ -515,22 +515,28 @@ public class ScenarioGridModel extends BaseGridData {
      */
     protected void commonAddColumn(final int index, final GridColumn<?> column, FactIdentifier factIdentifier, ExpressionIdentifier ei) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-        String title = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
+        String instanceTitle = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
+        String propertyTitle = ((ScenarioGridColumn) column).getPropertyHeaderMetaData().getTitle();
         final int columnIndex = index == -1 ? getColumnCount() : index;
         try {
-            simulationDescriptor.addFactMapping(columnIndex, title, factIdentifier, ei);
+            final FactMapping createdFactMapping = simulationDescriptor.addFactMapping(columnIndex, instanceTitle, factIdentifier, ei);
+            createdFactMapping.setExpressionAlias(propertyTitle);
             if (index == -1) {  // This is actually an append
                 super.appendColumn(column);
             } else {
                 super.insertColumn(index, column);
             }
+            final Range instanceLimits = getInstanceLimits(columnIndex);
+            IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
+                    .filter(currentIndex -> currentIndex != columnIndex)
+                    .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
         } catch (Throwable t) {
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
         }
+
         final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
-        String propertyTitle = ((ScenarioGridColumn) column).getPropertyHeaderMetaData().getTitle();
-        String placeHolder = FactIdentifier.EMPTY.equals(factIdentifier) || propertyTitle.isEmpty() ? ScenarioSimulationEditorConstants.INSTANCE.defineValidType() : ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+        String placeHolder = ((ScenarioGridColumn) column).isInstanceAssigned() ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         ((ScenarioGridColumn) column).setPlaceHolder(placeHolder);
         IntStream.range(0, scenarios.size())
                 .forEach(rowIndex -> setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder))));

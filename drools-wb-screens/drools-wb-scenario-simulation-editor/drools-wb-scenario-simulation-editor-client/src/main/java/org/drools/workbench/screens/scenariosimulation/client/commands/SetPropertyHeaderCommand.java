@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.stream.IntStream;
+
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -22,6 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 /**
  * <code>Command</code> to to set the <i>property</i> level header for a given column
@@ -63,13 +66,16 @@ public class SetPropertyHeaderCommand extends AbstractCommand {
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
         String title = value.substring(value.indexOf(".")+1);
-        final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
-        String columnGroup = informationHeaderMetaData.getColumnGroup();
-        if (!selectedColumn.isInstanceAssigned()) { // We have not defined the instance, yet
-            informationHeaderMetaData.setTitle(value.split("\\.")[0]);
-            selectedColumn.setInstanceAssigned(true);
-        }
-        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(columnGroup);
+        final GridData.Range instanceLimits = model.getInstanceLimits(columnIndex);
+        IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() +1)
+                .forEach(index -> {
+                    final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) model.getColumns().get(index);
+                    if (!scenarioGridColumn.isInstanceAssigned()) { // We have not defined the instance, yet
+                        scenarioGridColumn.getInformationHeaderMetaData().setTitle(value.split("\\.")[0]);
+                        scenarioGridColumn.setInstanceAssigned(true);
+                    }
+                });
+        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup());
         selectedColumn.getPropertyHeaderMetaData().setTitle(title);
         selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
         model.updateColumnProperty(columnIndex,

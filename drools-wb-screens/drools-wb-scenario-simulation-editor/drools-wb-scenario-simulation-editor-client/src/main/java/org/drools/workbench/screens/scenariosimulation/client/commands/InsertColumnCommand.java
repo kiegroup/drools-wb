@@ -87,7 +87,7 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
         scenarioGridColumnLocal.setReadOnly(!asProperty);
-        scenarioGridColumnLocal.setInstanceAssigned(true);
+        scenarioGridColumnLocal.setInstanceAssigned(selectedColumn.isInstanceAssigned());
         GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
         int columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         model.insertColumn(columnPosition, scenarioGridColumnLocal);
