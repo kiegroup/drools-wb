@@ -19,7 +19,6 @@ import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;

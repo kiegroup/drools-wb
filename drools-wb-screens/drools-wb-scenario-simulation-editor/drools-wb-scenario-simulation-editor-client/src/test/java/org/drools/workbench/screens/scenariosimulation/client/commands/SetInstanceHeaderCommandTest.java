@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -64,9 +65,9 @@ public class SetInstanceHeaderCommandTest extends AbstractCommandTest {
     @Test
     public void execute() {
         setInstanceHeaderCommand.execute();
-        verify(gridColumnMock, times(1)).getInformationHeaderMetaData();
-        verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
-        verify(gridColumnMock, times(1)).setInstanceAssigned(eq(true));
+        verify(gridColumnMock, atLeast(1)).getInformationHeaderMetaData();
+        verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE));
+        verify(gridColumnMock, atLeast(1)).setInstanceAssigned(eq(true));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
         verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock), eq(COLUMN_ID), eq(VALUE));
     }

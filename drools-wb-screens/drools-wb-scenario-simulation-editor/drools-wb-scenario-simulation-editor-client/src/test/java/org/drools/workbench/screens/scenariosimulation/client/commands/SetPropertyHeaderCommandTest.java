@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
@@ -47,7 +48,6 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
     public void setup() {
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
         setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(scenarioGridModelMock, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, scenarioGridPanelMock, scenarioGridLayerMock, true) {
 
             @Override
@@ -69,7 +69,7 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
-        verify(scenarioGridModelMock, times(1)).updateColumnProperty(eq(COLUMN_INDEX), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
     }
 
     @Test
@@ -79,6 +79,6 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
-        verify(scenarioGridModelMock, times(1)).updateColumnProperty(eq(COLUMN_INDEX), eq(gridColumnMock), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
     }
 }

@@ -48,13 +48,13 @@ public class ScenarioGridModel extends BaseGridData {
 
     public static final int HEADER_ROW_COUNT = 3;
 
-    Simulation simulation;
+    protected Simulation simulation;
 
-    EventBus eventBus;
+    protected EventBus eventBus;
 
-    AtomicInteger columnCounter = new AtomicInteger(0);
+    protected AtomicInteger columnCounter = new AtomicInteger(0);
 
-    GridColumn<?> selectedColumn = null;
+    protected GridColumn<?> selectedColumn = null;
 
     public ScenarioGridModel() {
     }

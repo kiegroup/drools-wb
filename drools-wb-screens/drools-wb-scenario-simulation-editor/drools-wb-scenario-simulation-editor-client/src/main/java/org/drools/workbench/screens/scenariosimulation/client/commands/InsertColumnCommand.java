@@ -25,7 +25,6 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;

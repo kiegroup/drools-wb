@@ -34,6 +34,7 @@ public class InsertRowCommandTest extends AbstractCommandTest  {
 
     @Before
     public void setup() {
+        super.setup();
         insertRowCommand = new InsertRowCommand(scenarioGridModelMock, ROW_INDEX);
     }
 

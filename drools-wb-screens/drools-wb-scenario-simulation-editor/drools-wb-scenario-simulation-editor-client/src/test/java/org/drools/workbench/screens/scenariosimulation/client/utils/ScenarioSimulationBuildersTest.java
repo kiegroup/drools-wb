@@ -57,7 +57,7 @@ public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
     @Test
     public void testHeaderBuilder() {
         ScenarioSimulationBuilders.HeaderBuilder builder = ScenarioSimulationBuilders.HeaderBuilder.get(scenarioHeaderTextBoxSingletonDOMElementFactoryMock);
-        builder.setColumnTitle(COLUMN_TITLE_FIRST);
+        builder.setColumnTitle(COLUMN_INSTANCE_TITLE_FIRST);
         builder.setColumnGroup(COLUMN_GROUP_FIRST);
         builder.setInstanceHeader(true);
         List<GridColumn.HeaderMetaData> retrieved = builder.build();
@@ -65,7 +65,7 @@ public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
         assertEquals(1, retrieved.size());
         ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData)retrieved.get(0);
         assertNotNull(headerMetaData);
-        assertEquals(COLUMN_TITLE_FIRST, headerMetaData.getTitle());
+        assertEquals(COLUMN_INSTANCE_TITLE_FIRST, headerMetaData.getTitle());
         assertEquals(COLUMN_GROUP_FIRST, headerMetaData.getColumnGroup());
         assertTrue(headerMetaData.isInstanceHeader());
         assertFalse(headerMetaData.isReadOnly());

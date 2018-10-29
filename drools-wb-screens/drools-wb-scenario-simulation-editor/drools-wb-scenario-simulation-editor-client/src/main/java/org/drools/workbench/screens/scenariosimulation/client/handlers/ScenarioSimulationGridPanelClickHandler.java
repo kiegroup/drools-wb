@@ -29,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Timer;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.AbstractHeaderMenuPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
@@ -39,8 +38,8 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -130,23 +129,31 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         final int canvasY = getRelativeY(event);
         final boolean isShiftKeyDown = event.getNativeEvent().getShiftKey();
         final boolean isControlKeyDown = event.getNativeEvent().getCtrlKey();
+
+        hideMenus();
+        scenarioGrid.clearSelections();
+        if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
+            eventBus.fireEvent(new ReloadRightPanelEvent());
+        }
+
+
         // Workaround to differentiate click and double click on the same element
         // we wait 300 ms to see  if another click happen in the meantime: if so, it is a double click,
         // and we ignore it
-        Timer t = new Timer() {
-            @Override
-            public void run() {
-                if (clickReceived.get() == 1) {
-                    hideMenus();
-                    scenarioGrid.clearSelections();
-                    if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
-
-                    }
-                }
-                clickReceived.set(0);
-            }
-        };
-        t.schedule(300);
+//        Timer t = new Timer() {
+//            @Override
+//            public void run() {
+//                if (clickReceived.get() == 1) {
+//                    hideMenus();
+//                    scenarioGrid.clearSelections();
+//                    if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
+//                        eventBus.fireEvent(new ReloadRightPanelEvent());
+//                    }
+//                }
+//                clickReceived.set(0);
+//            }
+//        };
+//        t.schedule(300);
     }
 
     @Override

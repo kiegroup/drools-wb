@@ -48,6 +48,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeast;
@@ -157,6 +159,8 @@ public class ScenarioGridModelTest {
             gridColumns.add(scenarioGridColumnMock);
             when(simulationDescriptorMock.getFactMappingByIndex(columnIndex)).thenReturn(factMappingMock);
         });
+        doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
+
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
         when(gridCellMock.getValue()).thenReturn(gridCellValueMock);
         when(gridCellValueMock.getValue()).thenReturn(GRID_CELL_TEXT);
@@ -283,7 +287,6 @@ public class ScenarioGridModelTest {
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(scenarioGridColumnMock), isA(FactIdentifier.class), isA(ExpressionIdentifier.class));
-        verify(scenarioGridModel, times(1)).selectColumn(eq(COLUMN_INDEX));
     }
 
     @Test
@@ -295,7 +298,6 @@ public class ScenarioGridModelTest {
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(scenarioGridColumnMock), isA(FactIdentifier.class), isA(ExpressionIdentifier.class));
         verify(scenarioGridModel, atLeast(ROW_COUNT - 1)).setCellValue(anyInt(), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
-        verify(scenarioGridModel, times(1)).selectColumn(eq(COLUMN_INDEX));
     }
 
     @Test
