@@ -46,6 +46,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
@@ -135,25 +136,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
             eventBus.fireEvent(new ReloadRightPanelEvent());
         }
-
-
-        // Workaround to differentiate click and double click on the same element
-        // we wait 300 ms to see  if another click happen in the meantime: if so, it is a double click,
-        // and we ignore it
-//        Timer t = new Timer() {
-//            @Override
-//            public void run() {
-//                if (clickReceived.get() == 1) {
-//                    hideMenus();
-//                    scenarioGrid.clearSelections();
-//                    if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
-//                        eventBus.fireEvent(new ReloadRightPanelEvent());
-//                    }
-//                }
-//                clickReceived.set(0);
-//            }
-//        };
-//        t.schedule(300);
     }
 
     @Override
@@ -225,8 +207,14 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
      * @return
      */
     private boolean manageHeaderRightClick(ScenarioGrid scenarioGrid, int left, int top, double gridY, Integer uiColumnIndex) {
-        ScenarioHeaderMetaData columnMetadata = getColumnScenarioHeaderMetaData(scenarioGrid, scenarioGrid.getModel().getColumns().get(uiColumnIndex), gridY);
+        final GridColumn<?> scenarioGridColumn = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
+        ScenarioHeaderMetaData columnMetadata = getColumnScenarioHeaderMetaData(scenarioGrid, scenarioGridColumn, gridY);
         if (columnMetadata == null) {
+            return false;
+        }
+        //Get row index
+        final Integer uiHeaderRowIndex = getUiHeaderRowIndex(scenarioGrid, scenarioGridColumn, gridY);
+        if (uiHeaderRowIndex == null) {
             return false;
         }
         String group = columnMetadata.getColumnGroup();
@@ -252,6 +240,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             default:
                 otherContextMenu.show(left, top);
         }
+        scenarioGrid.setSelectedColumnAndHeader(uiHeaderRowIndex, uiColumnIndex);
         return true;
     }
 
