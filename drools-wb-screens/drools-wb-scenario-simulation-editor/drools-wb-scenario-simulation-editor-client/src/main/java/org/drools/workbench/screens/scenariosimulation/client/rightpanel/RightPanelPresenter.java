@@ -77,6 +77,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @PostConstruct
     public void setup() {
         view.init(this);
+        view.disableEditorTab();
     }
 
     @DefaultPosition
@@ -214,7 +215,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        //view.enableEditorTab();
         view.enableAddButton();
     }
 

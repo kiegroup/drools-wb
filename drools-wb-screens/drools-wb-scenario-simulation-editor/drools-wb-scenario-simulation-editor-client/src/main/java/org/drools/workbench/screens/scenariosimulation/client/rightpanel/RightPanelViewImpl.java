@@ -50,7 +50,7 @@ public class RightPanelViewImpl
     protected ButtonElement searchButton = Document.get().createButtonElement();
 
     @DataField("inputSearch")
-    protected     InputElement inputSearch = Document.get().createTextInputElement();
+    protected InputElement inputSearch = Document.get().createTextInputElement();
 
     @DataField("nameField")
     protected InputElement nameField = Document.get().createTextInputElement();
@@ -65,7 +65,10 @@ public class RightPanelViewImpl
     protected ButtonElement conditionsButton = Document.get().createButtonElement();
 
     @DataField("addButton")
-    protected  ButtonElement addButton = Document.get().createButtonElement();
+    protected ButtonElement addButton = Document.get().createButtonElement();
+
+    @DataField("kieTestEditorTabContent")
+    protected DivElement kieTestEditorTabContent = Document.get().createDivElement();
 
     public RightPanelViewImpl() {
 
@@ -164,7 +167,12 @@ public class RightPanelViewImpl
         inputSearch.setDisabled(disabled);
         nameField.setDisabled(disabled);
         conditionsButton.setDisabled(disabled);
-       // setListContainerDisabledStatus(disabled);
+        setContainersDisabledStatus(disabled);
+        if (disabled) {
+            kieTestEditorTabContent.addClassName("disabled");
+        } else {
+            kieTestEditorTabContent.removeClassName("disabled");
+        }
     }
 
     protected void setContainersDisabledStatus(boolean disabled) {
@@ -176,5 +184,4 @@ public class RightPanelViewImpl
             instanceListContainer.removeClassName("disabled");
         }
     }
-
 }
