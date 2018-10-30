@@ -405,6 +405,11 @@ public class ScenarioGridModel extends BaseGridData {
         if (columnIndex > getColumnCount() - 1) {
             return;
         }
+        if (!selectedHeaderCells.isEmpty()) {
+            final SelectedCell selectedHeaderCell = selectedHeaderCells.get(0);
+            selectedHeaderCells.clear();
+            selectHeaderCell(selectedHeaderCell.getRowIndex(), columnIndex);
+        }
         selectedColumn = getColumns().get(columnIndex);
     }
 
@@ -530,7 +535,6 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
-
             selectColumn(columns.indexOf(column));
         } catch (Throwable t) {
             eventBus.fireEvent(new ScenarioGridReloadEvent());
