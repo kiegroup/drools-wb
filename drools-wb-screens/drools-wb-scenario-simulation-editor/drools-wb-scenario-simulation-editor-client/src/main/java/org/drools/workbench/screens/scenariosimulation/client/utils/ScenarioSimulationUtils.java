@@ -36,7 +36,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
@@ -74,7 +74,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()
@@ -110,7 +110,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isPropertyAssigned: <code>true</code>;
      * </p>
      * <p>
      * placeHolder: <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code>;
@@ -173,7 +173,7 @@ public class ScenarioSimulationUtils {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()

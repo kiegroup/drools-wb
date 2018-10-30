@@ -76,7 +76,7 @@ public class InsertColumnCommand extends AbstractCommand {
         final int nextColumnCount = model.nextColumnCount();
         String instanceTitle = asProperty ? originalInstanceTitle : getInstancePlaceHolder(nextColumnCount);
         String propertyTitle = getPropertyPlaceHolder(nextColumnCount);
-        String placeHolder = asProperty ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,
                                                                                       columnId,
@@ -85,8 +85,9 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridPanel,
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
-        scenarioGridColumnLocal.setReadOnly(!asProperty);
+        scenarioGridColumnLocal.setReadOnly(true);
         scenarioGridColumnLocal.setInstanceAssigned(selectedColumn.isInstanceAssigned());
+        scenarioGridColumnLocal.setPropertyAssigned(false);
         GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
         int columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         model.insertColumn(columnPosition, scenarioGridColumnLocal);

@@ -38,7 +38,7 @@ public class ScenarioSimulationBuilders {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * placeHolder: "";
@@ -121,7 +121,7 @@ public class ScenarioSimulationBuilders {
      * columnTitle: null;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * instanceHeader: <code>false</code>;

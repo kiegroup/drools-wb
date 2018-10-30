@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
@@ -29,7 +28,6 @@ import org.drools.workbench.screens.scenariosimulation.client.renderers.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
@@ -111,52 +109,85 @@ public class ScenarioGrid extends BaseGridWidget {
         String instanceTitle = factMapping.getFactAlias();
         String propertyTitle = factMapping.getExpressionAlias();
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
-        boolean readOnly = isReadOnly(factIdentifier);
-        String placeHolder = getPlaceholder(readOnly);
-        ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), readOnly, placeHolder);
-        conditionalPopulatePropertyHeader(factIdentifier, factMapping, scenarioGridColumn, columnIndex);
-        scenarioGridColumn.setInstanceAssigned(!FactIdentifier.EMPTY.equals(factIdentifier));
+        boolean isInstanceAssigned = isInstanceAssigned(factIdentifier);
+        boolean isPropertyAssigned = isPropertyAssigned(isInstanceAssigned, factMapping);
+        String placeHolder = getPlaceholder(isPropertyAssigned);
+        ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), isPropertyAssigned, placeHolder);
+        scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
+        scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
+        scenarioGridColumn.setReadOnly(!isPropertyAssigned);
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
 
-    protected void conditionalPopulatePropertyHeader(FactIdentifier factIdentifier, FactMapping factMapping, ScenarioGridColumn scenarioGridColumn, int columnIndex) {
-        if (FactIdentifier.INDEX.equals(factIdentifier) || FactIdentifier.DESCRIPTION.equals(factIdentifier)) {
-            return;
-        }
-        String title = "";
-        if (FactIdentifier.EMPTY.equals(factIdentifier)) {
-            title = factMapping.getExpressionAlias();
+    /**
+     * Returns <code>true</code> when
+     * <p>
+     * factIdentifier == FactIdentifier.DESCRIPTION
+     * </p><p>
+     * <b>or</b>
+     * <p>
+     * factIdentifier != FactIdentifier.EMPTY
+     * </p><p>
+     * <b>and</b>
+     * </p><p>
+     * factIdentifier != FactIdentifier.INDEX
+     * </p><p>
+     * @param factIdentifier
+     * @return
+     */
+    protected boolean isInstanceAssigned(FactIdentifier factIdentifier) {
+        if (FactIdentifier.DESCRIPTION.equals(factIdentifier)) {
+            return true;
         } else {
-            final List<ExpressionElement> expressionElements = factMapping.getExpressionElements();
-            title = expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
+            return !(FactIdentifier.EMPTY.equals(factIdentifier) || FactIdentifier.INDEX.equals(factIdentifier));
         }
-        scenarioGridColumn.getPropertyHeaderMetaData().setTitle(title);
-        scenarioGridColumn.getPropertyHeaderMetaData().setReadOnly(false);
     }
 
-    protected boolean isReadOnly(FactIdentifier factIdentifier) {
-        return FactIdentifier.EMPTY.equals(factIdentifier) || FactIdentifier.INDEX.equals(factIdentifier);
+    /**
+     * Returns <code>true</code> when
+     * <p>
+     * instanceAssigned == true
+     * </p><p>
+     * <b>and</b>
+     * </p><p>
+     * !factMapping.getExpressionElements().isEmpty()
+     * </p>
+     * @param instanceAssigned
+     * @param factMapping
+     * @return
+     */
+    protected boolean isPropertyAssigned(boolean instanceAssigned, FactMapping factMapping) {
+        return instanceAssigned && !factMapping.getExpressionElements().isEmpty();
     }
 
-    protected String getPlaceholder(boolean readOnly) {
-        return readOnly ? ScenarioSimulationEditorConstants.INSTANCE.defineValidType() : ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+    /**
+     * Returns <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code> if <code>isPropertyAssigned == true</code>, <code>ScenarioSimulationEditorConstants.INSTANCE.defineValidType()</code> otherwise
+     * @param isPropertyAssigned
+     * @return
+     */
+    protected String getPlaceholder(boolean isPropertyAssigned) {
+        return isPropertyAssigned ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
     }
 
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
         return FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
     }
 
-    protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, boolean readOnly, String placeHolder) {
+    protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String
+            columnId, String columnGroup, FactMappingType factMappingType, boolean readOnly, String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getScenarioHeaderTextBoxSingletonDOMElementFactory();
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
         return getScenarioGridColumnLocal(headerBuilder, readOnly, placeHolder);
     }
 
-    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, boolean readOnly, String placeHolder) {
+    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
+                                                            boolean readOnly, String placeHolder) {
         return ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, readOnly, placeHolder);
     }
 
-    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+    protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String
+            propertyTitle, String columnId, String columnGroup, FactMappingType
+                                                                                     factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
         return ScenarioSimulationUtils.getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
     }
 

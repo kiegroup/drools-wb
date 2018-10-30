@@ -38,9 +38,13 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
 
     protected String placeHolder;
     /**
-     * flag to know if aniunstance has been already assigned to this column; <code>false</code> on instantiation
+     * flag to know if an <b>instance</b> has been already assigned to this column; <code>false</code> on instantiation
      */
     protected boolean instanceAssigned = false;
+    /**
+     * flag to know if a <b>property</b> has been already assigned to this column; <code>false</code> on instantiation
+     */
+    protected boolean propertyAssigned = false;
 
     public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextBoxSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);
@@ -79,8 +83,32 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         return instanceAssigned;
     }
 
+    /**
+     * Set to <code>true</code> if an <b>instance</b> has been assigned, <code>false</code> otherwise.
+     * Setting this to <code>false</code> automatically set to <code>false</code> also <code>propertyAssigned</code>
+     * @param instanceAssigned
+     */
     public void setInstanceAssigned(boolean instanceAssigned) {
         this.instanceAssigned = instanceAssigned;
+        if (!instanceAssigned) {
+            propertyAssigned = false;
+        }
+    }
+
+    public boolean isPropertyAssigned() {
+        return propertyAssigned;
+    }
+
+    /**
+     * Set to <code>true</code> if a <b>property</b> has been assigned, <code>false</code> otherwise.
+     * Setting this to <code>true</code> automatically set to <code>true</code> also <code>instanceAssigned</code>
+     * @param propertyAssigned
+     */
+    public void setPropertyAssigned(boolean propertyAssigned) {
+        this.propertyAssigned = propertyAssigned;
+        if (propertyAssigned) {
+            instanceAssigned = true;
+        }
     }
 
     public void setPlaceHolder(String placeHolder) {

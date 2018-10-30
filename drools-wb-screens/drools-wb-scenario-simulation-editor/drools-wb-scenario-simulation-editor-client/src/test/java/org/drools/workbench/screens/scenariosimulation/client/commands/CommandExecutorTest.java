@@ -252,9 +252,13 @@ public class CommandExecutorTest extends AbstractCommandTest {
 
     @Test
     public void onReloadRightPanelEvent() {
-        ReloadRightPanelEvent event = new ReloadRightPanelEvent();
+        ReloadRightPanelEvent event = new ReloadRightPanelEvent(true);
         commandExecutor.onEvent(event);
-        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
+        reset(scenarioSimulationEditorPresenterMock);
+        event = new ReloadRightPanelEvent(false);
+        commandExecutor.onEvent(event);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(false));
     }
 
     @Test

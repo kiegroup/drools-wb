@@ -130,11 +130,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         final int canvasY = getRelativeY(event);
         final boolean isShiftKeyDown = event.getNativeEvent().getShiftKey();
         final boolean isControlKeyDown = event.getNativeEvent().getCtrlKey();
-
         hideMenus();
         scenarioGrid.clearSelections();
         if (!manageLeftClick(canvasX, canvasY, isShiftKeyDown, isControlKeyDown)) { // It was not a grid click
-            eventBus.fireEvent(new ReloadRightPanelEvent());
+            eventBus.fireEvent(new ReloadRightPanelEvent(true));
         }
     }
 
@@ -298,6 +297,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (scenarioGridColumn == null) {
             return false;
         }
+
         if (!manageHeaderLeftClick(scenarioGrid, uiColumnIndex, scenarioGridColumn, ap)) {
             final Integer uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, ap.getY());
             if (uiRowIndex == null) {

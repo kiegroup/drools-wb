@@ -236,9 +236,14 @@ public class ScenarioSimulationEditorPresenter
 
     /**
      * To be called to force right panel reload
+     *
+     * @param disable set this to <code>true</code> to <b>also</b> disable the panel
      */
-    public void reloadRightPanel() {
+    public void reloadRightPanel(boolean disable) {
         populateRightPanelCommand.execute();
+        if (disable) {
+            getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onDisableEditorTab);
+        }
     }
 
     public void onRunScenario() {

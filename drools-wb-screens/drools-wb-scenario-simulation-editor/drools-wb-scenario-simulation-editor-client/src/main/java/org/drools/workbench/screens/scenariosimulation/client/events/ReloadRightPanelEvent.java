@@ -25,16 +25,25 @@ public class ReloadRightPanelEvent extends GwtEvent<ReloadRightPanelEventHandler
 
     public static Type<ReloadRightPanelEventHandler> TYPE = new Type<>();
 
+    private final boolean disable;
+
     /**
-     * Fire this event to reload the right panel content)
+     * Fire this event to reload the right panel content
+     *
+     * @param disable set this to <code>true</code> to <b>also</b> disable the panel
      */
-    public ReloadRightPanelEvent() {
+    public ReloadRightPanelEvent(boolean disable) {
+        this.disable = disable;
     }
 
 
     @Override
     public Type<ReloadRightPanelEventHandler> getAssociatedType() {
         return TYPE;
+    }
+
+    public boolean isDisable() {
+        return disable;
     }
 
     @Override

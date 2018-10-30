@@ -59,7 +59,7 @@ public abstract class AbstractCommand implements Command {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * columnRenderer: new ScenarioGridColumnRenderer()

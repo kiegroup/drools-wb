@@ -60,6 +60,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -208,7 +209,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
     @Override
     public void onEvent(ReloadRightPanelEvent event) {
         if (scenarioSimulationEditorPresenter != null) {
-            scenarioSimulationEditorPresenter.reloadRightPanel();
+            scenarioSimulationEditorPresenter.reloadRightPanel(event.isDisable());
         }
     }
 
@@ -222,7 +223,20 @@ public class CommandExecutor implements AppendColumnEventHandler,
         if (model.getSelectedColumn() == null) {
             return;
         }
-        commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
+        if (model.isSameSelectedColumnType(event.getClassName())) {
+            return;
+        } else if (((ScenarioGridColumn) model.getSelectedColumn()).isInstanceAssigned()) {
+            Command okPreserveCommand = () -> commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
+            deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextQuestion(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextDanger(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.changeType(),
+                                      okPreserveCommand);
+        } else {
+            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
+        }
     }
 
     @Override

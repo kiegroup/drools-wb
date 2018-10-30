@@ -19,9 +19,12 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+
+import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
 /**
  * <code>Command</code> to set the <i>instance</i> level header for a given column
@@ -61,6 +64,8 @@ public class SetInstanceHeaderCommand extends AbstractCommand {
         informationHeaderMetaData.setTitle(className);
         selectedColumn.setInstanceAssigned(true);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
+        selectedColumn.setPlaceHolder(ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
+        propertyHeaderMetaData.setTitle(getPropertyPlaceHolder(columnIndex));
         propertyHeaderMetaData.setReadOnly(false);
         model.updateColumnInstance(columnIndex, selectedColumn, fullPackage, className);
     }
