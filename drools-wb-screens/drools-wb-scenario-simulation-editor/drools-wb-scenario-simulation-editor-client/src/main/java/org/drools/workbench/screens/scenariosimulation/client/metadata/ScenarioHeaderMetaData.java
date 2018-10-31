@@ -15,11 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.metadata;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxDOMElement;
-import org.gwtbootstrap3.client.ui.TextBox;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMElementFactory;
 
 public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
@@ -29,7 +27,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
     you'd be able to add your own `CellSelectionStrategy` to your `HeaderMetaData` and do was you wish (e.g. select whole column)
      */
 
-    final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory;
+    final ScenarioHeaderTextBoxSingletonDOMElementFactory factory;
     final String columnId;
     private boolean readOnly;
     // true if this header contains the column' main informations (group, title, id) and/or it is an instance header
@@ -48,7 +46,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
      * @param propertyHeader Set <code>true</code> for <i>property</i>' header <b>or</b> the description/id ones, <code>false</code>
      * @throws IllegalStateException if both <code>instanceHeader</code> and <code>propertyHeader</code> are <code>true</code>
      */
-    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory, boolean readOnly, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean readOnly, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
         super(columnTitle, columnGroup);
         if (instanceHeader && propertyHeader) {
             throw new IllegalStateException("A ScenarioHeaderMetaData can not be both InstanceHeader and PropertyHeader");
@@ -71,7 +69,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
      * @param propertyHeader Set <code>true</code> for <i>property</i>' header <b>or</b> the description/id ones, <code>false</code>
      * @throws IllegalStateException if both <code>instanceHeader</code> and <code>propertyHeader</code> are <code>true</code>
      */
-    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
         this(columnId, columnTitle, columnGroup, factory, false, instanceHeader, propertyHeader);
     }
 
