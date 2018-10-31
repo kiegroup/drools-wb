@@ -36,7 +36,7 @@ abstract class AbstractRightPanelTest {
     protected LIElement lIElementMock;
 
     @Mock
-    protected ViewsProvider viewsProviderMOck;
+    protected ViewsProvider viewsProviderMock;
 
     protected SortedMap<String, FactModelTree> dataObjectFactTreeMap;
     protected SortedMap<String, FactModelTree> instanceFactTreeMap;

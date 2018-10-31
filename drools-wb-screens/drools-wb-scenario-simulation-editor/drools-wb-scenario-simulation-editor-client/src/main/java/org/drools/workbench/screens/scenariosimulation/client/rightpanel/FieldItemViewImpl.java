@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Objects;
+
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -65,6 +67,11 @@ public class FieldItemViewImpl implements FieldItemView {
     }
 
     @Override
+    public String getFactName() {
+        return factName;
+    }
+
+    @Override
     public String getFieldName() {
         return fieldName;
     }
@@ -86,12 +93,47 @@ public class FieldItemViewImpl implements FieldItemView {
 
     @EventHandler("fieldElement")
     public void onFieldElementClick(ClickEvent clickEvent) {
+        onFieldElementClick();
+    }
+
+    @Override
+    public void onFieldElementClick() {
         fieldElement.addClassName("selected");
         fieldItemPresenter.onFieldElementClick(this);
     }
+
     @Override
     public void unselect() {
         fieldElement.removeClassName("selected");
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FieldItemViewImpl that = (FieldItemViewImpl) o;
+        return Objects.equals(getFullPath(), that.getFullPath()) &&
+                Objects.equals(getFactName(), that.getFactName()) &&
+                Objects.equals(getFieldName(), that.getFieldName()) &&
+                Objects.equals(getClassName(), that.getClassName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFullPath(), getFactName(), getFieldName(), getClassName());
+    }
+
+    @Override
+    public String toString() {
+        return "FieldItemViewImpl{" +
+                "fullPath='" + fullPath + '\'' +
+                ", factName='" + factName + '\'' +
+                ", fieldName='" + fieldName + '\'' +
+                ", className='" + className + '\'' +
+                '}';
+    }
 }

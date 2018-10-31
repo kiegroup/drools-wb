@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Objects;
+
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.DivElement;
@@ -229,5 +231,34 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     @Override
     public boolean isShown() {
         return listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ListGroupItemViewImpl that = (ListGroupItemViewImpl) o;
+        return Objects.equals(getParentPath(), that.getParentPath()) &&
+                Objects.equals(getFactName(), that.getFactName()) &&
+                Objects.equals(getFactType(), that.getFactType());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getParentPath(), getFactName(), getFactType());
+    }
+
+    @Override
+    public String toString() {
+        return "ListGroupItemViewImpl{" +
+                "fullClassName=" + fullClassName +
+                ", parentPath='" + parentPath + '\'' +
+                ", factName='" + factName + '\'' +
+                ", factType='" + factType + '\'' +
+                '}';
     }
 }

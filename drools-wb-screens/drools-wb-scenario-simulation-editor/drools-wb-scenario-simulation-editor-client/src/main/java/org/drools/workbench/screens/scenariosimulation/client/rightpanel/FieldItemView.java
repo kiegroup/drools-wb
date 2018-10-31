@@ -40,11 +40,15 @@ public interface FieldItemView {
 
     String getFullPath();
 
+    String getFactName();
+
     String getFieldName();
 
     String getClassName();
 
     void setPresenter(FieldItemView.Presenter fieldItemPresenter);
+
+    void onFieldElementClick();
 
     /**
      * @param fullPath The parent path (empty if the properties belongs to a <b>top-level</b> element)

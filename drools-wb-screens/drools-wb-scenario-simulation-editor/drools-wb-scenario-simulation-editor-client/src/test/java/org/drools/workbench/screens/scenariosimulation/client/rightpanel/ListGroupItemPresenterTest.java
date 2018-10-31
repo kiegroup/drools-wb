@@ -43,28 +43,32 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     private ListGroupItemPresenter listGroupItemPresenter;
 
     @Mock
-    private ListGroupItemView mockListGroupItemView;
+    private ListGroupItemView listGroupItemViewMock;
 
     @Mock
-    private DivElement mockDivElement;
+    private DivElement divElementMock;
 
     @Mock
-    private FieldItemPresenter mockFieldItemPresenter;
+    private FieldItemPresenter fieldItemPresenterMock;
 
     @Mock
-    private List<ListGroupItemView> mockListGroupItemViewList;
+    private Map<String, ListGroupItemView> listGroupItemViewMapMock;
+
+    @Mock
+    private List<ListGroupItemView> listGroupItemViewValuesMock;
 
     @Before
     public void setup() {
         super.setup();
-        when(viewsProviderMOck.getListGroupItemView()).thenReturn(mockListGroupItemView);
-        when(mockListGroupItemView.getListGroupItem()).thenReturn(mockDivElement);
-        when(mockListGroupItemView.getListGroupExpansion()).thenReturn(mockDivElement);
+        when(viewsProviderMock.getListGroupItemView()).thenReturn(listGroupItemViewMock);
+        when(listGroupItemViewMock.getListGroupItem()).thenReturn(divElementMock);
+        when(listGroupItemViewMock.getListGroupExpansion()).thenReturn(divElementMock);
+        when(listGroupItemViewMapMock.values()).thenReturn(listGroupItemViewValuesMock);
         this.listGroupItemPresenter = spy(new ListGroupItemPresenter() {
             {
-                listGroupItemViewList = mockListGroupItemViewList;
-                fieldItemPresenter = mockFieldItemPresenter;
-                viewsProvider = viewsProviderMOck;
+                listGroupItemViewMap = listGroupItemViewMapMock;
+                fieldItemPresenter = fieldItemPresenterMock;
+                viewsProvider = viewsProviderMock;
             }
         });
     }
@@ -73,84 +77,80 @@ public class ListGroupItemPresenterTest extends AbstractRightPanelTest {
     public void getDivElementByFactModel() {
         DivElement retrieved = listGroupItemPresenter.getDivElement(FACT_NAME, FACT_MODEL_TREE);
         assertNotNull(retrieved);
-        assertEquals(mockDivElement, retrieved);
-        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(""), eq(false));
-        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(""), eq(FACT_NAME), eq(FACT_MODEL_TREE));
+        assertEquals(divElementMock, retrieved);
+        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(""), eq(FACT_NAME), eq(false));
+        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(listGroupItemViewMock), eq(""), eq(FACT_NAME), eq(FACT_MODEL_TREE));
     }
 
     @Test
     public void getDivElementByStrings() {
         DivElement retrieved = listGroupItemPresenter.getDivElement(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
         assertNotNull(retrieved);
-        assertEquals(mockDivElement, retrieved);
-        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(FULL_PACKAGE), eq(true));
-        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(mockListGroupItemView), eq(VALUE), eq(VALUE_CLASS_NAME));
+        assertEquals(divElementMock, retrieved);
+        verify(listGroupItemPresenter, times(1)).commonGetListGroupItemView(eq(FULL_PACKAGE), eq(VALUE), eq(true));
+        verify(listGroupItemPresenter, times(1)).populateListGroupItemView(eq(listGroupItemViewMock), eq(VALUE), eq(VALUE_CLASS_NAME));
     }
 
     @Test
     public void onToggleRowExpansionDisabled() {
         listGroupItemPresenter.disable();
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
-        verify(mockListGroupItemViewList,never()).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView,never()).closeRow();
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        reset(mockListGroupItemView);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
-        verify(mockListGroupItemViewList,never()).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView,never()).expandRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, true);
+        verify(listGroupItemViewValuesMock, never()).contains(eq(listGroupItemViewMock));
+        verify(listGroupItemViewMock, never()).closeRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        reset(listGroupItemViewMock);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, false);
+        verify(listGroupItemViewValuesMock, never()).contains(eq(listGroupItemViewMock));
+        verify(listGroupItemViewMock, never()).expandRow();
     }
 
     @Test
     public void onToggleRowExpansionWithoutFactName() {
         listGroupItemPresenter.enable();
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
-        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(1)).closeRow();
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        reset(mockListGroupItemView);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
-        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(1)).expandRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, true);
+        verify(listGroupItemViewMock, times(1)).closeRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        reset(listGroupItemViewMock);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, false);
+        verify(listGroupItemViewMock, times(1)).expandRow();
     }
 
     @Test
     public void onToggleRowExpansionWithFactName() {
         listGroupItemPresenter.enable(FACT_NAME);
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, true);
-        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(1)).closeRow();
-        reset(mockListGroupItemViewList);
-        when(mockListGroupItemViewList.contains(mockListGroupItemView)).thenReturn(true);
-        reset(mockListGroupItemView);
-        listGroupItemPresenter.onToggleRowExpansion(mockListGroupItemView, false);
-        verify(mockListGroupItemViewList, times(1)).contains(eq(mockListGroupItemView));
-        verify(mockListGroupItemView, times(1)).expandRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, true);
+        verify(listGroupItemViewMock, times(1)).closeRow();
+        reset(listGroupItemViewMapMock);
+        when(listGroupItemViewValuesMock.contains(listGroupItemViewMock)).thenReturn(true);
+        reset(listGroupItemViewMock);
+        listGroupItemPresenter.onToggleRowExpansion(listGroupItemViewMock, false);
+        verify(listGroupItemViewMock, times(1)).expandRow();
     }
 
     @Test
     public void populateListGroupItemView() {
-        listGroupItemPresenter.populateListGroupItemView(mockListGroupItemView, "", FACT_NAME, FACT_MODEL_TREE);
-        verify(mockListGroupItemView, times(1)).setFactName(eq(FACT_NAME));
+        listGroupItemPresenter.populateListGroupItemView(listGroupItemViewMock, "", FACT_NAME, FACT_MODEL_TREE);
+        verify(listGroupItemViewMock, times(1)).setFactName(eq(FACT_NAME));
         Map<String, String> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
         for (String key : simpleProperties.keySet()) {
             String value = simpleProperties.get(key);
-            verify(mockFieldItemPresenter, times(1)).getLIElement(eq(FACT_NAME), eq(FACT_NAME), eq(key), eq(value));
+            verify(fieldItemPresenterMock, times(1)).getLIElement(eq(FACT_NAME), eq(FACT_NAME), eq(key), eq(value));
         }
-        verify(mockListGroupItemView, times(simpleProperties.size())).addFactField(anyObject());
-        reset(mockListGroupItemView);
+        verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField(anyObject());
+        reset(listGroupItemViewMock);
         Map<String, String> expandableProperties = FACT_MODEL_TREE.getExpandableProperties();
         for (String key : expandableProperties.keySet()) {
             String value = expandableProperties.get(key);
             verify(listGroupItemPresenter, times(1)).getDivElement(eq(""), eq(key), eq(value));
         }
-        verify(mockListGroupItemView, times(expandableProperties.size())).addExpandableFactField(anyObject());
+        verify(listGroupItemViewMock, times(expandableProperties.size())).addExpandableFactField(anyObject());
     }
 }
