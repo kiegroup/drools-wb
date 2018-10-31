@@ -111,7 +111,7 @@ public class ScenarioGridModelTest {
     private FactMapping factMappingMock;
 
     @Mock
-    private List<FactMappingValue> mockFactMappingValues;
+    private List<FactMappingValue> factMappingValuesMock;
 
     private List<GridColumn.HeaderMetaData> headerMetaDataList = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public class ScenarioGridModelTest {
         when(gridCellMock.getValue()).thenReturn(gridCellValueMock);
         when(gridCellValueMock.getValue()).thenReturn(GRID_CELL_TEXT);
 
-        when(scenarioMock.getUnmodifiableFactMappingValues()).thenReturn(mockFactMappingValues);
+        when(scenarioMock.getUnmodifiableFactMappingValues()).thenReturn(factMappingValuesMock);
 
         IntStream.range(0, ROW_COUNT).forEach(rowIndex -> {
             when(simulationMock.addScenario(rowIndex)).thenReturn(scenarioMock);
@@ -182,7 +182,7 @@ public class ScenarioGridModelTest {
         when(simulationMock.getScenarioByIndex(ROW_COUNT)).thenReturn(scenarioMock);
         when(simulationMock.cloneScenario(ROW_COUNT, ROW_COUNT + 1)).thenReturn(scenarioMock);
 
-        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(mockFactMappingValue));
+        when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(mockFactMappingValue));
         when(mockFactMappingValue.isError()).thenReturn(true);
 
         gridCellSupplier = () -> gridCellMock;
@@ -358,12 +358,12 @@ public class ScenarioGridModelTest {
     @Test
     public void refreshErrorsTest() {
         scenarioGridModel.refreshErrors();
-        verify(mockGridCell, times(24)).setError(eq(true));
+        verify(gridCellMock, times(24)).setError(eq(true));
 
-        reset(mockGridCell);
+        reset(gridCellMock);
         when(mockFactMappingValue.isError()).thenReturn(false);
         scenarioGridModel.refreshErrors();
-        verify(mockGridCell, times(24)).setError(eq(false));
+        verify(gridCellMock, times(24)).setError(eq(false));
     }
 
     @Test
@@ -371,12 +371,12 @@ public class ScenarioGridModelTest {
         FactMappingValue factMappingValue = mock(FactMappingValue.class);
         when(factMappingValue.isError()).thenReturn(true);
 
-        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.empty());
+        when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.empty());
         scenarioGridModel.refreshErrorsRow(0);
-        verify(mockGridCell, times(6)).setError(false);
+        verify(gridCellMock, times(6)).setError(false);
 
-        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
+        when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
         scenarioGridModel.refreshErrorsRow(0);
-        verify(mockGridCell, times(6)).setError(true);
+        verify(gridCellMock, times(6)).setError(true);
     }
 }
