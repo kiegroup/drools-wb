@@ -278,6 +278,20 @@ public class CommandExecutorTest extends AbstractCommandTest {
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         reset(commandExecutor);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnType(event.getClassName())).thenReturn(true);
+        commandExecutor.onEvent(event);
+        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderCommand.class));
+        when(scenarioGridModelMock.isSameSelectedColumnType(event.getClassName())).thenReturn(false);
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
+        commandExecutor.onEvent(event);
+        verify(deletePopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextQuestion()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextDanger()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.changeType()),
+                                                        isA(Command.class));
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
         commandExecutor.onEvent(event);
         verify(commandExecutor, times(1)).commonExecute(isA(SetInstanceHeaderCommand.class));
     }
@@ -306,26 +320,26 @@ public class CommandExecutorTest extends AbstractCommandTest {
         when(scenarioGridModelMock.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(true);
         commandExecutor.onEvent(event);
         verify(preserveDeletePopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextQuestion()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption1()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption2()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.preserveValues()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
-                                                              isA(Command.class),
-                                                              isA(Command.class));
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextQuestion()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption1()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption2()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.preserveValues()),
+                                                                eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                                                                isA(Command.class),
+                                                                isA(Command.class));
 
         when(scenarioGridModelMock.isSameSelectedColumnType(VALUE_CLASS_NAME)).thenReturn(false);
         reset(commandExecutor);
         commandExecutor.onEvent(event);
         verify(deletePopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
-                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
-                                                              isA(Command.class));
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
+                                                        eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                                                        isA(Command.class));
     }
 
     @Test
