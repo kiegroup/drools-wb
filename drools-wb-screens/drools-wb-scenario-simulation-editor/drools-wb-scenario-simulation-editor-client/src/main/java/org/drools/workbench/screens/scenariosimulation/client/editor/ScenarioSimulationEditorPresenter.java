@@ -125,7 +125,6 @@ public class ScenarioSimulationEditorPresenter
         //Zero-parameter constructor for CDI proxies
     }
 
-
     @Inject
     public ScenarioSimulationEditorPresenter(final Caller<ScenarioSimulationService> service,
                                              final ScenarioSimulationProducer scenarioSimulationProducer,
@@ -220,8 +219,8 @@ public class ScenarioSimulationEditorPresenter
                 && placeRequest.getPath().equals(this.path)) {
             hideScenarioSimulationDockEvent.fire(new OnHideScenarioSimulationDockEvent());
             view.getScenarioGridLayer().getScenarioGrid().clearSelections();
-                unRegisterRightPanelCallback();
-                clearRightPanelStatus();
+            unRegisterRightPanelCallback();
+            clearRightPanelStatus();
             testRunnerReportingScreen.reset();
         }
     }
@@ -247,7 +246,15 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(), model);
+        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
+    }
+
+    RemoteCallback<ScenarioSimulationModel> refreshModel() {
+        return newModel -> {
+            this.model = newModel;
+            view.refreshContent(newModel.getSimulation());
+        };
     }
 
     protected void registerRightPanelCallback() {
@@ -461,6 +468,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     private boolean isDirty() {
+        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
         return originalHash != currentHashcode;
     }

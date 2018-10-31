@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
@@ -54,6 +55,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -112,6 +114,9 @@ public class ScenarioGridModelTest {
     private List<FactMappingValue> mockFactMappingValues;
 
     private List<GridColumn.HeaderMetaData> headerMetaDataList = new ArrayList<>();
+
+    @Mock
+    private FactMappingValue mockFactMappingValue;
 
     private List<GridRow> gridRows = new ArrayList<>();
 
@@ -176,6 +181,9 @@ public class ScenarioGridModelTest {
         when(simulationMock.addScenario(ROW_COUNT)).thenReturn(scenarioMock);
         when(simulationMock.getScenarioByIndex(ROW_COUNT)).thenReturn(scenarioMock);
         when(simulationMock.cloneScenario(ROW_COUNT, ROW_COUNT + 1)).thenReturn(scenarioMock);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(mockFactMappingValue));
+        when(mockFactMappingValue.isError()).thenReturn(true);
 
         gridCellSupplier = () -> gridCellMock;
         scenarioGridModel = spy(new ScenarioGridModel(false) {
@@ -345,5 +353,30 @@ public class ScenarioGridModelTest {
         gridColumns.add(indexColumnPosition, scenarioIndexGridColumnMock);
         scenarioGridModel.updateIndexColumn();
         verify(scenarioGridModel, times(3)).setCellValue(anyInt(), eq(indexColumnPosition), isA(ScenarioGridCellValue.class));
+    }
+
+    @Test
+    public void refreshErrorsTest() {
+        scenarioGridModel.refreshErrors();
+        verify(mockGridCell, times(24)).setError(eq(true));
+
+        reset(mockGridCell);
+        when(mockFactMappingValue.isError()).thenReturn(false);
+        scenarioGridModel.refreshErrors();
+        verify(mockGridCell, times(24)).setError(eq(false));
+    }
+
+    @Test
+    public void refreshErrorsRow() {
+        FactMappingValue factMappingValue = mock(FactMappingValue.class);
+        when(factMappingValue.isError()).thenReturn(true);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.empty());
+        scenarioGridModel.refreshErrorsRow(0);
+        verify(mockGridCell, times(6)).setError(false);
+
+        when(mockScenario.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
+        scenarioGridModel.refreshErrorsRow(0);
+        verify(mockGridCell, times(6)).setError(true);
     }
 }
