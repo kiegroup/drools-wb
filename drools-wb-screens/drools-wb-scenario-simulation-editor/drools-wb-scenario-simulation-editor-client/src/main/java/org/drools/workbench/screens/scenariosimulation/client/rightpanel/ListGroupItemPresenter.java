@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -60,6 +61,19 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Override
     public void unselectAll() {
         listGroupItemViewList.forEach(ListGroupItemView::unselect);
+    }
+
+    @Override
+    public void selectProperty(String factName, String propertyName) {
+        listGroupItemViewList.stream().filter(listGroupItemView -> factName.equals(listGroupItemView.getFactName()))
+        .findFirst()
+        .ifPresent(new Consumer<ListGroupItemView>() {
+            @Override
+            public void accept(ListGroupItemView listGroupItemView) {
+                onToggleRowExpansion(listGroupItemView, listGroupItemView.isShown());
+
+            }
+        });
     }
 
     @Override

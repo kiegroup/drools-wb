@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
@@ -177,6 +179,25 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public void onPerfectMatchSearchedEvent(String search, boolean notEqualsSearch) {
+        clearDataObjectList();
+        clearInstanceList();
+        if (dataObjectFieldsMap.isEmpty()) {
+            return;
+        }
+        dataObjectFieldsMap
+                .entrySet()
+                .stream()
+                .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
+                .forEach(filteredEntry -> addDataObjectListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        instanceFieldsMap
+                .entrySet()
+                .stream()
+                .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
+                .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+    }
+
+    @Override
     public void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree) {
         DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
         view.getDataObjectListContainer().appendChild(toAdd);
@@ -197,11 +218,14 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
-    public void onEnableEditorTab(String factName) {
-        onSearchedEvent(factName);
+    public void onEnableEditorTab(String factName, String propertyName, boolean notEqualsSearch) {
+        onPerfectMatchSearchedEvent(factName, notEqualsSearch);
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
+        if (propertyName != null && !notEqualsSearch) {
+            listGroupItemPresenter.selectProperty(factName, propertyName);
+        }
     }
 
     @Override
@@ -246,6 +270,15 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 String fullPackage = factModelTree.getFullPackage();
                 eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName()));
             }
+        }
+    }
+
+    protected boolean filterTerm(String key, String search, boolean notEqualsSearch) {
+        List<String> terms = Arrays.asList(search.split(";"));
+        if (notEqualsSearch) {
+            return !terms.contains(key);
+        } else {
+            return terms.contains(key);
         }
     }
 }

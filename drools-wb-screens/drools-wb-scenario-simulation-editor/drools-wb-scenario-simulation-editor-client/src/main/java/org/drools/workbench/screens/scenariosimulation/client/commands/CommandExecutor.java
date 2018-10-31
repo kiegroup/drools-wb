@@ -182,7 +182,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
     @Override
     public void onEvent(EnableRightPanelEvent event) {
         if (rightPanelPresenter != null) {
-            commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFactName()));
+            commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
         }
     }
 

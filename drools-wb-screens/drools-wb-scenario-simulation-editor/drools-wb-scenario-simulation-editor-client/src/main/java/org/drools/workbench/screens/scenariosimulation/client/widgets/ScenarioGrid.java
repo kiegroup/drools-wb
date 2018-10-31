@@ -157,7 +157,11 @@ public class ScenarioGrid extends BaseGridWidget {
      * @return
      */
     protected boolean isPropertyAssigned(boolean instanceAssigned, FactMapping factMapping) {
-        return instanceAssigned && !factMapping.getExpressionElements().isEmpty();
+        if (FactIdentifier.DESCRIPTION.equals(factMapping.getFactIdentifier())) {
+            return true;
+        } else {
+            return instanceAssigned && !factMapping.getExpressionElements().isEmpty();
+        }
     }
 
     /**

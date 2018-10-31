@@ -70,7 +70,18 @@ public interface RightPanelView
 
         void onShowClearButton();
 
+        /**
+         * Filter the data in the right panel if they <b>contains</b> the given search string, case-unsensitive. To be used by manual search
+         * @param search
+         */
         void onSearchedEvent(String search);
+
+        /**
+         * Filter the data in the right panel if they are <b>exactly the same</b> as the given search string, case-sensitive. To be used by filter fired by grid.
+         * @param search
+         * @param notEqualsSearch set to <code>true</code> to perform a <b>not</b> filter, i.e. to show only results <b>different</b> than filterTerm
+         */
+        void onPerfectMatchSearchedEvent(String search, boolean notEqualsSearch);
 
         void clearDataObjectList();
 
@@ -105,8 +116,10 @@ public interface RightPanelView
          * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
          *
          * @param factName
+         * @param propertyName the string to <b>eventually</b> use to select the property in the right panel
+         * @param notEqualsSearch set to <code>true</code> to perform a <b>not</b> filter, i.e. to show only results <b>different</b> than filterTerm
          */
-        void onEnableEditorTab(String factName);
+        void onEnableEditorTab(String factName, String propertyName, boolean notEqualsSearch);
 
         /**
          * By default the <b>Editor Tab</b> must be disabled (no user interaction allowed).

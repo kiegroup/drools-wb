@@ -30,7 +30,9 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,6 +107,16 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
             @Override
             protected boolean manageRightClick(ContextMenuEvent event) {
                 return true;
+            }
+
+            @Override
+            protected String getExistingInstances(String group, ScenarioGridModel scenarioGridModel) {
+                return "test1;test2;test3";
+            }
+
+            @Override
+            protected String getPropertyName(Simulation simulation, int columnIndex) {
+                return "test.name";
             }
         });
         mockManagedMenus = spy(scenarioSimulationGridPanelClickHandler.managedMenus);

@@ -17,6 +17,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
@@ -30,7 +32,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -195,8 +199,8 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
 
     @Test
     public void onEnableEditorTabWithFactName() {
-        rightPanelPresenter.onEnableEditorTab(FACT_NAME);
-        verify(rightPanelPresenter, times(1)).onSearchedEvent(eq(FACT_NAME));
+        rightPanelPresenter.onEnableEditorTab(FACT_NAME, null, false);
+        verify(rightPanelPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(false));
         verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
         verify(listGroupItemPresenterMock, never()).enable();
         verify(listGroupItemPresenterMock, never()).disable();
@@ -235,4 +239,23 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         verify(eventBusMock, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
 
     }
+
+    @Test
+    public void filterTerm() {
+        String key = getRandomString();
+        String search = String.join(";", IntStream.range(0, 4)
+                .mapToObj(i -> getRandomString())
+                .collect(Collectors.toSet()));
+        assertTrue(rightPanelPresenter.filterTerm(key, key, false));
+        assertFalse(rightPanelPresenter.filterTerm(key, key, true));
+
+        assertFalse(rightPanelPresenter.filterTerm(key, search, false));
+        assertTrue(rightPanelPresenter.filterTerm(key, search, true));
+
+        search += ";" + key;
+        assertTrue(rightPanelPresenter.filterTerm(key, search, false));
+        assertFalse(rightPanelPresenter.filterTerm(key, search, true));
+
+    }
+
 }

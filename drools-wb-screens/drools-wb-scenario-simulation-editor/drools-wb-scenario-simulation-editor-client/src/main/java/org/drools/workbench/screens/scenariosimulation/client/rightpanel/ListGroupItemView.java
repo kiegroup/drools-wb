@@ -81,6 +81,8 @@ public interface ListGroupItemView extends IsWidget,
 
     void unselect();
 
+    boolean isShown();
+
     interface Presenter {
 
         /**
@@ -132,6 +134,13 @@ public interface ListGroupItemView extends IsWidget,
         void onSelectedElement(FieldItemView selected);
 
         void unselectAll();
+
+        /**
+         * Expand the node and select the given property
+         * @param factName
+         * @param propertyName
+         */
+        void selectProperty(String factName, String propertyName);
 
 
     }

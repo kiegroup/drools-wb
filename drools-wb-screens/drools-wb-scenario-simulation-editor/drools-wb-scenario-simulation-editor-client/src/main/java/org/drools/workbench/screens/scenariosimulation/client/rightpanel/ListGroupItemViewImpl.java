@@ -90,7 +90,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent event) {
-        presenter.onToggleRowExpansion(this, listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE));
+        presenter.onToggleRowExpansion(this, isShown());
     }
 
     @Override
@@ -224,5 +224,10 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
         listGroupItemHeader.addClassName(LIST_VIEW_PF_EXPAND_ACTIVE);
         listGroupItemContainer.removeClassName(HIDDEN);
         faAngleRight.addClassName(FA_ANGLE_DOWN);
+    }
+
+    @Override
+    public boolean isShown() {
+        return listGroupItemHeader.getClassName().contains(LIST_VIEW_PF_EXPAND_ACTIVE);
     }
 }
