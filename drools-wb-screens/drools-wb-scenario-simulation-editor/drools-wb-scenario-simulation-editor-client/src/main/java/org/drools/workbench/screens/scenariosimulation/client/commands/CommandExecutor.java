@@ -22,7 +22,6 @@ import java.util.List;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
-import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -102,12 +101,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
     protected DeletePopupPresenter deletePopupPresenter;
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
-    EventBus eventBus;
+    protected EventBus eventBus;
 
-    List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
+    protected List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
 
-    @Inject
-    Event<NotificationEvent> notificationEvent;
+    protected Event<NotificationEvent> notificationEvent;
 
     public CommandExecutor() {
         // CDI
@@ -143,6 +141,10 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     public void setPreserveDeletePopupPresenter(PreserveDeletePopupPresenter preserveDeletePopupPresenter) {
         this.preserveDeletePopupPresenter = preserveDeletePopupPresenter;
+    }
+
+    public void setNotificationEvent(Event<NotificationEvent> notificationEvent) {
+        this.notificationEvent = notificationEvent;
     }
 
     @PreDestroy
