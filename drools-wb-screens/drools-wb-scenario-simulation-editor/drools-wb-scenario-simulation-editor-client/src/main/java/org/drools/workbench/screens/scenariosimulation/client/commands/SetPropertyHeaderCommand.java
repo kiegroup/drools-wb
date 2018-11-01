@@ -72,8 +72,7 @@ public class SetPropertyHeaderCommand extends AbstractCommand {
             fullPackage += ".";
         }
         String canonicalClassName = fullPackage + className;
-        FactIdentifier factIdentifier = FactIdentifier.create(className, canonicalClassName);
-
+        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
         final GridData.Range instanceLimits = model.getInstanceLimits(columnIndex);
         IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() +1)
                 .forEach(index -> {

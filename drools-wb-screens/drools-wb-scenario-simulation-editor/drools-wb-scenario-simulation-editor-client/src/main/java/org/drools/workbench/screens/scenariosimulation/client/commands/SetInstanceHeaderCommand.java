@@ -61,6 +61,11 @@ public class SetInstanceHeaderCommand extends AbstractCommand {
             return;
         }
         int columnIndex = model.getColumns().indexOf(selectedColumn);
+        if (!fullPackage.endsWith(".")) {
+            fullPackage += ".";
+        }
+        String canonicalClassName = fullPackage + className;
+        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
         final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
         informationHeaderMetaData.setTitle(className);
         selectedColumn.setInstanceAssigned(true);
@@ -68,12 +73,6 @@ public class SetInstanceHeaderCommand extends AbstractCommand {
         selectedColumn.setPlaceHolder(ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         propertyHeaderMetaData.setTitle(getPropertyPlaceHolder(columnIndex));
         propertyHeaderMetaData.setReadOnly(false);
-        String instance = selectedColumn.getInformationHeaderMetaData().getTitle();
-        if (!fullPackage.endsWith(".")) {
-            fullPackage += ".";
-        }
-        String canonicalClassName = fullPackage + className;
-        FactIdentifier factIdentifier = FactIdentifier.create(instance, canonicalClassName);
         selectedColumn.setFactIdentifier(factIdentifier);
         model.updateColumnInstance(columnIndex, selectedColumn);
     }

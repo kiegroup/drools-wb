@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -22,7 +25,9 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider.getHeaderTextBoxFactory;
@@ -89,5 +94,13 @@ public abstract class AbstractCommand implements Command {
     protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
         // indirection add for test
         return getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, false, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+    }
+
+    protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle) {
+        final List<GridColumn<?>> columns = scenarioGridLayer.getScenarioGrid().getModel().getColumns();
+        return columns.stream()
+                .filter(column -> columnTitle.equals (((ScenarioGridColumn)column).getInformationHeaderMetaData().getTitle()))
+                .findFirst()
+                .map(column -> ((ScenarioGridColumn)column).getFactIdentifier());
     }
 }
