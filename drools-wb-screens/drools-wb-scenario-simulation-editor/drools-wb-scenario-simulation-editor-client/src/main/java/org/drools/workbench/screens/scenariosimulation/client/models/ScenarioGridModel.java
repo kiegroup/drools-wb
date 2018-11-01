@@ -26,6 +26,7 @@ import java.util.stream.IntStream;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -44,6 +45,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
+import org.uberfire.workbench.events.NotificationEvent;
 
 public class ScenarioGridModel extends BaseGridData {
 
@@ -571,6 +573,26 @@ public class ScenarioGridModel extends BaseGridData {
 
     void checkSimulation() {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
+    }
+
+    public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
+        ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
+        boolean isValid = !headerToEdit.isInstanceHeader() || isUnique(value, rowIndex, columnIndex);
+        if (!isValid) {
+            eventBus.fireEvent(new ScenarioNotificationEvent("Name '" + value + "' is already used",
+                                                             NotificationEvent.NotificationType.ERROR));
+        }
+        return isValid;
+    }
+
+    boolean isUnique(String value, int rowIndex, int columnIndex) {
+        Range instanceLimits = getInstanceLimits(columnIndex);
+        return IntStream.range(0, getColumnCount())
+                .filter(i -> i < instanceLimits.getMinRowIndex() || i > instanceLimits.getMaxRowIndex())
+                .mapToObj(i -> getColumns().get(i))
+                .filter(elem -> elem.getHeaderMetaData().size() > rowIndex)
+                .map(elem -> (ScenarioHeaderMetaData) elem.getHeaderMetaData().get(rowIndex))
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
     public void resetErrors() {

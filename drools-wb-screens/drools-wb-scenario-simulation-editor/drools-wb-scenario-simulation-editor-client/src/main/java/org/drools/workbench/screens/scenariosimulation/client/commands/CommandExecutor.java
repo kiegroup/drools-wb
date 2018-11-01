@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -38,6 +40,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
@@ -53,6 +56,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependCo
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioNotificationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -65,6 +69,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
+import org.uberfire.workbench.events.NotificationEvent;
 
 /**
  * This class is meant to be a centralized listener for events fired up by UI, responding to them with specific <code>Command</code>s.
@@ -85,6 +90,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                         PrependRowEventHandler,
                                         ReloadRightPanelEventHandler,
                                         ScenarioGridReloadEventHandler,
+                                        ScenarioNotificationEventHandler,
                                         SetInstanceHeaderEventHandler,
                                         SetPropertyHeaderEventHandler {
 
@@ -99,6 +105,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
     EventBus eventBus;
 
     List<HandlerRegistration> handlerRegistrationList = new ArrayList<>();
+
+    @Inject
+    Event<NotificationEvent> notificationEvent;
 
     public CommandExecutor() {
         // CDI
@@ -219,6 +228,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(ScenarioNotificationEvent event) {
+        notificationEvent.fire(new NotificationEvent(event.getMessage(), event.getType()));
+    }
+
+    @Override
     public void onEvent(SetInstanceHeaderEvent event) {
         if (model.getSelectedColumn() == null) {
             return;
@@ -293,6 +307,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ReloadRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ScenarioNotificationEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetInstanceHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));
     }
