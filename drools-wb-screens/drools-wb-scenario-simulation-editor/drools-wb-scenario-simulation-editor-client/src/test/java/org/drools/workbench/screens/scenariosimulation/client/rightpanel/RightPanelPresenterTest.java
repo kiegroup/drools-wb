@@ -193,7 +193,6 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         verify(rightPanelPresenter, times(1)).onSearchedEvent(eq(""));
         verify(listGroupItemPresenterMock, times(1)).enable();
         verify(listGroupItemPresenterMock, never()).enable(anyString());
-        verify(listGroupItemPresenterMock, never()).disable();
         verify(rightPanelViewMock, times(1)).enableEditorTab();
     }
 
@@ -203,7 +202,6 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         verify(rightPanelPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(false));
         verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
         verify(listGroupItemPresenterMock, never()).enable();
-        verify(listGroupItemPresenterMock, never()).disable();
         verify(rightPanelViewMock, times(1)).enableEditorTab();
     }
 
