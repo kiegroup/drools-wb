@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.Map;
+
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -23,7 +25,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
 /**
@@ -50,9 +51,9 @@ public class PrependColumnCommand extends AbstractCommand {
     public void execute() {
         final int index = model.getFirstIndexLeftOfGroup(columnGroup);
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        final int nextColumnCount = model.nextColumnCount();
-        String instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
-        String propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
+        Map.Entry<String, String> validPlaceholders = model.getValidPlaceholders();
+        String instanceTitle = validPlaceholders.getKey();
+        String propertyTitle = validPlaceholders.getValue();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,
                                                                                       columnId,

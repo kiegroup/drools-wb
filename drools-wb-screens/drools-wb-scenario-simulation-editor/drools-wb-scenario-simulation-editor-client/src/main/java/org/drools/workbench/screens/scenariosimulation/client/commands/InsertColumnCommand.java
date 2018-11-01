@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 
@@ -29,9 +30,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-
-import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getInstancePlaceHolder;
-import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
 /**
  * <code>Command</code> to <b>insert</b> a column.
@@ -74,9 +72,9 @@ public class InsertColumnCommand extends AbstractCommand {
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        final int nextColumnCount = model.nextColumnCount();
-        String instanceTitle = asProperty ? originalInstanceTitle : getInstancePlaceHolder(nextColumnCount);
-        String propertyTitle = getPropertyPlaceHolder(nextColumnCount);
+        Map.Entry<String, String> validPlaceholders = model.getValidPlaceholders();
+        String instanceTitle = asProperty ? originalInstanceTitle : validPlaceholders.getKey();
+        String propertyTitle = validPlaceholders.getValue();
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,

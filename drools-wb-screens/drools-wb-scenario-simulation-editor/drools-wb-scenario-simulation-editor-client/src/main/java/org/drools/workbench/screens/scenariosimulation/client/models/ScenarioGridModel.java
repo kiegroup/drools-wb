@@ -15,8 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,6 +85,18 @@ public class ScenarioGridModel extends BaseGridData {
 
     public int nextColumnCount() {
         return columnCounter.getAndIncrement();
+    }
+
+    public Map.Entry<String, String> getValidPlaceholders() {
+        String instanceTitle;
+        String propertyTitle;
+        do {
+            int nextColumnCount = nextColumnCount();
+            instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
+            propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
+        } while (!isNewInstanceName(instanceTitle) ||
+                !isNewPropertyName(propertyTitle));
+        return new AbstractMap.SimpleEntry<>(instanceTitle, propertyTitle);
     }
 
     /**
@@ -592,6 +606,20 @@ public class ScenarioGridModel extends BaseGridData {
                 .mapToObj(i -> getColumns().get(i))
                 .filter(elem -> elem.getHeaderMetaData().size() > rowIndex)
                 .map(elem -> (ScenarioHeaderMetaData) elem.getHeaderMetaData().get(rowIndex))
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
+    }
+
+    boolean isNewInstanceName(String value) {
+        return getColumns().stream()
+                .map(elem -> ((ScenarioGridColumn) elem).getInformationHeaderMetaData())
+                .filter(Objects::nonNull)
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
+    }
+
+    boolean isNewPropertyName(String value) {
+        return getColumns().stream()
+                .map(elem -> ((ScenarioGridColumn) elem).getPropertyHeaderMetaData())
+                .filter(Objects::nonNull)
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
