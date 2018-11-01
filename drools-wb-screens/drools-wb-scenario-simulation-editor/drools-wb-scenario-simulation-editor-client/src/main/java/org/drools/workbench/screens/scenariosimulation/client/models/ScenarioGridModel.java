@@ -374,18 +374,20 @@ public class ScenarioGridModel extends BaseGridData {
         if (Objects.equals(editedMetadata.getTitle(), value)) {
             return;
         }
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactMapping factMappingToEdit = simulationDescriptor.getFactMappingByIndex(columnIndex);
         if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
-            Range instanceLimits = getInstanceLimits(columnIndex);
-            final int firstIndexOfGroup = instanceLimits.getMinRowIndex();
-            final int lastIndexOfGroup = instanceLimits.getMaxRowIndex();
-            IntStream.range(firstIndexOfGroup, lastIndexOfGroup + 1).forEach(index -> {
-                ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-                simulation.getSimulationDescriptor().getFactMappingByIndex(index).setFactAlias(value);
+            IntStream.range(0, getColumnCount()).forEach(index -> {
+                FactMapping factMappingToCheck = simulationDescriptor.getFactMappingByIndex(index);
+                if (Objects.equals(factMappingToCheck.getFactIdentifier(), factMappingToEdit.getFactIdentifier())) {
+                    ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
+                    factMappingToCheck.setFactAlias(value);
+                }
             });
             eventBus.fireEvent(new ReloadRightPanelEvent(false));
         } else {
             editedMetadata.setTitle(value);
-            simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).setExpressionAlias(value);
+            factMappingToEdit.setExpressionAlias(value);
         }
     }
 
@@ -601,9 +603,12 @@ public class ScenarioGridModel extends BaseGridData {
 
     boolean isUnique(String value, int rowIndex, int columnIndex) {
         Range instanceLimits = getInstanceLimits(columnIndex);
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return IntStream.range(0, getColumnCount())
-                .filter(i -> i < instanceLimits.getMinRowIndex() || i > instanceLimits.getMaxRowIndex())
-                .mapToObj(i -> getColumns().get(i))
+                .filter(index -> index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex())
+                .filter(index -> !Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
+                .mapToObj(index -> getColumns().get(index))
                 .filter(elem -> elem.getHeaderMetaData().size() > rowIndex)
                 .map(elem -> (ScenarioHeaderMetaData) elem.getHeaderMetaData().get(rowIndex))
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
