@@ -60,7 +60,6 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
     /**
      * Constructor for ScenarioHeaderMetaData - readonly default to <code>false</code>
-     *
      * @param columnId
      * @param columnTitle
      * @param columnGroup
@@ -100,5 +99,14 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
     public boolean isPropertyHeader() {
         return propertyHeader;
+    }
+
+    @Override
+    public String toString() {
+        return "ScenarioHeaderMetaData{" +
+                "title=" + getTitle() +
+                ", columnGroup=" + getColumnGroup() +
+                ", columnId=" + getColumnId() +
+                '}';
     }
 }

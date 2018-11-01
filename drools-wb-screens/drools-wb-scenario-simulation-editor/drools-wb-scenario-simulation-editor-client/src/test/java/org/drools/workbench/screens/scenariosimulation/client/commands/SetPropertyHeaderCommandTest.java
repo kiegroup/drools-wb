@@ -69,7 +69,7 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
-        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
     }
 
     @Test
@@ -79,6 +79,6 @@ public class SetPropertyHeaderCommandTest extends AbstractCommandTest {
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(COLUMN_GROUP);
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
-        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(FULL_PACKAGE), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
     }
 }

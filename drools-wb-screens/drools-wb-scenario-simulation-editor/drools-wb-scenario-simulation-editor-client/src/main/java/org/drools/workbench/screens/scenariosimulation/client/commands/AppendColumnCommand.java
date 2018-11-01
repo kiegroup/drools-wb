@@ -19,8 +19,10 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
@@ -52,13 +54,15 @@ public class AppendColumnCommand extends AbstractCommand  {
         final int nextColumnCount = model.nextColumnCount();
         String instanceTitle = FactMapping.getInstancePlaceHolder(nextColumnCount);
         String propertyTitle = FactMapping.getPropertyPlaceHolder(nextColumnCount);
-        model.insertColumn(index, getScenarioGridColumnLocal(instanceTitle,
-                                                             propertyTitle,
-                                                        columnId,
-                                                        columnGroup,
-                                                        factMappingType,
-                                                        scenarioGridPanel,
-                                                        scenarioGridLayer,
-                                                        ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
+                                                                                      propertyTitle,
+                                                                                      columnId,
+                                                                                      columnGroup,
+                                                                                      factMappingType,
+                                                                                      scenarioGridPanel,
+                                                                                      scenarioGridLayer,
+                                                                                      ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
+        scenarioGridColumnLocal.setFactIdentifier(FactIdentifier.EMPTY);
+        model.insertColumn(index, scenarioGridColumnLocal);
     }
 }

@@ -77,7 +77,9 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
             }
         }
         key = factName + "." + propertyName;
-        fieldItemPresenter.fieldItemMap.get(key).onFieldElementClick();
+        if (fieldItemPresenter.fieldItemMap.containsKey(key)) {
+            fieldItemPresenter.fieldItemMap.get(key).onFieldElementClick();
+        }
     }
 
     @Override
@@ -121,9 +123,6 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         if (disabled.get()) {
             return;
         }
-//        if (listGroupItemViewMap.stream().anyMatch(listStored -> listStored.getFactType().equals(listGroupItemView.getFactType())
-//                && listStored.getParentPath().equals(listGroupItemView.getParentPath())
-//                && listStored.getFactName().equals(listGroupItemView.getFactName()))) {
         if (currentlyShown) {
             listGroupItemView.closeRow();
         } else {
@@ -139,7 +138,6 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
             }
             listGroupItemView.expandRow();
         }
-//        }
     }
 
     @Override

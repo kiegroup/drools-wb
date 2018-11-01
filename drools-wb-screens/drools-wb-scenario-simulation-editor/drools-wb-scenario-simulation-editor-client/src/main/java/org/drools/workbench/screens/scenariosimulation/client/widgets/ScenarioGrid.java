@@ -116,6 +116,7 @@ public class ScenarioGrid extends BaseGridWidget {
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
         scenarioGridColumn.setReadOnly(!isPropertyAssigned);
+        scenarioGridColumn.setFactIdentifier(factIdentifier);
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
 

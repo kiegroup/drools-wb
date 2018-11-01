@@ -23,6 +23,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 
 import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
@@ -67,6 +68,13 @@ public class SetInstanceHeaderCommand extends AbstractCommand {
         selectedColumn.setPlaceHolder(ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         propertyHeaderMetaData.setTitle(getPropertyPlaceHolder(columnIndex));
         propertyHeaderMetaData.setReadOnly(false);
-        model.updateColumnInstance(columnIndex, selectedColumn, fullPackage, className);
+        String instance = selectedColumn.getInformationHeaderMetaData().getTitle();
+        if (!fullPackage.endsWith(".")) {
+            fullPackage += ".";
+        }
+        String canonicalClassName = fullPackage + className;
+        FactIdentifier factIdentifier = FactIdentifier.create(instance, canonicalClassName);
+        selectedColumn.setFactIdentifier(factIdentifier);
+        model.updateColumnInstance(columnIndex, selectedColumn);
     }
 }

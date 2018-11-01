@@ -363,8 +363,11 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                     String complexSearch = getExistingInstances(group, scenarioGrid.getModel());
                     toFire = new EnableRightPanelEvent(complexSearch, true);
                 } else if (clickedScenarioHeaderMetadata.isPropertyHeader()) {
-                    final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
-                    String propertyName = optionalSimulation.map(simulation -> getPropertyName(simulation, uiColumnIndex)).orElse(null);
+                    String propertyName = null;
+                    if (scenarioGridColumn.isPropertyAssigned()) {
+                        final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
+                        propertyName = optionalSimulation.map(simulation -> getPropertyName(simulation, uiColumnIndex)).orElse(null);
+                    }
                     toFire = propertyName != null ? new EnableRightPanelEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle(), propertyName) : new EnableRightPanelEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
                 } else {
                     String complexSearch = getExistingInstances(group, scenarioGrid.getModel());

@@ -191,33 +191,24 @@ public class ScenarioGridModel extends BaseGridData {
      * @param columnIndex
      * @param column
      */
-    public void updateColumnInstance(int columnIndex, final GridColumn<?> column, String fullPackage, String value) {
+    public void updateColumnInstance(int columnIndex, final GridColumn<?> column) {
         checkSimulation();
         deleteColumn(columnIndex);
-        String instance = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
-        if (!fullPackage.endsWith(".")) {
-            fullPackage += ".";
-        }
-        String canonicalClassName = fullPackage + value;
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        final Optional<FactIdentifier> factIdentifierOptional = simulation.getSimulationDescriptor()
-                .getFactMappingsByFactName(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle())
-                .stream()
-                .filter(factMapping -> ei.getType().equals(factMapping.getExpressionIdentifier().getType()))
-                .findFirst()
-                .map(FactMapping::getFactIdentifier);
-        FactIdentifier factIdentifier = factIdentifierOptional.orElse(FactIdentifier.create(instance, canonicalClassName));
-        commonAddColumn(columnIndex, column, factIdentifier, ei);
+        commonAddColumn(columnIndex, column, ei);
     }
 
     /**
      * This method update the type mapped inside a give column and updates the underlying model
      * @param columnIndex
+     * @param column
      * @param value
+     * @param lastLevelClassName
+     * @param keepData
      */
-    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, String fullPackage, String value, String lastLevelClassName, boolean keepData) {
+    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, String value, String lastLevelClassName, boolean keepData) {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
         if (keepData) {
@@ -227,21 +218,9 @@ public class ScenarioGridModel extends BaseGridData {
         deleteColumn(columnIndex);
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
-        String instance = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
         String[] elements = value.split("\\.");
-        if (!fullPackage.endsWith(".")) {
-            fullPackage += ".";
-        }
-        String canonicalClassName = fullPackage + elements[0];
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        final Optional<FactIdentifier> factIdentifierOptional = simulation.getSimulationDescriptor()
-                .getFactMappingsByFactName(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle())
-                .stream()
-                .filter(factMapping -> ei.getType().equals(factMapping.getExpressionIdentifier().getType()))
-                .findFirst()
-                .map(FactMapping::getFactIdentifier);
-        FactIdentifier factIdentifier = factIdentifierOptional.orElse(FactIdentifier.create(instance, canonicalClassName));
-        commonAddColumn(columnIndex, column, factIdentifier, ei);
+        commonAddColumn(columnIndex, column, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         IntStream.range(1, elements.length)
                 .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
@@ -524,14 +503,7 @@ public class ScenarioGridModel extends BaseGridData {
         String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
         final ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        final Optional<FactIdentifier> factIdentifierOptional = simulation.getSimulationDescriptor()
-                .getFactMappingsByFactName(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle())
-                .stream()
-                .filter(factMapping -> ei.getType().equals(factMapping.getExpressionIdentifier().getType()))
-                .findFirst()
-                .map(FactMapping::getFactIdentifier);
-        FactIdentifier factIdentifier = factIdentifierOptional.orElse(FactIdentifier.EMPTY);
-        commonAddColumn(index, column, factIdentifier, ei);
+        commonAddColumn(index, column, ei);
     }
 
     /**
@@ -539,16 +511,15 @@ public class ScenarioGridModel extends BaseGridData {
      * If index == -1 -> add, otherwise insert.
      * @param index
      * @param column
-     * @param factIdentifier
      * @param ei
      */
-    protected void commonAddColumn(final int index, final GridColumn<?> column, FactIdentifier factIdentifier, ExpressionIdentifier ei) {
+    protected void commonAddColumn(final int index, final GridColumn<?> column, ExpressionIdentifier ei) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         String instanceTitle = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
         String propertyTitle = ((ScenarioGridColumn) column).getPropertyHeaderMetaData().getTitle();
         final int columnIndex = index == -1 ? getColumnCount() : index;
         try {
-            final FactMapping createdFactMapping = simulationDescriptor.addFactMapping(columnIndex, instanceTitle, factIdentifier, ei);
+            final FactMapping createdFactMapping = simulationDescriptor.addFactMapping(columnIndex, instanceTitle, ((ScenarioGridColumn) column).getFactIdentifier(), ei);
             createdFactMapping.setExpressionAlias(propertyTitle);
             if (index == -1) {  // This is actually an append
                 super.appendColumn(column);

@@ -69,6 +69,6 @@ public class SetInstanceHeaderCommandTest extends AbstractCommandTest {
         verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE));
         verify(gridColumnMock, atLeast(1)).setInstanceAssigned(eq(true));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
-        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock), eq(COLUMN_ID), eq(VALUE));
+        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock));
     }
 }

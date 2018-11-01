@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridColumn;
@@ -45,6 +46,11 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
      * flag to know if a <b>property</b> has been already assigned to this column; <code>false</code> on instantiation
      */
     protected boolean propertyAssigned = false;
+
+    /**
+     * The <code>FactIdentifier</code> mapped to this column
+     */
+    protected FactIdentifier factIdentifier;
 
     public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextAreaSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);
@@ -128,6 +134,21 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     }
 
 
+    public FactIdentifier getFactIdentifier() {
+        return factIdentifier;
+    }
+
+    public void setFactIdentifier(FactIdentifier factIdentifier) {
+        this.factIdentifier = factIdentifier;
+    }
+
+    @Override
+    public String toString() {
+        return "ScenarioGridColumn{" +
+                "informationHeaderMetaData=" + informationHeaderMetaData +
+                ", propertyHeaderMetaData=" + propertyHeaderMetaData +
+                '}';
+    }
 
     private GridCell<String> assertCell(final GridCell<String> cell) {
         if (cell != null) {
