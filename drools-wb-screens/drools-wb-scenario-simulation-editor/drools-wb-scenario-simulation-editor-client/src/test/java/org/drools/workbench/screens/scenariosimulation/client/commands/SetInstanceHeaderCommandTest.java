@@ -17,11 +17,13 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +60,11 @@ public class SetInstanceHeaderCommandTest extends AbstractCommandTest {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
                 return gridColumnMock;
+            }
+
+            @Override
+            protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle) {
+                return Optional.empty();
             }
         });
     }

@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
@@ -27,7 +26,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider.getHeaderTextBoxFactory;
@@ -97,8 +95,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle) {
-        final List<GridColumn<?>> columns = scenarioGridLayer.getScenarioGrid().getModel().getColumns();
-        return columns.stream()
+        return scenarioGridLayer.getScenarioGrid().getModel().getColumns().stream()
                 .filter(column -> columnTitle.equals (((ScenarioGridColumn)column).getInformationHeaderMetaData().getTitle()))
                 .findFirst()
                 .map(column -> ((ScenarioGridColumn)column).getFactIdentifier());
