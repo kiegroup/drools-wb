@@ -423,7 +423,10 @@ public class ScenarioSimulationEditorPresenter
                 if (model != null) {
                     final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
                     simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
-                        final String dataObjectName = factMapping.getFactIdentifier().getName();
+                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                        if (dataObjectName.contains(".")) {
+                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") +1);
+                        }
                         final String instanceName = factMapping.getFactAlias();
                         if (!instanceName.equals(dataObjectName)) {
                             final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
