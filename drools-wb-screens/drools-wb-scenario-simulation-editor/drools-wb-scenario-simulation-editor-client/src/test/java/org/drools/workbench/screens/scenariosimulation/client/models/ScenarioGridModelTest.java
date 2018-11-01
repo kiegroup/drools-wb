@@ -328,6 +328,12 @@ public class ScenarioGridModelTest {
         reset(eventBusMock);
         scenarioGridModel.updateHeader(COLUMN_INDEX, 2, newValue); // This is property header
         verify(eventBusMock, never()).fireEvent(any());
+
+        reset(eventBusMock);
+        // if update with same value, no event should be raised
+        String title = scenarioGridModel.getColumns().get(COLUMN_INDEX).getHeaderMetaData().get(1).getTitle();
+        scenarioGridModel.updateHeader(COLUMN_INDEX, 1, title);
+        verify(eventBusMock, never()).fireEvent(any());
     }
 
     @Test

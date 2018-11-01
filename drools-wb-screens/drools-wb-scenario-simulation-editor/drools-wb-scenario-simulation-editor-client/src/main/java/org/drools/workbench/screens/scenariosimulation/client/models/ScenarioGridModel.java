@@ -375,6 +375,10 @@ public class ScenarioGridModel extends BaseGridData {
 
     public void updateHeader(int columnIndex, int headerRowIndex, String value) {
         final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(headerRowIndex);
+        // do not update if old and new value are the same
+        if (Objects.equals(editedMetadata.getTitle(), value)) {
+            return;
+        }
         if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
             Range instanceLimits = getInstanceLimits(columnIndex);
             final int firstIndexOfGroup = instanceLimits.getMinRowIndex();
