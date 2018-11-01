@@ -87,6 +87,8 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         this.disabled.set(true);
         factName = null;
         listGroupItemViewMap.values().forEach(ListGroupItemView::closeRow);
+        unselectAll();
+        fieldItemPresenter.unselectAll();
     }
 
     @Override

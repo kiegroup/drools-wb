@@ -211,6 +211,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onEnableEditorTab() {
+        onDisableEditorTab();
         onSearchedEvent("");
         listGroupItemPresenter.enable();
         editingColumnEnabled = true;
@@ -219,6 +220,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onEnableEditorTab(String factName, String propertyName, boolean notEqualsSearch) {
+        onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, notEqualsSearch);
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
@@ -233,6 +235,8 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         listGroupItemPresenter.disable();
         editingColumnEnabled = false;
         view.disableEditorTab();
+        selectedFieldItemView = null;
+        selectedListGroupItemView = null;
     }
 
     @Override
