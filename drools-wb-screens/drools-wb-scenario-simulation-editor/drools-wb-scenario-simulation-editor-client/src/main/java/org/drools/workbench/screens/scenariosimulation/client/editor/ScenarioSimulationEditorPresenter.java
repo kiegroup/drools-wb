@@ -102,10 +102,6 @@ public class ScenarioSimulationEditorPresenter
 
     protected ScenarioGridPanel scenarioGridPanel;
 
-    private Event<OnShowScenarioSimulationDockEvent> showScenarioSimulationDockEvent;
-    private Event<OnHideScenarioSimulationDockEvent> hideScenarioSimulationDockEvent;
-
-
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
@@ -123,6 +119,8 @@ public class ScenarioSimulationEditorPresenter
     private Command populateRightPanelCommand;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
+
+    private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -205,7 +203,7 @@ public class ScenarioSimulationEditorPresenter
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
                 && placeRequest.getPath().equals(this.path)) {
             scenarioSimulationDocksHandler.addDocks();
-            scenarioSimulationDocksHandler.expandToolsDock();
+            expandToolsDock();
             registerRightPanelCallback();
             populateRightPanel();
         }
@@ -227,6 +225,10 @@ public class ScenarioSimulationEditorPresenter
         }
     }
 
+    public void expandToolsDock() {
+        scenarioSimulationDocksHandler.expandToolsDock();
+    }
+
     public ScenarioSimulationView getView() {
         return view;
     }
@@ -237,7 +239,6 @@ public class ScenarioSimulationEditorPresenter
 
     /**
      * To be called to force right panel reload
-     *
      * @param disable set this to <code>true</code> to <b>also</b> disable the panel
      */
     public void reloadRightPanel(boolean disable) {
@@ -306,7 +307,7 @@ public class ScenarioSimulationEditorPresenter
     void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
         getRightPanelPresenter().ifPresent(presenter -> {
-           // presenter.onDisableEditorTab();
+            // presenter.onDisableEditorTab();
             commandExecutor.setRightPanelPresenter(presenter);
             presenter.setEventBus(eventBus);
             populateRightPanel(presenter);
@@ -428,7 +429,7 @@ public class ScenarioSimulationEditorPresenter
                     simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
                         String dataObjectName = factMapping.getFactIdentifier().getClassName();
                         if (dataObjectName.contains(".")) {
-                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") +1);
+                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
                         }
                         final String instanceName = factMapping.getFactAlias();
                         if (!instanceName.equals(dataObjectName)) {

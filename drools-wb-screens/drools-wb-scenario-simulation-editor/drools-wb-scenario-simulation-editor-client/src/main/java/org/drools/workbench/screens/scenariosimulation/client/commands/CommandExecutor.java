@@ -192,6 +192,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(EnableRightPanelEvent event) {
+        if (scenarioSimulationEditorPresenter != null) {
+            scenarioSimulationEditorPresenter.expandToolsDock();
+        }
         if (rightPanelPresenter != null) {
             commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
         }
