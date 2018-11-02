@@ -41,17 +41,15 @@ public class IndexDecisionTableXLSAttributeNameTest extends BaseIndexingTest<Dec
     @Test
     public void testIndexDecisionTableXLSAttributeName() throws IOException, InterruptedException {
         //Add test files
-        final Path path1 = loadXLSFile( basePath,
-                                        "dtable1.xls" );
-        final Path path2 = loadXLSFile( basePath,
-                                        "dtable2.xls" );
+        final Path path1 = loadXLSFile(basePath,
+                                       "dtable1.xls");
 
-        Thread.sleep( 5000 ); //wait for events to be consumed from jgit -> (notify changes -> watcher -> index) -> lucene index
+        Thread.sleep(5000); //wait for events to be consumed from jgit -> (notify changes -> watcher -> index) -> lucene index
 
-        List<String> index = Arrays.asList(KObjectUtil.toKCluster(basePath.getFileSystem()).getClusterId());
+        List<String> index = Arrays.asList(KObjectUtil.toKCluster(basePath).getClusterId());
 
         {
-            final Query query = new SingleTermQueryBuilder( new ValueSharedPartIndexTerm( "*", PartType.RULEFLOW_GROUP, TermSearchType.WILDCARD ) )
+            final Query query = new SingleTermQueryBuilder(new ValueSharedPartIndexTerm("*", PartType.RULEFLOW_GROUP, TermSearchType.WILDCARD))
                     .build();
             searchFor(index, query, 1, path1);
         }
@@ -72,16 +70,15 @@ public class IndexDecisionTableXLSAttributeNameTest extends BaseIndexingTest<Dec
         return this.getClass().getSimpleName();
     }
 
-    private Path loadXLSFile( final Path basePath,
-                              final String fileName ) throws IOException {
-        final Path path = basePath.resolve( fileName );
-        final InputStream is = this.getClass().getResourceAsStream( fileName );
-        final OutputStream os = ioService().newOutputStream( path );
-        IOUtils.copy( is,
-                      os );
+    private Path loadXLSFile(final Path basePath,
+                             final String fileName) throws IOException {
+        final Path path = basePath.resolve(fileName);
+        final InputStream is = this.getClass().getResourceAsStream(fileName);
+        final OutputStream os = ioService().newOutputStream(path);
+        IOUtils.copy(is,
+                     os);
         os.flush();
         os.close();
         return path;
     }
-
 }

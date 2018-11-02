@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.10.0-SNAPSHOT</version>
+    <version>7.14.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -27,10 +27,10 @@
     </dependency>
 
     <dependency>
-        <groupId>org.kie.soup</groupId>
-        <artifactId>kie-soup-commons</artifactId>
-      </dependency>
-    
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-commons</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.gwtbootstrap3</groupId>
       <artifactId>gwtbootstrap3</artifactId>
@@ -63,6 +63,14 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-workbench-client-views-patternfly</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -77,7 +85,18 @@
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-ui</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-security-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-jaxrs-client</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-api</artifactId>
@@ -86,6 +105,11 @@
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-datamodel-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-workbench-client</artifactId>
     </dependency>
 
     <dependency>
@@ -101,6 +125,11 @@
     <dependency>
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-config-resource-widget</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
 
     <!--Wires Grids dependencies-->

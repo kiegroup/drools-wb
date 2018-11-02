@@ -19,11 +19,13 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 
 public class ScenarioGridRow extends BaseGridRow {
 
-        public ScenarioGridRow() {
-            super();
-        }
+    public static final double DEFAULT_HEIGHT = 30.0;
 
-        public ScenarioGridRow(double height) {
-            super(height);
-        }
+    public ScenarioGridRow() {
+        super(DEFAULT_HEIGHT);
     }
+
+    public ScenarioGridRow(double height) {
+        super(height);
+    }
+}

@@ -15,41 +15,77 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.enterprise.context.Dependent;
+
+import com.ait.lienzo.client.core.event.NodeMouseOutEvent;
+import com.ait.lienzo.client.core.event.NodeMouseOutHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelContextMenuHandler;
+import com.google.gwt.event.shared.EventBus;
+import com.google.gwt.event.shared.HandlerRegistration;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 /**
  * ScenarioGridPanel implementation of <code>GridLienzoPanel</code>.
- *
+ * <p>
  * This panel contains a <code>ScenarioGridLayer</code> and it is instantiated only once.
- * The Right click is managed by the injected <code>ScenarioSimulationGridPanelContextMenuHandler</code>
- *
+ * The Clicks are managed by the injected <code>ScenarioSimulationGridPanelClickHandler</code>
  */
-public class ScenarioGridPanel extends GridLienzoPanel {
+@Dependent
+public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHandler {
 
-    public static final int LIENZO_PANEL_WIDTH = 1000;
+    private EventBus eventBus;
+    private ScenarioSimulationGridPanelClickHandler clickHandler;
 
-    public static final int LIENZO_PANEL_HEIGHT = 450;
+    Set<HandlerRegistration> handlerRegistrations = new HashSet<>();
 
-    // Add for testing purpose
-    private ScenarioSimulationGridPanelContextMenuHandler contextMenuHandler;
-
-    public ScenarioGridPanel(ScenarioSimulationGridPanelContextMenuHandler contextMenuHandler) {
-        super(LIENZO_PANEL_WIDTH, LIENZO_PANEL_HEIGHT);
-        this.contextMenuHandler = contextMenuHandler;
-        getDomElementContainer().addDomHandler(contextMenuHandler,
-                                               ContextMenuEvent.getType());
+    public ScenarioGridPanel() {
     }
 
-    // Add for testing purpose
-    public ScenarioSimulationGridPanelContextMenuHandler getContextMenuHandler() {
-        return contextMenuHandler;
+    public void addClickHandler(final ScenarioSimulationGridPanelClickHandler clickHandler) {
+        this.clickHandler = clickHandler;
+        unregister();
+        handlerRegistrations.add(getDomElementContainer().addDomHandler(clickHandler,
+                                                            ContextMenuEvent.getType()));
+        handlerRegistrations.add(getDomElementContainer().addDomHandler(clickHandler,
+                                                            ClickEvent.getType()));
+        handlerRegistrations.add(getScenarioGridLayer().addNodeMouseOutHandler(this));
+    }
+
+    public ScenarioGridLayer getScenarioGridLayer() {
+        return (ScenarioGridLayer) getDefaultGridLayer();
     }
 
     public ScenarioGrid getScenarioGrid() {
         return ((ScenarioGridLayer) getDefaultGridLayer()).getScenarioGrid();
     }
 
+    public void setEventBus(EventBus eventBus) {
+        this.eventBus = eventBus;
+        getScenarioGrid().getModel().setEventBus(eventBus);
+    }
 
+    public void select() {
+        getDefaultGridLayer().select(getScenarioGrid()); // This is to have "floatable" header, ie. not moving
+    }
+
+    @Override
+    public void onNodeMouseOut(NodeMouseOutEvent event) {
+        final int height = getScenarioGridLayer().getHeight();
+        final int width = getScenarioGridLayer().getWidth();
+        final int x = event.getX();
+        final int y = event.getY();
+        if (x < 0 || x > width || y < 0 || y > height) {
+           clickHandler.hideMenus();
+       }
+    }
+
+    public void unregister() {
+        handlerRegistrations.forEach(HandlerRegistration::removeHandler);
+        handlerRegistrations.clear();
+    }
 }

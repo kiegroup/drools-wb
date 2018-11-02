@@ -15,12 +15,31 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
+import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
 
 public class ScenarioGridCell extends BaseGridCell<String> {
 
-        public ScenarioGridCell(GridCellValue<String> value) {
-            super(value);
-        }
+    private boolean isEditing = false;
+    private boolean isError = false;
+
+    public ScenarioGridCell(ScenarioGridCellValue value) {
+        super(value);
     }
+
+    public boolean isEditing() {
+        return isEditing;
+    }
+
+    public void setEditing(boolean editing) {
+        isEditing = editing;
+    }
+
+    public boolean isError() {
+        return isError;
+    }
+
+    public void setError(boolean error) {
+        isError = error;
+    }
+}

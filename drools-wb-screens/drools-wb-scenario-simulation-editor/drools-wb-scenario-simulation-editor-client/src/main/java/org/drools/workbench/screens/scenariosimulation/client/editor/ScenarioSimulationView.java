@@ -16,20 +16,29 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Map;
-
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.RequiresResize;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
+import org.uberfire.workbench.model.menu.MenuItem;
 
 public interface ScenarioSimulationView extends KieEditorView,
-                                                IsWidget {
+                                                IsWidget,
+                                                RequiresResize {
 
-    void setContent(final Map<Integer, String> headersMap, final Map<Integer, Map<Integer, String>> rowsMap);
+    void init(final ScenarioSimulationEditorPresenter presenter);
 
-    // Add for testing purpose
+    void setContent(final Simulation simulation);
+
+    void refreshContent(final Simulation simulation);
+
+    MenuItem getRunScenarioMenuItem();
+
+    void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
+
     ScenarioGridPanel getScenarioGridPanel();
 
-
-
+    ScenarioGridLayer getScenarioGridLayer();
 }

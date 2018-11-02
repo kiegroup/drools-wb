@@ -33,12 +33,13 @@ import org.drools.workbench.screens.testscenario.client.type.TestScenarioResourc
 import org.drools.workbench.screens.testscenario.model.TestScenarioModelContent;
 import org.drools.workbench.screens.testscenario.model.TestScenarioResult;
 import org.drools.workbench.screens.testscenario.service.ScenarioTestEditorService;
+import org.guvnor.common.services.project.categories.Decision;
 import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.project.client.security.ProjectController;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
-import org.guvnor.common.services.shared.test.TestService;
+import org.guvnor.common.services.shared.test.TestRunnerService;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
@@ -55,6 +56,8 @@ import org.kie.workbench.common.widgets.configresource.client.widget.bound.Impor
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
+import org.kie.workbench.common.workbench.client.test.TestReportingDocksHandler;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -63,15 +66,18 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
+import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.ext.editor.commons.client.history.VersionRecordManager;
 import org.uberfire.ext.editor.commons.client.menu.BasicFileMenuBuilder;
 import org.uberfire.ext.editor.commons.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.editor.commons.service.support.SupportsSaveAndRename;
 import org.uberfire.mocks.CallerMock;
+import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.category.Others;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
@@ -94,6 +100,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioEditorPresenterTest {
+
+    @Mock
+    private EventSourceMock showTestPanelEvent;
+    @Mock
+    private EventSourceMock hideTestPanelEvent;
 
     @Mock
     CommonConstants commonConstants;
@@ -126,7 +137,7 @@ public class ScenarioEditorPresenterTest {
     private ScenarioTestEditorService service;
 
     @Mock
-    private TestService testService;
+    private TestRunnerService testService;
 
     @Mock
     private BasicFileMenuBuilder menuBuilder;
@@ -153,6 +164,12 @@ public class ScenarioEditorPresenterTest {
     @Mock
     protected MenuItem alertsButtonMenuItem;
 
+    @Mock
+    TestRunnerReportingScreen testRunnerReportingScreen;
+
+    @Mock
+    TestReportingDocksHandler testReportingDocksHandler;
+
     private CallerMock<ScenarioTestEditorService> fakeService;
     private ScenarioEditorPresenter editor;
     private Scenario scenario;
@@ -170,10 +187,14 @@ public class ScenarioEditorPresenterTest {
                                                  importsWidget,
                                                  fakeService,
                                                  new CallerMock<>(testService),
-                                                 new TestScenarioResourceType(new Others()),
+                                                 new TestScenarioResourceType(new Decision()),
                                                  modelOracleFactory,
                                                  settingsPage,
-                                                 auditPage) {
+                                                 auditPage,
+                                                 testRunnerReportingScreen,
+                                                 testReportingDocksHandler,
+                                                 showTestPanelEvent,
+                                                 hideTestPanelEvent) {
             {
                 kieView = ScenarioEditorPresenterTest.this.kieView;
                 versionRecordManager = ScenarioEditorPresenterTest.this.versionRecordManager;
@@ -226,8 +247,49 @@ public class ScenarioEditorPresenterTest {
     }
 
     @Test
+    public void showDiagramEditorDocks() {
+        DefaultPlaceRequest place = new DefaultPlaceRequest(ScenarioEditorPresenter.IDENTIFIER);
+
+        editor.onStartup(mock(ObservablePath.class),
+                         place);
+
+        editor.showDiagramEditorDocks(new PlaceGainFocusEvent(place));
+        verify(showTestPanelEvent).fire(any());
+    }
+
+    @Test
+    public void showDiagramEditorDocksWrongPlaceName() {
+        editor.onStartup(mock(ObservablePath.class),
+                         new DefaultPlaceRequest(ScenarioEditorPresenter.IDENTIFIER));
+
+        editor.showDiagramEditorDocks(new PlaceGainFocusEvent(new DefaultPlaceRequest("wrong name")));
+        verify(showTestPanelEvent, never()).fire(any());
+    }
+
+    @Test
     public void testSimple() throws Exception {
         verify(view).setPresenter(any(ScenarioEditorPresenter.class));
+    }
+
+    @Test
+    public void hideDiagramEditorDocks() {
+        DefaultPlaceRequest place = new DefaultPlaceRequest(ScenarioEditorPresenter.IDENTIFIER);
+
+        editor.onStartup(mock(ObservablePath.class),
+                         place);
+
+        editor.hideDiagramEditorDocks(new PlaceHiddenEvent(place));
+        verify(hideTestPanelEvent).fire(any());
+        verify(testRunnerReportingScreen).reset();
+    }
+
+    @Test
+    public void hideDiagramEditorDocksWrongPlaceName() {
+        editor.onStartup(mock(ObservablePath.class),
+                         new DefaultPlaceRequest(ScenarioEditorPresenter.IDENTIFIER));
+
+        editor.hideDiagramEditorDocks(new PlaceHiddenEvent(new DefaultPlaceRequest("wrong name")));
+        verify(hideTestPanelEvent, never()).fire(any());
     }
 
     @Test
