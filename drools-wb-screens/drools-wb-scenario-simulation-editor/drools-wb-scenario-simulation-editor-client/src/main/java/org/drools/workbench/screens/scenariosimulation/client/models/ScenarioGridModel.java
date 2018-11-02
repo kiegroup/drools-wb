@@ -550,6 +550,7 @@ public class ScenarioGridModel extends BaseGridData {
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
             selectColumn(columns.indexOf(column));
         } catch (Throwable t) {
+            eventBus.fireEvent(new ScenarioNotificationEvent("Error during column creation: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
         }

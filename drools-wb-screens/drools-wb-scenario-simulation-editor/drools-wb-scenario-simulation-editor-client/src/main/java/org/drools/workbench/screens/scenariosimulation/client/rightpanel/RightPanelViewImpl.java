@@ -112,6 +112,7 @@ public class RightPanelViewImpl
     public void onAddButtonClicked(ClickEvent event) {
         presenter.onModifyColumn();
         addButton.setDisabled(true);
+        presenter.onDisableEditorTab();
     }
 
     @Override
