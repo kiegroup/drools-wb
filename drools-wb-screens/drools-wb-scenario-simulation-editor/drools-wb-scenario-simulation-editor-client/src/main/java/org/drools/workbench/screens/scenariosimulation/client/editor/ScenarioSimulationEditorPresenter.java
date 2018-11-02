@@ -26,17 +26,15 @@ import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.OnHideScenarioSimulationDockEvent;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.OnShowScenarioSimulationDockEvent;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -45,6 +43,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
+import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
@@ -67,6 +66,10 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
 import org.uberfire.client.workbench.events.PlaceHiddenEvent;
+import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
+import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
+import org.uberfire.ext.editor.commons.service.support.SupportsRename;
+import org.uberfire.ext.editor.commons.service.support.SupportsSaveAndRename;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -133,12 +136,10 @@ public class ScenarioSimulationEditorPresenter
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
                                              final PlaceManager placeManager,
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
-                                             final Event<OnShowScenarioSimulationDockEvent> showScenarioSimulationDockEvent,
-                                             final Event<OnHideScenarioSimulationDockEvent> hideScenarioSimulationDockEvent) {
+                                             final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
-        this.showScenarioSimulationDockEvent = showScenarioSimulationDockEvent;
-        this.hideScenarioSimulationDockEvent = hideScenarioSimulationDockEvent;
+        this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.view = (ScenarioSimulationView) baseView;
         this.service = service;
         this.type = type;
@@ -203,7 +204,8 @@ public class ScenarioSimulationEditorPresenter
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeGainFocusEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
                 && placeRequest.getPath().equals(this.path)) {
-            showScenarioSimulationDockEvent.fire(new OnShowScenarioSimulationDockEvent());
+            scenarioSimulationDocksHandler.addDocks();
+            scenarioSimulationDocksHandler.expandToolsDock();
             registerRightPanelCallback();
             populateRightPanel();
         }
@@ -217,7 +219,7 @@ public class ScenarioSimulationEditorPresenter
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
                 && placeRequest.getPath().equals(this.path)) {
-            hideScenarioSimulationDockEvent.fire(new OnHideScenarioSimulationDockEvent());
+            scenarioSimulationDocksHandler.removeDocks();
             view.getScenarioGridLayer().getScenarioGrid().clearSelections();
             unRegisterRightPanelCallback();
             clearRightPanelStatus();
@@ -254,6 +256,7 @@ public class ScenarioSimulationEditorPresenter
         return newModel -> {
             this.model = newModel;
             view.refreshContent(newModel.getSimulation());
+            scenarioSimulationDocksHandler.expandTestResultsDock();
         };
     }
 
@@ -478,5 +481,25 @@ public class ScenarioSimulationEditorPresenter
         } catch (Exception ignored) {
             return false;
         }
+    }
+
+    @Override
+    protected Caller<? extends SupportsDelete> getDeleteServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsRename> getRenameServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsCopy> getCopyServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsSaveAndRename<ScenarioSimulationModel, Metadata>> getSaveAndRenameServiceCaller() {
+        return service;
     }
 }
