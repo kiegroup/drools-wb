@@ -48,9 +48,9 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     protected boolean propertyAssigned = false;
 
     /**
-     * The <code>FactIdentifier</code> mapped to this column
+     * The <code>FactIdentifier</code> mapped to this column; default to <code>FactIdentifier.EMPTY</code>
      */
-    protected FactIdentifier factIdentifier;
+    protected FactIdentifier factIdentifier = FactIdentifier.EMPTY;
 
     public ScenarioGridColumn(HeaderMetaData headerMetaData, GridColumnRenderer<String> columnRenderer, double width, boolean isMovable, ScenarioCellTextAreaSingletonDOMElementFactory factory, String placeHolder) {
         super(headerMetaData, columnRenderer, width);

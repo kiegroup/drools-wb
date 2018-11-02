@@ -26,7 +26,6 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -73,7 +72,8 @@ public class InsertColumnCommand extends AbstractCommand {
         String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         Map.Entry<String, String> validPlaceholders = model.getValidPlaceholders();
-        String instanceTitle = asProperty ? originalInstanceTitle : validPlaceholders.getKey();
+        boolean cloneInstance = asProperty && selectedColumn.isInstanceAssigned();
+        String instanceTitle = cloneInstance ? originalInstanceTitle : validPlaceholders.getKey();
         String propertyTitle = validPlaceholders.getValue();
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
@@ -85,12 +85,10 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
         scenarioGridColumnLocal.setReadOnly(true);
-        scenarioGridColumnLocal.setInstanceAssigned(asProperty && selectedColumn.isInstanceAssigned());
+        scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
         scenarioGridColumnLocal.setPropertyAssigned(false);
-        if (asProperty) {
+        if (cloneInstance) {
             scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
-        } else {
-            scenarioGridColumnLocal.setFactIdentifier(FactIdentifier.EMPTY);
         }
         GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
         int columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();

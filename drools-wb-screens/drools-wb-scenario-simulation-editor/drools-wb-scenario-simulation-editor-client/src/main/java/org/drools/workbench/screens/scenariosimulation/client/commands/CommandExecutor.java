@@ -287,6 +287,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                       okPreserveCommand);
         }
+        if (scenarioSimulationEditorPresenter != null) {
+            scenarioSimulationEditorPresenter.reloadRightPanel(false);
+        }
     }
 
     void commonExecute(Command toExecute) {
