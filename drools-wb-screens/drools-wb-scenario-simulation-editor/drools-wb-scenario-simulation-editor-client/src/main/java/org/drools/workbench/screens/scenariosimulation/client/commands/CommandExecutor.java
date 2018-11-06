@@ -192,12 +192,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(EnableRightPanelEvent event) {
-        if (scenarioSimulationEditorPresenter != null) {
-            scenarioSimulationEditorPresenter.expandToolsDock();
-        }
-        if (rightPanelPresenter != null) {
-            commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
-        }
+
+//        new EnableRightPanelCommand(scenarioSimulationEditorPresenter, rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()).execute();
+        commonExecute(new EnableRightPanelCommand(scenarioSimulationEditorPresenter, rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
     }
 
     @Override
@@ -222,9 +219,7 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(ReloadRightPanelEvent event) {
-        if (scenarioSimulationEditorPresenter != null) {
-            scenarioSimulationEditorPresenter.reloadRightPanel(event.isDisable());
-        }
+        commonExecute(new ReloadRightPanelCommand(scenarioSimulationEditorPresenter, event.isDisable(), event.isOpenDock()));
     }
 
     @Override

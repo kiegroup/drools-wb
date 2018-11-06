@@ -29,26 +29,38 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class EnableRightPanelCommandTest extends AbstractCommandTest {
+public class ReloadRightPanelCommandTest extends AbstractCommandTest {
 
 
 
-    private EnableRightPanelCommand enableRightPanelCommand;
-
-    private static final String FACT_NAME = "FACT_NAME";
+    private ReloadRightPanelCommand reloadRightPanelCommand;
 
     @Before
     public void setup() {
         super.setup();
     }
 
+    @Test
+    public void executeDisableOpen() {
+        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, true);
+        reloadRightPanelCommand.execute();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
+    }
 
     @Test
-    public void executeWithFactName() {
-        enableRightPanelCommand = new EnableRightPanelCommand(scenarioSimulationEditorPresenterMock, rightPanelPresenterMock, FACT_NAME, null, true);
-        enableRightPanelCommand.execute();
+    public void executeNotDisableOpen() {
+        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, false, true);
+        reloadRightPanelCommand.execute();
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
-        verify(rightPanelPresenterMock, times(1)).onEnableEditorTab(eq(FACT_NAME), eq(null), eq(true));
-        verify(rightPanelPresenterMock, never()).onEnableEditorTab();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(false));
+    }
+
+    @Test
+    public void executeDisableNotOpen() {
+        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, false);
+        reloadRightPanelCommand.execute();
+        verify(scenarioSimulationEditorPresenterMock, never()).expandToolsDock();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
     }
 }
