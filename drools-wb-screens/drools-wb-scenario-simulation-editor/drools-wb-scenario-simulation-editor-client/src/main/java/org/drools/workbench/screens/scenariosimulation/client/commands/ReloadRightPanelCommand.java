@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
+import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.uberfire.mvp.Command;
@@ -54,6 +55,7 @@ public class ReloadRightPanelCommand implements Command {
 
     @Override
     public void execute() {
+        GWT.log("ReloadRightPanelCommand execute");
         if (scenarioSimulationEditorPresenter != null) {
             if (openDock) {
                 scenarioSimulationEditorPresenter.expandToolsDock();

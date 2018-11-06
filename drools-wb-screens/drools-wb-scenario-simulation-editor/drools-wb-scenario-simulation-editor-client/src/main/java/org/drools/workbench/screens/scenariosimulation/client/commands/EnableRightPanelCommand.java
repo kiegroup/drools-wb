@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.uberfire.mvp.Command;
 
@@ -27,7 +26,6 @@ import org.uberfire.mvp.Command;
 @Dependent
 public class EnableRightPanelCommand implements Command {
 
-    private ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     private RightPanelView.Presenter rightPanelPresenter;
 
     /**
@@ -55,15 +53,12 @@ public class EnableRightPanelCommand implements Command {
     /**
      * Execute this command to to show only the data model with the given name, <b>disabled</b> (i.e. <b>not selectable</b>)
      * and their properties <b>enabled</b> (i.e. <b>selectable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
-     *
-     * @param scenarioSimulationEditorPresenter
      * @param rightPanelPresenter
      * @param filterTerm the term used to filter the right panel ()relates to instance name)
      * @param propertyName the string to <b>eventually</b> use to select the property in the right panel
      * @param notEqualsSearch
      */
-    public EnableRightPanelCommand(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter, RightPanelView.Presenter rightPanelPresenter, String filterTerm, String propertyName, boolean notEqualsSearch) {
-        this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
+    public EnableRightPanelCommand(RightPanelView.Presenter rightPanelPresenter, String filterTerm, String propertyName, boolean notEqualsSearch) {
         this.rightPanelPresenter = rightPanelPresenter;
         this.filterTerm = filterTerm;
         this.notEqualsSearch = notEqualsSearch;
@@ -72,9 +67,6 @@ public class EnableRightPanelCommand implements Command {
 
     @Override
     public void execute() {
-//        if (scenarioSimulationEditorPresenter != null) {
-//            scenarioSimulationEditorPresenter.expandToolsDock();
-//        }
         if (rightPanelPresenter != null) {
             if (filterTerm == null) {
                 rightPanelPresenter.onEnableEditorTab();
@@ -82,8 +74,5 @@ public class EnableRightPanelCommand implements Command {
                 rightPanelPresenter.onEnableEditorTab(filterTerm, propertyName, notEqualsSearch);
             }
         }
-//        if (scenarioSimulationEditorPresenter != null) {
-//            scenarioSimulationEditorPresenter.expandToolsDock();
-//        }
     }
 }
