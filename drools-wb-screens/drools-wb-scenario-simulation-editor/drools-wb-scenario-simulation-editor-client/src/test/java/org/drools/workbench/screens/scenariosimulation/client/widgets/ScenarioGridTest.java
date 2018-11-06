@@ -246,10 +246,10 @@ public class ScenarioGridTest {
             scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
         });
 
-        // Add EXPECTED Facts
+        // Add EXPECT Facts
         IntStream.range(2, 4).forEach(id -> {
             id += 2; // This is to have consistent labels/names even when adding columns at runtime
-            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
+            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
             simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
             scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
         });

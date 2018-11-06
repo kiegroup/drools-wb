@@ -199,7 +199,7 @@ public class ScenarioSimulationUtils {
      * OTHER: single level
      * </p>
      * <p>
-     * EXPECTED/GIVEN: triple level
+     * EXPECT/GIVEN: triple level
      * </p>
      * @param instanceTitle
      * @param propertyTitle
@@ -271,7 +271,7 @@ public class ScenarioSimulationUtils {
     }
 
     private static boolean isExpected(FactMappingType factMappingType) {
-        return FactMappingType.EXPECTED.equals(factMappingType);
+        return FactMappingType.EXPECT.equals(factMappingType);
     }
 
     private static boolean isGiven(FactMappingType factMappingType) {
