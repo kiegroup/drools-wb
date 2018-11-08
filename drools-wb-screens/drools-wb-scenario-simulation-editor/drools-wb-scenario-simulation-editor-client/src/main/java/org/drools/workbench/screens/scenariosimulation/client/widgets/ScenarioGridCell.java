@@ -20,7 +20,9 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
 
 public class ScenarioGridCell extends BaseGridCell<String> {
 
+    // true if this cell is already in editing mode
     private boolean isEditing = false;
+    // true if this cell has to show errors
     private boolean isError = false;
 
     public ScenarioGridCell(ScenarioGridCellValue value) {
