@@ -376,10 +376,17 @@ public class ScenarioGridModel extends BaseGridData {
         }
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactMapping factMappingToEdit = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        final FactIdentifier factIdentifierToEdit = factMappingToEdit.getFactIdentifier();
         if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
             IntStream.range(0, getColumnCount()).forEach(index -> {
                 FactMapping factMappingToCheck = simulationDescriptor.getFactMappingByIndex(index);
-                if (Objects.equals(factMappingToCheck.getFactIdentifier(), factMappingToEdit.getFactIdentifier())) {
+                final FactIdentifier factIdentifierToCheck = factMappingToCheck.getFactIdentifier();
+                if (Objects.equals(FactIdentifier.EMPTY, factIdentifierToEdit)) {
+                    if  (Objects.equals(factIdentifierToCheck, factIdentifierToEdit) && Objects.equals(factMappingToEdit.getFactAlias(), factMappingToCheck.getFactAlias())) {
+                        ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
+                        factMappingToCheck.setFactAlias(value);
+                    }
+                } else if (Objects.equals(factIdentifierToCheck, factIdentifierToEdit)) {
                     ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
                     factMappingToCheck.setFactAlias(value);
                 }

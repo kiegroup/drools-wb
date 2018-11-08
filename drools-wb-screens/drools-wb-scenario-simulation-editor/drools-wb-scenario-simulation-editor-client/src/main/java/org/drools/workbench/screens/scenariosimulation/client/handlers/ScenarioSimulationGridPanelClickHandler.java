@@ -222,6 +222,9 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             return false;
         }
         String group = columnMetadata.getColumnGroup();
+        if (group.contains("-")) {
+            group = group.substring(0, group.indexOf("-"));
+        }
         switch (group) {
             case "":
                 switch (columnMetadata.getTitle()) {
@@ -342,6 +345,9 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
             return false;
         }
         String group = clickedScenarioHeaderMetadata.getColumnGroup();
+        if (group.contains("-")) {
+            group = group.substring(0, group.indexOf("-"));
+        }
         switch (group) {
             case "GIVEN":
             case "EXPECTED":
