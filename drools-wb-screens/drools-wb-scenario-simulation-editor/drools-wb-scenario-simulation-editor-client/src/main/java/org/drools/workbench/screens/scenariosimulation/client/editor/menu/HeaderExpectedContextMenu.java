@@ -36,10 +36,6 @@ public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter 
     private final String HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT = "headerexpectedcontextmenu-insert-column-right";
     private final String HEADEREXPECTEDCONTEXTMENU_DELETE_COLUMN = "headerexpectedcontextmenu-delete-column";
     private final String HEADEREXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE = "headerexpectedcontextmenu-insert-row-above";
-    private final String HEADEREXPECTEDCONTEXTMENU_INSERT_ROW_BELOW = "headerexpectedcontextmenu-insert-row-below";
-
-    private final AppendColumnEvent appendExpectedColumnEvent = new AppendColumnEvent("EXPECTED");
-    private final PrependColumnEvent prependExpectedColumnEvent = new PrependColumnEvent("EXPECTED");
 
     @PostConstruct
     @Override
@@ -50,11 +46,10 @@ public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter 
         HEADERCONTEXTMENU_INSERT_COLUMN_RIGHT = HEADEREXPECTEDCONTEXTMENU_INSERT_COLUMN_RIGHT;
         HEADERCONTEXTMENU_DELETE_COLUMN = HEADEREXPECTEDCONTEXTMENU_DELETE_COLUMN;
         HEADERCONTEXTMENU_PREPEND_ROW = HEADEREXPECTEDCONTEXTMENU_INSERT_ROW_ABOVE;
-        HEADERCONTEXTMENU_APPEND_ROW = HEADEREXPECTEDCONTEXTMENU_INSERT_ROW_BELOW;
         HEADERCONTEXTMENU_LABEL = constants.expected().toUpperCase();
         HEADERCONTEXTMENU_I18N = "expected";
-        appendColumnEvent = appendExpectedColumnEvent;
-        prependColumnEvent = prependExpectedColumnEvent;
+        appendColumnEvent = new AppendColumnEvent("EXPECTED");
+        prependColumnEvent = new PrependColumnEvent("EXPECTED");
         super.initMenu();
     }
 }
