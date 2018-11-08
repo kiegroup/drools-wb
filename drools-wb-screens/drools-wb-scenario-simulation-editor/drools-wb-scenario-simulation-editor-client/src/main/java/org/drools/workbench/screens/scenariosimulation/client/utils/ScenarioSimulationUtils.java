@@ -103,7 +103,7 @@ public class ScenarioSimulationUtils {
                                                            String placeHolder) {
         ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, false, placeHolder);
+        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, placeHolder);
     }
 
     /**
@@ -152,20 +152,17 @@ public class ScenarioSimulationUtils {
      * @param headerBuilder
      * @param scenarioGridPanel
      * @param gridLayer
-     * @param readOnly
      * @param placeHolder
      * @return
      */
     public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
                                                            ScenarioGridPanel scenarioGridPanel,
                                                            ScenarioGridLayer gridLayer,
-                                                           boolean readOnly,
                                                            String placeHolder) {
         ScenarioCellTextAreaSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
                                                                                                                       headerBuilder,
                                                                                                                       placeHolder);
-        scenarioGridColumnBuilder.setReadOnly(readOnly);
         return scenarioGridColumnBuilder.build();
     }
 
@@ -204,7 +201,7 @@ public class ScenarioSimulationUtils {
      * OTHER: single level
      * </p>
      * <p>
-     * EXPECTED/GIVEN: triple level
+     * EXPECT/GIVEN: triple level
      * </p>
      * @param instanceTitle
      * @param propertyTitle
@@ -275,11 +272,4 @@ public class ScenarioSimulationUtils {
         return FactMappingType.OTHER.equals(factMappingType);
     }
 
-    private static boolean isExpected(FactMappingType factMappingType) {
-        return FactMappingType.EXPECTED.equals(factMappingType);
-    }
-
-    private static boolean isGiven(FactMappingType factMappingType) {
-        return FactMappingType.GIVEN.equals(factMappingType);
-    }
 }
