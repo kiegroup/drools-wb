@@ -32,6 +32,11 @@ public class ScenarioSimulationUtils {
 
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
 
+
+    public static String getPropertyMetaDataGroup(String columnGroup) {
+        return columnGroup + "-" + subGroupCounter.getAndIncrement();
+    }
+
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
      * <p>
@@ -243,7 +248,7 @@ public class ScenarioSimulationUtils {
         // The "property" header
         instanceHeader.newLevel()
                 .setColumnTitle(propertyTitle)
-                .setColumnGroup(columnGroup + "-" + subGroupCounter.getAndIncrement())
+                .setColumnGroup(getPropertyMetaDataGroup(columnGroup))
                 .setReadOnly(false)
                 .setInstanceHeader(false)
                 .setPropertyHeader(true);
