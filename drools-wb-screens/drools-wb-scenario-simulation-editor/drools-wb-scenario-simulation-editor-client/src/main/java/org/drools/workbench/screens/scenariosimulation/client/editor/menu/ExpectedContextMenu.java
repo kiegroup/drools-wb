@@ -28,12 +28,9 @@ public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
     private final String EXPECTCONTEXTMENU_EXPECT = "expectcontextmenu-expect";
-    private final String EXPECTCONTEXTMENU_SCENARIO = "expectcontextmenu-scenario";
     private final String EXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "expectcontextmenu-insert-column-left";
     private final String EXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectcontextmenu-insert-column-right";
     private final String EXPECTCONTEXTMENU_DELETE_COLUMN = "expectcontextmenu-delete-column";
-    private final String EXPECTCONTEXTMENU_PREPEND_ROW = "expectcontextmenu-prepend-row";
-    private final String EXPECTCONTEXTMENU_APPEND_ROW = "expectcontextmenu-append-row";
 
     @PostConstruct
     @Override
@@ -46,8 +43,6 @@ public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_LABEL = constants.expect().toUpperCase();
         COLUMNCONTEXTMENU_I18N = "expect";
         // SCENARIO MENU
-//        HEADERCONTEXTMENU_SCENARIO = EXPECTEDCONTEXTMENU_SCENARIO;
-//        HEADERCONTEXTMENU_PREPEND_ROW = EXPECTEDCONTEXTMENU_PREPEND_ROW;
         super.initMenu();
     }
 }
