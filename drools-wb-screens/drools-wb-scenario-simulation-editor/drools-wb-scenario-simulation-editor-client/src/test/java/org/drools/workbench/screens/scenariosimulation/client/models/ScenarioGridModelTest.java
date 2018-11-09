@@ -340,20 +340,6 @@ public class ScenarioGridModelTest {
 
     @Test
     public void updateFactMapping() {
-        /*
-        final FactIdentifier factIdentifierReference = factMappingReference.getFactIdentifier();
-        FactMapping factMappingToCheck = simulationDescriptor.getFactMappingByIndex(index);
-        final FactIdentifier factIdentifierToCheck = factMappingToCheck.getFactIdentifier();
-        if (Objects.equals(FactIdentifier.EMPTY, factIdentifierReference)) {
-            if (Objects.equals(factIdentifierToCheck, factIdentifierReference) && Objects.equals(factMappingReference.getFactAlias(), factMappingToCheck.getFactAlias())) {
-                ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-                factMappingToCheck.setFactAlias(value);
-            }
-        } else if (Objects.equals(factIdentifierToCheck, factIdentifierReference)) {
-            ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-            factMappingToCheck.setFactAlias(value);
-        }
-         */
         final int INDEX = 0;
         final String VALUE = "VALUE";
         final String ALIAS_1 = "ALIAS_1";
