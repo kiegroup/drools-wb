@@ -116,6 +116,9 @@ public class ScenarioGrid extends BaseGridWidget {
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
         scenarioGridColumn.setFactIdentifier(factIdentifier);
+        if (FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
+            scenarioGridColumn.setColumnWidthMode(ScenarioGridColumn.ColumnWidthMode.fixed);
+        }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
 
