@@ -266,13 +266,13 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
     public void testManageGridLeftClickReadOnlyTrue() {
         when(headerMetaDataMock.isReadOnly()).thenReturn(true);
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBusMock);
-        when(scenarioGridCellMock.isEditing()).thenReturn(true);
+        when(scenarioGridCellMock.isEditingMode()).thenReturn(true);
         boolean retrieved = scenarioSimulationGridPanelClickHandler.manageGridLeftClick(scenarioGridMock, UI_ROW_INDEX, UI_COLUMN_INDEX, gridColumnMock);
-        verify(scenarioGridCellMock, never()).setEditing(anyBoolean());
+        verify(scenarioGridCellMock, never()).setEditingMode(anyBoolean());
         assertTrue(retrieved);
-        when(scenarioGridCellMock.isEditing()).thenReturn(false);
+        when(scenarioGridCellMock.isEditingMode()).thenReturn(false);
         scenarioSimulationGridPanelClickHandler.manageGridLeftClick(scenarioGridMock, UI_ROW_INDEX, UI_COLUMN_INDEX, gridColumnMock);
-        verify(scenarioGridCellMock, times(1)).setEditing(eq(false));
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(gridColumnMock, times(1)).isReadOnly();
     }
 
@@ -281,14 +281,14 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
         when(scenarioGridMock.startEditingCell(UI_ROW_INDEX, UI_COLUMN_INDEX)).thenReturn(true);
         when(headerMetaDataMock.isReadOnly()).thenReturn(false);
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBusMock);
-        when(scenarioGridCellMock.isEditing()).thenReturn(true);
+        when(scenarioGridCellMock.isEditingMode()).thenReturn(true);
         boolean retrieved = scenarioSimulationGridPanelClickHandler.manageGridLeftClick(scenarioGridMock, UI_ROW_INDEX, UI_COLUMN_INDEX, gridColumnMock);
         assertTrue(retrieved);
-        verify(scenarioGridCellMock, never()).setEditing(anyBoolean());
+        verify(scenarioGridCellMock, never()).setEditingMode(anyBoolean());
         verify(gridColumnMock, never()).isReadOnly();
-        when(scenarioGridCellMock.isEditing()).thenReturn(false);
+        when(scenarioGridCellMock.isEditingMode()).thenReturn(false);
         scenarioSimulationGridPanelClickHandler.manageGridLeftClick(scenarioGridMock, UI_ROW_INDEX, UI_COLUMN_INDEX, gridColumnMock);
-        verify(scenarioGridCellMock, times(1)).setEditing(eq(true));
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(true));
         verify(gridColumnMock, times(1)).isReadOnly();
     }
 

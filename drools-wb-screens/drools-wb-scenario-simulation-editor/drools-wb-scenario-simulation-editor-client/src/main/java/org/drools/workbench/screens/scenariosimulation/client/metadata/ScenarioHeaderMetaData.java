@@ -33,8 +33,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
     final boolean instanceHeader;
     // true if this header contains the column' informations (group, title, id) and it is a property header
     final boolean propertyHeader;
-    // true if this header is already in editing mode
-    private boolean isEditing = false;
+    private boolean isEditingMode = false;
 
     /**
      * Constructor for ScenarioHeaderMetaData
@@ -77,7 +76,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
         if (readOnly) {
             throw new IllegalStateException("A read only header cannot be edited");
         }
-        if (!isEditing) {
+        if (!isEditingMode) {
             factory.attachDomElement(context,
                                      (e) -> {
                                          e.getWidget().setText(getTitle());
@@ -86,7 +85,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
                                          }
                                      },
                                      (e) -> e.getWidget().setFocus(true));
-            isEditing = true;
+            isEditingMode = true;
         }
     }
 
@@ -110,12 +109,12 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
         return propertyHeader;
     }
 
-    public boolean isEditing() {
-        return isEditing;
+    public boolean isEditingMode() {
+        return isEditingMode;
     }
 
-    public void setEditing(boolean editing) {
-        isEditing = editing;
+    public void setEditingMode(boolean editingMode) {
+        isEditingMode = editingMode;
     }
 
     @Override

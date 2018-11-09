@@ -50,7 +50,7 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
             }
             model.updateHeader(columnIndex, rowIndex, value);
             if (scenarioHeaderMetaData != null) {
-                scenarioHeaderMetaData.setEditing(false);
+                scenarioHeaderMetaData.setEditingMode(false);
             }
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)

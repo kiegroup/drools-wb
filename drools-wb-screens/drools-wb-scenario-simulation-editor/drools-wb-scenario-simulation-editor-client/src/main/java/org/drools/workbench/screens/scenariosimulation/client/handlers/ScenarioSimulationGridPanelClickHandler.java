@@ -345,7 +345,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         switch (group) {
             case "GIVEN":
             case "EXPECT":
-                if (rendererHelper != null && !clickedScenarioHeaderMetadata.isEditing()) {
+                if (rendererHelper != null && !clickedScenarioHeaderMetadata.isEditingMode()) {
                     final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
                     final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(rp.getX());
                     final GridBodyCellEditContext context = ScenarioSimulationGridHeaderUtilities.makeRenderContext(scenarioGrid,
@@ -396,11 +396,11 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (cell == null) {
             return false;
         }
-        if (((ScenarioGridCell) cell).isEditing()) {
+        if (((ScenarioGridCell) cell).isEditingMode()) {
             return true;
         }
-        ((ScenarioGridCell) cell).setEditing((!scenarioGridColumn.isReadOnly()) && scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex));
-        return ((ScenarioGridCell) cell).isEditing();
+        ((ScenarioGridCell) cell).setEditingMode((!scenarioGridColumn.isReadOnly()) && scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex));
+        return ((ScenarioGridCell) cell).isEditingMode();
     }
 
     protected String getExistingInstances(String group, ScenarioGridModel scenarioGridModel) {
