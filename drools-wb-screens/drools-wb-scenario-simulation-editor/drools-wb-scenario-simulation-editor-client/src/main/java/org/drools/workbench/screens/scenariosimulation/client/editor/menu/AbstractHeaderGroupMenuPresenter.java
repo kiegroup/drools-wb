@@ -31,8 +31,6 @@ public abstract class AbstractHeaderGroupMenuPresenter extends AbstractHeaderMen
     protected String HEADERCONTEXTMENU_LABEL;
     protected String HEADERCONTEXTMENU_I18N;
 
-    protected String HEADERCONTEXTMENU_SCENARIO;
-    protected String HEADERCONTEXTMENU_PREPEND_ROW;
 
     protected AppendColumnEvent appendColumnEvent;
     protected PrependColumnEvent prependColumnEvent;
