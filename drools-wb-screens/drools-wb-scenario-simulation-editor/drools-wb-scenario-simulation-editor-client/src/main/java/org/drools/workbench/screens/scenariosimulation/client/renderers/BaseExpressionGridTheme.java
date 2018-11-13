@@ -39,13 +39,7 @@ import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.the
 
 public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
-    public static final String PLACEHOLDER_COLOR = "#757575";
-
     public static final String FONT_FAMILY_HEADER = "Open Sans, Helvetica, Arial, sans-serif";
-
-    public static final String FONT_FAMILY_LABEL = "Open Sans, Helvetica, Arial, sans-serif";
-
-    public static final String FONT_STYLE_ITALIC = "italic";
 
     public static final String FONT_STYLE_BOLD = "bold";
 
@@ -53,7 +47,6 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
     public static final double STROKE_WIDTH = 1.0;
 
-    public static final int FONT_SIZE = 10;
 
     @Override
     public String getName() {
@@ -145,19 +138,6 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
                 .setFillColor(TABLE_TEXT)
                 .setFontSize(FONT_SIZE)
                 .setFontFamily(FONT_FAMILY_LABEL)
-                .setTextUnit(TextUnit.PT)
-                .setListening(false)
-                .setTextBaseLine(TextBaseLine.MIDDLE)
-                .setTextAlign(TextAlign.CENTER);
-    }
-
-    @Override
-    public Text getPlaceholderText() {
-        return new Text("")
-                .setFillColor(PLACEHOLDER_COLOR)
-                .setFontSize(FONT_SIZE)
-                .setFontFamily(FONT_FAMILY_LABEL)
-                .setFontStyle(FONT_STYLE_ITALIC)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
                 .setTextBaseLine(TextBaseLine.MIDDLE)
