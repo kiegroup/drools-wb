@@ -20,13 +20,11 @@ import java.util.Collections;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.MouseEvent;
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +34,9 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellEditAction;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
-import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -50,12 +44,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
+public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractScenarioSimulationGridPanelClickHandlerTest {
 
     private static final int MOUSE_EVENT_X = 32;
 
@@ -66,22 +61,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
     private static final double GRID_COMPUTED_LOCATION_Y = 200.0;
 
     @Mock
-    private GridWidget gridWidget;
-
-    @Mock
-    private Group gridWidgetHeader;
-
-    @Mock
-    private GridColumn gridColumn;
-
-    @Mock
     private Viewport viewport;
-
-    @Mock
-    private GridPinnedModeManager pinnedModeManager;
-
-    @Mock
-    private GridRenderer renderer;
 
     @Mock
     private MouseEvent nativeClickEvent;
@@ -101,17 +81,12 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
     @Mock
     private BaseGridRendererHelper.RenderingBlockInformation renderingBlockInformation;
 
-    @Mock
-    private ScenarioHeaderMetaData editableHeaderMetaData;
-
     @Captor
     private ArgumentCaptor<GridBodyCellEditContext> gridBodyCellEditContextCaptor;
 
     private NodeMouseClickEvent clickEvent;
 
     private NodeMouseDoubleClickEvent doubleClickEvent;
-
-    private GridData uiModel;
 
     private ScenarioSimulationGridWidgetMouseEventHandler handler;
 
@@ -121,30 +96,21 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
 
     @Before
     @SuppressWarnings("unchecked")
-    public void setup() {
-        this.uiModel = new BaseGridData(false);
-        this.uiModel.appendColumn(gridColumn);
+    public void setup() throws Exception {
+        super.setUp();
+
         this.clickEvent = new NodeMouseClickEvent(nativeClickEvent);
         this.doubleClickEvent = new NodeMouseDoubleClickEvent(nativeDoubleClickEvent);
 
-        when(gridWidget.getModel()).thenReturn(uiModel);
-        when(gridWidget.getRendererHelper()).thenReturn(rendererHelper);
-        when(gridWidget.getRenderer()).thenReturn(renderer);
-        when(gridWidget.getHeader()).thenReturn(gridWidgetHeader);
-        when(gridWidget.getViewport()).thenReturn(viewport);
-        when(gridWidget.getComputedLocation()).thenReturn(computedLocation);
-        when(gridWidget.getWidth()).thenReturn((double) MOUSE_EVENT_X);
-
+        when(scenarioGridMock.getRendererHelper()).thenReturn(rendererHelper);
+        when(scenarioGridMock.getViewport()).thenReturn(viewport);
+        when(scenarioGridMock.getComputedLocation()).thenReturn(computedLocation);
         when(rendererHelper.getRenderingInformation()).thenReturn(renderingInformation);
         when(rendererHelper.getColumnInformation(anyDouble())).thenReturn(columnInformation);
-        when(columnInformation.getColumn()).thenReturn(gridColumn);
-
-        when(renderer.getHeaderHeight()).thenReturn((double) MOUSE_EVENT_Y);
-        when(renderer.getHeaderRowHeight()).thenReturn((double) MOUSE_EVENT_Y);
+        when(columnInformation.getColumn()).thenReturn((GridColumn) scenarioGridColumnMock);
         when(renderingInformation.getBodyBlockInformation()).thenReturn(renderingBlockInformation);
         when(renderingInformation.getFloatingBlockInformation()).thenReturn(renderingBlockInformation);
-
-        when(editableHeaderMetaData.getSupportedEditAction()).thenReturn(GridCellEditAction.SINGLE_CLICK);
+        when(headerMetaDataMock.getSupportedEditAction()).thenReturn(GridCellEditAction.SINGLE_CLICK);
 
         this.handler = new ScenarioSimulationGridWidgetMouseEventHandler();
     }
@@ -152,43 +118,42 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_NonEditableColumn() {
-        assertFalse(handler.handleHeaderCell(gridWidget,
+        assertFalse(handler.handleHeaderCell(scenarioGridMock,
                                              relativeLocation,
                                              0,
                                              0,
                                              clickEvent));
 
-        verify(editableHeaderMetaData, never()).edit(any(GridBodyCellEditContext.class));
+        verify(headerMetaDataMock, never()).edit(any(GridBodyCellEditContext.class));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_EditableColumn_NotEditableRow() {
-        when(gridColumn.getHeaderMetaData()).thenReturn(Collections.singletonList(new BaseHeaderMetaData("column")));
+        when(scenarioGridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(new BaseHeaderMetaData("column")));
 
-        assertFalse(handler.handleHeaderCell(gridWidget,
+        assertFalse(handler.handleHeaderCell(scenarioGridMock,
                                              relativeLocation,
                                              0,
                                              0,
                                              clickEvent));
 
-        verify(editableHeaderMetaData, never()).edit(any(GridBodyCellEditContext.class));
+        verify(headerMetaDataMock, never()).edit(any(GridBodyCellEditContext.class));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_EditableColumn_EditableRow_ClickEvent() {
-        when(gridColumn.getHeaderMetaData()).thenReturn(Collections.singletonList(editableHeaderMetaData));
+        when(scenarioGridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(headerMetaDataMock));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.singletonList(mock(GridData.SelectedCell.class)));
 
-        uiModel.selectHeaderCell(0, 0);
-
-        assertTrue(handler.handleHeaderCell(gridWidget,
+        assertTrue(handler.handleHeaderCell(scenarioGridMock,
                                             relativeLocation,
                                             0,
                                             0,
                                             clickEvent));
 
-        verify(editableHeaderMetaData).edit(gridBodyCellEditContextCaptor.capture());
+        verify(headerMetaDataMock).edit(gridBodyCellEditContextCaptor.capture());
 
         final GridBodyCellEditContext gridBodyCellEditContext = gridBodyCellEditContextCaptor.getValue();
         assertNotNull(gridBodyCellEditContext);
@@ -202,16 +167,16 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_EditableColumn_EditableRow_DoubleClickEvent() {
-        when(gridColumn.getHeaderMetaData()).thenReturn(Collections.singletonList(editableHeaderMetaData));
+        when(scenarioGridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(headerMetaDataMock));
 
-        uiModel.selectHeaderCell(0, 0);
+        scenarioGridModelMock.selectHeaderCell(0, 0);
 
-        assertFalse(handler.handleHeaderCell(gridWidget,
+        assertFalse(handler.handleHeaderCell(scenarioGridMock,
                                              relativeLocation,
                                              0,
                                              0,
                                              doubleClickEvent));
 
-        verify(editableHeaderMetaData, never()).edit(any(GridBodyCellEditContext.class));
+        verify(headerMetaDataMock, never()).edit(any(GridBodyCellEditContext.class));
     }
 }
