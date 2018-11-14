@@ -87,13 +87,17 @@ public class ScenarioSimulationBuilders {
         public ScenarioGridColumn build() {
             List<GridColumn.HeaderMetaData> headerMetaDataList = headerBuilder.build();
             ScenarioGridColumnRenderer actualScenarioGridColumnRenderer = scenarioGridColumnRenderer != null ? scenarioGridColumnRenderer : new ScenarioGridColumnRenderer();
-            return new ScenarioGridColumn(headerMetaDataList,
-                                                                 actualScenarioGridColumnRenderer,
-                                                                 width,
-                                                                 isMovable,
-                                                                 factoryCell,
-                                                                 placeHolder
+            ScenarioGridColumn scenarioGridColumn = new ScenarioGridColumn(headerMetaDataList,
+                                                                           actualScenarioGridColumnRenderer,
+                                                                           width,
+                                                                           isMovable,
+                                                                           factoryCell,
+                                                                           placeHolder
             );
+            // FIXME add test
+            // by default scenario columns should be auto should have auto resize
+            scenarioGridColumn.setColumnWidthMode(GridColumn.ColumnWidthMode.auto);
+            return scenarioGridColumn;
         }
     }
 

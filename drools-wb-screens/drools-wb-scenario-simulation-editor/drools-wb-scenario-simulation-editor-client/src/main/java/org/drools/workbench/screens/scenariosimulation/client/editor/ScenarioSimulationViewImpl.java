@@ -100,8 +100,6 @@ public class ScenarioSimulationViewImpl
             final double w = parent.getOffsetWidth();
             final double h = parent.getOffsetHeight();
             setPixelSize((int) w, (int) h);
-            // FIXME to move into panel call (percentace should be defined at scenarioGrid level via Theme)
-            getScenarioGridPanel().getScenarioGrid().getModel().refreshWidth(w, 1);
         }
         scenarioGridPanel.onResize();
     }

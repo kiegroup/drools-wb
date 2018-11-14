@@ -25,7 +25,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -688,65 +687,5 @@ public class ScenarioGridModel extends BaseGridData {
             return Optional.empty();
         }
         return Optional.ofNullable(gridCell.getValue().getValue());
-    }
-
-    public void refreshWidth(double visiblePanel, double percentage) {
-        GWT.log("--- START REFRESH: visiblePanel:" + visiblePanel + " percentage:" + percentage);
-        double targetGrossWidth = visiblePanel * percentage;
-        double currentGrossWidth = getColumns().stream().mapToDouble(GridColumn::getWidth).sum();
-
-        GWT.log("targetGrossWidth = " + targetGrossWidth);
-        GWT.log("currentGrossWidth = " + currentGrossWidth);
-        GWT.log("numberOfColumns = " + getColumns().size());
-
-        double fixedWidth = getColumns().stream().filter(column -> {
-            ScenarioGridColumn scenarioColumn = (ScenarioGridColumn) column;
-            return ScenarioGridColumn.ColumnWidthMode.isFixed(scenarioColumn);
-        }).mapToDouble(GridColumn::getWidth).sum();
-
-        double percentageWidth = getColumns().stream().filter(column -> {
-            ScenarioGridColumn scenarioColumn = (ScenarioGridColumn) column;
-            return ScenarioGridColumn.ColumnWidthMode.isPercentage(scenarioColumn);
-        }).mapToDouble(column -> {
-            double originalWidth = column.getWidth();
-            double ratioToKeep = originalWidth / currentGrossWidth;
-            column.setWidth(ratioToKeep * targetGrossWidth);
-            GWT.log("PERCENTAGE COLUMN = " + column);
-            GWT.log("originalWidth = " + originalWidth);
-            GWT.log("ratioToKeep = " + ratioToKeep);
-            GWT.log("newWidth = " + column.getWidth());
-            return originalWidth;
-        }).sum();
-
-        long numberOfFluidColumn = getColumns().stream().filter(column -> {
-            ScenarioGridColumn scenarioColumn = (ScenarioGridColumn) column;
-            return ScenarioGridColumn.ColumnWidthMode.isAuto(scenarioColumn);
-        }).count();
-
-        double targetWidth = targetGrossWidth - fixedWidth - percentageWidth;
-        double currentWidth = currentGrossWidth - fixedWidth - percentageWidth;
-
-        GWT.log("fixedWidth = " + fixedWidth);
-        GWT.log("percentageWidth = " + percentageWidth);
-        GWT.log("targetWidth = " + targetWidth);
-        GWT.log("currentWidth = " + currentWidth);
-
-        getColumns().forEach(column -> {
-            ScenarioGridColumn scenarioColumn = (ScenarioGridColumn) column;
-            GWT.log("--- COLUMN:" + scenarioColumn.toString());
-            if(ScenarioGridColumn.ColumnWidthMode.isAuto(column)) {
-                double newWidth = targetWidth / numberOfFluidColumn;
-                GWT.log("IS not fixed size, old: " + scenarioColumn.getWidth() + " new:" + newWidth);
-                if(newWidth > scenarioColumn.getMinimumWidth()) {
-                    GWT.log("CAN be reduced");
-                    scenarioColumn.setWidth(newWidth);
-                }
-                else {
-                    GWT.log("CANNOT be reduced, new:" + scenarioColumn.getMinimumWidth());
-                    scenarioColumn.setWidth(scenarioColumn.getMinimumWidth());
-                }
-            }
-        });
-        GWT.log("--- END REFRESH");
     }
 }
