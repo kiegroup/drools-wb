@@ -19,49 +19,33 @@ import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
  */
 @Dependent
-public class AppendColumnCommand extends AbstractCommand  {
-
-    private ScenarioGridModel model;
-    private String columnId;
-    private String columnGroup;
-
-
-    public AppendColumnCommand() {
-    }
-
-    public AppendColumnCommand(ScenarioGridModel model, String columnId, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        super(scenarioGridPanel, scenarioGridLayer);
-        this.model = model;
-        this.columnId = columnId;
-        this.columnGroup = columnGroup;
-    }
+public class AppendColumnCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        final int index = model.getFirstIndexRightOfGroup(columnGroup);
-        FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        Map.Entry<String, String> validPlaceholders = model.getValidPlaceholders();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        final int index = context.getModel().getFirstIndexRightOfGroup(context.getColumnGroup());
+        FactMappingType factMappingType = FactMappingType.valueOf(context.getColumnGroup().toUpperCase());
+        Map.Entry<String, String> validPlaceholders = context.getModel().getValidPlaceholders();
         String instanceTitle = validPlaceholders.getKey();
         String propertyTitle = validPlaceholders.getValue();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,
-                                                                                      columnId,
-                                                                                      columnGroup,
+                                                                                      context.getColumnId(),
+                                                                                      context.getColumnGroup(),
                                                                                       factMappingType,
-                                                                                      scenarioGridPanel,
-                                                                                      scenarioGridLayer,
+                                                                                      context.getScenarioGridPanel(),
+                                                                                      context.getScenarioGridLayer(),
                                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
-        model.insertColumn(index, scenarioGridColumnLocal);
+        context.getModel().insertColumn(index, scenarioGridColumnLocal);
+        return commonExecution(context);
     }
 }

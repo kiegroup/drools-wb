@@ -58,7 +58,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class CommandExecutorTest extends AbstractCommandTest {
+public class CommandExecutorTest extends AbstractScenarioSimulationCommandTest {
 
     @Mock
     private List<HandlerRegistration> handlerRegistrationListMock;
@@ -170,7 +170,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
     public void onAppendColumnEvent() {
         AppendColumnEvent event = new AppendColumnEvent(COLUMN_GROUP);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(AppendColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(AppendColumnScenarioSImulationCommand.class));
     }
 
     @Test
@@ -185,12 +185,12 @@ public class CommandExecutorTest extends AbstractCommandTest {
         DeleteColumnEvent event = new DeleteColumnEvent(COLUMN_INDEX, COLUMN_GROUP);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(DeleteColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(DeleteColumnScenarioSImulationCommand.class));
         verify(commandExecutor, times(1)).commonExecute(isA(DisableRightPanelCommand.class));
         reset(commandExecutor);
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(DeleteColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(DeleteColumnScenarioSImulationCommand.class));
         verify(commandExecutor, never()).commonExecute(isA(DisableRightPanelCommand.class));
     }
 
@@ -226,7 +226,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
     public void onInsertColumnEvent() {
         InsertColumnEvent event = new InsertColumnEvent(COLUMN_INDEX, true, false);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(InsertColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(InsertColumnScenarioSImulationCommand.class));
     }
 
     @Test
@@ -240,7 +240,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
     public void onPrependColumnEvent() {
         PrependColumnEvent event = new PrependColumnEvent(COLUMN_GROUP);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(PrependColumnCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(PrependColumnScenarioSImulationCommand.class));
     }
 
     @Test
@@ -286,13 +286,13 @@ public class CommandExecutorTest extends AbstractCommandTest {
         SetInstanceHeaderEvent event = new SetInstanceHeaderEvent(FULL_PACKAGE, FULL_CLASS_NAME);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderScenarioSImulationCommand.class));
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         reset(commandExecutor);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
         when(scenarioGridModelMock.isSameSelectedColumnType(event.getClassName())).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetInstanceHeaderScenarioSImulationCommand.class));
         when(scenarioGridModelMock.isSameSelectedColumnType(event.getClassName())).thenReturn(false);
         when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         commandExecutor.onEvent(event);
@@ -305,7 +305,7 @@ public class CommandExecutorTest extends AbstractCommandTest {
                                                         isA(Command.class));
         when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(SetInstanceHeaderCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(SetInstanceHeaderScenarioSImulationCommand.class));
     }
 
     @Test
@@ -313,19 +313,19 @@ public class CommandExecutorTest extends AbstractCommandTest {
         SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(FULL_PACKAGE, VALUE, VALUE_CLASS_NAME);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderScenarioSImulationCommand.class));
 
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         reset(commandExecutor);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, times(1)).commonExecute(isA(SetPropertyHeaderCommand.class));
+        verify(commandExecutor, times(1)).commonExecute(isA(SetPropertyHeaderScenarioSImulationCommand.class));
 
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
         reset(commandExecutor);
         when(scenarioGridModelMock.isSameSelectedColumnProperty(VALUE)).thenReturn(true);
         commandExecutor.onEvent(event);
-        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderCommand.class));
+        verify(commandExecutor, never()).commonExecute(isA(SetPropertyHeaderScenarioSImulationCommand.class));
 
         when(scenarioGridModelMock.isSameSelectedColumnProperty(VALUE)).thenReturn(false);
         reset(commandExecutor);

@@ -33,14 +33,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class PrependColumnCommandTest extends AbstractCommandTest {
+public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private PrependColumnCommand prependColumnCommand;
+    private PrependColumnScenarioSImulationCommand prependColumnCommand;
 
     @Before
     public void setup() {
         super.setup();
-        prependColumnCommand = spy(new PrependColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
+        prependColumnCommand = spy(new PrependColumnScenarioSImulationCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

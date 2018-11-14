@@ -27,7 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class EnableRightPanelCommandTest extends AbstractCommandTest {
+public class EnableRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
 
 
 

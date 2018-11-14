@@ -34,16 +34,8 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
  * <code>Command</code> to <b>insert</b> a column.
  */
 @Dependent
-public class InsertColumnCommand extends AbstractCommand {
+public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private String columnId;
-    private int columnIndex;
-    protected boolean isRight;
-    private boolean asProperty;
-
-    public InsertColumnCommand() {
-    }
 
     /**
      * @param model

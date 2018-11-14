@@ -38,9 +38,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class SetInstanceHeaderCommandTest extends AbstractCommandTest {
+public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetInstanceHeaderCommand setInstanceHeaderCommand;
+    private SetInstanceHeaderScenarioSImulationCommand setInstanceHeaderCommand;
 
     @Mock
     private List<GridColumn<?>> mockGridColumns;
@@ -50,7 +50,7 @@ public class SetInstanceHeaderCommandTest extends AbstractCommandTest {
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        setInstanceHeaderCommand = spy(new SetInstanceHeaderCommand(scenarioGridModelMock, COLUMN_ID, VALUE, scenarioGridPanelMock, scenarioGridLayerMock) {
+        setInstanceHeaderCommand = spy(new SetInstanceHeaderScenarioSImulationCommand(scenarioGridModelMock, COLUMN_ID, VALUE, scenarioGridPanelMock, scenarioGridLayerMock) {
 
             @Override
             protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {

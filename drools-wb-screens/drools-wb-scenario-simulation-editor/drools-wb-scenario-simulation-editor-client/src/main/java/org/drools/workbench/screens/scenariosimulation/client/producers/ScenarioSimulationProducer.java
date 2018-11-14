@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
@@ -34,21 +35,24 @@ public class ScenarioSimulationProducer {
 
 
     @Inject
-    ScenarioSimulationViewProducer scenarioSimulationViewProducer;
+    protected ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 
     @Inject
-    EventBusProducer eventBusProducer;
+    protected EventBusProducer eventBusProducer;
 
     @Inject
-    DeletePopupPresenter deletePopupPresenter;
+    protected DeletePopupPresenter deletePopupPresenter;
     @Inject
-    PreserveDeletePopupPresenter preserveDeletePopupPresenter;
+    protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
     @Inject
-    CommandExecutor commandExecutor;
+    protected CommandExecutor commandExecutor;
 
     @Inject
-    Event<NotificationEvent> notificationEvent;
+    protected ScenarioSimulationContext scenarioSimulationContext;
+
+    @Inject
+    protected Event<NotificationEvent> notificationEvent;
 
     public EventBus getEventBus() {
         return eventBusProducer.getEventBus();
@@ -65,5 +69,11 @@ public class ScenarioSimulationProducer {
         commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
         commandExecutor.setNotificationEvent(notificationEvent);
         return commandExecutor;
+    }
+
+    public ScenarioSimulationContext getScenarioSimulationContext() {
+        scenarioSimulationContext.setEventBus(getEventBus());
+        scenarioSimulationContext.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
+        return scenarioSimulationContext;
     }
 }

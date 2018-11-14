@@ -20,58 +20,34 @@ import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>delete</b> a column. <b>Eventually</b> add a ne column if the deleted one is the last of its group.
  */
 @Dependent
-public class DeleteColumnCommand extends AbstractCommand {
+public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private int columnIndex;
-    private String columnGroup;
-    private ScenarioGridPanel scenarioGridPanel;
-    private ScenarioGridLayer scenarioGridLayer;
-
-    public DeleteColumnCommand() {
-    }
-
-    /**
-     * @param model
-     * @param columnIndex
-     * @param columnGroup
-     * @param scenarioGridPanel
-     * @param scenarioGridLayer
-     */
-    public DeleteColumnCommand(ScenarioGridModel model, int columnIndex, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        this.model = model;
-        this.columnIndex = columnIndex;
-        this.columnGroup = columnGroup;
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridLayer;
-    }
-
+    
     @Override
-    public void execute() {
-        model.deleteColumn(columnIndex);
-        if (model.getGroupSize(columnGroup) < 1) {
-            FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-            Map.Entry<String, String> validPlaceholders = model.getValidPlaceholders();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().deleteColumn(context.getColumnIndex());
+        if (context.getModel().getGroupSize(context.getColumnGroup()) < 1) {
+            FactMappingType factMappingType = FactMappingType.valueOf(context.getColumnGroup().toUpperCase());
+            Map.Entry<String, String> validPlaceholders = context.getModel().getValidPlaceholders();
             String instanceTitle = validPlaceholders.getKey();
             String propertyTitle = validPlaceholders.getValue();
-            model.insertColumn(columnIndex, getScenarioGridColumnLocal(instanceTitle,
+            context.getModel().insertColumn(context.getColumnIndex(), getScenarioGridColumnLocal(instanceTitle,
                                                                        propertyTitle,
                                                                        String.valueOf(new Date().getTime()),
-                                                                       columnGroup,
+                                                                       context.getColumnGroup(),
                                                                        factMappingType,
-                                                                       scenarioGridPanel,
-                                                                       scenarioGridLayer,
+                                                                       context.getScenarioGridPanel(),
+                                                                       context.getScenarioGridLayer(),
                                                                        ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
+        return commonExecution(context);
     }
 }

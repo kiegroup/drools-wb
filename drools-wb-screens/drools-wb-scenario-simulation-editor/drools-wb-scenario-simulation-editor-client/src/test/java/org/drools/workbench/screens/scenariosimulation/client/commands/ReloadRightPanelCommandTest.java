@@ -27,7 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ReloadRightPanelCommandTest extends AbstractCommandTest {
+public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
 
 
 

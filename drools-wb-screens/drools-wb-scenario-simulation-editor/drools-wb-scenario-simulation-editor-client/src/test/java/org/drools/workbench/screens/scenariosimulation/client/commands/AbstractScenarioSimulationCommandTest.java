@@ -44,7 +44,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractCommandTest {
+public abstract class AbstractScenarioSimulationCommandTest {
 
     protected ScenarioGridModel scenarioGridModelMock;
 

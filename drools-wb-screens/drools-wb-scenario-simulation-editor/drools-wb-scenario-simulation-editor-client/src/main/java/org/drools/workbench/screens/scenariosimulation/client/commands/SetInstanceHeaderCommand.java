@@ -31,14 +31,8 @@ import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.
  * <code>Command</code> to set the <i>instance</i> level header for a given column
  */
 @Dependent
-public class SetInstanceHeaderCommand extends AbstractCommand {
+public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private String fullPackage;
-    private String className;
-
-    public SetInstanceHeaderCommand() {
-    }
 
     /**
      * @param model

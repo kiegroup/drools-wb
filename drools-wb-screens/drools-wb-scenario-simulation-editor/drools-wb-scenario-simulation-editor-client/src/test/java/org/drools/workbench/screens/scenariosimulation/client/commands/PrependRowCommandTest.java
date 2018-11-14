@@ -28,7 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class PrependRowCommandTest extends AbstractCommandTest {
+public class PrependRowCommandTest extends AbstractScenarioSimulationCommandTest {
 
 
 

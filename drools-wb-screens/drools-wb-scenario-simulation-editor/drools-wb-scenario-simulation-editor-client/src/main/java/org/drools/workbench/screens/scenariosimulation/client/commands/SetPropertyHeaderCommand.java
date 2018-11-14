@@ -33,16 +33,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  * <code>Command</code> to to set the <i>property</i> level header for a given column
  */
 @Dependent
-public class SetPropertyHeaderCommand extends AbstractCommand {
+public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private String fullPackage;
-    private String value;
-    private String valueClassName;
-    protected boolean keepData;
-
-    public SetPropertyHeaderCommand() {
-    }
 
     /**
      * @param model

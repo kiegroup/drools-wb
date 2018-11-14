@@ -38,14 +38,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DeleteColumnCommandTest extends AbstractCommandTest {
+public class DeleteColumnCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private DeleteColumnCommand deleteColumnCommand;
+    private DeleteColumnScenarioSImulationCommand deleteColumnCommand;
 
     @Before
     public void setup() {
         super.setup();
-        deleteColumnCommand = spy(new DeleteColumnCommand(scenarioGridModelMock, COLUMN_INDEX, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
+        deleteColumnCommand = spy(new DeleteColumnScenarioSImulationCommand(scenarioGridModelMock, COLUMN_INDEX, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

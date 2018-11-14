@@ -34,14 +34,14 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class InsertColumnCommandTest extends AbstractCommandTest {
+public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private InsertColumnCommand insertColumnCommand;
+    private InsertColumnScenarioSImulationCommand insertColumnCommand;
 
     @Before
     public void setup() {
         super.setup();
-        insertColumnCommand = spy(new InsertColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_INDEX, true, true, scenarioGridPanelMock, scenarioGridLayerMock) {
+        insertColumnCommand = spy(new InsertColumnScenarioSImulationCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_INDEX, true, true, scenarioGridPanelMock, scenarioGridLayerMock) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

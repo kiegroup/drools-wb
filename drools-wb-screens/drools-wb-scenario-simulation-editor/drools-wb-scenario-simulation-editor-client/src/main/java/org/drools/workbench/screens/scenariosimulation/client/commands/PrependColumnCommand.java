@@ -30,14 +30,8 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
  * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a column to a given <i>group</i>
  */
 @Dependent
-public class PrependColumnCommand extends AbstractCommand {
+public class PrependColumnCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private String columnId;
-    private String columnGroup;
-
-    public PrependColumnCommand() {
-    }
 
     public PrependColumnCommand(ScenarioGridModel model, String columnId, String columnGroup, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
         super(scenarioGridPanel, scenarioGridLayer);

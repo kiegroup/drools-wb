@@ -25,7 +25,6 @@ import javax.enterprise.event.Event;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
@@ -58,16 +57,12 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioG
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioNotificationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.Command;
 import org.uberfire.workbench.events.NotificationEvent;
 
 /**
@@ -93,11 +88,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                         SetInstanceHeaderEventHandler,
                                         SetPropertyHeaderEventHandler {
 
-    protected ScenarioGridModel model;
-    protected ScenarioGridPanel scenarioGridPanel;
-    protected ScenarioGridLayer scenarioGridLayer;
-    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    protected RightPanelView.Presenter rightPanelPresenter;
     protected DeletePopupPresenter deletePopupPresenter;
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
@@ -114,25 +104,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
         registerHandlers();
-    }
-
-    public void setScenarioSimulationEditorPresenter(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter) {
-        this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
-    }
-
-    public void setRightPanelPresenter(RightPanelView.Presenter rightPanelPresenter) {
-        this.rightPanelPresenter = rightPanelPresenter;
-    }
-
-    /**
-     * This method set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
-     * from the give <code>ScenarioGridPanel</code>
-     * @param scenarioGridPanel
-     */
-    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
-        this.model = scenarioGridLayer.getScenarioGrid().getModel();
     }
 
     public void setDeletePopupPresenter(DeletePopupPresenter deletePopupPresenter) {
@@ -291,10 +262,8 @@ public class CommandExecutor implements AppendColumnEventHandler,
         }
     }
 
-    void commonExecute(Command toExecute) {
-        toExecute.execute();
-        scenarioGridPanel.onResize();
-        scenarioGridPanel.select();
+    protected void commonExecute(Command toExecute, ScenarioSimulationContext context) {
+        toExecute.execute(context);
     }
 
     void registerHandlers() {

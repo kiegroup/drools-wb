@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
@@ -26,32 +27,24 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.AbstractCommand;
+import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.CommandResultBuilder;
+import org.kie.workbench.common.command.impl.CommandResultImpl;
 
-import static org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider.getHeaderTextBoxFactory;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getHeaderBuilder;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
 /**
  * <b>Abstract</b> <code>Command</code> class to provide common methods used by actual implementations
  */
-public abstract class AbstractCommand implements Command {
+public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<ScenarioSimulationContext, ScenarioSimulationViolation> {
 
-    protected ScenarioGridPanel scenarioGridPanel;
-    protected ScenarioGridLayer scenarioGridLayer;
-
-    public AbstractCommand() {
+    @Override
+    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
+        return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("NOT IMPLEMENTED, YET")));
     }
 
-    public AbstractCommand(ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridLayer;
-    }
-
-    protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
-        // indirection add for test
-        return getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
-    }
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
@@ -89,15 +82,23 @@ public abstract class AbstractCommand implements Command {
         return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, placeHolder);
     }
 
-    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
+    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
         // indirection add for test
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+        return getScenarioGridColumn(headerBuilder, context.getScenarioGridPanel(), context.getScenarioGridLayer(), ScenarioSimulationEditorConstants.INSTANCE.insertValue());
     }
 
-    protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle) {
-        return scenarioGridLayer.getScenarioGrid().getModel().getColumns().stream()
+    protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
+
+
+        return context.getScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
                 .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))
                 .findFirst()
                 .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());
+    }
+
+    protected CommandResult<ScenarioSimulationViolation> commonExecution(ScenarioSimulationContext context) {
+        context.getScenarioGridPanel().onResize();
+        context.getScenarioGridPanel().select();
+        return CommandResultBuilder.SUCCESS;
     }
 }
