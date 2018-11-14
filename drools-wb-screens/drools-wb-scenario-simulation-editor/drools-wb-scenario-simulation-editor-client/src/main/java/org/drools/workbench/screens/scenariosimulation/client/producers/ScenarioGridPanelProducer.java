@@ -32,24 +32,24 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class ScenarioGridPanelProducer {
 
     @Inject
-    ScenarioGridLayer scenarioGridLayer;
+    protected ScenarioGridLayer scenarioGridLayer;
 
     @Inject
-    ScenarioGridPanel scenarioGridPanel;
-
-    ScenarioGrid scenarioGrid;
+    protected ScenarioGridPanel scenarioGridPanel;
 
     @PostConstruct
     public void init() {
-         scenarioGrid = new ScenarioGrid(new ScenarioGridModel(false),
-                            scenarioGridLayer,
-                            new ScenarioGridRenderer(false),
-                            scenarioGridPanel);
+        final ScenarioGrid scenarioGrid = new ScenarioGrid(new ScenarioGridModel(false),
+                                                           scenarioGridLayer,
+                                                           new ScenarioGridRenderer(false),
+                                                           scenarioGridPanel);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
+
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
     }
+
 }

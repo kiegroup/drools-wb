@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.junit.Before;
@@ -26,6 +27,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -50,12 +52,16 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
     }
 
     @Test
+    public void init() {
+        scenarioGridPanelProducer.init();
+        verify(scenarioGridLayerMock, times(1)).addScenarioGrid(isA(ScenarioGrid.class));
+        verify(scenarioGridPanelMock, times(1)).add(eq(scenarioGridLayerMock));
+    }
+
+    @Test
     public void getScenarioGridPanel() {
         final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getScenarioGridPanel();
         assertEquals(scenarioGridPanelMock, retrieved);
-//        verify(scenarioGridPanelProducer, times(1)).newScenarioGrid(eq(scenarioGridPanelMock), eq(scenarioGridLayerMock));
-        verify(scenarioGridLayerMock, times(1)).addScenarioGrid(eq(scenarioGridMock));
-        verify(scenarioGridPanelMock, times(1)).add(eq(scenarioGridLayerMock));
     }
 
 }
