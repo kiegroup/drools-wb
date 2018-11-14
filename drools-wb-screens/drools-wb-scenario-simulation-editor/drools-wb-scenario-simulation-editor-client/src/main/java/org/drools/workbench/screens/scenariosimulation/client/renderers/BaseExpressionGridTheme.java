@@ -27,6 +27,7 @@ import com.ait.lienzo.shared.core.types.TextUnit;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEStyles;
 
 import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.CELL_ERROR_BACKGROUND;
 import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.CELL_ERROR_FOCUS;
@@ -108,7 +109,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     public Text getHeaderText() {
         return new Text("")
                 .setFillColor(TABLE_TEXT)
-                .setFontSize(FONT_SIZE)
+                .setFontSize(KIEStyles.FONT_SIZE)
                 .setFontFamily(FONT_FAMILY_HEADER)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
@@ -136,8 +137,8 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     public Text getBodyText() {
         return new Text("")
                 .setFillColor(TABLE_TEXT)
-                .setFontSize(FONT_SIZE)
-                .setFontFamily(FONT_FAMILY_LABEL)
+                .setFontSize(KIEStyles.FONT_SIZE)
+                .setFontFamily(KIEStyles.FONT_FAMILY_LABEL)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
                 .setTextBaseLine(TextBaseLine.MIDDLE)
@@ -172,8 +173,8 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     public Text getErrorText() {
         return new Text("")
                 .setFillColor(CELL_ERROR_FOCUS)
-                .setFontSize(FONT_SIZE)
-                .setFontFamily(FONT_FAMILY_LABEL)
+                .setFontSize(KIEStyles.FONT_SIZE)
+                .setFontFamily(KIEStyles.FONT_FAMILY_LABEL)
                 .setFontStyle(FONT_STYLE_BOLD)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
