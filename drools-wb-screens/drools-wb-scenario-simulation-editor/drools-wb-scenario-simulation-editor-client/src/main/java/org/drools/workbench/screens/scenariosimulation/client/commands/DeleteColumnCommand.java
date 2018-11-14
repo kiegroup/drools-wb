@@ -23,6 +23,7 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.kie.workbench.common.command.CommandResult;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 /**
  * <code>Command</code> to <b>delete</b> a column. <b>Eventually</b> add a ne column if the deleted one is the last of its group.
@@ -48,6 +49,13 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
                                                                        context.getScenarioGridLayer(),
                                                                        ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
-        return commonExecution(context);
+        // TODO CHECK POSITION
+        GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
+        boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == context.getColumnIndex();
+        if (context.getRightPanelPresenter() != null && toDisable) {
+            return new DisableRightPanelCommand().execute(context);
+        } else {
+            return commonExecution(context);
+        }
     }
 }

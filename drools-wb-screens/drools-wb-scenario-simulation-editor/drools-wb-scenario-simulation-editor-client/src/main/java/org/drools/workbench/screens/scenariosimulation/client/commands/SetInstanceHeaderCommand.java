@@ -18,12 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.CommandResultBuilder;
 
 import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
@@ -34,32 +33,20 @@ import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.
 public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand {
 
 
-    /**
-     * @param model
-     * @param fullPackage
-     * @param className
-     * @param scenarioGridPanel
-     * @param scenarioGridLayer
-     */
-    public SetInstanceHeaderCommand(ScenarioGridModel model, String fullPackage, String className, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer) {
-        super(scenarioGridPanel, scenarioGridLayer);
-        this.model = model;
-        this.fullPackage = fullPackage;
-        this.className = className;
-    }
-
     @Override
-    public void execute() {
-        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) model.getSelectedColumn();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
         if (selectedColumn == null) {
-            return;
+            return CommandResultBuilder.SUCCESS;
         }
-        int columnIndex = model.getColumns().indexOf(selectedColumn);
+        int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
+        String fullPackage = context.getFullPackage();
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
+        String className = context.getClassName();
         String canonicalClassName = fullPackage + className;
-        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
+        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className, context).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
         final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
         informationHeaderMetaData.setTitle(className);
         selectedColumn.setInstanceAssigned(true);
@@ -68,6 +55,7 @@ public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand 
         propertyHeaderMetaData.setTitle(getPropertyPlaceHolder(columnIndex));
         propertyHeaderMetaData.setReadOnly(false);
         selectedColumn.setFactIdentifier(factIdentifier);
-        model.updateColumnInstance(columnIndex, selectedColumn);
+        context.getModel().updateColumnInstance(columnIndex, selectedColumn);
+        return commonExecution(context);
     }
 }

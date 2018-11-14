@@ -17,29 +17,19 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>disable</b> the <code>RightPanelView</code>
  */
 @Dependent
-public class DisableRightPanelCommand implements Command {
-
-    private RightPanelView.Presenter rightPanelPresenter;
-
-    public DisableRightPanelCommand() {
-    }
-
-    /**
-     * @param rightPanelPresenter
-     */
-    public DisableRightPanelCommand(RightPanelView.Presenter rightPanelPresenter) {
-        this.rightPanelPresenter = rightPanelPresenter;
-    }
+public class DisableRightPanelCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        rightPanelPresenter.onDisableEditorTab();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        if (context.getRightPanelPresenter() != null) {
+            context.getRightPanelPresenter().onDisableEditorTab();
+        }
+        return commonExecution(context);
     }
 }

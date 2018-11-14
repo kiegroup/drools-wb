@@ -17,26 +17,15 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 @Dependent
-public class InsertRowCommand implements Command {
-
-    private int rowIndex;
-    private ScenarioGridModel model;
-
-    public InsertRowCommand() {
-    }
-
-    public InsertRowCommand(ScenarioGridModel model, int rowIndex) {
-        this.model = model;
-        this.rowIndex = rowIndex;
-    }
+public class InsertRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        model.insertRow(rowIndex, new ScenarioGridRow());
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().insertRow(context.getRowIndex(), new ScenarioGridRow());
+        return commonExecution(context);
     }
 }

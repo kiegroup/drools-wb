@@ -61,7 +61,6 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.kie.workbench.common.command.Command;
 import org.uberfire.workbench.events.NotificationEvent;
 
@@ -97,6 +96,8 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     protected Event<NotificationEvent> notificationEvent;
 
+    protected ScenarioSimulationContext context;
+
     public CommandExecutor() {
         // CDI
     }
@@ -118,6 +119,10 @@ public class CommandExecutor implements AppendColumnEventHandler,
         this.notificationEvent = notificationEvent;
     }
 
+    public void setContext(ScenarioSimulationContext context) {
+        this.context = context;
+    }
+
     @PreDestroy
     public void unregisterHandlers() {
         handlerRegistrationList.forEach(HandlerRegistration::removeHandler);
@@ -125,94 +130,135 @@ public class CommandExecutor implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(AppendColumnEvent event) {
-        commonExecute(new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer));
+        context.setColumnId(String.valueOf(new Date().getTime()));
+        context.setColumnGroup(event.getColumnGroup());
+        new AppendColumnCommand().execute(context);
+
+//        commonExecute(new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
-        commonExecute(new AppendRowCommand(model));
+        new AppendRowCommand().execute(context);
+//        commonExecute(new AppendRowCommand(model));
     }
 
     @Override
     public void onEvent(DeleteColumnEvent event) {
-        int deletedColumnIndex = event.getColumnIndex();
-        GridColumn<?> selectedColumn = model.getSelectedColumn();
-        boolean toDisable = selectedColumn == null || model.getColumns().indexOf(selectedColumn) == deletedColumnIndex;
-        commonExecute(new DeleteColumnCommand(model, deletedColumnIndex, event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer));
-        if (rightPanelPresenter != null && toDisable) {
-            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
-        }
+//        int deletedColumnIndex = event.getColumnIndex();
+//        GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
+        context.setColumnIndex(event.getColumnIndex());
+        context.setColumnGroup(event.getColumnGroup());
+        new DeleteColumnCommand().execute(context);
+//
+//
+//        boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == deletedColumnIndex;
+//
+//
+//
+////        commonExecute(new DeleteColumnCommand(model, deletedColumnIndex, event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
+//        if (rightPanelPresenter != null && toDisable) {
+//            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
+//        }
     }
 
     @Override
     public void onEvent(DeleteRowEvent event) {
-        commonExecute(new DeleteRowCommand(model, event.getRowIndex()));
+        context.setRowIndex(event.getRowIndex());
+        new DeleteRowCommand().execute(context);
+//        commonExecute(new DeleteRowCommand(model, event.getRowIndex()));
     }
 
     @Override
     public void onEvent(DisableRightPanelEvent event) {
-        if (rightPanelPresenter != null) {
-            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
-        }
+        new DisableRightPanelCommand().execute(context);
+//        if (rightPanelPresenter != null) {
+//            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
+//        }
     }
 
     @Override
     public void onEvent(DuplicateRowEvent event) {
-        commonExecute(new DuplicateRowCommand(model, event.getRowIndex()));
+        context.setRowIndex(event.getRowIndex());
+        new DuplicateRowCommand().execute(context);
+//        commonExecute(new DuplicateRowCommand(model, event.getRowIndex()));
     }
 
     @Override
     public void onEvent(EnableRightPanelEvent event) {
-        if (scenarioSimulationEditorPresenter != null) {
-            scenarioSimulationEditorPresenter.expandToolsDock();
-        }
-        commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
+        context.setFilterTerm(event.getFilterTerm());
+        context.setPropertyName(event.getPropertyName());
+        context.setNotEqualsSearch(event.isNotEqualsSearch());
+        new EnableRightPanelCommand().execute(context);
+
+//        if (scenarioSimulationEditorPresenter != null) {
+//            scenarioSimulationEditorPresenter.expandToolsDock();
+//        }
+//        commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
     }
 
     @Override
     public void onEvent(InsertColumnEvent event) {
-        commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), event.isAsProperty(), scenarioGridPanel, scenarioGridLayer));
+        context.setColumnId(String.valueOf(new Date().getTime()));
+        context.setColumnIndex(event.getColumnIndex());
+        context.setRight(event.isRight());
+        context.setAsProperty(event.isAsProperty());
+        new InsertColumnCommand().execute(context);
+//        commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), event.isAsProperty(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(InsertRowEvent event) {
-        commonExecute(new InsertRowCommand(model, event.getRowIndex()));
+        context.setRowIndex(event.getRowIndex());
+        new InsertRowCommand().execute(context);
+//        commonExecute(new InsertRowCommand(model, event.getRowIndex()));
     }
 
     @Override
     public void onEvent(PrependColumnEvent event) {
-        commonExecute(new PrependColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), scenarioGridPanel, scenarioGridLayer));
+        context.setColumnId(String.valueOf(new Date().getTime()));
+        context.setColumnGroup(event.getColumnGroup());
+        new PrependColumnCommand().execute(context);
+//        commonExecute(new PrependColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(PrependRowEvent event) {
-        commonExecute(new PrependRowCommand(model));
+        new PrependRowCommand().execute(context);
+//        commonExecute(new PrependRowCommand(model));
     }
 
     @Override
     public void onEvent(ReloadRightPanelEvent event) {
-        commonExecute(new ReloadRightPanelCommand(scenarioSimulationEditorPresenter, event.isDisable(), event.isOpenDock()));
+        context.setDisable(event.isDisable());
+        context.setOpenDock(event.isOpenDock());
+        new ReloadRightPanelCommand().execute(context);
+//        commonExecute(new ReloadRightPanelCommand(scenarioSimulationEditorPresenter, event.isDisable(), event.isOpenDock()));
     }
 
     @Override
     public void handle(ScenarioGridReloadEvent event) {
-        scenarioGridPanel.onResize();
+        // TODO CHECK FOR POSITION
+        context.getScenarioGridPanel().onResize();
     }
 
     @Override
     public void onEvent(ScenarioNotificationEvent event) {
+        // TODO CHECK FOR POSITION
         notificationEvent.fire(new NotificationEvent(event.getMessage(), event.getType()));
     }
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        if (model.getSelectedColumn() == null) {
+        // TODO CHECK FOR REFACTORING
+
+        if (context.getModel().getSelectedColumn() == null) {
             return;
         }
-        if (model.isSameSelectedColumnType(event.getClassName())) {
+        if (context.getModel().isSameSelectedColumnType(event.getClassName())) {
             return;
-        } else if (((ScenarioGridColumn) model.getSelectedColumn()).isInstanceAssigned()) {
-            Command okPreserveCommand = () -> commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
+        } else if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
+            Command okPreserveCommand = () -> commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -221,22 +267,23 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.changeType(),
                                       okPreserveCommand);
         } else {
-            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), scenarioGridPanel, scenarioGridLayer));
+            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
         }
     }
 
     @Override
     public void onEvent(SetPropertyHeaderEvent event) {
-        if (model.getSelectedColumn() == null) {
+        // TODO CHECK FOR REFACTORING
+        if (context.getModel().getSelectedColumn() == null) {
             return;
         }
-        if (model.isSelectedColumnEmpty()) {
-            commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
-        } else if (model.isSameSelectedColumnProperty(event.getValue())) {
+        if (context.getModel().isSelectedColumnEmpty()) {
+            commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
+        } else if (context.getModel().isSameSelectedColumnProperty(event.getValue())) {
             return;
-        } else if (model.isSameSelectedColumnType(event.getValueClassName())) {
-            Command okDeleteCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
-            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, true));
+        } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
+            Command okDeleteCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
+            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), true));
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1(),
@@ -247,8 +294,8 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                               ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                               okPreserveCommand,
                                               okDeleteCommand);
-        } else if (!model.isSameSelectedColumnType(event.getValueClassName())) {
-            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), scenarioGridPanel, scenarioGridLayer, false));
+        } else if (!context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
+            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1(),
@@ -260,10 +307,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
         if (scenarioSimulationEditorPresenter != null) {
             scenarioSimulationEditorPresenter.reloadRightPanel(false);
         }
-    }
-
-    protected void commonExecute(Command toExecute, ScenarioSimulationContext context) {
-        toExecute.execute(context);
     }
 
     void registerHandlers() {

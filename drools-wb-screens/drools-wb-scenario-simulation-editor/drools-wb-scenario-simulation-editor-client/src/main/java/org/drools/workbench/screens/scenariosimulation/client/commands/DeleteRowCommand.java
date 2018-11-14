@@ -17,36 +17,22 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>delete</b> a row.
  */
 @Dependent
-public class DeleteRowCommand implements Command {
+public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-    private int rowIndex;
-
-    public DeleteRowCommand() {
-    }
-
-    /**
-     * @param model
-     * @param rowIndex
-     */
-    public DeleteRowCommand(ScenarioGridModel model, int rowIndex) {
-        this.model = model;
-        this.rowIndex = rowIndex;
-    }
 
     @Override
-    public void execute() {
-        model.deleteRow(rowIndex);
-        if (model.getRows().isEmpty()) {
-            model.insertRow(0, new ScenarioGridRow());
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().deleteRow(context.getRowIndex());
+        if (context.getModel().getRows().isEmpty()) {
+            context.getModel().insertRow(0, new ScenarioGridRow());
         }
+        return commonExecution(context);
     }
 }

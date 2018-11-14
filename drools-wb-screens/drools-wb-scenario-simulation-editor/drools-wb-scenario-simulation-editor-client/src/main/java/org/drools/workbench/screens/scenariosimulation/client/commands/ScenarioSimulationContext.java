@@ -23,6 +23,8 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.mvp.PlaceRequest;
 
 /**
  * This class represent the <b>Context</b> inside which the commands will be executed
@@ -50,14 +52,53 @@ public class ScenarioSimulationContext {
     protected String valueClassName;
     protected boolean keepData;
 
+    protected int rowIndex;
+
+    /**
+     * The string to use for filtering in right panel
+     */
+    protected String filterTerm;
+
+    /**
+     * flag to decide which kind of filter (<b>equals</b> or <b>not euals</b>) is to be applied.
+     * Default to false (= <b>equals</b> filter)
+     */
+    protected boolean notEqualsSearch = false;
+
+    /**
+     * The string to <b>eventually</b> use to select the property in the right panel
+     */
+    protected String propertyName;
+
+    /**
+     * Disable the <b>RightPanel</b>
+     */
+    protected boolean disable = true;
+
+    /**
+     * open the Right dock
+     */
+    protected boolean openDock = false;
+
+    protected PlaceManager placeManager;
+
+    protected PlaceRequest rightPanelRequest;
+
 
     public void setModel(ScenarioGridModel model) {
         this.model = model;
     }
 
+    public ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter() {
+        return scenarioSimulationEditorPresenter;
+    }
 
     public void setScenarioSimulationEditorPresenter(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter) {
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
+    }
+
+    public RightPanelView.Presenter getRightPanelPresenter() {
+        return rightPanelPresenter;
     }
 
     public void setRightPanelPresenter(RightPanelView.Presenter rightPanelPresenter) {
@@ -165,5 +206,69 @@ public class ScenarioSimulationContext {
 
     public void setValueClassName(String valueClassName) {
         this.valueClassName = valueClassName;
+    }
+
+    public int getRowIndex() {
+        return rowIndex;
+    }
+
+    public void setRowIndex(int rowIndex) {
+        this.rowIndex = rowIndex;
+    }
+
+    public String getFilterTerm() {
+        return filterTerm;
+    }
+
+    public void setFilterTerm(String filterTerm) {
+        this.filterTerm = filterTerm;
+    }
+
+    public boolean isNotEqualsSearch() {
+        return notEqualsSearch;
+    }
+
+    public void setNotEqualsSearch(boolean notEqualsSearch) {
+        this.notEqualsSearch = notEqualsSearch;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public boolean isDisable() {
+        return disable;
+    }
+
+    public void setDisable(boolean disable) {
+        this.disable = disable;
+    }
+
+    public boolean isOpenDock() {
+        return openDock;
+    }
+
+    public void setOpenDock(boolean openDock) {
+        this.openDock = openDock;
+    }
+
+    public PlaceManager getPlaceManager() {
+        return placeManager;
+    }
+
+    public void setPlaceManager(PlaceManager placeManager) {
+        this.placeManager = placeManager;
+    }
+
+    public PlaceRequest getRightPanelRequest() {
+        return rightPanelRequest;
+    }
+
+    public void setRightPanelRequest(PlaceRequest rightPanelRequest) {
+        this.rightPanelRequest = rightPanelRequest;
     }
 }

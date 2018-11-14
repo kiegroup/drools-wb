@@ -19,12 +19,11 @@ import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.CommandResultBuilder;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyMetaDataGroup;
@@ -35,42 +34,26 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 @Dependent
 public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand {
 
-
-    /**
-     * @param model
-     * @param fullPackage
-     * @param value
-     * @param valueClassName
-     * @param scenarioGridPanel
-     * @param scenarioGridLayer
-     */
-    public SetPropertyHeaderCommand(ScenarioGridModel model, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData) {
-        super(scenarioGridPanel, scenarioGridLayer);
-        this.model = model;
-        this.fullPackage = fullPackage;
-        this.value = value;
-        this.valueClassName = valueClassName;
-        this.keepData = keepData;
-    }
-
     @Override
-    public void execute() {
-        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) model.getSelectedColumn();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
         if (selectedColumn == null) {
-            return;
+            return CommandResultBuilder.SUCCESS;
         }
-        int columnIndex = model.getColumns().indexOf(selectedColumn);
-        String title = value.substring(value.indexOf(".")+1);
+        int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
+        String value = context.getValue();
+        String title = value.substring(value.indexOf(".") + 1);
         String className = value.split("\\.")[0];
+        String fullPackage = context.getFullPackage();
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
         String canonicalClassName = fullPackage + className;
-        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
-        final GridData.Range instanceLimits = model.getInstanceLimits(columnIndex);
-        IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() +1)
+        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className, context).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
+        final GridData.Range instanceLimits = context.getModel().getInstanceLimits(columnIndex);
+        IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .forEach(index -> {
-                    final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) model.getColumns().get(index);
+                    final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) context.getModel().getColumns().get(index);
                     if (!scenarioGridColumn.isInstanceAssigned()) { // We have not defined the instance, yet
                         scenarioGridColumn.getInformationHeaderMetaData().setTitle(className);
                         scenarioGridColumn.setInstanceAssigned(true);
@@ -83,9 +66,10 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         selectedColumn.getPropertyHeaderMetaData().setTitle(title);
         selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
         selectedColumn.setPropertyAssigned(true);
-        model.updateColumnProperty(columnIndex,
-                                   selectedColumn,
-                                   value,
-                                   valueClassName, keepData);
+        context.getModel().updateColumnProperty(columnIndex,
+                                                selectedColumn,
+                                                value,
+                                                context.getValueClassName(), context.isKeepData());
+        return commonExecution(context);
     }
 }

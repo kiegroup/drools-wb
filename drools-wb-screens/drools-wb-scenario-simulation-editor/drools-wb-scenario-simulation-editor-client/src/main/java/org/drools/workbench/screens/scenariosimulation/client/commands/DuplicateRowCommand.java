@@ -17,33 +17,18 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>duplicate</b> a row.
  */
 @Dependent
-public class DuplicateRowCommand implements Command {
-
-    private ScenarioGridModel model;
-    private int rowIndex;
-
-    public DuplicateRowCommand() {
-    }
-
-    /**
-     * @param model
-     * @param rowIndex
-     */
-    public DuplicateRowCommand(ScenarioGridModel model, int rowIndex) {
-        this.model = model;
-        this.rowIndex = rowIndex;
-    }
+public class DuplicateRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        model.duplicateRow(rowIndex, new ScenarioGridRow());
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().duplicateRow(context.getRowIndex(), new ScenarioGridRow());
+        return commonExecution(context);
     }
 }

@@ -17,31 +17,30 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>enable</b> the <code>RightPanelView</code>
  */
 @Dependent
-public class EnableRightPanelCommand implements Command {
+public class EnableRightPanelCommand extends AbstractScenarioSimulationCommand {
 
-    private RightPanelView.Presenter rightPanelPresenter;
+ /*   private RightPanelView.Presenter rightPanelPresenter;
 
-    /**
+    *//**
      * The string to use for filtering in right panel
-     */
+     *//*
     private final String filterTerm;
 
-    /**
+    *//**
      * flag to decide which kind of filter (<b>equals</b> or <b>not euals</b>) is to be applied.
      * Default to false (= <b>equals</b> filter)
-     */
+     *//*
     private final boolean notEqualsSearch;
 
-    /**
+    *//**
      * The string to <b>eventually</b> use to select the property in the right panel
-     */
+     *//*
     private final String propertyName;
 
     public EnableRightPanelCommand() {
@@ -50,29 +49,33 @@ public class EnableRightPanelCommand implements Command {
         propertyName = null;
     }
 
-    /**
+    *//**
      * Execute this command to to show only the data model with the given name, <b>disabled</b> (i.e. <b>not selectable</b>)
      * and their properties <b>enabled</b> (i.e. <b>selectable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
      * @param rightPanelPresenter
      * @param filterTerm the term used to filter the right panel ()relates to instance name)
      * @param propertyName the string to <b>eventually</b> use to select the property in the right panel
      * @param notEqualsSearch
-     */
+     *//*
     public EnableRightPanelCommand(RightPanelView.Presenter rightPanelPresenter, String filterTerm, String propertyName, boolean notEqualsSearch) {
         this.rightPanelPresenter = rightPanelPresenter;
         this.filterTerm = filterTerm;
         this.notEqualsSearch = notEqualsSearch;
         this.propertyName = propertyName;
-    }
+    }*/
 
     @Override
-    public void execute() {
-        if (rightPanelPresenter != null) {
-            if (filterTerm == null) {
-                rightPanelPresenter.onEnableEditorTab();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        if (context.getScenarioSimulationEditorPresenter() != null) {
+            context.getScenarioSimulationEditorPresenter().expandToolsDock();
+        }
+        if (context.getRightPanelPresenter() != null) {
+            if (context.getFilterTerm() == null) {
+                context.getRightPanelPresenter().onEnableEditorTab();
             } else {
-                rightPanelPresenter.onEnableEditorTab(filterTerm, propertyName, notEqualsSearch);
+                context.getRightPanelPresenter().onEnableEditorTab(context.getFilterTerm(), context.getPropertyName(), context.isNotEqualsSearch());
             }
         }
+        return commonExecution(context);
     }
 }

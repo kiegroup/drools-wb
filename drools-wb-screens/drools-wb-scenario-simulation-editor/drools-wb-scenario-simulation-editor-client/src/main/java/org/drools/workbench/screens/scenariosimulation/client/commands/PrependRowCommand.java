@@ -15,26 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  *  <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
  */
-public class PrependRowCommand implements Command {
-
-    protected ScenarioGridModel model;
-
-    public PrependRowCommand() {
-    }
-
-    public PrependRowCommand(ScenarioGridModel model) {
-        this.model = model;
-    }
+public class PrependRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        model.insertRow(0, new ScenarioGridRow());
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().insertRow(0, new ScenarioGridRow());
+        return commonExecution(context);
     }
 }

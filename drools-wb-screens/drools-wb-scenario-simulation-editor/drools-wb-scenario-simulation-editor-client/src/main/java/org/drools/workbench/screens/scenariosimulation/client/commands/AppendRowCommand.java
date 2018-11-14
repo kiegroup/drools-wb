@@ -15,26 +15,18 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
  */
-public class AppendRowCommand implements Command {
+public class AppendRowCommand extends AbstractScenarioSimulationCommand {
 
-    private ScenarioGridModel model;
-
-    public AppendRowCommand() {
-    }
-
-    public AppendRowCommand(ScenarioGridModel model) {
-        this.model = model;
-    }
 
     @Override
-    public void execute() {
-        model.appendRow(new ScenarioGridRow());
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.getModel().appendRow(new ScenarioGridRow());
+        return commonExecution(context);
     }
 }

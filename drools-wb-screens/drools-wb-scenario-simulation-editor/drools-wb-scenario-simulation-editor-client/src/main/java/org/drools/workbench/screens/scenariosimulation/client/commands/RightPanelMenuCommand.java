@@ -16,39 +16,37 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
-import org.uberfire.client.mvp.PlaceManager;
+import org.kie.workbench.common.command.CommandResult;
 import org.uberfire.client.mvp.PlaceStatus;
-import org.uberfire.mvp.Command;
-import org.uberfire.mvp.PlaceRequest;
 
 @Dependent
-public class RightPanelMenuCommand implements Command {
+public class RightPanelMenuCommand extends AbstractScenarioSimulationCommand {
 
-    private PlaceManager placeManager;
+//    private PlaceManager placeManager;
+//
+//    PlaceRequest rightPanelRequest;
+//
+//    public RightPanelMenuCommand() {
+//    }
+//
+//    @Inject
+//    public RightPanelMenuCommand(PlaceManager placeManager) {
+//        this.placeManager = placeManager;
+//    }
 
-    PlaceRequest rightPanelRequest;
-
-    public RightPanelMenuCommand() {
-    }
-
-    @Inject
-    public RightPanelMenuCommand(PlaceManager placeManager) {
-        this.placeManager = placeManager;
-    }
-
-    public void init(PlaceRequest rightPanelRequest) {
-        this.rightPanelRequest = rightPanelRequest;
-    }
+//    public void init(PlaceRequest rightPanelRequest) {
+//        this.rightPanelRequest = rightPanelRequest;
+//    }
 
     @Override
-    public void execute() {
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            placeManager.closePlace(rightPanelRequest);
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        if (PlaceStatus.OPEN.equals(context.getPlaceManager().getStatus(context.getRightPanelRequest()))) {
+            context.getPlaceManager().closePlace(context.getRightPanelRequest());
         } else {
-            placeManager.goTo(rightPanelRequest);
+            context.getPlaceManager().goTo(context.getRightPanelRequest());
         }
+        return commonExecution(context);
     }
 
 }

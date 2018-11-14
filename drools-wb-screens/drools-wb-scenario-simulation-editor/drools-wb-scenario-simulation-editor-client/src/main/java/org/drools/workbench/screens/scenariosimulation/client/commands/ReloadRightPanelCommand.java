@@ -17,47 +17,22 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.uberfire.mvp.Command;
+import org.kie.workbench.common.command.CommandResult;
 
 /**
  * <code>Command</code> to <b>reload</b> the <code>RightPanelView</code>, <b>eventually</b> showing it (if required by original event)
  */
 @Dependent
-public class ReloadRightPanelCommand implements Command {
-
-    private ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-
-    private boolean disable = true;
-
-    private boolean openDock = false;
-
-    public ReloadRightPanelCommand() {
-        // CDI
-    }
-
-    /**
-     *
-     * @param scenarioSimulationEditorPresenter
-     *
-     * @param disable set this to <code>true</code> to <b>also</b> disable the panel.
-     * @param openDock set this to <code>true</code> to <b>also</b> open the dock in case it is closed
-     */
-    public ReloadRightPanelCommand(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter, boolean disable, boolean openDock) {
-        this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
-        this.disable = disable;
-        this.openDock = openDock;
-    }
-
-
+public class ReloadRightPanelCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public void execute() {
-        if (scenarioSimulationEditorPresenter != null) {
-            if (openDock) {
-                scenarioSimulationEditorPresenter.expandToolsDock();
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        if (context.getScenarioSimulationEditorPresenter() != null) {
+            if (context.isOpenDock()) {
+                context.getScenarioSimulationEditorPresenter().expandToolsDock();
             }
-            scenarioSimulationEditorPresenter.reloadRightPanel(disable);
+            context.getScenarioSimulationEditorPresenter().reloadRightPanel(context.isDisable());
         }
+        return commonExecution(context);
     }
 }
