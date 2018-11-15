@@ -22,7 +22,7 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a column to a given <i>group</i>

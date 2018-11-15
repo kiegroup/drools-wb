@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.client.CommandResult;
 
 @Dependent
 public class InsertRowCommand extends AbstractScenarioSimulationCommand {

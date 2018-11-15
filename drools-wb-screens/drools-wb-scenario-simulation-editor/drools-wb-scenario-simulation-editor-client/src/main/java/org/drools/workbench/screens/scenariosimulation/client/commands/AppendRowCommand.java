@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a row

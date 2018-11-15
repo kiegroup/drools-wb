@@ -17,7 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import javax.enterprise.context.Dependent;
 
-import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.client.CommandResult;
 import org.uberfire.client.mvp.PlaceStatus;
 
 @Dependent

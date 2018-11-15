@@ -21,8 +21,8 @@ import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioH
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.kie.workbench.common.command.CommandResult;
-import org.kie.workbench.common.command.CommandResultBuilder;
+import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
 
 import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 

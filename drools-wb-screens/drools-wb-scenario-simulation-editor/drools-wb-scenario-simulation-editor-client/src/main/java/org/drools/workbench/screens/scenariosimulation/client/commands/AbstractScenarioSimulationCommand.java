@@ -27,10 +27,10 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.AbstractCommand;
-import org.kie.workbench.common.command.CommandResult;
-import org.kie.workbench.common.command.CommandResultBuilder;
-import org.kie.workbench.common.command.impl.CommandResultImpl;
+import org.kie.workbench.common.command.client.AbstractCommand;
+import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
+import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getHeaderBuilder;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;

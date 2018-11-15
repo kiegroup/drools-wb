@@ -22,7 +22,7 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.CommandResult;
+import org.kie.workbench.common.command.client.CommandResult;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 /**

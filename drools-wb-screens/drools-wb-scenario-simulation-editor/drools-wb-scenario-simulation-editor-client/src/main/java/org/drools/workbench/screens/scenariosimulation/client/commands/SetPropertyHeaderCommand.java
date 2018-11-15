@@ -22,8 +22,8 @@ import javax.enterprise.context.Dependent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.kie.workbench.common.command.CommandResult;
-import org.kie.workbench.common.command.CommandResultBuilder;
+import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyMetaDataGroup;
