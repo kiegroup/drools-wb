@@ -49,10 +49,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        /*
-        ScenarioGridModel model, String fullPackage, String className, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer
-         */
-        setInstanceHeaderCommand = spy(new SetInstanceHeaderCommand(/*scenarioGridModelMock, COLUMN_ID, VALUE, scenarioGridPanelMock, scenarioGridLayerMock*/) {
+        setInstanceHeaderCommand = spy(new SetInstanceHeaderCommand() {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {

@@ -36,7 +36,7 @@ public class AppendRowCommandTest extends AbstractScenarioSimulationCommandTest 
     @Before
     public void setup() {
         super.setup();
-        appendRowCommand = new AppendRowCommand(/*scenarioGridModelMock*/);
+        appendRowCommand = new AppendRowCommand();
     }
 
     @Test

@@ -41,7 +41,7 @@ public class DeleteRowCommandTest extends AbstractScenarioSimulationCommandTest 
     @Before
     public void setup() {
         super.setup();
-        deleteRowCommand = new DeleteRowCommand(/*scenarioGridModelMock, ROW_INDEX*/);
+        deleteRowCommand = new DeleteRowCommand();
     }
 
     @Test

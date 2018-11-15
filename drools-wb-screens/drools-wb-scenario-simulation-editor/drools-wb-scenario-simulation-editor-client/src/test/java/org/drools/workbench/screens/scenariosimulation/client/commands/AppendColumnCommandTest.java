@@ -40,7 +40,7 @@ public class AppendColumnCommandTest extends AbstractScenarioSimulationCommandTe
     @Before
     public void setup() {
         super.setup();
-        appendColumnCommand = spy(new AppendColumnCommand(/*scenarioGridModelMock, COLUMN_ID, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock*/) {
+        appendColumnCommand = spy(new AppendColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

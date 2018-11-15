@@ -48,15 +48,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     public void setup() {
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        /*
-        ScenarioGridModel model, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData
-         */
-        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(/*scenarioGridModelMock, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, scenarioGridPanelMock, scenarioGridLayerMock, true*/) {
-
-//            @Override
-//            protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
-//                return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
-//            }
+        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand() {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
@@ -72,7 +64,6 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     @Test
     public void executeFalse() {
         scenarioSimulationContext.setKeepData(false);
-//        setPropertyHeaderCommand.keepData = false;
         setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
@@ -83,7 +74,6 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     @Test
     public void executeTrue() {
         scenarioSimulationContext.setKeepData(true);
-//        setPropertyHeaderCommand.keepData = true;
         setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);

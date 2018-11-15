@@ -45,7 +45,7 @@ public class DeleteColumnCommandTest extends AbstractScenarioSimulationCommandTe
     @Before
     public void setup() {
         super.setup();
-        deleteColumnCommand = spy(new DeleteColumnCommand(/*scenarioGridModelMock, COLUMN_INDEX, COLUMN_GROUP, scenarioGridPanelMock, scenarioGridLayerMock*/) {
+        deleteColumnCommand = spy(new DeleteColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

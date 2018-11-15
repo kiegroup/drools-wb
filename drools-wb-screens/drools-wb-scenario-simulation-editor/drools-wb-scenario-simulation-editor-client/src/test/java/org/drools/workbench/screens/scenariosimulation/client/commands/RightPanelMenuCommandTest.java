@@ -48,10 +48,7 @@ public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommand
     public void setup() {
         super.setup();
         when(placeRequestMock.getPath()).thenReturn(pathMock);
-        this.rightPanelMenuCommand = new RightPanelMenuCommand(/*placeManagerMock*/) {
-//            {
-//                this.rightPanelRequest = placeRequestMock;
-//            }
+        this.rightPanelMenuCommand = new RightPanelMenuCommand() {
         };
     }
 

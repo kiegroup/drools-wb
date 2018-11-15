@@ -35,7 +35,7 @@ public class InsertRowCommandTest extends AbstractScenarioSimulationCommandTest 
     @Before
     public void setup() {
         super.setup();
-        insertRowCommand = new InsertRowCommand(/*scenarioGridModelMock, ROW_INDEX*/);
+        insertRowCommand = new InsertRowCommand();
     }
 
     @Test

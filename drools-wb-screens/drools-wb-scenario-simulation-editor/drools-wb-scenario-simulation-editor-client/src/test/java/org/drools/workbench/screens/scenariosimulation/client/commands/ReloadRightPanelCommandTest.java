@@ -34,16 +34,12 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
     @Before
     public void setup() {
         super.setup();
-        /*
-        ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter, boolean disable, boolean openDock
-         */
         reloadRightPanelCommand = new ReloadRightPanelCommand();
         scenarioSimulationContext.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
     }
 
     @Test
     public void executeDisableOpen() {
-//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, true);
         scenarioSimulationContext.setDisable(true);
         scenarioSimulationContext.setOpenDock(true);
         reloadRightPanelCommand.execute(scenarioSimulationContext);
@@ -53,7 +49,6 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
 
     @Test
     public void executeNotDisableOpen() {
-//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, false, true);
         scenarioSimulationContext.setDisable(false);
         scenarioSimulationContext.setOpenDock(true);
         reloadRightPanelCommand.execute(scenarioSimulationContext);
@@ -63,7 +58,6 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
 
     @Test
     public void executeDisableNotOpen() {
-//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, false);
         scenarioSimulationContext.setDisable(true);
         scenarioSimulationContext.setOpenDock(false);
         reloadRightPanelCommand.execute(scenarioSimulationContext);

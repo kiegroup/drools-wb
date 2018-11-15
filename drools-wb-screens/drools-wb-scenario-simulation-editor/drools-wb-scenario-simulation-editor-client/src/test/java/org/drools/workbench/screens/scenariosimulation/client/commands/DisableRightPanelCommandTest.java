@@ -34,7 +34,7 @@ public class DisableRightPanelCommandTest extends AbstractScenarioSimulationComm
     @Before
     public void setup() {
         super.setup();
-        disableRightPanelCommand = new DisableRightPanelCommand(/*rightPanelPresenterMock*/);
+        disableRightPanelCommand = new DisableRightPanelCommand();
     }
 
     @Test

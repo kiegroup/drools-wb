@@ -132,55 +132,35 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setColumnId(String.valueOf(new Date().getTime()));
         context.setColumnGroup(event.getColumnGroup());
         new AppendColumnCommand().execute(context);
-
-//        commonExecute(new AppendColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
         new AppendRowCommand().execute(context);
-//        commonExecute(new AppendRowCommand(model));
     }
 
     @Override
     public void onEvent(DeleteColumnEvent event) {
-//        int deletedColumnIndex = event.getColumnIndex();
-//        GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
         context.setColumnIndex(event.getColumnIndex());
         context.setColumnGroup(event.getColumnGroup());
         new DeleteColumnCommand().execute(context);
-//
-//
-//        boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == deletedColumnIndex;
-//
-//
-//
-////        commonExecute(new DeleteColumnCommand(model, deletedColumnIndex, event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
-//        if (rightPanelPresenter != null && toDisable) {
-//            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
-//        }
     }
 
     @Override
     public void onEvent(DeleteRowEvent event) {
         context.setRowIndex(event.getRowIndex());
         new DeleteRowCommand().execute(context);
-//        commonExecute(new DeleteRowCommand(model, event.getRowIndex()));
     }
 
     @Override
     public void onEvent(DisableRightPanelEvent event) {
         new DisableRightPanelCommand().execute(context);
-//        if (rightPanelPresenter != null) {
-//            commonExecute(new DisableRightPanelCommand(rightPanelPresenter));
-//        }
     }
 
     @Override
     public void onEvent(DuplicateRowEvent event) {
         context.setRowIndex(event.getRowIndex());
         new DuplicateRowCommand().execute(context);
-//        commonExecute(new DuplicateRowCommand(model, event.getRowIndex()));
     }
 
     @Override
@@ -189,11 +169,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setPropertyName(event.getPropertyName());
         context.setNotEqualsSearch(event.isNotEqualsSearch());
         new EnableRightPanelCommand().execute(context);
-
-//        if (scenarioSimulationEditorPresenter != null) {
-//            scenarioSimulationEditorPresenter.expandToolsDock();
-//        }
-//        commonExecute(new EnableRightPanelCommand(rightPanelPresenter, event.getFilterTerm(), event.getPropertyName(), event.isNotEqualsSearch()));
     }
 
     @Override
@@ -203,14 +178,12 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setRight(event.isRight());
         context.setAsProperty(event.isAsProperty());
         new InsertColumnCommand().execute(context);
-//        commonExecute(new InsertColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnIndex(), event.isRight(), event.isAsProperty(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(InsertRowEvent event) {
         context.setRowIndex(event.getRowIndex());
         new InsertRowCommand().execute(context);
-//        commonExecute(new InsertRowCommand(model, event.getRowIndex()));
     }
 
     @Override
@@ -218,13 +191,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setColumnId(String.valueOf(new Date().getTime()));
         context.setColumnGroup(event.getColumnGroup());
         new PrependColumnCommand().execute(context);
-//        commonExecute(new PrependColumnCommand(model, String.valueOf(new Date().getTime()), event.getColumnGroup(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
     }
 
     @Override
     public void onEvent(PrependRowEvent event) {
         new PrependRowCommand().execute(context);
-//        commonExecute(new PrependRowCommand(model));
     }
 
     @Override
@@ -232,7 +203,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setDisable(event.isDisable());
         context.setOpenDock(event.isOpenDock());
         new ReloadRightPanelCommand().execute(context);
-//        commonExecute(new ReloadRightPanelCommand(scenarioSimulationEditorPresenter, event.isDisable(), event.isOpenDock()));
     }
 
     @Override
@@ -270,7 +240,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       okPreserveCommand);
         } else {
             new SetInstanceHeaderCommand().execute(context);
-//            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
         }
     }
 
@@ -285,8 +254,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
         context.setValueClassName(event.getValueClassName());
         if (context.getModel().isSelectedColumnEmpty()) {
             new SetPropertyHeaderCommand().execute(context);
-
-            //commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
         } else if (context.getModel().isSameSelectedColumnProperty(event.getValue())) {
             return;
         } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
@@ -298,8 +265,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
                 context.setKeepData(true);
                 new SetPropertyHeaderCommand().execute(context);
             };
-//            org.uberfire.mvp.Command okDeleteCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
-//            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), true));
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1(),
@@ -315,7 +280,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
                 context.setKeepData(false);
                 new SetPropertyHeaderCommand().execute(context);
             };
-            //            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1(),
@@ -324,9 +288,6 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                       okPreserveCommand);
         }
-//        if (scenarioSimulationEditorPresenter != null) {
-//            scenarioSimulationEditorPresenter.reloadRightPanel(false);
-//        }
     }
 
     void registerHandlers() {

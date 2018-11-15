@@ -57,6 +57,11 @@ public class ScenarioSimulationProducer {
     @PostConstruct
     public void init() {
         scenarioSimulationContext = new ScenarioSimulationContext(getScenarioSimulationView().getScenarioGridPanel());
+        commandExecutor.setEventBus(getEventBus());
+        commandExecutor.setDeletePopupPresenter(deletePopupPresenter);
+        commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
+        commandExecutor.setNotificationEvent(notificationEvent);
+        commandExecutor.setContext(scenarioSimulationContext);
     }
 
     public EventBus getEventBus() {
@@ -67,18 +72,7 @@ public class ScenarioSimulationProducer {
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
     }
 
-    public CommandExecutor getCommandExecutor() {
-        commandExecutor.setEventBus(getEventBus());
-//        commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
-        commandExecutor.setDeletePopupPresenter(deletePopupPresenter);
-        commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
-        commandExecutor.setNotificationEvent(notificationEvent);
-        return commandExecutor;
-    }
-
     public ScenarioSimulationContext getScenarioSimulationContext() {
-//        scenarioSimulationContext.setEventBus(getEventBus());
-//        scenarioSimulationContext.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
         return scenarioSimulationContext;
     }
 }

@@ -38,7 +38,7 @@ public class EnableRightPanelCommandTest extends AbstractScenarioSimulationComma
     @Before
     public void setup() {
         super.setup();
-        enableRightPanelCommand = new EnableRightPanelCommand(/*rightPanelPresenterMock, FACT_NAME, null, true*/);
+        enableRightPanelCommand = new EnableRightPanelCommand();
     }
 
 
