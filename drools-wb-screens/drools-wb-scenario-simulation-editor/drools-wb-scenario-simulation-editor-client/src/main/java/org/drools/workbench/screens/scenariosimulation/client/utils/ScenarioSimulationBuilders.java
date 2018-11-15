@@ -97,6 +97,7 @@ public class ScenarioSimulationBuilders {
             // FIXME add test
             // by default scenario columns should be auto should have auto resize
             scenarioGridColumn.setColumnWidthMode(GridColumn.ColumnWidthMode.auto);
+            scenarioGridColumn.setMinimumWidth(width);
             return scenarioGridColumn;
         }
     }

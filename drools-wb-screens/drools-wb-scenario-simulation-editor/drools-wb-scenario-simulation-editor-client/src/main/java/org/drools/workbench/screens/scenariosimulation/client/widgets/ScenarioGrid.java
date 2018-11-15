@@ -119,6 +119,7 @@ public class ScenarioGrid extends BaseGridWidget {
         // by default ScenarioGridColumnBuilders.ScenarioGridColumnBuilder.build() set ColumnWidthMode.auto to all generated columns
         if (FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
             scenarioGridColumn.setColumnWidthMode(ScenarioGridColumn.ColumnWidthMode.fixed);
+            scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
