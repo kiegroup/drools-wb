@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,6 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -39,7 +39,7 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
     @Before
     public void setup() {
         super.setup();
-        scenarioSimulationProducer = spy(new ScenarioSimulationProducer() {
+        scenarioSimulationProducer = new ScenarioSimulationProducer() {
             {
                 this.commandExecutor = commandExecutorMock;
                 this.deletePopupPresenter = deletePopupPresenterMock;
@@ -48,7 +48,15 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
                 this.scenarioSimulationViewProducer = scenarioSimulationViewProducerMock;
                 this.notificationEvent = notificationEventNew;
             }
-        });
+        };
+    }
+
+    @Test
+    public void init() {
+        scenarioSimulationProducer.init();
+        final ScenarioSimulationContext retrieved = scenarioSimulationProducer.getScenarioSimulationContext();
+        assertNotNull(retrieved);
+        assertEquals(scenarioGridPanelMock, retrieved.getScenarioGridPanel());
     }
 
     @Test
@@ -73,9 +81,11 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         assertNotNull(retrieved);
         assertEquals(retrieved, commandExecutorMock);
         verify(commandExecutorMock, times(1)).setEventBus(eq(eventBusMock));
-        verify(commandExecutorMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
+//        verify(commandExecutorMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
         verify(commandExecutorMock, times(1)).setDeletePopupPresenter(eq(deletePopupPresenterMock));
         verify(commandExecutorMock, times(1)).setPreserveDeletePopupPresenter(eq(preserveDeletePopupPresenterMock));
         verify(commandExecutorMock, times(1)).setNotificationEvent(eq(notificationEventNew));
     }
+
+
 }

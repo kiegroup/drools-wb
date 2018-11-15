@@ -37,12 +37,13 @@ public class DuplicateRowCommandTest extends AbstractScenarioSimulationCommandTe
     @Before
     public void setup() {
         super.setup();
-        duplicateRowCommand = new DuplicateRowCommand(scenarioGridModelMock, ROW_INDEX);
+        duplicateRowCommand = new DuplicateRowCommand(/*scenarioGridModelMock, ROW_INDEX*/);
     }
 
     @Test
     public void execute() {
-        duplicateRowCommand.execute();
+        scenarioSimulationContext.setRowIndex(ROW_INDEX);
+        duplicateRowCommand.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).duplicateRow(eq(ROW_INDEX), isA(ScenarioGridRow.class));
     }
 }

@@ -61,7 +61,6 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.kie.workbench.common.command.Command;
 import org.uberfire.workbench.events.NotificationEvent;
 
 /**
@@ -251,14 +250,17 @@ public class CommandExecutor implements AppendColumnEventHandler,
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
         // TODO CHECK FOR REFACTORING
-
         if (context.getModel().getSelectedColumn() == null) {
             return;
         }
+        // TODO CHECK FOR REFACTORING
         if (context.getModel().isSameSelectedColumnType(event.getClassName())) {
             return;
-        } else if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
-            Command okPreserveCommand = () -> commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
+        }
+        context.setFullPackage(event.getFullPackage());
+        context.setClassName(event.getClassName());
+        if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
+            org.uberfire.mvp.Command okPreserveCommand = () -> new SetInstanceHeaderCommand().execute(context);
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -267,7 +269,8 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.changeType(),
                                       okPreserveCommand);
         } else {
-            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
+            new SetInstanceHeaderCommand().execute(context);
+//            commonExecute(new SetInstanceHeaderCommand(model, event.getFullPackage(), event.getClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer()));
         }
     }
 
@@ -277,13 +280,26 @@ public class CommandExecutor implements AppendColumnEventHandler,
         if (context.getModel().getSelectedColumn() == null) {
             return;
         }
+        context.setFullPackage(event.getFullPackage());
+        context.setValue(event.getValue());
+        context.setValueClassName(event.getValueClassName());
         if (context.getModel().isSelectedColumnEmpty()) {
-            commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
+            new SetPropertyHeaderCommand().execute(context);
+
+            //commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
         } else if (context.getModel().isSameSelectedColumnProperty(event.getValue())) {
             return;
         } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
-            Command okDeleteCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
-            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), true));
+            org.uberfire.mvp.Command okDeleteCommand = () -> {
+                context.setKeepData(false);
+                new SetPropertyHeaderCommand().execute(context);
+            };
+            org.uberfire.mvp.Command okPreserveCommand = () -> {
+                context.setKeepData(true);
+                new SetPropertyHeaderCommand().execute(context);
+            };
+//            org.uberfire.mvp.Command okDeleteCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
+//            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), true));
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1(),
@@ -295,7 +311,11 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                               okPreserveCommand,
                                               okDeleteCommand);
         } else if (!context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
-            Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
+            org.uberfire.mvp.Command okPreserveCommand = () -> {
+                context.setKeepData(false);
+                new SetPropertyHeaderCommand().execute(context);
+            };
+            //            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecute(new SetPropertyHeaderCommand(model, event.getFullPackage(), event.getValue(), event.getValueClassName(), context.getScenarioGridPanel(), context.getScenarioGridLayer(), false));
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1(),
@@ -304,9 +324,9 @@ public class CommandExecutor implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                       okPreserveCommand);
         }
-        if (scenarioSimulationEditorPresenter != null) {
-            scenarioSimulationEditorPresenter.reloadRightPanel(false);
-        }
+//        if (scenarioSimulationEditorPresenter != null) {
+//            scenarioSimulationEditorPresenter.reloadRightPanel(false);
+//        }
     }
 
     void registerHandlers() {

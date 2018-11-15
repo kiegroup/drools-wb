@@ -19,7 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 import java.util.List;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Before;
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetPropertyHeaderScenarioSImulationCommand setPropertyHeaderCommand;
+    private SetPropertyHeaderCommand setPropertyHeaderCommand;
 
     @Mock
     private List<GridColumn<?>> mockGridColumns;
@@ -49,24 +48,32 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     public void setup() {
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        setPropertyHeaderCommand = spy(new SetPropertyHeaderScenarioSImulationCommand(scenarioGridModelMock, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, scenarioGridPanelMock, scenarioGridLayerMock, true) {
+        /*
+        ScenarioGridModel model, String fullPackage, String value, String valueClassName, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer, boolean keepData
+         */
+        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand(/*scenarioGridModelMock, FULL_PACKAGE, VALUE, VALUE_CLASS_NAME, scenarioGridPanelMock, scenarioGridLayerMock, true*/) {
+
+//            @Override
+//            protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
+//                return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
+//            }
 
             @Override
-            protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
-                return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
-            }
-
-            @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
+            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
                 return gridColumnMock;
             }
         });
+
+        scenarioSimulationContext.setFullPackage(FULL_PACKAGE);
+        scenarioSimulationContext.setValue(VALUE);
+        scenarioSimulationContext.setValueClassName(VALUE_CLASS_NAME);
     }
 
     @Test
     public void executeFalse() {
-        setPropertyHeaderCommand.keepData = false;
-        setPropertyHeaderCommand.execute();
+        scenarioSimulationContext.setKeepData(false);
+//        setPropertyHeaderCommand.keepData = false;
+        setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
@@ -75,8 +82,9 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
 
     @Test
     public void executeTrue() {
-        setPropertyHeaderCommand.keepData = true;
-        setPropertyHeaderCommand.execute();
+        scenarioSimulationContext.setKeepData(true);
+//        setPropertyHeaderCommand.keepData = true;
+        setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);

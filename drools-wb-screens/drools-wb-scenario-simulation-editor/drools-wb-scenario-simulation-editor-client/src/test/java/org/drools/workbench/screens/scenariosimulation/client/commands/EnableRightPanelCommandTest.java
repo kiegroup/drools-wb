@@ -38,13 +38,17 @@ public class EnableRightPanelCommandTest extends AbstractScenarioSimulationComma
     @Before
     public void setup() {
         super.setup();
+        enableRightPanelCommand = new EnableRightPanelCommand(/*rightPanelPresenterMock, FACT_NAME, null, true*/);
     }
 
 
     @Test
     public void executeWithFactName() {
-        enableRightPanelCommand = new EnableRightPanelCommand(rightPanelPresenterMock, FACT_NAME, null, true);
-        enableRightPanelCommand.execute();
+        scenarioSimulationContext.setRightPanelPresenter(rightPanelPresenterMock);
+        scenarioSimulationContext.setFilterTerm(FACT_NAME);
+        scenarioSimulationContext.setPropertyName(null);
+        scenarioSimulationContext.setNotEqualsSearch(true);
+        enableRightPanelCommand.execute(scenarioSimulationContext);
         verify(rightPanelPresenterMock, times(1)).onEnableEditorTab(eq(FACT_NAME), eq(null), eq(true));
         verify(rightPanelPresenterMock, never()).onEnableEditorTab();
     }

@@ -17,31 +17,34 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class AppendRowCommandTest extends AbstractScenarioSimulationCommandTest {
-
-
-
-    private AppendRowCommand appendRowCommand;
+public class ScenarioSimulationContextTest extends AbstractScenarioSimulationCommandTest {
+    
 
     @Before
     public void setup() {
         super.setup();
-        appendRowCommand = new AppendRowCommand(/*scenarioGridModelMock*/);
     }
 
     @Test
-    public void execute() {
-        appendRowCommand.execute(scenarioSimulationContext);
-        verify(scenarioGridModelMock, times(1)).appendRow(isA(ScenarioGridRow.class));
+    public void getScenarioGridPanel() {
+        assertEquals(scenarioGridPanelMock, scenarioSimulationContext.getScenarioGridPanel());
     }
+
+    @Test
+    public void getModel() {
+        assertEquals(scenarioGridModelMock, scenarioSimulationContext.getModel());
+    }
+
+    @Test
+    public void getScenarioGridLayer() {
+        assertEquals(scenarioGridLayerMock, scenarioSimulationContext.getScenarioGridLayer());
+    }
+
 }

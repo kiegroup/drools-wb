@@ -31,36 +31,39 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class RightPanelMenuCommandTest {
+public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommandTest {
 
     private RightPanelMenuCommand rightPanelMenuCommand;
 
     @Mock
-    private PlaceManager placeManager;
+    private PlaceManager placeManagerMock;
 
     @Mock
-    private PathPlaceRequest mockPlaceRequest;
+    private PathPlaceRequest placeRequestMock;
 
     @Mock
-    private ObservablePath mockPath;
+    private ObservablePath pathMock;
 
     @Before
     public void setup() {
-        when(mockPlaceRequest.getPath()).thenReturn(mockPath);
-        this.rightPanelMenuCommand = new RightPanelMenuCommand(placeManager) {
-            {
-                this.rightPanelRequest = mockPlaceRequest;
-            }
+        super.setup();
+        when(placeRequestMock.getPath()).thenReturn(pathMock);
+        this.rightPanelMenuCommand = new RightPanelMenuCommand(/*placeManagerMock*/) {
+//            {
+//                this.rightPanelRequest = placeRequestMock;
+//            }
         };
     }
 
     @Test
     public void execute() {
-        when(placeManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.OPEN);
-        rightPanelMenuCommand.execute();
-        verify(placeManager, times(1)).closePlace(mockPlaceRequest);
-        when(placeManager.getStatus(mockPlaceRequest)).thenReturn(PlaceStatus.CLOSE);
-        rightPanelMenuCommand.execute();
-        verify(placeManager, times(1)).goTo(mockPlaceRequest);
+        scenarioSimulationContext.setPlaceManager(placeManagerMock);
+        scenarioSimulationContext.setRightPanelRequest(placeRequestMock);
+        when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.OPEN);
+        rightPanelMenuCommand.execute(scenarioSimulationContext);
+        verify(placeManagerMock, times(1)).closePlace(placeRequestMock);
+        when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.CLOSE);
+        rightPanelMenuCommand.execute(scenarioSimulationContext);
+        verify(placeManagerMock, times(1)).goTo(placeRequestMock);
     }
 }

@@ -70,6 +70,9 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
                                                 selectedColumn,
                                                 value,
                                                 context.getValueClassName(), context.isKeepData());
+        if (context.getScenarioSimulationEditorPresenter() != null) {
+            context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
+        }
         return commonExecution(context);
     }
 }

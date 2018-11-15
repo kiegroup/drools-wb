@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetInstanceHeaderScenarioSImulationCommand setInstanceHeaderCommand;
+    private SetInstanceHeaderCommand setInstanceHeaderCommand;
 
     @Mock
     private List<GridColumn<?>> mockGridColumns;
@@ -50,20 +49,18 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        setInstanceHeaderCommand = spy(new SetInstanceHeaderScenarioSImulationCommand(scenarioGridModelMock, COLUMN_ID, VALUE, scenarioGridPanelMock, scenarioGridLayerMock) {
+        /*
+        ScenarioGridModel model, String fullPackage, String className, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer scenarioGridLayer
+         */
+        setInstanceHeaderCommand = spy(new SetInstanceHeaderCommand(/*scenarioGridModelMock, COLUMN_ID, VALUE, scenarioGridPanelMock, scenarioGridLayerMock*/) {
 
             @Override
-            protected ScenarioHeaderTextBoxSingletonDOMElementFactory getHeaderTextBoxFactoryLocal() {
-                return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
-            }
-
-            @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder) {
+            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
                 return gridColumnMock;
             }
 
             @Override
-            protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle) {
+            protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
                 return Optional.empty();
             }
         });
@@ -71,9 +68,11 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
 
     @Test
     public void execute() {
-        setInstanceHeaderCommand.execute();
+        scenarioSimulationContext.setFullPackage(FULL_PACKAGE);
+        scenarioSimulationContext.setClassName(VALUE_CLASS_NAME);
+        setInstanceHeaderCommand.execute(scenarioSimulationContext);
         verify(gridColumnMock, atLeast(1)).getInformationHeaderMetaData();
-        verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE));
+        verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE_CLASS_NAME));
         verify(gridColumnMock, atLeast(1)).setInstanceAssigned(eq(true));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
         verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock));

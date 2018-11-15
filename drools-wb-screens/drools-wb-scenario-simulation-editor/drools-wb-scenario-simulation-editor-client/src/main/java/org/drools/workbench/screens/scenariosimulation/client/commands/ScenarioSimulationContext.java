@@ -15,9 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import javax.enterprise.context.Dependent;
-
-import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -29,7 +26,6 @@ import org.uberfire.mvp.PlaceRequest;
 /**
  * This class represent the <b>Context</b> inside which the commands will be executed
  */
-@Dependent
 public class ScenarioSimulationContext {
 
     protected ScenarioGridModel model;
@@ -84,9 +80,15 @@ public class ScenarioSimulationContext {
 
     protected PlaceRequest rightPanelRequest;
 
-
-    public void setModel(ScenarioGridModel model) {
-        this.model = model;
+    /**
+     * This constructor set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
+     * from the give <code>ScenarioGridPanel</code>
+     * @param scenarioGridPanel
+     */
+    public ScenarioSimulationContext(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
+        this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
+        this.model = scenarioGridLayer.getScenarioGrid().getModel();
     }
 
     public ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter() {
@@ -107,17 +109,6 @@ public class ScenarioSimulationContext {
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
-    }
-
-    /**
-     * This method set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
-     * from the give <code>ScenarioGridPanel</code>
-     * @param scenarioGridPanel
-     */
-    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
-        this.model = scenarioGridLayer.getScenarioGrid().getModel();
     }
 
     public ScenarioGridModel getModel() {

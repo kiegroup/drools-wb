@@ -29,35 +29,44 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
 
-
-
     private ReloadRightPanelCommand reloadRightPanelCommand;
 
     @Before
     public void setup() {
         super.setup();
+        /*
+        ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter, boolean disable, boolean openDock
+         */
+        reloadRightPanelCommand = new ReloadRightPanelCommand();
+        scenarioSimulationContext.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
     }
 
     @Test
     public void executeDisableOpen() {
-        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, true);
-        reloadRightPanelCommand.execute();
+//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, true);
+        scenarioSimulationContext.setDisable(true);
+        scenarioSimulationContext.setOpenDock(true);
+        reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
     }
 
     @Test
     public void executeNotDisableOpen() {
-        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, false, true);
-        reloadRightPanelCommand.execute();
+//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, false, true);
+        scenarioSimulationContext.setDisable(false);
+        scenarioSimulationContext.setOpenDock(true);
+        reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(false));
     }
 
     @Test
     public void executeDisableNotOpen() {
-        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, false);
-        reloadRightPanelCommand.execute();
+//        reloadRightPanelCommand = new ReloadRightPanelCommand(scenarioSimulationEditorPresenterMock, true, false);
+        scenarioSimulationContext.setDisable(true);
+        scenarioSimulationContext.setOpenDock(false);
+        reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, never()).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
     }

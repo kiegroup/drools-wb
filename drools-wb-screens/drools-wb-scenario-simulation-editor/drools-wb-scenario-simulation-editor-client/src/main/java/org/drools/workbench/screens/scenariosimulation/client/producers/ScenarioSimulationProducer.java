@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -48,11 +49,15 @@ public class ScenarioSimulationProducer {
     @Inject
     protected CommandExecutor commandExecutor;
 
-    @Inject
     protected ScenarioSimulationContext scenarioSimulationContext;
 
     @Inject
     protected Event<NotificationEvent> notificationEvent;
+
+    @PostConstruct
+    public void init() {
+        scenarioSimulationContext = new ScenarioSimulationContext(getScenarioSimulationView().getScenarioGridPanel());
+    }
 
     public EventBus getEventBus() {
         return eventBusProducer.getEventBus();
@@ -64,7 +69,7 @@ public class ScenarioSimulationProducer {
 
     public CommandExecutor getCommandExecutor() {
         commandExecutor.setEventBus(getEventBus());
-        commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
+//        commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
         commandExecutor.setDeletePopupPresenter(deletePopupPresenter);
         commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
         commandExecutor.setNotificationEvent(notificationEvent);
@@ -72,8 +77,8 @@ public class ScenarioSimulationProducer {
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {
-        scenarioSimulationContext.setEventBus(getEventBus());
-        scenarioSimulationContext.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
+//        scenarioSimulationContext.setEventBus(getEventBus());
+//        scenarioSimulationContext.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
         return scenarioSimulationContext;
     }
 }
