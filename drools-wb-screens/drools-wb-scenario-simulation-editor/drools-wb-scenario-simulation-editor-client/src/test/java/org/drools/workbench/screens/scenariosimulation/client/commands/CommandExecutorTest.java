@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommandTest;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;

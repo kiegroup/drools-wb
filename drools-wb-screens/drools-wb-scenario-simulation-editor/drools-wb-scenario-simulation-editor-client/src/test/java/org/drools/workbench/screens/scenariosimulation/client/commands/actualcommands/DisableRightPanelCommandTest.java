@@ -14,38 +14,33 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.commands;
+package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommandTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationContextTest extends AbstractScenarioSimulationCommandTest {
-    
+public class DisableRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
+
+
+
+    private DisableRightPanelCommand disableRightPanelCommand;
 
     @Before
     public void setup() {
         super.setup();
+        disableRightPanelCommand = new DisableRightPanelCommand();
     }
 
     @Test
-    public void getScenarioGridPanel() {
-        assertEquals(scenarioGridPanelMock, scenarioSimulationContext.getScenarioGridPanel());
+    public void execute() {
+        scenarioSimulationContext.setRightPanelPresenter(rightPanelPresenterMock);
+        disableRightPanelCommand.execute(scenarioSimulationContext);
+        verify(rightPanelPresenterMock, times(1)).onDisableEditorTab();
     }
-
-    @Test
-    public void getModel() {
-        assertEquals(scenarioGridModelMock, scenarioSimulationContext.getModel());
-    }
-
-    @Test
-    public void getScenarioGridLayer() {
-        assertEquals(scenarioGridLayerMock, scenarioSimulationContext.getScenarioGridLayer());
-    }
-
 }
