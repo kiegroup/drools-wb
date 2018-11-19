@@ -21,8 +21,10 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
@@ -47,7 +49,13 @@ public class ScenarioSimulationProducer {
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
     @Inject
-    protected CommandExecutor commandExecutor;
+    protected ScenarioSimulationEventHandler scenarioSimulationEventHandler;
+
+    @Inject
+    protected ScenarioCommandRegistry scenarioCommandRegistry;
+
+    @Inject
+    protected ScenarioCommandManager scenarioCommandManager;
 
     protected ScenarioSimulationContext scenarioSimulationContext;
 
@@ -57,11 +65,13 @@ public class ScenarioSimulationProducer {
     @PostConstruct
     public void init() {
         scenarioSimulationContext = new ScenarioSimulationContext(getScenarioSimulationView().getScenarioGridPanel());
-        commandExecutor.setEventBus(getEventBus());
-        commandExecutor.setDeletePopupPresenter(deletePopupPresenter);
-        commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
-        commandExecutor.setNotificationEvent(notificationEvent);
-        commandExecutor.setContext(scenarioSimulationContext);
+        scenarioSimulationEventHandler.setEventBus(getEventBus());
+        scenarioSimulationEventHandler.setDeletePopupPresenter(deletePopupPresenter);
+        scenarioSimulationEventHandler.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
+        scenarioSimulationEventHandler.setNotificationEvent(notificationEvent);
+        scenarioSimulationEventHandler.setContext(scenarioSimulationContext);
+        scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
+        scenarioSimulationEventHandler.setScenarioCommandRegistry(scenarioCommandRegistry);
     }
 
     public EventBus getEventBus() {

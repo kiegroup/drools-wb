@@ -15,9 +15,42 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.NoSuchElementException;
+
+import javax.enterprise.context.Dependent;
+
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
 import org.kie.workbench.common.command.client.registry.command.CommandRegistryImpl;
 
+/**
+ * This class is used to store <code>Queue</code>es of <b>executed/undone</b> <code>Command</code>s
+ */
+@Dependent
 public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenarioSimulationCommand> {
+
+    protected final Deque<AbstractScenarioSimulationCommand> undoneCommands = new ArrayDeque<>();
+
+    /**
+     * Calls <b>undo</b> on the last executed <code>Command</code>
+     */
+    public void undo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException {
+        final AbstractScenarioSimulationCommand toUndo = pop();
+        toUndo.undo(scenarioSimulationContext);
+        undoneCommands.push(toUndo);
+
+    }
+
+    /**
+     * Re-execute the last <b>undone</b> <code>Command</code>
+     */
+    public void redo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException  {
+        final AbstractScenarioSimulationCommand toRedo = undoneCommands.pop();
+        toRedo.execute(scenarioSimulationContext);
+        register(toRedo);
+    }
+
+
 
 }

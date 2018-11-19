@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -32,13 +31,6 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
-
-//    @Mock
-//    protected ScenarioGridPanel scenarioGridPanelMock;
-//    @Mock
-//    protected ScenarioGridLayer scenarioGridLayerMock;
-//    @Mock
-//    protected ScenarioGrid scenarioGridMock;
 
     @Mock
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
@@ -70,7 +62,6 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
 
-    protected ScenarioSimulationContext scenarioSimulationContext;
 
     @Before
     public void setup() {
@@ -81,8 +72,5 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
-
-
-        scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanelMock);
     }
 }

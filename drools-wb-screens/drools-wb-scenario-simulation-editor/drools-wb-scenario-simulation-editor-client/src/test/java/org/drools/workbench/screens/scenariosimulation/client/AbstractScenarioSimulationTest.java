@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -57,6 +60,12 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioGrid scenarioGridMock;
 
+    @Mock
+    protected ScenarioCommandRegistry scenarioCommandRegistryMock;
+    @Mock
+    protected ScenarioCommandManager scenarioCommandManagerMock;
+
+    protected ScenarioSimulationContext scenarioSimulationContext;
 
     protected final int ROW_INDEX = 2;
     protected final int COLUMN_INDEX = 3;
@@ -148,6 +157,6 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+        scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanelMock);
     }
-
 }

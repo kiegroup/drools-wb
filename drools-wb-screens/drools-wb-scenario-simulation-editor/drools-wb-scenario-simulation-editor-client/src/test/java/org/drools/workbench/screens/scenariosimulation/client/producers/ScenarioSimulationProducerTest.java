@@ -40,12 +40,14 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         super.setup();
         scenarioSimulationProducer = new ScenarioSimulationProducer() {
             {
-                this.commandExecutor = commandExecutorMock;
+                this.scenarioSimulationEventHandler = scenarioSimulationEventHandlerMock;
                 this.deletePopupPresenter = deletePopupPresenterMock;
                 this.preserveDeletePopupPresenter = preserveDeletePopupPresenterMock;
                 this.eventBusProducer = eventBusProducerMock;
                 this.scenarioSimulationViewProducer = scenarioSimulationViewProducerMock;
                 this.notificationEvent = notificationEventNew;
+                this.scenarioCommandManager = scenarioCommandManagerMock;
+                this.scenarioCommandRegistry = scenarioCommandRegistryMock;
             }
         };
     }
@@ -56,11 +58,13 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         final ScenarioSimulationContext retrieved = scenarioSimulationProducer.getScenarioSimulationContext();
         assertNotNull(retrieved);
         assertEquals(scenarioGridPanelMock, retrieved.getScenarioGridPanel());
-        verify(commandExecutorMock, times(1)).setEventBus(eq(eventBusMock));
-        verify(commandExecutorMock, times(1)).setDeletePopupPresenter(eq(deletePopupPresenterMock));
-        verify(commandExecutorMock, times(1)).setPreserveDeletePopupPresenter(eq(preserveDeletePopupPresenterMock));
-        verify(commandExecutorMock, times(1)).setNotificationEvent(eq(notificationEventNew));
-        verify(commandExecutorMock, times(1)).setContext(eq(retrieved));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setEventBus(eq(eventBusMock));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setDeletePopupPresenter(eq(deletePopupPresenterMock));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setPreserveDeletePopupPresenter(eq(preserveDeletePopupPresenterMock));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setNotificationEvent(eq(notificationEventNew));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setContext(eq(retrieved));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setScenarioCommandManager(eq(scenarioCommandManagerMock));
+        verify(scenarioSimulationEventHandlerMock, times(1)).setScenarioCommandRegistry(eq(scenarioCommandRegistryMock));
     }
 
     @Test

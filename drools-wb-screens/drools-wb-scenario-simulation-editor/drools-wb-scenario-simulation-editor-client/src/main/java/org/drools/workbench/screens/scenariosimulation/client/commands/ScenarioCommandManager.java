@@ -15,8 +15,16 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import javax.enterprise.context.Dependent;
+
 import org.kie.workbench.common.command.client.impl.CommandManagerImpl;
 
-public class ScenarioCommandManager extends CommandManagerImpl {
+/**
+ * This class is used to actually invoke <code>Command</code>' methods on given command (<b>allow</b>, <b>execute</b>, <b>undo</b>)
+ */
+@Dependent
+public class ScenarioCommandManager extends CommandManagerImpl<ScenarioSimulationContext, ScenarioSimulationViolation> {
+
+
 
 }
