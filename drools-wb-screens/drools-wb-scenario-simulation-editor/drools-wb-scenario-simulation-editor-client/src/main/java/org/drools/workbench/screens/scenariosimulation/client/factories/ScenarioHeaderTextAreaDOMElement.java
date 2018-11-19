@@ -48,6 +48,10 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
                 return;
             }
         }
+        internalFlush(value);
+    }
+
+    protected void internalFlush(final String value) {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         try {
