@@ -39,8 +39,8 @@ public class InsertColumnCommand extends AbstractCommand {
     private ScenarioGridModel model;
     private String columnId;
     private int columnIndex;
-    protected boolean isRight;
-    protected boolean asProperty;
+    private boolean isRight;
+    private boolean asProperty;
 
     public InsertColumnCommand() {
     }
