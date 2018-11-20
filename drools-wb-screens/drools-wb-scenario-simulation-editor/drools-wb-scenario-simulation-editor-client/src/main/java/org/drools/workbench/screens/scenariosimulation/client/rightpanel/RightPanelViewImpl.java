@@ -21,11 +21,11 @@ import javax.enterprise.context.Dependent;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -70,6 +70,9 @@ public class RightPanelViewImpl
     @DataField("kieTestEditorTabContent")
     protected DivElement kieTestEditorTabContent = Document.get().createDivElement();
 
+    @DataField("mainSearchForm")
+    protected FormElement mainSearchForm = Document.get().createFormElement();
+
     public RightPanelViewImpl() {
 
     }
@@ -93,14 +96,19 @@ public class RightPanelViewImpl
 
     @EventHandler("inputSearch")
     public void onInputSearchKeyUp(KeyUpEvent event) {
-        presenter.onShowClearButton();
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            presenter.onSearchedEvent(inputSearch.getValue());
+        } else {
+            presenter.onShowClearButton();
+        }
     }
 
-    @EventHandler("inputSearch")
-    public void onInputSearchKeyDownEvent(KeyDownEvent event) {
+    @EventHandler("mainSearchForm")
+    public void onMainSearchFormKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             presenter.onSearchedEvent(inputSearch.getValue());
         }
+        event.stopPropagation();
     }
 
     @EventHandler("searchButton")
