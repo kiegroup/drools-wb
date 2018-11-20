@@ -16,17 +16,22 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
-public class ScenarioException extends IllegalArgumentException {
+public class IndexedScenarioException extends ScenarioException {
 
-    public ScenarioException(String message) {
+    private final int index;
+
+    public IndexedScenarioException(int index, String message) {
         super(message);
+        this.index = index;
     }
 
-    public ScenarioException(String message, Throwable cause) {
+    public IndexedScenarioException(int index, String message, Throwable cause) {
         super(message, cause);
+        this.index = index;
     }
 
-    public ScenarioException(Throwable cause) {
-        super(cause.getMessage(), cause);
+    public IndexedScenarioException(int index, Throwable cause) {
+        super(cause);
+        this.index = index;
     }
 }

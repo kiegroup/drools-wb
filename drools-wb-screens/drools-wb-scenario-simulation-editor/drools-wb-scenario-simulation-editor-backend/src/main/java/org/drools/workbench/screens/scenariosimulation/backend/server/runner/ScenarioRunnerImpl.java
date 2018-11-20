@@ -16,7 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.BaseExpressionEvaluator;
@@ -45,13 +47,13 @@ public class ScenarioRunnerImpl extends Runner {
     private final Description desc;
     private final KieContainer kieContainer;
     private final SimulationDescriptor simulationDescriptor;
-    private List<Scenario> scenarios;
+    private Map<Integer, Scenario> scenarios;
 
     public ScenarioRunnerImpl(KieContainer kieContainer, Simulation simulation) {
-        this(kieContainer, simulation.getSimulationDescriptor(), simulation.getUnmodifiableScenarios());
+        this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation));
     }
 
-    public ScenarioRunnerImpl(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, List<Scenario> scenarios) {
+    public ScenarioRunnerImpl(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
         this.kieContainer = kieContainer;
         this.simulationDescriptor = simulationDescriptor;
         this.scenarios = scenarios;
@@ -62,8 +64,10 @@ public class ScenarioRunnerImpl extends Runner {
     @Override
     public void run(RunNotifier notifier) {
 
-        for (Scenario scenario : scenarios) {
-            internalRunScenario(scenario, getSingleNotifier(notifier, scenario));
+        for (Map.Entry<Integer, Scenario> integerScenarioEntry : scenarios.entrySet()) {
+            Scenario scenario = integerScenarioEntry.getValue();
+            Integer index = integerScenarioEntry.getKey();
+            internalRunScenario(index, scenario, getSingleNotifier(notifier, index, scenario));
         }
     }
 
@@ -72,14 +76,14 @@ public class ScenarioRunnerImpl extends Runner {
         return this.desc;
     }
 
-    private EachTestNotifier getSingleNotifier(RunNotifier notifier, Scenario scenario) {
+    private EachTestNotifier getSingleNotifier(RunNotifier notifier, int index, Scenario scenario) {
         Description childDescription = Description.createTestDescription(getClass(),
-                                                                         scenario.getDescription());
+                                                                         String.format("#%d: %s", index, scenario.getDescription()));
         desc.addChild(childDescription);
         return new EachTestNotifier(notifier, childDescription);
     }
 
-    protected List<ScenarioResult> internalRunScenario(Scenario scenario, EachTestNotifier singleNotifier) {
+    protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, EachTestNotifier singleNotifier) {
         ScenarioRunnerData scenarioRunnerData = new ScenarioRunnerData();
 
         singleNotifier.fireTestStarted();
@@ -102,9 +106,9 @@ public class ScenarioRunnerImpl extends Runner {
                               scenario,
                               singleNotifier);
         } catch (ScenarioException e) {
-            singleNotifier.addFailure(e);
+            singleNotifier.addFailure(new IndexedScenarioException(index, e));
         } catch (Throwable e) {
-            singleNotifier.addFailure(new IllegalStateException(new StringBuilder().append("Unexpected test error in scenario '")
+            singleNotifier.addFailure(new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
                                                                         .append(scenario.getDescription()).append("'").toString(), e));
         }
 
@@ -122,5 +126,14 @@ public class ScenarioRunnerImpl extends Runner {
 
     public static Description getDescriptionForSimulationDescriptor(SimulationDescriptor simulationDescriptor) {
         return Description.createSuiteDescription("Test Scenarios (Preview) tests");
+    }
+
+    public static Map<Integer, Scenario> toScenarioMap(Simulation simulation) {
+        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
+        Map<Integer, Scenario> indexToScenario = new HashMap<>();
+        for (int index = 0; index < scenarios.size(); index += 1) {
+            indexToScenario.put(index + 1, scenarios.get(index));
+        }
+        return indexToScenario;
     }
 }
