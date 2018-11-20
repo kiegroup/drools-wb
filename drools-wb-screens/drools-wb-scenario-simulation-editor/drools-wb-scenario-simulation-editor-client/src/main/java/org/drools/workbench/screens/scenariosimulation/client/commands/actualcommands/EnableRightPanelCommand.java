@@ -18,8 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  * <code>Command</code> to <b>enable</b> the <code>RightPanelView</code>
@@ -28,7 +26,7 @@ import org.kie.workbench.common.command.client.CommandResult;
 public class EnableRightPanelCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().expandToolsDock();
         }
@@ -39,6 +37,5 @@ public class EnableRightPanelCommand extends AbstractScenarioSimulationCommand {
                 context.getRightPanelPresenter().onEnableEditorTab(context.getFilterTerm(), context.getPropertyName(), context.isNotEqualsSearch());
             }
         }
-        return commonExecution(context);
     }
 }

@@ -16,9 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  *  <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
@@ -26,8 +24,7 @@ import org.kie.workbench.common.command.client.CommandResult;
 public class PrependRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().insertRow(0, new ScenarioGridRow());
-        return commonExecution(context);
     }
 }

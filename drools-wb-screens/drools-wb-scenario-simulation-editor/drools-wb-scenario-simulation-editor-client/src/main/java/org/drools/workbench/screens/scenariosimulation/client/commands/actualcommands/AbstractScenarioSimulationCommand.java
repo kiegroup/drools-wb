@@ -47,6 +47,17 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("NOT IMPLEMENTED, YET")));
     }
 
+    @Override
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        try {
+            internalExecute(context);
+            return commonExecution(context);
+        } catch (Exception e) {
+            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+        }
+    }
+
+    protected abstract void internalExecute(ScenarioSimulationContext context);
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:

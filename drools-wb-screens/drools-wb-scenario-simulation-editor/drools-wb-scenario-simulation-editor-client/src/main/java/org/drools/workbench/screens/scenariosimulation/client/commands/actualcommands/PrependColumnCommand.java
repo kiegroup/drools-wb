@@ -20,11 +20,9 @@ import java.util.Map;
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a column to a given <i>group</i>
@@ -34,7 +32,7 @@ public class PrependColumnCommand extends AbstractScenarioSimulationCommand {
 
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         final int index = context.getModel().getFirstIndexLeftOfGroup(context.getColumnGroup());
         FactMappingType factMappingType = FactMappingType.valueOf(context.getColumnGroup().toUpperCase());
         Map.Entry<String, String> validPlaceholders = context.getModel().getValidPlaceholders();
@@ -49,6 +47,5 @@ public class PrependColumnCommand extends AbstractScenarioSimulationCommand {
                                                                                       context.getScenarioGridLayer(),
                                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         context.getModel().insertColumn(index, scenarioGridColumnLocal);
-        return commonExecution(context);
     }
 }

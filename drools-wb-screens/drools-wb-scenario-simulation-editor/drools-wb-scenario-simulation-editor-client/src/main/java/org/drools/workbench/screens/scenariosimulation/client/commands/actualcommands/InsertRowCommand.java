@@ -18,16 +18,13 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.client.CommandResult;
 
 @Dependent
 public class InsertRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().insertRow(context.getRowIndex(), new ScenarioGridRow());
-        return commonExecution(context);
     }
 }

@@ -18,13 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.kie.workbench.common.command.client.CommandResult;
-import org.kie.workbench.common.command.client.CommandResultBuilder;
 
 import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
@@ -36,10 +33,10 @@ public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand 
 
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
         if (selectedColumn == null) {
-            return CommandResultBuilder.SUCCESS;
+            return;
         }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         String fullPackage = context.getFullPackage();
@@ -58,6 +55,5 @@ public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand 
         propertyHeaderMetaData.setReadOnly(false);
         selectedColumn.setFactIdentifier(factIdentifier);
         context.getModel().updateColumnInstance(columnIndex, selectedColumn);
-        return commonExecution(context);
     }
 }

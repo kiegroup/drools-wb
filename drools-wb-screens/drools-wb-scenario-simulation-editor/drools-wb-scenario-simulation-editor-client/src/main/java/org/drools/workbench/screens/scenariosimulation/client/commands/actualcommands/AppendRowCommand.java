@@ -16,9 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
@@ -27,8 +25,7 @@ public class AppendRowCommand extends AbstractScenarioSimulationCommand {
 
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().appendRow(new ScenarioGridRow());
-        return commonExecution(context);
     }
 }

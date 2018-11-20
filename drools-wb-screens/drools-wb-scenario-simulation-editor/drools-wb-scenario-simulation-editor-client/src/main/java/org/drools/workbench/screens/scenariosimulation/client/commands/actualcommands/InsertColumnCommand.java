@@ -21,12 +21,10 @@ import java.util.Map;
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.client.CommandResult;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
@@ -38,7 +36,7 @@ public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
 
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         final List<GridColumn<?>> columns = context.getModel().getColumns();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(context.getColumnIndex());
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
@@ -66,6 +64,5 @@ public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
         GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
         int columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
-        return commonExecution(context);
     }
 }

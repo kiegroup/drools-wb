@@ -21,10 +21,8 @@ import java.util.Map;
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
-import org.kie.workbench.common.command.client.CommandResult;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 /**
@@ -33,9 +31,8 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 @Dependent
 public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
-    
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().deleteColumn(context.getColumnIndex());
         if (context.getModel().getGroupSize(context.getColumnGroup()) < 1) {
             FactMappingType factMappingType = FactMappingType.valueOf(context.getColumnGroup().toUpperCase());
@@ -43,21 +40,19 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
             String instanceTitle = validPlaceholders.getKey();
             String propertyTitle = validPlaceholders.getValue();
             context.getModel().insertColumn(context.getColumnIndex(), getScenarioGridColumnLocal(instanceTitle,
-                                                                       propertyTitle,
-                                                                       String.valueOf(new Date().getTime()),
-                                                                       context.getColumnGroup(),
-                                                                       factMappingType,
-                                                                       context.getScenarioGridPanel(),
-                                                                       context.getScenarioGridLayer(),
-                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+                                                                                                 propertyTitle,
+                                                                                                 String.valueOf(new Date().getTime()),
+                                                                                                 context.getColumnGroup(),
+                                                                                                 factMappingType,
+                                                                                                 context.getScenarioGridPanel(),
+                                                                                                 context.getScenarioGridLayer(),
+                                                                                                 ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
         // TODO CHECK POSITION
         GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
         boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == context.getColumnIndex();
         if (context.getRightPanelPresenter() != null && toDisable) {
-            return new DisableRightPanelCommand().execute(context);
-        } else {
-            return commonExecution(context);
+            new DisableRightPanelCommand().execute(context);
         }
     }
 }

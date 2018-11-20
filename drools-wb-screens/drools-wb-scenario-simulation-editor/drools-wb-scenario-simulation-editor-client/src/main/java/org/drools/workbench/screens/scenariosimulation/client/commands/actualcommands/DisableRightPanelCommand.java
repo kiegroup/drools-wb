@@ -18,8 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  * <code>Command</code> to <b>disable</b> the <code>RightPanelView</code>
@@ -28,10 +26,9 @@ import org.kie.workbench.common.command.client.CommandResult;
 public class DisableRightPanelCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         if (context.getRightPanelPresenter() != null) {
             context.getRightPanelPresenter().onDisableEditorTab();
         }
-        return commonExecution(context);
     }
 }

@@ -18,9 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-import org.kie.workbench.common.command.client.CommandResult;
 
 /**
  * <code>Command</code> to <b>duplicate</b> a row.
@@ -29,8 +27,7 @@ import org.kie.workbench.common.command.client.CommandResult;
 public class DuplicateRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().duplicateRow(context.getRowIndex(), new ScenarioGridRow());
-        return commonExecution(context);
     }
 }

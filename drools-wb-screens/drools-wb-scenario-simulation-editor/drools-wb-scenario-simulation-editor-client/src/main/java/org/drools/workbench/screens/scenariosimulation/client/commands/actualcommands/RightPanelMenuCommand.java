@@ -18,21 +18,18 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.kie.workbench.common.command.client.CommandResult;
 import org.uberfire.client.mvp.PlaceStatus;
 
 @Dependent
 public class RightPanelMenuCommand extends AbstractScenarioSimulationCommand {
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    protected void internalExecute(ScenarioSimulationContext context) {
         if (PlaceStatus.OPEN.equals(context.getPlaceManager().getStatus(context.getRightPanelRequest()))) {
             context.getPlaceManager().closePlace(context.getRightPanelRequest());
         } else {
             context.getPlaceManager().goTo(context.getRightPanelRequest());
         }
-        return commonExecution(context);
     }
 
 }
