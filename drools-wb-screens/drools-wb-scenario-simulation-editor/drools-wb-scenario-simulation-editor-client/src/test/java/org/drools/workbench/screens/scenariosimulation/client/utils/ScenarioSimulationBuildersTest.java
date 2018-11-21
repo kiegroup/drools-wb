@@ -34,7 +34,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
 
-
     @Before
     public void setup() {
         super.setup();
@@ -51,6 +50,7 @@ public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
         assertFalse(retrieved.isMovable());
         assertNotNull(retrieved.getHeaderMetaData());
         assertFalse(retrieved.getHeaderMetaData().isEmpty());
+        assertEquals(GridColumn.ColumnWidthMode.auto, retrieved.getColumnWidthMode());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
         List<GridColumn.HeaderMetaData> retrieved = builder.build();
         assertNotNull(retrieved);
         assertEquals(1, retrieved.size());
-        ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData)retrieved.get(0);
+        ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData) retrieved.get(0);
         assertNotNull(headerMetaData);
         assertEquals(COLUMN_INSTANCE_TITLE_FIRST, headerMetaData.getTitle());
         assertEquals(COLUMN_GROUP_FIRST, headerMetaData.getColumnGroup());
