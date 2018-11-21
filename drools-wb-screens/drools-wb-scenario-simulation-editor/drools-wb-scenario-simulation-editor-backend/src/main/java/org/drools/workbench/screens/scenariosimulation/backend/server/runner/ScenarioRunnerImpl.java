@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.BaseExpressionEvaluator;
@@ -28,9 +29,9 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.kie.api.runtime.KieContainer;
 
@@ -48,27 +49,35 @@ public class ScenarioRunnerImpl extends Runner {
     private final KieContainer kieContainer;
     private final SimulationDescriptor simulationDescriptor;
     private Map<Integer, Scenario> scenarios;
+    private String fileName;
 
     public ScenarioRunnerImpl(KieContainer kieContainer, Simulation simulation) {
-        this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation));
+        this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation), null);
     }
 
-    public ScenarioRunnerImpl(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
+    public ScenarioRunnerImpl(KieContainer kieContainer, Simulation simulation, String fileName) {
+        this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation), fileName);
+    }
+
+    public ScenarioRunnerImpl(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios, String fileName) {
         this.kieContainer = kieContainer;
         this.simulationDescriptor = simulationDescriptor;
         this.scenarios = scenarios;
-        this.desc = getDescriptionForSimulationDescriptor(simulationDescriptor);
+        this.fileName = fileName;
+        this.desc = getDescriptionForSimulation(getFileName(), simulationDescriptor, scenarios);
         this.classLoader = kieContainer.getClassLoader();
     }
 
     @Override
     public void run(RunNotifier notifier) {
 
+        notifier.fireTestStarted(getDescription());
         for (Map.Entry<Integer, Scenario> integerScenarioEntry : scenarios.entrySet()) {
             Scenario scenario = integerScenarioEntry.getValue();
             Integer index = integerScenarioEntry.getKey();
-            internalRunScenario(index, scenario, getSingleNotifier(notifier, index, scenario));
+            internalRunScenario(index, scenario, notifier);
         }
+        notifier.fireTestStarted(getDescription());
     }
 
     @Override
@@ -76,17 +85,10 @@ public class ScenarioRunnerImpl extends Runner {
         return this.desc;
     }
 
-    private EachTestNotifier getSingleNotifier(RunNotifier notifier, int index, Scenario scenario) {
-        Description childDescription = Description.createTestDescription(getClass(),
-                                                                         String.format("#%d: %s", index, scenario.getDescription()));
-        desc.addChild(childDescription);
-        return new EachTestNotifier(notifier, childDescription);
-    }
-
-    protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, EachTestNotifier singleNotifier) {
+    protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, RunNotifier runNotifier) { //EachTestNotifier singleNotifier) {
         ScenarioRunnerData scenarioRunnerData = new ScenarioRunnerData();
 
-        singleNotifier.fireTestStarted();
+        runNotifier.fireTestStarted(getDescriptionForScenario(getFileName(), index, scenario));
 
         try {
             ExpressionEvaluator expressionEvaluator = createExpressionEvaluator();
@@ -103,16 +105,19 @@ public class ScenarioRunnerImpl extends Runner {
                              scenarioRunnerData,
                              expressionEvaluator);
             validateAssertion(scenarioRunnerData.getResultData(),
-                              scenario,
-                              singleNotifier);
+                              scenario);
+            runNotifier.fireTestFinished(getDescriptionForScenario(getFileName(), index, scenario));
         } catch (ScenarioException e) {
-            singleNotifier.addFailure(new IndexedScenarioException(index, e));
+            IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, e);
+            indexedScenarioException.setFileName(fileName);
+            runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         } catch (Throwable e) {
-            singleNotifier.addFailure(new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
-                                                                        .append(scenario.getDescription()).append("'").toString(), e));
+            IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
+                    .append(scenario.getDescription()).append("'").toString(), e);
+            indexedScenarioException.setFileName(fileName);
+            runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         }
 
-        singleNotifier.fireTestFinished();
         return scenarioRunnerData.getResultData();
     }
 
@@ -124,8 +129,22 @@ public class ScenarioRunnerImpl extends Runner {
         this.expressionEvaluatorFactory = expressionEvaluatorFactory;
     }
 
-    public static Description getDescriptionForSimulationDescriptor(SimulationDescriptor simulationDescriptor) {
-        return Description.createSuiteDescription("Test Scenarios (Preview) tests");
+    public Optional<String> getFileName() {
+        return Optional.ofNullable(fileName);
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public static Description getDescriptionForSimulation(Optional<String> filename, Simulation simulation) {
+        return getDescriptionForSimulation(filename, simulation.getSimulationDescriptor(), toScenarioMap(simulation));
+    }
+
+    public static Description getDescriptionForSimulation(Optional<String> filename, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
+        Description suiteDescription = Description.createSuiteDescription("Test Scenarios (Preview) tests");
+        scenarios.forEach((index, scenario) -> suiteDescription.addChild(getDescriptionForScenario(filename, index, scenario)));
+        return suiteDescription;
     }
 
     public static Map<Integer, Scenario> toScenarioMap(Simulation simulation) {
@@ -135,5 +154,10 @@ public class ScenarioRunnerImpl extends Runner {
             indexToScenario.put(index + 1, scenarios.get(index));
         }
         return indexToScenario;
+    }
+
+    public static Description getDescriptionForScenario(Optional<String> className, int index, Scenario scenario) {
+        return Description.createTestDescription(className.orElse(ScenarioRunnerImpl.class.getCanonicalName()),
+                                                 String.format("#%d: %s", index, scenario.getDescription()));
     }
 }

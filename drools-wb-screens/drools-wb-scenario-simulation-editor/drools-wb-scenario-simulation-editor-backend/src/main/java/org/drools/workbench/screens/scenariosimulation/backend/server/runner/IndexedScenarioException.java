@@ -20,6 +20,8 @@ public class IndexedScenarioException extends ScenarioException {
 
     private final int index;
 
+    private String fileName;
+
     public IndexedScenarioException(int index, String message) {
         super(message);
         this.index = index;
@@ -33,5 +35,22 @@ public class IndexedScenarioException extends ScenarioException {
     public IndexedScenarioException(int index, Throwable cause) {
         super(cause);
         this.index = index;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    @Override
+    public String getMessage() {
+        StringBuilder format = new StringBuilder().append("#").append(index).append(": ").append(super.getMessage());
+        if(getFileName() != null) {
+            format.append("(").append(getFileName()).append(")");
+        }
+        return format.toString();
     }
 }

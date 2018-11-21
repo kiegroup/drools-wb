@@ -41,7 +41,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.junit.internal.runners.model.EachTestNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 
@@ -170,13 +169,10 @@ public class ScenarioRunnerHelper {
         return scenarioResults;
     }
 
-    public static void validateAssertion(List<ScenarioResult> scenarioResults, Scenario scenario, EachTestNotifier singleNotifier) {
+    public static void validateAssertion(List<ScenarioResult> scenarioResults, Scenario scenario) {
         boolean scenarioFailed = false;
         for (ScenarioResult scenarioResult : scenarioResults) {
             if (!scenarioResult.getResult()) {
-                singleNotifier.addFailedAssumption(
-                        new ScenarioAssumptionViolatedException(scenario, scenarioResult, new StringBuilder().append("Scenario '").append(scenario.getDescription())
-                                .append("' has wrong assertion").toString()));
                 scenarioFailed = true;
             }
         }

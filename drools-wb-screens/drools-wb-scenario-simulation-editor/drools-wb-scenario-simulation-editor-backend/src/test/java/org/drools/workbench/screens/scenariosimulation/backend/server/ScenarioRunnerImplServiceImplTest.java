@@ -24,13 +24,13 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.runners.model.EachTestNotifier;
 import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.workbench.common.services.backend.builder.service.BuildInfo;
 import org.kie.workbench.common.services.backend.builder.service.BuildInfoService;
@@ -57,53 +57,53 @@ import static org.mockito.Mockito.when;
 public class ScenarioRunnerImplServiceImplTest {
 
     @Mock
-    private EventSourceMock<TestResultMessage> defaultTestResultMessageEvent;
+    private EventSourceMock<TestResultMessage> defaultTestResultMessageEventMock;
 
     @Mock
     private Runner runnerMock;
 
     @Mock
-    private KieModuleService moduleService;
+    private KieModuleService moduleServiceMock;
 
     @Mock
-    private BuildInfoService buildInfoService;
+    private BuildInfoService buildInfoServiceMock;
 
     @Mock
-    private BuildInfo buildInfo;
+    private BuildInfo buildInfoMock;
 
     @Mock
-    private KieContainer kieContainer;
+    private KieContainer kieContainerMock;
 
     @Mock
-    private ModuleClassLoaderHelper classLoaderHelper;
+    private ModuleClassLoaderHelper classLoaderHelperMock;
 
     @Captor
-    private ArgumentCaptor<TestResultMessage> testResultMessage;
+    private ArgumentCaptor<TestResultMessage> testResultMessageArgumentCaptor;
 
     @InjectMocks
     private ScenarioRunnerServiceImpl scenarioRunnerService = new ScenarioRunnerServiceImpl();
 
     @Before
     public void setup() {
-        when(classLoaderHelper.getModuleClassLoader(any())).thenReturn(ClassLoader.getSystemClassLoader());
+        when(classLoaderHelperMock.getModuleClassLoader(any())).thenReturn(ClassLoader.getSystemClassLoader());
     }
 
     @Test
     public void runAllTests() throws Exception {
         scenarioRunnerService.runAllTests("test", mock(Path.class));
 
-        verify(defaultTestResultMessageEvent).fire(any());
+        verify(defaultTestResultMessageEventMock).fire(any());
     }
 
     @Test
     public void runTest() throws Exception {
-        when(buildInfoService.getBuildInfo(any())).thenReturn(buildInfo);
-        when(buildInfo.getKieContainer()).thenReturn(kieContainer);
+        when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
+        when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         final ScenarioSimulationModel scenarioSimulationModel = mock(ScenarioSimulationModel.class);
         when(scenarioSimulationModel.getSimulation()).thenReturn(mock(Simulation.class));
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
 
-        verify(defaultTestResultMessageEvent).fire(any());
+        verify(defaultTestResultMessageEventMock).fire(any());
     }
 
     @Test
@@ -114,14 +114,14 @@ public class ScenarioRunnerImplServiceImplTest {
 
         scenarioRunnerService.runAllTests("test", mock(Path.class), customTestResultEvent);
 
-        verify(defaultTestResultMessageEvent, never()).fire(any());
+        verify(defaultTestResultMessageEventMock, never()).fire(any());
         verify(customTestResultEvent).fire(any());
     }
 
     @Test
     public void runFailed() throws Exception {
-        when(buildInfoService.getBuildInfo(any())).thenReturn(buildInfo);
-        when(buildInfo.getKieContainer()).thenReturn(kieContainer);
+        when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
+        when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
         Scenario scenario = scenarioSimulationModel.getSimulation().getScenarioByIndex(0);
         scenario.setDescription("Test Scenario");
@@ -130,25 +130,25 @@ public class ScenarioRunnerImplServiceImplTest {
         scenarioRunnerService.setRunnerSupplier((kieContainer, simulation) -> new ScenarioRunnerImpl(kieContainer, simulation) {
 
             @Override
-            protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, EachTestNotifier singleNotifier) {
+            protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
 
-                singleNotifier.fireTestStarted();
+                runNotifier.fireTestStarted(getDescriptionForScenario(getFileName(), index, scenario));
 
-                singleNotifier.addFailure(new IndexedScenarioException(index, errorMessage));
-                singleNotifier.fireTestFinished();
-
+                runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario),
+                                                        new IndexedScenarioException(index, errorMessage)));
                 return Collections.emptyList();
             }
         });
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
-        verify(defaultTestResultMessageEvent, times(1)).fire(testResultMessage.capture());
-        TestResultMessage value = testResultMessage.getValue();
-        List<Failure> failures = value.getFailures();
+        verify(defaultTestResultMessageEventMock, times(1)).fire(testResultMessageArgumentCaptor.capture());
+        TestResultMessage value = testResultMessageArgumentCaptor.getValue();
+        List<org.guvnor.common.services.shared.test.Failure> failures = value.getFailures();
         assertEquals(1, failures.size());
 
         String testDescription = String.format("#%d: %s", 1, scenario.getDescription());
-        Failure failure = failures.get(0);
-        assertEquals(errorMessage, failure.getMessage());
+        String errorMessageFormatted = String.format("#%d: %s", 1, errorMessage);
+        org.guvnor.common.services.shared.test.Failure failure = failures.get(0);
+        assertEquals(errorMessageFormatted, failure.getMessage());
         assertTrue(failure.getDisplayName().startsWith(testDescription));
     }
 }
