@@ -83,16 +83,16 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest {
     protected List<GridColumn<?>> columnsMock;
 
     @Mock
-    private ScenarioGridPanel scenarioGridPanelMock;
+    protected ScenarioGridModel scenarioGridModelMock;
 
     @Mock
-    private ScenarioGridModel scenarioGridModelMock;
+    private ScenarioGridPanel scenarioGridPanelMock;
 
     @Mock
     private GridRenderer scenarioGridRendererMock;
 
     @Mock
-    private BaseGridRendererHelper scenarioGridRendererHelperMock;
+    protected BaseGridRendererHelper scenarioGridRendererHelperMock;
 
     @Mock
     private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformationMock;
