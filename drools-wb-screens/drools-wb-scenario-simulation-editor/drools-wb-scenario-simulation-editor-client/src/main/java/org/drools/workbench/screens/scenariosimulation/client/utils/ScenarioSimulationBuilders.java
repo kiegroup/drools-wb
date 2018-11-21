@@ -94,7 +94,7 @@ public class ScenarioSimulationBuilders {
                                                                            factoryCell,
                                                                            placeHolder
             );
-            // by default scenario columns should be auto should have auto resize
+            // by default scenario columns should be auto to have auto resize
             scenarioGridColumn.setColumnWidthMode(GridColumn.ColumnWidthMode.auto);
             scenarioGridColumn.setMinimumWidth(width);
             return scenarioGridColumn;
