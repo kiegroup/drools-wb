@@ -98,6 +98,7 @@ public class RightPanelViewImpl
     public void onInputSearchKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             presenter.onSearchedEvent(inputSearch.getValue());
+            event.stopPropagation();
         } else {
             presenter.onShowClearButton();
         }

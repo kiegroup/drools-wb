@@ -91,6 +91,7 @@ public class RightPanelViewImplTest {
         when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_ENTER);
         rightPanelView.onInputSearchKeyUp(eventMock);
         verify(rightPanelPresenterMock, times(1)).onSearchedEvent(any());
+        verify(eventMock, times(1)).stopPropagation();
     }
 
     public void onMainSearchFormKeyUpNotEnter() {
