@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
@@ -29,6 +30,7 @@ import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -94,6 +96,23 @@ public class RightPanelViewImplTest {
         verify(eventMock, times(1)).stopPropagation();
     }
 
+    @Test
+    public void onInputSearchKeyDownNotEnter() {
+        KeyDownEvent eventMock = mock(KeyDownEvent.class);
+        when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_SPACE);
+        rightPanelView.onInputSearchKeyDown(eventMock);
+        verify(eventMock, never()).stopPropagation();
+    }
+
+    @Test
+    public void onInputSearchKeyDownEnter() {
+        KeyDownEvent eventMock = mock(KeyDownEvent.class);
+        when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_ENTER);
+        rightPanelView.onInputSearchKeyDown(eventMock);
+        verify(eventMock, times(1)).stopPropagation();
+    }
+
+    @Test
     public void onMainSearchFormKeyUpNotEnter() {
         KeyUpEvent eventMock = mock(KeyUpEvent.class);
         when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_SPACE);
@@ -102,6 +121,7 @@ public class RightPanelViewImplTest {
         verify(eventMock, times(1)).stopPropagation();
     }
 
+    @Test
     public void onMainSearchFormKeyUpEnter() {
         KeyUpEvent eventMock = mock(KeyUpEvent.class);
         when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_ENTER);
@@ -110,17 +130,36 @@ public class RightPanelViewImplTest {
         verify(eventMock, times(1)).stopPropagation();
     }
 
+    @Test
+    public void onMainSearchKeyDownNotEnter() {
+        KeyDownEvent eventMock = mock(KeyDownEvent.class);
+        when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_SPACE);
+        rightPanelView.onMainSearchFormKeyDown(eventMock);
+        verify(eventMock, never()).stopPropagation();
+    }
+
+    @Test
+    public void onMainSearchKeyDownEnter() {
+        KeyDownEvent eventMock = mock(KeyDownEvent.class);
+        when(eventMock.getNativeKeyCode()).thenReturn(KeyCodes.KEY_ENTER);
+        rightPanelView.onMainSearchFormKeyDown(eventMock);
+        verify(eventMock, times(1)).stopPropagation();
+    }
+
+
+    @Test
     public void onSearchButtonClicked() {
         ClickEvent eventMock = mock(ClickEvent.class);
         rightPanelView.onSearchButtonClicked(eventMock);
         verify(rightPanelPresenterMock, times(1)).onSearchedEvent(any());
     }
 
+    @Test
     public void onAddButtonClicked() {
         ClickEvent eventMock = mock(ClickEvent.class);
         rightPanelView.onAddButtonClicked(eventMock);
         verify(rightPanelPresenterMock, times(1)).onModifyColumn();
-        verify(addButtonMock, times(1)).setDisabled(eq(true));
+        verify(addButtonMock, atLeast(1)).setDisabled(eq(true));
         verify(rightPanelPresenterMock, times(1)).onDisableEditorTab();
 
     }
