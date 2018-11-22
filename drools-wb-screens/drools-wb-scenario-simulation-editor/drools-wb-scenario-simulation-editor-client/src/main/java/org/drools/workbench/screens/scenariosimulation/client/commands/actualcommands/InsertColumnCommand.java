@@ -50,7 +50,15 @@ public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,
-                                                                                      context.getColumnId(),
+                                                                                      scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
+        scenarioGridColumnLocal.setPropertyAssigned(false);
+        if (cloneInstance) {
+            scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
+        }
+        GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
+        int columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
+        context.getColumnId(),
                                                                                       columnGroup,
                                                                                       factMappingType,
                                                                                       context.getScenarioGridPanel(),
@@ -61,8 +69,13 @@ public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
         if (cloneInstance) {
             scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
         }
-        GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
-        int columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        int columnPosition = -1;
+        if (asProperty) {
+            columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        } else {
+            GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
+            columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        }
         context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
     }
 }
