@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -33,6 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.junit.Before;
 import org.mockito.Mock;
+import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
@@ -53,6 +55,8 @@ public abstract class AbstractScenarioSimulationTest {
     protected List<GridRow> rowsMock;
     @Mock
     protected ScenarioGridPanel scenarioGridPanelMock;
+    @Mock
+    protected EventBus eventBusMock;
 
     @Mock
     protected ScenarioGridLayer scenarioGridLayerMock;
@@ -152,7 +156,18 @@ public abstract class AbstractScenarioSimulationTest {
             public List<GridRow> getRows() {
                 return rowsMock;
             }
+
+            @Override
+            public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
+                return range;
+            }
+
+            @Override
+            public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
+                return true;
+            }
         });
+        when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);

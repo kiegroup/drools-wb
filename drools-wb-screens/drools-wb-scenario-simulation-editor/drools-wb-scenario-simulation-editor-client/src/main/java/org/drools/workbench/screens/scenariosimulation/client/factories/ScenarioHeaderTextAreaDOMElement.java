@@ -18,8 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import java.util.Objects;
 
+import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.gwtbootstrap3.client.ui.TextArea;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
@@ -55,11 +57,7 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         try {
-            ScenarioGridModel model = (ScenarioGridModel) gridWidget.getModel();
-            if (!model.validateHeaderUpdate(value, rowIndex, columnIndex)) {
-                return;
-            }
-            model.updateHeader(columnIndex, rowIndex, value);
+            ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, true));
             originalValue = value;
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)

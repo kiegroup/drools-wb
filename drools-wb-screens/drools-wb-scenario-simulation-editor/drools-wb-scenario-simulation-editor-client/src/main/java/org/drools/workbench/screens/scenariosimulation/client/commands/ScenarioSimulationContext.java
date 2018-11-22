@@ -57,6 +57,8 @@ public class ScenarioSimulationContext {
      */
     protected boolean keepData;
 
+    protected String cellValue;
+
     protected int rowIndex;
 
     /**
@@ -298,5 +300,13 @@ public class ScenarioSimulationContext {
 
     public void setRightPanelRequest(PlaceRequest rightPanelRequest) {
         this.rightPanelRequest = rightPanelRequest;
+    }
+
+    public String getCellValue() {
+        return cellValue;
+    }
+
+    public void setCellValue(String cellValue) {
+        this.cellValue = cellValue;
     }
 }

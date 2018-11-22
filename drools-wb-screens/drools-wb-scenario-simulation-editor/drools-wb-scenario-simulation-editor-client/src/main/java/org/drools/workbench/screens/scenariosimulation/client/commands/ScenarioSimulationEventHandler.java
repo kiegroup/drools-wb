@@ -41,6 +41,8 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetCellValueCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetInstanceHeaderCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetPropertyHeaderCommand;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
@@ -57,6 +59,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowE
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
@@ -73,6 +76,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependRo
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioNotificationEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.SetCellValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
@@ -103,6 +107,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        ReloadRightPanelEventHandler,
                                                        ScenarioGridReloadEventHandler,
                                                        ScenarioNotificationEventHandler,
+                                                       SetCellValueEventHandler,
                                                        SetInstanceHeaderEventHandler,
                                                        SetPropertyHeaderEventHandler {
 
@@ -248,6 +253,18 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(SetCellValueEvent event) {
+        context.setRowIndex(event.getRowIndex());
+        context.setColumnIndex(event.getColumnIndex());
+        context.setCellValue(event.getCellValue());
+        if (event.isHeader()) {
+            commonExecution(context, new SetHeaderValueCommand());
+        } else {
+            commonExecution(context, new SetCellValueCommand());
+        }
+    }
+
+    @Override
     public void onEvent(SetInstanceHeaderEvent event) {
         if (context.getModel().getSelectedColumn() == null) {
             return;
@@ -258,7 +275,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.setFullPackage(event.getFullPackage());
         context.setClassName(event.getClassName());
         if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
-            org.uberfire.mvp.Command okPreserveCommand = () ->  commonExecution(context, new SetInstanceHeaderCommand());
+            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context, new SetInstanceHeaderCommand());
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -358,6 +375,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(ReloadRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioNotificationEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(SetCellValueEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetInstanceHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));
     }

@@ -17,14 +17,14 @@
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
+import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,9 +45,16 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     }
 
     @Test
-    public void flush() {
+    public void flushSameValue() {
+        scenarioCellTextAreaDOMElement.originalValue = "";
         scenarioCellTextAreaDOMElement.flush("");
-        verify(scenarioGridModelMock, times(1)).setCellValue(eq(ROW_INDEX), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
-        verify(scenarioGridModelMock, times(1)).resetErrors(anyInt());
+        verify(eventBusMock, never()).fireEvent(isA(SetCellValueEvent.class));
+    }
+
+    @Test
+    public void flushDifferentValue() {
+        scenarioCellTextAreaDOMElement.originalValue = "";
+        scenarioCellTextAreaDOMElement.flush("TEST");
+        verify(eventBusMock, times(1)).fireEvent(isA(SetCellValueEvent.class));
     }
 }
