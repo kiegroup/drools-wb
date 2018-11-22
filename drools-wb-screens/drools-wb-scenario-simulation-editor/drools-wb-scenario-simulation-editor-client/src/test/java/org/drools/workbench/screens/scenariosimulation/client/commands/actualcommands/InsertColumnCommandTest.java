@@ -44,13 +44,17 @@ public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void executeNotIsRightIsAsProperty() {
-        insertColumnCommand = spy(new InsertColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_INDEX, false, true, scenarioGridPanelMock, scenarioGridLayerMock) {
+        insertColumnCommand = spy(new InsertColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;
             }
         });
-        insertColumnCommand.execute();
+        scenarioSimulationContext.setColumnId(COLUMN_ID);
+        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.setRight(false);
+        scenarioSimulationContext.setAsProperty(true);
+        insertColumnCommand.execute(scenarioSimulationContext);
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(3), eq(gridColumnMock));
     }
@@ -63,33 +67,45 @@ public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTe
                 return gridColumnMock;
             }
         });
-        insertColumnCommand.execute();
+        scenarioSimulationContext.setColumnId(COLUMN_ID);
+        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.setRight(true);
+        scenarioSimulationContext.setAsProperty(true);
+        insertColumnCommand.execute(scenarioSimulationContext);
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
     }
 
     @Test
     public void executeNotIsRightNotIsAsProperty() {
-        insertColumnCommand = spy(new InsertColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_INDEX, false, false, scenarioGridPanelMock, scenarioGridLayerMock) {
+        insertColumnCommand = spy(new InsertColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;
             }
         });
-        insertColumnCommand.execute();
+        scenarioSimulationContext.setColumnId(COLUMN_ID);
+        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.setRight(false);
+        scenarioSimulationContext.setAsProperty(false);
+        insertColumnCommand.execute(scenarioSimulationContext);
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(2), eq(gridColumnMock));
     }
 
     @Test
     public void executeIsRightNotIsAsProperty() {
-        insertColumnCommand = spy(new InsertColumnCommand(scenarioGridModelMock, COLUMN_ID, COLUMN_INDEX, true, false, scenarioGridPanelMock, scenarioGridLayerMock) {
+        insertColumnCommand = spy(new InsertColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;
             }
         });
-        insertColumnCommand.execute();
+        scenarioSimulationContext.setColumnId(COLUMN_ID);
+        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.setRight(true);
+        scenarioSimulationContext.setAsProperty(false);
+        insertColumnCommand.execute(scenarioSimulationContext);
         verify(insertColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
     }

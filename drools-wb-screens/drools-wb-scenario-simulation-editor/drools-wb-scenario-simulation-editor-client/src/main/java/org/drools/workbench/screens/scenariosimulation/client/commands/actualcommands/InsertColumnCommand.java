@@ -34,7 +34,6 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
 @Dependent
 public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
 
-
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final List<GridColumn<?>> columns = context.getModel().getColumns();
@@ -50,32 +49,25 @@ public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
                                                                                       propertyTitle,
-                                                                                      scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
-        scenarioGridColumnLocal.setPropertyAssigned(false);
-        if (cloneInstance) {
-            scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
-        }
-        GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
-        int columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
-        context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
-        context.getColumnId(),
+                                                                                      context.getColumnId(),
                                                                                       columnGroup,
                                                                                       factMappingType,
                                                                                       context.getScenarioGridPanel(),
                                                                                       context.getScenarioGridLayer(),
                                                                                       placeHolder);
-        scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
         scenarioGridColumnLocal.setPropertyAssigned(false);
         if (cloneInstance) {
             scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
         }
         int columnPosition = -1;
-        if (asProperty) {
-            columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        if (context.isAsProperty()) {
+            columnPosition = context.isRight() ? context.getColumnIndex() + 1 : context.getColumnIndex();
         } else {
             GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getColumnIndex());
             columnPosition = context.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         }
+        scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
+        scenarioGridColumnLocal.setPropertyAssigned(false);
         context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
     }
 }
