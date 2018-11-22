@@ -85,12 +85,12 @@ public class ScenarioRunnerImpl extends Runner {
         return this.desc;
     }
 
-    protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, RunNotifier runNotifier) { //EachTestNotifier singleNotifier) {
+    protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
         ScenarioRunnerData scenarioRunnerData = new ScenarioRunnerData();
 
-        runNotifier.fireTestStarted(getDescriptionForScenario(getFileName(), index, scenario));
 
         try {
+            runNotifier.fireTestStarted(getDescriptionForScenario(getFileName(), index, scenario));
             ExpressionEvaluator expressionEvaluator = createExpressionEvaluator();
             extractGivenValues(simulationDescriptor, scenario.getUnmodifiableFactMappingValues(), classLoader, expressionEvaluator)
                     .forEach(scenarioRunnerData::addInput);
@@ -112,8 +112,9 @@ public class ScenarioRunnerImpl extends Runner {
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         } catch (Throwable e) {
+            String scenarioDescription = scenario != null ? scenario.getDescription() : "";
             IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
-                    .append(scenario.getDescription()).append("'").toString(), e);
+                    .append(scenarioDescription).append("'").toString(), e);
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         }
