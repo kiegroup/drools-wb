@@ -112,9 +112,8 @@ public class ScenarioRunnerImpl extends Runner {
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         } catch (Throwable e) {
-            String scenarioDescription = scenario != null ? scenario.getDescription() : "";
             IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
-                    .append(scenarioDescription).append("'").toString(), e);
+                    .append(scenario.getDescription()).append("'").toString(), e);
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario), indexedScenarioException));
         }
