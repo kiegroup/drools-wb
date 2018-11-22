@@ -39,7 +39,7 @@ public class InsertColumnCommand extends AbstractCommand {
     private ScenarioGridModel model;
     private String columnId;
     private int columnIndex;
-    protected boolean isRight;
+    private boolean isRight;
     private boolean asProperty;
 
     public InsertColumnCommand() {
@@ -84,14 +84,18 @@ public class InsertColumnCommand extends AbstractCommand {
                                                                                       scenarioGridPanel,
                                                                                       scenarioGridLayer,
                                                                                       placeHolder);
-        scenarioGridColumnLocal.setReadOnly(true);
         scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
         scenarioGridColumnLocal.setPropertyAssigned(false);
         if (cloneInstance) {
             scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
         }
-        GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
-        int columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        int columnPosition = -1;
+        if (asProperty) {
+            columnPosition = isRight ? columnIndex + 1 : columnIndex;
+        } else {
+            GridData.Range instanceRange = model.getInstanceLimits(columnIndex);
+            columnPosition = isRight ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        }
         model.insertColumn(columnPosition, scenarioGridColumnLocal);
     }
 }

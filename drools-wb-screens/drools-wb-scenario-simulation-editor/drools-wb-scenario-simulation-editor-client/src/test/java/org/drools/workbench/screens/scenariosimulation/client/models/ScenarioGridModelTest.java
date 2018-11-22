@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -336,6 +337,57 @@ public class ScenarioGridModelTest {
         verify(eventBusMock, never()).fireEvent(any());
     }
 
+
+    @Test
+    public void updateFactMapping() {
+        final int INDEX = 0;
+        final String VALUE = "VALUE";
+        final String ALIAS_1 = "ALIAS_1";
+        final String ALIAS_2 = "ALIAS_2";
+        FactMapping factMappingReference = mock(FactMapping.class);
+        FactMapping factMappingToCheck = mock(FactMapping.class);
+        FactIdentifier factIdentifier1 = mock(FactIdentifier.class);
+        FactIdentifier factIdentifier2 = mock(FactIdentifier.class);
+        // Should execute the if in the first if
+        when(factMappingReference.getFactIdentifier()).thenReturn(FactIdentifier.EMPTY);
+        when(factMappingToCheck.getFactIdentifier()).thenReturn(FactIdentifier.EMPTY);
+        when(factMappingReference.getFactAlias()).thenReturn(ALIAS_1);
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
+        when(simulationDescriptorMock.getFactMappingByIndex(INDEX)).thenReturn(factMappingToCheck);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
+        verify(factMappingToCheck, times(1)).setFactAlias(eq(VALUE));
+        reset(informationHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should not execute the if in the first if
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_2);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
+        verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
+        reset(informationHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should not execute the if in the first if
+        when(factMappingReference.getFactIdentifier()).thenReturn(factIdentifier1);
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
+        verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
+        reset(informationHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should execute the second if
+        when(factMappingToCheck.getFactIdentifier()).thenReturn(factIdentifier1);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
+        verify(factMappingToCheck, times(1)).setFactAlias(eq(VALUE));
+        reset(informationHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should not execute the second if
+        when(factMappingToCheck.getFactIdentifier()).thenReturn(factIdentifier2);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
+        verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
+    }
+
     @Test
     public void commonAddColumn() {
         reset(scenarioGridModel);
@@ -364,12 +416,12 @@ public class ScenarioGridModelTest {
     @Test
     public void refreshErrorsTest() {
         scenarioGridModel.refreshErrors();
-        verify(gridCellMock, times(24)).setError(eq(true));
+        verify(gridCellMock, times(24)).setErrorMode(eq(true));
 
         reset(gridCellMock);
         when(factMappingValueMock.isError()).thenReturn(false);
         scenarioGridModel.refreshErrors();
-        verify(gridCellMock, times(24)).setError(eq(false));
+        verify(gridCellMock, times(24)).setErrorMode(eq(false));
     }
 
     @Test
@@ -379,10 +431,10 @@ public class ScenarioGridModelTest {
 
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.empty());
         scenarioGridModel.refreshErrorsRow(0);
-        verify(gridCellMock, times(6)).setError(false);
+        verify(gridCellMock, times(6)).setErrorMode(false);
 
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
         scenarioGridModel.refreshErrorsRow(0);
-        verify(gridCellMock, times(6)).setError(true);
+        verify(gridCellMock, times(6)).setErrorMode(true);
     }
 }

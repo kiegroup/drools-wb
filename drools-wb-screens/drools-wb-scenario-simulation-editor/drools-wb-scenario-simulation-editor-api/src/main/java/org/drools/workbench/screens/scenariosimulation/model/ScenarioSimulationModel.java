@@ -26,7 +26,7 @@ public class ScenarioSimulationModel
         implements HasImports {
 
     @XStreamAsAttribute()
-    private String version = "1.0";
+    private String version = "1.1";
 
     private Simulation simulation;
 
@@ -50,9 +50,9 @@ public class ScenarioSimulationModel
         givenFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
 
-        // Add EXPECTED Fact
+        // Add EXPECT Fact
         id = 2;
-        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
+        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
         final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
         expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
@@ -78,5 +78,9 @@ public class ScenarioSimulationModel
     @Override
     public void setImports(Imports imports) {
         this.imports = imports;
+    }
+
+    public String getVersion() {
+        return version;
     }
 }

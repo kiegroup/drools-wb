@@ -32,8 +32,6 @@ public class GridContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
     private final String GRIDCONTEXTMENU_GRID = "gridcontextmenu-grid";
-
-    private final String GRIDCONTEXTMENU_SCENARIO = "gridcontextmenu-scenario";
     private final String GRIDCONTEXTMENU_INSERT_COLUMN_LEFT = "gridcontextmenu-insert-column-left";
     private final String GRIDCONTEXTMENU_INSERT_COLUMN_RIGHT = "gridcontextmenu-insert-column-right";
     private final String GRIDCONTEXTMENU_DELETE_COLUMN = "gridcontextmenu-delete-column";
@@ -55,13 +53,11 @@ public class GridContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT = GRIDCONTEXTMENU_INSERT_COLUMN_LEFT;
         COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT = GRIDCONTEXTMENU_INSERT_COLUMN_RIGHT;
         COLUMNCONTEXTMENU_DELETE_COLUMN = GRIDCONTEXTMENU_DELETE_COLUMN;
-        COLUMNCONTEXTMENU_LABEL = constants.expected().toUpperCase();
+        COLUMNCONTEXTMENU_LABEL = constants.expect().toUpperCase();
         COLUMNCONTEXTMENU_I18N = "grid";
         // SCENARIO MENU
-        HEADERCONTEXTMENU_SCENARIO = GRIDCONTEXTMENU_SCENARIO;
-        HEADERCONTEXTMENU_PREPEND_ROW = GRIDCONTEXTMENU_INSERT_ROW_ABOVE;
-        HEADERCONTEXTMENU_APPEND_ROW = GRIDCONTEXTMENU_INSERT_ROW_BELOW;
         super.initMenu();
+        removeMenuItem(insertRowBelowElement);
         insertRowAboveLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove");
         insertRowBelowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow");
         duplicateRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");

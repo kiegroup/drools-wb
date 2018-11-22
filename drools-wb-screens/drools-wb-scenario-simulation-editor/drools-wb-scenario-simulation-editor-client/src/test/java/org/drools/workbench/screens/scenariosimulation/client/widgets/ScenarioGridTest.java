@@ -15,11 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
-import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -37,18 +38,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
-import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -117,16 +116,29 @@ public class ScenarioGridTest {
             }
 
             @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, boolean readOnly, String placeHolder) {
+            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, String placeHolder) {
                 return scenarioGridColumnMock;
             }
         });
     }
 
     @Test
-    public void getGridMouseDoubleClickHandler() {
-        NodeMouseDoubleClickHandler retrieved = scenarioGrid.getGridMouseDoubleClickHandler(mock(GridSelectionManager.class), mock(GridPinnedModeManager.class));
-        assertNotNull(retrieved);
+    @SuppressWarnings("unchecked")
+    public void testDefaultNodeMouseClickHandlers() {
+        final List<NodeMouseEventHandler> handlers = scenarioGrid.getNodeMouseClickEventHandlers(mockScenarioGridLayer);
+
+        assertEquals(1, handlers.size());
+        assertTrue(handlers.get(0) instanceof DefaultGridWidgetCellSelectorMouseEventHandler);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testDefaultNodeMouseDoubleClickHandlers() {
+        final List<NodeMouseEventHandler> handlers = scenarioGrid.getNodeMouseDoubleClickEventHandlers(mockScenarioGridLayer,
+                                                                                                       mockScenarioGridLayer);
+
+        assertEquals(1, handlers.size());
+        assertTrue(handlers.get(0) instanceof ScenarioSimulationGridWidgetMouseEventHandler);
     }
 
     @Test
@@ -157,7 +169,6 @@ public class ScenarioGridTest {
                                                                   eq(columnId),
                                                                   eq(columnGroup),
                                                                   eq(type),
-                                                                  eq(true),
                                                                   eq(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
         reset(scenarioGrid);
         columnId = factMappingGiven.getExpressionIdentifier().getName();
@@ -171,7 +182,6 @@ public class ScenarioGridTest {
                                                                   eq(columnId),
                                                                   eq(columnGroup),
                                                                   eq(type),
-                                                                  eq(false),
                                                                   eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
     }
 
@@ -182,7 +192,7 @@ public class ScenarioGridTest {
         String propertyTitle = "PROPERTY TITLE";
         final FactMappingType type = factMappingDescription.getExpressionIdentifier().getType();
         String columnGroup = type.name();
-        scenarioGrid.getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, type, false, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+        scenarioGrid.getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, type, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
         verify(scenarioGrid, times(1)).getScenarioHeaderTextBoxSingletonDOMElementFactory();
         verify(scenarioGrid, times(1)).getHeaderBuilderLocal(eq(instanceTitle),
                                                              eq(propertyTitle),
@@ -246,10 +256,10 @@ public class ScenarioGridTest {
             scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
         });
 
-        // Add EXPECTED Facts
+        // Add EXPECT Facts
         IntStream.range(2, 4).forEach(id -> {
             id += 2; // This is to have consistent labels/names even when adding columns at runtime
-            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECTED);
+            ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
             simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
             scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
         });

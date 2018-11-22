@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import java.util.Objects;
+
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.gwtbootstrap3.client.ui.TextArea;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -23,21 +26,41 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
 public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMElement {
 
+    private ScenarioHeaderMetaData scenarioHeaderMetaData;
+
     public ScenarioHeaderTextAreaDOMElement(TextArea widget, GridLayer gridLayer, GridWidget gridWidget) {
         super(widget, gridLayer, gridWidget);
     }
 
+    /**
+     * Set the <code>ScenarioHeaderMetaData</code> this element is bind to
+     * @param scenarioHeaderMetaData
+     */
+    public void setScenarioHeaderMetaData(ScenarioHeaderMetaData scenarioHeaderMetaData) {
+        this.scenarioHeaderMetaData = scenarioHeaderMetaData;
+    }
+
     @Override
     public void flush(final String value) {
+        if (scenarioHeaderMetaData != null) {
+            scenarioHeaderMetaData.setEditingMode(false);
+            if (Objects.equals(value, scenarioHeaderMetaData.getTitle())) {
+                return;
+            }
+        }
+        internalFlush(value);
+    }
+
+    protected void internalFlush(final String value) {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         try {
             ScenarioGridModel model = (ScenarioGridModel) gridWidget.getModel();
-
             if (!model.validateHeaderUpdate(value, rowIndex, columnIndex)) {
                 return;
             }
             model.updateHeader(columnIndex, rowIndex, value);
+            originalValue = value;
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)
                                                        .append(") of column ").append(columnIndex).toString(), e);
