@@ -38,7 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
 
@@ -171,7 +171,7 @@ public class ScenarioGridTest {
                                                                   eq(columnGroup),
                                                                   eq(type),
                                                                   eq(ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-        verify(scenarioGridColumnMock, times(1)).setColumnWidthMode(GridColumn.ColumnWidthMode.fixed);
+        verify(scenarioGridColumnMock, times(1)).setColumnWidthMode(ColumnWidthMode.FIXED);
 
         reset(scenarioGrid);
         reset(scenarioGridColumnMock);
