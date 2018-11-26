@@ -36,19 +36,14 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
      * Calls <b>undo</b> on the last executed <code>Command</code>
      */
     public void undo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException {
-        final AbstractScenarioSimulationCommand toUndo = pop();
-        toUndo.undo(scenarioSimulationContext);
-        undoneCommands.push(toUndo);
-
+        // to be implemented
     }
 
     /**
      * Re-execute the last <b>undone</b> <code>Command</code>
      */
     public void redo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException  {
-        final AbstractScenarioSimulationCommand toRedo = undoneCommands.pop();
-        toRedo.execute(scenarioSimulationContext);
-        register(toRedo);
+        // to be implemented
     }
 
 

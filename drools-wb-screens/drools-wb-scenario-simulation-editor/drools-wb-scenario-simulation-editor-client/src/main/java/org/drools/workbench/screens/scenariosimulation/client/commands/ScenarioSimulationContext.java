@@ -36,7 +36,13 @@ public class ScenarioSimulationContext {
 
     protected String columnId;
     protected int columnIndex;
+    /**
+     * When <code>true</code>, column will be inserted to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
+     */
     protected boolean isRight;
+    /**
+     * When <code>true</code>, column will use the <b>instance</b> header of the original one, so to create a new "property" header under the same instance
+     */
     protected boolean asProperty;
 
     protected String columnGroup;
@@ -46,6 +52,9 @@ public class ScenarioSimulationContext {
 
     protected String value;
     protected String valueClassName;
+    /**
+     * When <code>true</code>, data from changed column will be kept
+     */
     protected boolean keepData;
 
     protected int rowIndex;
@@ -56,7 +65,7 @@ public class ScenarioSimulationContext {
     protected String filterTerm;
 
     /**
-     * flag to decide which kind of filter (<b>equals</b> or <b>not euals</b>) is to be applied.
+     * flag to decide which kind of filter (<b>equals</b> or <b>not equals</b>) is to be applied.
      * Default to false (= <b>equals</b> filter)
      */
     protected boolean notEqualsSearch = false;
@@ -67,12 +76,12 @@ public class ScenarioSimulationContext {
     protected String propertyName;
 
     /**
-     * Disable the <b>RightPanel</b>
+     * Set this to <code>true</code> to disable the <code>RightPanel</code>
      */
     protected boolean disable = true;
 
     /**
-     * open the Right dock
+     * Set this to <code>true</code> to open the dock in case it is closed
      */
     protected boolean openDock = false;
 
@@ -163,6 +172,10 @@ public class ScenarioSimulationContext {
         return isRight;
     }
 
+    /**
+     *
+     * @param right set <code>true</code> to insert column to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
+     */
     public void setRight(boolean right) {
         isRight = right;
     }
@@ -179,6 +192,10 @@ public class ScenarioSimulationContext {
         return keepData;
     }
 
+    /**
+     *
+     * @param keepData set <code>true</code> to keep data in the column
+     */
     public void setKeepData(boolean keepData) {
         this.keepData = keepData;
     }
@@ -211,6 +228,10 @@ public class ScenarioSimulationContext {
         return filterTerm;
     }
 
+    /**
+     *
+     * @param filterTerm the string to use for filtering in right panel
+     */
     public void setFilterTerm(String filterTerm) {
         this.filterTerm = filterTerm;
     }
@@ -219,6 +240,10 @@ public class ScenarioSimulationContext {
         return notEqualsSearch;
     }
 
+    /**
+     *
+     * @param notEqualsSearch set to <code>true</code> to have a <b>not equals</b> filter, <code>false</code> for an <b>equals</b> one
+     */
     public void setNotEqualsSearch(boolean notEqualsSearch) {
         this.notEqualsSearch = notEqualsSearch;
     }
@@ -227,6 +252,10 @@ public class ScenarioSimulationContext {
         return propertyName;
     }
 
+    /**
+     *
+     * @param propertyName The string to <b>eventually</b> use to select the property in the right panel
+     */
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
     }
@@ -235,6 +264,10 @@ public class ScenarioSimulationContext {
         return disable;
     }
 
+    /**
+     *
+     * @param disable Set this to <code>true</code> to disable the <code>RightPanel</code>
+     */
     public void setDisable(boolean disable) {
         this.disable = disable;
     }
@@ -243,6 +276,10 @@ public class ScenarioSimulationContext {
         return openDock;
     }
 
+    /**
+     *
+     * @param openDock Set this to <code>true</code> to open the dock in case it is closed
+     */
     public void setOpenDock(boolean openDock) {
         this.openDock = openDock;
     }

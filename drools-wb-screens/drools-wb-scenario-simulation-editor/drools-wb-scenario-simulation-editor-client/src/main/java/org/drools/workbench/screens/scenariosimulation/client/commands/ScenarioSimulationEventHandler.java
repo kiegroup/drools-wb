@@ -239,23 +239,19 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void handle(ScenarioGridReloadEvent event) {
-        // TODO CHECK FOR POSITION
         context.getScenarioGridPanel().onResize();
     }
 
     @Override
     public void onEvent(ScenarioNotificationEvent event) {
-        // TODO CHECK FOR POSITION
         notificationEvent.fire(new NotificationEvent(event.getMessage(), event.getType()));
     }
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        // TODO CHECK FOR REFACTORING
         if (context.getModel().getSelectedColumn() == null) {
             return;
         }
-        // TODO CHECK FOR REFACTORING
         if (context.getModel().isSameSelectedColumnType(event.getClassName())) {
             return;
         }
@@ -277,7 +273,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetPropertyHeaderEvent event) {
-        // TODO CHECK FOR REFACTORING
         if (context.getModel().getSelectedColumn() == null) {
             return;
         }

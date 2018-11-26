@@ -27,6 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableRightPanelCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableRightPanelCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
@@ -203,7 +204,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     public void onDisableRightPanelEvent() {
         DisableRightPanelEvent event = new DisableRightPanelEvent();
         scenarioSimulationEventHandler.onEvent(event);
-        // TODO verify
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContext), isA(DisableRightPanelCommand.class));
     }
 
     @Test
