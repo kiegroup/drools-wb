@@ -23,17 +23,16 @@ public class Logger {
 
     private static List<String> list = new ArrayList();
 
-
-    public static void add( final String message ) {
-        list.add( message );
+    public static void add(final String message) {
+        list.add(message);
     }
 
     public static String log() {
         final StringBuilder builder = new StringBuilder();
 
-        for ( final String line : list ) {
-            builder.append( line );
-            builder.append( "\n" );
+        for (final String line : list) {
+            builder.append(line);
+            builder.append("\n");
         }
 
         final String log = builder.toString();

@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil;
+import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
@@ -41,7 +42,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.junit.internal.runners.model.EachTestNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 
@@ -170,13 +170,10 @@ public class ScenarioRunnerHelper {
         return scenarioResults;
     }
 
-    public static void validateAssertion(List<ScenarioResult> scenarioResults, Scenario scenario, EachTestNotifier singleNotifier) {
+    public static void validateAssertion(List<ScenarioResult> scenarioResults, Scenario scenario) {
         boolean scenarioFailed = false;
         for (ScenarioResult scenarioResult : scenarioResults) {
             if (!scenarioResult.getResult()) {
-                singleNotifier.addFailedAssumption(
-                        new ScenarioAssumptionViolatedException(scenario, scenarioResult, new StringBuilder().append("Scenario '").append(scenario.getDescription())
-                                .append("' has wrong assertion").toString()));
                 scenarioFailed = true;
             }
         }
@@ -250,10 +247,11 @@ public class ScenarioRunnerHelper {
                     .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
             List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
-            Object resultValue = ScenarioBeanUtil.navigateToObject(objectToCheck, pathToValue, false);
+            ScenarioBeanWrapper<?> scenarioBeanWrapper = ScenarioBeanUtil.navigateToObject(objectToCheck, pathToValue, false);
+            Object resultValue = scenarioBeanWrapper.getBean();
 
             try {
-                return expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue) ?
+                return expressionEvaluator.evaluate(expectedResult.getRawValue(), resultValue, scenarioBeanWrapper.getBeanClass()) ?
                         createResult(resultValue) :
                         createErrorResult();
             } catch (Exception e) {
