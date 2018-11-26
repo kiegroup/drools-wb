@@ -15,8 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.Objects;
+
 import javax.enterprise.context.Dependent;
 
+import org.kie.workbench.common.command.client.Command;
+import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandManagerImpl;
 
 /**
@@ -25,6 +30,13 @@ import org.kie.workbench.common.command.client.impl.CommandManagerImpl;
 @Dependent
 public class ScenarioCommandManager extends CommandManagerImpl<ScenarioSimulationContext, ScenarioSimulationViolation> {
 
-
-
+    @Override
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context, Command<ScenarioSimulationContext, ScenarioSimulationViolation> command) {
+        final CommandResult<ScenarioSimulationViolation> toReturn = super.execute(context, command);
+        if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
+            context.getScenarioGridPanel().onResize();
+            context.getScenarioGridPanel().select();
+        }
+        return toReturn;
+    }
 }

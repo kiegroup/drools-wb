@@ -29,9 +29,10 @@ public class SetCellValueCommand extends AbstractScenarioSimulationCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        context.getModel().setCellValue(context.getRowIndex(),
-                                        context.getColumnIndex(),
-                                        new ScenarioGridCellValue(context.getCellValue(), ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-        context.getModel().resetErrors(context.getRowIndex());
+        final ScenarioSimulationContext.Status status = context.getStatus();
+        context.getModel().setCellValue(status.getRowIndex(),
+                                        status.getColumnIndex(),
+                                        new ScenarioGridCellValue(status.getCellValue(), ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
+        context.getModel().resetErrors(status.getRowIndex());
     }
 }

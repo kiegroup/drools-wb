@@ -13,21 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
+package org.drools.workbench.screens.scenariosimulation.client.events;
 
-import javax.enterprise.context.Dependent;
-
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
+import com.google.gwt.event.shared.GwtEvent;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEventHandler;
 
 /**
- * <code>Command</code> to <b>duplicate</b> a row.
+ * <code>GwtEvent</code> to <b>undo</b> last command
  */
-@Dependent
-public class DuplicateRowCommand extends AbstractScenarioSimulationCommand {
+public class UndoEvent extends GwtEvent<UndoEventHandler> {
+
+    public static Type<UndoEventHandler> TYPE = new Type<>();
+
+
+    public UndoEvent() {
+    }
 
     @Override
-    protected void internalExecute(ScenarioSimulationContext context) {
-        context.getModel().duplicateRow(context.getStatus().getRowIndex(), new ScenarioGridRow());
+    public Type<UndoEventHandler> getAssociatedType() {
+        return TYPE;
     }
+
+    @Override
+    protected void dispatch(UndoEventHandler handler) {
+        handler.onEvent(this);
+    }
+
+
 }

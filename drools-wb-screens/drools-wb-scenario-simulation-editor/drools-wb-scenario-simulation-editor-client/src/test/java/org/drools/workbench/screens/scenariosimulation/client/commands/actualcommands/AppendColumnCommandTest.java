@@ -50,8 +50,8 @@ public class AppendColumnCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void execute() {
-        scenarioSimulationContext.setColumnId(COLUMN_ID);
-        scenarioSimulationContext.setColumnGroup(COLUMN_GROUP);
+        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContext.getStatus().setColumnGroup(COLUMN_GROUP);
         appendColumnCommand.execute(scenarioSimulationContext);
         verify(appendColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(),anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexRightOfGroup(eq(COLUMN_GROUP));

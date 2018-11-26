@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
+package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import javax.enterprise.context.Dependent;
+import com.google.gwt.event.shared.EventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
-
-@Dependent
-public class InsertRowCommand extends AbstractScenarioSimulationCommand {
-
-    @Override
-    protected void internalExecute(ScenarioSimulationContext context) {
-        context.getModel().insertRow(context.getStatus().getRowIndex(), new ScenarioGridRow());
-    }
+/**
+ * <code>EventHandler</code> for {@link RedoEvent}
+ */
+public interface RedoEventHandler extends EventHandler {
+    void onEvent(RedoEvent event);
 }

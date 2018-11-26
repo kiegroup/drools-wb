@@ -57,14 +57,14 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
             }
         });
 
-        scenarioSimulationContext.setFullPackage(FULL_PACKAGE);
-        scenarioSimulationContext.setValue(VALUE);
-        scenarioSimulationContext.setValueClassName(VALUE_CLASS_NAME);
+        scenarioSimulationContext.getStatus().setFullPackage(FULL_PACKAGE);
+        scenarioSimulationContext.getStatus().setValue(VALUE);
+        scenarioSimulationContext.getStatus().setValueClassName(VALUE_CLASS_NAME);
     }
 
     @Test
     public void executeFalse() {
-        scenarioSimulationContext.setKeepData(false);
+        scenarioSimulationContext.getStatus().setKeepData(false);
         setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
@@ -74,7 +74,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
 
     @Test
     public void executeTrue() {
-        scenarioSimulationContext.setKeepData(true);
+        scenarioSimulationContext.getStatus().setKeepData(true);
         setPropertyHeaderCommand.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);

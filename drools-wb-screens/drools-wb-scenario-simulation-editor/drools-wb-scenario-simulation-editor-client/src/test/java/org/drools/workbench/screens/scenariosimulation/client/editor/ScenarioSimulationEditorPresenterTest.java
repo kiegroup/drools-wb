@@ -203,16 +203,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            void populateRightPanel() {
+            protected void populateRightPanel() {
             }
 
             @Override
-            void clearRightPanelStatus() {
+            protected void clearRightPanelStatus() {
 
             }
 
             @Override
-            String getJsonModel(ScenarioSimulationModel model) {
+            protected String getJsonModel(ScenarioSimulationModel model) {
                 return "";
             }
         };

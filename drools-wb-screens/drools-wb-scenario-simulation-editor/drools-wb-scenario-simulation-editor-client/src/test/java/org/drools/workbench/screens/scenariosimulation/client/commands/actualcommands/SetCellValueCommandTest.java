@@ -41,9 +41,9 @@ public class SetCellValueCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void execute() {
-        scenarioSimulationContext.setRowIndex(ROW_INDEX);
-        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.setCellValue(VALUE);
+        scenarioSimulationContext.getStatus().setRowIndex(ROW_INDEX);
+        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.getStatus().setCellValue(VALUE);
         setCellValueCommand.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).setCellValue(eq(ROW_INDEX), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
         verify(scenarioGridModelMock, times(1)).resetErrors(eq(ROW_INDEX));

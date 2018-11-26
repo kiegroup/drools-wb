@@ -66,8 +66,8 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
 
     @Test
     public void execute() {
-        scenarioSimulationContext.setFullPackage(FULL_PACKAGE);
-        scenarioSimulationContext.setClassName(VALUE_CLASS_NAME);
+        scenarioSimulationContext.getStatus().setFullPackage(FULL_PACKAGE);
+        scenarioSimulationContext.getStatus().setClassName(VALUE_CLASS_NAME);
         setInstanceHeaderCommand.execute(scenarioSimulationContext);
         verify(gridColumnMock, atLeast(1)).getInformationHeaderMetaData();
         verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE_CLASS_NAME));

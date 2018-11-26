@@ -34,16 +34,17 @@ public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand 
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
+        final ScenarioSimulationContext.Status status = context.getStatus();
         ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
         if (selectedColumn == null) {
             return;
         }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
-        String fullPackage = context.getFullPackage();
+        String fullPackage = status.getFullPackage();
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
-        String className = context.getClassName();
+        String className = status.getClassName();
         String canonicalClassName = fullPackage + className;
         FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className, context).orElse(FactIdentifier.create(selectedColumn.getInformationHeaderMetaData().getColumnId(), canonicalClassName));
         final ScenarioHeaderMetaData informationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();

@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
@@ -29,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.kie.workbench.common.command.client.AbstractCommand;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
@@ -42,9 +44,35 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<ScenarioSimulationContext, ScenarioSimulationViolation> {
 
+    private static final AtomicLong COUNTER_ID = new AtomicLong();
+
+    /**
+     * Auto-generated incremental identifier used  to uniquely identify each command
+     */
+    private final long id;
+
+    public AbstractScenarioSimulationCommand() {
+        this.id = COUNTER_ID.getAndIncrement();
+    }
+
+    public long getId() {
+        return id;
+    }
+
     @Override
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
-        return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("NOT IMPLEMENTED, YET")));
+        try {
+            final Simulation toRestore = context.getStatus().getSimulation();
+            if (toRestore != null) {
+                context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
+                context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
+                return commonExecution(context);
+            } else {
+                return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
+            }
+        } catch (Exception e) {
+            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+        }
     }
 
     @Override
@@ -101,7 +129,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     }
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
-
 
         return context.getScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
                 .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))

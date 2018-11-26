@@ -40,10 +40,10 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
             return;
         }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
-        String value = context.getValue();
+        String value = context.getStatus().getValue();
         String title = value.substring(value.indexOf(".") + 1);
         String className = value.split("\\.")[0];
-        String fullPackage = context.getFullPackage();
+        String fullPackage = context.getStatus().getFullPackage();
         if (!fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
@@ -68,7 +68,7 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 value,
-                                                context.getValueClassName(), context.isKeepData());
+                                                context.getStatus().getValueClassName(), context.getStatus().isKeepData());
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
         }

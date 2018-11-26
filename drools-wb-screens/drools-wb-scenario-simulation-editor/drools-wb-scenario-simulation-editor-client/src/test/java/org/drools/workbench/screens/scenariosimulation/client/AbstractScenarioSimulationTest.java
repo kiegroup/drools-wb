@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import javax.enterprise.event.Event;
+
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
@@ -38,6 +40,8 @@ import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
+import org.uberfire.mocks.EventSourceMock;
+import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -57,6 +61,13 @@ public abstract class AbstractScenarioSimulationTest {
     protected ScenarioGridPanel scenarioGridPanelMock;
     @Mock
     protected EventBus eventBusMock;
+
+    protected Event<NotificationEvent> notificationEvent = new EventSourceMock<NotificationEvent>() {
+        @Override
+        public void fire(final NotificationEvent event) {
+            //Do nothing. Default implementation throws a RuntimeException
+        }
+    };
 
     @Mock
     protected ScenarioGridLayer scenarioGridLayerMock;

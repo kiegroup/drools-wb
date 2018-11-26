@@ -52,6 +52,10 @@ public class FactIdentifier {
         return new FactIdentifier(name, className);
     }
 
+    protected FactIdentifier cloneFactIdentifier() {
+        return FactIdentifier.create(this.name, this.className);
+    }
+
     @Override
     public String toString() {
         return "FactIdentifier{" +

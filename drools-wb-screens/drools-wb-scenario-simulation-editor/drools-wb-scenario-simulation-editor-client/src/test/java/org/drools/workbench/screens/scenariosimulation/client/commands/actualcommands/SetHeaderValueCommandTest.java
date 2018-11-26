@@ -37,9 +37,9 @@ public class SetHeaderValueCommandTest extends AbstractScenarioSimulationCommand
     public void setup() {
         super.setup();
         setHeaderValueCommand = spy(new SetHeaderValueCommand());
-        scenarioSimulationContext.setRowIndex(ROW_INDEX);
-        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.setCellValue(VALUE);
+        scenarioSimulationContext.getStatus().setRowIndex(ROW_INDEX);
+        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.getStatus().setCellValue(VALUE);
     }
 
     @Test

@@ -18,8 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 
 /**
  * <code>Command</code> to to set the <i>value</i> of a header' cell
@@ -29,8 +27,9 @@ public class SetHeaderValueCommand extends AbstractScenarioSimulationCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        if (context.getModel().validateHeaderUpdate(context.getCellValue(), context.getRowIndex(), context.getColumnIndex())) {
-            context.getModel().updateHeader(context.getColumnIndex(), context.getRowIndex(), context.getCellValue());
+        final ScenarioSimulationContext.Status status = context.getStatus();
+        if (context.getModel().validateHeaderUpdate(status.getCellValue(), status.getRowIndex(), status.getColumnIndex())) {
+            context.getModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), status.getCellValue());
         }
     }
 }

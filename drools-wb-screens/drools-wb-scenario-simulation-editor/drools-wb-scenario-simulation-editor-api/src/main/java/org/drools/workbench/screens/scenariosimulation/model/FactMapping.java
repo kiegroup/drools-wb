@@ -127,4 +127,5 @@ public class FactMapping {
     public static String getPropertyPlaceHolder(int index) {
         return "PROPERTY " + index;
     }
+
 }

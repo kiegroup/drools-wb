@@ -27,11 +27,12 @@ public class ReloadRightPanelCommand extends AbstractScenarioSimulationCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
+        final ScenarioSimulationContext.Status status = context.getStatus();
         if (context.getScenarioSimulationEditorPresenter() != null) {
-            if (context.isOpenDock()) {
+            if (status.isOpenDock()) {
                 context.getScenarioSimulationEditorPresenter().expandToolsDock();
             }
-            context.getScenarioSimulationEditorPresenter().reloadRightPanel(context.isDisable());
+            context.getScenarioSimulationEditorPresenter().reloadRightPanel(status.isDisable());
         }
     }
 }

@@ -74,8 +74,20 @@ public class ScenarioSimulationViewImpl
 
     @Override
     public MenuItem getRunScenarioMenuItem() {
-        return new RunScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
-                                       () -> presenter.onRunScenario());
+        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
+                                    () -> presenter.onRunScenario());
+    }
+
+    @Override
+    public MenuItem getUndoMenuItem() {
+        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.undo(),
+                                    () -> presenter.onUndo());
+    }
+
+    @Override
+    public MenuItem getRedoMenuItem() {
+        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.redo(),
+                                    () -> presenter.onRedo());
     }
 
     @Override

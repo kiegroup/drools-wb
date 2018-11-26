@@ -34,6 +34,8 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
@@ -149,7 +151,6 @@ public class ScenarioSimulationEditorPresenter
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
         scenarioGridPanel = view.getScenarioGridPanel();
-//        context.setScenarioGridPanel(scenarioGridPanel);
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateRightPanelCommand = getPopulateRightPanelCommand();
@@ -255,6 +256,14 @@ public class ScenarioSimulationEditorPresenter
         service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
     }
 
+    public void onUndo() {
+        eventBus.fireEvent(new UndoEvent());
+    }
+
+    public void onRedo() {
+        eventBus.fireEvent(new RedoEvent());
+    }
+
     RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return newModel -> {
             this.model = newModel;
@@ -277,6 +286,8 @@ public class ScenarioSimulationEditorPresenter
     @Override
     protected void makeMenuBar() {
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
         super.makeMenuBar();
     }
 
@@ -309,7 +320,6 @@ public class ScenarioSimulationEditorPresenter
     void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
         getRightPanelPresenter().ifPresent(presenter -> {
-            // presenter.onDisableEditorTab();
             context.setRightPanelPresenter(presenter);
             presenter.setEventBus(eventBus);
             populateRightPanel(presenter);
@@ -342,11 +352,11 @@ public class ScenarioSimulationEditorPresenter
         }
     }
 
-    void clearRightPanelStatus() {
+    protected void clearRightPanelStatus() {
         getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
     }
 
-    String getJsonModel(ScenarioSimulationModel model) {
+    protected String getJsonModel(ScenarioSimulationModel model) {
         return MarshallingWrapper.toJSON(model);
     }
 

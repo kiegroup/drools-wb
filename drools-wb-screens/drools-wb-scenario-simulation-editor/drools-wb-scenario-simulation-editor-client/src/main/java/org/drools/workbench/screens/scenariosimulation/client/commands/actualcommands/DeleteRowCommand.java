@@ -29,7 +29,7 @@ public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        context.getModel().deleteRow(context.getRowIndex());
+        context.getModel().deleteRow(context.getStatus().getRowIndex());
         if (context.getModel().getRows().isEmpty()) {
             context.getModel().insertRow(0, new ScenarioGridRow());
         }

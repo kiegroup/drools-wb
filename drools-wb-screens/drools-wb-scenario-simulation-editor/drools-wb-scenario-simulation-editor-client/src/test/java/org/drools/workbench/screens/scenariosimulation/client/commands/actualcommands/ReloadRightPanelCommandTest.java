@@ -40,8 +40,8 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
 
     @Test
     public void executeDisableOpen() {
-        scenarioSimulationContext.setDisable(true);
-        scenarioSimulationContext.setOpenDock(true);
+        scenarioSimulationContext.getStatus().setDisable(true);
+        scenarioSimulationContext.getStatus().setOpenDock(true);
         reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
@@ -49,8 +49,8 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
 
     @Test
     public void executeNotDisableOpen() {
-        scenarioSimulationContext.setDisable(false);
-        scenarioSimulationContext.setOpenDock(true);
+        scenarioSimulationContext.getStatus().setDisable(false);
+        scenarioSimulationContext.getStatus().setOpenDock(true);
         reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(false));
@@ -58,8 +58,8 @@ public class ReloadRightPanelCommandTest extends AbstractScenarioSimulationComma
 
     @Test
     public void executeDisableNotOpen() {
-        scenarioSimulationContext.setDisable(true);
-        scenarioSimulationContext.setOpenDock(false);
+        scenarioSimulationContext.getStatus().setDisable(true);
+        scenarioSimulationContext.getStatus().setOpenDock(false);
         reloadRightPanelCommand.execute(scenarioSimulationContext);
         verify(scenarioSimulationEditorPresenterMock, never()).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));

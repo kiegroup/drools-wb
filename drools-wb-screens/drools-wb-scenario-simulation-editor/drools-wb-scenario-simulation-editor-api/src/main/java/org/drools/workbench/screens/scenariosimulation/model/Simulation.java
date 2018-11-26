@@ -109,6 +109,24 @@ public class Simulation {
         scenarios.forEach(Scenario::resetErrors);
     }
 
+    public Simulation cloneSimulation() {
+        Simulation toReturn = new Simulation();
+        // TODO CHECK ALL THE FOLLOWING *SHOULD BE* REAL CLONES
+        this.scenarios.forEach(scenario -> toReturn.scenarios.add(scenario.cloneScenario()));
+        final List<FactMapping> originalFactMappings = this.simulationDescriptor.getUnmodifiableFactMappings();
+        for (int i = 0; i < originalFactMappings.size(); i++) {
+            final FactMapping originalFactMapping = originalFactMappings.get(i);
+            // TODO CHECK IF CLONE IS NEEDED FOR FactIdentifier/ExpressionIdentifier
+            final FactIdentifier clonedFactIdentifier = originalFactMapping.getFactIdentifier().cloneFactIdentifier();
+            final ExpressionIdentifier clonedExpressionIdentifier = originalFactMapping.getExpressionIdentifier().cloneExpressionIdentifier();
+            final FactMapping clonedFactMapping = toReturn.simulationDescriptor.addFactMapping(i, clonedFactIdentifier, clonedExpressionIdentifier);
+            clonedFactMapping.setFactAlias(originalFactMapping.getFactAlias());
+            clonedFactMapping.setExpressionAlias(originalFactMapping.getExpressionAlias());
+            originalFactMapping.getExpressionElements().forEach(expressionElement -> clonedFactMapping.getExpressionElements().add(new ExpressionElement(expressionElement.getStep())));
+        }
+        return toReturn;
+    }
+
     private void cleanScenarios(FactMapping toRemove) {
         scenarios.forEach(e -> e.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier()));
     }

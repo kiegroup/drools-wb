@@ -55,8 +55,8 @@ public class DeleteColumnCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void execute() {
-        scenarioSimulationContext.setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.setColumnGroup(COLUMN_GROUP);
+        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContext.getStatus().setColumnGroup(COLUMN_GROUP);
         doReturn(4l).when(scenarioGridModelMock).getGroupSize(COLUMN_GROUP);
         deleteColumnCommand.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).deleteColumn(eq(COLUMN_INDEX));

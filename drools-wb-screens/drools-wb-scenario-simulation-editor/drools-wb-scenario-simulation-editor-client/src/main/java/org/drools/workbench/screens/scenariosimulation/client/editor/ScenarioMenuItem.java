@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Button;
@@ -26,22 +24,15 @@ import org.uberfire.workbench.model.menu.MenuCustom;
 import org.uberfire.workbench.model.menu.MenuPosition;
 import org.uberfire.workbench.model.menu.MenuVisitor;
 
-public class RunScenarioMenuItem
+public class ScenarioMenuItem
         implements MenuCustom<Widget> {
 
     private Button button;
 
-    public RunScenarioMenuItem(final String title, final Command command) {
+    public ScenarioMenuItem(final String title, final Command command) {
         this.button = new Button(title);
-
         button.setSize(ButtonSize.SMALL);
-
-        button.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                command.execute();
-            }
-        });
+        button.addClickHandler(clickEvent -> command.execute());
     }
 
     @Override
