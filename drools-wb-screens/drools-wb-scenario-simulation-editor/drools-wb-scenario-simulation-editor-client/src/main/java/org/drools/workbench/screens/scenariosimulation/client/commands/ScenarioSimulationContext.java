@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -28,6 +30,8 @@ import org.uberfire.mvp.PlaceRequest;
  * This class represent the <b>Context</b> inside which the commands will be executed
  */
 public class ScenarioSimulationContext {
+
+    private static final AtomicLong COUNTER_ID = new AtomicLong();
 
     protected ScenarioGridModel model;
     protected ScenarioGridPanel scenarioGridPanel;
@@ -52,7 +56,6 @@ public class ScenarioSimulationContext {
     public void setStatus(Status status) {
         this.status = status;
     }
-
 
     protected PlaceManager placeManager;
 
@@ -128,6 +131,11 @@ public class ScenarioSimulationContext {
      */
     public class Status {
 
+        /**
+         * Auto-generated incremental identifier used  to uniquely identify each status
+         */
+        private final long id;
+
         protected String columnId;
         protected int columnIndex;
         protected boolean isRight;
@@ -173,6 +181,14 @@ public class ScenarioSimulationContext {
          * open the Right dock
          */
         protected boolean openDock = false;
+
+        public Status() {
+            this.id = COUNTER_ID.getAndIncrement();
+        }
+
+        public long getId() {
+            return id;
+        }
 
         public String getColumnId() {
             return columnId;

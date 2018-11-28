@@ -174,25 +174,25 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     public void onEvent(AppendColumnEvent event) {
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
-        commonExecution(context, new AppendColumnCommand());
+        commonExecution(context, new AppendColumnCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
-        commonExecution(context, new AppendRowCommand());
+        commonExecution(context, new AppendRowCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(DeleteColumnEvent event) {
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setColumnGroup(event.getColumnGroup());
-        commonExecution(context, new DeleteColumnCommand());
+        commonExecution(context, new DeleteColumnCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(DeleteRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context, new DeleteRowCommand());
+        commonExecution(context, new DeleteRowCommand(context.getStatus()));
     }
 
     @Override
@@ -203,7 +203,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     @Override
     public void onEvent(DuplicateRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context, new DuplicateRowCommand());
+        commonExecution(context, new DuplicateRowCommand(context.getStatus()));
     }
 
     @Override
@@ -220,25 +220,25 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(event.isRight());
         context.getStatus().setAsProperty(event.isAsProperty());
-        commonExecution(context, new InsertColumnCommand());
+        commonExecution(context, new InsertColumnCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(InsertRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context, new InsertRowCommand());
+        commonExecution(context, new InsertRowCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(PrependColumnEvent event) {
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
-        commonExecution(context, new PrependColumnCommand());
+        commonExecution(context, new PrependColumnCommand(context.getStatus()));
     }
 
     @Override
     public void onEvent(PrependRowEvent event) {
-        commonExecution(context, new PrependRowCommand());
+        commonExecution(context, new PrependRowCommand(context.getStatus()));
     }
 
     @Override
@@ -280,9 +280,9 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setCellValue(event.getCellValue());
         if (event.isHeader()) {
-            commonExecution(context, new SetHeaderValueCommand());
+            commonExecution(context, new SetHeaderValueCommand(context.getStatus()));
         } else {
-            commonExecution(context, new SetCellValueCommand());
+            commonExecution(context, new SetCellValueCommand(context.getStatus()));
         }
     }
 
@@ -297,7 +297,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
         if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
-            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context, new SetInstanceHeaderCommand());
+            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context, new SetInstanceHeaderCommand(context.getStatus()));
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -306,7 +306,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.changeType(),
                                       okPreserveCommand);
         } else {
-            commonExecution(context, new SetInstanceHeaderCommand());
+            commonExecution(context, new SetInstanceHeaderCommand(context.getStatus()));
         }
     }
 
@@ -325,11 +325,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okDeleteCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(context, new SetPropertyHeaderCommand());
+                commonExecution(context, new SetPropertyHeaderCommand(context.getStatus()));
             };
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(true);
-                commonExecution(context, new SetPropertyHeaderCommand());
+                commonExecution(context, new SetPropertyHeaderCommand(context.getStatus()));
             };
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
@@ -344,7 +344,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else if (!context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(context, new SetPropertyHeaderCommand());
+                commonExecution(context, new SetPropertyHeaderCommand(context.getStatus()));
             };
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
@@ -383,9 +383,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.setStatusSimulationIfEmpty();
         final ScenarioSimulationContext.Status previousStatus = context.getStatus().cloneStatus();
         final CommandResult<ScenarioSimulationViolation> status = scenarioCommandManager.execute(context, command);
-        if (Objects.equals(CommandResultBuilder.SUCCESS, status)) {
-            scenarioCommandRegistry.register(previousStatus, command);
-        } else {
+        if (Objects.equals(CommandResult.Type.ERROR, status.getType())) {
             String violations = StreamSupport.stream(status.getViolations().spliterator(), false)
                     .map(violation -> violation.getMessage())
                     .collect(Collectors.joining("\r\n"));
@@ -397,6 +395,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                     .append(violations)
                     .toString();
             notificationEvent.fire(new NotificationEvent(message, NotificationEvent.NotificationType.ERROR));
+        } else if (Objects.equals(CommandResultBuilder.SUCCESS, status) && command.isUndoable()) {
+            scenarioCommandRegistry.register(context, previousStatus, command);
         }
     }
 

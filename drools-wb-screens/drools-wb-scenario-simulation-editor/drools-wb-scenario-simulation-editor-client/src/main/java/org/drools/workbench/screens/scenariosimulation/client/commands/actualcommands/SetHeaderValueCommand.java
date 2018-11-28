@@ -25,6 +25,13 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 @Dependent
 public class SetHeaderValueCommand extends AbstractScenarioSimulationCommand {
 
+    public SetHeaderValueCommand() {
+    }
+
+    public SetHeaderValueCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();

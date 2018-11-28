@@ -25,16 +25,25 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
+import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.junit.Before;
+import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -52,6 +61,8 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected Simulation simulationMock;
     @Mock
+    protected Simulation clonedSimulationMock;
+    @Mock
     protected SimulationDescriptor simulationDescriptorMock;
     @Mock
     protected ScenarioGridColumn gridColumnMock;
@@ -61,6 +72,17 @@ public abstract class AbstractScenarioSimulationTest {
     protected ScenarioGridPanel scenarioGridPanelMock;
     @Mock
     protected EventBus eventBusMock;
+    @Mock
+    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
+    @Mock
+    protected ScenarioSimulationView scenarioSimulationViewMock;
+    @Mock
+    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock;
+
+    @Mock
+    protected ScenarioHeaderMetaData informationHeaderMetaDataMock;
+    @Mock
+    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock;
 
     protected Event<NotificationEvent> notificationEvent = new EventSourceMock<NotificationEvent>() {
         @Override
@@ -79,14 +101,30 @@ public abstract class AbstractScenarioSimulationTest {
     protected ScenarioCommandRegistry scenarioCommandRegistryMock;
     @Mock
     protected ScenarioCommandManager scenarioCommandManagerMock;
+    @Mock
+    protected ScenarioSimulationModel scenarioSimulationModelMock;
 
     protected ScenarioSimulationContext scenarioSimulationContext;
+    protected AppendRowCommand appendRowCommandMock;
 
     protected final int ROW_INDEX = 2;
     protected final int COLUMN_INDEX = 3;
 
     protected final int FIRST_INDEX_LEFT = 2;
     protected final int FIRST_INDEX_RIGHT = 4;
+    protected final String COLUMN_ID = "COLUMN ID";
+
+    protected final String COLUMN_GROUP = FactMappingType.EXPECT.name();
+
+    protected final String FULL_PACKAGE = "test.scesim";
+
+    protected final String VALUE = "VALUE";
+
+    protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
+
+    protected final String VALUE_CLASS_NAME = String.class.getName();
+
+    protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     private List<GridColumn<?>> gridColumns = new ArrayList<>();
 
     @Before
@@ -178,11 +216,37 @@ public abstract class AbstractScenarioSimulationTest {
                 return true;
             }
         });
+
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanelMock);
+        when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
+        when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
+        scenarioSimulationContext.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
+        scenarioSimulationContext.getStatus().setSimulation(simulationMock);
+        when(scenarioCommandRegistryMock.undo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
+        when(scenarioCommandRegistryMock.redo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
+
+        appendRowCommandMock = spy(new AppendRowCommand(scenarioSimulationContext.getStatus()) {
+            @Override
+            public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+                return CommandResultBuilder.SUCCESS;
+            }
+
+            @Override
+            public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
+                return CommandResultBuilder.SUCCESS;
+            }
+        });
+        when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
+        when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
+        when(headerMetaDatasMock.get(1)).thenReturn(informationHeaderMetaDataMock);
+        when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
+        when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
+        when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
     }
 }

@@ -31,6 +31,12 @@ import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.
 @Dependent
 public class SetInstanceHeaderCommand extends AbstractScenarioSimulationCommand {
 
+    public SetInstanceHeaderCommand() {
+    }
+
+    public SetInstanceHeaderCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {

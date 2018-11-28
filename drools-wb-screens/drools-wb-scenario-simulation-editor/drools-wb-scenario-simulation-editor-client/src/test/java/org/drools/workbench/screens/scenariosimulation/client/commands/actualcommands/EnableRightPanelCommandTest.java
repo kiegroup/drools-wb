@@ -23,22 +23,19 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class EnableRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
 
-
-
-    private EnableRightPanelCommand enableRightPanelCommand;
-
     private static final String FACT_NAME = "FACT_NAME";
 
     @Before
     public void setup() {
         super.setup();
-        enableRightPanelCommand = new EnableRightPanelCommand();
+        command = spy(new EnableRightPanelCommand());
     }
 
 
@@ -48,7 +45,7 @@ public class EnableRightPanelCommandTest extends AbstractScenarioSimulationComma
         scenarioSimulationContext.getStatus().setFilterTerm(FACT_NAME);
         scenarioSimulationContext.getStatus().setPropertyName(null);
         scenarioSimulationContext.getStatus().setNotEqualsSearch(true);
-        enableRightPanelCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(rightPanelPresenterMock, times(1)).onEnableEditorTab(eq(FACT_NAME), eq(null), eq(true));
         verify(rightPanelPresenterMock, never()).onEnableEditorTab();
     }

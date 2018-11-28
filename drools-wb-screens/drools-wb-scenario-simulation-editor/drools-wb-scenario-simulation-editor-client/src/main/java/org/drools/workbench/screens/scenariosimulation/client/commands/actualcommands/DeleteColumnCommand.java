@@ -31,6 +31,13 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 @Dependent
 public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
+    public DeleteColumnCommand() {
+    }
+
+    public DeleteColumnCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();

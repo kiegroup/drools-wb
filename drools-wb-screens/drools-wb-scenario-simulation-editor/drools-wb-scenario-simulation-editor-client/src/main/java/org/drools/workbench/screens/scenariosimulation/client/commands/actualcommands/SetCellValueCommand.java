@@ -27,6 +27,13 @@ import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGri
 @Dependent
 public class SetCellValueCommand extends AbstractScenarioSimulationCommand {
 
+    public SetCellValueCommand() {
+    }
+
+    public SetCellValueCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();

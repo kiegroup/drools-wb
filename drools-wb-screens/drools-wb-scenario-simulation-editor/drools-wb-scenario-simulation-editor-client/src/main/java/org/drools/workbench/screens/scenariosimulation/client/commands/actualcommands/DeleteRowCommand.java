@@ -26,6 +26,12 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
 
+    public DeleteRowCommand() {
+    }
+
+    public DeleteRowCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {

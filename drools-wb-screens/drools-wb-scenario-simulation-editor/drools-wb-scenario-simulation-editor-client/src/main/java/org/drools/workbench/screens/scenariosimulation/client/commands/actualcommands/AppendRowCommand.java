@@ -23,6 +23,12 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  */
 public class AppendRowCommand extends AbstractScenarioSimulationCommand {
 
+    public AppendRowCommand() {
+    }
+
+    public AppendRowCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {

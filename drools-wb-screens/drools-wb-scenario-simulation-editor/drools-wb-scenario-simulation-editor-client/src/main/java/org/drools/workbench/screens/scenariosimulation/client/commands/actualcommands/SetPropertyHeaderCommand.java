@@ -33,6 +33,13 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 @Dependent
 public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand {
 
+    public SetPropertyHeaderCommand() {
+    }
+
+    public SetPropertyHeaderCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();

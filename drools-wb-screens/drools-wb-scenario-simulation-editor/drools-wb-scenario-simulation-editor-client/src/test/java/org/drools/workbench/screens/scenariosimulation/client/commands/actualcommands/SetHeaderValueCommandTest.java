@@ -31,12 +31,10 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetHeaderValueCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetHeaderValueCommand setHeaderValueCommand;
-
     @Before
     public void setup() {
         super.setup();
-        setHeaderValueCommand = spy(new SetHeaderValueCommand());
+        command = spy(new SetHeaderValueCommand(scenarioSimulationContext.getStatus()));
         scenarioSimulationContext.getStatus().setRowIndex(ROW_INDEX);
         scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContext.getStatus().setCellValue(VALUE);
@@ -45,14 +43,14 @@ public class SetHeaderValueCommandTest extends AbstractScenarioSimulationCommand
     @Test
     public void executeNotValid() {
         when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX))).thenReturn(false);
-        setHeaderValueCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, never()).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
     }
 
     @Test
     public void executeValid() {
         when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX))).thenReturn(true);
-        setHeaderValueCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
     }
 }

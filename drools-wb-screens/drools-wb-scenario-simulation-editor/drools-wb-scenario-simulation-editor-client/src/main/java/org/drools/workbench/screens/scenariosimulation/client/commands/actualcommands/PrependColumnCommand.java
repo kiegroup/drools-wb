@@ -30,6 +30,12 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 @Dependent
 public class PrependColumnCommand extends AbstractScenarioSimulationCommand {
 
+    public PrependColumnCommand() {
+    }
+
+    public PrependColumnCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {

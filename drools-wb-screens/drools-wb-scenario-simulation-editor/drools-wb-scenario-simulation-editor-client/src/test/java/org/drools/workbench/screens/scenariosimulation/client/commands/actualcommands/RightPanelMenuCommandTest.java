@@ -33,8 +33,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private RightPanelMenuCommand rightPanelMenuCommand;
-
     @Mock
     private PlaceManager placeManagerMock;
 
@@ -48,7 +46,7 @@ public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommand
     public void setup() {
         super.setup();
         when(placeRequestMock.getPath()).thenReturn(pathMock);
-        this.rightPanelMenuCommand = new RightPanelMenuCommand() {
+        this.command = new RightPanelMenuCommand() {
         };
     }
 
@@ -57,10 +55,10 @@ public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommand
         scenarioSimulationContext.setPlaceManager(placeManagerMock);
         scenarioSimulationContext.setRightPanelRequest(placeRequestMock);
         when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.OPEN);
-        rightPanelMenuCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(placeManagerMock, times(1)).closePlace(placeRequestMock);
         when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.CLOSE);
-        rightPanelMenuCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(placeManagerMock, times(1)).goTo(placeRequestMock);
     }
 }

@@ -35,12 +35,10 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private PrependColumnCommand prependColumnCommand;
-
     @Before
     public void setup() {
         super.setup();
-        prependColumnCommand = spy(new PrependColumnCommand() {
+        command = spy(new PrependColumnCommand(scenarioSimulationContext.getStatus()) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;
@@ -52,8 +50,8 @@ public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandT
     public void execute() {
         scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContext.getStatus().setColumnGroup(COLUMN_GROUP);
-        prependColumnCommand.execute(scenarioSimulationContext);
-        verify(prependColumnCommand, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        command.execute(scenarioSimulationContext);
+        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioGridPanelMock), eq(scenarioGridLayerMock), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexLeftOfGroup(eq(COLUMN_GROUP));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(FIRST_INDEX_LEFT), eq(gridColumnMock));
     }

@@ -264,7 +264,15 @@ public class ScenarioSimulationEditorPresenter
         eventBus.fireEvent(new RedoEvent());
     }
 
-    RemoteCallback<ScenarioSimulationModel> refreshModel() {
+    public void setUndoButtonEnabledStatus(boolean enabled) {
+        view.getUndoMenuItem().setEnabled(enabled);
+    }
+
+    public void setRedoButtonEnabledStatus(boolean enabled) {
+        view.getRedoMenuItem().setEnabled(enabled);
+    }
+
+    protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return newModel -> {
             this.model = newModel;
             view.refreshContent(newModel.getSimulation());
@@ -288,6 +296,8 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
+        view.getUndoMenuItem().setEnabled(false);
+        view.getRedoMenuItem().setEnabled(false);
         super.makeMenuBar();
     }
 

@@ -16,28 +16,26 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import java.util.NoSuchElementException;
-
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.command.client.CommandResult;
-import org.kie.workbench.common.command.client.CommandResultBuilder;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest {
 
-
     private ScenarioCommandRegistry scenarioCommandRegistry;
-
-    private AppendRowCommand appendRowCommandMock;
-
 
     @Before
     public void setup() {
@@ -45,49 +43,80 @@ public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest 
         scenarioCommandRegistry = spy(new ScenarioCommandRegistry() {
 
         });
-
-        appendRowCommandMock = spy(new AppendRowCommand() {
-            @Override
-            public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
-                return CommandResultBuilder.SUCCESS;
-            }
-
-            @Override
-            public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
-                return CommandResultBuilder.SUCCESS;
-            }
-        });
-    }
-
-
-    @Test(expected = NoSuchElementException.class)
-    public void undoFailing() {
-        scenarioCommandRegistry.undoneCommands.clear();
-        scenarioCommandRegistry.undo(scenarioSimulationContext);
     }
 
     @Test
-    public void undoNotFailing() {
-        int currentSize = scenarioCommandRegistry.undoneCommands.size();
-        scenarioCommandRegistry.register(scenarioSimulationContext.getStatus(), appendRowCommandMock);
-        scenarioCommandRegistry.undo(scenarioSimulationContext);
-        assertEquals(currentSize +1, scenarioCommandRegistry.undoneCommands.size());
+    public void undoEmpty() {
+        scenarioCommandRegistry.undoneCommands.clear();
+        final CommandResult<ScenarioSimulationViolation> retrieved = scenarioCommandRegistry.undo(scenarioSimulationContext);
+        assertEquals(CommandResult.Type.WARNING, retrieved.getType());
+        verify(scenarioCommandRegistry, never()).commonOperation(eq(scenarioSimulationContext), eq(appendRowCommandMock), eq(true));
+        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
     }
 
-    @Test(expected = NoSuchElementException.class)
-    public void redoFailing() {
+    @Test
+    public void undoNotEmpty() {
+        int currentSize = scenarioCommandRegistry.undoneCommands.size();
+        scenarioCommandRegistry.register(scenarioSimulationContext, scenarioSimulationContext.getStatus(), appendRowCommandMock);
+        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
+        scenarioCommandRegistry.undo(scenarioSimulationContext);
+        assertEquals(currentSize + 1, scenarioCommandRegistry.undoneCommands.size());
+        verify(scenarioCommandRegistry, times(1)).commonOperation(eq(scenarioSimulationContext), eq(appendRowCommandMock), eq(true));
+        verify(scenarioCommandRegistry, times(2)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
+    }
+
+    @Test
+    public void redoEmpty() {
         scenarioCommandRegistry.undoneCommands.clear();
         scenarioCommandRegistry.redo(scenarioSimulationContext);
+        verify(scenarioCommandRegistry, never()).commonOperation(eq(scenarioSimulationContext), eq(appendRowCommandMock), eq(true));
+        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
     }
 
     @Test
-    public void redoNotFailing() {
+    public void redoNotEmpty() {
         scenarioCommandRegistry.undoneCommands.push(appendRowCommandMock);
         int currentSize = scenarioCommandRegistry.undoneCommands.size();
         scenarioCommandRegistry.redo(scenarioSimulationContext);
-        assertEquals(currentSize -1, scenarioCommandRegistry.undoneCommands.size());
+        assertEquals(currentSize - 1, scenarioCommandRegistry.undoneCommands.size());
+        verify(scenarioCommandRegistry, times(1)).commonOperation(eq(scenarioSimulationContext), eq(appendRowCommandMock), eq(false));
+        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
     }
 
+    @Test
+    public void setUndoRedoButtonStatus() {
+        scenarioCommandRegistry.clear();
+        scenarioCommandRegistry.undoneCommands.clear();
+        scenarioCommandRegistry.setUndoRedoButtonStatus(scenarioSimulationContext);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(false));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(false));
+        //
+        reset(scenarioSimulationEditorPresenterMock);
+        scenarioCommandRegistry.register(appendRowCommandMock);
+        scenarioCommandRegistry.setUndoRedoButtonStatus(scenarioSimulationContext);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(true));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(false));
+        //
+        reset(scenarioSimulationEditorPresenterMock);
+        scenarioCommandRegistry.undoneCommands.push(appendRowCommandMock);
+        scenarioCommandRegistry.setUndoRedoButtonStatus(scenarioSimulationContext);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(true));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(true));
+    }
 
+    @Test
+    public void commonOperationUndo() {
+        scenarioCommandRegistry.commonOperation(scenarioSimulationContext, appendRowCommandMock, true);
+        verify(appendRowCommandMock, times(1)).undo(eq(scenarioSimulationContext));
+        verify(appendRowCommandMock, never()).redo(eq(scenarioSimulationContext));
+        verify(appendRowCommandMock, times(1)).setRestorableStatus(isA(ScenarioSimulationContext.Status.class));
+    }
 
+    @Test
+    public void commonOperationRedo() {
+        scenarioCommandRegistry.commonOperation(scenarioSimulationContext, appendRowCommandMock, false);
+        verify(appendRowCommandMock, times(1)).redo(eq(scenarioSimulationContext));
+        verify(appendRowCommandMock, never()).undo(eq(scenarioSimulationContext));
+        verify(appendRowCommandMock, times(1)).setRestorableStatus(isA(ScenarioSimulationContext.Status.class));
+    }
 }

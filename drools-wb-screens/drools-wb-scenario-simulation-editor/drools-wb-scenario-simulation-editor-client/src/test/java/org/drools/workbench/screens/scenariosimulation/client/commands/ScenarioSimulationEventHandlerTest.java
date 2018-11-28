@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommandTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
@@ -71,7 +71,6 @@ import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import org.mockito.Mock;
-import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyObject;
@@ -79,7 +78,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -88,7 +86,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulationCommandTest {
+public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulationTest {
 
     @Mock
     private List<HandlerRegistration> handlerRegistrationListMock;
@@ -385,18 +383,17 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void commonExecution() {
-        AbstractScenarioSimulationCommand commandMock = mock(AppendColumnCommand.class);
-        when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContext), eq(commandMock))).thenReturn(CommandResultBuilder.SUCCESS);
-        scenarioSimulationEventHandler.commonExecution(scenarioSimulationContext, commandMock);
+        when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContext), eq(appendRowCommandMock))).thenReturn(CommandResultBuilder.SUCCESS);
+        scenarioSimulationEventHandler.commonExecution(scenarioSimulationContext, appendRowCommandMock);
         assertEquals(simulationMock, scenarioSimulationContext.getStatus().getSimulation());
-        verify(scenarioCommandRegistryMock, times(1)).register(isA(ScenarioSimulationContext.Status.class), eq(commandMock));
+        verify(scenarioCommandRegistryMock, times(1)).register(eq(scenarioSimulationContext), isA(ScenarioSimulationContext.Status.class), eq(appendRowCommandMock));
         //
         reset(scenarioCommandRegistryMock);
         CommandResult<ScenarioSimulationViolation> status = new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("FAKE ERROR")));
-        when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContext), eq(commandMock))).thenReturn(status);
-        scenarioSimulationEventHandler.commonExecution(scenarioSimulationContext, commandMock);
+        when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContext), eq(appendRowCommandMock))).thenReturn(status);
+        scenarioSimulationEventHandler.commonExecution(scenarioSimulationContext, appendRowCommandMock);
         assertEquals(simulationMock, scenarioSimulationContext.getStatus().getSimulation());
-        verify(scenarioCommandRegistryMock, never()).register(eq(commandMock));
+        verify(scenarioCommandRegistryMock, never()).register(eq(appendRowCommandMock));
     }
 
     @Test

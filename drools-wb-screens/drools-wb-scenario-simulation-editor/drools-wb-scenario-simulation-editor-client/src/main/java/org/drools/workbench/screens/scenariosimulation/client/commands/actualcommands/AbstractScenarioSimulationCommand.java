@@ -51,28 +51,58 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
      */
     private final long id;
 
+    /**
+     * Flag that indicates if the command is <b>undoable</b>. Default is <code>false</code>
+     */
+    private final boolean undoable;
+
+    /**
+     * The <code>ScenarioSimulationContext.Status</code> to restore when calling <b>undo/redo</b>.
+     * Needed only for <b>undoable</b> commands.
+     */
+    protected ScenarioSimulationContext.Status restorableStatus = null;
+
+    /**
+     * Calling this constructor will set the command as <b>not undoable</b>
+     */
     public AbstractScenarioSimulationCommand() {
         this.id = COUNTER_ID.getAndIncrement();
+        this.undoable = false;
+    }
+
+    /**
+     * Calling this constructor will set the command as <b>undoable</b>
+     * @param restorableStatus
+     */
+    public AbstractScenarioSimulationCommand(ScenarioSimulationContext.Status restorableStatus) {
+        this.id = COUNTER_ID.getAndIncrement();
+        this.undoable = true;
+        this.restorableStatus = restorableStatus;
     }
 
     public long getId() {
         return id;
     }
 
+    public boolean isUndoable() {
+        return undoable;
+    }
+
     @Override
-    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
-        try {
-            final Simulation toRestore = context.getStatus().getSimulation();
-            if (toRestore != null) {
-                context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
-                context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
-                return commonExecution(context);
-            } else {
-                return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
-            }
-        } catch (Exception e) {
-            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) throws UnsupportedOperationException {
+        if (!undoable || restorableStatus == null) {
+            String message = !undoable ? this.getClass().getSimpleName() + " is not undoable" : "restorableStatus status is null";
+            throw new UnsupportedOperationException(message);
         }
+        return setCurrentContext(context);
+    }
+
+    public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext context) throws UnsupportedOperationException {
+        if (!undoable || restorableStatus == null) {
+            String message = !undoable ? this.getClass().getSimpleName() + " is not redoable" : "restorableStatus status is null";
+            throw new UnsupportedOperationException(message);
+        }
+        return setCurrentContext(context);
     }
 
     @Override
@@ -80,6 +110,30 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         try {
             internalExecute(context);
             return commonExecution(context);
+        } catch (Exception e) {
+            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+        }
+    }
+
+    public ScenarioSimulationContext.Status getRestorableStatus() {
+        return restorableStatus;
+    }
+
+    public void setRestorableStatus(ScenarioSimulationContext.Status restorableStatus) {
+        this.restorableStatus = restorableStatus;
+    }
+
+    protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
+        try {
+            final Simulation toRestore = restorableStatus.getSimulation();
+            if (toRestore != null) {
+                context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
+                context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
+                context.setStatus(restorableStatus);
+                return commonExecution(context);
+            } else {
+                return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
+            }
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }

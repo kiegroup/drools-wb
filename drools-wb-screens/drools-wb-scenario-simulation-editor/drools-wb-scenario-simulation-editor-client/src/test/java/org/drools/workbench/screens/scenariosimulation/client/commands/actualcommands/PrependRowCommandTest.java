@@ -24,25 +24,22 @@ import org.junit.runner.RunWith;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class PrependRowCommandTest extends AbstractScenarioSimulationCommandTest {
 
-
-
-    private PrependRowCommand prependRowCommand;
-
     @Before
     public void setup() {
         super.setup();
-        prependRowCommand = new PrependRowCommand();
+        command = spy(new PrependRowCommand(scenarioSimulationContext.getStatus()));
     }
 
     @Test
     public void execute() {
-        prependRowCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).insertRow(eq(0), isA(ScenarioGridRow.class));
     }
 }

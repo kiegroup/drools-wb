@@ -40,16 +40,14 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetPropertyHeaderCommand setPropertyHeaderCommand;
-
     @Mock
-    private List<GridColumn<?>> mockGridColumns;
+    private List<GridColumn<?>> gridColumnsMock;
 
     @Before
     public void setup() {
         super.setup();
-        when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        setPropertyHeaderCommand = spy(new SetPropertyHeaderCommand() {
+        when(gridColumnsMock.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
+        command = spy(new SetPropertyHeaderCommand(scenarioSimulationContext.getStatus()) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
@@ -65,7 +63,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     @Test
     public void executeFalse() {
         scenarioSimulationContext.getStatus().setKeepData(false);
-        setPropertyHeaderCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
@@ -75,7 +73,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     @Test
     public void executeTrue() {
         scenarioSimulationContext.getStatus().setKeepData(true);
-        setPropertyHeaderCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);

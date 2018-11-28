@@ -18,6 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -66,6 +68,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -113,9 +116,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioGridModel scenarioGridModelMock;
 
     @Mock
-    private ScenarioSimulationView scenarioSimulationViewMock;
-
-    @Mock
     private ScenarioSimulationProducer scenarioSimulationProducerMock;
 
     @Mock
@@ -149,6 +149,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private TestRunnerReportingScreen testRunnerReportingScreenMock;
     @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
+    @Mock
+    private ScenarioMenuItem runScenarioMenuItemMock;
+    @Mock
+    private ScenarioMenuItem undoMenuItemMock;
+    @Mock
+    private ScenarioMenuItem redoMenuItemMock;
 
     @Before
     public void setup() {
@@ -156,6 +162,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
+        when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
+        when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
@@ -190,6 +199,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.scenarioGridPanel = scenarioGridPanelMock;
                 this.oracle = oracleMock;
                 this.packageName = SCENARIO_PACKAGE;
+                this.eventBus = eventBusMock;
             }
 
             @Override
@@ -259,6 +269,48 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                             mock(PlaceRequest.class));
 
         verify(fileMenuBuilderMock).addNewTopLevelMenu(menuItem);
+    }
+
+    @Test
+    public void onUndo() {
+        presenter.onUndo();
+        verify(eventBusMock, times(1)).fireEvent(isA(UndoEvent.class));
+    }
+
+    @Test
+    public void onRedo() {
+        presenter.onRedo();
+        verify(eventBusMock, times(1)).fireEvent(isA(RedoEvent.class));
+    }
+
+    @Test
+    public void setUndoButtonEnabledStatus() {
+        presenter.setUndoButtonEnabledStatus(true);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(true));
+        //
+        reset(undoMenuItemMock);
+        presenter.setUndoButtonEnabledStatus(false);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
+    }
+
+    @Test
+    public void setRedoButtonEnabledStatus() {
+        presenter.setRedoButtonEnabledStatus(true);
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(true));
+        //
+        reset(redoMenuItemMock);
+        presenter.setRedoButtonEnabledStatus(false);
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
+    }
+
+    @Test
+    public void makeMenuBar() {
+        presenter.makeMenuBar();
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
     @Test

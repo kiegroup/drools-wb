@@ -42,6 +42,12 @@ public class ScenarioSimulationViewImpl
 
     private ScenarioGridLayer scenarioGridLayer;
 
+    private ScenarioMenuItem runMenuItem;
+
+    private ScenarioMenuItem undoMenuItem;
+
+    private ScenarioMenuItem redoMenuItem;
+
 
     /**
      * This method also set <code>ScenarioGridLayer</code> taken the instance from given <code>ScenarioGridPanel</code>
@@ -74,20 +80,29 @@ public class ScenarioSimulationViewImpl
 
     @Override
     public MenuItem getRunScenarioMenuItem() {
-        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
-                                    () -> presenter.onRunScenario());
+        if (runMenuItem == null) {
+            runMenuItem = new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.runScenarioSimulation(),
+                                               () -> presenter.onRunScenario());
+        }
+        return runMenuItem;
     }
 
     @Override
     public MenuItem getUndoMenuItem() {
-        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.undo(),
-                                    () -> presenter.onUndo());
+        if (undoMenuItem == null) {
+            undoMenuItem = new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.undo(),
+                                                () -> presenter.onUndo());
+        }
+        return undoMenuItem;
     }
 
     @Override
     public MenuItem getRedoMenuItem() {
-        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.redo(),
-                                    () -> presenter.onRedo());
+        if (redoMenuItem == null) {
+            redoMenuItem = new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.redo(),
+                                                () -> presenter.onRedo());
+        }
+        return redoMenuItem;
     }
 
     @Override

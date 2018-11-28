@@ -31,12 +31,10 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetCellValueCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetCellValueCommand setCellValueCommand;
-
     @Before
     public void setup() {
         super.setup();
-        setCellValueCommand = spy(new SetCellValueCommand());
+        command = spy(new SetCellValueCommand(scenarioSimulationContext.getStatus()));
     }
 
     @Test
@@ -44,7 +42,7 @@ public class SetCellValueCommandTest extends AbstractScenarioSimulationCommandTe
         scenarioSimulationContext.getStatus().setRowIndex(ROW_INDEX);
         scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContext.getStatus().setCellValue(VALUE);
-        setCellValueCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).setCellValue(eq(ROW_INDEX), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
         verify(scenarioGridModelMock, times(1)).resetErrors(eq(ROW_INDEX));
     }

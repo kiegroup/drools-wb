@@ -16,19 +16,17 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.List;
-
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
 
@@ -41,36 +39,85 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Mock
     protected EventBus eventBusMock;
 
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock;
-
-    protected final String COLUMN_ID = "COLUMN ID";
-
-    protected final String COLUMN_GROUP = FactMappingType.EXPECT.name();
-
-    protected final String FULL_PACKAGE = "test.scesim";
-
-    protected final String VALUE = "VALUE";
-
-    protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
-
-    protected final String VALUE_CLASS_NAME = String.class.getName();
-
-    protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
+    protected AbstractScenarioSimulationCommand command;
 
 
     @Before
     public void setup() {
         super.setup();
-        when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
-        when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
-        when(headerMetaDatasMock.get(1)).thenReturn(informationHeaderMetaDataMock);
-        when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
-        when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
-        when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
+
     }
+
+
+    /*
+
+      @Override
+    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) throws UnsupportedOperationException {
+        if (!undoable || restorableStatus == null) {
+            String message = !undoable ? this.getClass().getSimpleName() + " is not undoable" : "restorableStatus status is null";
+            throw new UnsupportedOperationException(message);
+        }
+        return setCurrentContext(context);
+    }
+
+    */
+
+    @Test
+    public void undoOnUndoable() {
+        if (command.isUndoable()) {
+            command.undo(scenarioSimulationContext);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void undoOnNotUndoable() {
+        if (!command.isUndoable()) {
+            command.undo(scenarioSimulationContext);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @Test
+    public void redoOnRedoable() {
+        if (command.isUndoable()) {
+            command.redo(scenarioSimulationContext);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+        }
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void redoOnNotUndoable() {
+        if (!command.isUndoable()) {
+            command.redo(scenarioSimulationContext);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    @Test
+    public void execute() {
+        command.execute(scenarioSimulationContext);
+        verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
+    }
+
+    @Test
+    public void setCurrentContext() {
+        if (command.isUndoable()) {
+            command.setCurrentContext(scenarioSimulationContext);
+            verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
+            verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
+        }
+    }
+
+    @Test
+    public void commonExecution() {
+        if (command.isUndoable()) {
+            command.commonExecution(scenarioSimulationContext);
+            verify(scenarioGridPanelMock, times(1)).onResize();
+            verify(scenarioGridPanelMock, times(1)).select();
+        }
+    }
+
 }

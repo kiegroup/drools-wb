@@ -34,6 +34,13 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
 @Dependent
 public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
 
+    public InsertColumnCommand() {
+    }
+
+    public InsertColumnCommand(ScenarioSimulationContext.Status restorableStatus) {
+        super(restorableStatus);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();

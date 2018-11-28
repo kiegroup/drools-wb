@@ -27,20 +27,16 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class DisableRightPanelCommandTest extends AbstractScenarioSimulationCommandTest {
 
-
-
-    private DisableRightPanelCommand disableRightPanelCommand;
-
     @Before
     public void setup() {
         super.setup();
-        disableRightPanelCommand = new DisableRightPanelCommand();
+        command = new DisableRightPanelCommand();
     }
 
     @Test
     public void execute() {
         scenarioSimulationContext.setRightPanelPresenter(rightPanelPresenterMock);
-        disableRightPanelCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(rightPanelPresenterMock, times(1)).onDisableEditorTab();
     }
 }

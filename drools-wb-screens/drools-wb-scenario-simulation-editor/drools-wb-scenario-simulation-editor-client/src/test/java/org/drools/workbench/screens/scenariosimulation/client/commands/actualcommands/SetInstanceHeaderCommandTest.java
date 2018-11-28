@@ -40,8 +40,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private SetInstanceHeaderCommand setInstanceHeaderCommand;
-
     @Mock
     private List<GridColumn<?>> mockGridColumns;
 
@@ -50,7 +48,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        setInstanceHeaderCommand = spy(new SetInstanceHeaderCommand() {
+        command = spy(new SetInstanceHeaderCommand(scenarioSimulationContext.getStatus()) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
@@ -68,7 +66,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
     public void execute() {
         scenarioSimulationContext.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContext.getStatus().setClassName(VALUE_CLASS_NAME);
-        setInstanceHeaderCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(gridColumnMock, atLeast(1)).getInformationHeaderMetaData();
         verify(informationHeaderMetaDataMock, atLeast(1)).setTitle(eq(VALUE_CLASS_NAME));
         verify(gridColumnMock, atLeast(1)).setInstanceAssigned(eq(true));
