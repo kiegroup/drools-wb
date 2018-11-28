@@ -56,13 +56,6 @@ public class SimulationTest {
                       IllegalArgumentException.class);
     }
 
-//    @Test
-//    public void cloneSimulationTest() {
-//        final Simulation retrieved = simulation.clone();
-//        assertNotNull(retrieved);
-//        assertFalse(simulation == retrieved);
-//    }
-
     @Test
     public void cloneScenarioTest() {
         Scenario clonedScenario = simulation.cloneScenario(0, 1);

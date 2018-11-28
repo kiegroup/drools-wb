@@ -18,12 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,23 +50,10 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     }
 
-
-    /*
-
-      @Override
-    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) throws UnsupportedOperationException {
-        if (!undoable || restorableStatus == null) {
-            String message = !undoable ? this.getClass().getSimpleName() + " is not undoable" : "restorableStatus status is null";
-            throw new UnsupportedOperationException(message);
-        }
-        return setCurrentContext(context);
-    }
-
-    */
-
     @Test
     public void undoOnUndoable() {
         if (command.isUndoable()) {
+            command.restorableStatus = scenarioSimulationContext.getStatus();
             command.undo(scenarioSimulationContext);
             verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
         }
@@ -82,6 +71,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void redoOnRedoable() {
         if (command.isUndoable()) {
+            command.restorableStatus = scenarioSimulationContext.getStatus();
             command.redo(scenarioSimulationContext);
             verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
         }
@@ -98,16 +88,21 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     @Test
     public void execute() {
+        final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
         command.execute(scenarioSimulationContext);
         verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
+        assertNotEquals(status, command.restorableStatus);
     }
 
     @Test
     public void setCurrentContext() {
         if (command.isUndoable()) {
+            final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
+            command.restorableStatus = status;
             command.setCurrentContext(scenarioSimulationContext);
             verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
             verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
+            assertNotEquals(status, command.restorableStatus);
         }
     }
 

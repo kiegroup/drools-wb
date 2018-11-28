@@ -25,7 +25,6 @@ import org.kie.workbench.common.command.client.CommandResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -57,7 +56,7 @@ public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest 
     @Test
     public void undoNotEmpty() {
         int currentSize = scenarioCommandRegistry.undoneCommands.size();
-        scenarioCommandRegistry.register(scenarioSimulationContext, scenarioSimulationContext.getStatus(), appendRowCommandMock);
+        scenarioCommandRegistry.register(scenarioSimulationContext, appendRowCommandMock);
         verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContext));
         scenarioCommandRegistry.undo(scenarioSimulationContext);
         assertEquals(currentSize + 1, scenarioCommandRegistry.undoneCommands.size());
@@ -109,7 +108,6 @@ public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest 
         scenarioCommandRegistry.commonOperation(scenarioSimulationContext, appendRowCommandMock, true);
         verify(appendRowCommandMock, times(1)).undo(eq(scenarioSimulationContext));
         verify(appendRowCommandMock, never()).redo(eq(scenarioSimulationContext));
-        verify(appendRowCommandMock, times(1)).setRestorableStatus(isA(ScenarioSimulationContext.Status.class));
     }
 
     @Test
@@ -117,6 +115,5 @@ public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest 
         scenarioCommandRegistry.commonOperation(scenarioSimulationContext, appendRowCommandMock, false);
         verify(appendRowCommandMock, times(1)).redo(eq(scenarioSimulationContext));
         verify(appendRowCommandMock, never()).undo(eq(scenarioSimulationContext));
-        verify(appendRowCommandMock, times(1)).setRestorableStatus(isA(ScenarioSimulationContext.Status.class));
     }
 }

@@ -34,7 +34,7 @@ public class SetCellValueCommandTest extends AbstractScenarioSimulationCommandTe
     @Before
     public void setup() {
         super.setup();
-        command = spy(new SetCellValueCommand(scenarioSimulationContext.getStatus()));
+        command = spy(new SetCellValueCommand());
     }
 
     @Test

@@ -34,7 +34,7 @@ public class PrependRowCommandTest extends AbstractScenarioSimulationCommandTest
     @Before
     public void setup() {
         super.setup();
-        command = spy(new PrependRowCommand(scenarioSimulationContext.getStatus()));
+        command = spy(new PrependRowCommand());
     }
 
     @Test

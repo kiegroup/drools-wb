@@ -24,10 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class PrependRowCommand extends AbstractScenarioSimulationCommand {
 
     public PrependRowCommand() {
-    }
-
-    public PrependRowCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
+        super(true);
     }
 
     @Override

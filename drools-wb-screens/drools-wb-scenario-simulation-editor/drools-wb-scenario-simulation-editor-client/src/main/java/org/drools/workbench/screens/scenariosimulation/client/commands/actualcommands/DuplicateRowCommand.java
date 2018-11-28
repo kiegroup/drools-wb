@@ -27,12 +27,8 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class DuplicateRowCommand extends AbstractScenarioSimulationCommand {
 
     public DuplicateRowCommand() {
+        super(true);
     }
-
-    public DuplicateRowCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
-    }
-
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().duplicateRow(context.getStatus().getRowIndex(), new ScenarioGridRow());

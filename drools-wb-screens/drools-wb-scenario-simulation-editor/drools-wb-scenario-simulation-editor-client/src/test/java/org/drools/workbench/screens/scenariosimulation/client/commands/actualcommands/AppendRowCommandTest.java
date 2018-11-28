@@ -35,7 +35,7 @@ public class AppendRowCommandTest extends AbstractScenarioSimulationCommandTest 
     @Before
     public void setup() {
         super.setup();
-        command = spy(new AppendRowCommand(scenarioSimulationContext.getStatus()));
+        command = spy(new AppendRowCommand());
     }
 
     @Test

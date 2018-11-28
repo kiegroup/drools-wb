@@ -47,7 +47,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     public void setup() {
         super.setup();
         when(gridColumnsMock.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        command = spy(new SetPropertyHeaderCommand(scenarioSimulationContext.getStatus()) {
+        command = spy(new SetPropertyHeaderCommand() {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {

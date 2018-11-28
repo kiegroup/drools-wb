@@ -32,10 +32,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
     public DeleteColumnCommand() {
-    }
-
-    public DeleteColumnCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
+        super(true);
     }
 
     @Override
@@ -48,13 +45,13 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
             String instanceTitle = validPlaceholders.getKey();
             String propertyTitle = validPlaceholders.getValue();
             context.getModel().insertColumn(status.getColumnIndex(), getScenarioGridColumnLocal(instanceTitle,
-                                                                                                             propertyTitle,
-                                                                                                             String.valueOf(new Date().getTime()),
-                                                                                                             status.getColumnGroup(),
-                                                                                                             factMappingType,
-                                                                                                             context.getScenarioGridPanel(),
-                                                                                                             context.getScenarioGridLayer(),
-                                                                                                             ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+                                                                                                propertyTitle,
+                                                                                                String.valueOf(new Date().getTime()),
+                                                                                                status.getColumnGroup(),
+                                                                                                factMappingType,
+                                                                                                context.getScenarioGridPanel(),
+                                                                                                context.getScenarioGridLayer(),
+                                                                                                ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
         GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
         boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == status.getColumnIndex();

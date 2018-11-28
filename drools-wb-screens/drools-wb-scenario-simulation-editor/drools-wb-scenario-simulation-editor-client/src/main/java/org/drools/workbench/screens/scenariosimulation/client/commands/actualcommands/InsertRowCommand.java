@@ -24,10 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class InsertRowCommand extends AbstractScenarioSimulationCommand {
 
     public InsertRowCommand() {
-    }
-
-    public InsertRowCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
+        super(true);
     }
 
     @Override

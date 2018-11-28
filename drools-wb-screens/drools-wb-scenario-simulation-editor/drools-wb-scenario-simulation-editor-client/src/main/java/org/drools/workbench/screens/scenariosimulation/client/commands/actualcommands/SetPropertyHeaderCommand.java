@@ -34,10 +34,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand {
 
     public SetPropertyHeaderCommand() {
-    }
-
-    public SetPropertyHeaderCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
+        super(true);
     }
 
     @Override

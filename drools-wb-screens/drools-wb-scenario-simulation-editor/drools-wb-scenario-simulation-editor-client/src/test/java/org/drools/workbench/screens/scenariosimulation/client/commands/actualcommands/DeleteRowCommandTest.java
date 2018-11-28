@@ -38,7 +38,7 @@ public class DeleteRowCommandTest extends AbstractScenarioSimulationCommandTest 
     @Before
     public void setup() {
         super.setup();
-        command = spy(new DeleteRowCommand(scenarioSimulationContext.getStatus()));
+        command = spy(new DeleteRowCommand());
     }
 
     @Test

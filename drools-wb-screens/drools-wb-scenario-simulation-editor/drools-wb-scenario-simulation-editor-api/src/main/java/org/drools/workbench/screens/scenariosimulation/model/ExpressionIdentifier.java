@@ -59,10 +59,6 @@ public class ExpressionIdentifier {
         return new ExpressionIdentifier(name, type);
     }
 
-    protected ExpressionIdentifier cloneExpressionIdentifier() {
-        return ExpressionIdentifier.create(this.name, this.type);
-    }
-
     @Override
     public String toString() {
         return "ExpressionIdentifier{" +

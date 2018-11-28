@@ -62,22 +62,16 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
      */
     protected ScenarioSimulationContext.Status restorableStatus = null;
 
-    /**
-     * Calling this constructor will set the command as <b>not undoable</b>
-     */
-    public AbstractScenarioSimulationCommand() {
-        this.id = COUNTER_ID.getAndIncrement();
-        this.undoable = false;
-    }
 
     /**
      * Calling this constructor will set the command as <b>undoable</b>
-     * @param restorableStatus
+     *
+     *
+     * @param undoable
      */
-    public AbstractScenarioSimulationCommand(ScenarioSimulationContext.Status restorableStatus) {
+    protected AbstractScenarioSimulationCommand(boolean undoable) {
         this.id = COUNTER_ID.getAndIncrement();
-        this.undoable = true;
-        this.restorableStatus = restorableStatus;
+        this.undoable = undoable;
     }
 
     public long getId() {
@@ -107,6 +101,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
 
     @Override
     public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        context.setStatusSimulationIfEmpty();
+        restorableStatus = context.getStatus().cloneStatus();
         try {
             internalExecute(context);
             return commonExecution(context);
@@ -115,21 +111,15 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
     }
 
-    public ScenarioSimulationContext.Status getRestorableStatus() {
-        return restorableStatus;
-    }
-
-    public void setRestorableStatus(ScenarioSimulationContext.Status restorableStatus) {
-        this.restorableStatus = restorableStatus;
-    }
-
     protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
         try {
             final Simulation toRestore = restorableStatus.getSimulation();
             if (toRestore != null) {
+                final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
                 context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
                 context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
                 context.setStatus(restorableStatus);
+                restorableStatus = originalStatus;
                 return commonExecution(context);
             } else {
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));

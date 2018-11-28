@@ -25,6 +25,10 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 @Dependent
 public class EnableRightPanelCommand extends AbstractScenarioSimulationCommand {
 
+    public EnableRightPanelCommand() {
+        super(false);
+    }
+
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();

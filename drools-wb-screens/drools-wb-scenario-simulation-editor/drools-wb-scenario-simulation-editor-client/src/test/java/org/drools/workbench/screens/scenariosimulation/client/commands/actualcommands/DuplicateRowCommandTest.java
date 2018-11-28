@@ -34,7 +34,7 @@ public class DuplicateRowCommandTest extends AbstractScenarioSimulationCommandTe
     @Before
     public void setup() {
         super.setup();
-        command = spy(new DuplicateRowCommand(scenarioSimulationContext.getStatus()));
+        command = spy(new DuplicateRowCommand());
     }
 
     @Test

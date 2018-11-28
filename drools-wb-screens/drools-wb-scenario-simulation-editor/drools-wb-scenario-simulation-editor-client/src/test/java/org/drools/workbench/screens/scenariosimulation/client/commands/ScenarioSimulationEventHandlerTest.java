@@ -386,7 +386,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContext), eq(appendRowCommandMock))).thenReturn(CommandResultBuilder.SUCCESS);
         scenarioSimulationEventHandler.commonExecution(scenarioSimulationContext, appendRowCommandMock);
         assertEquals(simulationMock, scenarioSimulationContext.getStatus().getSimulation());
-        verify(scenarioCommandRegistryMock, times(1)).register(eq(scenarioSimulationContext), isA(ScenarioSimulationContext.Status.class), eq(appendRowCommandMock));
+        verify(scenarioCommandRegistryMock, times(1)).register(eq(scenarioSimulationContext), eq(appendRowCommandMock));
         //
         reset(scenarioCommandRegistryMock);
         CommandResult<ScenarioSimulationViolation> status = new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("FAKE ERROR")));

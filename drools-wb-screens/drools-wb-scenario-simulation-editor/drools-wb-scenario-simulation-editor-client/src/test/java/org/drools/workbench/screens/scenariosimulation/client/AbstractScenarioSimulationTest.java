@@ -231,7 +231,11 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioCommandRegistryMock.undo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryMock.redo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
 
-        appendRowCommandMock = spy(new AppendRowCommand(scenarioSimulationContext.getStatus()) {
+        appendRowCommandMock = spy(new AppendRowCommand() {
+
+            {
+                this.restorableStatus = scenarioSimulationContext.getStatus();
+            }
             @Override
             public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
                 return CommandResultBuilder.SUCCESS;
@@ -241,6 +245,8 @@ public abstract class AbstractScenarioSimulationTest {
             public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
                 return CommandResultBuilder.SUCCESS;
             }
+
+
         });
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);

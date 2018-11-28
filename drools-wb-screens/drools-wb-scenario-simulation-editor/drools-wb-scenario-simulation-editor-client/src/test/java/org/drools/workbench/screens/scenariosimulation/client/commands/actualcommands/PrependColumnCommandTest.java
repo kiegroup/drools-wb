@@ -38,7 +38,7 @@ public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandT
     @Before
     public void setup() {
         super.setup();
-        command = spy(new PrependColumnCommand(scenarioSimulationContext.getStatus()) {
+        command = spy(new PrependColumnCommand() {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioGridPanel scenarioGridPanel, ScenarioGridLayer gridLayer, String placeHolder) {
                 return gridColumnMock;

@@ -35,10 +35,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
 public class InsertColumnCommand extends AbstractScenarioSimulationCommand {
 
     public InsertColumnCommand() {
-    }
-
-    public InsertColumnCommand(ScenarioSimulationContext.Status restorableStatus) {
-        super(restorableStatus);
+        super(true);
     }
 
     @Override

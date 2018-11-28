@@ -40,12 +40,12 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
     /**
      * Method to register the status as it was soon before the command execution,
      * to be used for undo/redo
-     * @param previousStatus
+     *
+     * @param context
      * @param command
      */
-    public void register(ScenarioSimulationContext context, ScenarioSimulationContext.Status previousStatus, AbstractScenarioSimulationCommand command) {
+    public void register(ScenarioSimulationContext context, AbstractScenarioSimulationCommand command) {
         super.register(command);
-        command.setRestorableStatus(previousStatus);
         undoneCommands.clear();
         setUndoRedoButtonStatus(context);
     }
@@ -92,14 +92,10 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
 
     protected CommandResult<ScenarioSimulationViolation> commonOperation(final ScenarioSimulationContext scenarioSimulationContext, final AbstractScenarioSimulationCommand command, boolean isUndo) {
         CommandResult<ScenarioSimulationViolation> toReturn;
-        final ScenarioSimulationContext.Status originalStatus = scenarioSimulationContext.getStatus().cloneStatus();
         if (isUndo) {
             toReturn = command.undo(scenarioSimulationContext);
         } else {
             toReturn = command.redo(scenarioSimulationContext);
-        }
-        if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-            command.setRestorableStatus(originalStatus);
         }
         return toReturn;
     }
