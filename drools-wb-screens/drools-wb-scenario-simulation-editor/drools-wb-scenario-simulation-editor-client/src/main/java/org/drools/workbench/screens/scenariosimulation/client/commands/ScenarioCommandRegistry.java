@@ -15,10 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.NoSuchElementException;
-
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
@@ -29,23 +25,6 @@ import org.kie.workbench.common.command.client.registry.command.CommandRegistryI
  */
 @Dependent
 public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenarioSimulationCommand> {
-
-    protected final Deque<AbstractScenarioSimulationCommand> undoneCommands = new ArrayDeque<>();
-
-    /**
-     * Calls <b>undo</b> on the last executed <code>Command</code>
-     */
-    public void undo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException {
-        // to be implemented
-    }
-
-    /**
-     * Re-execute the last <b>undone</b> <code>Command</code>
-     */
-    public void redo(ScenarioSimulationContext scenarioSimulationContext) throws NoSuchElementException  {
-        // to be implemented
-    }
-
 
 
 }
