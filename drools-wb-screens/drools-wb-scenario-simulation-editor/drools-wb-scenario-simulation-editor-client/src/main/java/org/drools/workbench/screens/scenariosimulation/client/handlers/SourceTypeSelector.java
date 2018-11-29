@@ -27,18 +27,35 @@ import org.gwtbootstrap3.client.ui.Radio;
 
 public class SourceTypeSelector extends VerticalPanel implements ValueChangeHandler<Boolean> {
 
-    private static final String SOURCE_TYPE = "SOURCE_TYPE";
-    private static final String[] SOURCE_TYPES = {"DRL", "DMN"};
-    private final TitledAttachmentFileWidget uploadWidget;
-    private final List<Radio> radioButtonList = new ArrayList<Radio>();
+    protected static final String SOURCE_TYPE = "SOURCE_TYPE";
+    protected static final String[] SOURCE_TYPES = {"DRL", "DMN"};
+    protected final TitledAttachmentFileWidget uploadWidget;
+    protected final List<Radio> radioButtonList = new ArrayList<Radio>();
 
     public SourceTypeSelector(TitledAttachmentFileWidget uploadWidget) {
         this.uploadWidget = uploadWidget;
         addRadioButtons();
     }
 
-    private void addRadioButtons() {
+
+    @Override
+    public void onValueChange(ValueChangeEvent<Boolean> event) {
+        final boolean dmnSelected = isDMNSelected();
+        uploadWidget.setVisible(dmnSelected);
+        if (dmnSelected) {
+            uploadWidget.updateAssetList();
+        }
+    }
+
+    public boolean isDMNSelected() {
+        return radioButtonList.stream()
+                .filter(CheckBox::getValue)
+                .anyMatch(radioButton -> radioButton.getText().equalsIgnoreCase("DMN"));
+    }
+
+    protected void addRadioButtons() {
         boolean first = true;
+        radioButtonList.clear();
         for (String sourceType : SOURCE_TYPES) {
             Radio radioButton = new Radio(SOURCE_TYPE);
             radioButton.setText(sourceType);
@@ -49,20 +66,5 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
             add(radioButton);
         }
         uploadWidget.setVisible(isDMNSelected());
-    }
-
-
-    @Override
-    public void onValueChange(ValueChangeEvent<Boolean> event) {
-        uploadWidget.setVisible(isDMNSelected());
-        if (isDMNSelected()) {
-            uploadWidget.updateAssetList();
-        }
-    }
-
-    public boolean isDMNSelected() {
-        return radioButtonList.stream()
-                .filter(CheckBox::getValue)
-                .anyMatch(radioButton -> radioButton.getText().equalsIgnoreCase("DMN"));
     }
 }

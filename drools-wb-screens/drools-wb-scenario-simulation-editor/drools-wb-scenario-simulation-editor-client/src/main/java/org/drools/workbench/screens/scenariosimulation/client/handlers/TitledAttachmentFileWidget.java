@@ -38,12 +38,12 @@ import org.uberfire.util.URIUtil;
 
 public class TitledAttachmentFileWidget extends Composite {
 
-    private final VerticalPanel fields = GWT.create(VerticalPanel.class);
-    private final FormLabel titleLabel = GWT.create(FormLabel.class);
-    private final ComboBox comboBox = GWT.create(ComboBox.class);
-    private final LibraryPlaces libraryPlaces;
-    private final AssetQueryService assetQueryService;
-    private WorkspaceProject workspaceProject;
+    protected VerticalPanel fields = GWT.create(VerticalPanel.class);
+    protected FormLabel titleLabel = GWT.create(FormLabel.class);
+    protected ComboBox comboBox = GWT.create(ComboBox.class);
+    protected LibraryPlaces libraryPlaces;
+    protected AssetQueryService assetQueryService;
+    protected WorkspaceProject workspaceProject;
 
     public TitledAttachmentFileWidget() {
         this("", null, null);
@@ -66,14 +66,14 @@ public class TitledAttachmentFileWidget extends Composite {
     }
 
     protected void getAssets(RemoteCallback<AssetQueryResult> callback) {
-        ProjectAssetsQuery query = this.createProjectQuery();
+        ProjectAssetsQuery query = createProjectQuery();
         assetQueryService.getAssets(query)
                 .call(callback, new DefaultErrorCallback());
     }
 
     protected ProjectAssetsQuery createProjectQuery() {
         List<String> suffixes = Collections.singletonList("dmn");
-        return new ProjectAssetsQuery(libraryPlaces.getActiveWorkspace(),
+        return new ProjectAssetsQuery(workspaceProject,
                                       "",
                                       0,
                                       1000,
@@ -84,14 +84,14 @@ public class TitledAttachmentFileWidget extends Composite {
         if (Objects.equals(AssetQueryResult.ResultType.Normal, result.getResultType())) {
             List<AssetInfo> assetInfos = result.getAssetInfos().get();
             assetInfos.forEach(asset -> {
-                if (!asset.getFolderItem().getType().equals(FolderItemType.FOLDER)) {
+                if (asset.getFolderItem().getType().equals(FolderItemType.FILE)) {
                     comboBox.addItem(getAssetPath(asset));
                 }
             });
         }
     }
 
-    private String getAssetPath(final AssetInfo asset) {
+    protected String getAssetPath(final AssetInfo asset) {
         final String fullPath = ((Path) asset.getFolderItem().getItem()).toURI();
         final String projectRootPath = workspaceProject.getRootPath().toURI();
         final String relativeAssetPath = fullPath.substring(projectRootPath.length());
