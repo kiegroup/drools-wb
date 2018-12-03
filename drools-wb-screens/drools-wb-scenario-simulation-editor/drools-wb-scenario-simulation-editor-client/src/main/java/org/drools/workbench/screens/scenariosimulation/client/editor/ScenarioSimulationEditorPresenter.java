@@ -18,9 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -31,17 +33,19 @@ import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
+import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
@@ -51,6 +55,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
@@ -63,6 +68,10 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
 import org.uberfire.client.workbench.events.PlaceHiddenEvent;
+import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
+import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
+import org.uberfire.ext.editor.commons.service.support.SupportsRename;
+import org.uberfire.ext.editor.commons.service.support.SupportsSaveAndRename;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
@@ -82,6 +91,19 @@ public class ScenarioSimulationEditorPresenter
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
+    protected AsyncPackageDataModelOracle oracle;
+
+    //Package for which this Scenario Simulation relates
+    protected String packageName = "";
+
+    protected PlaceRequest rightPanelRequest;
+
+    protected ObservablePath path;
+
+    protected EventBus eventBus;
+
+    protected ScenarioGridPanel scenarioGridPanel;
+
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
@@ -92,26 +114,15 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationResourceType type;
 
-    AsyncPackageDataModelOracle oracle;
-
     private ScenarioSimulationView view;
 
-    private CommandExecutor commandExecutor;
+    private ScenarioSimulationContext context;
 
     private Command populateRightPanelCommand;
 
-    //Package for which this Scenario Simulation relates
-    String packageName = "";
+    private TestRunnerReportingScreen testRunnerReportingScreen;
 
-    RightPanelMenuItem rightPanelMenuItem;
-
-    PlaceRequest rightPanelRequest;
-
-    ObservablePath path;
-
-    EventBus eventBus;
-
-    ScenarioGridPanel scenarioGridPanel;
+    private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -123,25 +134,25 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationResourceType type,
                                              final ImportsWidgetPresenter importsWidget,
                                              final AsyncPackageDataModelOracleFactory oracleFactory,
-                                             final PlaceManager placeManager) {
+                                             final PlaceManager placeManager,
+                                             final TestRunnerReportingScreen testRunnerReportingScreen,
+                                             final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
+        this.testRunnerReportingScreen = testRunnerReportingScreen;
+        this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.view = (ScenarioSimulationView) baseView;
         this.service = service;
         this.type = type;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
-        this.rightPanelMenuItem = scenarioSimulationProducer.getRightPanelMenuItem();
-        this.commandExecutor = scenarioSimulationProducer.getCommandExecutor();
+        this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
-
         scenarioGridPanel = view.getScenarioGridPanel();
-        commandExecutor.setScenarioGridPanel(scenarioGridPanel);
-
+//        context.setScenarioGridPanel(scenarioGridPanel);
+        context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
-
         populateRightPanelCommand = getPopulateRightPanelCommand();
-
         scenarioGridPanel.select();
     }
 
@@ -152,18 +163,11 @@ public class ScenarioSimulationEditorPresenter
                    place,
                    type);
         this.path = path;
-        rightPanelRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
-        rightPanelRequest.addParameter("ScenarioSimulationEditorPresenter", path.toString());
-        rightPanelMenuItem.init(rightPanelRequest);
     }
 
     @OnClose
     public void onClose() {
         this.versionRecordManager.clear();
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            placeManager.closePlace(rightPanelRequest);
-            this.view.showLoading();
-        }
         scenarioGridPanel.unregister();
     }
 
@@ -199,10 +203,10 @@ public class ScenarioSimulationEditorPresenter
         }
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeGainFocusEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)
-                && PlaceStatus.CLOSE.equals(placeManager.getStatus(rightPanelRequest))) {
+                && placeRequest.getPath().equals(this.path)) {
+            scenarioSimulationDocksHandler.addDocks();
+            expandToolsDock();
             registerRightPanelCallback();
-            placeManager.goTo(rightPanelRequest);
             populateRightPanel();
         }
     }
@@ -215,13 +219,16 @@ public class ScenarioSimulationEditorPresenter
         PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
         if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
                 && placeRequest.getPath().equals(this.path)) {
+            scenarioSimulationDocksHandler.removeDocks();
             view.getScenarioGridLayer().getScenarioGrid().clearSelections();
-            if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-                unRegisterRightPanelCallback();
-                clearRightPanelStatus();
-                placeManager.closePlace(rightPanelRequest);
-            }
+            unRegisterRightPanelCallback();
+            clearRightPanelStatus();
+            testRunnerReportingScreen.reset();
         }
+    }
+
+    public void expandToolsDock() {
+        scenarioSimulationDocksHandler.expandToolsDock();
     }
 
     public ScenarioSimulationView getView() {
@@ -232,21 +239,36 @@ public class ScenarioSimulationEditorPresenter
         return model;
     }
 
+    /**
+     * To be called to force right panel reload
+     * @param disable set this to <code>true</code> to <b>also</b> disable the panel
+     */
+    public void reloadRightPanel(boolean disable) {
+        populateRightPanelCommand.execute();
+        if (disable) {
+            getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onDisableEditorTab);
+        }
+    }
+
     public void onRunScenario() {
-        service.call().runScenario(versionRecordManager.getCurrentPath(),
-                                   model);
+        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
+    }
+
+    RemoteCallback<ScenarioSimulationModel> refreshModel() {
+        return newModel -> {
+            this.model = newModel;
+            view.refreshContent(newModel.getSimulation());
+            scenarioSimulationDocksHandler.expandTestResultsDock();
+        };
     }
 
     protected void registerRightPanelCallback() {
-        placeManager.registerOnOpenCallback(rightPanelRequest, populateRightPanelCommand);
-        placeManager.registerOnOpenCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextTrue());
-        placeManager.registerOnCloseCallback(rightPanelRequest, rightPanelMenuItem.getSetButtonTextFalse());
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER), populateRightPanelCommand);
     }
 
     protected void unRegisterRightPanelCallback() {
-        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(populateRightPanelCommand);
-        placeManager.getOnOpenCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextTrue());
-        placeManager.getOnCloseCallbacks(rightPanelRequest).remove(rightPanelMenuItem.getSetButtonTextFalse());
+        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER)).remove(populateRightPanelCommand);
     }
 
     /**
@@ -256,7 +278,6 @@ public class ScenarioSimulationEditorPresenter
     protected void makeMenuBar() {
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         super.makeMenuBar();
-        addRightPanelMenuItem(fileMenuBuilder);
     }
 
     @Override
@@ -288,8 +309,8 @@ public class ScenarioSimulationEditorPresenter
     void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
         getRightPanelPresenter().ifPresent(presenter -> {
-            presenter.onDisableEditorTab();
-            commandExecutor.setRightPanelPresenter(presenter);
+            // presenter.onDisableEditorTab();
+            context.setRightPanelPresenter(presenter);
             presenter.setEventBus(eventBus);
             populateRightPanel(presenter);
         });
@@ -301,7 +322,7 @@ public class ScenarioSimulationEditorPresenter
         // Execute only when oracle has been set
         if (oracle == null) {
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
             }
             return;
         }
@@ -309,7 +330,7 @@ public class ScenarioSimulationEditorPresenter
         String[] factTypes = oracle.getFactTypes();
         if (factTypes.length == 0) {  // We do not have to set nothing
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
             }
             return;
         }
@@ -389,10 +410,6 @@ public class ScenarioSimulationEditorPresenter
         };
     }
 
-    private void addRightPanelMenuItem(final FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder.addNewTopLevelMenu(rightPanelMenuItem);
-    }
-
     /**
      * This <code>Callback</code> will receive data from other callbacks and when the retrieved results get to the
      * expected ones it will recursively elaborate the map
@@ -406,7 +423,29 @@ public class ScenarioSimulationEditorPresenter
             factTypeFieldsMap.put(result.getFactName(), result);
             if (factTypeFieldsMap.size() == expectedElements) {
                 factTypeFieldsMap.values().forEach(factModelTree -> populateFactModel(factModelTree, factTypeFieldsMap));
-                rightPanelPresenter.setFactTypeFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+                SortedMap<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
+                // map instance name top data model class
+                if (model != null) {
+                    final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
+                    simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
+                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                        if (dataObjectName.contains(".")) {
+                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
+                        }
+                        final String instanceName = factMapping.getFactAlias();
+                        if (!instanceName.equals(dataObjectName)) {
+                            final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
+                            if (factModelTree != null) {
+                                instanceFieldsMap.put(instanceName, factModelTree);
+                            }
+                        }
+                    });
+                }
+                rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
+                Set<String> dataObjectsInstancesName = new HashSet<>(factTypeFieldsMap.keySet());
+                dataObjectsInstancesName.addAll(instanceFieldsMap.keySet());
+                scenarioGridPanel.getScenarioGrid().getModel().setDataObjectsInstancesName(dataObjectsInstancesName);
             }
         };
     }
@@ -423,8 +462,9 @@ public class ScenarioSimulationEditorPresenter
     }
 
     private Optional<RightPanelView> getRightPanelView() {
-        if (PlaceStatus.OPEN.equals(placeManager.getStatus(rightPanelRequest))) {
-            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(rightPanelRequest);
+        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
+            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
             return Optional.of((RightPanelView) rightPanelActivity.getWidget());
         } else {
             return Optional.empty();
@@ -439,8 +479,33 @@ public class ScenarioSimulationEditorPresenter
         return this::populateRightPanel;
     }
 
-    private boolean isDirty() {
-        int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
-        return originalHash != currentHashcode;
+    boolean isDirty() {
+        try {
+            view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+            int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
+            return originalHash != currentHashcode;
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
+    @Override
+    protected Caller<? extends SupportsDelete> getDeleteServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsRename> getRenameServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsCopy> getCopyServiceCaller() {
+        return service;
+    }
+
+    @Override
+    protected Caller<? extends SupportsSaveAndRename<ScenarioSimulationModel, Metadata>> getSaveAndRenameServiceCaller() {
+        return service;
     }
 }

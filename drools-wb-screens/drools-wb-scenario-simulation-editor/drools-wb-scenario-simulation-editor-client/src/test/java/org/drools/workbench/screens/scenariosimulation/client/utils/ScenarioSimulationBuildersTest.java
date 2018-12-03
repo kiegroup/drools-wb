@@ -24,16 +24,16 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
+import static org.uberfire.ext.wires.core.grids.client.model.GridColumn.HeaderMetaData;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
-
 
     @Before
     public void setup() {
@@ -42,32 +42,32 @@ public class ScenarioSimulationBuildersTest extends AbstractUtilsTest {
 
     @Test
     public void testScenarioGridColumnBuilder() {
-        ScenarioSimulationBuilders.ScenarioGridColumnBuilder builder = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(scenarioCellTextBoxSingletonDOMElementFactoryMock, headerBuilderMock);
-        builder.setReadOnly(false);
+        ScenarioSimulationBuilders.ScenarioGridColumnBuilder builder = ScenarioSimulationBuilders.ScenarioGridColumnBuilder.get(scenarioCellTextAreaSingletonDOMElementFactoryMock, headerBuilderMock);
         builder.setPlaceHolder(PLACEHOLDER);
         ScenarioGridColumn retrieved = builder.build();
         assertNotNull(retrieved);
         assertEquals(PLACEHOLDER, retrieved.getPlaceHolder());
-        assertFalse(retrieved.isReadOnly());
+        assertTrue(retrieved.isReadOnly());
         assertFalse(retrieved.isMovable());
         assertNotNull(retrieved.getHeaderMetaData());
         assertFalse(retrieved.getHeaderMetaData().isEmpty());
+        assertEquals(ColumnWidthMode.AUTO, retrieved.getColumnWidthMode());
     }
 
     @Test
     public void testHeaderBuilder() {
         ScenarioSimulationBuilders.HeaderBuilder builder = ScenarioSimulationBuilders.HeaderBuilder.get(scenarioHeaderTextBoxSingletonDOMElementFactoryMock);
-        builder.setColumnTitle(COLUMN_TITLE_FIRST);
+        builder.setColumnTitle(COLUMN_INSTANCE_TITLE_FIRST);
         builder.setColumnGroup(COLUMN_GROUP_FIRST);
-        builder.setInformationHeader(true);
-        List<GridColumn.HeaderMetaData> retrieved = builder.build();
+        builder.setInstanceHeader(true);
+        List<HeaderMetaData> retrieved = builder.build();
         assertNotNull(retrieved);
         assertEquals(1, retrieved.size());
-        ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData)retrieved.get(0);
+        ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData) retrieved.get(0);
         assertNotNull(headerMetaData);
-        assertEquals(COLUMN_TITLE_FIRST, headerMetaData.getTitle());
+        assertEquals(COLUMN_INSTANCE_TITLE_FIRST, headerMetaData.getTitle());
         assertEquals(COLUMN_GROUP_FIRST, headerMetaData.getColumnGroup());
-        assertTrue(headerMetaData.isInformationHeader());
+        assertTrue(headerMetaData.isInstanceHeader());
         assertFalse(headerMetaData.isReadOnly());
     }
 }

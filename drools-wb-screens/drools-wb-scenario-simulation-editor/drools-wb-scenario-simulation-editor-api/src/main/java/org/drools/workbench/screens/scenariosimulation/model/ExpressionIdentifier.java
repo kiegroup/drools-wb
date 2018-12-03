@@ -28,8 +28,16 @@ public class ExpressionIdentifier {
     private String name;
     private FactMappingType type;
 
-    public static ExpressionIdentifier INDEX = create("Index", FactMappingType.OTHER);
-    public static ExpressionIdentifier DESCRIPTION = create("Description", FactMappingType.OTHER);
+    public enum NAME {
+        Description,
+        Expected,
+        Given,
+        Index,
+        Other;
+    }
+
+    public static ExpressionIdentifier INDEX = create(NAME.Index.name(), FactMappingType.OTHER);
+    public static ExpressionIdentifier DESCRIPTION = create(NAME.Description.name(), FactMappingType.OTHER);
 
     public ExpressionIdentifier() {
     }
@@ -49,6 +57,14 @@ public class ExpressionIdentifier {
 
     public static ExpressionIdentifier create(String name, FactMappingType type) {
         return new ExpressionIdentifier(name, type);
+    }
+
+    @Override
+    public String toString() {
+        return "ExpressionIdentifier{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                '}';
     }
 
     @Override

@@ -28,8 +28,8 @@ public class FactIdentifier {
     private String name;
     private String className;
 
-    public static FactIdentifier INDEX = create("Index", Integer.class.getCanonicalName());
-    public static FactIdentifier DESCRIPTION = create("Description", String.class.getCanonicalName());
+    public static FactIdentifier INDEX = create("#", Integer.class.getCanonicalName());
+    public static FactIdentifier DESCRIPTION = create("Scenario description", String.class.getCanonicalName());
     public static FactIdentifier EMPTY = create("Empty", Void.class.getName());
 
     public FactIdentifier() {
@@ -50,6 +50,14 @@ public class FactIdentifier {
 
     public static FactIdentifier create(String name, String className) {
         return new FactIdentifier(name, className);
+    }
+
+    @Override
+    public String toString() {
+        return "FactIdentifier{" +
+                "name='" + name + '\'' +
+                ", className='" + className + '\'' +
+                '}';
     }
 
     @Override

@@ -18,11 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
 public class ScenarioException extends IllegalArgumentException {
 
-    public ScenarioException() {
-    }
-
-    public ScenarioException(String s) {
-        super(s);
+    public ScenarioException(String message) {
+        super(message);
     }
 
     public ScenarioException(String message, Throwable cause) {
@@ -30,6 +27,6 @@ public class ScenarioException extends IllegalArgumentException {
     }
 
     public ScenarioException(Throwable cause) {
-        super(cause);
+        super(cause.getMessage(), cause);
     }
 }

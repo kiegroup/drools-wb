@@ -34,6 +34,9 @@ public class ScenarioBeanUtil {
         primitiveMap.put("long", long.class);
         primitiveMap.put("double", double.class);
         primitiveMap.put("float", float.class);
+        primitiveMap.put("char", char.class);
+        primitiveMap.put("byte", byte.class);
+        primitiveMap.put("short", short.class);
     }
 
     private ScenarioBeanUtil() {
@@ -70,7 +73,8 @@ public class ScenarioBeanUtil {
 
         Object currentObject = beanToFill;
         if (pathToProperty.size() > 0) {
-            currentObject = navigateToObject(beanToFill, pathToProperty, true);
+            ScenarioBeanWrapper<?> scenarioBeanWrapper = navigateToObject(beanToFill, pathToProperty, true);
+            currentObject = scenarioBeanWrapper.getBean();
         }
 
         Field last = currentObject.getClass().getDeclaredField(lastStep);
@@ -78,11 +82,11 @@ public class ScenarioBeanUtil {
         last.set(currentObject, propertyValue);
     }
 
-    public static Object navigateToObject(Object rootObject, List<String> steps) {
+    public static ScenarioBeanWrapper<?> navigateToObject(Object rootObject, List<String> steps) {
         return navigateToObject(rootObject, steps, true);
     }
 
-    public static Object navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
+    public static ScenarioBeanWrapper<?> navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
         if (steps.size() < 1) {
             throw new ScenarioException(new StringBuilder().append("Invalid path to a property, no steps provided").toString());
         }
@@ -114,7 +118,7 @@ public class ScenarioBeanUtil {
             }
         }
 
-        return currentObject;
+        return new ScenarioBeanWrapper<>(currentObject, currentClass);
     }
 
     private static Object getFieldValue(Field declaredField, Object currentObject, boolean createIfNull) throws ReflectiveOperationException {
@@ -155,15 +159,21 @@ public class ScenarioBeanUtil {
         if (clazz.isAssignableFrom(String.class)) {
             return value;
         } else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
-            return Boolean.parseBoolean(value);
+            return parseBoolean(value);
         } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
-            return Integer.parseInt(value);
+            return Integer.parseInt(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
-            return Long.parseLong(value);
+            return Long.parseLong(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(double.class)) {
-            return Double.parseDouble(value);
+            return Double.parseDouble(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Float.class) || clazz.isAssignableFrom(float.class)) {
-            return Float.parseFloat(value);
+            return Float.parseFloat(cleanStringForNumberParsing(value));
+        } else if (clazz.isAssignableFrom(Character.class) || clazz.isAssignableFrom(char.class)) {
+            return parseChar(value);
+        } else if (clazz.isAssignableFrom(Byte.class) || clazz.isAssignableFrom(byte.class)) {
+            return parseByte(value);
+        } else if (clazz.isAssignableFrom(Short.class) || clazz.isAssignableFrom(short.class)) {
+            return Short.parseShort(cleanStringForNumberParsing(value));
         }
 
         throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
@@ -171,8 +181,8 @@ public class ScenarioBeanUtil {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Class<T> loadClass(String className, ClassLoader classLoader) {
-        if (primitiveMap.containsKey(className)) {
+    public static <T> Class<T> loadClass(String className, ClassLoader classLoader) {
+        if (isPrimitive(className)) {
             return (Class<T>) primitiveMap.get(className);
         }
         try {
@@ -184,5 +194,33 @@ public class ScenarioBeanUtil {
 
     private static boolean isPrimitive(String className) {
         return primitiveMap.containsKey(className);
+    }
+
+    private static boolean parseBoolean(String value) {
+        if ("true".equalsIgnoreCase(value)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(value)) {
+            return false;
+        } else {
+            throw new IllegalArgumentException("Impossible to parse as boolean " + value);
+        }
+    }
+
+    private static char parseChar(String value) {
+        if (value == null || value.length() != 1) {
+            throw new IllegalArgumentException("Impossible to transform " + value + "as char");
+        }
+        return value.charAt(0);
+    }
+
+    private static byte parseByte(String value) {
+        if (value == null || value.length() != 1) {
+            throw new IllegalArgumentException("Impossible to transform " + value + "as byte");
+        }
+        return value.getBytes()[0];
+    }
+
+    private static String cleanStringForNumberParsing(String rawValue) {
+        return rawValue.replaceAll("(-)\\s*([0-9])", "$1$2");
     }
 }

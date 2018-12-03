@@ -58,7 +58,7 @@ public interface ScenarioSimulationEditorConstants
 
     String runScenarioSimulation();
 
-    String expected();
+    String expect();
 
     String insertColumnLeft();
 
@@ -90,5 +90,43 @@ public interface ScenarioSimulationEditorConstants
 
     String insertValue();
 
+    String deleteValues();
+
+    String deleteScenarioMainTitle();
+
+    String deleteScenarioMainQuestion();
+
+    String deleteScenarioText1();
+
+    String deleteScenarioTextQuestion();
+
+    String deleteScenarioTextDanger();
+
+    String preserveDeleteScenarioMainTitle();
+
+    String preserveDeleteScenarioMainQuestion();
+
+    String preserveDeleteScenarioText1();
+
+    String preserveDeleteScenarioTextQuestion();
+
+    String preserveDeleteScenarioTextOption1();
+
+    String preserveDeleteScenarioTextOption2();
+
+    String preserveValues();
+
     String defineValidType();
+
+    String changeType();
+
+    String changeTypeMainTitle();
+
+    String changeTypeMainQuestion();
+
+    String changeTypeText1();
+
+    String changeTypeTextQuestion();
+
+    String changeTypeTextDanger();
 }

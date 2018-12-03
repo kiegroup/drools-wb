@@ -16,16 +16,17 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.metadata;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxDOMElement;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
-import org.gwtbootstrap3.client.ui.TextBox;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.SingletonDOMElementFactory;
+import org.uberfire.ext.wires.core.grids.client.model.GridCellEditAction;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -33,23 +34,44 @@ import static org.mockito.Mockito.verify;
 public class ScenarioHeaderMetaDataTest {
 
     @Mock
-    SingletonDOMElementFactory<TextBox, ScenarioHeaderTextBoxDOMElement> factory;
+    private ScenarioHeaderTextBoxSingletonDOMElementFactory factoryMock;
 
     @Mock
-    FactMapping factMapping;
+    private FactMapping factMapping;
 
-    @Test
-    public void editTest() {
-        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factory, false, false);
-        scenarioHeaderMetaData.edit(null);
-
-        verify(factory, times(1)).attachDomElement(any(), any(), any());
+    @Test(expected = IllegalStateException.class)
+    public void constructorFail() {
+        new ScenarioHeaderMetaData("", "", "", factoryMock, true, true);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void editFailTest() {
-        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factory, true, false);
-
+    public void edit_ReadOnly() {
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factoryMock, true, false);
+        scenarioHeaderMetaData.setReadOnly(true);
         scenarioHeaderMetaData.edit(null);
+    }
+
+    @Test
+    public void editTest_EditingMode() {
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factoryMock, false, false);
+        scenarioHeaderMetaData.setReadOnly(false);
+        scenarioHeaderMetaData.setEditingMode(true);
+        scenarioHeaderMetaData.edit(null);
+        verify(factoryMock, never()).attachDomElement(any(), any(), any());
+    }
+
+    @Test
+    public void editTest_NotEditingMode() {
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factoryMock, false, false);
+        scenarioHeaderMetaData.setReadOnly(false);
+        scenarioHeaderMetaData.setEditingMode(false);
+        scenarioHeaderMetaData.edit(null);
+        verify(factoryMock, times(1)).attachDomElement(any(), any(), any());
+    }
+
+    @Test
+    public void testSupportedEditAction() {
+        ScenarioHeaderMetaData scenarioHeaderMetaData = new ScenarioHeaderMetaData("", "", "", factoryMock, false, false);
+        assertEquals(GridCellEditAction.DOUBLE_CLICK, scenarioHeaderMetaData.getSupportedEditAction());
     }
 }

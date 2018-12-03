@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridColumnRenderer;
@@ -38,7 +38,7 @@ public class ScenarioSimulationBuilders {
      * isMovable: <code>false</code>;
      * </p>
      * <p>
-     * isReadOnly: <code>true</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
      * placeHolder: "";
@@ -55,17 +55,16 @@ public class ScenarioSimulationBuilders {
 
         private double width = 150;
         private boolean isMovable = false;
-        private boolean isReadOnly = true;
         private String placeHolder = "";
         private final HeaderBuilder headerBuilder;
         private ScenarioGridColumnRenderer scenarioGridColumnRenderer;
-        private final ScenarioCellTextBoxSingletonDOMElementFactory factoryCell;
+        private final ScenarioCellTextAreaSingletonDOMElementFactory factoryCell;
 
-        public static ScenarioGridColumnBuilder get(ScenarioCellTextBoxSingletonDOMElementFactory factoryCell, HeaderBuilder headerBuilder) {
+        public static ScenarioGridColumnBuilder get(ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, HeaderBuilder headerBuilder) {
             return new ScenarioGridColumnBuilder(factoryCell, headerBuilder);
         }
 
-        public ScenarioGridColumnBuilder(ScenarioCellTextBoxSingletonDOMElementFactory factoryCell, HeaderBuilder headerBuilder) {
+        private ScenarioGridColumnBuilder(ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, HeaderBuilder headerBuilder) {
             this.factoryCell = factoryCell;
             this.headerBuilder = headerBuilder;
         }
@@ -80,33 +79,21 @@ public class ScenarioSimulationBuilders {
             return this;
         }
 
-        public ScenarioGridColumnBuilder setReadOnly(boolean readOnly) {
-            isReadOnly = readOnly;
-            return this;
-        }
-
         public ScenarioGridColumnBuilder setPlaceHolder(String placeHolder) {
             this.placeHolder = placeHolder;
             return this;
         }
 
-        public ScenarioGridColumnBuilder setScenarioGridColumnRenderer(ScenarioGridColumnRenderer scenarioGridColumnRenderer) {
-            this.scenarioGridColumnRenderer = scenarioGridColumnRenderer;
-            return this;
-        }
-
         public ScenarioGridColumn build() {
-            List<GridColumn.HeaderMetaData> headerMetaDataList =  headerBuilder.build();
+            List<GridColumn.HeaderMetaData> headerMetaDataList = headerBuilder.build();
             ScenarioGridColumnRenderer actualScenarioGridColumnRenderer = scenarioGridColumnRenderer != null ? scenarioGridColumnRenderer : new ScenarioGridColumnRenderer();
-            ScenarioGridColumn toReturn = new ScenarioGridColumn(headerMetaDataList,
-                                                                 actualScenarioGridColumnRenderer,
-                                                                 width,
-                                                                 isMovable,
-                                                                 factoryCell,
-                                                                 placeHolder
+            return new ScenarioGridColumn(headerMetaDataList,
+                                          actualScenarioGridColumnRenderer,
+                                          width,
+                                          isMovable,
+                                          factoryCell,
+                                          placeHolder
             );
-            toReturn.setReadOnly(isReadOnly);
-            return toReturn;
         }
     }
 
@@ -121,10 +108,10 @@ public class ScenarioSimulationBuilders {
      * columnTitle: null;
      * </p>
      * <p>
-     * isReadOnly: <code>false</code>;
+     * isPropertyAssigned: <code>false</code>;
      * </p>
      * <p>
-     * informationHeader: <code>false</code>;
+     * instanceHeader: <code>false</code>;
      * </p>
      * </p>
      */
@@ -134,7 +121,8 @@ public class ScenarioSimulationBuilders {
         String columnTitle;
         String columnGroup = "";
         boolean readOnly = false;
-        boolean informationHeader = false;
+        boolean instanceHeader = false;
+        boolean propertyHeader = false;
         HeaderBuilder nestedLevel;
         final ScenarioHeaderTextBoxSingletonDOMElementFactory factory;
 
@@ -144,6 +132,10 @@ public class ScenarioSimulationBuilders {
 
         public HeaderBuilder(ScenarioHeaderTextBoxSingletonDOMElementFactory factory) {
             this.factory = factory;
+        }
+
+        public String getColumnId() {
+            return columnId;
         }
 
         public HeaderBuilder setColumnId(String columnId) {
@@ -166,8 +158,13 @@ public class ScenarioSimulationBuilders {
             return this;
         }
 
-        public HeaderBuilder setInformationHeader(boolean informationHeader) {
-            this.informationHeader = informationHeader;
+        public HeaderBuilder setInstanceHeader(boolean instanceHeader) {
+            this.instanceHeader = instanceHeader;
+            return this;
+        }
+
+        public HeaderBuilder setPropertyHeader(boolean propertyHeader) {
+            this.propertyHeader = propertyHeader;
             return this;
         }
 
@@ -191,7 +188,7 @@ public class ScenarioSimulationBuilders {
         }
 
         private GridColumn.HeaderMetaData internalBuild() {
-            return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly, informationHeader);
+            return new ScenarioHeaderMetaData(columnId, columnTitle, columnGroup, factory, readOnly, instanceHeader, propertyHeader);
         }
     }
 }

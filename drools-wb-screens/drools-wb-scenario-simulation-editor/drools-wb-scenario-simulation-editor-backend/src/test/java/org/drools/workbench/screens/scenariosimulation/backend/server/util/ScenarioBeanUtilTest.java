@@ -32,6 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.Sce
 import org.junit.Test;
 
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil.convertValue;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil.loadClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -102,7 +103,8 @@ public class ScenarioBeanUtilTest {
         dispute.setCreator(creator);
         List<String> pathToProperty = Arrays.asList("creator", "firstName");
 
-        Object targetObject = ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, true);
+        ScenarioBeanWrapper<?> scenarioBeanWrapper = ScenarioBeanUtil.navigateToObject(dispute, pathToProperty, true);
+        Object targetObject = scenarioBeanWrapper.getBean();
 
         assertEquals(targetObject, FIRST_NAME);
     }
@@ -150,6 +152,12 @@ public class ScenarioBeanUtilTest {
         assertEquals(1.0D, convertValue(Double.class.getCanonicalName(), "1.0", classLoader));
         assertEquals(1.0F, convertValue(float.class.getCanonicalName(), "1.0", classLoader));
         assertEquals(1.0F, convertValue(Float.class.getCanonicalName(), "1.0", classLoader));
+        assertEquals('a', convertValue(char.class.getCanonicalName(), "a", classLoader));
+        assertEquals('a', convertValue(Character.class.getCanonicalName(), "a", classLoader));
+        assertEquals((short)1, convertValue(short.class.getCanonicalName(), "1", classLoader));
+        assertEquals((short)1, convertValue(Short.class.getCanonicalName(), "1", classLoader));
+        assertEquals("0".getBytes()[0], convertValue(byte.class.getCanonicalName(), "0", classLoader));
+        assertEquals("0".getBytes()[0], convertValue(Byte.class.getCanonicalName(), "0", classLoader));
         assertNull(convertValue(Float.class.getCanonicalName(), null, classLoader));
     }
 
@@ -171,5 +179,19 @@ public class ScenarioBeanUtilTest {
     @Test(expected = IllegalArgumentException.class)
     public void convertValueFailNotStringOrTypeTest() {
         convertValue(ScenarioRunnerHelperTest.class.getCanonicalName(), 1, classLoader);
+    }
+
+    @Test
+    public void loadClassTest() {
+        assertEquals(String.class, loadClass(String.class.getCanonicalName(), classLoader));
+        assertEquals(int.class, loadClass(int.class.getCanonicalName(), classLoader));
+
+        Assertions.assertThatThrownBy(() -> loadClass(null, classLoader))
+                .isInstanceOf(ScenarioException.class)
+                .hasMessage("Impossible to load class null");
+
+        Assertions.assertThatThrownBy(() -> loadClass("NotExistingClass", classLoader))
+                .isInstanceOf(ScenarioException.class)
+                .hasMessage("Impossible to load class NotExistingClass");
     }
 }

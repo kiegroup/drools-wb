@@ -30,13 +30,13 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class ScenarioSimulationViewProducer {
 
     @Inject
-    private ScenarioSimulationView scenarioSimulationView;
+    protected ScenarioSimulationView scenarioSimulationView;
 
     @Inject
-    private ScenarioGridPanelProducer scenarioGridPanelProducer;
+    protected ScenarioGridPanelProducer scenarioGridPanelProducer;
 
     @Inject
-    private ScenarioSimulationGridPanelClickHandlerProducer scenarioSimulationGridPanelClickHandlerProducer;
+    protected ScenarioSimulationGridPanelClickHandlerProducer scenarioSimulationGridPanelClickHandlerProducer;
 
     public ScenarioSimulationView getScenarioSimulationView(EventBus eventBus) {
 
@@ -52,5 +52,4 @@ public class ScenarioSimulationViewProducer {
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);
         return scenarioSimulationView;
     }
-
 }

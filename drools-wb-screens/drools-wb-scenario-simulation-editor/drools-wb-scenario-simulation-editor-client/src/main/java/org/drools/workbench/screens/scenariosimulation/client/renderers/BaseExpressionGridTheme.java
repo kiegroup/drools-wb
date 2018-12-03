@@ -24,47 +24,30 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.lienzo.shared.core.types.TextAlign;
 import com.ait.lienzo.shared.core.types.TextBaseLine;
 import com.ait.lienzo.shared.core.types.TextUnit;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEStyles;
+
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.CELL_ERROR_BACKGROUND;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.CELL_ERROR_FOCUS;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.CELL_FOCUS;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.HEADER_BACKGROUND_DARK_BLUE;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.HEADER_BACKGROUND_LIGHT_BLUE;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.HEADER_BACKGROUND_WHITE;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.TABLE_GRID;
+import static org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.themes.impl.KIEColours.TABLE_TEXT;
 
 public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
-    public static final String BACKGROUND_FILL_COLOUR = "#c7ffca";
-
-    public static final String LABEL_BACKGROUND_FILL_COLOUR = "#c7ffca";
-
-    public static final String HOVER_STATE_STROKE_COLOUR = "#008acd";
-
-    public static final String GRID_STROKE_COLOUR = "#dbdbdb";
-
-    public static final String ROW_NUMBER_BACKGROUND_FILL_COLOUR = "#c7ffca";
-
-    public static final String INPUT_CLAUSE_BACKGROUND_FILL_COLOUR = "#ddffdf";
-
-    public static final String OUTPUT_CLAUSE_BACKGROUND_FILL_COLOUR = "#e9ffea";
-
-    public static final String DESCRIPTION_COLUMN_BACKGROUND_FILL_COLOUR = "#f7f7f7";
-
-    public static final String EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR = "#f7f7f7";
-
-    public static final String UNDEFINED_EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR = "#f7f7f7";
-
-    public static final String LITERAL_EXPRESSION_COLUMN_BACKGROUND_FILL_COLOUR = "#f7f7f7";
-
-    public static final String RELATION_BACKGROUND_FILL_COLOUR = "#f7f7f7";
-
     public static final String FONT_FAMILY_HEADER = "Open Sans, Helvetica, Arial, sans-serif";
 
-    public static final String FONT_FAMILY_LABEL = "Open Sans, Helvetica, Arial, sans-serif";
-
-    public static final String FONT_FAMILY_EXPRESSION = "Courier New";
-
-    public static final String FONT_STYLE_ITALIC = "italic";
+    public static final String FONT_STYLE_BOLD = "bold";
 
     public static final double SELECTOR_STROKE_WIDTH = 2.0;
 
     public static final double STROKE_WIDTH = 1.0;
 
-    public static final int FONT_SIZE = 10;
 
     @Override
     public String getName() {
@@ -79,7 +62,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Rectangle getCellSelectorBorder() {
         return new Rectangle(0, 0)
-                .setStrokeColor(HOVER_STATE_STROKE_COLOUR)
+                .setStrokeColor(CELL_FOCUS)
                 .setStrokeWidth(SELECTOR_STROKE_WIDTH);
     }
 
@@ -90,8 +73,22 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
 
     @Override
     public Rectangle getHeaderBackground(final GridColumn<?> column) {
+        String colorToApply;
+        // GIVEN
+        if(FactMappingType.GIVEN.name().equalsIgnoreCase(column.getHeaderMetaData().get(0).getTitle())) {
+            colorToApply = HEADER_BACKGROUND_LIGHT_BLUE;
+        }
+        // EXPECT
+        else if (FactMappingType.EXPECT.name().equalsIgnoreCase(column.getHeaderMetaData().get(0).getTitle())) {
+            colorToApply = HEADER_BACKGROUND_DARK_BLUE;
+        }
+        // DEFAULT
+        else {
+            colorToApply = HEADER_BACKGROUND_WHITE;
+        }
+
         return new Rectangle(0, 0)
-                .setFillColor(BACKGROUND_FILL_COLOUR);
+                .setFillColor(colorToApply);
     }
 
     @Override
@@ -103,7 +100,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public MultiPath getHeaderGridLine() {
         return new MultiPath()
-                .setStrokeColor(GRID_STROKE_COLOUR)
+                .setStrokeColor(TABLE_GRID)
                 .setStrokeWidth(STROKE_WIDTH)
                 .setVisible(true);
     }
@@ -111,8 +108,8 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Text getHeaderText() {
         return new Text("")
-                .setFillColor(ColorName.BLACK)
-                .setFontSize(FONT_SIZE)
+                .setFillColor(TABLE_TEXT)
+                .setFontSize(KIEStyles.FONT_SIZE)
                 .setFontFamily(FONT_FAMILY_HEADER)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
@@ -123,6 +120,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Rectangle getBodyBackground(final GridColumn<?> column) {
         final Rectangle background = new Rectangle(0, 0);
+        background.setFillColor(ColorName.TRANSPARENT);
         // to customize background on column-type base, set the fill color (e.g. background.setFillColor(LABEL_BACKGROUND_FILL_COLOUR); ) based on the column type
         return background;
     }
@@ -130,7 +128,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public MultiPath getBodyGridLine() {
         return new MultiPath()
-                .setStrokeColor(GRID_STROKE_COLOUR)
+                .setStrokeColor(TABLE_GRID)
                 .setStrokeWidth(STROKE_WIDTH)
                 .setVisible(true);
     }
@@ -138,22 +136,9 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Text getBodyText() {
         return new Text("")
-                .setFillColor(ColorName.BLACK)
-                .setFontSize(FONT_SIZE)
-                .setFontFamily(FONT_FAMILY_LABEL)
-                .setTextUnit(TextUnit.PT)
-                .setListening(false)
-                .setTextBaseLine(TextBaseLine.MIDDLE)
-                .setTextAlign(TextAlign.CENTER);
-    }
-
-    @Override
-    public Text getPlaceholderText() {
-        return new Text("")
-                .setFillColor(ColorName.GRAY)
-                .setFontSize(FONT_SIZE)
-                .setFontFamily(FONT_FAMILY_LABEL)
-                .setFontStyle(FONT_STYLE_ITALIC)
+                .setFillColor(TABLE_TEXT)
+                .setFontSize(KIEStyles.FONT_SIZE)
+                .setFontFamily(KIEStyles.FONT_FAMILY_LABEL)
                 .setTextUnit(TextUnit.PT)
                 .setListening(false)
                 .setTextBaseLine(TextBaseLine.MIDDLE)
@@ -163,7 +148,7 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Rectangle getGridBoundary() {
         return new Rectangle(0, 0)
-                .setStrokeColor(GRID_STROKE_COLOUR)
+                .setStrokeColor(TABLE_GRID)
                 .setStrokeWidth(STROKE_WIDTH)
                 .setVisible(true);
     }
@@ -171,8 +156,29 @@ public class BaseExpressionGridTheme implements ScenarioGridRendererTheme {
     @Override
     public Line getGridHeaderBodyDivider() {
         return new Line()
-                .setStrokeColor(GRID_STROKE_COLOUR)
+                .setStrokeColor(TABLE_GRID)
                 .setStrokeWidth(STROKE_WIDTH)
                 .setVisible(true);
+    }
+
+    @Override
+    public Rectangle getBodyErrorBackground(GridCell<?> cell) {
+        final Rectangle header = new Rectangle(0,
+                                               0)
+                .setFillColor(CELL_ERROR_BACKGROUND);
+        return header;
+    }
+
+    @Override
+    public Text getErrorText() {
+        return new Text("")
+                .setFillColor(CELL_ERROR_FOCUS)
+                .setFontSize(KIEStyles.FONT_SIZE)
+                .setFontFamily(KIEStyles.FONT_FAMILY_LABEL)
+                .setFontStyle(FONT_STYLE_BOLD)
+                .setTextUnit(TextUnit.PT)
+                .setListening(false)
+                .setTextBaseLine(TextBaseLine.MIDDLE)
+                .setTextAlign(TextAlign.CENTER);
     }
 }

@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb</artifactId>
-    <version>7.13.0-SNAPSHOT</version>
+    <version>7.16.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-webapp</artifactId>
@@ -38,6 +38,11 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.kie.workbench.profile</groupId>
+      <artifactId>kie-wb-common-profile-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
@@ -71,6 +76,10 @@
       <artifactId>kie-wb-common-contributors-backend</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.kie.workbench</groupId>
+      <artifactId>kie-wb-common-command-api</artifactId>
+    </dependency>
 
     <!-- errai-cdi-jboss provides gwt-dev with the proper dependency exclusions and should be first on the classpath -->
     <dependency>
@@ -650,7 +659,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-rule-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-rule-editor-client</artifactId>
@@ -665,7 +674,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-template-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-template-editor-client</artifactId>
@@ -680,7 +689,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtable-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtable-editor-client</artifactId>
@@ -695,7 +704,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtree-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-dtree-editor-client</artifactId>
@@ -710,7 +719,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-scorecard-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-guided-scorecard-editor-client</artifactId>
@@ -725,7 +734,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-drl-text-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-drl-text-editor-client</artifactId>
@@ -740,7 +749,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-enum-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-enum-editor-client</artifactId>
@@ -764,7 +773,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dsl-text-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dsl-text-editor-client</artifactId>
@@ -779,7 +788,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dtable-xls-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-dtable-xls-editor-client</artifactId>
@@ -794,7 +803,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scorecard-xls-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scorecard-xls-editor-client</artifactId>
@@ -809,7 +818,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-globals-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-globals-editor-client</artifactId>
@@ -824,7 +833,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-test-scenario-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-test-scenario-editor-client</artifactId>
@@ -839,7 +848,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-workitems-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-workitems-editor-client</artifactId>
@@ -854,7 +863,7 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-api</artifactId>
     </dependency>
-   
+
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -1081,6 +1090,11 @@
       <artifactId>uberfire-metadata-backend-elasticsearch</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-metadata-backend-infinispan</artifactId>
+    </dependency>
+
     <!-- UberFire -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -1173,6 +1187,21 @@
       <classifier>sources</classifier>
     </dependency>
 
+    <!-- Uberfire SSH -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-ssh-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-ssh-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-ssh-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Uberfire Security Management -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -1250,6 +1279,23 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
+    </dependency>
+
+    <!-- Experimental Deps -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-experimental-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -1508,7 +1554,7 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <extraJvmArgs>-Xmx5G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
+          <extraJvmArgs>-Xmx8G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.DroolsWorkbench</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
@@ -1535,8 +1581,11 @@
             <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-message-console-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-message-console-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-ssh-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-ssh-client</compileSourcesArtifact>
 
             <!-- Common dependencies -->
+            <compileSourcesArtifact>org.kie.workbench.profile:kie-wb-common-profile-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-library-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-library-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-api</compileSourcesArtifact>
@@ -1574,7 +1623,7 @@
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-workbench-client</compileSourcesArtifact>
-
+            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-command-api</compileSourcesArtifact>
             <!-- Models for drools-wb -->
             <compileSourcesArtifact>org.drools:drools-workbench-models-commons</compileSourcesArtifact>
             <compileSourcesArtifact>org.drools:drools-workbench-models-guided-dtable</compileSourcesArtifact>
@@ -1705,6 +1754,10 @@
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-default</compileSourcesArtifact>
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-google</compileSourcesArtifact>
+
+            <!-- Experimental Deps -->
+            <compileSourcesArtifact>org.uberfire:uberfire-experimental-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-experimental-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>

@@ -15,13 +15,20 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanelMenuItem;
+import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
+import org.uberfire.workbench.events.NotificationEvent;
 
 /**
  * <code>@Dependent</code> Class meant to be the only <i>Producer</i> for a given {@link org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter}
@@ -29,20 +36,42 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.RightPanel
 @Dependent
 public class ScenarioSimulationProducer {
 
-    @Inject
-    private RightPanelMenuItemProducer rightPanelMenuItemProducer;
 
     @Inject
-    private EventBusProducer eventBusProducer;
+    protected ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 
     @Inject
-    private ScenarioSimulationViewProducer scenarioSimulationViewProducer;
+    protected EventBusProducer eventBusProducer;
 
     @Inject
-    private CommandExecutor commandExecutor;
+    protected DeletePopupPresenter deletePopupPresenter;
+    @Inject
+    protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
 
-    public RightPanelMenuItem getRightPanelMenuItem() {
-        return rightPanelMenuItemProducer.getRightPanelMenuItem();
+    @Inject
+    protected ScenarioSimulationEventHandler scenarioSimulationEventHandler;
+
+    @Inject
+    protected ScenarioCommandRegistry scenarioCommandRegistry;
+
+    @Inject
+    protected ScenarioCommandManager scenarioCommandManager;
+
+    protected ScenarioSimulationContext scenarioSimulationContext;
+
+    @Inject
+    protected Event<NotificationEvent> notificationEvent;
+
+    @PostConstruct
+    public void init() {
+        scenarioSimulationContext = new ScenarioSimulationContext(getScenarioSimulationView().getScenarioGridPanel());
+        scenarioSimulationEventHandler.setEventBus(getEventBus());
+        scenarioSimulationEventHandler.setDeletePopupPresenter(deletePopupPresenter);
+        scenarioSimulationEventHandler.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
+        scenarioSimulationEventHandler.setNotificationEvent(notificationEvent);
+        scenarioSimulationEventHandler.setContext(scenarioSimulationContext);
+        scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
+        scenarioSimulationEventHandler.setScenarioCommandRegistry(scenarioCommandRegistry);
     }
 
     public EventBus getEventBus() {
@@ -53,9 +82,7 @@ public class ScenarioSimulationProducer {
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
     }
 
-    public CommandExecutor getCommandExecutor() {
-        commandExecutor.setEventBus(getEventBus());
-        commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
-        return commandExecutor;
+    public ScenarioSimulationContext getScenarioSimulationContext() {
+        return scenarioSimulationContext;
     }
 }
