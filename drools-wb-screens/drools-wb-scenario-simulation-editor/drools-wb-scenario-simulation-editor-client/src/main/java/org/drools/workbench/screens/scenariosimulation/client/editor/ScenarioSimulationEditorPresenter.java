@@ -16,15 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -34,8 +26,9 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DRLDataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -43,14 +36,11 @@ import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimul
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
-import org.kie.soup.project.datamodel.oracle.ModelField;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
@@ -62,7 +52,6 @@ import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
-import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
@@ -91,12 +80,8 @@ public class ScenarioSimulationEditorPresenter
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
-    protected AsyncPackageDataModelOracle oracle;
-
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
-
-    protected PlaceRequest rightPanelRequest;
 
     protected ObservablePath path;
 
@@ -104,11 +89,11 @@ public class ScenarioSimulationEditorPresenter
 
     protected ScenarioGridPanel scenarioGridPanel;
 
+    protected DataManagementStrategy dataManagementStrategy;
+
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
-
-    private ScenarioSimulationModel model;
 
     private Caller<ScenarioSimulationService> service;
 
@@ -149,7 +134,6 @@ public class ScenarioSimulationEditorPresenter
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
         scenarioGridPanel = view.getScenarioGridPanel();
-//        context.setScenarioGridPanel(scenarioGridPanel);
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateRightPanelCommand = getPopulateRightPanelCommand();
@@ -236,7 +220,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public ScenarioSimulationModel getModel() {
-        return model;
+        return dataManagementStrategy.getModel();
     }
 
     /**
@@ -252,12 +236,12 @@ public class ScenarioSimulationEditorPresenter
 
     public void onRunScenario() {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
+        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), dataManagementStrategy.getModel());
     }
 
-    RemoteCallback<ScenarioSimulationModel> refreshModel() {
+    protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return newModel -> {
-            this.model = newModel;
+            dataManagementStrategy.setModel(newModel);
             view.refreshContent(newModel.getSimulation());
             scenarioSimulationDocksHandler.expandTestResultsDock();
         };
@@ -282,11 +266,12 @@ public class ScenarioSimulationEditorPresenter
 
     @Override
     protected Supplier<ScenarioSimulationModel> getContentSupplier() {
-        return () -> model;
+        return () -> dataManagementStrategy.getModel();
     }
 
     @Override
     protected void save(final String commitMessage) {
+        final ScenarioSimulationModel model = dataManagementStrategy.getModel();
         service.call(getSaveSuccessCallback(getJsonModel(model).hashCode()),
                      new HasBusyIndicatorDefaultErrorCallback(baseView)).save(versionRecordManager.getCurrentPath(),
                                                                               model,
@@ -306,85 +291,24 @@ public class ScenarioSimulationEditorPresenter
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    void populateRightPanel() {
-        // Execute only when RightPanelPresenter is actually available
-        getRightPanelPresenter().ifPresent(presenter -> {
-            // presenter.onDisableEditorTab();
-            context.setRightPanelPresenter(presenter);
-            presenter.setEventBus(eventBus);
-            populateRightPanel(presenter);
-        });
-    }
-
-    void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
-        // Instantiate a container map
-        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
-        // Execute only when oracle has been set
-        if (oracle == null) {
-            if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-            }
-            return;
-        }
-        // Retrieve the relevant facttypes
-        String[] factTypes = oracle.getFactTypes();
-        if (factTypes.length == 0) {  // We do not have to set nothing
-            if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-            }
-            return;
-        }
-        // Instantiate the aggregator callback
-        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, factTypes.length, factTypeFieldsMap);
-        // Iterate over all facttypes to retrieve their modelfields
-        for (String factType : factTypes) {
-            oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
+    protected void populateRightPanel() {
+        // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available
+        if (dataManagementStrategy != null) {
+            getRightPanelPresenter().ifPresent(presenter -> {
+                // presenter.onDisableEditorTab();
+                context.setRightPanelPresenter(presenter);
+                presenter.setEventBus(eventBus);
+                dataManagementStrategy.populateRightPanel(presenter, scenarioGridPanel.getScenarioGrid().getModel());
+            });
         }
     }
 
-    void clearRightPanelStatus() {
+    protected void clearRightPanelStatus() {
         getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
     }
 
-    String getJsonModel(ScenarioSimulationModel model) {
+    protected String getJsonModel(ScenarioSimulationModel model) {
         return MarshallingWrapper.toJSON(model);
-    }
-
-    /**
-     * This <code>Callback</code> will receive <code>ModelField[]</code> from <code>AsyncPackageDataModelOracleFactory.getFieldCompletions(final String,
-     * final Callback&lt;ModelField[]&gt;)</code>; build a <code>FactModelTree</code> from them, and send it to the
-     * given <code>Callback&lt;FactModelTree&gt;</code> aggregatorCallback
-     * @param factName
-     * @param aggregatorCallback
-     * @return
-     */
-    protected Callback<ModelField[]> fieldCompletionsCallback(String factName, Callback<FactModelTree> aggregatorCallback) {
-        return result -> {
-            FactModelTree toSend = getFactModelTree(factName, result);
-            aggregatorCallback.callback(toSend);
-        };
-    }
-
-    /**
-     * Create a <code>FactModelTree</code> for a given <b>factName</b> populating it with the given
-     * <code>ModelField[]</code>
-     * @param factName
-     * @param modelFields
-     * @return
-     */
-    protected FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
-        Map<String, String> simpleProperties = new HashMap<>();
-        for (ModelField modelField : modelFields) {
-            if (!modelField.getName().equals("this")) {
-                simpleProperties.put(modelField.getName(), modelField.getClassName());
-            }
-        }
-        String factPackageName = packageName;
-        String fullFactClassName = oracle.getFQCNByFactName(factName);
-        if (fullFactClassName != null && fullFactClassName.contains(".")) {
-            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
-        }
-        return new FactModelTree(factName, factPackageName, simpleProperties);
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
@@ -395,70 +319,21 @@ public class ScenarioSimulationEditorPresenter
             }
             packageName = content.getDataModel().getPackageName();
             resetEditorPages(content.getOverview());
-            model = content.getModel();
-            oracle = oracleFactory.makeAsyncPackageDataModelOracle(versionRecordManager.getCurrentPath(),
-                                                                   model,
-                                                                   content.getDataModel());
+            dataManagementStrategy = new DRLDataManagementStrategy(oracleFactory);
+
+            dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
             populateRightPanel();
-            importsWidget.setContent(oracle,
-                                     model.getImports(),
-                                     isReadOnly);
-            addImportsTab(importsWidget);
+            final ScenarioSimulationModel model = dataManagementStrategy.getModel();
+            if (dataManagementStrategy instanceof DRLDataManagementStrategy) {
+                importsWidget.setContent(((DRLDataManagementStrategy) dataManagementStrategy).getOracle(),
+                                         model.getImports(),
+                                         isReadOnly);
+                addImportsTab(importsWidget);
+            }
             baseView.hideBusyIndicator();
             view.setContent(model.getSimulation());
             setOriginalHash(getJsonModel(model).hashCode());
         };
-    }
-
-    /**
-     * This <code>Callback</code> will receive data from other callbacks and when the retrieved results get to the
-     * expected ones it will recursively elaborate the map
-     * @param rightPanelPresenter
-     * @param expectedElements
-     * @param factTypeFieldsMap
-     * @return
-     */
-    private Callback<FactModelTree> aggregatorCallback(final RightPanelView.Presenter rightPanelPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap) {
-        return result -> {
-            factTypeFieldsMap.put(result.getFactName(), result);
-            if (factTypeFieldsMap.size() == expectedElements) {
-                factTypeFieldsMap.values().forEach(factModelTree -> populateFactModel(factModelTree, factTypeFieldsMap));
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-                SortedMap<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
-                // map instance name top data model class
-                if (model != null) {
-                    final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
-                    simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
-                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                        if (dataObjectName.contains(".")) {
-                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                        }
-                        final String instanceName = factMapping.getFactAlias();
-                        if (!instanceName.equals(dataObjectName)) {
-                            final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
-                            if (factModelTree != null) {
-                                instanceFieldsMap.put(instanceName, factModelTree);
-                            }
-                        }
-                    });
-                }
-                rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
-                Set<String> dataObjectsInstancesName = new HashSet<>(factTypeFieldsMap.keySet());
-                dataObjectsInstancesName.addAll(instanceFieldsMap.keySet());
-                scenarioGridPanel.getScenarioGrid().getModel().setDataObjectsInstancesName(dataObjectsInstancesName);
-            }
-        };
-    }
-
-    private void populateFactModel(FactModelTree toPopulate, SortedMap<String, FactModelTree> factTypeFieldsMap) {
-        List<String> toRemove = new ArrayList<>();
-        toPopulate.getSimpleProperties().forEach((key, value) -> {
-            if (factTypeFieldsMap.containsKey(value)) {
-                toRemove.add(key);
-                toPopulate.addExpandableProperty(key, factTypeFieldsMap.get(value).getFactName());
-            }
-        });
-        toRemove.forEach(toPopulate::removeSimpleProperty);
     }
 
     private Optional<RightPanelView> getRightPanelView() {
@@ -479,10 +354,10 @@ public class ScenarioSimulationEditorPresenter
         return this::populateRightPanel;
     }
 
-    boolean isDirty() {
+    protected boolean isDirty() {
         try {
             view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-            int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
+            int currentHashcode = MarshallingWrapper.toJSON(dataManagementStrategy.getModel()).hashCode();
             return originalHash != currentHashcode;
         } catch (Exception ignored) {
             return false;
