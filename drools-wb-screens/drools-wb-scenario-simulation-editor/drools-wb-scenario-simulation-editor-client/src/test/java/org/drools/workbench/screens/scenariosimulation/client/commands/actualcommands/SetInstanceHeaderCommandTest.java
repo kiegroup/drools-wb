@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.spy;
@@ -60,6 +61,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
                 return Optional.empty();
             }
         });
+        assertTrue(command.isUndoable());
     }
 
     @Test

@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -44,6 +45,7 @@ public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandT
                 return gridColumnMock;
             }
         });
+        assertTrue(command.isUndoable());
     }
 
     @Test

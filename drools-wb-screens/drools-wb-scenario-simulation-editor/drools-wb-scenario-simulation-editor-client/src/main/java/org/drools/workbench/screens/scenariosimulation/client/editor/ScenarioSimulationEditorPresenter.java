@@ -31,8 +31,10 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
@@ -59,6 +61,7 @@ import org.kie.workbench.common.widgets.configresource.client.widget.bound.Impor
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.WorkbenchEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -272,6 +275,11 @@ public class ScenarioSimulationEditorPresenter
         view.getRedoMenuItem().setEnabled(enabled);
     }
 
+    @Override
+    public void addDownloadMenuItem(FileMenuBuilder fileMenuBuilder) {
+        fileMenuBuilder.addNewTopLevelMenu(view.getDownloadMenuItem(getPathSupplier()));
+    }
+
     protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return newModel -> {
             this.model = newModel;
@@ -327,7 +335,16 @@ public class ScenarioSimulationEditorPresenter
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    void populateRightPanel() {
+    protected void onDownload(final Supplier<Path> pathSupplier) {
+        final String downloadURL = getFileDownloadURL(pathSupplier);
+        open(downloadURL);
+    }
+
+    protected void open(final String downloadURL) {
+        DomGlobal.window.open(downloadURL);
+    }
+
+    protected void populateRightPanel() {
         // Execute only when RightPanelPresenter is actually available
         getRightPanelPresenter().ifPresent(presenter -> {
             context.setRightPanelPresenter(presenter);
@@ -336,7 +353,7 @@ public class ScenarioSimulationEditorPresenter
         });
     }
 
-    void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
+    protected void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
         // Instantiate a container map
         SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Execute only when oracle has been set
@@ -405,6 +422,10 @@ public class ScenarioSimulationEditorPresenter
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
         }
         return new FactModelTree(factName, factPackageName, simpleProperties);
+    }
+
+    private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
+        return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

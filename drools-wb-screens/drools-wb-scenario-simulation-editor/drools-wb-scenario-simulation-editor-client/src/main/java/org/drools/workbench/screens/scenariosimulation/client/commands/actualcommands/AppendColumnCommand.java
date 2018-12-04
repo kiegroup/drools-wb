@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 public class AppendColumnCommand extends AbstractScenarioSimulationCommand {
 
     public AppendColumnCommand() {
-        super(false);
+        super(true);
     }
 
     @Override

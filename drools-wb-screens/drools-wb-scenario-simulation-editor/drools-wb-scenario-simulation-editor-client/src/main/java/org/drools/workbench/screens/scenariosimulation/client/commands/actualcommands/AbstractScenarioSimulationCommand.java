@@ -62,11 +62,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
      */
     protected ScenarioSimulationContext.Status restorableStatus = null;
 
-
     /**
      * Calling this constructor will set the command as <b>undoable</b>
-     *
-     *
      * @param undoable
      */
     protected AbstractScenarioSimulationCommand(boolean undoable) {

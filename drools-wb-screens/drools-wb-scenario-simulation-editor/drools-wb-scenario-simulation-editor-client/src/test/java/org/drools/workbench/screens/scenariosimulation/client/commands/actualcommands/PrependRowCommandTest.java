@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
@@ -35,6 +36,7 @@ public class PrependRowCommandTest extends AbstractScenarioSimulationCommandTest
     public void setup() {
         super.setup();
         command = spy(new PrependRowCommand());
+        assertTrue(command.isUndoable());
     }
 
     @Test

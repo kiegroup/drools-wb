@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -54,10 +55,10 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
                 return gridColumnMock;
             }
         });
-
         scenarioSimulationContext.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContext.getStatus().setValue(VALUE);
         scenarioSimulationContext.getStatus().setValueClassName(VALUE_CLASS_NAME);
+        assertTrue(command.isUndoable());
     }
 
     @Test

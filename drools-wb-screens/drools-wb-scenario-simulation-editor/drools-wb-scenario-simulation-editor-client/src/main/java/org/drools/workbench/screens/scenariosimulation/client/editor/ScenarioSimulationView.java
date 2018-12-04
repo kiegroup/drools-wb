@@ -16,12 +16,15 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.function.Supplier;
+
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 public interface ScenarioSimulationView extends KieEditorView,
@@ -39,6 +42,8 @@ public interface ScenarioSimulationView extends KieEditorView,
     MenuItem getUndoMenuItem();
 
     MenuItem getRedoMenuItem();
+
+    MenuItem getDownloadMenuItem(final Supplier<Path> pathSupplier);
 
     void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
 

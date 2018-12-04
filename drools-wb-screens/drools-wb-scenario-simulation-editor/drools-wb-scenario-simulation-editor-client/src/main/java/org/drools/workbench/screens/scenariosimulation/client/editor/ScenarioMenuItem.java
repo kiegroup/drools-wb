@@ -19,6 +19,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.uberfire.workbench.model.menu.EnabledStateChangeListener;
 import org.uberfire.workbench.model.menu.MenuCustom;
 import org.uberfire.workbench.model.menu.MenuPosition;
@@ -31,6 +32,13 @@ public class ScenarioMenuItem
 
     public ScenarioMenuItem(final String title, final Command command) {
         this.button = new Button(title);
+        button.setSize(ButtonSize.SMALL);
+        button.addClickHandler(clickEvent -> command.execute());
+    }
+
+    public ScenarioMenuItem(final IconType icon, final Command command) {
+        this.button = new Button();
+        button.setIcon(icon);
         button.setSize(ButtonSize.SMALL);
         button.addClickHandler(clickEvent -> command.execute());
     }

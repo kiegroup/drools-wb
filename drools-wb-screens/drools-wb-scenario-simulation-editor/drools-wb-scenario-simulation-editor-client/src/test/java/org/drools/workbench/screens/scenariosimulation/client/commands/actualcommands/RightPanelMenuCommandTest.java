@@ -26,6 +26,7 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,7 +48,8 @@ public class RightPanelMenuCommandTest extends AbstractScenarioSimulationCommand
     public void setup() {
         super.setup();
         when(placeRequestMock.getPath()).thenReturn(pathMock);
-        this.command = spy(new RightPanelMenuCommand());
+        command = spy(new RightPanelMenuCommand());
+        assertFalse(command.isUndoable());
     }
 
     @Test

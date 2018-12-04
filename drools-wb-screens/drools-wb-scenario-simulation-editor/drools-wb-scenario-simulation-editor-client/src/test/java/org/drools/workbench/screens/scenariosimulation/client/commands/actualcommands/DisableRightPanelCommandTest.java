@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,6 +33,7 @@ public class DisableRightPanelCommandTest extends AbstractScenarioSimulationComm
     public void setup() {
         super.setup();
         command = spy(new DisableRightPanelCommand());
+        assertFalse(command.isUndoable());
     }
 
     @Test

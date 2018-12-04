@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -39,6 +40,7 @@ public class DeleteRowCommandTest extends AbstractScenarioSimulationCommandTest 
     public void setup() {
         super.setup();
         command = spy(new DeleteRowCommand());
+        assertTrue(command.isUndoable());
     }
 
     @Test
