@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.uberfire.backend.vfs.ObservablePath;
 
@@ -29,10 +28,6 @@ public interface DataManagementStrategy {
 
 
     void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel);
-
-    ScenarioSimulationModel getModel();
-
-    void setModel(ScenarioSimulationModel model);
 
     void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage);
 

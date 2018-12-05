@@ -36,7 +36,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.callbacks.Callback;
 
-public class DRLDataManagementStrategy implements DataManagementStrategy {
+public class DMODataManagementStrategy implements DataManagementStrategy {
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
@@ -46,7 +46,7 @@ public class DRLDataManagementStrategy implements DataManagementStrategy {
 
     private ScenarioSimulationModel model;
 
-    public DRLDataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory) {
+    public DMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory) {
         this.oracleFactory = oracleFactory;
     }
 
@@ -75,16 +75,6 @@ public class DRLDataManagementStrategy implements DataManagementStrategy {
         for (String factType : factTypes) {
             oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
         }
-    }
-
-    @Override
-    public ScenarioSimulationModel getModel() {
-        return model;
-    }
-
-    @Override
-    public void setModel(ScenarioSimulationModel model) {
-        this.model = model;
     }
 
     @Override

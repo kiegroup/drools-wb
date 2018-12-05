@@ -56,9 +56,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
+public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
-    private DRLDataManagementStrategy drlDataManagementStrategy;
+    private DMODataManagementStrategy dmoDataManagementStrategy;
 
     @Mock
     private AsyncPackageDataModelOracle oracleMock;
@@ -72,7 +72,7 @@ public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEdi
         super.setup();
         when(oracleMock.getFQCNByFactName(FACT_NAME)).thenReturn(FULL_FACT_CLASSNAME);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, model, content.getDataModel())).thenReturn(oracleMock);
-        this.drlDataManagementStrategy = spy(new DRLDataManagementStrategy(oracleFactoryMock) {
+        this.dmoDataManagementStrategy = spy(new DMODataManagementStrategy(oracleFactoryMock) {
             {
                 this.oracle = oracleMock;
             }
@@ -83,14 +83,14 @@ public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEdi
     public void populateRightPanel() {
         String[] emptyFactTypes = {};
         when(oracleMock.getFactTypes()).thenReturn(emptyFactTypes);
-        drlDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(drlDataManagementStrategy, never()).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
+        dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        verify(dmoDataManagementStrategy, never()).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
         verify(oracleMock, never()).getFieldCompletions(anyString(), any(Callback.class));
         //
         String[] notEmptyFactTypes = getRandomStringArray();
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
-        drlDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(drlDataManagementStrategy, times(1)).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
+        dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        verify(dmoDataManagementStrategy, times(1)).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
         for (String factType : notEmptyFactTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
         }
@@ -98,17 +98,16 @@ public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEdi
 
     @Test
     public void manageScenarioSimulationModelContent() {
-        drlDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, content);
-        assertEquals(drlDataManagementStrategy.getModel(), content.getModel());
-        assertEquals(drlDataManagementStrategy.oracle, oracleMock);
+        dmoDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, content);
+        assertEquals(dmoDataManagementStrategy.oracle, oracleMock);
     }
 
     @Test
     public void fieldCompletionsCallbackMethod() {
         ModelField[] result = {};
         Callback<FactModelTree> aggregatorCallbackMock = mock(Callback.class);
-        drlDataManagementStrategy.fieldCompletionsCallbackMethod(FACT_NAME, result, aggregatorCallbackMock);
-        verify(drlDataManagementStrategy, times(1)).getFactModelTree(eq(FACT_NAME), eq(result));
+        dmoDataManagementStrategy.fieldCompletionsCallbackMethod(FACT_NAME, result, aggregatorCallbackMock);
+        verify(dmoDataManagementStrategy, times(1)).getFactModelTree(eq(FACT_NAME), eq(result));
         verify(aggregatorCallbackMock, times(1)).callback(isA(FactModelTree.class));
     }
 
@@ -116,7 +115,7 @@ public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEdi
     public void getFactModelTree() {
         Map<String, String> simpleProperties = getSimplePropertiesInner();
         final ModelField[] modelFields = getModelFieldsInner(simpleProperties);
-        final FactModelTree retrieved = drlDataManagementStrategy.getFactModelTree(FACT_NAME, modelFields);
+        final FactModelTree retrieved = dmoDataManagementStrategy.getFactModelTree(FACT_NAME, modelFields);
         assertNotNull(retrieved);
         assertEquals(FACT_NAME, retrieved.getFactName());
         assertEquals("", retrieved.getFullPackage());
@@ -130,7 +129,7 @@ public class DRLDataManagementStrategyTest extends AbstractScenarioSimulationEdi
         final Set<String> keys = simpleProperties.keySet();
         final Collection<String> values = simpleProperties.values();
         SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
-        drlDataManagementStrategy.populateFactModelTree(toPopulate, factTypeFieldsMap);
+        dmoDataManagementStrategy.populateFactModelTree(toPopulate, factTypeFieldsMap);
         keys.forEach(key -> {
             final String value = simpleProperties.get(key);
             final String factName = factTypeFieldsMap.get(value).getFactName();

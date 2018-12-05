@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DRLDataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
@@ -94,6 +94,8 @@ public class ScenarioSimulationEditorPresenter
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
+
+    private ScenarioSimulationModel model;
 
     private Caller<ScenarioSimulationService> service;
 
@@ -220,7 +222,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public ScenarioSimulationModel getModel() {
-        return dataManagementStrategy.getModel();
+        return model;
     }
 
     /**
@@ -236,12 +238,12 @@ public class ScenarioSimulationEditorPresenter
 
     public void onRunScenario() {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), dataManagementStrategy.getModel());
+        service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
     }
 
     protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return newModel -> {
-            dataManagementStrategy.setModel(newModel);
+            this.model = newModel;
             view.refreshContent(newModel.getSimulation());
             scenarioSimulationDocksHandler.expandTestResultsDock();
         };
@@ -266,12 +268,11 @@ public class ScenarioSimulationEditorPresenter
 
     @Override
     protected Supplier<ScenarioSimulationModel> getContentSupplier() {
-        return () -> dataManagementStrategy.getModel();
+        return () -> model;
     }
 
     @Override
     protected void save(final String commitMessage) {
-        final ScenarioSimulationModel model = dataManagementStrategy.getModel();
         service.call(getSaveSuccessCallback(getJsonModel(model).hashCode()),
                      new HasBusyIndicatorDefaultErrorCallback(baseView)).save(versionRecordManager.getCurrentPath(),
                                                                               model,
@@ -295,7 +296,6 @@ public class ScenarioSimulationEditorPresenter
         // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available
         if (dataManagementStrategy != null) {
             getRightPanelPresenter().ifPresent(presenter -> {
-                // presenter.onDisableEditorTab();
                 context.setRightPanelPresenter(presenter);
                 presenter.setEventBus(eventBus);
                 dataManagementStrategy.populateRightPanel(presenter, scenarioGridPanel.getScenarioGrid().getModel());
@@ -319,13 +319,13 @@ public class ScenarioSimulationEditorPresenter
             }
             packageName = content.getDataModel().getPackageName();
             resetEditorPages(content.getOverview());
-            dataManagementStrategy = new DRLDataManagementStrategy(oracleFactory);
+            dataManagementStrategy = new DMODataManagementStrategy(oracleFactory);
 
             dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
             populateRightPanel();
-            final ScenarioSimulationModel model = dataManagementStrategy.getModel();
-            if (dataManagementStrategy instanceof DRLDataManagementStrategy) {
-                importsWidget.setContent(((DRLDataManagementStrategy) dataManagementStrategy).getOracle(),
+            model = content.getModel();
+            if (dataManagementStrategy instanceof DMODataManagementStrategy) {
+                importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),
                                          model.getImports(),
                                          isReadOnly);
                 addImportsTab(importsWidget);
@@ -357,7 +357,7 @@ public class ScenarioSimulationEditorPresenter
     protected boolean isDirty() {
         try {
             view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-            int currentHashcode = MarshallingWrapper.toJSON(dataManagementStrategy.getModel()).hashCode();
+            int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
             return originalHash != currentHashcode;
         } catch (Exception ignored) {
             return false;
