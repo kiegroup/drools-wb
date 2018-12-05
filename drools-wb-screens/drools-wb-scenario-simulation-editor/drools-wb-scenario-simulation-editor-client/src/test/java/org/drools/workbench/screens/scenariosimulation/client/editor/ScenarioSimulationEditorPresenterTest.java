@@ -146,6 +146,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationContext contextMock;
     @Mock
+    private ScenarioSimulationContext.Status statusMock;
+    @Mock
     private TestRunnerReportingScreen testRunnerReportingScreenMock;
     @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
@@ -177,6 +179,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(rightPanelActivityMock.getWidget()).thenReturn(rightPanelViewMock);
 
         when(placeRequestMock.getPath()).thenReturn(pathMock);
+        when(contextMock.getStatus()).thenReturn(statusMock);
 
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationServiceMock),
                                                                scenarioSimulationProducerMock,
@@ -200,6 +203,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.oracle = oracleMock;
                 this.packageName = SCENARIO_PACKAGE;
                 this.eventBus = eventBusMock;
+                this.context = contextMock;
             }
 
             @Override
@@ -261,13 +265,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void runScenarioButtonIsAdded() throws Exception {
-
         final MenuItem menuItem = mock(MenuItem.class);
         doReturn(menuItem).when(scenarioSimulationViewMock).getRunScenarioMenuItem();
-
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-
         verify(fileMenuBuilderMock).addNewTopLevelMenu(menuItem);
     }
 
@@ -382,6 +383,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
 
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
+    }
+
+    @Test
+    public void refreshModelContent() {
+        when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
+        presenter.refreshModelContent(scenarioSimulationModelMock);
+        assertEquals(scenarioSimulationModelMock, presenter.getModel());
+        verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
+        verify(statusMock, times(1)).setSimulation(eq(simulationMock));
     }
 
     @Test

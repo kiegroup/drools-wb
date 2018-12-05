@@ -228,6 +228,7 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContext.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
         scenarioSimulationContext.getStatus().setSimulation(simulationMock);
+        when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
         when(scenarioCommandRegistryMock.undo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryMock.redo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
 

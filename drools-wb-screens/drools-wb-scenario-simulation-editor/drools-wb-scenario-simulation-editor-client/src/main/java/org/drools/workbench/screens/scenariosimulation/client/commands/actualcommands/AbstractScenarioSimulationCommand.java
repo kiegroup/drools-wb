@@ -99,7 +99,9 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     @Override
     public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
         context.setStatusSimulationIfEmpty();
-        restorableStatus = context.getStatus().cloneStatus();
+        if (undoable) {
+            restorableStatus = context.getStatus().cloneStatus();
+        }
         try {
             internalExecute(context);
             return commonExecution(context);

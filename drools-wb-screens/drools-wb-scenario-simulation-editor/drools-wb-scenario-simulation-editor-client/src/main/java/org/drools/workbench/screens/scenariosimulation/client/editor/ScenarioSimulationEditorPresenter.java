@@ -47,6 +47,7 @@ import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimul
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -121,7 +122,7 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
-    private ScenarioSimulationContext context;
+    protected ScenarioSimulationContext context;
 
     private Command populateRightPanelCommand;
 
@@ -281,11 +282,15 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
-        return newModel -> {
-            this.model = newModel;
-            view.refreshContent(newModel.getSimulation());
-            scenarioSimulationDocksHandler.expandTestResultsDock();
-        };
+        return this::refreshModelContent;
+    }
+
+    protected void refreshModelContent(ScenarioSimulationModel newModel) {
+        this.model = newModel;
+        final Simulation simulation = newModel.getSimulation();
+        view.refreshContent(simulation);
+        context.getStatus().setSimulation(simulation);
+        scenarioSimulationDocksHandler.expandTestResultsDock();
     }
 
     protected void registerRightPanelCallback() {

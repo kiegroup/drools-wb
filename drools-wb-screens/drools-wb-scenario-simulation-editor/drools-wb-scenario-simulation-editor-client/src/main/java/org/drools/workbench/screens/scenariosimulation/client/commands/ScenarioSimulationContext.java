@@ -32,6 +32,7 @@ import org.uberfire.mvp.PlaceRequest;
 public class ScenarioSimulationContext {
 
     private static final AtomicLong COUNTER_ID = new AtomicLong();
+    private static final AtomicLong STATUS_COUNTER_ID = new AtomicLong();
 
     protected ScenarioGridModel model;
     protected ScenarioGridPanel scenarioGridPanel;
@@ -62,6 +63,11 @@ public class ScenarioSimulationContext {
     protected PlaceRequest rightPanelRequest;
 
     /**
+     * Auto-generated incremental identifier used  to uniquely identify each context
+     */
+    private final long id;
+
+    /**
      * This constructor set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
      * from the give <code>ScenarioGridPanel</code>
      * @param scenarioGridPanel
@@ -70,6 +76,7 @@ public class ScenarioSimulationContext {
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
         this.model = scenarioGridLayer.getScenarioGrid().getModel();
+        id = COUNTER_ID.getAndIncrement();
     }
 
     public ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter() {
@@ -124,6 +131,10 @@ public class ScenarioSimulationContext {
         if (status.getSimulation() == null) {
             status.setSimulation(model.getSimulation().get());
         }
+    }
+
+    public long getId() {
+        return id;
     }
 
     /**
@@ -183,7 +194,7 @@ public class ScenarioSimulationContext {
         protected boolean openDock = false;
 
         public Status() {
-            this.id = COUNTER_ID.getAndIncrement();
+            this.id = STATUS_COUNTER_ID.getAndIncrement();
         }
 
         public long getId() {
