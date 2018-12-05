@@ -22,6 +22,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -45,15 +48,23 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
 
     @Test
     public void flushSameValue() {
-        scenarioCellTextAreaDOMElement.originalValue = "";
+        scenarioCellTextAreaDOMElement.originalValue = null;
         scenarioCellTextAreaDOMElement.flush("");
-        verify(eventBusMock, never()).fireEvent(isA(SetCellValueEvent.class));
+        verify(scenarioCellTextAreaDOMElement, never()).internalFlush(anyString());
     }
 
     @Test
     public void flushDifferentValue() {
-        scenarioCellTextAreaDOMElement.originalValue = "";
-        scenarioCellTextAreaDOMElement.flush("TEST");
+        scenarioCellTextAreaDOMElement.originalValue = null;
+        scenarioCellTextAreaDOMElement.flush(VALUE);
+        verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(VALUE));
+    }
+
+    @Test
+    public void internalFlush() {
+        scenarioCellTextAreaDOMElement.originalValue = null;
+        scenarioCellTextAreaDOMElement.internalFlush(VALUE);
         verify(eventBusMock, times(1)).fireEvent(isA(SetCellValueEvent.class));
+        assertEquals(VALUE, scenarioCellTextAreaDOMElement.originalValue);
     }
 }

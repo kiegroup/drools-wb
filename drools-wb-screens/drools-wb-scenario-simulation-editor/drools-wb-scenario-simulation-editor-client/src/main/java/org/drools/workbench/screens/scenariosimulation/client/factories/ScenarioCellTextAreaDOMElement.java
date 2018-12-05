@@ -23,6 +23,7 @@ import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Focusable;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.gwtbootstrap3.client.ui.TextArea;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
@@ -33,6 +34,7 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
                                                                                                 Focusable {
 
     protected String originalValue;
+    protected ScenarioGridCell scenarioGridCell;
 
     public ScenarioCellTextAreaDOMElement(final TextArea widget,
                                           final GridLayer gridLayer,
@@ -68,6 +70,10 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
         getContainer().getElement().getStyle().setPaddingBottom(5,
                                                                 Style.Unit.PX);
         getContainer().setWidget(widget);
+    }
+
+    public void setScenarioGridCell(ScenarioGridCell scenarioGridCell) {
+        this.scenarioGridCell = scenarioGridCell;
     }
 
     @Override
@@ -109,12 +115,20 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
     @Override
     @SuppressWarnings("unchecked")
     public void flush(final String value) {
-        if (Objects.equals(value, originalValue)) {
+        if (scenarioGridCell != null) {
+            scenarioGridCell.setEditingMode(false);
+        }
+        String actualValue = (value == null || value.trim().isEmpty()) ? null : value;
+        if (Objects.equals(actualValue, originalValue)) {
             return;
         }
+        internalFlush(actualValue);
+    }
+
+    protected void internalFlush(final String value) {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
-        String actualValue = (value == null || value.trim().isEmpty()) ? null : value;
-        ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, actualValue, false));
+        ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, false));
+        originalValue = value;
     }
 }

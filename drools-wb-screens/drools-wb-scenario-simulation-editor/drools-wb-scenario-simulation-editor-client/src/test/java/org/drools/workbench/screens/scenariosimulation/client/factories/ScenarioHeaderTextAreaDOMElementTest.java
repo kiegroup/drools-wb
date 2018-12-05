@@ -79,16 +79,16 @@ public class ScenarioHeaderTextAreaDOMElementTest extends AbstractFactoriesTest 
     @Test
     public void internalFlushInvalidHeader() {
         when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX))).thenReturn(false);
-        scenarioHeaderTextAreaDOMElement.flush(VALUE);
+        scenarioHeaderTextAreaDOMElement.internalFlush(VALUE);
         verify(scenarioGridModelMock, never()).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
     }
 
     @Test
     public void internalFlushValidHeader() {
         when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX))).thenReturn(true);
-        scenarioHeaderTextAreaDOMElement.flush(VALUE);
+        scenarioHeaderTextAreaDOMElement.internalFlush(VALUE);
         verify(eventBusMock, times(1)).fireEvent(isA(SetCellValueEvent.class));
-        assertEquals(scenarioHeaderTextAreaDOMElement.originalValue, VALUE);
+        assertEquals(VALUE, scenarioHeaderTextAreaDOMElement.originalValue);
     }
 
 }
