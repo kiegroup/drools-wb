@@ -33,7 +33,6 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextArea> implements TakesValue<String>,
                                                                                                 Focusable {
 
-    protected String originalValue;
     protected ScenarioGridCell scenarioGridCell;
 
     public ScenarioCellTextAreaDOMElement(final TextArea widget,
@@ -84,7 +83,6 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
     @Override
     public void setValue(final String value) {
         getWidget().setValue(value);
-        this.originalValue = value;
     }
 
     @Override
@@ -117,18 +115,19 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
     public void flush(final String value) {
         if (scenarioGridCell != null) {
             scenarioGridCell.setEditingMode(false);
+            String actualValue = value.isEmpty() ? null : value;
+            String cellValue = scenarioGridCell.getValue().getValue();
+            String originalValue =  (cellValue == null || cellValue.isEmpty()) ? null : cellValue;
+            if (Objects.equals(actualValue, originalValue)) {
+                return;
+            }
         }
-        String actualValue = (value == null || value.trim().isEmpty()) ? null : value;
-        if (Objects.equals(actualValue, originalValue)) {
-            return;
-        }
-        internalFlush(actualValue);
+        internalFlush(value);
     }
 
     protected void internalFlush(final String value) {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, false));
-        originalValue = value;
     }
 }
