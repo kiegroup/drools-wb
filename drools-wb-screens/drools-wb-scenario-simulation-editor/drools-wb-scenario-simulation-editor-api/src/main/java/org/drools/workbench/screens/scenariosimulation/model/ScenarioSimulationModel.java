@@ -25,14 +25,82 @@ import org.kie.soup.project.datamodel.imports.Imports;
 public class ScenarioSimulationModel
         implements HasImports {
 
+    public enum Type {
+        DMO,
+        DMN
+    }
+
     @XStreamAsAttribute()
-    private String version = "1.1";
+    private String version = "1.2";
 
     private Simulation simulation;
 
     private Imports imports = new Imports();
 
+    private final String dmoSession;
+
+    private final String dmnFilePath;
+
+    private final Type type;
+
+    /**
+     * Default constructor that instantiate a <code>Type.DMO</code> model with <b>default</b> as value
+     */
     public ScenarioSimulationModel() {
+        this(Type.DMO, "default");
+    }
+
+    public ScenarioSimulationModel(Type type, String value) {
+        this.type = type;
+        switch (type) {
+            case DMN:
+                this.dmnFilePath = value;
+                dmoSession = null;
+                setDMNSession();
+                break;
+            case DMO:
+            default:
+                this.dmoSession = value;
+                dmnFilePath = null;
+                setDMOSession();
+        }
+    }
+
+    public Simulation getSimulation() {
+        return simulation;
+    }
+
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+    }
+
+    @Override
+    public Imports getImports() {
+        return imports;
+    }
+
+    @Override
+    public void setImports(Imports imports) {
+        this.imports = imports;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDmoSession() {
+        return dmoSession;
+    }
+
+    public String getDmnFilePath() {
+        return dmnFilePath;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    protected void setDMOSession() {
         simulation = new Simulation();
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
 
@@ -58,29 +126,7 @@ public class ScenarioSimulationModel
         scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
     }
 
-    public ScenarioSimulationModel(Simulation simulation) {
-        this.simulation = simulation;
-    }
+    protected void setDMNSession() {
 
-    public Simulation getSimulation() {
-        return simulation;
-    }
-
-    public void setSimulation(Simulation simulation) {
-        this.simulation = simulation;
-    }
-
-    @Override
-    public Imports getImports() {
-        return imports;
-    }
-
-    @Override
-    public void setImports(Imports imports) {
-        this.imports = imports;
-    }
-
-    public String getVersion() {
-        return version;
     }
 }
