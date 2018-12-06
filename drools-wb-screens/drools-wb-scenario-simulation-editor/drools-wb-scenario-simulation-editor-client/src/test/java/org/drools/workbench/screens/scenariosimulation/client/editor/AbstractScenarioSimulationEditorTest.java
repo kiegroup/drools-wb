@@ -89,7 +89,9 @@ public abstract class AbstractScenarioSimulationEditorTest {
         when(workbenchContextMock.getActiveWorkspaceProject()).thenReturn(Optional.empty());
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
-        this.model = new ScenarioSimulationModel(ScenarioSimulationModel.Type.DMO, "default");
+        this.model = new ScenarioSimulationModel();
+        model.setRuleSession("default");
+        model.setType(ScenarioSimulationModel.Type.RULE);
         this.content = new ScenarioSimulationModelContent(model,
                                                           overviewMock,
                                                           mock(PackageDataModelOracleBaselinePayload.class));

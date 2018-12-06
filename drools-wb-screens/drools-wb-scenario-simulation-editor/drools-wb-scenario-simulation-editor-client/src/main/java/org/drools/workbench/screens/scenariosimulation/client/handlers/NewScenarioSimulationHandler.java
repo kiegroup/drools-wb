@@ -118,23 +118,29 @@ public class NewScenarioSimulationHandler
     public void create(final Package pkg,
                        final String baseFileName,
                        final NewResourcePresenter presenter) {
-        busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
         final ScenarioSimulationModel.Type selectedType = sourceTypeSelector.getSelectedType();
         String value;
+        ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
+        scenarioSimulationModel.setType(selectedType);
         switch (selectedType) {
             case DMN:
                 value = uploadWidget.getSelectedPath();
+                if (value == null || value.isEmpty()) {
+                    return;
+                }
+                scenarioSimulationModel.setDmnFilePath(value);
                 break;
-            case DMO:
+            case RULE:
             default:
                 value = "default";
+                scenarioSimulationModel.setRuleSession(value);
         }
+        busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
         scenarioSimulationService.call(getSuccessCallback(presenter),
                                        new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageTestResourcesPath(),
                                                                                                            buildFileName(baseFileName,
                                                                                                                          resourceType),
-                                                                                                           new ScenarioSimulationModel(selectedType, value),
-                                                                                                           "");
+                                                                                                           scenarioSimulationModel, "");
     }
 
     @PostConstruct

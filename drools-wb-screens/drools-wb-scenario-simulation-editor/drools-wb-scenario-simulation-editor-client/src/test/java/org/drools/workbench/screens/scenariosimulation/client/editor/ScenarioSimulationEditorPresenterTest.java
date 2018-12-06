@@ -263,7 +263,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTest() throws Exception {
-//        final ScenarioSimulationModel model = new ScenarioSimulationModel(ScenarioSimulationModel.Type.DMO, "default");
+//        final ScenarioSimulationModel model = new ScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "default");
         doReturn(new ScenarioSimulationModelContent(model,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());

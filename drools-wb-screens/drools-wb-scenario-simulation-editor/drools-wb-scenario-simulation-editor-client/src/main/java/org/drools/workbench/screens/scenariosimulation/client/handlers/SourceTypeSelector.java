@@ -54,7 +54,7 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
     }
 
     /**
-     * Returns the selected Type. <b>By default, it returns <code>ScenarioSimulationModel.Type.DMO</code></b>
+     * Returns the selected Type. <b>By default, it returns <code>ScenarioSimulationModel.Type.RULE</code></b>
      * @return
      */
     public ScenarioSimulationModel.Type getSelectedType() {
@@ -62,7 +62,7 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
                 .filter(CheckBox::getValue)
                 .findFirst()
                 .map(selectedText -> ScenarioSimulationModel.Type.valueOf(selectedText.getText()))
-                .orElse(ScenarioSimulationModel.Type.DMO);
+                .orElse(ScenarioSimulationModel.Type.RULE);
     }
 
     protected void addRadioButtons() {

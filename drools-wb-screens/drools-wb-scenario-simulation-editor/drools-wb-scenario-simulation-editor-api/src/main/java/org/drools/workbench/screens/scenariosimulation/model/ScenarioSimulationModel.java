@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Objects;
+
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.kie.soup.project.datamodel.imports.HasImports;
@@ -26,7 +28,7 @@ public class ScenarioSimulationModel
         implements HasImports {
 
     public enum Type {
-        DMO,
+        RULE,
         DMN
     }
 
@@ -37,33 +39,13 @@ public class ScenarioSimulationModel
 
     private Imports imports = new Imports();
 
-    private final String dmoSession;
+    private String dmoSession;
 
-    private final String dmnFilePath;
+    private String dmnFilePath;
 
-    private final Type type;
+    private Type type;
 
-    /**
-     * Default constructor that instantiate a <code>Type.DMO</code> model with <b>default</b> as value
-     */
     public ScenarioSimulationModel() {
-        this(Type.DMO, "default");
-    }
-
-    public ScenarioSimulationModel(Type type, String value) {
-        this.type = type;
-        switch (type) {
-            case DMN:
-                this.dmnFilePath = value;
-                dmoSession = null;
-                setDMNSession();
-                break;
-            case DMO:
-            default:
-                this.dmoSession = value;
-                dmnFilePath = null;
-                setDMOSession();
-        }
     }
 
     public Simulation getSimulation() {
@@ -92,15 +74,45 @@ public class ScenarioSimulationModel
         return dmoSession;
     }
 
+    public void setRuleSession(String ruleSession) {
+        this.dmoSession = ruleSession;
+        if (Objects.equals(type, Type.RULE)) {
+            createSimulation();
+        }
+    }
+
     public String getDmnFilePath() {
         return dmnFilePath;
+    }
+
+    public void setDmnFilePath(String dmnFilePath) {
+        this.dmnFilePath = dmnFilePath;
+        if (Objects.equals(type, Type.DMN)) {
+            createSimulation();
+        }
     }
 
     public Type getType() {
         return type;
     }
 
-    protected void setDMOSession() {
+    public void setType(Type type) {
+        this.type = type;
+        switch (type) {
+            case RULE:
+                if (dmoSession != null) {
+                    createSimulation();
+                }
+                break;
+            case DMN:
+                if (dmnFilePath != null) {
+                    createSimulation();
+                }
+                break;
+        }
+    }
+
+    protected void createSimulation() {
         simulation = new Simulation();
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
 
@@ -124,9 +136,5 @@ public class ScenarioSimulationModel
         final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
         expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
-    }
-
-    protected void setDMNSession() {
-
     }
 }
