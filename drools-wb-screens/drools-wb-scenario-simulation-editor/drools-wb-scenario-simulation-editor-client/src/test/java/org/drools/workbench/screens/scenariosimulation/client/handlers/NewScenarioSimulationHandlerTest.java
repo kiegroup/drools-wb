@@ -24,6 +24,8 @@ import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.screens.library.client.screens.assets.AssetQueryService;
+import org.kie.workbench.common.screens.library.client.util.LibraryPlaces;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -75,6 +77,12 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
 
     @Mock
     private SessionInfo sessionInfoMock;
+
+    @Mock
+    private  LibraryPlaces libraryPlacesMock;
+
+    @Mock
+    private  AssetQueryService assetQueryServiceMock;
 
     @Mock
     private User userMock;
