@@ -66,13 +66,15 @@ public class ScenarioSimulationGridHeaderUtilitiesTest {
 
     private Point2D rp = new Point2D(0, 0);
 
+    private ScenarioGridModel scenarioGridModel = new ScenarioGridModel();
+
     @Before
     public void setup() {
         doReturn(gridRenderer).when(gridWidget).getRenderer();
         doReturn(gridRendererHelper).when(gridWidget).getRendererHelper();
         doReturn(ri).when(gridRendererHelper).getRenderingInformation();
         doReturn(HEADER_HEIGHT).when(gridRenderer).getHeaderHeight();
-        doReturn(HEADER_HEIGHT).when(gridRenderer).getHeaderRowHeight();
+        doReturn(HEADER_ROW_HEIGHT).when(gridRenderer).getHeaderRowHeight();
 
         doReturn(floatingBlockInformation).when(ri).getFloatingBlockInformation();
         doReturn(0.0).when(floatingBlockInformation).getX();
@@ -80,7 +82,7 @@ public class ScenarioSimulationGridHeaderUtilitiesTest {
 
         doReturn(mock(Viewport.class)).when(gridWidget).getViewport();
 
-        doReturn(new ScenarioGridModel()).when(gridWidget).getModel();
+        doReturn(scenarioGridModel).when(gridWidget).getModel();
     }
 
     @Test
@@ -314,6 +316,8 @@ public class ScenarioSimulationGridHeaderUtilitiesTest {
 
         doReturn(headerMetaData).when(uiColumn).getHeaderMetaData();
         doReturn(width).when(uiColumn).getWidth();
+
+        scenarioGridModel.appendColumn(uiColumn);
 
         return uiColumn;
     }
