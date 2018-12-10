@@ -28,10 +28,10 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -41,7 +41,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
@@ -354,6 +353,10 @@ public class ScenarioSimulationEditorPresenter
 
     protected String getJsonModel(ScenarioSimulationModel model) {
         return MarshallingWrapper.toJSON(model);
+    }
+
+    private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
+        return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

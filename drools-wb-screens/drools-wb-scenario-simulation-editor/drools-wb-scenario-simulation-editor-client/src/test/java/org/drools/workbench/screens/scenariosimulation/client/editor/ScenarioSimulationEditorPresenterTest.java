@@ -21,6 +21,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -57,6 +58,7 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -96,10 +98,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioGridPanel scenarioGridPanelMock;
     @Mock
     private ScenarioSimulationView scenarioSimulationViewMock;
-
     @Mock
     private ScenarioGridModel scenarioGridModelMock;
-
     @Mock
     private ScenarioSimulationProducer scenarioSimulationProducerMock;
     @Mock
