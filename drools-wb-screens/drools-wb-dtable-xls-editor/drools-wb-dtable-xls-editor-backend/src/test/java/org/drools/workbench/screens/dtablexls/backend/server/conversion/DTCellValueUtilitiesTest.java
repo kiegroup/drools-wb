@@ -25,17 +25,26 @@ import java.util.Collection;
 
 import org.apache.xmlbeans.SystemProperties;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(Parameterized.class)
 public class DTCellValueUtilitiesTest {
+
+    @Mock
+    private DTCellValueUtilities.ConversionErrorCallback conversionErrorCallback;
 
     private static final String DATE_FORMAT = SystemProperties.getProperty(ApplicationPreferences.DATE_FORMAT);
     private static final SimpleDateFormat FORMATTER = new SimpleDateFormat(DATE_FORMAT);
@@ -99,15 +108,22 @@ public class DTCellValueUtilitiesTest {
         });
     }
 
+    @Before
+    public void initMock() throws Exception {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
     public void conversion() {
-        final String message = type + " " + "should equal to " + provided.getDataType().name();
+        DTCellValueUtilities.assertDTCellValue(type,
+                                               provided,
+                                               conversionErrorCallback);
+        if (hasConversionError) {
+            verify(conversionErrorCallback).onConversionError(anyString(), any(DataType.DataTypes.class));
+        } else {
+            verifyZeroInteractions(conversionErrorCallback);
+        }
 
-        DTCellValueUtilities
-                .assertDTCellValue(type,
-                                   provided,
-                                   (final String value,
-                                    final DataType.DataTypes dataType) -> assertTrue(message, hasConversionError));
         assertEquals(expectedDataType,
                      provided.getDataType());
         assertEquals(expectedValue,
