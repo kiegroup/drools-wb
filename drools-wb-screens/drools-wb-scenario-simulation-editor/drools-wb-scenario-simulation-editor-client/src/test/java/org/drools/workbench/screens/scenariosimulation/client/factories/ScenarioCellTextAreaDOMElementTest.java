@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;

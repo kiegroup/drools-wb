@@ -34,7 +34,6 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
                                                                                                 Focusable {
 
     protected ScenarioGridCell scenarioGridCell;
-    protected ScenarioGridCell scenarioGridCell;
 
     public ScenarioCellTextAreaDOMElement(final TextArea widget,
                                           final GridLayer gridLayer,
