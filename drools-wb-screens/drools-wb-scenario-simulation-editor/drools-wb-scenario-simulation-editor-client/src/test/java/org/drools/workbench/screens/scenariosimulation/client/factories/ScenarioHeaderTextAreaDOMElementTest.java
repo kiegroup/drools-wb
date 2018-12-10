@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
@@ -88,7 +87,6 @@ public class ScenarioHeaderTextAreaDOMElementTest extends AbstractFactoriesTest 
         when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX))).thenReturn(true);
         scenarioHeaderTextAreaDOMElement.internalFlush(VALUE);
         verify(eventBusMock, times(1)).fireEvent(isA(SetCellValueEvent.class));
-        assertEquals(VALUE, scenarioHeaderTextAreaDOMElement.originalValue);
     }
 
 }

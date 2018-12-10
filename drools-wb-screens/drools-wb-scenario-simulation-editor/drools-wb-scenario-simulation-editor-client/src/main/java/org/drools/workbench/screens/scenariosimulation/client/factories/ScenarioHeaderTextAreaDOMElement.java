@@ -57,7 +57,6 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
         final int columnIndex = context.getColumnIndex();
         try {
             ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, true));
-            originalValue = value;
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)
                                                        .append(") of column ").append(columnIndex).toString(), e);
