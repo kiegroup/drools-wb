@@ -56,6 +56,7 @@ import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.java.nio.file.OpenOption;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
@@ -230,16 +231,38 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void createRULEScenario() throws Exception {
         doReturn(false).when(ioService).exists(any());
-
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
+        model.setType(ScenarioSimulationModel.Type.RULE);
+        model.setRuleSession("default");
+        assertNull(model.getSimulation());
         final Path returnPath = service.create(this.path,
                                                "test.scesim",
-                                               new ScenarioSimulationModel(),
+                                               model,
                                                "Commit comment");
 
         assertNotNull(returnPath);
+        assertNotNull(model.getSimulation());
+        verify(ioService, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
+                                          anyString(),
+                                          any(CommentedOption.class));
+    }
 
+    @Test
+    public void createDMNScenario() throws Exception {
+        doReturn(false).when(ioService).exists(any());
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
+        model.setType(ScenarioSimulationModel.Type.DMN);
+        model.setDmnFilePath("path");
+        assertNull(model.getSimulation());
+        final Path returnPath = service.create(this.path,
+                                               "test.scesim",
+                                               model,
+                                               "Commit comment");
+
+        assertNotNull(returnPath);
+        assertNotNull(model.getSimulation());
         verify(ioService, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
                                           anyString(),
                                           any(CommentedOption.class));
@@ -248,10 +271,12 @@ public class ScenarioSimulationServiceImplTest {
     @Test(expected = FileAlreadyExistsException.class)
     public void createFileExists() throws Exception {
         doReturn(true).when(ioService).exists(any());
-
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
+        model.setType(ScenarioSimulationModel.Type.DMN);
+        model.setDmnFilePath("path");
         service.create(this.path,
                        "test.scesim",
-                       new ScenarioSimulationModel(),
+                       model,
                        "Commit comment");
     }
 

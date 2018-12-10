@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioJunitActivator;
+import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
@@ -155,6 +156,7 @@ public class ScenarioSimulationServiceImpl
                        final ScenarioSimulationModel content,
                        final String comment) {
         try {
+            content.setSimulation(ScenarioSimulationBuilder.createSimulation(content));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);
 

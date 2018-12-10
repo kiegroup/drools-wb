@@ -21,6 +21,7 @@ import java.util.List;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.IndexedScenarioException;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerImpl;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -125,6 +126,7 @@ public class ScenarioRunnerServiceImplTest {
         ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
         scenarioSimulationModel.setRuleSession("default");
         scenarioSimulationModel.setType(ScenarioSimulationModel.Type.RULE);
+        scenarioSimulationModel.setSimulation(ScenarioSimulationBuilder.createSimulation(scenarioSimulationModel));
         Scenario scenario = scenarioSimulationModel.getSimulation().getScenarioByIndex(0);
         scenario.setDescription("Test Scenario");
         String errorMessage = "Test Error";
