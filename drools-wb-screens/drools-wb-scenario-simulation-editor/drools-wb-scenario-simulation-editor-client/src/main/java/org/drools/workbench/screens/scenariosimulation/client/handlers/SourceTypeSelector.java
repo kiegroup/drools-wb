@@ -28,7 +28,7 @@ import org.gwtbootstrap3.client.ui.Radio;
 public class SourceTypeSelector extends VerticalPanel implements ValueChangeHandler<Boolean> {
 
     protected static final String SOURCE_TYPE = "SOURCE_TYPE";
-    protected static final String[] SOURCE_TYPES = {"DRL", "DMN"};
+    protected static final String[] SOURCE_TYPES = {"Rule", "DMN"};
     protected final TitledAttachmentFileWidget uploadWidget;
     protected final List<Radio> radioButtonList = new ArrayList<Radio>();
 
