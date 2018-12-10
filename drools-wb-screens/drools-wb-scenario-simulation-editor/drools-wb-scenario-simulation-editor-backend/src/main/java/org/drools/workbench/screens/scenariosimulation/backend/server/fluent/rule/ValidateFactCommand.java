@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
+package org.drools.workbench.screens.scenariosimulation.backend.server.fluent.rule;
 
 import java.util.Collection;
 import java.util.List;

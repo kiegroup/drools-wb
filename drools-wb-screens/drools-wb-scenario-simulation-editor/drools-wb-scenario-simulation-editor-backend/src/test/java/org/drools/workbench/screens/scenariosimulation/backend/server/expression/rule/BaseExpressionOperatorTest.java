@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
+package org.drools.workbench.screens.scenariosimulation.backend.server.expression.rule;
 
 import java.util.Arrays;
 

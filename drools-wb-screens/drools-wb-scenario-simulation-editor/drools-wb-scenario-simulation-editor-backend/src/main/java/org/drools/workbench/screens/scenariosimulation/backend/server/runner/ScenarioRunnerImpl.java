@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.expression.BaseExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
+import org.drools.workbench.screens.scenariosimulation.backend.server.expression.rule.BaseExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;

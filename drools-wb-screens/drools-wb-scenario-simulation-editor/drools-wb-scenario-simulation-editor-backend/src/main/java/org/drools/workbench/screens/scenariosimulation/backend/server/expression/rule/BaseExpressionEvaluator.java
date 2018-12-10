@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
+package org.drools.workbench.screens.scenariosimulation.backend.server.expression.rule;
+
+import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 
 public class BaseExpressionEvaluator implements ExpressionEvaluator {
 
