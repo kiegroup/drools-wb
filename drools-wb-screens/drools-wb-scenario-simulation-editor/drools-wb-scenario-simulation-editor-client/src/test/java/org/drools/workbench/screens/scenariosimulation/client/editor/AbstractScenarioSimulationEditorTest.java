@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.Optional;
 
+import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractScenarioSimulationEditorTest {
+public abstract class AbstractScenarioSimulationEditorTest extends AbstractScenarioSimulationTest {
 
     protected static final String SCENARIO_PACKAGE = "scenario.package";
 

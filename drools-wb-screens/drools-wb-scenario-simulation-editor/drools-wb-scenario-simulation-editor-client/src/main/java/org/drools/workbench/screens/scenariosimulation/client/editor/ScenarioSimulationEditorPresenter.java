@@ -23,9 +23,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
@@ -36,6 +40,8 @@ import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimul
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
@@ -47,6 +53,7 @@ import org.kie.workbench.common.widgets.configresource.client.widget.bound.Impor
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.WorkbenchEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -103,7 +110,7 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationView view;
 
-    private ScenarioSimulationContext context;
+    protected ScenarioSimulationContext context;
 
     private Command populateRightPanelCommand;
 
@@ -241,12 +248,37 @@ public class ScenarioSimulationEditorPresenter
         service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
     }
 
+    public void onUndo() {
+        eventBus.fireEvent(new UndoEvent());
+    }
+
+    public void onRedo() {
+        eventBus.fireEvent(new RedoEvent());
+    }
+
+    public void setUndoButtonEnabledStatus(boolean enabled) {
+        view.getUndoMenuItem().setEnabled(enabled);
+    }
+
+    public void setRedoButtonEnabledStatus(boolean enabled) {
+        view.getRedoMenuItem().setEnabled(enabled);
+    }
+
+    @Override
+    public void addDownloadMenuItem(FileMenuBuilder fileMenuBuilder) {
+        fileMenuBuilder.addNewTopLevelMenu(view.getDownloadMenuItem(getPathSupplier()));
+    }
+
     protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
-        return newModel -> {
-            this.model = newModel;
-            view.refreshContent(newModel.getSimulation());
-            scenarioSimulationDocksHandler.expandTestResultsDock();
-        };
+        return this::refreshModelContent;
+    }
+
+    protected void refreshModelContent(ScenarioSimulationModel newModel) {
+        this.model = newModel;
+        final Simulation simulation = newModel.getSimulation();
+        view.refreshContent(simulation);
+        context.getStatus().setSimulation(simulation);
+        scenarioSimulationDocksHandler.expandTestResultsDock();
     }
 
     protected void registerRightPanelCallback() {
@@ -263,6 +295,10 @@ public class ScenarioSimulationEditorPresenter
     @Override
     protected void makeMenuBar() {
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
+        view.getUndoMenuItem().setEnabled(false);
+        view.getRedoMenuItem().setEnabled(false);
         super.makeMenuBar();
     }
 
@@ -290,6 +326,15 @@ public class ScenarioSimulationEditorPresenter
     protected void loadContent() {
         service.call(getModelSuccessCallback(),
                      getNoSuchFileExceptionErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
+    }
+
+    protected void onDownload(final Supplier<Path> pathSupplier) {
+        final String downloadURL = getFileDownloadURL(pathSupplier);
+        open(downloadURL);
+    }
+
+    protected void open(final String downloadURL) {
+        DomGlobal.window.open(downloadURL);
     }
 
     protected void populateRightPanel() {
