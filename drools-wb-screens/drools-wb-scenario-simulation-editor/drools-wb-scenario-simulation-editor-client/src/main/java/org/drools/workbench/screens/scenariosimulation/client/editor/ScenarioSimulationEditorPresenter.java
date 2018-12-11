@@ -45,6 +45,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -360,11 +361,12 @@ public class ScenarioSimulationEditorPresenter
 
     protected void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
         // Instantiate a container map
-        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
+        SortedMap<String, FactModelTree> factTypeFieldsMap = getDefaultSimpleProperties();
         // Execute only when oracle has been set
         if (oracle == null) {
             if (rightPanelPresenter != null) {
                 rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
             }
             return;
         }
@@ -373,11 +375,13 @@ public class ScenarioSimulationEditorPresenter
         if (factTypes.length == 0) {  // We do not have to set nothing
             if (rightPanelPresenter != null) {
                 rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
             }
             return;
         }
+        int expectedElements = factTypeFieldsMap.size() + factTypes.length;
         // Instantiate the aggregator callback
-        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, factTypes.length, factTypeFieldsMap);
+        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, factTypeFieldsMap);
         // Iterate over all facttypes to retrieve their modelfields
         for (String factType : factTypes) {
             oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
@@ -429,6 +433,21 @@ public class ScenarioSimulationEditorPresenter
         return new FactModelTree(factName, factPackageName, simpleProperties);
     }
 
+    protected SortedMap<String, FactModelTree> getDefaultSimpleProperties() {
+        SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
+        Class[] clazzes = {String.class, Boolean.class, Integer.class, Double.class, Float.class};
+        for (Class clazz : clazzes) {
+            String key = clazz.getSimpleName();
+            Map<String, String> simpleProperties = new HashMap<>();
+            String fullName = clazz.getCanonicalName();
+            simpleProperties.put("value", fullName);
+            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+            FactModelTree value = new FactModelTree(key, packageName, simpleProperties);
+            toReturn.put(key, value);
+        }
+        return toReturn;
+    }
+
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
@@ -474,19 +493,22 @@ public class ScenarioSimulationEditorPresenter
                 // map instance name top data model class
                 if (model != null) {
                     final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
-                    simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
-                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                        if (dataObjectName.contains(".")) {
-                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                        }
-                        final String instanceName = factMapping.getFactAlias();
-                        if (!instanceName.equals(dataObjectName)) {
-                            final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
-                            if (factModelTree != null) {
-                                instanceFieldsMap.put(instanceName, factModelTree);
-                            }
-                        }
-                    });
+                    simulationDescriptor.getUnmodifiableFactMappings()
+                            .stream()
+                            .filter(factMapping -> factMapping.getExpressionIdentifier().getType() != FactMappingType.OTHER)
+                            .forEach(factMapping -> {
+                                String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                                if (dataObjectName.contains(".")) {
+                                    dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
+                                }
+                                final String instanceName = factMapping.getFactAlias();
+                                if (!instanceName.equals(dataObjectName)) {
+                                    final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
+                                    if (factModelTree != null) {
+                                        instanceFieldsMap.put(instanceName, factModelTree);
+                                    }
+                                }
+                            });
                 }
                 rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
                 Set<String> dataObjectsInstancesName = new HashSet<>(factTypeFieldsMap.keySet());

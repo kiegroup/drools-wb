@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.Map;
+import java.util.SortedMap;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
@@ -63,6 +66,7 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.jgroups.util.Util.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -369,19 +373,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(new ScenarioSimulationModelContent(model,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-
         when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(mock(ScenarioSimulationModel.class));
-
         presenter.onStartup(mock(ObservablePath.class), mock(PlaceRequest.class));
-
         presenter.onRunScenario();
-
         verify(scenarioSimulationServiceMock).runScenario(any(), eq(model));
-
         verify(scenarioGridModelMock, times(1)).resetErrors();
-
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
-
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
     }
 
@@ -422,6 +419,31 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertNotNull(retrieved);
         assertEquals(factName, retrieved.getFactName());
         assertEquals(SCENARIO_PACKAGE, retrieved.getFullPackage());
+    }
+
+    @Test
+    public void getDefaultSimpleProperties() {
+        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Float.class};
+        SortedMap<String, FactModelTree> retrieved = presenter.getDefaultSimpleProperties();
+        assertNotNull(retrieved);
+        assertEquals(expectedClazzes.length, retrieved.size());
+        for (Class expectedClazz : expectedClazzes) {
+            String key = expectedClazz.getSimpleName();
+            assertTrue(retrieved.containsKey(key));
+            FactModelTree value = retrieved.get(key);
+            assertNotNull(value);
+            assertEquals(key, value.getFactName());
+            String fullName = expectedClazz.getCanonicalName();
+            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+            assertEquals(packageName, value.getFullPackage());
+            Map<String, String> simpleProperties = value.getSimpleProperties();
+            assertNotNull(simpleProperties);
+            assertEquals(1, simpleProperties.size());
+            assertTrue(simpleProperties.containsKey("value"));
+            String simplePropertyValue = simpleProperties.get("value");
+            assertNotNull(simplePropertyValue);
+            assertEquals(fullName, simplePropertyValue);
+        }
     }
 
     @Test
