@@ -57,7 +57,8 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
         });
     }
 
-   public void flushSameValue() {
+    @Test
+    public void flushSameValue() {
         when(gridCellValueMock.getValue()).thenReturn(VALUE);
         scenarioCellTextAreaDOMElement.flush(VALUE);
         verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
