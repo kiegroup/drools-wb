@@ -93,18 +93,18 @@ public class ScenarioSimulationXMLPersistenceTest {
     public void unmarshalRULE() throws Exception {
         String toUnmarshal = getFileContent("scesim-rule.scesim");
         final ScenarioSimulationModel retrieved = ScenarioSimulationXMLPersistence.getInstance().unmarshal(toUnmarshal);
-        assertEquals(retrieved.getType(), ScenarioSimulationModel.Type.RULE);
-        assertNotNull(retrieved.getDmoSession());
-        assertNull(retrieved.getDmnFilePath());
+        assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.RULE);
+        assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
+        assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());
     }
 
     @Test
     public void unmarshalDMN() throws Exception {
         String toUnmarshal = getFileContent("scesim-dmn.scesim");
         final ScenarioSimulationModel retrieved = ScenarioSimulationXMLPersistence.getInstance().unmarshal(toUnmarshal);
-        assertEquals(retrieved.getType(), ScenarioSimulationModel.Type.DMN);
-        assertNotNull(retrieved.getDmnFilePath());
-        assertNull(retrieved.getDmoSession());
+        assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.DMN);
+        assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());
+        assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
     }
 
     private String getFileContent(String fileName) throws IOException {

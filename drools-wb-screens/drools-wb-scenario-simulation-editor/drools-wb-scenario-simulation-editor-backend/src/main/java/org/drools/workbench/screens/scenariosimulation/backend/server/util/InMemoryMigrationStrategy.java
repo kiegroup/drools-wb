@@ -27,6 +27,6 @@ public class InMemoryMigrationStrategy implements MigrationStrategy {
 
     @Override
     public Function<String, String> from1_1to1_2() {
-        return rawXml -> rawXml.replaceAll("</ScenarioSimulationModel>", "<dmoSession></dmoSession>\n<type>RULE</type>\n</ScenarioSimulationModel>").replaceAll("<ScenarioSimulationModel version=\"1.1\">", "<ScenarioSimulationModel version=\"1.2\">");
+        return rawXml -> rawXml.replaceAll("</simulationDescriptor>", "<dmoSession></dmoSession>\n<type>RULE</type>\n</simulationDescriptor>").replaceAll("<ScenarioSimulationModel version=\"1.1\">", "<ScenarioSimulationModel version=\"1.2\">");
     }
 }

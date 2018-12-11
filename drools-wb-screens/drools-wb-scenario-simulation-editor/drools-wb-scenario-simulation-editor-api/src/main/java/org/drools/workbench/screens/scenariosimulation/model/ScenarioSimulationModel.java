@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.Objects;
-
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.kie.soup.project.datamodel.imports.HasImports;
@@ -39,14 +37,15 @@ public class ScenarioSimulationModel
 
     private Imports imports = new Imports();
 
-    private String dmoSession;
-
-    private String dmnFilePath;
-
-    private Type type;
-
     public ScenarioSimulationModel() {
+        createSimulation(Type.RULE, "default");
     }
+
+
+    public ScenarioSimulationModel(ScenarioSimulationModel.Type selectedType, String value) {
+        createSimulation(selectedType, value);
+    }
+
 
     public Simulation getSimulation() {
         return simulation;
@@ -70,51 +69,18 @@ public class ScenarioSimulationModel
         return version;
     }
 
-    public String getDmoSession() {
-        return dmoSession;
-    }
-
-    public void setRuleSession(String ruleSession) {
-        this.dmoSession = ruleSession;
-        if (Objects.equals(type, Type.RULE)) {
-            createSimulation();
-        }
-    }
-
-    public String getDmnFilePath() {
-        return dmnFilePath;
-    }
-
-    public void setDmnFilePath(String dmnFilePath) {
-        this.dmnFilePath = dmnFilePath;
-        if (Objects.equals(type, Type.DMN)) {
-            createSimulation();
-        }
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-        switch (type) {
-            case RULE:
-                if (dmoSession != null) {
-                    createSimulation();
-                }
-                break;
-            case DMN:
-                if (dmnFilePath != null) {
-                    createSimulation();
-                }
-                break;
-        }
-    }
-
-    protected void createSimulation() {
+    protected void createSimulation(ScenarioSimulationModel.Type selectedType, String value) {
         simulation = new Simulation();
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        simulationDescriptor.setType(selectedType);
+        switch (selectedType) {
+            case DMN:
+                simulationDescriptor.setDmnFilePath(value);
+                break;
+            case RULE:
+            default:
+                simulationDescriptor.setRuleSession(value);
+        }
 
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
@@ -137,4 +103,5 @@ public class ScenarioSimulationModel
         expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
         scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
     }
+
 }
