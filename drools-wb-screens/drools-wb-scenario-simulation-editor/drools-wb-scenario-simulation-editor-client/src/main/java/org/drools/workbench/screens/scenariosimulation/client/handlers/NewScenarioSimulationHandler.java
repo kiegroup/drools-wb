@@ -150,12 +150,4 @@ public class NewScenarioSimulationHandler
         extensions.add(Pair.newPair(ScenarioSimulationEditorConstants.INSTANCE.sourceType(), sourceTypeSelector));
         extensions.add(Pair.newPair("", uploadWidget));
     }
-
-    @PostConstruct
-    public void setupExtensions() {
-        uploadWidget = new TitledAttachmentFileWidget(ScenarioSimulationEditorConstants.INSTANCE.chooseDMN(), libraryPlaces, assetQueryService);
-        sourceTypeSelector = new SourceTypeSelector(uploadWidget);
-        extensions.add(Pair.newPair(ScenarioSimulationEditorConstants.INSTANCE.sourceType(), sourceTypeSelector));
-        extensions.add(Pair.newPair("", uploadWidget));
-    }
 }
