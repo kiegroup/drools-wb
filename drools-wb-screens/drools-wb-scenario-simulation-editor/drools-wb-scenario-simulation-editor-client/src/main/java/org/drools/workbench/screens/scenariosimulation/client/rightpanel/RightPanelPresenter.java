@@ -56,6 +56,8 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     protected Map<String, FactModelTree> dataObjectFieldsMap;
 
+    protected Map<String, FactModelTree> simpleJavaTypeFieldsMap;
+
     protected Map<String, FactModelTree> instanceFieldsMap;
 
     protected EventBus eventBus;
@@ -121,6 +123,11 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public void clearSimpleJavaTypeList() {
+        view.getSimpleJavaTypeListContainer().removeAllChildren();
+    }
+
+    @Override
     public void clearInstanceList() {
         view.getInstanceListContainer().removeAllChildren();
     }
@@ -128,6 +135,11 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public FactModelTree getFactModelTreeFromFactTypeMap(String factName) {
         return dataObjectFieldsMap.get(factName);
+    }
+
+    @Override
+    public FactModelTree getFactModelTreeFromSimpleJavaTypeMap(String factName) {
+        return simpleJavaTypeFieldsMap.get(factName);
     }
 
     @Override
@@ -140,6 +152,13 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         clearDataObjectList();
         this.dataObjectFieldsMap = dataObjectFieldsMap;
         this.dataObjectFieldsMap.forEach(this::addDataObjectListGroupItemView);
+    }
+
+    @Override
+    public void setSimpleJavaTypeFieldsMap(SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap) {
+        clearSimpleJavaTypeList();
+        this.simpleJavaTypeFieldsMap = simpleJavaTypeFieldsMap;
+        this.simpleJavaTypeFieldsMap.forEach(this::addSimpleJavaTypeListGroupItemView);
     }
 
     @Override
@@ -162,15 +181,18 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onSearchedEvent(String search) {
         clearDataObjectList();
+        clearSimpleJavaTypeList();
         clearInstanceList();
-        if (dataObjectFieldsMap.isEmpty()) {
-            return;
-        }
         dataObjectFieldsMap
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addDataObjectListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        simpleJavaTypeFieldsMap
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
+                .forEach(filteredEntry -> addSimpleJavaTypeListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         instanceFieldsMap
                 .entrySet()
                 .stream()
@@ -181,15 +203,18 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onPerfectMatchSearchedEvent(String search, boolean notEqualsSearch) {
         clearDataObjectList();
+        clearSimpleJavaTypeList();
         clearInstanceList();
-        if (dataObjectFieldsMap.isEmpty()) {
-            return;
-        }
         dataObjectFieldsMap
                 .entrySet()
                 .stream()
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addDataObjectListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        simpleJavaTypeFieldsMap
+                .entrySet()
+                .stream()
+                .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
+                .forEach(filteredEntry -> addSimpleJavaTypeListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         instanceFieldsMap
                 .entrySet()
                 .stream()
@@ -201,6 +226,12 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     public void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree) {
         DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
         view.getDataObjectListContainer().appendChild(toAdd);
+    }
+
+    @Override
+    public void addSimpleJavaTypeListGroupItemView(String factName, FactModelTree factModelTree) {
+        DivElement toAdd = listGroupItemPresenter.getDivElement(factName, factModelTree);
+        view.getSimpleJavaTypeListContainer().appendChild(toAdd);
     }
 
     @Override
@@ -260,6 +291,9 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 String className = selectedListGroupItemView.getActualClassName();
                 FactModelTree factModelTree = getFactModelTreeFromFactTypeMap(className);
                 if (factModelTree == null) {
+                    factModelTree = getFactModelTreeFromSimpleJavaTypeMap(className);
+                }
+                if (factModelTree == null) {
                     factModelTree = getFactModelTreeFromInstanceMap(className);
                 }
                 String fullPackage = factModelTree.getFullPackage();
@@ -268,6 +302,9 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 FactModelTree factModelTree = getFactModelTreeFromFactTypeMap(baseClass);
+                if (factModelTree == null) {
+                    factModelTree = getFactModelTreeFromSimpleJavaTypeMap(baseClass);
+                }
                 if (factModelTree == null) {
                     factModelTree = getFactModelTreeFromInstanceMap(baseClass);
                 }

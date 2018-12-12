@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.Map;
-import java.util.SortedMap;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -422,21 +421,17 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void getDefaultSimpleProperties() {
-        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Float.class};
-        SortedMap<String, FactModelTree> retrieved = presenter.getDefaultSimpleProperties();
-        assertNotNull(retrieved);
-        assertEquals(expectedClazzes.length, retrieved.size());
+    public void getSimpleClassFactModelTree() {
+        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
         for (Class expectedClazz : expectedClazzes) {
+            final FactModelTree retrieved = presenter.getSimpleClassFactModelTree(expectedClazz);
+            assertNotNull(retrieved);
             String key = expectedClazz.getSimpleName();
-            assertTrue(retrieved.containsKey(key));
-            FactModelTree value = retrieved.get(key);
-            assertNotNull(value);
-            assertEquals(key, value.getFactName());
+            assertEquals(key, retrieved.getFactName());
             String fullName = expectedClazz.getCanonicalName();
             String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-            assertEquals(packageName, value.getFullPackage());
-            Map<String, String> simpleProperties = value.getSimpleProperties();
+            assertEquals(packageName, retrieved.getFullPackage());
+            Map<String, String> simpleProperties = retrieved.getSimpleProperties();
             assertNotNull(simpleProperties);
             assertEquals(1, simpleProperties.size());
             assertTrue(simpleProperties.containsKey("value"));

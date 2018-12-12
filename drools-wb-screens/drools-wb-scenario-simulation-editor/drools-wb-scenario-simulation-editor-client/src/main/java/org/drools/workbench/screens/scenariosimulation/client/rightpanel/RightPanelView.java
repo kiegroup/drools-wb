@@ -38,6 +38,8 @@ public interface RightPanelView
 
     DivElement getDataObjectListContainer();
 
+    DivElement getSimpleJavaTypeListContainer();
+
     DivElement getInstanceListContainer();
 
     Presenter getPresenter();
@@ -85,19 +87,27 @@ public interface RightPanelView
 
         void clearDataObjectList();
 
+        void clearSimpleJavaTypeList();
+
         void clearInstanceList();
 
         void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree);
 
+        void addSimpleJavaTypeListGroupItemView(String factName, FactModelTree factModelTree);
+
         void addInstanceListGroupItemView(String factName, FactModelTree factModelTree);
 
         void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap);
+
+        void setSimpleJavaTypeFieldsMap(SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap);
 
         void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
         void setEventBus(EventBus eventBus);
 
         FactModelTree getFactModelTreeFromFactTypeMap(String factName);
+
+        FactModelTree getFactModelTreeFromSimpleJavaTypeMap(String factName);
 
         FactModelTree getFactModelTreeFromInstanceMap(String factName);
 

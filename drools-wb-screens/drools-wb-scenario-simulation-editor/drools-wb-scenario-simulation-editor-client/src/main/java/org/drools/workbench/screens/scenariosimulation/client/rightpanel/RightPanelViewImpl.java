@@ -58,6 +58,9 @@ public class RightPanelViewImpl
     @DataField("dataObjectListContainer")
     protected DivElement dataObjectListContainer = Document.get().createDivElement();
 
+    @DataField("simpleJavaTypeListContainer")
+    protected DivElement simpleJavaTypeListContainer = Document.get().createDivElement();
+
     @DataField("instanceListContainer")
     protected DivElement instanceListContainer = Document.get().createDivElement();
 
@@ -143,6 +146,11 @@ public class RightPanelViewImpl
     }
 
     @Override
+    public DivElement getSimpleJavaTypeListContainer() {
+        return simpleJavaTypeListContainer;
+    }
+
+    @Override
     public DivElement getInstanceListContainer() {
         return instanceListContainer;
     }
@@ -179,9 +187,11 @@ public class RightPanelViewImpl
     protected void setContainersDisabledStatus(boolean disabled) {
         if (disabled) {
             dataObjectListContainer.addClassName("disabled");
+            simpleJavaTypeListContainer.addClassName("disabled");
             instanceListContainer.addClassName("disabled");
         } else {
             dataObjectListContainer.removeClassName("disabled");
+            simpleJavaTypeListContainer.removeClassName("disabled");
             instanceListContainer.removeClassName("disabled");
         }
     }

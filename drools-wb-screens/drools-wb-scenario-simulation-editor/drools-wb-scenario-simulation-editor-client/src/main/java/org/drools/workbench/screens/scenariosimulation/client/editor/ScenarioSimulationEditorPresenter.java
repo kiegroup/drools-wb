@@ -16,7 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
@@ -97,6 +102,14 @@ public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
+
+    public static final Map<String, Class> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
+            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), Boolean.class),
+            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), Double.class),
+            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), Integer.class),
+            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), Number.class),
+            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), String.class)).
+            collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
 
     protected AsyncPackageDataModelOracle oracle;
 
@@ -360,32 +373,39 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void populateRightPanel(RightPanelView.Presenter rightPanelPresenter) {
-        // Instantiate a container map
-        SortedMap<String, FactModelTree> factTypeFieldsMap = getDefaultSimpleProperties();
         // Execute only when oracle has been set
-        if (oracle == null) {
+        if (oracle == null || oracle.getFactTypes().length == 0) {
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(new TreeMap<>());
+                rightPanelPresenter.setSimpleJavaTypeFieldsMap(new TreeMap<>());
                 rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
             }
             return;
         }
         // Retrieve the relevant facttypes
-        String[] factTypes = oracle.getFactTypes();
-        if (factTypes.length == 0) {  // We do not have to set nothing
-            if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-                rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
-            }
-            return;
-        }
-        int expectedElements = factTypeFieldsMap.size() + factTypes.length;
+        List<String> factTypes = Arrays.asList(oracle.getFactTypes());
+
+        // Split the DMO from the Simple Java types
+        final Map<Boolean, List<String>> partitionedFactTypes = factTypes.stream()
+                .collect(Collectors.partitioningBy(factType -> SIMPLE_CLASSES_MAP.keySet().contains(factType)));
+
+        final List<String> dataObjectsTypes = partitionedFactTypes.get(false);
+        final List<String> simpleJavaTypes = partitionedFactTypes.get(true);
+
+        int expectedElements = dataObjectsTypes.size();
+        // Instantiate a dataObjects container map
+        SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
+        // Instantiate a simpleJavaTypes container map
+        SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
+
         // Instantiate the aggregator callback
-        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, factTypeFieldsMap);
-        // Iterate over all facttypes to retrieve their modelfields
-        for (String factType : factTypes) {
-            oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
-        }
+        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, dataObjectsFieldsMap);
+        // Iterate over all dataObjects to retrieve their modelfields
+        dataObjectsTypes.forEach(factType ->
+                                         oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
+        simpleJavaTypes.forEach(factType ->
+                                        simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
+        rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleJavaTypeFieldsMap);
     }
 
     protected void clearRightPanelStatus() {
@@ -422,7 +442,8 @@ public class ScenarioSimulationEditorPresenter
         Map<String, String> simpleProperties = new HashMap<>();
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
-                simpleProperties.put(modelField.getName(), modelField.getClassName());
+                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
+                simpleProperties.put(modelField.getName(), className);
             }
         }
         String factPackageName = packageName;
@@ -433,19 +454,13 @@ public class ScenarioSimulationEditorPresenter
         return new FactModelTree(factName, factPackageName, simpleProperties);
     }
 
-    protected SortedMap<String, FactModelTree> getDefaultSimpleProperties() {
-        SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
-        Class[] clazzes = {String.class, Boolean.class, Integer.class, Double.class, Float.class};
-        for (Class clazz : clazzes) {
-            String key = clazz.getSimpleName();
-            Map<String, String> simpleProperties = new HashMap<>();
-            String fullName = clazz.getCanonicalName();
-            simpleProperties.put("value", fullName);
-            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-            FactModelTree value = new FactModelTree(key, packageName, simpleProperties);
-            toReturn.put(key, value);
-        }
-        return toReturn;
+    protected FactModelTree getSimpleClassFactModelTree(Class clazz) {
+        String key = clazz.getSimpleName();
+        Map<String, String> simpleProperties = new HashMap<>();
+        String fullName = clazz.getCanonicalName();
+        simpleProperties.put("value", fullName);
+        String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+        return new FactModelTree(key, packageName, simpleProperties);
     }
 
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
