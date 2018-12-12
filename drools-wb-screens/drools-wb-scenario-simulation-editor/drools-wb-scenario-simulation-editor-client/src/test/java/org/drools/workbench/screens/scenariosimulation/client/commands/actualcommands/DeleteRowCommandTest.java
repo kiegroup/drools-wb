@@ -22,11 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,26 +36,23 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class DeleteRowCommandTest extends AbstractScenarioSimulationCommandTest {
 
-
-
-    private DeleteRowCommand deleteRowCommand;
-
     @Before
     public void setup() {
         super.setup();
-        deleteRowCommand = new DeleteRowCommand();
+        command = spy(new DeleteRowCommand());
+        assertTrue(command.isUndoable());
     }
 
     @Test
     public void execute() {
-        scenarioSimulationContext.setRowIndex(ROW_INDEX);
+        scenarioSimulationContext.getStatus().setRowIndex(ROW_INDEX);
         when(rowsMock.isEmpty()).thenReturn(false);
-        deleteRowCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).deleteRow(eq(ROW_INDEX));
         verify(scenarioGridModelMock, never()).insertRow(anyInt(), isA(ScenarioGridRow.class));
         reset(scenarioGridModelMock);
         when(rowsMock.isEmpty()).thenReturn(true);
-        deleteRowCommand.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContext);
         verify(scenarioGridModelMock, times(1)).deleteRow(eq(ROW_INDEX));
         verify(scenarioGridModelMock, times(1)).insertRow(eq(0), isA(ScenarioGridRow.class));
     }

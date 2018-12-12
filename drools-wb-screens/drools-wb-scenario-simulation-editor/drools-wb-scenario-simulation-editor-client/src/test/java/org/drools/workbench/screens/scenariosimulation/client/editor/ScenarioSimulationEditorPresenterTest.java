@@ -18,11 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -35,11 +35,8 @@ import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuIt
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
-import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
@@ -63,9 +60,8 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -79,7 +75,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimulationEditorTest {
 
-    private static final String SCENARIO_PACKAGE = "scenario.package";
 
     private ScenarioSimulationEditorPresenter presenter;
 
@@ -87,58 +82,34 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Mock
     private KieEditorWrapperView kieViewMock;
-
     @Mock
     private OverviewWidgetPresenter overviewWidgetPresenterMock;
-
     @Mock
     private DefaultFileNameValidator fileNameValidatorMock;
-
     @Mock
     private AlertsButtonMenuItemBuilder alertsButtonMenuItemBuilderMock;
-
     @Mock
     private EventSourceMock<NotificationEvent> notificationMock;
-
     @Mock
     private ScenarioGrid scenarioGridMock;
-
     @Mock
     private ScenarioGridLayer scenarioGridLayerMock;
-
     @Mock
     private ScenarioGridPanel scenarioGridPanelMock;
-
-    @Mock
-    private ScenarioGridModel scenarioGridModelMock;
-
     @Mock
     private ScenarioSimulationView scenarioSimulationViewMock;
-
+    @Mock
+    private ScenarioGridModel scenarioGridModelMock;
     @Mock
     private ScenarioSimulationProducer scenarioSimulationProducerMock;
-
     @Mock
     private ImportsWidgetPresenter importsWidgetPresenterMock;
-
-    @Mock
-    private AsyncPackageDataModelOracleFactory oracleFactoryMock;
-
-    @Mock
-    private AsyncPackageDataModelOracle oracleMock;
-
     @Mock
     private PlaceManager placeManagerMock;
-
     @Mock
     private AbstractWorkbenchActivity rightPanelActivityMock;
-
     @Mock
     private RightPanelView rightPanelViewMock;
-
-    @Mock
-    private RightPanelPresenter rightPanelPresenterMock;
-
     @Mock
     private ObservablePath pathMock;
     @Mock
@@ -146,9 +117,17 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationContext contextMock;
     @Mock
+    private ScenarioSimulationContext.Status statusMock;
+    @Mock
     private TestRunnerReportingScreen testRunnerReportingScreenMock;
     @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
+    @Mock
+    private ScenarioMenuItem runScenarioMenuItemMock;
+    @Mock
+    private ScenarioMenuItem undoMenuItemMock;
+    @Mock
+    private ScenarioMenuItem redoMenuItemMock;
 
     @Before
     public void setup() {
@@ -156,18 +135,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
+        when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
+        when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationContext()).thenReturn(contextMock);
         when(placeRequestMock.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
-
-        when(oracleFactoryMock.makeAsyncPackageDataModelOracle(anyObject(), anyObject(), anyObject())).thenReturn(oracleMock);
-
         when(rightPanelViewMock.getPresenter()).thenReturn(rightPanelPresenterMock);
         when(rightPanelActivityMock.getWidget()).thenReturn(rightPanelViewMock);
-
         when(placeRequestMock.getPath()).thenReturn(pathMock);
+        when(contextMock.getStatus()).thenReturn(statusMock);
 
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationServiceMock),
                                                                scenarioSimulationProducerMock,
@@ -188,8 +167,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.alertsButtonMenuItemBuilder = alertsButtonMenuItemBuilderMock;
                 this.path = pathMock;
                 this.scenarioGridPanel = scenarioGridPanelMock;
-                this.oracle = oracleMock;
                 this.packageName = SCENARIO_PACKAGE;
+                this.eventBus = eventBusMock;
+                this.context = contextMock;
             }
 
             @Override
@@ -203,16 +183,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            void populateRightPanel() {
+            protected void populateRightPanel() {
             }
 
             @Override
-            void clearRightPanelStatus() {
+            protected void clearRightPanelStatus() {
 
             }
 
             @Override
-            String getJsonModel(ScenarioSimulationModel model) {
+            protected String getJsonModel(ScenarioSimulationModel model) {
                 return "";
             }
         };
@@ -245,20 +225,58 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void validateButtonShouldNotBeAdded() {
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-
         verify(presenterSpy, never()).getValidateCommand();
     }
 
     @Test
     public void runScenarioButtonIsAdded() throws Exception {
-
         final MenuItem menuItem = mock(MenuItem.class);
         doReturn(menuItem).when(scenarioSimulationViewMock).getRunScenarioMenuItem();
-
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
-
         verify(fileMenuBuilderMock).addNewTopLevelMenu(menuItem);
+    }
+
+    @Test
+    public void onUndo() {
+        presenter.onUndo();
+        verify(eventBusMock, times(1)).fireEvent(isA(UndoEvent.class));
+    }
+
+    @Test
+    public void onRedo() {
+        presenter.onRedo();
+        verify(eventBusMock, times(1)).fireEvent(isA(RedoEvent.class));
+    }
+
+    @Test
+    public void setUndoButtonEnabledStatus() {
+        presenter.setUndoButtonEnabledStatus(true);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(true));
+        //
+        reset(undoMenuItemMock);
+        presenter.setUndoButtonEnabledStatus(false);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
+    }
+
+    @Test
+    public void setRedoButtonEnabledStatus() {
+        presenter.setRedoButtonEnabledStatus(true);
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(true));
+        //
+        reset(redoMenuItemMock);
+        presenter.setRedoButtonEnabledStatus(false);
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
+    }
+
+    @Test
+    public void makeMenuBar() {
+        presenter.makeMenuBar();
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
+        verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
+        verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
     @Test
@@ -266,9 +284,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
         reset(scenarioSimulationViewMock);
-
         presenter.save("save message");
-
         verify(scenarioSimulationViewMock).hideBusyIndicator();
         verify(notificationMock).fire(any(NotificationEvent.class));
         verify(versionRecordManagerMock).reloadVersions(any(Path.class));
@@ -311,55 +327,25 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTest() throws Exception {
-
-        final ScenarioSimulationModel model = new ScenarioSimulationModel();
         doReturn(new ScenarioSimulationModelContent(model,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-
         when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(mock(ScenarioSimulationModel.class));
-
         presenter.onStartup(mock(ObservablePath.class), mock(PlaceRequest.class));
-
         presenter.onRunScenario();
-
         verify(scenarioSimulationServiceMock).runScenario(any(), eq(model));
-
         verify(scenarioGridModelMock, times(1)).resetErrors();
-
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
-
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
     }
 
     @Test
-    public void getFactModelTree() {
-        String factPackage = "scenario.test";
-        String factName = "FACT_NAME";
-        String fullFactname = factPackage + "." + factName;
-        ModelField modelField1 = new ModelField("this",
-                                                fullFactname,
-                                                ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
-                                                ModelField.FIELD_ORIGIN.SELF,
-                                                FieldAccessorsAndMutators.BOTH,
-                                                fullFactname);
-        ModelField modelField2 = new ModelField("myint",
-                                                int.class.getName(),
-                                                ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
-                                                ModelField.FIELD_ORIGIN.SELF,
-                                                FieldAccessorsAndMutators.BOTH,
-                                                int.class.getName());
-        ModelField[] modelFields = {modelField1, modelField2};
-        when(oracleMock.getFQCNByFactName(factName)).thenReturn(fullFactname);
-        FactModelTree retrieved = presenter.getFactModelTree(factName, modelFields);
-        assertNotNull(retrieved);
-        assertEquals(factName, retrieved.getFactName());
-        assertEquals(factPackage, retrieved.getFullPackage());
-        when(oracleMock.getFQCNByFactName(factName)).thenReturn(null);
-        retrieved = presenter.getFactModelTree(factName, modelFields);
-        assertNotNull(retrieved);
-        assertEquals(factName, retrieved.getFactName());
-        assertEquals(SCENARIO_PACKAGE, retrieved.getFullPackage());
+    public void refreshModelContent() {
+        when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
+        presenter.refreshModelContent(scenarioSimulationModelMock);
+        assertEquals(scenarioSimulationModelMock, presenter.getModel());
+        verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
+        verify(statusMock, times(1)).setSimulation(eq(simulationMock));
     }
 
     @Test

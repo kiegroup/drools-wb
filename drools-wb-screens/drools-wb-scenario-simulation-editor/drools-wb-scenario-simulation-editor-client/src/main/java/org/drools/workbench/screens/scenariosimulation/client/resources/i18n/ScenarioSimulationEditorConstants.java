@@ -129,4 +129,12 @@ public interface ScenarioSimulationEditorConstants
     String changeTypeTextQuestion();
 
     String changeTypeTextDanger();
+
+    String undo();
+
+    String redo();
+
+    String sourceType();
+
+    String chooseDMN();
 }
