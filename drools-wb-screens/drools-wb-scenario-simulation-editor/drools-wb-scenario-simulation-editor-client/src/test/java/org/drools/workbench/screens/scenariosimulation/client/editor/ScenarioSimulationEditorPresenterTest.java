@@ -16,14 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.Map;
-
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -61,10 +58,8 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
-import static org.jgroups.util.Util.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
@@ -343,28 +338,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
     }
-
-    @Test
-    public void getSimpleClassFactModelTree() {
-        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
-        for (Class expectedClazz : expectedClazzes) {
-            final FactModelTree retrieved = presenter.getSimpleClassFactModelTree(expectedClazz);
-            assertNotNull(retrieved);
-            String key = expectedClazz.getSimpleName();
-            assertEquals(key, retrieved.getFactName());
-            String fullName = expectedClazz.getCanonicalName();
-            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-            assertEquals(packageName, retrieved.getFullPackage());
-            Map<String, String> simpleProperties = retrieved.getSimpleProperties();
-            assertNotNull(simpleProperties);
-            assertEquals(1, simpleProperties.size());
-            assertTrue(simpleProperties.containsKey("value"));
-            String simplePropertyValue = simpleProperties.get("value");
-            assertNotNull(simplePropertyValue);
-            assertEquals(fullName, simplePropertyValue);
-        }
-    }
-
 
     @Test
     public void refreshModelContent() {

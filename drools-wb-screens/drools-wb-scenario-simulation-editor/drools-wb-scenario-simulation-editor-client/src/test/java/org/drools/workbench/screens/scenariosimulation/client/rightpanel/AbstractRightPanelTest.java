@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.LIElement;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.junit.Before;
@@ -39,6 +40,7 @@ abstract class AbstractRightPanelTest {
     protected ViewsProvider viewsProviderMock;
 
     protected SortedMap<String, FactModelTree> dataObjectFactTreeMap;
+    protected SortedMap<String, FactModelTree> simpleJavaTypeTreeMap;
     protected SortedMap<String, FactModelTree> instanceFactTreeMap;
     protected String FACT_NAME;
     protected String FACT_PACKAGE = "test.scesim.package";
@@ -57,6 +59,7 @@ abstract class AbstractRightPanelTest {
     @Before
     public void setup() {
         dataObjectFactTreeMap = getDataObjectFactTreeMap();
+        simpleJavaTypeTreeMap = getSimpleJavaTypeFieldsMap();
         instanceFactTreeMap = new TreeMap<>();
         dataObjectFactTreeMap.keySet().forEach(key -> instanceFactTreeMap.put(getRandomString(), dataObjectFactTreeMap.get(key)));
 
@@ -85,6 +88,19 @@ abstract class AbstractRightPanelTest {
                         value.addSimpleProperty(getRandomString(), value.getFactName());
                     }
                 });
+        return toReturn;
+    }
+
+    protected SortedMap<String, FactModelTree> getSimpleJavaTypeFieldsMap() {
+        SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
+        for (String key : DataManagementStrategy.SIMPLE_CLASSES_MAP.keySet()) {
+            Map<String, String> simpleProperties = new HashMap<>();
+            String fullName = DataManagementStrategy.SIMPLE_CLASSES_MAP.get(key).getCanonicalName();
+            simpleProperties.put("value", fullName);
+            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+            FactModelTree value = new FactModelTree(key, packageName, simpleProperties);
+            toReturn.put(key, value);
+        }
         return toReturn;
     }
 

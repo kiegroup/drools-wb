@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -242,7 +242,7 @@ public class ScenarioGridModel extends BaseGridData {
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        if (!ScenarioSimulationEditorPresenter.SIMPLE_CLASSES_MAP.keySet().contains(elements[0])) {
+        if (!DataManagementStrategy.SIMPLE_CLASSES_MAP.keySet().contains(elements[0])) {
             IntStream.range(1, elements.length)
                     .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
         }

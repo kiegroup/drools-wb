@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -36,7 +38,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.callbacks.Callback;
 
-public class DMODataManagementStrategy implements DataManagementStrategy {
+public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
@@ -52,29 +54,39 @@ public class DMODataManagementStrategy implements DataManagementStrategy {
 
     @Override
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
-        // Instantiate a container map
-        SortedMap<String, FactModelTree> factTypeFieldsMap = new TreeMap<>();
         // Execute only when oracle has been set
-        if (oracle == null) {
+        if (oracle == null || oracle.getFactTypes().length == 0) {
             if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+                rightPanelPresenter.setDataObjectFieldsMap(new TreeMap<>());
+                rightPanelPresenter.setSimpleJavaTypeFieldsMap(new TreeMap<>());
+                rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
             }
             return;
         }
         // Retrieve the relevant facttypes
-        String[] factTypes = oracle.getFactTypes();
-        if (factTypes.length == 0) {  // We do not have to set nothing
-            if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-            }
-            return;
-        }
+        List<String> factTypes = Arrays.asList(oracle.getFactTypes());
+
+        // Split the DMO from the Simple Java types
+        final Map<Boolean, List<String>> partitionedFactTypes = factTypes.stream()
+                .collect(Collectors.partitioningBy(factType -> SIMPLE_CLASSES_MAP.keySet().contains(factType)));
+
+        final List<String> dataObjectsTypes = partitionedFactTypes.get(false);
+        final List<String> simpleJavaTypes = partitionedFactTypes.get(true);
+
+        int expectedElements = dataObjectsTypes.size();
+        // Instantiate a dataObjects container map
+        SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
+        // Instantiate a simpleJavaTypes container map
+        SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
+
         // Instantiate the aggregator callback
-        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, factTypes.length, factTypeFieldsMap, scenarioGridModel);
-        // Iterate over all facttypes to retrieve their modelfields
-        for (String factType : factTypes) {
-            oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback));
-        }
+        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel);
+        // Iterate over all dataObjects to retrieve their modelfields
+        dataObjectsTypes.forEach(factType ->
+                                         oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
+        simpleJavaTypes.forEach(factType ->
+                                        simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
+        rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleJavaTypeFieldsMap);
     }
 
     @Override
@@ -123,7 +135,8 @@ public class DMODataManagementStrategy implements DataManagementStrategy {
         Map<String, String> simpleProperties = new HashMap<>();
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
-                simpleProperties.put(modelField.getName(), modelField.getClassName());
+                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
+                simpleProperties.put(modelField.getName(), className);
             }
         }
         String factPackageName = packageName;

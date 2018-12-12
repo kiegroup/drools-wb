@@ -57,6 +57,9 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     private DivElement dataObjectListContainerMock;
 
     @Mock
+    private DivElement simpleJavaTypeListContainerMock;
+
+    @Mock
     private DivElement instanceListContainerMock;
 
     @Mock
@@ -87,11 +90,13 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass);
 
         when(rightPanelViewMock.getDataObjectListContainer()).thenReturn(dataObjectListContainerMock);
+        when(rightPanelViewMock.getSimpleJavaTypeListContainer()).thenReturn(simpleJavaTypeListContainerMock);
         when(rightPanelViewMock.getInstanceListContainer()).thenReturn(instanceListContainerMock);
         when(listGroupItemPresenterMock.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(dataObjectListContainerMock);
         this.rightPanelPresenter = spy(new RightPanelPresenter(rightPanelViewMock, listGroupItemPresenterMock) {
             {
                 this.dataObjectFieldsMap = dataObjectFactTreeMap;
+                this.simpleJavaTypeFieldsMap = simpleJavaTypeTreeMap;
                 this.instanceFieldsMap = instanceFactTreeMap;
                 this.eventBus = eventBusMock;
             }

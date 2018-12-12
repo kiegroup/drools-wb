@@ -16,18 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
@@ -48,7 +38,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -96,16 +85,6 @@ public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
-
-    public static final Map<String, Class> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
-            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), Boolean.class),
-            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), Double.class),
-            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), Integer.class),
-            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), Number.class),
-            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), String.class)).
-            collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
-
-    protected AsyncPackageDataModelOracle oracle;
 
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
@@ -389,7 +368,6 @@ public class ScenarioSimulationEditorPresenter
             packageName = content.getDataModel().getPackageName();
             resetEditorPages(content.getOverview());
             dataManagementStrategy = new DMODataManagementStrategy(oracleFactory);
-
             dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
             populateRightPanel();
             model = content.getModel();

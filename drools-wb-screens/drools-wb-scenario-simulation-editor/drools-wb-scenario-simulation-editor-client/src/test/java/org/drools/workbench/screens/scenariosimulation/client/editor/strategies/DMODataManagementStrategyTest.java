@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.jgroups.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -136,6 +137,27 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
             verify(spied, times(1)).addExpandableProperty(eq(key), eq(factName));
         });
         assertTrue(toPopulate.getSimpleProperties().isEmpty());
+    }
+
+    @Test
+    public void getSimpleClassFactModelTree() {
+        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
+        for (Class expectedClazz : expectedClazzes) {
+            final FactModelTree retrieved = dmoDataManagementStrategy.getSimpleClassFactModelTree(expectedClazz);
+            assertNotNull(retrieved);
+            String key = expectedClazz.getSimpleName();
+            assertEquals(key, retrieved.getFactName());
+            String fullName = expectedClazz.getCanonicalName();
+            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+            assertEquals(packageName, retrieved.getFullPackage());
+            Map<String, String> simpleProperties = retrieved.getSimpleProperties();
+            assertNotNull(simpleProperties);
+            assertEquals(1, simpleProperties.size());
+            Util.assertTrue(simpleProperties.containsKey("value"));
+            String simplePropertyValue = simpleProperties.get("value");
+            assertNotNull(simplePropertyValue);
+            assertEquals(fullName, simplePropertyValue);
+        }
     }
 
     private ModelField[] getModelFieldsInner(Map<String, String> simpleProperties) {
