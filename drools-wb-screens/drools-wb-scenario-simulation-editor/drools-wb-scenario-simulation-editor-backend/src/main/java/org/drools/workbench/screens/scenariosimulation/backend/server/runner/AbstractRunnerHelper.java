@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
@@ -48,9 +48,9 @@ public abstract class AbstractRunnerHelper {
     public void run(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Scenario scenario, ExpressionEvaluator expressionEvaluator, ClassLoader classLoader, ScenarioRunnerData scenarioRunnerData) {
 
         extractGivenValues(simulationDescriptor, scenario.getUnmodifiableFactMappingValues(), classLoader, expressionEvaluator)
-                .forEach(scenarioRunnerData::addInput);
+                .forEach(scenarioRunnerData::addGiven);
 
-        extractExpectedValues(scenario.getUnmodifiableFactMappingValues()).forEach(scenarioRunnerData::addOutput);
+        extractExpectedValues(scenario.getUnmodifiableFactMappingValues()).forEach(scenarioRunnerData::addExpect);
 
         RequestContext requestContext = executeScenario(kieContainer,
                                                         scenarioRunnerData,
@@ -62,15 +62,15 @@ public abstract class AbstractRunnerHelper {
                          expressionEvaluator,
                          requestContext);
 
-        validateAssertion(scenarioRunnerData.getResultData(),
+        validateAssertion(scenarioRunnerData.getResults(),
                           scenario);
     }
 
-    public List<ScenarioInput> extractGivenValues(SimulationDescriptor simulationDescriptor,
+    public List<ScenarioGiven> extractGivenValues(SimulationDescriptor simulationDescriptor,
                                                   List<FactMappingValue> factMappingValues,
                                                   ClassLoader classLoader,
                                                   ExpressionEvaluator expressionEvaluator) {
-        List<ScenarioInput> scenarioInput = new ArrayList<>();
+        List<ScenarioGiven> scenarioGiven = new ArrayList<>();
 
         Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifier =
                 groupByFactIdentifierAndFilter(factMappingValues, FactMappingType.GIVEN);
@@ -86,18 +86,17 @@ public abstract class AbstractRunnerHelper {
                                                                        classLoader,
                                                                        expressionEvaluator);
 
-            // FIXME to test
             Object bean = getDirectMapping(paramsForBean, entry.getKey().getClassName(), classLoader)
                     .orElse(createObject(factIdentifier.getClassName(), paramsForBean, classLoader));
 
-            scenarioInput.add(new ScenarioInput(factIdentifier, bean));
+            scenarioGiven.add(new ScenarioGiven(factIdentifier, bean));
         }
 
-        return scenarioInput;
+        return scenarioGiven;
     }
 
     public Optional<Object> getDirectMapping(Map<List<String>, Object> params, String className, ClassLoader classLoader) {
-        // if a direct mapping exists (no steps to reach the field) the value itself is the object
+        // if a direct mapping exists (no steps to reach the field) the value itself is the object (just converted)
         return params.entrySet().stream()
                 .filter(e -> e.getKey().isEmpty())
                 .map(Map.Entry::getValue)
@@ -105,10 +104,8 @@ public abstract class AbstractRunnerHelper {
                 .map(rawValue -> convertValue(className, rawValue, classLoader));
     }
 
-    protected abstract Object convertValue(String className, Object rawValue, ClassLoader classLoader);
-
-    public List<ScenarioOutput> extractExpectedValues(List<FactMappingValue> factMappingValues) {
-        List<ScenarioOutput> scenarioOutput = new ArrayList<>();
+    public List<ScenarioExpect> extractExpectedValues(List<FactMappingValue> factMappingValues) {
+        List<ScenarioExpect> scenarioExpect = new ArrayList<>();
 
         Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifier =
                 groupByFactIdentifierAndFilter(factMappingValues, FactMappingType.EXPECT);
@@ -122,10 +119,10 @@ public abstract class AbstractRunnerHelper {
 
             FactIdentifier factIdentifier = entry.getKey();
 
-            scenarioOutput.add(new ScenarioOutput(factIdentifier, entry.getValue(), !inputFacts.contains(factIdentifier)));
+            scenarioExpect.add(new ScenarioExpect(factIdentifier, entry.getValue(), !inputFacts.contains(factIdentifier)));
         }
 
-        return scenarioOutput;
+        return scenarioExpect;
     }
 
     public Map<FactIdentifier, List<FactMappingValue>> groupByFactIdentifierAndFilter(List<FactMappingValue> factMappingValues,
@@ -205,4 +202,6 @@ public abstract class AbstractRunnerHelper {
                                           RequestContext requestContext);
 
     public abstract Object createObject(String className, Map<List<String>, Object> params, ClassLoader classLoader);
+
+    protected abstract Object convertValue(String className, Object rawValue, ClassLoader classLoader);
 }

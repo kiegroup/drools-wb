@@ -40,9 +40,8 @@ public class DMNFeelExpressionEvaluatorTest {
     @Test
     public void getValueForGiven() {
         assertEquals(BigDecimal.valueOf(5), expressionEvaluator.getValueForGiven(BigDecimal.class.getCanonicalName(), "2 + 3"));
-        assertThatThrownBy(() -> expressionEvaluator.getValueForGiven("class", new Object()))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Raw expression should be a string");
+        Object nonStringObject = new Object();
+        assertEquals(nonStringObject, expressionEvaluator.getValueForGiven("class", nonStringObject));
 
         assertThatThrownBy(() -> expressionEvaluator.getValueForGiven(String.class.getCanonicalName(), "2 + 3"))
                 .isInstanceOf(IllegalArgumentException.class)

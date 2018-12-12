@@ -27,8 +27,8 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.expression
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Dispute;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Person;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
@@ -110,78 +110,78 @@ public class RuleScenarioRunnerHelperTest {
 
     @Test
     public void extractGivenValuesTest() {
-        List<ScenarioInput> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario1.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
+        List<ScenarioGiven> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario1.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
         assertEquals(1, scenario1Inputs.size());
 
-        List<ScenarioInput> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario2.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
+        List<ScenarioGiven> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario2.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
         assertEquals(2, scenario2Inputs.size());
     }
 
     @Test
     public void extractExpectedValuesTest() {
-        List<ScenarioOutput> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
+        List<ScenarioExpect> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
         assertEquals(1, scenario1Outputs.size());
 
         scenario2.addOrUpdateMappingValue(FactIdentifier.create("TEST", String.class.getCanonicalName()),
                                           ExpressionIdentifier.create("TEST", FactMappingType.EXPECT),
                                           "TEST");
-        List<ScenarioOutput> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
+        List<ScenarioExpect> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
         assertEquals(3, scenario2Outputs.size());
-        assertEquals(1, scenario2Outputs.stream().filter(ScenarioOutput::isNewFact).count());
+        assertEquals(1, scenario2Outputs.stream().filter(ScenarioExpect::isNewFact).count());
     }
 
     @Test
     public void verifyConditionsTest() {
-        List<ScenarioInput> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario1.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
-        List<ScenarioOutput> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
+        List<ScenarioGiven> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario1.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
+        List<ScenarioExpect> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
 
         ScenarioRunnerData scenarioRunnerData1 = new ScenarioRunnerData();
-        scenario1Inputs.forEach(scenarioRunnerData1::addInput);
-        scenario1Outputs.forEach(scenarioRunnerData1::addOutput);
+        scenario1Inputs.forEach(scenarioRunnerData1::addGiven);
+        scenario1Outputs.forEach(scenarioRunnerData1::addExpect);
 
         runnerHelper.verifyConditions(simulation.getSimulationDescriptor(),
                                       scenarioRunnerData1,
                                       expressionEvaluator,
                                       null);
-        assertEquals(1, scenarioRunnerData1.getResultData().size());
+        assertEquals(1, scenarioRunnerData1.getResults().size());
 
-        List<ScenarioInput> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario2.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
-        List<ScenarioOutput> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
+        List<ScenarioGiven> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario2.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
+        List<ScenarioExpect> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
 
         ScenarioRunnerData scenarioRunnerData2 = new ScenarioRunnerData();
-        scenario2Inputs.forEach(scenarioRunnerData2::addInput);
-        scenario2Outputs.forEach(scenarioRunnerData2::addOutput);
+        scenario2Inputs.forEach(scenarioRunnerData2::addGiven);
+        scenario2Outputs.forEach(scenarioRunnerData2::addExpect);
 
         runnerHelper.verifyConditions(simulation.getSimulationDescriptor(),
                                       scenarioRunnerData2,
                                       expressionEvaluator,
                                       null);
-        assertEquals(2, scenarioRunnerData2.getResultData().size());
+        assertEquals(2, scenarioRunnerData2.getResults().size());
     }
 
     @Test
     public void getScenarioResultsTest() {
-        List<ScenarioInput> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario1.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
-        List<ScenarioOutput> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
+        List<ScenarioGiven> scenario1Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario1.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
+        List<ScenarioExpect> scenario1Outputs = runnerHelper.extractExpectedValues(scenario1.getUnmodifiableFactMappingValues());
 
         assertTrue(scenario1Inputs.size() > 0);
 
-        ScenarioInput input1 = scenario1Inputs.get(0);
+        ScenarioGiven input1 = scenario1Inputs.get(0);
 
         scenario1Outputs = scenario1Outputs.stream().filter(elem -> elem.getFactIdentifier().equals(input1.getFactIdentifier())).collect(toList());
         List<ScenarioResult> scenario1Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, input1, expressionEvaluator);
@@ -189,15 +189,15 @@ public class RuleScenarioRunnerHelperTest {
         assertEquals(1, scenario1Results.size());
         assertFalse(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
 
-        List<ScenarioInput> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
-                                                                 scenario2.getUnmodifiableFactMappingValues(),
-                                                                 classLoader,
-                                                                 expressionEvaluator);
-        List<ScenarioOutput> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
+        List<ScenarioGiven> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
+                                                                              scenario2.getUnmodifiableFactMappingValues(),
+                                                                              classLoader,
+                                                                              expressionEvaluator);
+        List<ScenarioExpect> scenario2Outputs = runnerHelper.extractExpectedValues(scenario2.getUnmodifiableFactMappingValues());
 
         assertTrue(scenario2Inputs.size() > 0);
 
-        ScenarioInput input2 = scenario2Inputs.get(0);
+        ScenarioGiven input2 = scenario2Inputs.get(0);
 
         scenario2Outputs = scenario2Outputs.stream().filter(elem -> elem.getFactIdentifier().equals(input2.getFactIdentifier())).collect(toList());
         List<ScenarioResult> scenario2Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario2Outputs, input2, expressionEvaluator);
@@ -205,14 +205,14 @@ public class RuleScenarioRunnerHelperTest {
         assertEquals(1, scenario2Results.size());
         assertFalse(scenario2Outputs.get(0).getExpectedResult().get(0).isError());
 
-        List<ScenarioOutput> newFact = Collections.singletonList(new ScenarioOutput(personFactIdentifier, Collections.emptyList(), true));
+        List<ScenarioExpect> newFact = Collections.singletonList(new ScenarioExpect(personFactIdentifier, Collections.emptyList(), true));
         List<ScenarioResult> scenario2NoResults = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), newFact, input2, expressionEvaluator);
 
         assertEquals(0, scenario2NoResults.size());
 
         Person person = new Person();
         person.setFirstName("ANOTHER STRING");
-        ScenarioInput newInput = new ScenarioInput(personFactIdentifier, person);
+        ScenarioGiven newInput = new ScenarioGiven(personFactIdentifier, person);
 
         List<ScenarioResult> scenario3Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, newInput, expressionEvaluator);
         assertTrue(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
@@ -279,10 +279,10 @@ public class RuleScenarioRunnerHelperTest {
         assertFalse(extractorFunction.apply(person).isSatisfied());
 
         Function<Object, SingleFactValueResult> extractorFunction1 = runnerHelper.createExtractorFunction(expressionEvaluator,
-                                                                                             new FactMappingValue(personFactIdentifier,
-                                                                                                                  firstNameGivenExpressionIdentifier,
-                                                                                                                  null),
-                                                                                             simulation.getSimulationDescriptor());
+                                                                                                          new FactMappingValue(personFactIdentifier,
+                                                                                                                               firstNameGivenExpressionIdentifier,
+                                                                                                                               null),
+                                                                                                          simulation.getSimulationDescriptor());
         SingleFactValueResult nullValue = extractorFunction1.apply(new Person());
         assertTrue(nullValue.isSatisfied());
         assertNull(nullValue.getResult());
@@ -310,11 +310,9 @@ public class RuleScenarioRunnerHelperTest {
 
         assertEquals("Test", runnerHelper.getDirectMapping(paramsToSet, String.class.getCanonicalName(), classLoader).get());
 
-
         paramsToSet.clear();
         paramsToSet.put(Collections.emptyList(), "1");
 
         assertEquals(1, runnerHelper.getDirectMapping(paramsToSet, Integer.class.getCanonicalName(), classLoader).get());
     }
-
 }

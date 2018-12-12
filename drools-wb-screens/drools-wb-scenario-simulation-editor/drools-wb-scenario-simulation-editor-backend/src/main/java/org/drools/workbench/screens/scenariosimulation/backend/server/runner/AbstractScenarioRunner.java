@@ -35,6 +35,8 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.kie.api.runtime.KieContainer;
 
+import static org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel.Type;
+
 public abstract class AbstractScenarioRunner extends Runner {
 
     private final ClassLoader classLoader;
@@ -103,7 +105,7 @@ public abstract class AbstractScenarioRunner extends Runner {
 
         runNotifier.fireTestFinished(descriptionForScenario);
 
-        return scenarioRunnerData.getResultData();
+        return scenarioRunnerData.getResults();
     }
 
     protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
@@ -164,12 +166,13 @@ public abstract class AbstractScenarioRunner extends Runner {
                                                  String.format("#%d: %s", index, scenario.getDescription()));
     }
 
-    public static BiFunction<KieContainer, Simulation, AbstractScenarioRunner> newSpecificRunner(Simulation simulation) {
-        // FIXME wait DROOLS-3361
-        if (true) {
+    public static BiFunction<KieContainer, Simulation, AbstractScenarioRunner> getSpecificRunnerProvider(Simulation simulation) {
+        if (Type.RULE.equals(simulation.getSimulationDescriptor().getType())) {
             return RuleScenarioRunner::new;
-        } else {
+        } else if (Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
             return DMNScenarioRunner::new;
+        } else {
+            throw new IllegalArgumentException("Impossible to run simulation of type " + simulation.getSimulationDescriptor().getType());
         }
     }
 

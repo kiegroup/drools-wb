@@ -23,8 +23,8 @@ import java.util.Map;
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.DMNFeelExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.fluent.DMNScenarioExecutableBuilder;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifie
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
@@ -43,7 +44,6 @@ import static org.drools.workbench.screens.scenariosimulation.backend.server.run
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult.createResult;
 import static org.kie.dmn.api.core.DMNDecisionResult.DecisionEvaluationStatus.SUCCEEDED;
 
-// FIXME to test
 public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
 
     private final SimulationDescriptor simulationDescriptor;
@@ -52,23 +52,23 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
         this.simulationDescriptor = simulationDescriptor;
     }
 
-    // FIXME to test
     @Override
     public RequestContext executeScenario(KieContainer kieContainer,
                                           ScenarioRunnerData scenarioRunnerData,
                                           ExpressionEvaluator expressionEvaluator,
                                           SimulationDescriptor simulationDescriptor) {
+        if (!ScenarioSimulationModel.Type.DMN.equals(simulationDescriptor.getType())) {
+            throw new ScenarioException("Impossible to run a not-DMN simulation with DMN runner");
+        }
         DMNScenarioExecutableBuilder executableBuilder = DMNScenarioExecutableBuilder.createBuilder(kieContainer);
-        // FIXME wait DROOLS-3361
-        // executableBuilder.setActiveModel(simulationDescriptor.getPath());
-        for (ScenarioInput input : scenarioRunnerData.getInputData()) {
+        executableBuilder.setActiveModel(simulationDescriptor.getDmnFilePath());
+        for (ScenarioGiven input : scenarioRunnerData.getGivens()) {
             executableBuilder.setValue(input.getFactIdentifier().getName(), input.getValue());
         }
 
         return executableBuilder.run();
     }
 
-    // FIXME to test
     @Override
     public void verifyConditions(SimulationDescriptor simulationDescriptor,
                                  ScenarioRunnerData scenarioRunnerData,
@@ -76,14 +76,14 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                  RequestContext requestContext) {
         DMNResult dmnResult = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_RESULT);
 
-        for (ScenarioOutput output : scenarioRunnerData.getOutputData()) {
+        for (ScenarioExpect output : scenarioRunnerData.getExpects()) {
             FactIdentifier factIdentifier = output.getFactIdentifier();
             String decisionName = factIdentifier.getName();
             DMNDecisionResult decisionResult = dmnResult.getDecisionResultByName(decisionName);
             if (decisionResult == null) {
                 throw new ScenarioException("DMN execution has not generated a decision result with name " + decisionName);
             }
-            if(!SUCCEEDED.equals(decisionResult.getEvaluationStatus())) {
+            if (!SUCCEEDED.equals(decisionResult.getEvaluationStatus())) {
                 throw new ScenarioException("DMN decision '" + decisionName + "' has status " + decisionResult.getEvaluationStatus());
             }
 
@@ -97,18 +97,17 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
 
                 scenarioRunnerData.addResult(new ScenarioResult(factIdentifier, expectedResult, resultValue.getResult()).setResult(resultValue.isSatisfied()));
             }
-
         }
     }
 
     @SuppressWarnings("unchecked")
     protected SingleFactValueResult getSingleFactValueResult(FactMapping factMapping,
-                                                           FactMappingValue expectedResult,
-                                                           DMNDecisionResult decisionResult,
-                                                           ExpressionEvaluator expressionEvaluator) {
+                                                             FactMappingValue expectedResult,
+                                                             DMNDecisionResult decisionResult,
+                                                             ExpressionEvaluator expressionEvaluator) {
         Object resultRaw = decisionResult.getResult();
         for (ExpressionElement expressionElement : factMapping.getExpressionElements()) {
-            if(resultRaw == null || !(resultRaw.getClass().isAssignableFrom(Map.class))) {
+            if (resultRaw == null || !(resultRaw instanceof Map)) {
                 throw new ScenarioException("Wrong resultRaw structure because it is not a complex type as expected");
             }
             Map<String, Object> result = (Map<String, Object>) resultRaw;
@@ -121,7 +120,6 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                 createErrorResult();
     }
 
-    // FIXME to test
     @SuppressWarnings("unchecked")
     @Override
     public Object createObject(String className, Map<List<String>, Object> params, ClassLoader classLoader) {

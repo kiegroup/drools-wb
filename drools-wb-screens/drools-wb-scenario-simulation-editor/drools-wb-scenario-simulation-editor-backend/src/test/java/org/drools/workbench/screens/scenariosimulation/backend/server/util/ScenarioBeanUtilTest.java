@@ -145,8 +145,8 @@ public class ScenarioBeanUtilTest {
         assertEquals(1.0F, convertValue(Float.class.getCanonicalName(), "1.0", classLoader));
         assertEquals('a', convertValue(char.class.getCanonicalName(), "a", classLoader));
         assertEquals('a', convertValue(Character.class.getCanonicalName(), "a", classLoader));
-        assertEquals((short)1, convertValue(short.class.getCanonicalName(), "1", classLoader));
-        assertEquals((short)1, convertValue(Short.class.getCanonicalName(), "1", classLoader));
+        assertEquals((short) 1, convertValue(short.class.getCanonicalName(), "1", classLoader));
+        assertEquals((short) 1, convertValue(Short.class.getCanonicalName(), "1", classLoader));
         assertEquals("0".getBytes()[0], convertValue(byte.class.getCanonicalName(), "0", classLoader));
         assertEquals("0".getBytes()[0], convertValue(Byte.class.getCanonicalName(), "0", classLoader));
         assertNull(convertValue(Float.class.getCanonicalName(), null, classLoader));

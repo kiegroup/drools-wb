@@ -24,8 +24,8 @@ import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.fluent.RuleScenarioExecutableBuilder;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioInput;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioOutput;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifie
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
@@ -59,10 +60,14 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
                                           ScenarioRunnerData scenarioRunnerData,
                                           ExpressionEvaluator expressionEvaluator,
                                           SimulationDescriptor simulationDescriptor) {
+        if (!ScenarioSimulationModel.Type.RULE.equals(simulationDescriptor.getType())) {
+            throw new ScenarioException("Impossible to run a not-RULE simulation with RULE runner");
+        }
         RuleScenarioExecutableBuilder ruleScenarioExecutableBuilder = createBuilder(kieContainer);
-        scenarioRunnerData.getInputData().stream().map(ScenarioInput::getValue).forEach(ruleScenarioExecutableBuilder::insert);
-        scenarioRunnerData.getOutputData().stream()
-                .filter(ScenarioOutput::isNewFact)
+        scenarioRunnerData.getGivens().stream().map(ScenarioGiven::getValue).forEach(ruleScenarioExecutableBuilder::insert);
+        // all new facts should be verified internally to the working memory because
+        scenarioRunnerData.getExpects().stream()
+                .filter(ScenarioExpect::isNewFact)
                 .flatMap(output -> output.getExpectedResult().stream()
                         .map(factMappingValue -> new ScenarioResult(output.getFactIdentifier(), factMappingValue)))
                 .forEach(scenarioResult -> {
@@ -82,9 +87,9 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
                                  ExpressionEvaluator expressionEvaluator,
                                  RequestContext requestContext) {
 
-        for (ScenarioInput input : scenarioRunnerData.getInputData()) {
+        for (ScenarioGiven input : scenarioRunnerData.getGivens()) {
             FactIdentifier factIdentifier = input.getFactIdentifier();
-            List<ScenarioOutput> assertionOnFact = scenarioRunnerData.getOutputData().stream()
+            List<ScenarioExpect> assertionOnFact = scenarioRunnerData.getExpects().stream()
                     .filter(elem -> !elem.isNewFact())
                     .filter(elem -> Objects.equals(elem.getFactIdentifier(), factIdentifier)).collect(toList());
 
@@ -98,18 +103,18 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     protected List<ScenarioResult> getScenarioResultsFromGivenFacts(SimulationDescriptor simulationDescriptor,
-                                                                 List<ScenarioOutput> scenarioOutputsPerFact,
-                                                                 ScenarioInput input,
-                                                                 ExpressionEvaluator expressionEvaluator) {
+                                                                    List<ScenarioExpect> scenarioOutputsPerFact,
+                                                                    ScenarioGiven input,
+                                                                    ExpressionEvaluator expressionEvaluator) {
         FactIdentifier factIdentifier = input.getFactIdentifier();
         Object factInstance = input.getValue();
         List<ScenarioResult> scenarioResults = new ArrayList<>();
-        for (ScenarioOutput scenarioOutput : scenarioOutputsPerFact) {
-            if (scenarioOutput.isNewFact()) {
+        for (ScenarioExpect scenarioExpect : scenarioOutputsPerFact) {
+            if (scenarioExpect.isNewFact()) {
                 continue;
             }
 
-            for (FactMappingValue expectedResult : scenarioOutput.getExpectedResult()) {
+            for (FactMappingValue expectedResult : scenarioExpect.getExpectedResult()) {
 
                 SingleFactValueResult resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
 
@@ -122,8 +127,8 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     protected Function<Object, SingleFactValueResult> createExtractorFunction(ExpressionEvaluator expressionEvaluator,
-                                                                           FactMappingValue expectedResult,
-                                                                           SimulationDescriptor simulationDescriptor) {
+                                                                              FactMappingValue expectedResult,
+                                                                              SimulationDescriptor simulationDescriptor) {
         return objectToCheck -> {
 
             ExpressionIdentifier expressionIdentifier = expectedResult.getExpressionIdentifier();

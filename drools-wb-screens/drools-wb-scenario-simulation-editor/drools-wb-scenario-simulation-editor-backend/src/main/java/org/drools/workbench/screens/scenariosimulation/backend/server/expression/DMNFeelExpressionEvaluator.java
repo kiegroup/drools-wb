@@ -46,11 +46,11 @@ public class DMNFeelExpressionEvaluator implements ExpressionEvaluator {
     @Override
     public Object getValueForGiven(String className, Object raw) {
         if (!(raw instanceof String)) {
-            throw new IllegalArgumentException("Raw expression should be a string");
+            return raw;
         }
         EvaluationContext evaluationContext = newEvaluationContext();
         Object toReturn = feel.evaluate((String) raw, evaluationContext);
-        if(toReturn != null && !toReturn.getClass().getCanonicalName().equals(className)) {
+        if (toReturn != null && !toReturn.getClass().getCanonicalName().equals(className)) {
             throw new IllegalArgumentException("Wrong type for expression, expected " + className + " found " + toReturn.getClass().getCanonicalName());
         }
         return toReturn;

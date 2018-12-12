@@ -120,7 +120,7 @@ public class ScenarioRunnerServiceImpl
         if (runnerSupplier != null) {
             return runnerSupplier;
         }
-        return AbstractScenarioRunner.newSpecificRunner(simulation);
+        return AbstractScenarioRunner.getSpecificRunnerProvider(simulation);
     }
 
     public void setRunnerSupplier(BiFunction<KieContainer, Simulation, AbstractScenarioRunner> runnerSupplier) {
