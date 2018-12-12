@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.backend.server.expression.rule;
-
-import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
+package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
 
 public class BaseExpressionEvaluator implements ExpressionEvaluator {
 
@@ -37,7 +35,7 @@ public class BaseExpressionEvaluator implements ExpressionEvaluator {
     }
 
     @Override
-    public Object getValueForGiven(String className, Object raw, ClassLoader classLoader) {
+    public Object getValueForGiven(String className, Object raw) {
         if (!(raw instanceof String)) {
             return raw;
         }

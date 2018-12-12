@@ -42,4 +42,6 @@ public class SingleFactValueResult {
     public Object getResult() {
         return result;
     }
+
+
 }

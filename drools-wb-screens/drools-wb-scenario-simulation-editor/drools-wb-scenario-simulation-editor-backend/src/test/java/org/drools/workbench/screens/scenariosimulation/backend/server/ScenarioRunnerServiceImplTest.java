@@ -15,12 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.IndexedScenarioException;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerImpl;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.RuleScenarioRunner;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioException;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -28,9 +28,6 @@ import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.Failure;
-import org.junit.runner.notification.RunNotifier;
 import org.kie.api.runtime.KieContainer;
 import org.kie.workbench.common.services.backend.builder.service.BuildInfo;
 import org.kie.workbench.common.services.backend.builder.service.BuildInfoService;
@@ -60,7 +57,7 @@ public class ScenarioRunnerServiceImplTest {
     private EventSourceMock<TestResultMessage> defaultTestResultMessageEventMock;
 
     @Mock
-    private Runner runnerMock;
+    private AbstractScenarioRunner runnerMock;
 
     @Mock
     private KieModuleService moduleServiceMock;
@@ -127,17 +124,11 @@ public class ScenarioRunnerServiceImplTest {
         scenario.setDescription("Test Scenario");
         String errorMessage = "Test Error";
 
-        scenarioRunnerService.setRunnerSupplier((kieContainer, simulation) -> new ScenarioRunnerImpl(kieContainer, simulation) {
+        scenarioRunnerService.setRunnerSupplier((kieContainer, simulation) -> new RuleScenarioRunner(kieContainer, simulation, "") {
 
             @Override
-            protected List<ScenarioResult> internalRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
-
-                runNotifier.fireTestStarted(getDescriptionForScenario(getFileName(), index, scenario));
-
-                runNotifier.fireTestFailure(new Failure(getDescriptionForScenario(getFileName(), index, scenario),
-                                                        new IndexedScenarioException(index, errorMessage)));
-                runNotifier.fireTestFinished(getDescriptionForScenario(getFileName(), index, scenario));
-                return Collections.emptyList();
+            protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
+                throw new ScenarioException(errorMessage);
             }
         });
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
@@ -147,7 +138,7 @@ public class ScenarioRunnerServiceImplTest {
         assertEquals(1, failures.size());
 
         String testDescription = String.format("#%d: %s", 1, scenario.getDescription());
-        String errorMessageFormatted = String.format("#%d: %s", 1, errorMessage);
+        String errorMessageFormatted = String.format("#%d: %s()", 1, errorMessage);
         org.guvnor.common.services.shared.test.Failure failure = failures.get(0);
         assertEquals(errorMessageFormatted, failure.getMessage());
         assertEquals(1, value.getRunCount());
