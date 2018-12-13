@@ -21,7 +21,7 @@ import java.util.SortedMap;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface RightPanelView
@@ -93,6 +93,8 @@ public interface RightPanelView
 
         void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap);
 
+        void setHiddenFieldsMap(SortedMap<String, FactModelTree> hiddenFieldsMap);
+
         void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
         void setEventBus(EventBus eventBus);
@@ -100,6 +102,8 @@ public interface RightPanelView
         FactModelTree getFactModelTreeFromFactTypeMap(String factName);
 
         FactModelTree getFactModelTreeFromInstanceMap(String factName);
+
+        FactModelTree getFactModelTreeFromHiddenMap(String factName);
 
         /**
          * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).

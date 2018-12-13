@@ -25,8 +25,8 @@ import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.LIElement;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.mockito.Mock;
 

@@ -26,6 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -53,6 +54,8 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     protected FileMenuBuilder fileMenuBuilderMock;
     @Mock
     protected ScenarioSimulationService scenarioSimulationServiceMock;
+    @Mock
+    protected DMNTypeService dmnTypeServiceMock;
     @Mock
     protected ObservablePath observablePathMock;
     @Mock

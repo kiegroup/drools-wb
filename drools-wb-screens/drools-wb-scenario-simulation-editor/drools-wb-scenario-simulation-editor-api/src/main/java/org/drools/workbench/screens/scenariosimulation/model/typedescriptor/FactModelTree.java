@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.models;
+package org.drools.workbench.screens.scenariosimulation.model.typedescriptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
 /**
  * Class used to recursively represent a given fact with its ModelFields eventually expanded
  */
+@Portable
 public class FactModelTree {
 
     private final String factName;  // The name of the asset
     private final String fullPackage;  // The package of the asset
+    private boolean isSimple = false;
 
     private final Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
     private final Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
@@ -63,6 +67,13 @@ public class FactModelTree {
         simpleProperties.remove(propertyName);
     }
 
+    public boolean isSimple() {
+        return isSimple;
+    }
+
+    public void setSimple(boolean simple) {
+        isSimple = simple;
+    }
 
     @Override
     public String toString() {

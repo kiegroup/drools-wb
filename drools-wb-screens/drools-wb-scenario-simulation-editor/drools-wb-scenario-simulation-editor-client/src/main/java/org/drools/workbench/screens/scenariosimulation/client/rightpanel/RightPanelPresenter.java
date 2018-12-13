@@ -30,8 +30,8 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
@@ -57,6 +57,8 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     protected Map<String, FactModelTree> dataObjectFieldsMap;
 
     protected Map<String, FactModelTree> instanceFieldsMap;
+
+    protected Map<String, FactModelTree> hiddenFieldsMap;
 
     protected EventBus eventBus;
 
@@ -136,10 +138,20 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     }
 
     @Override
+    public FactModelTree getFactModelTreeFromHiddenMap(String factName) {
+        return hiddenFieldsMap.get(factName);
+    }
+
+    @Override
     public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
         clearDataObjectList();
         this.dataObjectFieldsMap = dataObjectFieldsMap;
         this.dataObjectFieldsMap.forEach(this::addDataObjectListGroupItemView);
+    }
+
+    @Override
+    public void setHiddenFieldsMap(SortedMap<String, FactModelTree> hiddenFieldsMap) {
+        this.hiddenFieldsMap = hiddenFieldsMap;
     }
 
     @Override

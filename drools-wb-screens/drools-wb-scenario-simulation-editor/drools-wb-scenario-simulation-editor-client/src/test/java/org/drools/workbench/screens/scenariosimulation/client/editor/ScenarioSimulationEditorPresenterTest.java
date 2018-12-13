@@ -155,7 +155,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                oracleFactoryMock,
                                                                placeManagerMock,
                                                                testRunnerReportingScreenMock,
-                                                               scenarioSimulationDocksHandlerMock) {
+                                                               scenarioSimulationDocksHandlerMock,
+                                                               new CallerMock<>(dmnTypeServiceMock)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
