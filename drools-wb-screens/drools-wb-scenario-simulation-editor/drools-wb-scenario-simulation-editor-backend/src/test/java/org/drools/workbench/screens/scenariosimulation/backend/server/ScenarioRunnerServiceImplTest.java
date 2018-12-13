@@ -23,7 +23,6 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.Sce
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,8 +95,8 @@ public class ScenarioRunnerServiceImplTest {
     public void runTest() throws Exception {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
-        final ScenarioSimulationModel scenarioSimulationModel = mock(ScenarioSimulationModel.class);
-        when(scenarioSimulationModel.getSimulation()).thenReturn(mock(Simulation.class));
+        ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "default");
+
         scenarioRunnerService.runTest("test", mock(Path.class), scenarioSimulationModel);
 
         verify(defaultTestResultMessageEventMock).fire(any());
