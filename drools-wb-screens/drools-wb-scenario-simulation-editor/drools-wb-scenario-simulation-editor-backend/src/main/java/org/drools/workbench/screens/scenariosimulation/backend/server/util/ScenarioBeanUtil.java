@@ -87,10 +87,6 @@ public class ScenarioBeanUtil {
     }
 
     public static ScenarioBeanWrapper<?> navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
-        if (steps.size() < 1) {
-            throw new ScenarioException(new StringBuilder().append("Invalid path to a property, no steps provided").toString());
-        }
-
         Class<?> currentClass = rootObject.getClass();
         Object currentObject = rootObject;
 

@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -110,14 +109,6 @@ public class ScenarioBeanUtilTest {
     }
 
     @Test
-    public void navigateToObjectNoStepTest() {
-        String message = "Invalid path to a property, no steps provided";
-        Assertions.assertThatThrownBy(() -> ScenarioBeanUtil.navigateToObject(new Dispute(), new ArrayList<>(), true))
-                .isInstanceOf(ScenarioException.class)
-                .hasMessage(message);
-    }
-
-    @Test
     public void navigateToObjectFakeFieldTest() {
         Dispute dispute = new Dispute();
         List<String> pathToProperty = Arrays.asList("fakeField");
@@ -154,8 +145,8 @@ public class ScenarioBeanUtilTest {
         assertEquals(1.0F, convertValue(Float.class.getCanonicalName(), "1.0", classLoader));
         assertEquals('a', convertValue(char.class.getCanonicalName(), "a", classLoader));
         assertEquals('a', convertValue(Character.class.getCanonicalName(), "a", classLoader));
-        assertEquals((short)1, convertValue(short.class.getCanonicalName(), "1", classLoader));
-        assertEquals((short)1, convertValue(Short.class.getCanonicalName(), "1", classLoader));
+        assertEquals((short) 1, convertValue(short.class.getCanonicalName(), "1", classLoader));
+        assertEquals((short) 1, convertValue(Short.class.getCanonicalName(), "1", classLoader));
         assertEquals("0".getBytes()[0], convertValue(byte.class.getCanonicalName(), "0", classLoader));
         assertEquals("0".getBytes()[0], convertValue(Byte.class.getCanonicalName(), "0", classLoader));
         assertNull(convertValue(Float.class.getCanonicalName(), null, classLoader));
