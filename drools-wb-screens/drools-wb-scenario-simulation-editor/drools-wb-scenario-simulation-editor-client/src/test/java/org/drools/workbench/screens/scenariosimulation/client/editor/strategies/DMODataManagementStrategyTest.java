@@ -160,6 +160,16 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
         }
     }
 
+    @Test
+    public void  getInstanceMap() {
+        FactModelTree toPopulate = getFactModelTreeInner(randomAlphabetic(3));
+        final Map<String, String> simpleProperties = toPopulate.getSimpleProperties();
+        final Collection<String> values = simpleProperties.values();
+        SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
+        SortedMap<String, FactModelTree> retrieved  = dmoDataManagementStrategy.getInstanceMap(factTypeFieldsMap);
+        assertNotNull(retrieved);
+    }
+
     private ModelField[] getModelFieldsInner(Map<String, String> simpleProperties) {
         List<ModelField> toReturn = new ArrayList<>();
         simpleProperties.forEach((key, value) -> toReturn.add(getModelFieldInner(key, value, "String")));
