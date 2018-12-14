@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -64,6 +65,8 @@ public class ScenarioGridModel extends BaseGridData {
     protected GridColumn<?> selectedColumn = null;
 
     protected Set<String> dataObjectsInstancesName;
+
+    protected Set<String> simpleJavaTypeInstancesName;
 
     public ScenarioGridModel() {
     }
@@ -515,7 +518,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
         ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
-        boolean isValid = !headerToEdit.isInstanceHeader() || (!isDataObjectInstanceName(value) && isUnique(value, rowIndex, columnIndex));
+        boolean isValid = !headerToEdit.isInstanceHeader() || (!isInstanceName(value) && isUnique(value, rowIndex, columnIndex));
         if (!isValid) {
             eventBus.fireEvent(new ScenarioNotificationEvent("Name '" + value + "' can not be used",
                                                              NotificationEvent.NotificationType.ERROR));
@@ -538,11 +541,19 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Set the names of alredy existing Data Objects/Instances, used inside updateHeaderValidation
+     * Set the names of already existing Data Objects/Instances, used inside updateHeaderValidation
      * @param dataObjectsInstancesName
      */
     public void setDataObjectsInstancesName(Set<String> dataObjectsInstancesName) {
         this.dataObjectsInstancesName = dataObjectsInstancesName;
+    }
+
+    /**
+     * Set the names of already existing Simple Java Types/Instances, used inside updateHeaderValidation
+     * @param simpleJavaTypeInstancesName
+     */
+    public void setSimpleJavaTypeInstancesName(Set<String> simpleJavaTypeInstancesName) {
+        this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
     /**
@@ -677,12 +688,15 @@ public class ScenarioGridModel extends BaseGridData {
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
-    protected boolean isDataObjectInstanceName(String value) {
-        if (dataObjectsInstancesName == null || dataObjectsInstancesName.isEmpty()) {
-            return false;
+    protected boolean isInstanceName(String value) {
+        Set<String> aggregated = new HashSet<>();
+        if (dataObjectsInstancesName != null) {
+            aggregated.addAll(dataObjectsInstancesName);
         }
-        return dataObjectsInstancesName.contains(value);
-
+        if (simpleJavaTypeInstancesName != null) {
+            aggregated.addAll(simpleJavaTypeInstancesName);
+        }
+        return aggregated.contains(value);
     }
 
     protected void refreshErrorsRow(int rowIndex) {

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
@@ -77,7 +79,7 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         // Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType ->
                                          oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
-        populateSimpleJavaTypes(simpleJavaTypes, rightPanelPresenter);
+        populateSimpleJavaTypes(simpleJavaTypes, rightPanelPresenter, scenarioGridModel);
     }
 
     @Override
@@ -115,11 +117,41 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         aggregatorCallback.callback(toSend);
     }
 
-    protected void populateSimpleJavaTypes(List<String> simpleJavaTypes, RightPanelView.Presenter rightPanelPresenter) {
+    protected void populateSimpleJavaTypes(List<String> simpleJavaTypes, RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a simpleJavaTypes container map
         SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
         simpleJavaTypes.forEach(factType -> simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
         rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleJavaTypeFieldsMap);
+        SortedMap<String, FactModelTree> simpleJavaTypeInstanceFieldsMap = getInstanceMap(simpleJavaTypeFieldsMap);
+        rightPanelPresenter.setSimpleJavaInstanceFieldsMap(simpleJavaTypeInstanceFieldsMap);
+        Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleJavaTypeFieldsMap.keySet());
+        simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
+        scenarioGridModel.setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
+    }
+
+    protected SortedMap<String, FactModelTree> getInstanceMap(SortedMap<String, FactModelTree> sourceMap) {
+        SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
+        // map instance name to base class
+        if (model != null) {
+            final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
+            simulationDescriptor.getUnmodifiableFactMappings()
+                    .stream()
+                    .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))
+                    .forEach(factMapping -> {
+                String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                if (dataObjectName.contains(".")) {
+                    dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
+                }
+                final String instanceName = factMapping.getFactAlias();
+                if (!instanceName.equals(dataObjectName)) {
+                    final FactModelTree factModelTree = sourceMap.get(dataObjectName);
+                    if (factModelTree != null) {
+                        toReturn.put(instanceName, factModelTree);
+                    }
+                }
+            });
+        }
+        return toReturn;
     }
 
     /**
@@ -170,24 +202,7 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         if (factTypeFieldsMap.size() == expectedElements) {
             factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
             rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
-            SortedMap<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
-            // map instance name top data model class
-            if (model != null) {
-                final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
-                simulationDescriptor.getUnmodifiableFactMappings().forEach(factMapping -> {
-                    String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                    if (dataObjectName.contains(".")) {
-                        dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                    }
-                    final String instanceName = factMapping.getFactAlias();
-                    if (!instanceName.equals(dataObjectName)) {
-                        final FactModelTree factModelTree = factTypeFieldsMap.get(dataObjectName);
-                        if (factModelTree != null) {
-                            instanceFieldsMap.put(instanceName, factModelTree);
-                        }
-                    }
-                });
-            }
+            SortedMap<String, FactModelTree> instanceFieldsMap = getInstanceMap(factTypeFieldsMap);
             rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
             Set<String> dataObjectsInstancesName = new HashSet<>(factTypeFieldsMap.keySet());
             dataObjectsInstancesName.addAll(instanceFieldsMap.keySet());
