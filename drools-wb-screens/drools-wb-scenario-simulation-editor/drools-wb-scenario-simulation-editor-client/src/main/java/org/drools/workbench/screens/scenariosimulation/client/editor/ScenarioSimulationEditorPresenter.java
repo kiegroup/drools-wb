@@ -380,7 +380,6 @@ public class ScenarioSimulationEditorPresenter
             else {
                 dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService);
             }
-
             dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
             populateRightPanel();
             model = content.getModel();
