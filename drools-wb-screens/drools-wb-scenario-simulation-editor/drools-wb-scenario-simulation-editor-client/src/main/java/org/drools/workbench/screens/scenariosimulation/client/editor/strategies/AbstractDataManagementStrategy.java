@@ -27,7 +27,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
 
 
 
-    protected FactModelTree getSimpleClassFactModelTree(Class clazz) {
+    protected static FactModelTree getSimpleClassFactModelTree(Class clazz) {
         String key = clazz.getSimpleName();
         Map<String, String> simpleProperties = new HashMap<>();
         String fullName = clazz.getCanonicalName();
