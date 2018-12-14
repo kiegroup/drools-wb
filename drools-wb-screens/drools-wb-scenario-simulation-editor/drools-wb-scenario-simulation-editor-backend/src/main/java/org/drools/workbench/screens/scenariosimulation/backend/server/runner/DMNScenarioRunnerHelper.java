@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.expression.DMNFeelExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.fluent.DMNScenarioExecutableBuilder;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
@@ -137,11 +136,5 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
             targetMap.put(lastStep, listObjectEntry.getValue());
         }
         return toReturn;
-    }
-
-    @Override
-    protected Object convertValue(String className, Object rawValue, ClassLoader classLoader) {
-        DMNFeelExpressionEvaluator dmnFeelExpressionEvaluator = new DMNFeelExpressionEvaluator(classLoader);
-        return dmnFeelExpressionEvaluator.getValueForGiven(className, rawValue);
     }
 }

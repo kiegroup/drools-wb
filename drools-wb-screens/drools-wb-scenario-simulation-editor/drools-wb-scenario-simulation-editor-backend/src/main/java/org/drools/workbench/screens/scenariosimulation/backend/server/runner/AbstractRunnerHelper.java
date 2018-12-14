@@ -100,8 +100,7 @@ public abstract class AbstractRunnerHelper {
         return params.entrySet().stream()
                 .filter(e -> e.getKey().isEmpty())
                 .map(Map.Entry::getValue)
-                .findFirst()
-                .map(rawValue -> convertValue(className, rawValue, classLoader));
+                .findFirst();
     }
 
     public List<ScenarioExpect> extractExpectedValues(List<FactMappingValue> factMappingValues) {
@@ -202,6 +201,4 @@ public abstract class AbstractRunnerHelper {
                                           RequestContext requestContext);
 
     public abstract Object createObject(String className, Map<List<String>, Object> params, ClassLoader classLoader);
-
-    protected abstract Object convertValue(String className, Object rawValue, ClassLoader classLoader);
 }
