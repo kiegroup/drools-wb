@@ -42,6 +42,7 @@ abstract class AbstractRightPanelTest {
     protected SortedMap<String, FactModelTree> dataObjectFactTreeMap;
     protected SortedMap<String, FactModelTree> simpleJavaTypeTreeMap;
     protected SortedMap<String, FactModelTree> instanceFactTreeMap;
+    protected SortedMap<String, FactModelTree> simpleJavaInstanceFactTreeMap;
     protected String FACT_NAME;
     protected String FACT_PACKAGE = "test.scesim.package";
     protected final String GRID_COLUMN_TITLE = "GRID_COLUMN_TITLE";
@@ -62,7 +63,7 @@ abstract class AbstractRightPanelTest {
         simpleJavaTypeTreeMap = getSimpleJavaTypeFieldsMap();
         instanceFactTreeMap = new TreeMap<>();
         dataObjectFactTreeMap.keySet().forEach(key -> instanceFactTreeMap.put(getRandomString(), dataObjectFactTreeMap.get(key)));
-
+        simpleJavaInstanceFactTreeMap = new TreeMap<>();
         FACT_NAME = new ArrayList<>(dataObjectFactTreeMap.keySet()).get(0);
         FACT_MODEL_TREE = dataObjectFactTreeMap.get(FACT_NAME);
     }

@@ -56,11 +56,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         // Execute only when oracle has been set
         if (oracle == null || oracle.getFactTypes().length == 0) {
-            if (rightPanelPresenter != null) {
-                rightPanelPresenter.setDataObjectFieldsMap(new TreeMap<>());
-                rightPanelPresenter.setSimpleJavaTypeFieldsMap(new TreeMap<>());
-                rightPanelPresenter.setInstanceFieldsMap(new TreeMap<>());
-            }
             return;
         }
         // Retrieve the relevant facttypes
@@ -76,17 +71,13 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         int expectedElements = dataObjectsTypes.size();
         // Instantiate a dataObjects container map
         SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
-        // Instantiate a simpleJavaTypes container map
-        SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
 
         // Instantiate the aggregator callback
         Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel);
         // Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType ->
                                          oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
-        simpleJavaTypes.forEach(factType ->
-                                        simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
-        rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleJavaTypeFieldsMap);
+        populateSimpleJavaTypes(simpleJavaTypes, rightPanelPresenter);
     }
 
     @Override
@@ -122,6 +113,13 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
     protected void fieldCompletionsCallbackMethod(String factName, ModelField[] result, Callback<FactModelTree> aggregatorCallback) {
         FactModelTree toSend = getFactModelTree(factName, result);
         aggregatorCallback.callback(toSend);
+    }
+
+    protected void populateSimpleJavaTypes(List<String> simpleJavaTypes, RightPanelView.Presenter rightPanelPresenter) {
+        // Instantiate a simpleJavaTypes container map
+        SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
+        simpleJavaTypes.forEach(factType -> simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
+        rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleJavaTypeFieldsMap);
     }
 
     /**

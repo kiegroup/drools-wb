@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.ButtonElement;
@@ -64,6 +67,9 @@ public class RightPanelViewImpl
     @DataField("instanceListContainer")
     protected DivElement instanceListContainer = Document.get().createDivElement();
 
+    @DataField("simpleJavaInstanceListContainer")
+    protected DivElement simpleJavaInstanceListContainer = Document.get().createDivElement();
+
     @DataField("conditionsButton")
     protected ButtonElement conditionsButton = Document.get().createButtonElement();
 
@@ -73,8 +79,10 @@ public class RightPanelViewImpl
     @DataField("kieTestEditorTabContent")
     protected DivElement kieTestEditorTabContent = Document.get().createDivElement();
 
-    public RightPanelViewImpl() {
+    protected List<DivElement> managedDivElements;
 
+    public RightPanelViewImpl() {
+        managedDivElements = Arrays.asList(dataObjectListContainer, simpleJavaTypeListContainer, instanceListContainer, simpleJavaTypeListContainer);
     }
 
     @Override
@@ -156,6 +164,11 @@ public class RightPanelViewImpl
     }
 
     @Override
+    public DivElement getSimpleJavaInstanceListContainer() {
+        return simpleJavaInstanceListContainer;
+    }
+
+    @Override
     public void enableEditorTab() {
         setDisabledStatus(false);
     }
@@ -186,13 +199,9 @@ public class RightPanelViewImpl
 
     protected void setContainersDisabledStatus(boolean disabled) {
         if (disabled) {
-            dataObjectListContainer.addClassName("disabled");
-            simpleJavaTypeListContainer.addClassName("disabled");
-            instanceListContainer.addClassName("disabled");
+            managedDivElements.forEach(divElement -> divElement.addClassName("disabled"));
         } else {
-            dataObjectListContainer.removeClassName("disabled");
-            simpleJavaTypeListContainer.removeClassName("disabled");
-            instanceListContainer.removeClassName("disabled");
+            managedDivElements.forEach(divElement -> divElement.removeClassName("disabled"));
         }
     }
 }

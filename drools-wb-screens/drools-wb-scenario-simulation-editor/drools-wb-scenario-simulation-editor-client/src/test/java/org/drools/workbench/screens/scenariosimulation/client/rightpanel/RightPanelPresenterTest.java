@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -63,6 +64,9 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     private DivElement instanceListContainerMock;
 
     @Mock
+    private DivElement simpleJavaInstanceListContainerMock;
+
+    @Mock
     private ListGroupItemPresenter listGroupItemPresenterMock;
 
     @Mock
@@ -92,12 +96,14 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         when(rightPanelViewMock.getDataObjectListContainer()).thenReturn(dataObjectListContainerMock);
         when(rightPanelViewMock.getSimpleJavaTypeListContainer()).thenReturn(simpleJavaTypeListContainerMock);
         when(rightPanelViewMock.getInstanceListContainer()).thenReturn(instanceListContainerMock);
+        when(rightPanelViewMock.getSimpleJavaInstanceListContainer()).thenReturn(simpleJavaInstanceListContainerMock);
         when(listGroupItemPresenterMock.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(dataObjectListContainerMock);
         this.rightPanelPresenter = spy(new RightPanelPresenter(rightPanelViewMock, listGroupItemPresenterMock) {
             {
                 this.dataObjectFieldsMap = dataObjectFactTreeMap;
                 this.simpleJavaTypeFieldsMap = simpleJavaTypeTreeMap;
                 this.instanceFieldsMap = instanceFactTreeMap;
+                this.simpleJavaInstanceFieldsMap = simpleJavaInstanceFactTreeMap;
                 this.eventBus = eventBusMock;
             }
         });
@@ -154,9 +160,10 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
     public void getFactModelTree() {
         rightPanelPresenter.setDataObjectFieldsMap(dataObjectFactTreeMap);
         String factName = getRandomFactModelTree(dataObjectFactTreeMap, 0);
-        FactModelTree retrieved = rightPanelPresenter.getFactModelTreeFromFactTypeMap(factName);
+        Optional<FactModelTree> retrieved = rightPanelPresenter.getFactModelTreeFromFactTypeMap(factName);
         assertNotNull(retrieved);
-        assertEquals(dataObjectFactTreeMap.get(factName), retrieved);
+        assertTrue(retrieved.isPresent());
+        assertEquals(dataObjectFactTreeMap.get(factName), retrieved.get());
     }
 
     @Test

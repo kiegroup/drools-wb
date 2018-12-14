@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Optional;
 import java.util.SortedMap;
 
 import com.google.gwt.dom.client.DivElement;
@@ -41,6 +42,8 @@ public interface RightPanelView
     DivElement getSimpleJavaTypeListContainer();
 
     DivElement getInstanceListContainer();
+
+    DivElement getSimpleJavaInstanceListContainer();
 
     Presenter getPresenter();
 
@@ -91,11 +94,15 @@ public interface RightPanelView
 
         void clearInstanceList();
 
+        void clearSimpleJavaInstanceFieldList();
+
         void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree);
 
         void addSimpleJavaTypeListGroupItemView(String factName, FactModelTree factModelTree);
 
         void addInstanceListGroupItemView(String factName, FactModelTree factModelTree);
+
+        void addSimpleJavaInstanceListGroupItemView(String factName, FactModelTree factModelTree);
 
         void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap);
 
@@ -103,13 +110,17 @@ public interface RightPanelView
 
         void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
+        void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
+
         void setEventBus(EventBus eventBus);
 
-        FactModelTree getFactModelTreeFromFactTypeMap(String factName);
+        Optional<FactModelTree> getFactModelTreeFromFactTypeMap(String factName);
 
-        FactModelTree getFactModelTreeFromSimpleJavaTypeMap(String factName);
+        Optional<FactModelTree> getFactModelTreeFromSimpleJavaTypeMap(String factName);
 
-        FactModelTree getFactModelTreeFromInstanceMap(String factName);
+        Optional<FactModelTree> getFactModelTreeFromInstanceMap(String factName);
+
+        Optional<FactModelTree> getFactModelTreeFromSimpleJavaInstanceMap(String factName);
 
         /**
          * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).
