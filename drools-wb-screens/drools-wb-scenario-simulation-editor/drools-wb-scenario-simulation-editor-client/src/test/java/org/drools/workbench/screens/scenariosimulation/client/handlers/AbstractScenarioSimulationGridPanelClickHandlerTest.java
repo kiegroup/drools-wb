@@ -22,12 +22,8 @@ import java.util.List;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -38,7 +34,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest {
+public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extends AbstractScenarioSimulationTest {
 
     protected final Double GRID_WIDTH = 100.0;
     protected final Double HEADER_HEIGHT = 10.0;
@@ -55,28 +51,13 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest {
     protected Point2D point2DMock;
 
     @Mock
-    protected ScenarioGrid scenarioGridMock;
-
-    @Mock
     protected ScenarioGridCell scenarioGridCellMock;
-
-    @Mock
-    protected ScenarioHeaderMetaData headerMetaDataMock;
 
     @Mock
     protected ContextMenuEvent contextMenuEventMock;
 
-    @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock;
-
     protected List<GridColumn<?>> columnsMock;
-
-    @Mock
-    protected ScenarioGridModel scenarioGridModelMock;
-
-    @Mock
-    private ScenarioGridPanel scenarioGridPanelMock;
-
+    
     @Mock
     private GridRenderer scenarioGridRendererMock;
 
@@ -87,7 +68,8 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest {
     private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformationMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        super.setup();
         doReturn(scenarioGridCellMock).when(scenarioGridModelMock).getCell(UI_ROW_INDEX, UI_COLUMN_INDEX);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getWidth()).thenReturn(GRID_WIDTH);
@@ -100,20 +82,18 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest {
 
         // mock single column in grid
         when(scenarioGridModelMock.getHeaderRowCount()).thenReturn(1);
-        columnsMock = Arrays.asList(scenarioGridColumnMock, scenarioGridColumnMock);
+        columnsMock = Arrays.asList(gridColumnMock, gridColumnMock);
         when(scenarioGridModelMock.getColumns()).thenReturn(columnsMock);
         when(scenarioGridModelMock.getColumnCount()).thenReturn(2);
 
-        // presence of header metadata is prerequisite to handle header click
-        // to simplify test, return just one header metadata
-        // it simulates just one row in column header rows
-        when(scenarioGridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(headerMetaDataMock));
-        when(scenarioGridColumnMock.getInformationHeaderMetaData()).thenReturn(headerMetaDataMock);
-        when(headerMetaDataMock.getColumnGroup()).thenReturn(FactMappingType.GIVEN.name());
-
         // mock that column to index 0
         BaseGridRendererHelper.ColumnInformation columnInformation =
-                new BaseGridRendererHelper.ColumnInformation(scenarioGridColumnMock, UI_COLUMN_INDEX, OFFSET_X);
+                new BaseGridRendererHelper.ColumnInformation(gridColumnMock, UI_COLUMN_INDEX, OFFSET_X);
         when(scenarioGridRendererHelperMock.getColumnInformation(CLICK_POINT_X)).thenReturn(columnInformation);
+
+
+        when(gridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(informationHeaderMetaDataMock));
+        when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
+        when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(FactMappingType.GIVEN.name());
     }
 }

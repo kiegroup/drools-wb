@@ -255,5 +255,6 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
     }
 }
