@@ -20,17 +20,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
+import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -41,10 +44,8 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
     protected final Double HEADER_ROW_HEIGHT = 10.0;
     protected final int UI_COLUMN_INDEX = 0;
     protected final int UI_ROW_INDEX = 1;
-    protected final int CLICK_POINT_X = 5;
-    protected final int CLICK_POINT_Y = 5;
-    protected final boolean SHIFT_PRESSED = false;
-    protected final boolean CTRL_PRESSED = false;
+    protected final double CLICK_POINT_X = 5;
+    protected final double CLICK_POINT_Y = 5;
     protected final int OFFSET_X = 0;
 
     @Mock
@@ -57,7 +58,7 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
     protected ContextMenuEvent contextMenuEventMock;
 
     protected List<GridColumn<?>> columnsMock;
-    
+
     @Mock
     private GridRenderer scenarioGridRendererMock;
 
@@ -66,6 +67,9 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
 
     @Mock
     private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformationMock;
+
+    @Mock
+    private BaseGridRendererHelper.RenderingBlockInformation floatingBlockInformationMock;
 
     @Before
     public void setUp() {
@@ -76,6 +80,7 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridMock.getRenderer()).thenReturn(scenarioGridRendererMock);
         when(scenarioGridMock.getRendererHelper()).thenReturn(scenarioGridRendererHelperMock);
+        when(scenarioGridMock.getViewport()).thenReturn(viewportMock);
         when(scenarioGridRendererMock.getHeaderHeight()).thenReturn(HEADER_HEIGHT);
         when(scenarioGridRendererMock.getHeaderRowHeight()).thenReturn(HEADER_ROW_HEIGHT);
         when(scenarioGridRendererHelperMock.getRenderingInformation()).thenReturn(scenarioRenderingInformationMock);
