@@ -52,6 +52,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.workbench.events.NotificationEvent;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -125,7 +126,7 @@ public abstract class AbstractScenarioSimulationTest {
     protected final String VALUE_CLASS_NAME = String.class.getName();
 
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
-    private List<GridColumn<?>> gridColumns = new ArrayList<>();
+    protected List<GridColumn<?>> gridColumns = new ArrayList<>();
 
     @Before
     public void setup() {
@@ -251,7 +252,7 @@ public abstract class AbstractScenarioSimulationTest {
         });
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
-        when(headerMetaDatasMock.get(1)).thenReturn(informationHeaderMetaDataMock);
+        when(headerMetaDatasMock.get(anyInt())).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);

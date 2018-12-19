@@ -22,7 +22,6 @@ import java.util.List;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
-import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
@@ -34,7 +33,6 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellEditAction;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
@@ -42,8 +40,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,9 +60,6 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
     private static final double GRID_COMPUTED_LOCATION_X = 100.0;
 
     private static final double GRID_COMPUTED_LOCATION_Y = 200.0;
-
-    @Mock
-    private Viewport viewport;
 
     @Mock
     private MouseEvent nativeClickEvent;
@@ -97,7 +96,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
         this.clickEvent = new NodeMouseClickEvent(nativeClickEvent);
         this.doubleClickEvent = new NodeMouseDoubleClickEvent(nativeDoubleClickEvent);
         when(scenarioGridMock.getRendererHelper()).thenReturn(rendererHelper);
-        when(scenarioGridMock.getViewport()).thenReturn(viewport);
+        when(scenarioGridMock.getViewport()).thenReturn(viewportMock);
         when(scenarioGridMock.getComputedLocation()).thenReturn(computedLocation);
         when(rendererHelper.getRenderingInformation()).thenReturn(renderingInformation);
         when(rendererHelper.getColumnInformation(anyDouble())).thenReturn(columnInformation);
@@ -105,11 +104,11 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
         when(renderingInformation.getBodyBlockInformation()).thenReturn(renderingBlockInformation);
         when(renderingInformation.getFloatingBlockInformation()).thenReturn(renderingBlockInformation);
         when(informationHeaderMetaDataMock.getSupportedEditAction()).thenReturn(GridCellEditAction.SINGLE_CLICK);
-        this.handler = new ScenarioSimulationGridWidgetMouseEventHandler();
+        this.handler = spy(new ScenarioSimulationGridWidgetMouseEventHandler());
     }
 
     @Test
-    public void testHanldeHeaderCell_NullColumn() {
+    public void testHandleHeaderCell_NullColumn() {
         when(columnInformation.getColumn()).thenReturn(null);
         assertFalse(handler.handleHeaderCell(scenarioGridMock,
                                             relativeLocation,
@@ -121,6 +120,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_NonEditableColumn() {
+        doReturn(false).when(handler).isEditableHeaderLocal(eq(gridColumnMock), anyInt());
         assertTrue(handler.handleHeaderCell(scenarioGridMock,
                                              relativeLocation,
                                              0,
@@ -132,7 +132,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_EditableColumn_NotEditableRow() {
-        when(gridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(new BaseHeaderMetaData("column")));
+        doReturn(true).when(handler).isEditableHeaderLocal(eq(gridColumnMock), anyInt());
         assertTrue(handler.handleHeaderCell(scenarioGridMock,
                                              relativeLocation,
                                              0,
@@ -144,6 +144,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
     @Test
     @SuppressWarnings("unchecked")
     public void testHandleHeaderCell_EditableColumn_EditableRow_DoubleClickEvent() {
+        doReturn(true).when(handler).isEditableHeaderLocal(eq(gridColumnMock), anyInt());
         when(gridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(informationHeaderMetaDataMock));
         List<GridData.SelectedCell> selectedCellsMock = mock(ArrayList.class);
         when(selectedCellsMock.size()).thenReturn(1);

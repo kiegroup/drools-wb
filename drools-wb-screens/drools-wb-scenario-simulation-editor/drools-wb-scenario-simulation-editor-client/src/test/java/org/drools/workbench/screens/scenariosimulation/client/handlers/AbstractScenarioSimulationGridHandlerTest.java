@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import com.ait.lienzo.client.core.shape.Viewport;
@@ -25,7 +24,6 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.mockito.AdditionalMatchers;
 import org.mockito.Mock;
@@ -37,7 +35,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extends AbstractScenarioSimulationTest {
+public abstract class AbstractScenarioSimulationGridHandlerTest extends AbstractScenarioSimulationTest {
 
     protected final Double GRID_WIDTH = 100.0;
     protected final Double HEADER_HEIGHT = 10.0;
@@ -52,6 +50,9 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
     protected Point2D point2DMock;
 
     @Mock
+    protected Viewport viewportMock;
+
+    @Mock
     protected ScenarioGridCell scenarioGridCellMock;
 
     @Mock
@@ -60,13 +61,13 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
     protected List<GridColumn<?>> columnsMock;
 
     @Mock
-    private GridRenderer scenarioGridRendererMock;
-
-    @Mock
     protected BaseGridRendererHelper scenarioGridRendererHelperMock;
 
     @Mock
     private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformationMock;
+
+    @Mock
+    private GridRenderer scenarioGridRendererMock;
 
     @Mock
     private BaseGridRendererHelper.RenderingBlockInformation floatingBlockInformationMock;
@@ -94,11 +95,8 @@ public abstract class AbstractScenarioSimulationGridPanelClickHandlerTest extend
         // mock that column to index 0
         BaseGridRendererHelper.ColumnInformation columnInformation =
                 new BaseGridRendererHelper.ColumnInformation(gridColumnMock, UI_COLUMN_INDEX, OFFSET_X);
-        when(scenarioGridRendererHelperMock.getColumnInformation(CLICK_POINT_X)).thenReturn(columnInformation);
-
-
-        when(gridColumnMock.getHeaderMetaData()).thenReturn(Collections.singletonList(informationHeaderMetaDataMock));
-        when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
-        when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(FactMappingType.GIVEN.name());
+        when(scenarioGridRendererHelperMock.getColumnInformation(AdditionalMatchers.or(eq(0.0), eq(CLICK_POINT_X))))
+                .thenReturn(columnInformation);
+        when(scenarioRenderingInformationMock.getFloatingBlockInformation()).thenReturn(floatingBlockInformationMock);
     }
 }

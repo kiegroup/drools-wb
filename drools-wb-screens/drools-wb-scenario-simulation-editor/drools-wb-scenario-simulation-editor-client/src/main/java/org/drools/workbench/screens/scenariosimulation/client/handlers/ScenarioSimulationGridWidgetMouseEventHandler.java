@@ -50,8 +50,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandler extends DefaultGridWi
         if (column == null) {
             return false;
         }
-        if (!ScenarioSimulationGridHeaderUtilities.hasEditableHeader(column) || !ScenarioSimulationGridHeaderUtilities.isEditableHeader(column,
-                                                                    uiHeaderRowIndex)) {
+        if (!isEditableHeaderLocal(column, uiHeaderRowIndex)) {
             return true;
         }
         final ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData) column.getHeaderMetaData().get(uiHeaderRowIndex);
@@ -68,5 +67,10 @@ public class ScenarioSimulationGridWidgetMouseEventHandler extends DefaultGridWi
             headerMetaData.edit(context);
         }
         return true;
+    }
+
+    // Indirection add for test
+    protected boolean isEditableHeaderLocal(GridColumn<?> scenarioGridColumn, Integer uiHeaderRowIndex) {
+        return ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumn, uiHeaderRowIndex);
     }
 }

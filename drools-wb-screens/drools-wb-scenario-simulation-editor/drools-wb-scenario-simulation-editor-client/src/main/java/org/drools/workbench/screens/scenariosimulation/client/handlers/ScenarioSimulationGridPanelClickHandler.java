@@ -300,9 +300,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
      */
     protected boolean manageHeaderLeftClick(Integer uiColumnIndex, ScenarioGridColumn scenarioGridColumn, Point2D
             clickPoint) {
-        if (!hasEditableHeaderLocal(scenarioGridColumn)) {
-            return false;
-        }
         //Get row index
         final Integer uiHeaderRowIndex = getUiHeaderRowIndexLocal(scenarioGrid, clickPoint);
         if (uiHeaderRowIndex == null) {
@@ -325,9 +322,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                 return manageGivenExpectHeaderLeftClick(clickedScenarioHeaderMetadata,
                                                         scenarioGridColumn,
                                                         group,
-                                                        uiColumnIndex,
-                                                        uiHeaderRowIndex,
-                                                        clickPoint);
+                                                        uiColumnIndex);
             default:
                 return false;
         }
@@ -339,16 +334,12 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
      * @param scenarioGridColumn
      * @param group
      * @param uiColumnIndex
-     * @param uiHeaderRowIndex
-     * @param clickPoint - coordinates relative to the grid top left corner
      * @return
      */
     protected boolean manageGivenExpectHeaderLeftClick(ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
                                                        ScenarioGridColumn scenarioGridColumn,
                                                        String group,
-                                                       Integer uiColumnIndex,
-                                                       Integer uiHeaderRowIndex,
-                                                       Point2D rp) {
+                                                       Integer uiColumnIndex) {
         scenarioGrid.setSelectedColumnAndHeader(scenarioGridColumn.getHeaderMetaData().indexOf(clickedScenarioHeaderMetadata), uiColumnIndex);
         if (scenarioGridColumn.isInstanceAssigned() && clickedScenarioHeaderMetadata.isInstanceHeader()) {
             eventBus.fireEvent(new ReloadRightPanelEvent(true, true));
@@ -391,11 +382,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     // Indirection add for test
     protected Integer getUiHeaderRowIndexLocal(ScenarioGrid scenarioGrid, Point2D point) {
         return getUiHeaderRowIndex(scenarioGrid, point);
-    }
-
-    // Indirection add for test
-    protected boolean hasEditableHeaderLocal(GridColumn<?> scenarioGridColumn) {
-        return ScenarioSimulationGridHeaderUtilities.hasEditableHeader(scenarioGridColumn);
     }
 
     // Indirection add for test
