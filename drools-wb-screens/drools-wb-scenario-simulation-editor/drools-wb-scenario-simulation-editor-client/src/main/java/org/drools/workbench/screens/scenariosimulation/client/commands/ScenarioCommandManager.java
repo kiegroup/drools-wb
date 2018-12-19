@@ -25,6 +25,4 @@ import org.kie.workbench.common.command.client.impl.CommandManagerImpl;
 @Dependent
 public class ScenarioCommandManager extends CommandManagerImpl<ScenarioSimulationContext, ScenarioSimulationViolation> {
 
-
-
 }

@@ -21,7 +21,7 @@ import java.util.List;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 
-public class ScenarioOutput {
+public class ScenarioExpect {
 
     private final FactIdentifier factIdentifier;
 
@@ -29,13 +29,13 @@ public class ScenarioOutput {
 
     private final boolean isNewFact;
 
-    public ScenarioOutput(FactIdentifier factIdentifier, List<FactMappingValue> expectedResult, boolean isNewFact) {
+    public ScenarioExpect(FactIdentifier factIdentifier, List<FactMappingValue> expectedResult, boolean isNewFact) {
         this.factIdentifier = factIdentifier;
         this.expectedResult = expectedResult;
         this.isNewFact = isNewFact;
     }
 
-    public ScenarioOutput(FactIdentifier factIdentifier, List<FactMappingValue> expectedResult) {
+    public ScenarioExpect(FactIdentifier factIdentifier, List<FactMappingValue> expectedResult) {
         this(factIdentifier, expectedResult, false);
     }
 

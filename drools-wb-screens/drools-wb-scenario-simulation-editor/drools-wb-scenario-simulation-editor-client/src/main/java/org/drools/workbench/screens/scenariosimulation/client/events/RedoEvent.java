@@ -13,26 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.screens.scenariosimulation.client.events;
 
-package org.drools.workbench.screens.scenariosimulation.backend.server.runner.model;
+import com.google.gwt.event.shared.GwtEvent;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.RedoEventHandler;
 
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+/**
+ * <code>GwtEvent</code> to <b>redo</b> last command
+ */
+public class RedoEvent extends GwtEvent<RedoEventHandler> {
 
-public class ScenarioInput {
+    public static Type<RedoEventHandler> TYPE = new Type<>();
 
-    private final FactIdentifier factIdentifier;
-    private final Object value;
 
-    public ScenarioInput(FactIdentifier factIdentifier, Object value) {
-        this.factIdentifier = factIdentifier;
-        this.value = value;
+    public RedoEvent() {
     }
 
-    public FactIdentifier getFactIdentifier() {
-        return factIdentifier;
+    @Override
+    public Type<RedoEventHandler> getAssociatedType() {
+        return TYPE;
     }
 
-    public Object getValue() {
-        return value;
+    @Override
+    protected void dispatch(RedoEventHandler handler) {
+        handler.onEvent(this);
     }
+
+
 }
