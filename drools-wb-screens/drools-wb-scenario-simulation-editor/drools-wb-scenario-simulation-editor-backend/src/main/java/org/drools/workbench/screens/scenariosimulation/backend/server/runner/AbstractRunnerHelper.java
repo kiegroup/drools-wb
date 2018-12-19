@@ -87,7 +87,7 @@ public abstract class AbstractRunnerHelper {
                                                                        expressionEvaluator);
 
             Object bean = getDirectMapping(paramsForBean, entry.getKey().getClassName(), classLoader)
-                    .orElse(createObject(factIdentifier.getClassName(), paramsForBean, classLoader));
+                    .orElseGet(() -> createObject(factIdentifier.getClassName(), paramsForBean, classLoader));
 
             scenarioGiven.add(new ScenarioGiven(factIdentifier, bean));
         }
