@@ -114,6 +114,9 @@ public class ScenarioSimulationServiceImpl
     @Inject
     private KieModuleService kieModuleService;
 
+    @Inject
+    protected ScenarioSimulationBuilder scenarioSimulationBuilder;
+
     private SafeSessionInfo safeSessionInfo;
 
     private Properties props = new Properties();
@@ -155,8 +158,13 @@ public class ScenarioSimulationServiceImpl
                        final String fileName,
                        final ScenarioSimulationModel content,
                        final String comment) {
+        return create(context, fileName, content, comment, ScenarioSimulationModel.Type.RULE, "default");
+    }
+
+    @Override
+    public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, ScenarioSimulationModel.Type type, String value) {
         try {
-            content.setSimulation(ScenarioSimulationBuilder.createSimulation(content));
+            content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);
 

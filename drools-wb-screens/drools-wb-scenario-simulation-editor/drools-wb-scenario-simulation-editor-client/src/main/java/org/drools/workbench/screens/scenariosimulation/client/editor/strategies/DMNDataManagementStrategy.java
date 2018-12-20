@@ -15,12 +15,14 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.jboss.errai.common.client.api.Caller;
@@ -54,7 +56,9 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
 
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
-            rightPanelPresenter.setDataObjectFieldsMap(factMappingTuple.getVisibleFacts());
+            final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
+
+            rightPanelPresenter.setDataObjectFieldsMap(visibleFacts);
             rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
         };
     }

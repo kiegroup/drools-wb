@@ -15,13 +15,26 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.uberfire.backend.vfs.Path;
 
 /**
  * <b>Strategy</b> that actually builds the required <code>Simulation</code> based on <code>ScenarioSimulationModel.Type</code>
  */
 public interface SimulationCreationStrategy {
 
-    Simulation createSimulation(String value);
+    Simulation createSimulation(Path context, String value) throws Exception ;
+
+    default Scenario createScenario(Simulation simulation, SimulationDescriptor simulationDescriptor) {
+        simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
+        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
+        Scenario toReturn = simulation.addScenario();
+        toReturn.setDescription(null);
+        return toReturn;
+    }
 
 }

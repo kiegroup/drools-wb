@@ -15,28 +15,30 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.uberfire.backend.vfs.Path;
 
+@ApplicationScoped
 public class RULESimulationCreationStrategy implements SimulationCreationStrategy {
 
     @Override
-    public Simulation createSimulation(String value) {
+    public Simulation createSimulation(Path context, String value) throws Exception {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
+        simulationDescriptor.setRuleSession(value);
 
-        simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
-        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-
-        Scenario scenario = toReturn.addScenario();
+        Scenario scenario = createScenario(toReturn, simulationDescriptor);
         int row = toReturn.getUnmodifiableScenarios().indexOf(scenario);
-        scenario.setDescription(null);
-
         // Add GIVEN Fact
         int id = 1;
         ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);

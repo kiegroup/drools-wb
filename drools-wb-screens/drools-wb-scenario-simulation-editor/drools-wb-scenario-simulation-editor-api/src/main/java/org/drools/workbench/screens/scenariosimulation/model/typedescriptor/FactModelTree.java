@@ -26,17 +26,42 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactModelTree {
 
-    private final String factName;  // The name of the asset
-    private final String fullPackage;  // The package of the asset
+    public enum Type {
+        INPUT,
+        DECISION,
+        UNDEFINED
+    }
+
+    private String factName;  // The name of the asset
+    private String fullPackage;  // The package of the asset
     private boolean isSimple = false;
 
-    private final Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
-    private final Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
+    private Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
+    private Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
+    private Type type;
 
+    /**
+     * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code>
+     * @param factName
+     * @param fullPackage
+     * @param simpleProperties
+     */
     public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties) {
+        this(factName, fullPackage, simpleProperties, Type.UNDEFINED);
+    }
+
+    /**
+     * Call this constructor to specify the <code>FactModelTree</code>' <code>Type</code>
+     * @param factName
+     * @param fullPackage
+     * @param simpleProperties
+     * @param type
+     */
+    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Type type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
+        this.type = type;
     }
 
     public String getFactName() {
@@ -73,6 +98,10 @@ public class FactModelTree {
 
     public void setSimple(boolean simple) {
         isSimple = simple;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     @Override

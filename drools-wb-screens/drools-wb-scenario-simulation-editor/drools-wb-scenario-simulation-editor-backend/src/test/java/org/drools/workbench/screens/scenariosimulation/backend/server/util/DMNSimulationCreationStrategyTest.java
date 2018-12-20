@@ -14,68 +14,77 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.backend.server;
+package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.enterprise.context.ApplicationScoped;
-
+import org.drools.workbench.screens.scenariosimulation.backend.server.AbstractDMNTest;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
-import org.jboss.errai.bus.server.annotations.Service;
-import org.kie.dmn.api.core.DMNModel;
-import org.kie.dmn.api.core.DMNRuntime;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 
-@Service
-@ApplicationScoped
-public class DMNTypeServiceImpl
-        extends AbstractKieContainerService
-        implements DMNTypeService {
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
-    @Override
-    public FactModelTuple retrieveType(Path path) {
-        DMNModel dmnModel = getDMNModel(path);
+@RunWith(MockitoJUnitRunner.class)
+public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
 
+    private DMNSimulationCreationStrategy dmnSimulationCreationStrategy;
+
+    @Before
+    public void init() {
+        super.init();
+        dmnSimulationCreationStrategy = spy(new DMNSimulationCreationStrategy() {
+
+        });
+    }
+
+    @Test
+    public void createSimulation() throws Exception {
+        FactModelTuple factModelTuple = getFactModelTuple();
+        final Path pathMock = mock(Path.class);
+        final String dmnFilePath = "test";
+        doReturn(factModelTuple).when(dmnSimulationCreationStrategy).getFactModelTuple(any(), any());
+        final Simulation retrieved = dmnSimulationCreationStrategy.createSimulation(pathMock, dmnFilePath);
+        assertNotNull(retrieved);
+    }
+
+    private FactModelTuple getFactModelTuple() throws IOException {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
 
-        for (InputDataNode input : dmnModel.getInputs()) {
+        for (InputDataNode input : dmnModelMock.getInputs()) {
             DMNType type = input.getType();
             visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
         }
 
-        for (DecisionNode decision : dmnModel.getDecisions()) {
+        for (DecisionNode decision : dmnModelMock.getDecisions()) {
             DMNType type = decision.getResultType();
             visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
         }
-
         return new FactModelTuple(visibleFacts, hiddenFacts);
-    }
-
-    public DMNRuntime getDMNRuntime(Path path) {
-        return getKieContainer(path).newKieSession().getKieRuntime(DMNRuntime.class);
-    }
-
-    public DMNModel getDMNModel(Path path) {
-        return getDMNRuntime(path).getModels().stream()
-                .filter(model -> path.toURI().equals(model.getResource().getSourcePath()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Impossible to find DMN model"));
     }
 
     private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
         Map<String, String> simpleFields = new HashMap<>();
         if (!type.isComposite()) {
             simpleFields.put("value", type.getName());
-            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, fmType);
+            FactModelTree simpleFactModelTree = new FactModelTree(name, "",  simpleFields, fmType);
             simpleFactModelTree.setSimple(true);
             return simpleFactModelTree;
         }

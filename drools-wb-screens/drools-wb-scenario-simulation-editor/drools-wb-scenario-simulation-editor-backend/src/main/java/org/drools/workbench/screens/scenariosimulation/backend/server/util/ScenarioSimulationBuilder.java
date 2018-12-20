@@ -15,18 +15,28 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.uberfire.backend.vfs.Path;
 
+@ApplicationScoped
 public class ScenarioSimulationBuilder {
 
-    public static Simulation createSimulation(ScenarioSimulationModel content) {
-        ScenarioSimulationModel.Type type = content.getType();
+    @Inject
+    protected RULESimulationCreationStrategy ruleSimulationCreationStrategy;
+
+    @Inject
+    protected DMNSimulationCreationStrategy dmnSimulationCreationStrategy;
+
+    public Simulation createSimulation(Path context, ScenarioSimulationModel.Type type, String value) throws Exception {
         switch (type) {
             case RULE:
-                return new RULESimulationCreationStrategy().createSimulation(content.getDmoSession());
+                return ruleSimulationCreationStrategy.createSimulation(context, value);
             case DMN:
-                return new DMNSimulationCreationStrategy().createSimulation(content.getDmnFilePath());
+                return dmnSimulationCreationStrategy.createSimulation(context, value);
             default:
                 return null;
         }

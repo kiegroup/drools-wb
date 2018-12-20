@@ -16,45 +16,28 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.dmn.api.core.DMNModel;
-import org.kie.dmn.api.core.DMNType;
-import org.kie.dmn.api.core.ast.DecisionNode;
-import org.kie.dmn.api.core.ast.InputDataNode;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DMNTypeServiceImplTest {
+public class DMNTypeServiceImplTest extends AbstractDMNTest {
 
-    @Mock
-    DMNModel dmnModelMock;
 
-    DMNTypeServiceImpl dmnTypeService;
-
-    static final String SIMPLE_TYPE_NAME = "SIMPLE_TYPE_NAME";
-    static final String SIMPLE_DECISION_TYPE_NAME = "SIMPLE_DECISION_TYPE_NAME";
-    static final String COMPLEX_DECISION_TYPE_NAME = "COMPLEX_DECISION_TYPE_NAME";
-    static final String BASE_TYPE = "BASE_TYPE";
-    static final String COMPLEX_TYPE = "COMPLEX_TYPE";
+    private DMNTypeServiceImpl dmnTypeServiceImpl;
 
     @Before
     public void init() {
-        dmnTypeService = new DMNTypeServiceImpl() {
+        super.init();
+        dmnTypeServiceImpl = new DMNTypeServiceImpl() {
             @Override
             public DMNModel getDMNModel(Path path) {
                 return dmnModelMock;
@@ -64,52 +47,7 @@ public class DMNTypeServiceImplTest {
 
     @Test
     public void retrieveType() {
-        Set<InputDataNode> inputDataNodes = new HashSet<>();
-
-        InputDataNode inputDataNodeSimpleMock = mock(InputDataNode.class);
-        DMNType simpleTypeMock = mock(DMNType.class);
-        when(simpleTypeMock.isComposite()).thenReturn(false);
-        when(simpleTypeMock.getName()).thenReturn(BASE_TYPE);
-        when(inputDataNodeSimpleMock.getType()).thenReturn(simpleTypeMock);
-        when(inputDataNodeSimpleMock.getName()).thenReturn(SIMPLE_TYPE_NAME);
-
-        inputDataNodes.add(inputDataNodeSimpleMock);
-        when(dmnModelMock.getInputs()).thenReturn(inputDataNodes);
-
-        Set<DecisionNode> decisionNodes = new HashSet<>();
-
-        DecisionNode decisionNodeSimpleMock = mock(DecisionNode.class);
-        when(decisionNodeSimpleMock.getResultType()).thenReturn(simpleTypeMock);
-        when(decisionNodeSimpleMock.getName()).thenReturn(SIMPLE_DECISION_TYPE_NAME);
-        decisionNodes.add(decisionNodeSimpleMock);
-
-        DecisionNode decisionNodeComplexMock = mock(DecisionNode.class);
-
-        DMNType complexTypeMock = mock(DMNType.class);
-        when(complexTypeMock.isComposite()).thenReturn(true);
-        when(complexTypeMock.getName()).thenReturn(COMPLEX_TYPE);
-
-        Map<String, DMNType> complexFields = new HashMap<>();
-        complexFields.put(SIMPLE_DECISION_TYPE_NAME, simpleTypeMock);
-        when(complexTypeMock.getFields()).thenReturn(complexFields);
-
-        DMNType nestedComplexTypeMock = mock(DMNType.class);
-        when(nestedComplexTypeMock.isComposite()).thenReturn(true);
-        when(nestedComplexTypeMock.getName()).thenReturn(COMPLEX_TYPE);
-        complexFields.put(COMPLEX_DECISION_TYPE_NAME, nestedComplexTypeMock);
-
-        Map<String, DMNType> nestedComplexFields = new HashMap<>();
-        nestedComplexFields.put(SIMPLE_DECISION_TYPE_NAME, simpleTypeMock);
-        when(nestedComplexTypeMock.getFields()).thenReturn(nestedComplexFields);
-
-        when(decisionNodeComplexMock.getResultType()).thenReturn(complexTypeMock);
-        when(decisionNodeComplexMock.getName()).thenReturn(COMPLEX_DECISION_TYPE_NAME);
-        decisionNodes.add(decisionNodeComplexMock);
-
-        when(dmnModelMock.getDecisions()).thenReturn(decisionNodes);
-
-        FactModelTuple factModelTuple = dmnTypeService.retrieveType(mock(Path.class));
-
+        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class));
         assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getFactName());
         assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getSimpleProperties().get("value"));
         assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).isSimple());

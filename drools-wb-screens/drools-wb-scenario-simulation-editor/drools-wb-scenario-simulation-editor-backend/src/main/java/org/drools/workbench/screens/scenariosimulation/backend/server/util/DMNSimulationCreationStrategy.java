@@ -15,41 +15,77 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
+import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.uberfire.backend.server.util.Paths;
+import org.uberfire.backend.vfs.Path;
 
+@ApplicationScoped
 public class DMNSimulationCreationStrategy implements SimulationCreationStrategy {
 
+    @Inject
+    protected DMNTypeService dmnTypeService;
+
     @Override
-    public Simulation createSimulation(String dmnFilePath) {
+    public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
+        final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        simulationDescriptor.setType(ScenarioSimulationModel.Type.DMN);
+        simulationDescriptor.setDmnFilePath(dmnFilePath);
+        Scenario scenario = createScenario(toReturn, simulationDescriptor);
 
-        simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
-        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-
-        Scenario scenario = toReturn.addScenario();
         int row = toReturn.getUnmodifiableScenarios().indexOf(scenario);
-        scenario.setDescription(null);
+        AtomicInteger id = new AtomicInteger(1);
+        final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
 
-        // Add GIVEN Fact
-        int id = 1;
-        ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
-        final FactMapping givenFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, givenExpression);
-        givenFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
-        scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
-
-        // Add EXPECT Fact
-        id = 2;
-        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
-        final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
-        expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
-        scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
+        final Map<FactModelTree.Type, List<FactModelTree>> groupedFactModelTrees = visibleFactTrees.stream()
+                .collect(Collectors.groupingBy(FactModelTree::getType));
+        // Add INPUT data
+        groupedFactModelTrees.get(FactModelTree.Type.INPUT).forEach(factModelTree -> {
+            addToScenario(row, id.getAndIncrement(), FactMappingType.GIVEN, factModelTree, simulationDescriptor, scenario);
+        });
+        // Add DECISION data
+        groupedFactModelTrees.get(FactModelTree.Type.DECISION).forEach(factModelTree -> {
+            addToScenario(row, id.getAndIncrement(), FactMappingType.EXPECT, factModelTree, simulationDescriptor, scenario);
+        });
         return toReturn;
+    }
+
+    protected FactModelTuple getFactModelTuple(Path context, String dmnFilePath) throws Exception {
+        File dmnFile = new File(dmnFilePath);
+        if (!dmnFile.exists() || !dmnFile.canRead() || !dmnFile.isFile()) {
+            throw new Exception(dmnFilePath + " is not a readable file!");
+        }
+        final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(dmnFilePath);
+        final Path path = Paths.convert(nioPath);
+        return dmnTypeService.retrieveType(path);
+    }
+
+    private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario) {
+        ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id, type);
+        FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFullPackage());
+        final FactMapping inputFactMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
+        inputFactMapping.setExpressionAlias(factModelTree.getFactName());
+        scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
     }
 }
