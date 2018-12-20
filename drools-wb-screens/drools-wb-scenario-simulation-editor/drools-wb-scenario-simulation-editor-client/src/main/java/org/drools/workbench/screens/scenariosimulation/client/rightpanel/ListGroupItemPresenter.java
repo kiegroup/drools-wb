@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.enterprise.context.Dependent;
