@@ -40,6 +40,10 @@ public class FactModelTree {
     private Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
     private Type type;
 
+    public FactModelTree() {
+        // CDI
+    }
+
     /**
      * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code>
      * @param factName
