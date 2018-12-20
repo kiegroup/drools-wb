@@ -311,7 +311,7 @@ public class RuleScenarioRunnerHelperTest {
         assertEquals("Test", runnerHelper.getDirectMapping(paramsToSet, String.class.getCanonicalName(), classLoader).get());
 
         paramsToSet.clear();
-        paramsToSet.put(Collections.emptyList(), "1");
+        paramsToSet.put(Collections.emptyList(), 1);
 
         assertEquals(1, runnerHelper.getDirectMapping(paramsToSet, Integer.class.getCanonicalName(), classLoader).get());
     }

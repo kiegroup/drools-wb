@@ -155,9 +155,4 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
     public Object createObject(String className, Map<List<String>, Object> params, ClassLoader classLoader) {
         return fillBean(className, params, classLoader);
     }
-
-    @Override
-    protected Object convertValue(String className, Object rawValue, ClassLoader classLoader) {
-        return ScenarioBeanUtil.convertValue(className, rawValue, classLoader);
-    }
 }

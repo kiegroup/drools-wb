@@ -53,7 +53,6 @@ public class ScenarioSimulationViewImpl
 
     private ScenarioMenuItem downloadMenuItem;
 
-
     /**
      * This method also set <code>ScenarioGridLayer</code> taken the instance from given <code>ScenarioGridPanel</code>
      * @param scenarioGridPanel
@@ -75,6 +74,9 @@ public class ScenarioSimulationViewImpl
     @Override
     public void setContent(Simulation simulation) {
         scenarioGridPanel.getScenarioGrid().setContent(simulation);
+
+        // prepare grid for keyboard navigation
+        scenarioGridPanel.setFocus(true);
     }
 
     @Override
@@ -114,7 +116,7 @@ public class ScenarioSimulationViewImpl
     public MenuItem getDownloadMenuItem(final Supplier<Path> pathSupplier) {
         if (downloadMenuItem == null) {
             downloadMenuItem = new ScenarioMenuItem(IconType.DOWNLOAD,
-                                                () -> presenter.onDownload(pathSupplier));
+                                                    () -> presenter.onDownload(pathSupplier));
         }
         return downloadMenuItem;
     }
