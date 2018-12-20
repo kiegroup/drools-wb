@@ -45,8 +45,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.util.RenderContextUtilities;
-import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData;
@@ -57,22 +55,23 @@ import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.
 import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getUiColumnIndex;
 import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getUiHeaderRowIndex;
 import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getUiRowIndex;
+
 @Dependent
 public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                                                                 ContextMenuHandler {
 
-    ScenarioGrid scenarioGrid;
-    OtherContextMenu otherContextMenu;
-    HeaderGivenContextMenu headerGivenContextMenu;
-    HeaderExpectedContextMenu headerExpectedContextMenu;
-    GivenContextMenu givenContextMenu;
-    ExpectedContextMenu expectedContextMenu;
-    GridContextMenu gridContextMenu;
-    UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
-    Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
-    EventBus eventBus;
-    AtomicInteger clickReceived = new AtomicInteger(0);
-    BaseGridRendererHelper rendererHelper;
+    protected ScenarioGrid scenarioGrid;
+    protected OtherContextMenu otherContextMenu;
+    protected HeaderGivenContextMenu headerGivenContextMenu;
+    protected HeaderExpectedContextMenu headerExpectedContextMenu;
+    protected GivenContextMenu givenContextMenu;
+    protected ExpectedContextMenu expectedContextMenu;
+    protected GridContextMenu gridContextMenu;
+    protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+    protected Set<AbstractHeaderMenuPresenter> managedMenus = new HashSet<>();
+    protected EventBus eventBus;
+    protected AtomicInteger clickReceived = new AtomicInteger(0);
+    protected BaseGridRendererHelper rendererHelper;
 
     public ScenarioSimulationGridPanelClickHandler() {
     }
@@ -278,15 +277,14 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (scenarioGridColumn == null) {
             return false;
         }
-
         if (!manageHeaderLeftClick(uiColumnIndex, scenarioGridColumn, gridClickPoint)) {
-            final Integer uiRowIndex = getUiRowIndex(scenarioGrid, gridClickPoint.getY());
+        final Integer uiRowIndex = getUiRowIndex(scenarioGrid, gridClickPoint.getY());
 
-            if (uiRowIndex == null) {
-                return false;
-            } else {
-                return manageGridLeftClick(uiRowIndex, uiColumnIndex, scenarioGridColumn);
-            }
+        if (uiRowIndex == null) {
+            return false;
+        } else {
+            return manageGridLeftClick(uiRowIndex, uiColumnIndex, scenarioGridColumn);
+        }
         } else {
             return true;
         }
@@ -302,9 +300,6 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
      */
     protected boolean manageHeaderLeftClick(Integer uiColumnIndex, ScenarioGridColumn scenarioGridColumn, Point2D
             clickPoint) {
-        if (!hasEditableHeaderLocal(scenarioGridColumn)) {
-            return false;
-        }
         //Get row index
         final Integer uiHeaderRowIndex = getUiHeaderRowIndexLocal(scenarioGrid, clickPoint);
         if (uiHeaderRowIndex == null) {
@@ -327,9 +322,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
                 return manageGivenExpectHeaderLeftClick(clickedScenarioHeaderMetadata,
                                                         scenarioGridColumn,
                                                         group,
-                                                        uiColumnIndex,
-                                                        uiHeaderRowIndex,
-                                                        clickPoint);
+                                                        uiColumnIndex);
             default:
                 return false;
         }
@@ -341,31 +334,17 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
      * @param scenarioGridColumn
      * @param group
      * @param uiColumnIndex
-     * @param uiHeaderRowIndex
-     * @param clickPoint - coordinates relative to the grid top left corner
      * @return
      */
     protected boolean manageGivenExpectHeaderLeftClick(ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
                                                        ScenarioGridColumn scenarioGridColumn,
                                                        String group,
-                                                       Integer uiColumnIndex,
-                                                       Integer uiHeaderRowIndex,
-                                                       Point2D clickPoint) {
-        if (isHeaderEditable(clickedScenarioHeaderMetadata, scenarioGridColumn)) {
-            final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
-            final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(clickPoint.getX());
-            final GridBodyCellEditContext context = RenderContextUtilities.makeRenderContext(scenarioGrid,
-                                                                                             ri,
-                                                                                             ci,
-                                                                                             clickPoint,
-                                                                                             uiHeaderRowIndex);
-            clickedScenarioHeaderMetadata.edit(context);
-        }
+                                                       Integer uiColumnIndex) {
+        scenarioGrid.setSelectedColumnAndHeader(scenarioGridColumn.getHeaderMetaData().indexOf(clickedScenarioHeaderMetadata), uiColumnIndex);
         if (scenarioGridColumn.isInstanceAssigned() && clickedScenarioHeaderMetadata.isInstanceHeader()) {
             eventBus.fireEvent(new ReloadRightPanelEvent(true, true));
             return true;
         }
-        scenarioGrid.setSelectedColumnAndHeader(scenarioGridColumn.getHeaderMetaData().indexOf(clickedScenarioHeaderMetadata), uiColumnIndex);
         EnableRightPanelEvent toFire = getEnableRightPanelEvent(scenarioGrid,
                                                                 scenarioGridColumn,
                                                                 clickedScenarioHeaderMetadata,
@@ -406,19 +385,8 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     }
 
     // Indirection add for test
-    protected boolean hasEditableHeaderLocal(GridColumn<?> scenarioGridColumn) {
-        return ScenarioSimulationGridHeaderUtilities.hasEditableHeader(scenarioGridColumn);
-    }
-
-    // Indirection add for test
     protected boolean isEditableHeaderLocal(GridColumn<?> scenarioGridColumn, Integer uiHeaderRowIndex) {
         return ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumn, uiHeaderRowIndex);
     }
 
-    protected boolean isHeaderEditable(ScenarioHeaderMetaData clickedScenarioHeaderMetadata, ScenarioGridColumn scenarioGridColumn) {
-        if (rendererHelper == null || clickedScenarioHeaderMetadata.isEditingMode() || !scenarioGridColumn.isInstanceAssigned()) {
-            return false;
-        }
-        return (clickedScenarioHeaderMetadata.isInstanceHeader() || (clickedScenarioHeaderMetadata.isPropertyHeader() && scenarioGridColumn.isPropertyAssigned()));
-    }
 }
