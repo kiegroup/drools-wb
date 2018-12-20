@@ -47,8 +47,6 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
 
     protected static final String SCENARIO_PACKAGE = "scenario.package";
 
-    protected static final String SCENARIO_PACKAGE = "scenario.package";
-
     @Mock
     protected VersionRecordManager versionRecordManagerMock;
     @Mock
@@ -93,8 +91,6 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
         this.model = new ScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "default");
-        model.setRuleSession("default");
-        model.setType(ScenarioSimulationModel.Type.RULE);
         this.content = new ScenarioSimulationModelContent(model,
                                                           overviewMock,
                                                           mock(PackageDataModelOracleBaselinePayload.class));
