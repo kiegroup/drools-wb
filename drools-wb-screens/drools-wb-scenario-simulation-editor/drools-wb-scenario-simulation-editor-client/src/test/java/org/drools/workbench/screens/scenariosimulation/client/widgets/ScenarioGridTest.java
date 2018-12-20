@@ -47,6 +47,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandle
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 
+import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -86,12 +87,15 @@ public class ScenarioGridTest {
 
     private final String EXPRESSION_ALIAS_DESCRIPTION = "EXPRESSION_ALIAS_DESCRIPTION";
     private final String EXPRESSION_ALIAS_GIVEN = "EXPRESSION_ALIAS_GIVEN";
+    private final String EXPRESSION_ALIAS_INTEGER = "EXPRESSION_ALIAS_INTEGER";
     private final String EXPRESSION_ALIAS_INDEX = "EXPRESSION_ALIAS_INDEX";
 
     private FactMapping factMappingDescription;
     private FactMapping factMappingIndex;
     private FactMapping factMappingGiven;
+    private FactMapping factMappingInteger;
     private FactIdentifier factIdentifierGiven;
+    private FactIdentifier factIdentifierInteger;
 
     private Simulation simulation = new Simulation();
 
@@ -103,8 +107,10 @@ public class ScenarioGridTest {
     public void setup() {
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
         factIdentifierGiven = new FactIdentifier("GIVEN", "GIVEN");
+        factIdentifierInteger = new FactIdentifier("Integer", "java.lang.Integer");
         factMappingDescription = new FactMapping(EXPRESSION_ALIAS_DESCRIPTION, FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
         factMappingGiven = new FactMapping(EXPRESSION_ALIAS_GIVEN, factIdentifierGiven, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
+        factMappingInteger = new FactMapping(EXPRESSION_ALIAS_INTEGER, factIdentifierInteger, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
         factMappingIndex = new FactMapping(EXPRESSION_ALIAS_INDEX, FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulation = getSimulation();
         scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock, scenarioGridLayerMock, scenarioGridRendererMock, scenarioGridPanelMock) {
@@ -239,6 +245,15 @@ public class ScenarioGridTest {
         factMappingGiven.getExpressionElements().add(new ExpressionElement("test"));
         assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingGiven));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingGiven));
+        factMappingInteger.getExpressionElements().clear();
+        assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingInteger));
+        assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingInteger));
+    }
+
+    @Test
+    public void isSimpleJavaType() {
+        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(scenarioGrid.isSimpleJavaType(clazz.getName())));
+        assertFalse(scenarioGrid.isSimpleJavaType("com.TestBean"));
     }
 
     @Test

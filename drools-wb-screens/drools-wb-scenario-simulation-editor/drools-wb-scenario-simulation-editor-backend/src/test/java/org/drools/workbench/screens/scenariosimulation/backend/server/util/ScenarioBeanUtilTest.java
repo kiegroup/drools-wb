@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -98,14 +97,6 @@ public class ScenarioBeanUtilTest {
         Object targetObject = scenarioBeanWrapper.getBean();
 
         assertEquals(targetObject, FIRST_NAME);
-    }
-
-    @Test
-    public void navigateToObjectNoStepTest() {
-        String message = "Invalid path to a property, no steps provided";
-        Assertions.assertThatThrownBy(() -> ScenarioBeanUtil.navigateToObject(new Dispute(), new ArrayList<>(), true))
-                .isInstanceOf(ScenarioException.class)
-                .hasMessage(message);
     }
 
     @Test
