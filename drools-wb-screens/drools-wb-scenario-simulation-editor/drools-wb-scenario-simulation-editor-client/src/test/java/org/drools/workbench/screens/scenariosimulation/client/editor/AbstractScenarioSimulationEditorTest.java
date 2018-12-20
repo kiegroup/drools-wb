@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.Optional;
 
+import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
@@ -42,7 +43,9 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractScenarioSimulationEditorTest {
+public abstract class AbstractScenarioSimulationEditorTest extends AbstractScenarioSimulationTest {
+
+    protected static final String SCENARIO_PACKAGE = "scenario.package";
 
     protected static final String SCENARIO_PACKAGE = "scenario.package";
 
@@ -89,7 +92,7 @@ public abstract class AbstractScenarioSimulationEditorTest {
         when(workbenchContextMock.getActiveWorkspaceProject()).thenReturn(Optional.empty());
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
-        this.model = new ScenarioSimulationModel();
+        this.model = new ScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "default");
         model.setRuleSession("default");
         model.setType(ScenarioSimulationModel.Type.RULE);
         this.content = new ScenarioSimulationModelContent(model,

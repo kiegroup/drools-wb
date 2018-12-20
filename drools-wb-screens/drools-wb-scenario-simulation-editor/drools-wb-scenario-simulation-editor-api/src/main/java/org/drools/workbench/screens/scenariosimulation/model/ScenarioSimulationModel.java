@@ -37,14 +37,16 @@ public class ScenarioSimulationModel
 
     private Imports imports = new Imports();
 
-    private String dmoSession;
-
-    private String dmnFilePath;
-
-    private Type type;
 
     public ScenarioSimulationModel() {
+        createSimulation(Type.RULE, "default");
     }
+
+
+    public ScenarioSimulationModel(ScenarioSimulationModel.Type selectedType, String value) {
+        createSimulation(selectedType, value);
+    }
+
 
     public Simulation getSimulation() {
         return simulation;
@@ -68,28 +70,39 @@ public class ScenarioSimulationModel
         return version;
     }
 
-    public String getDmoSession() {
-        return dmoSession;
-    }
+    protected void createSimulation(ScenarioSimulationModel.Type selectedType, String value) {
+        simulation = new Simulation();
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        simulationDescriptor.setType(selectedType);
+        switch (selectedType) {
+            case DMN:
+                simulationDescriptor.setDmnFilePath(value);
+                break;
+            case RULE:
+            default:
+                simulationDescriptor.setRuleSession(value);
+        }
 
-    public void setRuleSession(String ruleSession) {
-        this.dmoSession = ruleSession;
-    }
+        simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
+        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
-    public String getDmnFilePath() {
-        return dmnFilePath;
-    }
+        Scenario scenario = simulation.addScenario();
+        int row = simulation.getUnmodifiableScenarios().indexOf(scenario);
+        scenario.setDescription(null);
 
-    public void setDmnFilePath(String dmnFilePath) {
-        this.dmnFilePath = dmnFilePath;
-    }
+        // Add GIVEN Fact
+        int id = 1;
+        ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
+        final FactMapping givenFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, givenExpression);
+        givenFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
+        scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
+        // Add EXPECT Fact
+        id = 2;
+        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
+        final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
+        expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
+        scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
     }
 
 }

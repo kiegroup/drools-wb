@@ -120,21 +120,18 @@ public class NewScenarioSimulationHandler
                        final NewResourcePresenter presenter) {
         final ScenarioSimulationModel.Type selectedType = sourceTypeSelector.getSelectedType();
         String value;
-        ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
-        scenarioSimulationModel.setType(selectedType);
         switch (selectedType) {
             case DMN:
                 value = uploadWidget.getSelectedPath();
                 if (value == null || value.isEmpty()) {
                     return;
                 }
-                scenarioSimulationModel.setDmnFilePath(value);
                 break;
             case RULE:
             default:
                 value = "default";
-                scenarioSimulationModel.setRuleSession(value);
         }
+        ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel(selectedType, value);
         busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
         scenarioSimulationService.call(getSuccessCallback(presenter),
                                        new HasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageTestResourcesPath(),

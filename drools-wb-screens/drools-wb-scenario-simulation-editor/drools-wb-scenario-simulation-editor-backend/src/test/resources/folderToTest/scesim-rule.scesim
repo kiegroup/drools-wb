@@ -54,6 +54,8 @@
           <expressionAlias>PROPERTY 2</expressionAlias>
         </FactMapping>
       </factMappings>
+      <dmoSession></dmoSession>
+      <type>RULE</type>
     </simulationDescriptor>
     <scenarios>
       <Scenario>
@@ -83,6 +85,4 @@
   <imports>
     <imports/>
   </imports>
-  <dmoSession></dmoSession>
-  <type>RULE</type>
 </ScenarioSimulationModel>

@@ -19,8 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.ait.lienzo.client.core.event.INodeXYEvent;
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -32,85 +30,45 @@ import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
 public class ScenarioSimulationGridHeaderUtilities {
 
     /**
-     * Gets the header row index corresponding to the provided Canvas y-coordinate relative to the grid. Grid-relative coordinates
-     * can be obtained from {@link INodeXYEvent} using {@link CoordinateUtilities#convertDOMToGridCoordinate(GridWidget, Point2D)}
-     * @param gridWidget GridWidget to check.
-     * @param column Column on which the even has occurred
-     * @param cy y-coordinate relative to the GridWidget.
-     * @return The header row index or null if the coordinate did not map to a header row.
-     */
-    public static Integer getUiHeaderRowIndex(final GridWidget gridWidget,
-                                              final GridColumn<?> column,
-                                              final double cy) {
-        final Group header = gridWidget.getHeader();
-        final GridRenderer renderer = gridWidget.getRenderer();
-        final BaseGridRendererHelper.RenderingInformation ri = gridWidget.getRendererHelper().getRenderingInformation();
-        final double headerRowsYOffset = ri.getHeaderRowsYOffset();
-        final double headerMinY = (header == null ? headerRowsYOffset : header.getY() + headerRowsYOffset);
-        final double headerMaxY = (header == null ? renderer.getHeaderHeight() : renderer.getHeaderHeight() + header.getY());
-
-        if (cy < headerMinY || cy > headerMaxY) {
-            return null;
-        }
-
-        //Get header row index
-        int uiHeaderRowIndex = 0;
-        double offsetY = cy - headerMinY;
-        final int headerRowCount = gridWidget.getModel().getHeaderRowCount();
-        final double headerRowHeight = renderer.getHeaderRowHeight();
-        final double headerRowsHeight = headerRowHeight * headerRowCount;
-        final double columnHeaderRowHeight = headerRowsHeight / column.getHeaderMetaData().size();
-        while (columnHeaderRowHeight < offsetY) {
-            offsetY = offsetY - columnHeaderRowHeight;
-            uiHeaderRowIndex++;
-        }
-        if (uiHeaderRowIndex < 0 || uiHeaderRowIndex > column.getHeaderMetaData().size() - 1) {
-            return null;
-        }
-
-        return uiHeaderRowIndex;
-    }
-
-    /**
      * Retrieve the  <code>ScenarioHeaderMetaData</code> from the <code>GridColumn</code> of a <code>GridWidget</code> at a given point x.
      * It returns <code>null</code> if none is present at that position.
      * @param gridWidget
-     * @param cx
-     * @param cy
+     * @param relativePoint within the gridWidget
      * @return
      */
-    public static ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(GridWidget gridWidget, double cx, double cy) {
-        final GridColumn<?> column = getGridColumn(gridWidget, cx);
+    public static ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(GridWidget gridWidget, Point2D relativePoint) {
+        final GridColumn<?> column = getGridColumn(gridWidget, relativePoint.getX());
         if (column == null) {
             return null;
         }
         //Get row index
-        final Integer uiHeaderRowIndex = ScenarioSimulationGridHeaderUtilities.getUiHeaderRowIndex(gridWidget,
-                                                                                                   column,
-                                                                                                   cy);
+        final Integer uiHeaderRowIndex = CoordinateUtilities.getUiHeaderRowIndex(gridWidget,
+                                                                                 relativePoint);
+        if (uiHeaderRowIndex == null) {
+            return null;
+        }
         return (ScenarioHeaderMetaData) column.getHeaderMetaData().get(uiHeaderRowIndex);
     }
 
     /**
-     * Retrieve the  <code>ScenarioHeaderMetaData</code> from the <code>GridColumn</code> of a <code>GridWidget</code> at a given point.
-     * It returns <code>null</code> if none is present at that position.
-     * @param gridWidget
-     * @param column
-     * @param cy
+     * Retrieve the <code>ScenarioHeaderMetaData</code> from the <code>GridColumn</code> corresponding to given row.
+     * It returns <code>null</code> row with given index doesn't exist.
+     * @param scenarioGridColumn
+     * @param uiRowIndex
      * @return
      */
-    public static ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(GridWidget gridWidget, GridColumn<?> column, double cy) {
-        //Get row index
-        final Integer uiHeaderRowIndex = ScenarioSimulationGridHeaderUtilities.getUiHeaderRowIndex(gridWidget,
-                                                                                                   column,
-                                                                                                   cy);
-        return uiHeaderRowIndex == null ? null : (ScenarioHeaderMetaData) column.getHeaderMetaData().get(uiHeaderRowIndex);
+    public static ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(final ScenarioGridColumn scenarioGridColumn,
+                                                                         final int uiRowIndex) {
+        if (scenarioGridColumn.getHeaderMetaData().size() > uiRowIndex) {
+            return (ScenarioHeaderMetaData) scenarioGridColumn.getHeaderMetaData().get(uiRowIndex);
+        }
+
+        return null;
     }
 
     /**
@@ -167,7 +125,6 @@ public class ScenarioSimulationGridHeaderUtilities {
         return String.join(";", scenarioGridModel.getColumns()
                 .stream()
                 .filter(gridColumn -> {
-
                     GridColumn.HeaderMetaData m = ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData();
                     return group.equals(m.getColumnGroup());
                 })

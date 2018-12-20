@@ -34,6 +34,12 @@ public class SimulationDescriptor {
 
     private final List<FactMapping> factMappings = new ArrayList<>();
 
+    private String dmoSession;
+
+    private String dmnFilePath;
+
+    private ScenarioSimulationModel.Type type;
+
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
@@ -44,6 +50,30 @@ public class SimulationDescriptor {
 
     public Set<FactIdentifier> getFactIdentifiers() {
         return factMappings.stream().map(FactMapping::getFactIdentifier).collect(Collectors.toSet());
+    }
+
+    public String getDmoSession() {
+        return dmoSession;
+    }
+
+    public void setRuleSession(String ruleSession) {
+        this.dmoSession = ruleSession;
+    }
+
+    public String getDmnFilePath() {
+        return dmnFilePath;
+    }
+
+    public void setDmnFilePath(String dmnFilePath) {
+        this.dmnFilePath = dmnFilePath;
+    }
+
+    public ScenarioSimulationModel.Type getType() {
+        return type;
+    }
+
+    public void setType(ScenarioSimulationModel.Type type) {
+        this.type = type;
     }
 
     public void moveFactMapping(int oldIndex, int newIndex) {
@@ -90,6 +120,18 @@ public class SimulationDescriptor {
         List<FactMapping> factMappings = internalFilter(e -> e.getExpressionIdentifier().equals(ei) &&
                 e.getFactIdentifier().equals(factIdentifier));
         return factMappings.stream().findFirst();
+    }
+
+    /**
+     * This method clone the given <code>FactMapping</code> and insert the cloned instance at the specified index
+     * @param index
+     * @param toClone
+     * @return the <b>cloned</b> <code>FactMapping</code>
+     */
+    public FactMapping addFactMapping(int index, FactMapping toClone) {
+        FactMapping toReturn = toClone.cloneFactMapping();
+        factMappings.add(index, toReturn);
+        return toReturn;
     }
 
     public FactMapping addFactMapping(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {

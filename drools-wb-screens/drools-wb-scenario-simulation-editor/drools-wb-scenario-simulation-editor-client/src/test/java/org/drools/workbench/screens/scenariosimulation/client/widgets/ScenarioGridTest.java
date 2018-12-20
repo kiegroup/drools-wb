@@ -15,10 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -39,8 +42,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,6 +54,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -75,6 +81,8 @@ public class ScenarioGridTest {
     private ScenarioGridColumn scenarioGridColumnMock;
     @Mock
     private ScenarioHeaderMetaData propertyHeaderMetadataMock;
+    @Mock
+    private EventBus eventBusMock;
 
     private final String EXPRESSION_ALIAS_DESCRIPTION = "EXPRESSION_ALIAS_DESCRIPTION";
     private final String EXPRESSION_ALIAS_GIVEN = "EXPRESSION_ALIAS_GIVEN";
@@ -121,6 +129,7 @@ public class ScenarioGridTest {
                 return scenarioGridColumnMock;
             }
         });
+        scenarioGrid.setEventBus(eventBusMock);
     }
 
     @Test
@@ -242,6 +251,26 @@ public class ScenarioGridTest {
     public void appendRows() {
         scenarioGrid.appendRows(simulation);
         verify(scenarioGrid, times(1)).appendRow(anyInt(), isA(Scenario.class));
+    }
+
+    @Test
+    public void testAdjustSelection() {
+        final int uiColumnIndex = 0;
+        final int uiRowIndex = 0;
+        final ScenarioGridColumn columnMock = mock(ScenarioGridColumn.class);
+        when(columnMock.getIndex()).thenReturn(uiColumnIndex);
+        when(scenarioGridModelMock.getColumns()).thenReturn(Collections.singletonList(columnMock));
+
+        final GridData.SelectedCell selectedHeaderCell = mock(GridData.SelectedCell.class);
+        when(selectedHeaderCell.getColumnIndex()).thenReturn(uiColumnIndex);
+        when(selectedHeaderCell.getRowIndex()).thenReturn(uiRowIndex);
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.singletonList(selectedHeaderCell));
+
+        scenarioGrid.adjustSelection(mock(SelectionExtension.class), false);
+
+        verify(scenarioGrid).signalRightPanelAboutSelectedHeaderCells();
+        verify(scenarioGrid).setSelectedColumnAndHeader(uiRowIndex, uiColumnIndex);
+        verify(eventBusMock).fireEvent(any(EnableRightPanelEvent.class));
     }
 
     private Simulation getSimulation() {

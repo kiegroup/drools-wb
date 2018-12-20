@@ -54,6 +54,8 @@
           <expressionAlias>PROPERTY 2</expressionAlias>
         </FactMapping>
       </factMappings>
+      <dmnFilePath>src/main/resources/com/new-def.dmn</dmnFilePath>
+      <type>DMN</type>
     </simulationDescriptor>
     <scenarios>
       <Scenario>
@@ -83,6 +85,4 @@
   <imports>
     <imports/>
   </imports>
-  <dmnFilePath>src/main/resources/com/new-def.dmn</dmnFilePath>
-  <type>DMN</type>
 </ScenarioSimulationModel>
