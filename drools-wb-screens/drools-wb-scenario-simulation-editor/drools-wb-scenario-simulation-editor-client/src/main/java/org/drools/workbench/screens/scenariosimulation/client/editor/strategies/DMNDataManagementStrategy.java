@@ -15,8 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
+import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -57,8 +60,12 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
             final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
-
-            rightPanelPresenter.setDataObjectFieldsMap(visibleFacts);
+            final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
+                    .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
+            final SortedMap<String, FactModelTree> complexDataObjects = new TreeMap<>(partitionBy.get(false).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+            final SortedMap<String, FactModelTree> simpleDataObjects = new TreeMap<>(partitionBy.get(true).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+            rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
+            rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
             rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
         };
     }

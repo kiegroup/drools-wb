@@ -309,6 +309,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     @Override
     public void onDisableEditorTab() {
+        onSearchedEvent("");
         listGroupItemPresenter.disable();
         editingColumnEnabled = false;
         view.disableEditorTab();

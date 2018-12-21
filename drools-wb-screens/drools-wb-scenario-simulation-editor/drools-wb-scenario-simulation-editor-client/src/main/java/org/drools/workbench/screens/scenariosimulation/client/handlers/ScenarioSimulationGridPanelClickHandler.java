@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -134,7 +135,7 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         hideMenus();
         scenarioGrid.clearSelections();
         if (!manageLeftClick(canvasX, canvasY)) { // It was not a grid click
-            eventBus.fireEvent(new ReloadRightPanelEvent(true));
+            eventBus.fireEvent(new DisableRightPanelEvent());
         }
     }
 

@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -72,10 +71,6 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     }
 
     protected FactModelTuple getFactModelTuple(Path context, String dmnFilePath) throws Exception {
-        File dmnFile = new File(dmnFilePath);
-        if (!dmnFile.exists() || !dmnFile.canRead() || !dmnFile.isFile()) {
-            throw new Exception(dmnFilePath + " is not a readable file!");
-        }
         final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(dmnFilePath);
         final Path path = Paths.convert(nioPath);
         return dmnTypeService.retrieveType(path);
