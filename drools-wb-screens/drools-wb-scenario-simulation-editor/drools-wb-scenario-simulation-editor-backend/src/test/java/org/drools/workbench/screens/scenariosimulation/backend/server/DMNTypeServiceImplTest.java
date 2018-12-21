@@ -39,7 +39,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         super.init();
         dmnTypeServiceImpl = new DMNTypeServiceImpl() {
             @Override
-            public DMNModel getDMNModel(Path path) {
+            public DMNModel getDMNModel(Path path,String stringPath) {
                 return dmnModelMock;
             }
         };
@@ -47,7 +47,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
 
     @Test
     public void retrieveType() {
-        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class));
+        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class), mock(String.class));
         assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getFactName());
         assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getSimpleProperties().get("value"));
         assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).isSimple());

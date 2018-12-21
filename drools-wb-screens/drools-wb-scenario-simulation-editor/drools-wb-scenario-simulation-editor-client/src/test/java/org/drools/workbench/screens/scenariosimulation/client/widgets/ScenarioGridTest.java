@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.junit.Before;
@@ -169,7 +170,7 @@ public class ScenarioGridTest {
     @Test
     public void setHeaderColumns() {
         scenarioGrid.setHeaderColumns(simulation);
-        verify(scenarioGrid, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class));
+        verify(scenarioGrid, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(true));
     }
 
     @Test
@@ -177,7 +178,7 @@ public class ScenarioGridTest {
         String columnId = factMappingDescription.getExpressionIdentifier().getName();
         FactMappingType type = factMappingDescription.getExpressionIdentifier().getType();
         String columnGroup = type.name();
-        scenarioGrid.setHeaderColumn(1, factMappingDescription);
+        scenarioGrid.setHeaderColumn(1, factMappingDescription, true);
         verify(scenarioGrid, times(1)).isPropertyAssigned(eq(true), eq(factMappingDescription));
         verify(scenarioGrid, times(1)).getPlaceholder(eq(true));
         verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS_DESCRIPTION),
@@ -194,7 +195,7 @@ public class ScenarioGridTest {
         columnId = factMappingGiven.getExpressionIdentifier().getName();
         type = factMappingGiven.getExpressionIdentifier().getType();
         columnGroup = type.name();
-        scenarioGrid.setHeaderColumn(1, factMappingGiven);
+        scenarioGrid.setHeaderColumn(1, factMappingGiven, true);
         verify(scenarioGrid, times(1)).isPropertyAssigned(eq(true), eq(factMappingGiven));
         verify(scenarioGrid, times(1)).getPlaceholder(eq(false));
         verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS_GIVEN),
@@ -291,6 +292,7 @@ public class ScenarioGridTest {
     private Simulation getSimulation() {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
 
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
