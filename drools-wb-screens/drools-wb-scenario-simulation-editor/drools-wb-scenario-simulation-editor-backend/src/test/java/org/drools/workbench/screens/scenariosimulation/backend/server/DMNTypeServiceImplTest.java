@@ -56,7 +56,7 @@ public class DMNTypeServiceImplTest {
     public void init() {
         dmnTypeService = new DMNTypeServiceImpl() {
             @Override
-            public DMNModel getDMNModel(Path path) {
+            public DMNModel getDMNModel(Path path,String stringPath) {
                 return dmnModelMock;
             }
         };
@@ -108,7 +108,7 @@ public class DMNTypeServiceImplTest {
 
         when(dmnModelMock.getDecisions()).thenReturn(decisionNodes);
 
-        FactModelTuple factModelTuple = dmnTypeService.retrieveType(mock(Path.class));
+        FactModelTuple factModelTuple = dmnTypeService.retrieveType(mock(Path.class), mock(String.class));
 
         assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getFactName());
         assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getSimpleProperties().get("value"));

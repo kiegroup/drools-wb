@@ -30,6 +30,7 @@ import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.mocks.CallerMock;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,14 +46,14 @@ public class DMNDataManagementStrategyTest {
 
     @Before
     public void init() {
-        when(dmnTypeServiceMock.retrieveType(any())).thenReturn(mock(FactModelTuple.class));
+        when(dmnTypeServiceMock.retrieveType(any(), anyString())).thenReturn(mock(FactModelTuple.class));
         dmnDataManagementStrategy = new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock));
     }
 
     @Test
     public void populateRightPanel() {
         dmnDataManagementStrategy.populateRightPanel(mock(RightPanelView.Presenter.class), mock(ScenarioGridModel.class));
-        verify(dmnTypeServiceMock, times(1)).retrieveType(any());
+        verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
     }
 
     @Test

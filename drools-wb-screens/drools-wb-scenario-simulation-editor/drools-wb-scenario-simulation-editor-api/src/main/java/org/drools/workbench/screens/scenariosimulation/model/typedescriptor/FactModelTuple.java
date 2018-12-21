@@ -25,8 +25,12 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactModelTuple {
 
-    private final SortedMap<String, FactModelTree> visibleFacts;
-    private final SortedMap<String, FactModelTree> hiddenFacts;
+    private SortedMap<String, FactModelTree> visibleFacts;
+    private SortedMap<String, FactModelTree> hiddenFacts;
+
+    public FactModelTuple() {
+        // CDI
+    }
 
     public FactModelTuple(SortedMap<String, FactModelTree> visibleFacts, SortedMap<String, FactModelTree> hiddenFacts) {
         this.visibleFacts = visibleFacts;

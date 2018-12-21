@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -27,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.jboss.errai.bus.server.annotations.Service;
+import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
@@ -40,9 +42,11 @@ public class DMNTypeServiceImpl
         extends AbstractKieContainerService
         implements DMNTypeService {
 
+    private Map<Path, DMNRuntime> cache = new ConcurrentHashMap<>();
+
     @Override
-    public FactModelTuple retrieveType(Path path) {
-        DMNModel dmnModel = getDMNModel(path);
+    public FactModelTuple retrieveType(Path path, String dmnPath) {
+        DMNModel dmnModel = getDMNModel(path, dmnPath);
 
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
@@ -82,14 +86,17 @@ public class DMNTypeServiceImpl
         return factModelTree;
     }
 
-    public DMNRuntime getDMNRuntime(Path path) {
-        return getKieContainer(path).newKieSession().getKieRuntime(DMNRuntime.class);
-    }
-
-    public DMNModel getDMNModel(Path path) {
+    public DMNModel getDMNModel(Path path, String dmnPath) {
         return getDMNRuntime(path).getModels().stream()
-                .filter(model -> path.toURI().equals(model.getResource().getSourcePath()))
+                .filter(model -> dmnPath.endsWith(model.getResource().getSourcePath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Impossible to find DMN model"));
+    }
+
+    public DMNRuntime getDMNRuntime(Path path) {
+        return cache.computeIfAbsent(path, p -> {
+            KieContainer kieContainer = getKieContainer(p);
+            return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
+        });
     }
 }

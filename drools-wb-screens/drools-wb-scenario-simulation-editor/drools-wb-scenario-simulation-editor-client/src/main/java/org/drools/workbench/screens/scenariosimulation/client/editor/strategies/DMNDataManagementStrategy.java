@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 
 import java.util.TreeMap;
 
+import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
@@ -34,6 +35,7 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     private final Caller<DMNTypeService> dmnTypeService;
     private Path currentPath;
     private ScenarioSimulationModel model;
+    private ThreadLocal<FactModelTuple> factModelTupleThreadLocal = new ThreadLocal<>();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
         this.dmnTypeService = dmnTypeService;
@@ -41,9 +43,16 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
 
     @Override
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
-        dmnTypeService.call(getSuccessCallback(rightPanelPresenter),
-                            getErrorCallback(rightPanelPresenter))
-                .retrieveType(currentPath);
+        GWT.log("LALALALALALA scenarioGridModel.getSimulation().isPresent() = " + scenarioGridModel.getSimulation().isPresent());
+        String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
+        if(factModelTupleThreadLocal.get() != null) {
+            getSuccessCallback(rightPanelPresenter).callback(factModelTupleThreadLocal.get());
+        }
+        else {
+            dmnTypeService.call(getSuccessCallback(rightPanelPresenter),
+                                getErrorCallback(rightPanelPresenter))
+                    .retrieveType(currentPath, dmnFilePath);
+        }
     }
 
     @Override
@@ -54,8 +63,10 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
 
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
+            factModelTupleThreadLocal.set(factMappingTuple);
             rightPanelPresenter.setDataObjectFieldsMap(factMappingTuple.getVisibleFacts());
             rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
+
         };
     }
 
