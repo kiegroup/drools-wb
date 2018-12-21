@@ -60,11 +60,17 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
                 .collect(Collectors.groupingBy(FactModelTree::getType));
         // Add INPUT data
         groupedFactModelTrees.get(FactModelTree.Type.INPUT).forEach(factModelTree -> {
-            addToScenario(row, id.getAndIncrement(), FactMappingType.GIVEN, factModelTree, simulationDescriptor, scenario);
+            factModelTree.getSimpleProperties().forEach((propertyName, propertyClass) -> {
+                String stepName = propertyClass.equals(factModelTree.getFactName()) ? propertyClass : propertyName;
+                addToScenario(row, id.getAndIncrement(), FactMappingType.GIVEN, factModelTree, simulationDescriptor, scenario, stepName, propertyClass);
+            });
         });
         // Add DECISION data
         groupedFactModelTrees.get(FactModelTree.Type.DECISION).forEach(factModelTree -> {
-            addToScenario(row, id.getAndIncrement(), FactMappingType.EXPECT, factModelTree, simulationDescriptor, scenario);
+            factModelTree.getSimpleProperties().forEach((propertyName, propertyClass) -> {
+                String stepName = propertyClass.equals(factModelTree.getFactName()) ? propertyClass : propertyName;
+                addToScenario(row, id.getAndIncrement(), FactMappingType.EXPECT, factModelTree, simulationDescriptor, scenario, stepName, propertyClass);
+            });
         });
         return toReturn;
     }
@@ -74,12 +80,12 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         return dmnTypeService.retrieveType(context, dmnFilePath);
     }
 
-    private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario) {
+    private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario, String propertyName, String propertyClass) {
         ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id, type);
         FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
         final FactMapping factMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
-        factMapping.setExpressionAlias(factModelTree.getFactName());
-        factMapping.addExpressionElement(factModelTree.getSimpleProperties().get("value"), factModelTree.getSimpleProperties().get("value"));
+        factMapping.setExpressionAlias(propertyName);
+        factMapping.addExpressionElement(propertyName, propertyClass);
         scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
     }
 }
