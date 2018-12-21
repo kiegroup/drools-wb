@@ -17,12 +17,16 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.kie.api.runtime.ExecutableRunner;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
+import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.internal.builder.fluent.DMNRuntimeFluent;
 import org.kie.internal.builder.fluent.ExecutableBuilder;
+import org.kie.internal.command.RegistryContext;
 
 public class DMNScenarioExecutableBuilder {
 
@@ -55,7 +59,22 @@ public class DMNScenarioExecutableBuilder {
 
     public void setActiveModel(String path) {
         dmnRuntimeFluent
-                .setActiveModel(path)
+                // FIXME update SetDMNActiveModelCommand
+                .addCommand(context -> {
+                    RegistryContext registryContext = (RegistryContext) context;
+
+                    DMNRuntime dmnRuntime = registryContext.lookup(DMNRuntime.class);
+                    if (dmnRuntime == null) {
+                        throw new IllegalStateException("There is no DMNRuntime available");
+                    }
+
+
+                return dmnRuntime.getModels().stream()
+                        .filter(model -> path.endsWith(model.getResource().getSourcePath()))
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("Cannot find a DMN model with resource=" + path));
+            })
+                //                .setActiveModel(path)
                 .out(DMN_MODEL);
     }
 
