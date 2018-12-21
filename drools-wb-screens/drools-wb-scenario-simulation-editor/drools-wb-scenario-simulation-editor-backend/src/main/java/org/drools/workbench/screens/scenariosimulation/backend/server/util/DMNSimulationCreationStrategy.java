@@ -35,7 +35,6 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
-import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
@@ -70,17 +69,17 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         return toReturn;
     }
 
+    // Indirection for test
     protected FactModelTuple getFactModelTuple(Path context, String dmnFilePath) throws Exception {
-        final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(dmnFilePath);
-        final Path path = Paths.convert(nioPath);
-        return dmnTypeService.retrieveType(path, dmnFilePath);
+        return dmnTypeService.retrieveType(context, dmnFilePath);
     }
 
     private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario) {
         ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id, type);
-        FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getSimpleProperties().get("value"));
+        FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
         final FactMapping factMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
         factMapping.setExpressionAlias(factModelTree.getFactName());
+        factMapping.addExpressionElement(factModelTree.getSimpleProperties().get("value"), factModelTree.getSimpleProperties().get("value"));
         scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
     }
 }

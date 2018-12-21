@@ -50,9 +50,9 @@ public class DMNFeelExpressionEvaluator implements ExpressionEvaluator {
         }
         EvaluationContext evaluationContext = newEvaluationContext();
         Object toReturn = feel.evaluate((String) raw, evaluationContext);
-        if (toReturn != null && !toReturn.getClass().getCanonicalName().equals(className)) {
-            throw new IllegalArgumentException("Wrong type for expression, expected " + className + " found " + toReturn.getClass().getCanonicalName());
-        }
+//        if (toReturn != null && !toReturn.getClass().getCanonicalName().equals(className)) {
+//            throw new IllegalArgumentException("Wrong type for expression, expected " + className + " found " + toReturn.getClass().getCanonicalName());
+//        }
         return toReturn;
     }
 
