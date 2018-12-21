@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import org.kie.api.runtime.ExecutableRunner;
 import org.kie.api.runtime.KieContainer;
@@ -68,11 +67,12 @@ public class DMNScenarioExecutableBuilder {
                         throw new IllegalStateException("There is no DMNRuntime available");
                     }
 
-
-                return dmnRuntime.getModels().stream()
-                        .filter(model -> path.endsWith(model.getResource().getSourcePath()))
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalStateException("Cannot find a DMN model with resource=" + path));
+                    DMNModel dmnModel = dmnRuntime.getModels().stream()
+                            .filter(model -> path.endsWith(model.getResource().getSourcePath()))
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalStateException("Cannot find a DMN model with resource=" + path));
+                    registryContext.register(DMNModel.class, dmnModel);
+                    return dmnModel;
             })
                 //                .setActiveModel(path)
                 .out(DMN_MODEL);
