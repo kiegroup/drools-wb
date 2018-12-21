@@ -47,32 +47,31 @@ public class DMNTypeServiceImpl
     @Override
     public FactModelTuple retrieveType(Path path, String dmnPath) {
         DMNModel dmnModel = getDMNModel(path, dmnPath);
-
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
             visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
         }
-
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
             visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
         }
-
         return new FactModelTuple(visibleFacts, hiddenFacts);
     }
 
-    public DMNRuntime getDMNRuntime(Path path) {
-        return getKieContainer(path).newKieSession().getKieRuntime(DMNRuntime.class);
-    }
-
-    public DMNModel getDMNModel(Path path) {
+    public DMNModel getDMNModel(Path path, String dmnPath) {
         return getDMNRuntime(path).getModels().stream()
-                .filter(model -> path.toURI().equals(model.getResource().getSourcePath()))
+                .filter(model -> dmnPath.endsWith(model.getResource().getSourcePath()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Impossible to find DMN model"));
+    }
+
+    public DMNRuntime getDMNRuntime(Path path) {
+        return cache.computeIfAbsent(path, p -> {
+            KieContainer kieContainer = getKieContainer(p);
+            return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
+        });
     }
 
     private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
@@ -94,19 +93,5 @@ public class DMNTypeServiceImpl
             }
         }
         return factModelTree;
-    }
-
-    public DMNModel getDMNModel(Path path, String dmnPath) {
-        return getDMNRuntime(path).getModels().stream()
-                .filter(model -> dmnPath.endsWith(model.getResource().getSourcePath()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Impossible to find DMN model"));
-    }
-
-    public DMNRuntime getDMNRuntime(Path path) {
-        return cache.computeIfAbsent(path, p -> {
-            KieContainer kieContainer = getKieContainer(p);
-            return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
-        });
     }
 }

@@ -73,14 +73,14 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     protected FactModelTuple getFactModelTuple(Path context, String dmnFilePath) throws Exception {
         final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(dmnFilePath);
         final Path path = Paths.convert(nioPath);
-        return dmnTypeService.retrieveType(path);
+        return dmnTypeService.retrieveType(path, dmnFilePath);
     }
 
     private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario) {
         ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id, type);
-        FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFullPackage());
-        final FactMapping inputFactMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
-        inputFactMapping.setExpressionAlias(factModelTree.getFactName());
+        FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getSimpleProperties().get("value"));
+        final FactMapping factMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
+        factMapping.setExpressionAlias(factModelTree.getFactName());
         scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
     }
 }

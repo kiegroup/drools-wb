@@ -69,10 +69,6 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
             factModelTupleThreadLocal.set(factMappingTuple);
-            rightPanelPresenter.setDataObjectFieldsMap(factMappingTuple.getVisibleFacts());
-            rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
-
-
             final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
             final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
                     .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
