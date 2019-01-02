@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +98,8 @@ public class ScenarioBeanUtilTest {
         Object targetObject = scenarioBeanWrapper.getBean();
 
         assertEquals(targetObject, FIRST_NAME);
+
+        assertNull(ScenarioBeanUtil.navigateToObject(null, Collections.emptyList()).getBean());
     }
 
     @Test

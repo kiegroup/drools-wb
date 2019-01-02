@@ -79,7 +79,7 @@ public class ScenarioBeanUtil {
     }
 
     public static ScenarioBeanWrapper<?> navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
-        Class<?> currentClass = rootObject.getClass();
+        Class<?> currentClass = rootObject != null ? rootObject.getClass() : null;
         Object currentObject = rootObject;
 
         for (String step : steps) {

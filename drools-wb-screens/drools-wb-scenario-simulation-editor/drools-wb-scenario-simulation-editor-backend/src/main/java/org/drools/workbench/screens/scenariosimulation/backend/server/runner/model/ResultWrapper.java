@@ -46,10 +46,7 @@ public class ResultWrapper<T> {
     }
 
     public T getResult() {
-        if (satisfied) {
-            return result;
-        }
-        throw new IllegalStateException("Impossible to retrieve result value from an error");
+        return result;
     }
 
     public T orElse(T defaultValue) {
