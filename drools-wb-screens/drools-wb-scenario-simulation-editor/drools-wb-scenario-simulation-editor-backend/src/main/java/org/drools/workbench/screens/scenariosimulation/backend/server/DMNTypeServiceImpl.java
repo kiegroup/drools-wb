@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -41,8 +40,6 @@ import org.uberfire.backend.vfs.Path;
 public class DMNTypeServiceImpl
         extends AbstractKieContainerService
         implements DMNTypeService {
-
-    private Map<Path, DMNRuntime> cache = new ConcurrentHashMap<>();
 
     @Override
     public FactModelTuple retrieveType(Path path, String dmnPath) {
@@ -68,10 +65,8 @@ public class DMNTypeServiceImpl
     }
 
     public DMNRuntime getDMNRuntime(Path path) {
-        return cache.computeIfAbsent(path, p -> {
-            KieContainer kieContainer = getKieContainer(p);
-            return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
-        });
+        KieContainer kieContainer = getKieContainer(path);
+        return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
     }
 
     private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
