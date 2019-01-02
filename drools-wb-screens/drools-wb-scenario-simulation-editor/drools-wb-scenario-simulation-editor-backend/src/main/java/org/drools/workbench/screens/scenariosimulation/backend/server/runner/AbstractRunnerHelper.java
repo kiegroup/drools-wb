@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,7 +41,6 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 
-import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 public abstract class AbstractRunnerHelper {

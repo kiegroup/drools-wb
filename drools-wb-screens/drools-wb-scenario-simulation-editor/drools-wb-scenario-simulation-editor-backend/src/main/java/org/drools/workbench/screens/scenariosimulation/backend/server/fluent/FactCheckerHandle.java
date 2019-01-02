@@ -18,8 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
 
 import java.util.function.Function;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 
 public class FactCheckerHandle {
 

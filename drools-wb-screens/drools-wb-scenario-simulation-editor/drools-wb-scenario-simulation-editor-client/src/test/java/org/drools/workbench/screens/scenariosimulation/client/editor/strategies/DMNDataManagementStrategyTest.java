@@ -18,7 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.junit.Before;
@@ -52,6 +55,14 @@ public class DMNDataManagementStrategyTest {
 
     @Test
     public void populateRightPanel() {
+        ScenarioSimulationModelContent scenarioSimulationModelContentMock = mock(ScenarioSimulationModelContent.class);
+        ScenarioSimulationModel scenarioSimulationModel = mock(ScenarioSimulationModel.class);
+        when(scenarioSimulationModelContentMock.getModel()).thenReturn(scenarioSimulationModel);
+        Simulation simulationMock = mock(Simulation.class);
+        when(scenarioSimulationModel.getSimulation()).thenReturn(simulationMock);
+        SimulationDescriptor simulationDescriptorMock = mock(SimulationDescriptor.class);
+        when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
+        dmnDataManagementStrategy.manageScenarioSimulationModelContent(mock(ObservablePath.class), scenarioSimulationModelContentMock);
         dmnDataManagementStrategy.populateRightPanel(mock(RightPanelView.Presenter.class), mock(ScenarioGridModel.class));
         verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
     }

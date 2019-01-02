@@ -27,11 +27,11 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.expression
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Dispute;
 import org.drools.workbench.screens.scenariosimulation.backend.server.model.Person;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;

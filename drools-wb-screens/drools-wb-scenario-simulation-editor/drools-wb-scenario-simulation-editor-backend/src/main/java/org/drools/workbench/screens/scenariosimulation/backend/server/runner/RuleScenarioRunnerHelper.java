@@ -24,11 +24,11 @@ import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.fluent.RuleScenarioExecutableBuilder;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
