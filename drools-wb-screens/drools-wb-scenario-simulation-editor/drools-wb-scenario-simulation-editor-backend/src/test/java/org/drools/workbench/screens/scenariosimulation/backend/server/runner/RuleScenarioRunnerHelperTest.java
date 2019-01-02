@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
@@ -269,7 +269,7 @@ public class RuleScenarioRunnerHelperTest {
     public void createExtractorFunctionTest() {
         String personName = "Test";
         FactMappingValue factMappingValue = new FactMappingValue(personFactIdentifier, firstNameGivenExpressionIdentifier, personName);
-        Function<Object, SingleFactValueResult> extractorFunction = runnerHelper.createExtractorFunction(expressionEvaluator, factMappingValue, simulation.getSimulationDescriptor());
+        Function<Object, ResultWrapper> extractorFunction = runnerHelper.createExtractorFunction(expressionEvaluator, factMappingValue, simulation.getSimulationDescriptor());
         Person person = new Person();
 
         person.setFirstName(personName);
@@ -278,12 +278,12 @@ public class RuleScenarioRunnerHelperTest {
         person.setFirstName("OtherString");
         assertFalse(extractorFunction.apply(person).isSatisfied());
 
-        Function<Object, SingleFactValueResult> extractorFunction1 = runnerHelper.createExtractorFunction(expressionEvaluator,
-                                                                                                          new FactMappingValue(personFactIdentifier,
+        Function<Object, ResultWrapper> extractorFunction1 = runnerHelper.createExtractorFunction(expressionEvaluator,
+                                                                                                  new FactMappingValue(personFactIdentifier,
                                                                                                                                firstNameGivenExpressionIdentifier,
                                                                                                                                null),
-                                                                                                          simulation.getSimulationDescriptor());
-        SingleFactValueResult nullValue = extractorFunction1.apply(new Person());
+                                                                                                  simulation.getSimulationDescriptor());
+        ResultWrapper nullValue = extractorFunction1.apply(new Person());
         assertTrue(nullValue.isSatisfied());
         assertNull(nullValue.getResult());
     }
@@ -308,11 +308,16 @@ public class RuleScenarioRunnerHelperTest {
         Map<List<String>, Object> paramsToSet = new HashMap<>();
         paramsToSet.put(Collections.emptyList(), "Test");
 
-        assertEquals("Test", runnerHelper.getDirectMapping(paramsToSet, String.class.getCanonicalName(), classLoader).get());
+        assertEquals("Test", runnerHelper.getDirectMapping(paramsToSet).getResult());
 
         paramsToSet.clear();
         paramsToSet.put(Collections.emptyList(), 1);
 
-        assertEquals(1, runnerHelper.getDirectMapping(paramsToSet, Integer.class.getCanonicalName(), classLoader).get());
+        assertEquals(1, runnerHelper.getDirectMapping(paramsToSet).getResult());
+
+        paramsToSet.clear();
+        paramsToSet.put(Collections.emptyList(), null);
+
+        assertNull(runnerHelper.getDirectMapping(paramsToSet).getResult());
     }
 }

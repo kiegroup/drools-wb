@@ -26,7 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
@@ -39,8 +39,8 @@ import org.kie.api.runtime.RequestContext;
 import org.kie.dmn.api.core.DMNDecisionResult;
 import org.kie.dmn.api.core.DMNResult;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult.createErrorResult;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult.createResult;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createErrorResult;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createResult;
 import static org.kie.dmn.api.core.DMNDecisionResult.DecisionEvaluationStatus.SUCCEEDED;
 
 public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
@@ -92,7 +92,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                 FactMapping factMapping = simulationDescriptor.getFactMapping(factIdentifier, expressionIdentifier)
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
-                SingleFactValueResult resultValue = getSingleFactValueResult(factMapping, expectedResult, decisionResult, expressionEvaluator);
+                ResultWrapper resultValue = getSingleFactValueResult(factMapping, expectedResult, decisionResult, expressionEvaluator);
 
                 scenarioRunnerData.addResult(new ScenarioResult(factIdentifier, expectedResult, resultValue.getResult()).setResult(resultValue.isSatisfied()));
             }
@@ -100,13 +100,13 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     @SuppressWarnings("unchecked")
-    protected SingleFactValueResult getSingleFactValueResult(FactMapping factMapping,
-                                                             FactMappingValue expectedResult,
-                                                             DMNDecisionResult decisionResult,
-                                                             ExpressionEvaluator expressionEvaluator) {
+    protected ResultWrapper getSingleFactValueResult(FactMapping factMapping,
+                                                     FactMappingValue expectedResult,
+                                                     DMNDecisionResult decisionResult,
+                                                     ExpressionEvaluator expressionEvaluator) {
         Object resultRaw = decisionResult.getResult();
         for (ExpressionElement expressionElement : factMapping.getExpressionElements()) {
-            if (resultRaw == null || !(resultRaw instanceof Map)) {
+            if (!(resultRaw instanceof Map)) {
                 throw new ScenarioException("Wrong resultRaw structure because it is not a complex type as expected");
             }
             Map<String, Object> result = (Map<String, Object>) resultRaw;

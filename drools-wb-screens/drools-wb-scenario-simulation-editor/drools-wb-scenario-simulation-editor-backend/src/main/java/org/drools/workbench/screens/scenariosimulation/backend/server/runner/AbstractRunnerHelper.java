@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
@@ -41,6 +42,7 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 
+import static java.util.stream.Collectors.reducing;
 import static java.util.stream.Collectors.toList;
 
 public abstract class AbstractRunnerHelper {
@@ -86,7 +88,7 @@ public abstract class AbstractRunnerHelper {
                                                                        classLoader,
                                                                        expressionEvaluator);
 
-            Object bean = getDirectMapping(paramsForBean, entry.getKey().getClassName(), classLoader)
+            Object bean = getDirectMapping(paramsForBean)
                     .orElseGet(() -> createObject(factIdentifier.getClassName(), paramsForBean, classLoader));
 
             scenarioGiven.add(new ScenarioGiven(factIdentifier, bean));
@@ -95,12 +97,14 @@ public abstract class AbstractRunnerHelper {
         return scenarioGiven;
     }
 
-    public Optional<Object> getDirectMapping(Map<List<String>, Object> params, String className, ClassLoader classLoader) {
+    public ResultWrapper<Object> getDirectMapping(Map<List<String>, Object> params) {
         // if a direct mapping exists (no steps to reach the field) the value itself is the object (just converted)
-        return params.entrySet().stream()
-                .filter(e -> e.getKey().isEmpty())
-                .map(Map.Entry::getValue)
-                .findFirst();
+        for (Map.Entry<List<String>, Object> entry : params.entrySet()) {
+            if(entry.getKey().isEmpty()) {
+                return ResultWrapper.createResult(entry.getValue());
+            }
+        }
+        return ResultWrapper.createErrorResult();
     }
 
     public List<ScenarioExpect> extractExpectedValues(List<FactMappingValue> factMappingValues) {

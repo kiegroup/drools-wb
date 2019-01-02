@@ -28,7 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
@@ -43,8 +43,8 @@ import org.kie.api.runtime.RequestContext;
 
 import static java.util.stream.Collectors.toList;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.fluent.RuleScenarioExecutableBuilder.createBuilder;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult.createErrorResult;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult.createResult;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createErrorResult;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createResult;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioBeanUtil.fillBean;
 
 public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
@@ -116,7 +116,7 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
 
             for (FactMappingValue expectedResult : scenarioExpect.getExpectedResult()) {
 
-                SingleFactValueResult resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
+                ResultWrapper resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
 
                 expectedResult.setError(!resultValue.isSatisfied());
 
@@ -126,9 +126,9 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
         return scenarioResults;
     }
 
-    protected Function<Object, SingleFactValueResult> createExtractorFunction(ExpressionEvaluator expressionEvaluator,
-                                                                              FactMappingValue expectedResult,
-                                                                              SimulationDescriptor simulationDescriptor) {
+    protected Function<Object, ResultWrapper> createExtractorFunction(ExpressionEvaluator expressionEvaluator,
+                                                                      FactMappingValue expectedResult,
+                                                                      SimulationDescriptor simulationDescriptor) {
         return objectToCheck -> {
 
             ExpressionIdentifier expressionIdentifier = expectedResult.getExpressionIdentifier();
