@@ -338,6 +338,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 String className = selectedListGroupItemView.getActualClassName();
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
             } else if (selectedFieldItemView != null) {
+                // FIXME remove value if needed
                 String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName())));
