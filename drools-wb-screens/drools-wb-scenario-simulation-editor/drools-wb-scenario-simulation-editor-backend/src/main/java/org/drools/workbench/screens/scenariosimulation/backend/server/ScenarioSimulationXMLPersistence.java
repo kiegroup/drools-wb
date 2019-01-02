@@ -75,6 +75,10 @@ public class ScenarioSimulationXMLPersistence {
     }
 
     public ScenarioSimulationModel unmarshal(final String rawXml) {
+        return unmarshal(rawXml, true);
+    }
+
+    public ScenarioSimulationModel unmarshal(final String rawXml, boolean migrate) {
         if (rawXml == null) {
             return new ScenarioSimulationModel();
         }
@@ -82,7 +86,7 @@ public class ScenarioSimulationXMLPersistence {
             return new ScenarioSimulationModel();
         }
 
-        String xml = migrateIfNecessary(rawXml);
+        String xml = migrate ? migrateIfNecessary(rawXml) : rawXml;
 
         return internalUnmarshal(xml);
     }
@@ -98,6 +102,10 @@ public class ScenarioSimulationXMLPersistence {
                 break;
             case "1.1":
                 migrator = migrator.andThen(getMigrationStrategy().from1_1to1_2());
+                supported = true;
+                break;
+            case "1.2":
+                migrator = migrator.andThen(getMigrationStrategy().from1_2to1_3());
                 supported = true;
                 break;
         }

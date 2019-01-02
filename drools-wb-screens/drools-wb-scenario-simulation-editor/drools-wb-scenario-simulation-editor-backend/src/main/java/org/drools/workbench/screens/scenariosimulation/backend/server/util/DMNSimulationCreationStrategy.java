@@ -81,11 +81,17 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     }
 
     private void addToScenario(int row, int id, FactMappingType type, FactModelTree factModelTree, SimulationDescriptor simulationDescriptor, Scenario scenario, String propertyName, String propertyClass) {
+        boolean simpleType = factModelTree.isSimple();
         ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id, type);
         FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
         final FactMapping factMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
         factMapping.setExpressionAlias(propertyName);
-        factMapping.addExpressionElement(propertyName, propertyClass);
+        String factType = simpleType ? factModelTree.getSimpleProperties().get("value") : factModelTree.getFactName();
+        if(!simpleType) {
+            factMapping.addExpressionElement(propertyName, propertyClass);
+        }
+        factMapping.addExpressionElement(factModelTree.getFactName(), factType);
+
         scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
     }
 }

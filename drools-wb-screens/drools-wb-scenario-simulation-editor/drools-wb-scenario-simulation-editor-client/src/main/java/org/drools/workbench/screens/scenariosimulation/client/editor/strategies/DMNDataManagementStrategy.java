@@ -39,6 +39,7 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     private final Caller<DMNTypeService> dmnTypeService;
     private Path currentPath;
     private ScenarioSimulationModel model;
+    private ResultHolder factModelTreeHolder = new ResultHolder();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
         this.dmnTypeService = dmnTypeService;
@@ -47,9 +48,14 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     @Override
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
-        dmnTypeService.call(getSuccessCallback(rightPanelPresenter),
-                            getErrorCallback(rightPanelPresenter))
-                .retrieveType(currentPath, dmnFilePath);
+        if(factModelTreeHolder.getFactModelTuple() != null) {
+            getSuccessCallback(rightPanelPresenter).callback(factModelTreeHolder.getFactModelTuple());
+        }
+        else {
+            dmnTypeService.call(getSuccessCallback(rightPanelPresenter),
+                                getErrorCallback(rightPanelPresenter))
+                    .retrieveType(currentPath, dmnFilePath);
+        }
     }
 
     @Override
@@ -60,6 +66,7 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
 
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
+            factModelTreeHolder.setFactModelTuple(factMappingTuple);
             final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
             final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
                     .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
@@ -76,5 +83,17 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
             rightPanelPresenter.setDataObjectFieldsMap(new TreeMap<>());
             return false;
         };
+    }
+
+    static private class ResultHolder {
+        FactModelTuple factModelTuple;
+
+        public FactModelTuple getFactModelTuple() {
+            return factModelTuple;
+        }
+
+        public void setFactModelTuple(FactModelTuple factModelTuple) {
+            this.factModelTuple = factModelTuple;
+        }
     }
 }

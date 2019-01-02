@@ -28,7 +28,6 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -245,10 +244,8 @@ public class ScenarioGridModel extends BaseGridData {
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        if (!DataManagementStrategy.SIMPLE_CLASSES_MAP.keySet().contains(elements[0])) {
-            IntStream.range(1, elements.length)
-                    .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
-        }
+        IntStream.range(0, elements.length)
+                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
         if (keepData) {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
@@ -559,7 +556,6 @@ public class ScenarioGridModel extends BaseGridData {
     /**
      * If the <code>FactIdentifier</code> of the given <code>FactMapping</code> equals the one at <b>index</b>, update the <code>FactMapping.FactAlias</code> at <b>index</b>
      * position with the provided <b>value</b>
-     *
      * @param simulationDescriptor
      * @param factMappingReference
      * @param index
@@ -681,7 +677,7 @@ public class ScenarioGridModel extends BaseGridData {
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
-    protected  boolean isNewPropertyName(String value) {
+    protected boolean isNewPropertyName(String value) {
         return getColumns().stream()
                 .map(elem -> ((ScenarioGridColumn) elem).getPropertyHeaderMetaData())
                 .filter(Objects::nonNull)

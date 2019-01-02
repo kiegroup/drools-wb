@@ -17,11 +17,13 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -65,6 +67,10 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Override
     public void selectProperty(String factName, String propertyName) {
         final ListGroupItemView listGroupItemView = listGroupItemViewMap.get(factName);
+        GWT.log("------>");
+        GWT.log("HASH " + Objects.hashCode(this));
+        GWT.log("factName " + factName);
+        GWT.log("facts:" + String.join(", ", listGroupItemViewMap.keySet()));
         if (!listGroupItemView.isShown()) {
             onToggleRowExpansion(listGroupItemView, false);
         }
@@ -203,7 +209,17 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         toReturn.init(this);
         toReturn.setToExpand(toExpand);
         toReturn.setParentPath(parentPath);
+
+        GWT.log("1------>");
+        GWT.log("HASH " + Objects.hashCode(this));
+        GWT.log("factName " + factName);
+        GWT.log("parentPath " + parentPath);
+        GWT.log("toExpand " + toExpand);
+        GWT.log("key " + key);
+        GWT.log("toReturn " + toReturn.isShown());
+        GWT.log("prefacts:" + String.join(", ", listGroupItemViewMap.keySet()));
         listGroupItemViewMap.put(key, toReturn);
+        GWT.log("postfacts:" + String.join(", ", listGroupItemViewMap.keySet()));
         return toReturn;
     }
 }

@@ -234,19 +234,19 @@ public class ScenarioGridTest {
 
     @Test
     public void isPropertyAssigned() {
-        factMappingDescription.getExpressionElements().clear();
+        factMappingDescription.getExpressionElementsWithoutClass().clear();
         assertTrue(scenarioGrid.isPropertyAssigned(false, factMappingDescription));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingDescription));
-        factMappingDescription.getExpressionElements().add(new ExpressionElement("test"));
+        factMappingDescription.getExpressionElementsWithoutClass().add(new ExpressionElement("test"));
         assertTrue(scenarioGrid.isPropertyAssigned(false, factMappingDescription));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingDescription));
-        factMappingGiven.getExpressionElements().clear();
+        factMappingGiven.getExpressionElementsWithoutClass().clear();
         assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingGiven));
         assertFalse(scenarioGrid.isPropertyAssigned(true, factMappingGiven));
-        factMappingGiven.getExpressionElements().add(new ExpressionElement("test"));
+        factMappingGiven.getExpressionElementsWithoutClass().add(new ExpressionElement("test"));
         assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingGiven));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingGiven));
-        factMappingInteger.getExpressionElements().clear();
+        factMappingInteger.getExpressionElementsWithoutClass().clear();
         assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingInteger));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingInteger));
     }

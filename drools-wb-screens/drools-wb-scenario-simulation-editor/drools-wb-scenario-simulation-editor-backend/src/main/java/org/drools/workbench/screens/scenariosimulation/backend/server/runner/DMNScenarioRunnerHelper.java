@@ -92,9 +92,9 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                 FactMapping factMapping = simulationDescriptor.getFactMapping(factIdentifier, expressionIdentifier)
                         .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
-                ResultWrapper resultValue = getSingleFactValueResult(factMapping, expectedResult, decisionResult, expressionEvaluator);
+                ScenarioResult scenarioResult = fillResult(expectedResult, factIdentifier, () -> getSingleFactValueResult(factMapping, expectedResult, decisionResult, expressionEvaluator));
 
-                scenarioRunnerData.addResult(new ScenarioResult(factIdentifier, expectedResult, resultValue.getResult()).setResult(resultValue.isSatisfied()));
+                scenarioRunnerData.addResult(scenarioResult);
             }
         }
     }
@@ -105,8 +105,8 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                                      DMNDecisionResult decisionResult,
                                                      ExpressionEvaluator expressionEvaluator) {
         Object resultRaw = decisionResult.getResult();
-        for (ExpressionElement expressionElement : factMapping.getExpressionElements()) {
-            if (!(resultRaw instanceof Map)) {
+        for (ExpressionElement expressionElement : factMapping.getExpressionElementsWithoutClass()) {
+            if (resultRaw != null && !(resultRaw instanceof Map)) {
                 throw new ScenarioException("Wrong resultRaw structure because it is not a complex type as expected");
             }
             Map<String, Object> result = (Map<String, Object>) resultRaw;

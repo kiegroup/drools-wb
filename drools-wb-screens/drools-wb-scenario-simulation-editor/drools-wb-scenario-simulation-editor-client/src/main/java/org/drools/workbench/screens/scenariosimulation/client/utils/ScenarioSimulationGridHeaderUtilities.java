@@ -135,7 +135,7 @@ public class ScenarioSimulationGridHeaderUtilities {
     }
 
     public static String getPropertyName(final Simulation simulation, final int columnIndex) {
-        return String.join(".", simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElements()
+        return String.join(".", simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
                 .stream()
                 .map(ExpressionElement::getStep)
                 .collect(Collectors.toSet()));

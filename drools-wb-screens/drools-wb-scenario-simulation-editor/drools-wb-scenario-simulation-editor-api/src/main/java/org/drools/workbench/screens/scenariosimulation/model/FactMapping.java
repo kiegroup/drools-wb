@@ -85,6 +85,15 @@ public class FactMapping {
         return expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
     }
 
+    // FIXME add migration strategy
+    public List<ExpressionElement> getExpressionElementsWithoutClass() {
+        if(expressionElements.size() == 0) {
+            throw new IllegalStateException("ExpressionElements malformed");
+        }
+        return expressionElements.subList(1, expressionElements.size());
+    }
+
+    // FIXME fix test
     public List<ExpressionElement> getExpressionElements() {
         return expressionElements;
     }
@@ -161,6 +170,6 @@ public class FactMapping {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpressionElements(), getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias());
+        return Objects.hash(getExpressionElementsWithoutClass(), getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias());
     }
 }

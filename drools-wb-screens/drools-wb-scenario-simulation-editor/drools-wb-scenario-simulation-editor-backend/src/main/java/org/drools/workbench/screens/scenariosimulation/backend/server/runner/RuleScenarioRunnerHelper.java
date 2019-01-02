@@ -116,11 +116,12 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
 
             for (FactMappingValue expectedResult : scenarioExpect.getExpectedResult()) {
 
-                ResultWrapper resultValue = createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor).apply(factInstance);
+                ScenarioResult scenarioResult = fillResult(expectedResult,
+                                                           factIdentifier,
+                                                           () -> createExtractorFunction(expressionEvaluator, expectedResult, simulationDescriptor)
+                                                                   .apply(factInstance));
 
-                expectedResult.setError(!resultValue.isSatisfied());
-
-                scenarioResults.add(new ScenarioResult(factIdentifier, expectedResult, resultValue.getResult()).setResult(resultValue.isSatisfied()));
+                scenarioResults.add(scenarioResult);
             }
         }
         return scenarioResults;
@@ -136,7 +137,7 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
             FactMapping factMapping = simulationDescriptor.getFactMapping(expectedResult.getFactIdentifier(), expressionIdentifier)
                     .orElseThrow(() -> new IllegalStateException("Wrong expression, this should not happen"));
 
-            List<String> pathToValue = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(toList());
+            List<String> pathToValue = factMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(toList());
             ScenarioBeanWrapper<?> scenarioBeanWrapper = ScenarioBeanUtil.navigateToObject(objectToCheck, pathToValue, false);
             Object resultValue = scenarioBeanWrapper.getBean();
 

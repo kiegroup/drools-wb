@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -345,6 +346,8 @@ public class ScenarioSimulationEditorPresenter
 
     protected void populateRightPanel() {
         // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available
+        GWT.log("dataManagementStrategy " + (dataManagementStrategy == null));
+        GWT.log("dataManagementStrategy " + Objects.hashCode(dataManagementStrategy));
         if (dataManagementStrategy != null) {
             getRightPanelPresenter().ifPresent(presenter -> {
                 context.setRightPanelPresenter(presenter);
