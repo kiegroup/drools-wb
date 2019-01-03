@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -58,12 +57,8 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
         final Map<String, FactModelTree> hiddenValues = factModelTuple.getHiddenFacts();
 
-        final Map<FactModelTree.Type, List<FactModelTree>> groupedFactModelTrees = visibleFactTrees.stream()
-                .collect(Collectors.groupingBy(FactModelTree::getType));
-
         visibleFactTrees.forEach(factModelTree -> {
             FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
-//            String stepName = propertyClass.equals(factModelTree.getFactName()) ? propertyClass : propertyName;
             FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, row, id, convert(factModelTree.getType()), simulationDescriptor, scenario);
             addToScenario(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
         });

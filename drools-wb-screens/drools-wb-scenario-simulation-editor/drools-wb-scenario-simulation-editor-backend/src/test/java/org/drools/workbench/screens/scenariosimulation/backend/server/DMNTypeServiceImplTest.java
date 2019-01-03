@@ -47,7 +47,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
 
     @Test
     public void retrieveType() {
-        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class), mock(String.class));
+        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class), null);
         assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getFactName());
         assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getSimpleProperties().get("value"));
         assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).isSimple());

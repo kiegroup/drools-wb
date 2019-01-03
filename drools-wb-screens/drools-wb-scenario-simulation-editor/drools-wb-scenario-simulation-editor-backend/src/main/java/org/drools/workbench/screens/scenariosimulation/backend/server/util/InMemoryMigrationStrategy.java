@@ -41,7 +41,6 @@ public class InMemoryMigrationStrategy implements MigrationStrategy {
         };
     }
 
-    // FIXME to test
     @Override
     public Function<String, String> from1_2to1_3() {
         return rawXml -> {
@@ -50,7 +49,7 @@ public class InMemoryMigrationStrategy implements MigrationStrategy {
             for (FactMapping factMapping : model.getSimulation().getSimulationDescriptor().getUnmodifiableFactMappings()) {
                 factMapping.getExpressionElements().add(0, new ExpressionElement(factMapping.getFactIdentifier().getName()));
             }
-            return xmlPersistence.marshal(model);
+            return xmlPersistence.marshal(model).replaceAll("<ScenarioSimulationModel version=\"1.2\">", "<ScenarioSimulationModel version=\"1.3\">");
         };
     }
 }

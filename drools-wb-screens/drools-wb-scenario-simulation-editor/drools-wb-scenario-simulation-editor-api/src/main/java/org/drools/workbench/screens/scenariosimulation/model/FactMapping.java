@@ -92,7 +92,6 @@ public class FactMapping {
         return expressionElements.subList(1, expressionElements.size());
     }
 
-    // FIXME fix test
     public List<ExpressionElement> getExpressionElements() {
         return expressionElements;
     }

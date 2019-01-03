@@ -58,7 +58,6 @@ public class DMNScenarioExecutableBuilder {
 
     public void setActiveModel(String path) {
         dmnRuntimeFluent
-                // FIXME update SetDMNActiveModelCommand
                 .addCommand(context -> {
                     RegistryContext registryContext = (RegistryContext) context;
 
@@ -74,7 +73,6 @@ public class DMNScenarioExecutableBuilder {
                     registryContext.register(DMNModel.class, dmnModel);
                     return dmnModel;
             })
-                //                .setActiveModel(path)
                 .out(DMN_MODEL);
     }
 

@@ -119,7 +119,7 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected final String FULL_PACKAGE = "test.scesim";
 
-    protected final String VALUE = "VALUE";
+    protected final String VALUE = "value";
 
     protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
 

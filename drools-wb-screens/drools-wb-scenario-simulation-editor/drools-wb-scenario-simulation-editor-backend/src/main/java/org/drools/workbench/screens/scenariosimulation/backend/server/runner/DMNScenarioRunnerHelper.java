@@ -82,9 +82,6 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
             if (decisionResult == null) {
                 throw new ScenarioException("DMN execution has not generated a decision result with name " + decisionName);
             }
-            if (!SUCCEEDED.equals(decisionResult.getEvaluationStatus())) {
-                throw new ScenarioException("DMN decision '" + decisionName + "' has status " + decisionResult.getEvaluationStatus());
-            }
 
             for (FactMappingValue expectedResult : output.getExpectedResult()) {
                 ExpressionIdentifier expressionIdentifier = expectedResult.getExpressionIdentifier();
@@ -105,8 +102,13 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                                      DMNDecisionResult decisionResult,
                                                      ExpressionEvaluator expressionEvaluator) {
         Object resultRaw = decisionResult.getResult();
+
+        if (!SUCCEEDED.equals(decisionResult.getEvaluationStatus())) {
+            return createErrorResult();
+        }
+
         for (ExpressionElement expressionElement : factMapping.getExpressionElementsWithoutClass()) {
-            if (resultRaw != null && !(resultRaw instanceof Map)) {
+            if (!(resultRaw instanceof Map)) {
                 throw new ScenarioException("Wrong resultRaw structure because it is not a complex type as expected");
             }
             Map<String, Object> result = (Map<String, Object>) resultRaw;

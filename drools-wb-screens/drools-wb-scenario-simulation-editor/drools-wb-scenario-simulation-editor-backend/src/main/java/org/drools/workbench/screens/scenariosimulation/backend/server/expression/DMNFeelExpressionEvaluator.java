@@ -35,7 +35,6 @@ public class DMNFeelExpressionEvaluator implements ExpressionEvaluator {
 
     @Override
     public boolean evaluate(Object rawExpression, Object resultValue, Class<?> resultClass) {
-        // FIXME to test with null
         if (rawExpression != null && !(rawExpression instanceof String)) {
             throw new IllegalArgumentException("Raw expression should be a string");
         }
@@ -51,7 +50,6 @@ public class DMNFeelExpressionEvaluator implements ExpressionEvaluator {
         }
         EvaluationContext evaluationContext = newEvaluationContext();
         return feel.evaluate((String) raw, evaluationContext);
-        // FIXME fix the test
     }
 
     private EvaluationContext newEvaluationContext() {

@@ -111,7 +111,6 @@ public class Simulation {
 
     public Simulation cloneSimulation() {
         Simulation toReturn = new Simulation();
-        // FIXME to test
         toReturn.getSimulationDescriptor().setType(simulationDescriptor.getType());
         toReturn.getSimulationDescriptor().setDmnFilePath(simulationDescriptor.getDmnFilePath());
         toReturn.getSimulationDescriptor().setDmoSession(simulationDescriptor.getDmoSession());

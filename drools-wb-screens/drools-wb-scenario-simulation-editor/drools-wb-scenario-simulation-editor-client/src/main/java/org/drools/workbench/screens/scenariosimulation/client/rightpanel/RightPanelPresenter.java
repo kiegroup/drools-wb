@@ -187,7 +187,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
         this.hiddenFieldsMap = hiddenFieldsMap;
     }
 
-
     @Override
     public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
         clearInstanceList();
@@ -289,7 +288,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     @Override
     public void onEnableEditorTab() {
         onDisableEditorTab();
-        onSearchedEvent("");
         listGroupItemPresenter.enable();
         editingColumnEnabled = true;
         view.enableEditorTab();
@@ -338,7 +336,6 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 String className = selectedListGroupItemView.getActualClassName();
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
             } else if (selectedFieldItemView != null) {
-                // FIXME remove value if needed
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
@@ -354,9 +351,9 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     protected Optional<FactModelTree> getFactModelTreeFromMaps(String key) {
         return Optional.ofNullable(getFactModelTreeFromFactTypeMap(key)
-                .orElseGet(() -> getFactModelTreeFromSimpleJavaTypeMap(key)
-                .orElseGet(() -> getFactModelTreeFromInstanceMap(key)
-                .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key).orElse(null)))));
+                                           .orElseGet(() -> getFactModelTreeFromSimpleJavaTypeMap(key)
+                                                   .orElseGet(() -> getFactModelTreeFromInstanceMap(key)
+                                                           .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key).orElse(null)))));
     }
 
     protected boolean isSimple(String key) {
