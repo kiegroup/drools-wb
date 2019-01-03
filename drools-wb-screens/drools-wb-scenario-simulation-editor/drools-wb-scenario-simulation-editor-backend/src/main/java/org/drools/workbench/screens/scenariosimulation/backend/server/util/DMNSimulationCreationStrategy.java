@@ -75,7 +75,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         String propertyName = factModelTree.getFactName();
 
         // if is a simple type it generates a single column
-        if(factModelTree.isSimple()) {
+        if (factModelTree.isSimple()) {
 
             String factType = factModelTree.getSimpleProperties().get("value");
             factMappingExtractor.getFactMapping(factModelTree, propertyName, previousSteps, factType);
@@ -95,14 +95,13 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
                 String factType = entry.getValue();
                 FactModelTree nestedModelTree = hiddenValues.get(factType);
 
-                if(previousSteps.isEmpty()) {
+                if (previousSteps.isEmpty()) {
                     previousSteps.add(factModelTree.getFactName());
                 }
                 addToScenario(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues);
             }
         }
     }
-
 
     static private class FactMappingExtractor {
 
@@ -130,13 +129,10 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
 
             previousSteps.forEach(step -> factMapping.addExpressionElement(step, factType));
 
-            if(previousSteps.isEmpty()) {
+            if (previousSteps.isEmpty()) {
                 factMapping.addExpressionElement(factModelTree.getFactName(), factType);
             }
-
             scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
-
-
 
             return factMapping;
         }

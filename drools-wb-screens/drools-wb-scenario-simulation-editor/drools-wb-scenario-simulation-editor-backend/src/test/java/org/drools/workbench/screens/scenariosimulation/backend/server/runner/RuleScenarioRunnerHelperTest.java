@@ -284,8 +284,8 @@ public class RuleScenarioRunnerHelperTest {
 
         Function<Object, ResultWrapper> extractorFunction1 = runnerHelper.createExtractorFunction(expressionEvaluator,
                                                                                                   new FactMappingValue(personFactIdentifier,
-                                                                                                                               firstNameGivenExpressionIdentifier,
-                                                                                                                               null),
+                                                                                                                       firstNameGivenExpressionIdentifier,
+                                                                                                                       null),
                                                                                                   simulation.getSimulationDescriptor());
         ResultWrapper nullValue = extractorFunction1.apply(new Person());
         assertTrue(nullValue.isSatisfied());

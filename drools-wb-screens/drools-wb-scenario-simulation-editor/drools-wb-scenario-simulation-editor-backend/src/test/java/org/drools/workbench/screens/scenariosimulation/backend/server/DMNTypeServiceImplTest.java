@@ -31,7 +31,6 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class DMNTypeServiceImplTest extends AbstractDMNTest {
 
-
     private DMNTypeServiceImpl dmnTypeServiceImpl;
 
     @Before
@@ -39,7 +38,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         super.init();
         dmnTypeServiceImpl = new DMNTypeServiceImpl() {
             @Override
-            public DMNModel getDMNModel(Path path,String stringPath) {
+            public DMNModel getDMNModel(Path path, String stringPath) {
                 return dmnModelMock;
             }
         };

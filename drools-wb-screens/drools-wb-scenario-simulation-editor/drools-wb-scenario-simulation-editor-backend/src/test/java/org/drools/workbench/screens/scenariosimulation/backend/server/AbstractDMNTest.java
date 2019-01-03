@@ -46,7 +46,7 @@ public class AbstractDMNTest {
     protected DMNType nestedComplexTypeMock;
     protected Map<String, DMNType> complexFields;
     protected Map<String, DMNType> nestedComplexFields;
-    protected  Set<InputDataNode> inputDataNodes;
+    protected Set<InputDataNode> inputDataNodes;
     protected Set<DecisionNode> decisionNodes;
 
     protected void init() {
@@ -92,6 +92,5 @@ public class AbstractDMNTest {
         when(decisionNodeComplexMock.getName()).thenReturn(COMPLEX_DECISION_TYPE_NAME);
         decisionNodes.add(decisionNodeComplexMock);
         when(dmnModelMock.getDecisions()).thenReturn(decisionNodes);
-
     }
 }

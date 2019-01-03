@@ -72,7 +72,7 @@ public class DMNScenarioExecutableBuilder {
                             .orElseThrow(() -> new IllegalStateException("Cannot find a DMN model with resource=" + path));
                     registryContext.register(DMNModel.class, dmnModel);
                     return dmnModel;
-            })
+                })
                 .out(DMN_MODEL);
     }
 

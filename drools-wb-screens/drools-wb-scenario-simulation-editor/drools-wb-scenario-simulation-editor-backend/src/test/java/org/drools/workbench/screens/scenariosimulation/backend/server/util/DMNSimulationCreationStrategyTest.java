@@ -84,7 +84,7 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
         Map<String, String> simpleFields = new HashMap<>();
         if (!type.isComposite()) {
             simpleFields.put("value", type.getName());
-            FactModelTree simpleFactModelTree = new FactModelTree(name, "",  simpleFields, fmType);
+            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, fmType);
             simpleFactModelTree.setSimple(true);
             return simpleFactModelTree;
         }

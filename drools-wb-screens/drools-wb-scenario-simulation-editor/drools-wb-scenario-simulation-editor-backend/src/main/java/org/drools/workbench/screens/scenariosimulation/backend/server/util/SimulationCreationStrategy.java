@@ -27,7 +27,7 @@ import org.uberfire.backend.vfs.Path;
  */
 public interface SimulationCreationStrategy {
 
-    Simulation createSimulation(Path context, String value) throws Exception ;
+    Simulation createSimulation(Path context, String value) throws Exception;
 
     default Scenario createScenario(Simulation simulation, SimulationDescriptor simulationDescriptor) {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
@@ -36,5 +36,4 @@ public interface SimulationCreationStrategy {
         toReturn.setDescription(null);
         return toReturn;
     }
-
 }

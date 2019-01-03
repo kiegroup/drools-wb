@@ -168,6 +168,6 @@ public class FactMapping {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpressionElementsWithoutClass(), getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias());
+        return Objects.hash(getExpressionElements(), getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias());
     }
 }
