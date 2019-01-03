@@ -37,6 +37,8 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.uberfire.backend.vfs.Path;
 
+import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.Type;
+
 @ApplicationScoped
 public class DMNSimulationCreationStrategy implements SimulationCreationStrategy {
 
@@ -57,7 +59,11 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
         final Map<String, FactModelTree> hiddenValues = factModelTuple.getHiddenFacts();
 
-        visibleFactTrees.forEach(factModelTree -> {
+        visibleFactTrees.stream().sorted((a, b) -> {
+            Type aType = a.getType();
+            Type bType = b.getType();
+            return aType.equals(bType) ? 0 : (Type.INPUT.equals(aType) ? -1 : 1);
+        }).forEach(factModelTree -> {
             FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
             FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, row, id, convert(factModelTree.getType()), simulationDescriptor, scenario);
             addToScenario(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
@@ -72,13 +78,11 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     }
 
     private void addToScenario(FactMappingExtractor factMappingExtractor, FactModelTree factModelTree, List<String> previousSteps, Map<String, FactModelTree> hiddenValues) {
-        String propertyName = factModelTree.getFactName();
-
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
 
             String factType = factModelTree.getSimpleProperties().get("value");
-            factMappingExtractor.getFactMapping(factModelTree, propertyName, previousSteps, factType);
+            factMappingExtractor.getFactMapping(factModelTree, "value", previousSteps, factType);
         }
         // otherwise it adds a column for each simple properties direct or nested
         else {
@@ -98,6 +102,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
                 if (previousSteps.isEmpty()) {
                     previousSteps.add(factModelTree.getFactName());
                 }
+                previousSteps.add(entry.getKey());
                 addToScenario(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues);
             }
         }
@@ -121,11 +126,20 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
             this.scenario = scenario;
         }
 
-        public FactMapping getFactMapping(FactModelTree factModelTree, String factName, List<String> previousSteps, String factType) {
+        public FactMapping getFactMapping(FactModelTree factModelTree, String propertyName, List<String> previousSteps, String factType) {
+
+            String factAlias = previousSteps.size() > 0 ? previousSteps.get(0) : factModelTree.getFactName();
 
             ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id.getAndIncrement(), type);
-            final FactMapping factMapping = simulationDescriptor.addFactMapping(factModelTree.getFactName(), factIdentifier, expressionIdentifier);
-            factMapping.setExpressionAlias(factName);
+            final FactMapping factMapping = simulationDescriptor.addFactMapping(factAlias, factIdentifier, expressionIdentifier);
+
+            List<String> localPreviousStep = new ArrayList<>(previousSteps);
+            localPreviousStep.add(propertyName);
+            String expressionAlias = String.join(".",
+                                                 localPreviousStep.size() > 1 ?
+                                                         localPreviousStep.subList(1, localPreviousStep.size()) :
+                                                         localPreviousStep);
+            factMapping.setExpressionAlias(expressionAlias);
 
             previousSteps.forEach(step -> factMapping.addExpressionElement(step, factType));
 
@@ -138,7 +152,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         }
     }
 
-    static private FactMappingType convert(FactModelTree.Type modelTreeType) {
+    static private FactMappingType convert(Type modelTreeType) {
         switch (modelTreeType) {
             case INPUT:
                 return FactMappingType.GIVEN;

@@ -128,15 +128,16 @@ public class ScenarioBeanUtil {
     }
 
     public static Object convertValue(String className, Object cleanValue, ClassLoader classLoader) {
+        if (!isPrimitive(className) && cleanValue == null) {
+            return null;
+        }
+
         Class<?> clazz = loadClass(className, classLoader);
 
         // if it is not a String, it has to be an instance of the desired type
         if (!(cleanValue instanceof String)) {
             if (clazz.isInstance(cleanValue)) {
                 return cleanValue;
-            }
-            if (!isPrimitive(className) && cleanValue == null) {
-                return null;
             }
             throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
                                                        .append(" is not a String or an instance of ").append(className).toString());
