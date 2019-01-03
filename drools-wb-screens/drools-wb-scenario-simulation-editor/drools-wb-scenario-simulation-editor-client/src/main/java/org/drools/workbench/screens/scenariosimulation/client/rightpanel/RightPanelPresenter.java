@@ -339,8 +339,10 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
             } else if (selectedFieldItemView != null) {
                 // FIXME remove value if needed
-                String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
+                String value = isSimple(baseClass) ?
+                        selectedFieldItemView.getFullPath() :
+                        selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName())));
             }
         }
@@ -355,6 +357,12 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
                 .orElseGet(() -> getFactModelTreeFromSimpleJavaTypeMap(key)
                 .orElseGet(() -> getFactModelTreeFromInstanceMap(key)
                 .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key).orElse(null)))));
+    }
+
+    protected boolean isSimple(String key) {
+        return Optional.ofNullable(getFactModelTreeFromSimpleJavaTypeMap(key))
+                .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key))
+                .isPresent();
     }
 
     protected void clearLists() {

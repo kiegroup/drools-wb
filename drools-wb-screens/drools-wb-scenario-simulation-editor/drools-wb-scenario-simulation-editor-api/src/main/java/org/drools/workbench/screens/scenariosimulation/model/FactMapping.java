@@ -85,7 +85,6 @@ public class FactMapping {
         return expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
     }
 
-    // FIXME add migration strategy
     public List<ExpressionElement> getExpressionElementsWithoutClass() {
         if(expressionElements.size() == 0) {
             throw new IllegalStateException("ExpressionElements malformed");

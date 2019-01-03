@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
@@ -120,6 +121,8 @@ public class ScenarioGrid extends BaseGridWidget {
 
     protected void setHeaderColumns(Simulation simulation) {
         final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
+        Simulation simTemp = simulation;
+        GWT.log("simulation.getSimulationDescriptor().getType():" + simulation.getSimulationDescriptor().getType());
         boolean editableHeaders = !simulation.getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.DMN);
         IntStream.range(0, factMappings.size())
                 .forEach(columnIndex -> {

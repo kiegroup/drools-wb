@@ -118,7 +118,7 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
                 break;
             case RULE:
             default:
-                simulationDescriptor.setRuleSession(value);
+                simulationDescriptor.setDmoSession(value);
         }
 
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);

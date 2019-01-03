@@ -124,7 +124,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
             }
         } catch (Exception e) {
-            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+            throw new RuntimeException(e);
+//            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }
     }
 

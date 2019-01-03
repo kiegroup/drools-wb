@@ -46,7 +46,7 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         String value = context.getStatus().getValue();
-        String title = value.substring(value.indexOf(".") + 1);
+        String title = value.contains(".") ? value.substring(value.indexOf(".") + 1) : "value";
         String className = value.split("\\.")[0];
         String fullPackage = context.getStatus().getFullPackage();
         if (!fullPackage.endsWith(".")) {

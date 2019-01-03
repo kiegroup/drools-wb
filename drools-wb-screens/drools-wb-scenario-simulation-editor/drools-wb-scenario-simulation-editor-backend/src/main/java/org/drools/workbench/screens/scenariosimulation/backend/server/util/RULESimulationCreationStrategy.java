@@ -35,7 +35,7 @@ public class RULESimulationCreationStrategy implements SimulationCreationStrateg
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
         simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
-        simulationDescriptor.setRuleSession(value);
+        simulationDescriptor.setDmoSession(value);
 
         Scenario scenario = createScenario(toReturn, simulationDescriptor);
         int row = toReturn.getUnmodifiableScenarios().indexOf(scenario);
