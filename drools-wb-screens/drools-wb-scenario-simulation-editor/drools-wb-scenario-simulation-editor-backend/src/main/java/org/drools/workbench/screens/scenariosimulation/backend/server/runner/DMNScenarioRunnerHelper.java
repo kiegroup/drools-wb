@@ -133,7 +133,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
 
             Map<String, Object> targetMap = toReturn;
             for (String step : steps) {
-                targetMap = (Map<String, Object>) toReturn.computeIfAbsent(step, k -> new HashMap<>());
+                targetMap = (Map<String, Object>) targetMap.computeIfAbsent(step, k -> new HashMap<>());
             }
             targetMap.put(lastStep, listObjectEntry.getValue());
         }
