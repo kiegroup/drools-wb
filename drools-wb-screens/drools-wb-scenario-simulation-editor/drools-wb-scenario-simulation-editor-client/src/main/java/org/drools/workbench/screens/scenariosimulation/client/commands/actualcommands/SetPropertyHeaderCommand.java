@@ -32,53 +32,14 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  * <code>Command</code> to to set the <i>property</i> level header for a given column
  */
 @Dependent
-public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand {
+public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
 
     public SetPropertyHeaderCommand() {
-        super(true);
+        super();
     }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
-        if (selectedColumn == null) {
-            return;
-        }
-        int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
-        String value = context.getStatus().getValue();
-        String title = value.contains(".") ? value.substring(value.indexOf(".") + 1) : "value";
-        String className = value.split("\\.")[0];
-        String fullPackage = context.getStatus().getFullPackage();
-        if (!fullPackage.endsWith(".")) {
-            fullPackage += ".";
-        }
-        String canonicalClassName = fullPackage + className;
-        final ScenarioSimulationModel.Type simulationModelType = context.getModel().getSimulation().get().getSimulationDescriptor().getType();
-        selectedColumn.setEditableHeaders(!simulationModelType.equals(ScenarioSimulationModel.Type.DMN));
-        String nameToUseForCreation = simulationModelType.equals(ScenarioSimulationModel.Type.DMN) ? className : selectedColumn.getInformationHeaderMetaData().getColumnId();
-        FactIdentifier factIdentifier = getFactIdentifierByColumnTitle(className, context).orElse(FactIdentifier.create(nameToUseForCreation, canonicalClassName));
-        final GridData.Range instanceLimits = context.getModel().getInstanceLimits(columnIndex);
-        IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
-                .forEach(index -> {
-                    final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) context.getModel().getColumns().get(index);
-                    if (!scenarioGridColumn.isInstanceAssigned()) { // We have not defined the instance, yet
-                        scenarioGridColumn.getInformationHeaderMetaData().setTitle(className);
-                        scenarioGridColumn.setInstanceAssigned(true);
-                        scenarioGridColumn.setFactIdentifier(factIdentifier);
-                    }
-                });
-        String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.insertValue();
-        selectedColumn.setPlaceHolder(placeHolder);
-        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getPropertyMetaDataGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        selectedColumn.getPropertyHeaderMetaData().setTitle(title);
-        selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
-        selectedColumn.setPropertyAssigned(true);
-        context.getModel().updateColumnProperty(columnIndex,
-                                                selectedColumn,
-                                                value,
-                                                context.getStatus().getValueClassName(), context.getStatus().isKeepData());
-        if (context.getScenarioSimulationEditorPresenter() != null) {
-            context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
-        }
+        setPropertyHeader(context);
     }
 }
