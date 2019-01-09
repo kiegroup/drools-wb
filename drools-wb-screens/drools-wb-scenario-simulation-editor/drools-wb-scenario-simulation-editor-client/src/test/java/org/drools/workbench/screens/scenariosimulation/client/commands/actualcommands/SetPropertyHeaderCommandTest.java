@@ -22,6 +22,7 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,12 +60,15 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
         scenarioSimulationContext.getStatus().setValue(VALUE);
         scenarioSimulationContext.getStatus().setValueClassName(VALUE_CLASS_NAME);
         assertTrue(command.isUndoable());
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
     }
 
     @Test
-    public void executeFalse() {
+    public void executeKeepDataFalseDMN() {
         scenarioSimulationContext.getStatus().setKeepData(false);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         command.execute(scenarioSimulationContext);
+        verify(gridColumnMock, times(1)).setEditableHeaders(eq(false));
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
@@ -72,7 +76,19 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
     }
 
     @Test
-    public void executeTrue() {
+    public void executeKeepDataFalseRule() {
+        scenarioSimulationContext.getStatus().setKeepData(false);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        command.execute(scenarioSimulationContext);
+        verify(gridColumnMock, times(1)).setEditableHeaders(eq(true));
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+    }
+
+    @Test
+    public void executeKeepDataTrue() {
         scenarioSimulationContext.getStatus().setKeepData(true);
         command.execute(scenarioSimulationContext);
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
