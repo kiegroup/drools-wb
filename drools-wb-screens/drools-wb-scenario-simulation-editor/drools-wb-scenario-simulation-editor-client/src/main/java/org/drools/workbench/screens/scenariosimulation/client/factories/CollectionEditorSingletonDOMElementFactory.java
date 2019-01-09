@@ -41,7 +41,9 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     public CollectionEditorViewImpl createWidget() {
-        return new CollectionEditorViewImpl(listWidget);
+        CollectionEditorViewImpl toReturn = new CollectionEditorViewImpl();
+        toReturn.setListWidget(listWidget);
+        return toReturn;
     }
 
     @Override

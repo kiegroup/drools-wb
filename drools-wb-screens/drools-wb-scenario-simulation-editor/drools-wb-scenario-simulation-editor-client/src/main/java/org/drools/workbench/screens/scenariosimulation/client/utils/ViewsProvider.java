@@ -19,6 +19,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ListEditorElementView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyEditorView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
@@ -38,6 +40,12 @@ public class ViewsProvider {
     @Inject
     private Instance<ListGroupItemView> listGroupItemViewInstance;
 
+    @Inject
+    private Instance<ListEditorElementView> listEditorElementViewInstance;
+
+    @Inject
+    private Instance<PropertyEditorView> propertyEditorViewInstance;
+
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();
     }
@@ -48,6 +56,14 @@ public class ViewsProvider {
 
     public ListGroupItemView getListGroupItemView() {
         return listGroupItemViewInstance.get();
+    }
+
+    public ListEditorElementView getListEditorElementView() {
+        return listEditorElementViewInstance.get();
+    }
+
+    public PropertyEditorView getPropertyEditorView() {
+        return propertyEditorViewInstance.get();
     }
 
 }

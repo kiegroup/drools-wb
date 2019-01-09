@@ -15,11 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 public class CollectionEditorPresenter implements CollectionEditorView.Presenter {
+
+
+    @Inject
+    protected ListEditorElementPresenter listEditorElementPresenter;
 
     @Override
     public void initStructure() {

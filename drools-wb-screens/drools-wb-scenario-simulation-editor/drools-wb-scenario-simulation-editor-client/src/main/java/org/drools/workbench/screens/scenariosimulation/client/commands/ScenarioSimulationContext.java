@@ -154,6 +154,14 @@ public class ScenarioSimulationContext {
         return id;
     }
 
+    public CollectionEditorSingletonDOMElementFactory getCollectionEditorSingletonDOMElementFactory() {
+        return collectionEditorSingletonDOMElementFactory;
+    }
+
+    public ScenarioCellTextAreaSingletonDOMElementFactory getScenarioCellTextAreaSingletonDOMElementFactory() {
+        return scenarioCellTextAreaSingletonDOMElementFactory;
+    }
+
     /**
      * Class representing the variable <b>Status</b> of the context
      */

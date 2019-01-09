@@ -82,11 +82,13 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
                                  e -> {
                                      if (e instanceof ScenarioCellTextAreaDOMElement) {
                                          ((ScenarioCellTextAreaDOMElement) e).getWidget().setValue(assertCell(cell).getValue().getValue());
-                                         ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell)cell);
+                                         ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell) cell);
                                      }
                                  },
-                                 e -> { if (e.getWidget() instanceof HasFocus)
-                                     ((FocusWidget)e.getWidget()).setFocus(true);
+                                 e -> {
+                                     if ((e.getWidget() instanceof HasFocus)) {
+                                         ((FocusWidget) e.getWidget()).setFocus(true);
+                                     }
                                  });
     }
 
@@ -94,7 +96,8 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
      * Set the <b>factory</b> used for creation of the editing <code>DOMElement</code>
      * @param factory
      */
-    public void setFactory(BaseSingletonDOMElementFactory<String, ? extends Widget, ? extends BaseDOMElement<String, ? extends Widget>> factory) {
+    public void setFactory(BaseSingletonDOMElementFactory<String, ? extends Widget, ? extends
+            BaseDOMElement<String, ? extends Widget>> factory) {
         this.factory = factory;
     }
 

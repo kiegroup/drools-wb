@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
 
@@ -75,13 +77,32 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         selectedColumn.getPropertyHeaderMetaData().setTitle(title);
         selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
         selectedColumn.setPropertyAssigned(true);
+        String propertyType = context.getStatus().getValueClassName();
+        String propertyName = title; // TODO GC CHECK
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 value,
-                                                context.getStatus().getValueClassName(), context.getStatus().isKeepData());
+                                                propertyType, context.getStatus().isKeepData());
         final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
+        // TODO GC MANAGE WITH EXCEPTION
+        final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
+        final String s = factModelTree.getSimpleProperties().get(propertyName);
+        if (isCollection(propertyType)) {
+            context.getCollectionEditorSingletonDOMElementFactory().setListWidget(isList(propertyType));
+            selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
+        } else {
+            selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
+        }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
         }
+    }
+
+    private boolean isCollection(String propertyType) {
+        return List.class.getName().equals(propertyType) || Map.class.getName().equals(propertyType);
+    }
+
+    private boolean isList(String propertyType) {
+        return List.class.getName().equals(propertyType);
     }
 }

@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import javax.inject.Inject;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -30,19 +32,23 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
  *
  * The overall architecture is:
  * <p>this widget contains a series of elements</p>
- * <p>if this widget represent a list, each element will show a single item of the it</p>
- * <p>if this widget represent a map, each element will show a single entry (key/value) of it</p>
+ * <p>if this widget represent a list, each element will show a single item of it, represented by a <code>ListEditorElementViewImpl</code></p>
+ * <p>if this widget represent a map, each element will show a single entry (key/value) of it, represented by a <code>MapEditorElementViewImpl</code></p>
+ * <p><code>PropertyEditorViewImpl</code> represents a single property (label with name and textbox for value)</p>
+ * <p>each item/key/value could be a simple java object or a complex one</p>
+ * <p>for complex java object, for each property a <code>PropertyEditorViewImpl</code> will be created</p>
  * <p>the presenter will be responsible to choose which kind of elements are to be populated</p>
  */
 @Templated
 public class CollectionEditorViewImpl extends Composite implements HasCloseCompositeHandler,
                                                                    CollectionEditorView {
 
+    @Inject
+    protected CollectionEditorPresenter presenter;
+
     @DataField("elementsContainer")
     protected DivElement elementsContainer = Document.get().createDivElement();
 
-
-    protected CollectionEditorView.Presenter presenter;
 
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
@@ -51,11 +57,10 @@ public class CollectionEditorViewImpl extends Composite implements HasCloseCompo
 
     /**
      *
-     *
      * @param listWidget set to <code>true</code> if the current instance will manage a <code>List</code>,
      * <code>false</code> for a <code>Map</code>.
      */
-    public CollectionEditorViewImpl(boolean listWidget) {
+    public void setListWidget(boolean listWidget) {
         this.listWidget = listWidget;
     }
 

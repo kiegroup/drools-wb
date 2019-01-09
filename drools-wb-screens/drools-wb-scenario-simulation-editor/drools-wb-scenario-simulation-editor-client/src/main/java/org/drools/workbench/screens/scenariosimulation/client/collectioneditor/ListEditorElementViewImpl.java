@@ -15,28 +15,24 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.Map;
-
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-public interface ListEditorElementView {
+/**
+ * This class is used as <code>ListElement</code> <b>editor</b>
+ *
+ * It represent a single item of the List
+ */
+@Templated
+public class ListEditorElementViewImpl implements ListEditorElementView {
 
+    @DataField("propertiesContainer")
+    protected LIElement propertiesContainer = Document.get().createLIElement();
 
-    interface Presenter {
-
-        /**
-         *
-         * @param propertiesMap the properties to be put inside the <code>LIElement</code>
-         * representing a single item of the list
-         * @return the <code>LIElement</code> representing a single item of the list
-         */
-        LIElement getPropertiesContainer(Map<String, String> propertiesMap);
+    @Override
+    public LIElement getPropertiesContainer() {
+        return propertiesContainer;
     }
-
-    /**
-     *
-     * @return the <code>LIElement</code> representing a single item of the list
-     */
-    LIElement getPropertiesContainer();
-
 }
