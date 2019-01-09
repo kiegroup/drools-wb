@@ -15,14 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mvp.PlaceRequest;
 
@@ -39,6 +42,8 @@ public class ScenarioSimulationContext {
     protected ScenarioGridLayer scenarioGridLayer;
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected RightPanelView.Presenter rightPanelPresenter;
+    protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
+    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory;
 
     protected Status status = new Status();
 
@@ -76,6 +81,7 @@ public class ScenarioSimulationContext {
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
         this.model = scenarioGridLayer.getScenarioGrid().getModel();
+        this.collectionEditorSingletonDOMElementFactory = new CollectionEditorSingletonDOMElementFactory(this.scenarioGridPanel, this.scenarioGridLayer, this.scenarioGridLayer.getScenarioGrid());
         id = COUNTER_ID.getAndIncrement();
     }
 
@@ -93,6 +99,14 @@ public class ScenarioSimulationContext {
 
     public void setRightPanelPresenter(RightPanelView.Presenter rightPanelPresenter) {
         this.rightPanelPresenter = rightPanelPresenter;
+    }
+
+    public SortedMap<String, FactModelTree> getDataObjectFieldsMap() {
+        return dataObjectFieldsMap;
+    }
+
+    public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
+        this.dataObjectFieldsMap = dataObjectFieldsMap;
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

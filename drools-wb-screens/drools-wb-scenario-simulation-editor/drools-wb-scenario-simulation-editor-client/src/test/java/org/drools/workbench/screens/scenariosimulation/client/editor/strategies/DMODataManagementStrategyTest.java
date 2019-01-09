@@ -73,7 +73,7 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
         super.setup();
         when(oracleMock.getFQCNByFactName(FACT_NAME)).thenReturn(FULL_FACT_CLASSNAME);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, model, content.getDataModel())).thenReturn(oracleMock);
-        this.dmoDataManagementStrategy = spy(new DMODataManagementStrategy(oracleFactoryMock) {
+        this.dmoDataManagementStrategy = spy(new DMODataManagementStrategy(oracleFactoryMock, scenarioSimulationContext) {
             {
                 this.oracle = oracleMock;
             }

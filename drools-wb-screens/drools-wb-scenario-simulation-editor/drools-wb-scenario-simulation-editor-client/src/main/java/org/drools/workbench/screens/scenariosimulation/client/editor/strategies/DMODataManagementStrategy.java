@@ -27,6 +27,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
@@ -44,14 +45,16 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
+    protected ScenarioSimulationContext scenarioSimulationContext;
 
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
 
     private ScenarioSimulationModel model;
 
-    public DMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory) {
+    public DMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory, final ScenarioSimulationContext scenarioSimulationContext) {
         this.oracleFactory = oracleFactory;
+        this.scenarioSimulationContext = scenarioSimulationContext;
     }
 
     @Override
@@ -202,6 +205,7 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         if (factTypeFieldsMap.size() == expectedElements) {
             factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
             rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
+            scenarioSimulationContext.setDataObjectFieldsMap(factTypeFieldsMap);
             SortedMap<String, FactModelTree> instanceFieldsMap = getInstanceMap(factTypeFieldsMap);
             rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
             Set<String> dataObjectsInstancesName = new HashSet<>(factTypeFieldsMap.keySet());
