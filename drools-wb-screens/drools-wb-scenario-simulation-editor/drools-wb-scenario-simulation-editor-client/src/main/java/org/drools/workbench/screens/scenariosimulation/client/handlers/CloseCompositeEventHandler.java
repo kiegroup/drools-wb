@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.widgets;
+package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.ait.lienzo.client.core.shape.Group;
+import com.google.gwt.event.shared.EventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 
-public class ScenarioMenuItem extends Group {
-
-    private String caption;
-
-    public ScenarioMenuItem(String caption) {
-        this.caption = caption;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
+/**
+ * <code>EventHandler</code> for {@link CloseCompositeEvent}
+ */
+public interface CloseCompositeEventHandler extends EventHandler {
+    void onEvent(CloseCompositeEvent event);
 }
