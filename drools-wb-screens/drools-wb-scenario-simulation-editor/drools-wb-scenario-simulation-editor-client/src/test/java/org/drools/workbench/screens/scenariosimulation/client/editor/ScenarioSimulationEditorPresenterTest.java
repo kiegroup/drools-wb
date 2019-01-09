@@ -27,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -94,8 +93,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioGrid scenarioGridMock;
     @Mock
     private ScenarioGridLayer scenarioGridLayerMock;
-    @Mock
-    private ScenarioGridPanel scenarioGridPanelMock;
     @Mock
     private ScenarioSimulationView scenarioSimulationViewMock;
     @Mock
