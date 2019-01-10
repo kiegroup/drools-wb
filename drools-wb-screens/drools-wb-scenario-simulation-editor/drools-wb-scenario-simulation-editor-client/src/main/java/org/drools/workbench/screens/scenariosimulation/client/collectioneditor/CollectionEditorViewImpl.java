@@ -55,6 +55,10 @@ public class CollectionEditorViewImpl extends Composite implements HasCloseCompo
      */
     protected boolean listWidget;
 
+    public CollectionEditorViewImpl() {
+        initWidget(this);
+    }
+
     /**
      *
      * @param listWidget set to <code>true</code> if the current instance will manage a <code>List</code>,
