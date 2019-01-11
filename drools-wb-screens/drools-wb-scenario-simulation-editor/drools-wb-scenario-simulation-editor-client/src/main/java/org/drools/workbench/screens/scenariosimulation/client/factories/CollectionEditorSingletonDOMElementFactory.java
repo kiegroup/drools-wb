@@ -16,8 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import java.util.Map;
+
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -26,30 +29,40 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPane
 
 public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, CollectionEditorViewImpl, CollectionEditorDOMElement> {
 
+    protected ViewsProvider viewsProvider;
+
     /**
      * Flag to indicate if the <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
      */
     protected boolean listWidget = true;
 
+    /**
+     * The <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
+     */
+    protected Map<String, Class<?>> instancePropertyMap;
+
     public CollectionEditorSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                       final GridLayer gridLayer,
-                                                      final GridWidget gridWidget) {
+                                                      final GridWidget gridWidget,
+                                                      ViewsProvider viewsProvider) {
         super(gridPanel,
               gridLayer,
               gridWidget);
+        this.viewsProvider = viewsProvider;
     }
 
     @Override
     public CollectionEditorViewImpl createWidget() {
-        CollectionEditorViewImpl toReturn = new CollectionEditorViewImpl();
+        CollectionEditorViewImpl toReturn = (CollectionEditorViewImpl) viewsProvider.getCollectionEditorView();
         toReturn.setListWidget(listWidget);
+        toReturn.setInstancePropertyMap(instancePropertyMap);
         return toReturn;
     }
 
     @Override
     public CollectionEditorDOMElement createDomElement(final GridLayer gridLayer,
-                                                               final GridWidget gridWidget,
-                                                               final GridBodyCellRenderContext context) {
+                                                       final GridWidget gridWidget,
+                                                       final GridBodyCellRenderContext context) {
         this.widget = createWidget();
         this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
         widget.addCloseCompositeEventHandler(event -> {
@@ -69,6 +82,14 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         this.listWidget = listWidget;
     }
 
+    /**
+     * Set the <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
+     * @param instancePropertyMap
+     */
+    public void setInstancePropertyMap(Map<String, Class<?>> instancePropertyMap) {
+        this.instancePropertyMap = instancePropertyMap;
+    }
+
     @Override
     protected String getValue() {
 //        if (widget != null) {
@@ -78,7 +99,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     protected CollectionEditorDOMElement internalCreateDomElement(CollectionEditorViewImpl widget, GridLayer gridLayer, GridWidget gridWidget) {
-       return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
+        return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
     }
 }
 

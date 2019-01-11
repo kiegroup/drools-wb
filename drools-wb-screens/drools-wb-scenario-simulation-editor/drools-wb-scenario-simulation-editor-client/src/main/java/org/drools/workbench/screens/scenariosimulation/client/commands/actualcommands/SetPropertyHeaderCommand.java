@@ -15,15 +15,19 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.List;
+import java.util.AbstractMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
@@ -87,8 +91,15 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         // TODO GC MANAGE WITH EXCEPTION
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
         final String s = factModelTree.getSimpleProperties().get(propertyName);
-        if (isCollection(propertyType)) {
-            context.getCollectionEditorSingletonDOMElementFactory().setListWidget(isList(propertyType));
+
+        if (ScenarioSimulationUtils.isCollection(propertyType)) {
+            final Map<String, Class<?>> instancePropertyMap = Collections.unmodifiableMap(Stream.of(
+                    new AbstractMap.SimpleEntry<>("City", String.class),
+                    new AbstractMap.SimpleEntry<>("Country", String.class),
+                    new AbstractMap.SimpleEntry<>("CODE", Integer.class))
+                                                                                                                       .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+            context.getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(propertyType));
+            context.getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(instancePropertyMap);
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
@@ -96,13 +107,5 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
         }
-    }
-
-    private boolean isCollection(String propertyType) {
-        return List.class.getName().equals(propertyType) || Map.class.getName().equals(propertyType);
-    }
-
-    private boolean isList(String propertyType) {
-        return List.class.getName().equals(propertyType);
     }
 }

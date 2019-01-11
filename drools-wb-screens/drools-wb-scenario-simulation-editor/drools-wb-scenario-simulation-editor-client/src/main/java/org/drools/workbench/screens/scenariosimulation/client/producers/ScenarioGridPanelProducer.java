@@ -19,9 +19,13 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.EditScenarioSimulationGridCellKeyboardOperation;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -44,13 +48,15 @@ public class ScenarioGridPanelProducer {
     @Inject
     protected ScenarioGridPanel scenarioGridPanel;
 
+    @Inject
+    protected ViewsProvider viewsProvider;
+
     @PostConstruct
     public void init() {
-        final ScenarioGrid scenarioGrid = new ScenarioGrid(new ScenarioGridModel(false),
+        ScenarioGridModel scenarioGridModel = new ScenarioGridModel(false);
+        final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
                                                            scenarioGridLayer,
-                                                           new ScenarioGridRenderer(false),
-                                                           scenarioGridPanel);
-
+                                                           new ScenarioGridRenderer(false));
         final BaseGridWidgetKeyboardHandler handler = new BaseGridWidgetKeyboardHandler(scenarioGridLayer);
         handler.addOperation(new EditScenarioSimulationGridCellKeyboardOperation(scenarioGridLayer),
                              new KeyboardOperationSelectTopLeftCell(scenarioGridLayer),
@@ -59,8 +65,17 @@ public class ScenarioGridPanelProducer {
                              new KeyboardOperationMoveUp(scenarioGridLayer),
                              new KeyboardOperationMoveDown(scenarioGridLayer));
         scenarioGridPanel.addKeyDownHandler(handler);
-
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
+        scenarioGridModel.setCollectionEditorSingletonDOMElementFactory(new CollectionEditorSingletonDOMElementFactory(scenarioGridPanel,
+                                                                                                                       scenarioGridLayer,
+                                                                                                                       scenarioGridLayer.getScenarioGrid(),
+                                                                                                                       viewsProvider));
+        scenarioGridModel.setScenarioCellTextAreaSingletonDOMElementFactory(new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanel,
+                                                                                                                               scenarioGridLayer,
+                                                                                                                               scenarioGridLayer.getScenarioGrid()));
+        scenarioGridModel.setScenarioHeaderTextBoxSingletonDOMElementFactory(new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
+                                                                                                                                 scenarioGridLayer,
+                                                                                                                                 scenarioGridLayer.getScenarioGrid()));
         scenarioGridPanel.add(scenarioGridLayer);
     }
 

@@ -37,7 +37,7 @@ public class CloseCompositeEvent extends DomEvent<CloseCompositeEventHandler> {
         return TYPE;
     }
 
-    protected CloseCompositeEvent() {
+    public CloseCompositeEvent() {
     }
 
     @Override

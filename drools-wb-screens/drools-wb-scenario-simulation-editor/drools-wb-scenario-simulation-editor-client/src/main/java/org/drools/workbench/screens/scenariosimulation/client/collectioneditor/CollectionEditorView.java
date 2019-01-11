@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.Map;
+
 import com.google.gwt.dom.client.DivElement;
 
 /**
@@ -27,8 +29,10 @@ public interface CollectionEditorView {
         /**
          * Actual implementations should invoke this method first to retrieve information about the collection
          * generic type and the structure of such type
+         *
+         * @param instancePropertyMap
          */
-        void initStructure();
+        void initStructure(Map<String, Class<?>> instancePropertyMap, CollectionEditorView collectionEditorView);
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
@@ -60,6 +64,12 @@ public interface CollectionEditorView {
      * @return the json representation of the current content
      */
     String getValue();
+
+    /**
+     * @param listWidget set to <code>true</code> if the current instance will manage a <code>List</code>,
+     * <code>false</code> for a <code>Map</code>.
+     */
+    void setListWidget(boolean listWidget);
 
     /**
      * Returns <code>true</code> if the current instance will manage a <code>List</code>,

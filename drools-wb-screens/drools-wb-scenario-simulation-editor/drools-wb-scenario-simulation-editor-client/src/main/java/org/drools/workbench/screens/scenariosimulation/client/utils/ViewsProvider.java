@@ -16,14 +16,15 @@
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ListEditorElementView;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyEditorView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
+import org.jboss.errai.ioc.client.api.ManagedInstance;
 
 @ApplicationScoped
 /**
@@ -32,19 +33,22 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGro
 public class ViewsProvider {
 
     @Inject
-    private Instance<MenuItemView> menuItemViewInstance;
+    private ManagedInstance<MenuItemView> menuItemViewInstance;
 
     @Inject
-    private Instance<FieldItemView> fieldItemViewInstance;
+    private ManagedInstance<FieldItemView> fieldItemViewInstance;
 
     @Inject
-    private Instance<ListGroupItemView> listGroupItemViewInstance;
+    private ManagedInstance<ListGroupItemView> listGroupItemViewInstance;
 
     @Inject
-    private Instance<ListEditorElementView> listEditorElementViewInstance;
+    private ManagedInstance<CollectionEditorView> collectionEditorViewInstance;
 
     @Inject
-    private Instance<PropertyEditorView> propertyEditorViewInstance;
+    private ManagedInstance<ListEditorElementView> listEditorElementViewInstance;
+
+    @Inject
+    private ManagedInstance<PropertyEditorView> propertyEditorViewInstance;
 
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();
@@ -56,6 +60,10 @@ public class ViewsProvider {
 
     public ListGroupItemView getListGroupItemView() {
         return listGroupItemViewInstance.get();
+    }
+
+    public CollectionEditorView getCollectionEditorView() {
+        return collectionEditorViewInstance.get();
     }
 
     public ListEditorElementView getListEditorElementView() {

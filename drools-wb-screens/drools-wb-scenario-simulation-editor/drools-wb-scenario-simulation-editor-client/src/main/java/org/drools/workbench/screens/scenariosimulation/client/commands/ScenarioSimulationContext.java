@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -44,8 +45,6 @@ public class ScenarioSimulationContext {
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected RightPanelView.Presenter rightPanelPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
-    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory;
-    protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory;
 
     protected Status status = new Status();
 
@@ -83,8 +82,6 @@ public class ScenarioSimulationContext {
         this.scenarioGridPanel = scenarioGridPanel;
         this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
         this.model = scenarioGridLayer.getScenarioGrid().getModel();
-        this.collectionEditorSingletonDOMElementFactory = new CollectionEditorSingletonDOMElementFactory(this.scenarioGridPanel, this.scenarioGridLayer, this.scenarioGridLayer.getScenarioGrid());
-        this.scenarioCellTextAreaSingletonDOMElementFactory = new ScenarioCellTextAreaSingletonDOMElementFactory(this.scenarioGridPanel, this.scenarioGridLayer, this.scenarioGridLayer.getScenarioGrid());
         id = COUNTER_ID.getAndIncrement();
     }
 
@@ -155,11 +152,15 @@ public class ScenarioSimulationContext {
     }
 
     public CollectionEditorSingletonDOMElementFactory getCollectionEditorSingletonDOMElementFactory() {
-        return collectionEditorSingletonDOMElementFactory;
+        return model.getCollectionEditorSingletonDOMElementFactory();
     }
 
     public ScenarioCellTextAreaSingletonDOMElementFactory getScenarioCellTextAreaSingletonDOMElementFactory() {
-        return scenarioCellTextAreaSingletonDOMElementFactory;
+        return model.getScenarioCellTextAreaSingletonDOMElementFactory();
+    }
+
+    public ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
+        return model.getScenarioHeaderTextBoxSingletonDOMElementFactory();
     }
 
     /**

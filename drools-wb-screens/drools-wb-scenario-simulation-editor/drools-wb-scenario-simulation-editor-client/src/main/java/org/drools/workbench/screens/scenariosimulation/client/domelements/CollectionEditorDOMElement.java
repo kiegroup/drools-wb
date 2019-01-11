@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.TakesValue;
+import com.google.gwt.user.client.ui.Focusable;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -29,7 +30,8 @@ import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
-public class CollectionEditorDOMElement extends BaseDOMElement<String, CollectionEditorViewImpl> implements TakesValue<String> {
+public class CollectionEditorDOMElement extends BaseDOMElement<String, CollectionEditorViewImpl> implements TakesValue<String>,
+                                                                                                            Focusable {
 
     protected ScenarioGridCell scenarioGridCell;
 
@@ -85,6 +87,26 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
     @Override
     public String getValue() {
         return getWidget().getValue();
+    }
+
+    @Override
+    public int getTabIndex() {
+        return getWidget().getTabIndex();
+    }
+
+    @Override
+    public void setAccessKey(final char key) {
+        getWidget().setAccessKey(key);
+    }
+
+    @Override
+    public void setFocus(final boolean focused) {
+        getWidget().setFocus(focused);
+    }
+
+    @Override
+    public void setTabIndex(final int index) {
+        getWidget().setTabIndex(index);
     }
 
     @Override

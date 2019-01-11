@@ -29,8 +29,12 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
+import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -105,8 +109,14 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioSimulationModel scenarioSimulationModelMock;
 
+    @Mock
+    protected ViewsProvider viewsProviderMock;
+
     protected ScenarioSimulationContext scenarioSimulationContext;
     protected AppendRowCommand appendRowCommandMock;
+    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactoryTest;
+    protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactoryTest;
+    protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
 
     protected final int ROW_INDEX = 2;
     protected final int COLUMN_INDEX = 3;
@@ -133,12 +143,26 @@ public abstract class AbstractScenarioSimulationTest {
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
         IntStream.range(0, 4).forEach(index -> gridColumns.add(gridColumnMock));
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
+        collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
+                                                                                                        scenarioGridLayerMock,
+                                                                                                        scenarioGridMock,
+                                                                                                        viewsProviderMock);
+        scenarioCellTextAreaSingletonDOMElementFactoryTest = new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanelMock,
+                                                                                                                scenarioGridLayerMock,
+                                                                                                                scenarioGridMock);
+        scenarioHeaderTextBoxSingletonDOMElementFactoryTest = new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanelMock,
+                                                                                                                  scenarioGridLayerMock,
+                                                                                                                  scenarioGridMock);
+
 
         scenarioGridModelMock = spy(new ScenarioGridModel(false) {
             {
                 this.simulation = simulationMock;
                 this.columns = gridColumns;
                 this.rows = rowsMock;
+                this.collectionEditorSingletonDOMElementFactory = collectionEditorSingletonDOMElementFactoryTest;
+                this.scenarioCellTextAreaSingletonDOMElementFactory = scenarioCellTextAreaSingletonDOMElementFactoryTest;
+                this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
             }
 
             @Override
@@ -217,7 +241,6 @@ public abstract class AbstractScenarioSimulationTest {
                 return true;
             }
         });
-
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
@@ -238,6 +261,7 @@ public abstract class AbstractScenarioSimulationTest {
             {
                 this.restorableStatus = scenarioSimulationContext.getStatus();
             }
+
             @Override
             public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
                 return CommandResultBuilder.SUCCESS;
@@ -247,8 +271,6 @@ public abstract class AbstractScenarioSimulationTest {
             public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
                 return CommandResultBuilder.SUCCESS;
             }
-
-
         });
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);

@@ -114,7 +114,7 @@ public class ScenarioGridTest {
         factMappingInteger = new FactMapping(EXPRESSION_ALIAS_INTEGER, factIdentifierInteger, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
         factMappingIndex = new FactMapping(EXPRESSION_ALIAS_INDEX, FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulation = getSimulation();
-        scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock, scenarioGridLayerMock, scenarioGridRendererMock, scenarioGridPanelMock) {
+        scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock, scenarioGridLayerMock, scenarioGridRendererMock) {
 
             @Override
             protected void appendRow(int rowIndex, Scenario scenario) {
@@ -122,12 +122,8 @@ public class ScenarioGridTest {
             }
 
             @Override
-            protected ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
-                return scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
-            }
-
-            @Override
-            protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
+            protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String
+                    propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType) {
                 return headerBuilderMock;
             }
 
@@ -215,13 +211,11 @@ public class ScenarioGridTest {
         final FactMappingType type = factMappingDescription.getExpressionIdentifier().getType();
         String columnGroup = type.name();
         scenarioGrid.getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, type, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
-        verify(scenarioGrid, times(1)).getScenarioHeaderTextBoxSingletonDOMElementFactory();
         verify(scenarioGrid, times(1)).getHeaderBuilderLocal(eq(instanceTitle),
                                                              eq(propertyTitle),
                                                              eq(columnId),
                                                              eq(columnGroup),
-                                                             eq(type),
-                                                             eq(scenarioHeaderTextBoxSingletonDOMElementFactoryMock));
+                                                             eq(type));
     }
 
     @Test

@@ -15,26 +15,41 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
 public class ScenarioSimulationUtils {
 
-
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
-
 
     public static String getPropertyMetaDataGroup(String columnGroup) {
         return columnGroup + "-" + subGroupCounter.getAndIncrement();
+    }
+
+    /**
+     * Returns true if given string equals <code>List.class.getName()</code> or <code>Map.class.getName()</code>
+     * @param className
+     * @return
+     */
+    public static boolean isCollection(String className) {
+        return List.class.getName().equals(className) || Map.class.getName().equals(className);
+    }
+
+    /**
+     * Returns true if given string equals <code>List.class.getName()</code>
+     * @param className
+     * @return
+     */
+    public static boolean isList(String className) {
+        return List.class.getName().equals(className);
     }
 
     /**
@@ -59,8 +74,8 @@ public class ScenarioSimulationUtils {
      * @param columnId
      * @param columnGroup
      * @param factMappingType
-     * @param scenarioGridPanel
-     * @param gridLayer
+     * @param factoryHeader
+     * @param factoryCell
      * @return
      */
     public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
@@ -68,11 +83,11 @@ public class ScenarioSimulationUtils {
                                                            String columnId,
                                                            String columnGroup,
                                                            FactMappingType factMappingType,
-                                                           ScenarioGridPanel scenarioGridPanel,
-                                                           ScenarioGridLayer gridLayer) {
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
+                                                           ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell
+    ) {
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer);
+        return getScenarioGridColumn(headerBuilder, factoryCell);
     }
 
     /**
@@ -94,8 +109,9 @@ public class ScenarioSimulationUtils {
      * @param columnId
      * @param columnGroup
      * @param factMappingType
-     * @param scenarioGridPanel
-     * @param gridLayer
+     * @param factoryHeader
+     * @param factoryCell
+     * @param placeHolder
      * @return
      */
     public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
@@ -103,12 +119,11 @@ public class ScenarioSimulationUtils {
                                                            String columnId,
                                                            String columnGroup,
                                                            FactMappingType factMappingType,
-                                                           ScenarioGridPanel scenarioGridPanel,
-                                                           ScenarioGridLayer gridLayer,
+                                                           ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell,
                                                            String placeHolder) {
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, scenarioGridPanel, gridLayer, placeHolder);
+        return getScenarioGridColumn(headerBuilder, factoryCell, placeHolder);
     }
 
     /**
@@ -129,14 +144,11 @@ public class ScenarioSimulationUtils {
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
      * @param headerBuilder
-     * @param scenarioGridPanel
-     * @param gridLayer
+     * @param factoryCell
      * @return
      */
     public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
-                                                           ScenarioGridPanel scenarioGridPanel,
-                                                           ScenarioGridLayer gridLayer) {
-        ScenarioCellTextAreaSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
+                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell) {
         ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
                                                                                                                       headerBuilder,
                                                                                                                       ScenarioSimulationEditorConstants.INSTANCE.insertValue());
@@ -155,16 +167,13 @@ public class ScenarioSimulationUtils {
      * columnRenderer: new ScenarioGridColumnRenderer()
      * </p>
      * @param headerBuilder
-     * @param scenarioGridPanel
-     * @param gridLayer
+     * @param factoryCell
      * @param placeHolder
      * @return
      */
     public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
-                                                           ScenarioGridPanel scenarioGridPanel,
-                                                           ScenarioGridLayer gridLayer,
+                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell,
                                                            String placeHolder) {
-        ScenarioCellTextAreaSingletonDOMElementFactory factoryCell = FactoryProvider.getCellTextBoxFactory(scenarioGridPanel, gridLayer);
         ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
                                                                                                                       headerBuilder,
                                                                                                                       placeHolder);
@@ -276,5 +285,4 @@ public class ScenarioSimulationUtils {
     private static boolean isOther(FactMappingType factMappingType) {
         return FactMappingType.OTHER.equals(factMappingType);
     }
-
 }

@@ -15,16 +15,19 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
-import org.drools.workbench.screens.scenariosimulation.client.factories.FactoryProvider;
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -54,14 +57,10 @@ import static org.drools.workbench.screens.scenariosimulation.client.editor.stra
 
 public class ScenarioGrid extends BaseGridWidget {
 
-    private final ScenarioGridLayer scenarioGridLayer;
-    private final ScenarioGridPanel scenarioGridPanel;
     private EventBus eventBus;
 
-    public ScenarioGrid(ScenarioGridModel model, ScenarioGridLayer scenarioGridLayer, ScenarioGridRenderer renderer, ScenarioGridPanel scenarioGridPanel) {
+    public ScenarioGrid(ScenarioGridModel model, ScenarioGridLayer scenarioGridLayer, ScenarioGridRenderer renderer) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
-        this.scenarioGridLayer = scenarioGridLayer;
-        this.scenarioGridPanel = scenarioGridPanel;
         setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
@@ -141,12 +140,32 @@ public class ScenarioGrid extends BaseGridWidget {
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
         scenarioGridColumn.setFactIdentifier(factIdentifier);
         scenarioGridColumn.setEditableHeaders(editableHeaders);
-        // by default ScenarioGridColumnBuilders.ScenarioGridColumnBuilder.build() set ColumnWidthMode.auto to all generated columns
         if (FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
             scenarioGridColumn.setColumnWidthMode(ColumnWidthMode.FIXED);
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
+        if (isPropertyAssigned) {
+            setDOMElementFactory(scenarioGridColumn, factMapping.getClassName());
+        }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
+    }
+
+    /**
+     * Set the correct <b>DOMElement</b> factory to the given <code>ScenarioGridColumn</code>
+     * @param scenarioGridColumn
+     * @param className
+     */
+    protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, String className) {
+        if (ScenarioSimulationUtils.isCollection(className)) {
+            ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(className));
+            final Map<String, Class<?>> instancePropertyMap = Collections.unmodifiableMap(Stream.of(
+                    new AbstractMap.SimpleEntry<>("City", String.class),
+                    new AbstractMap.SimpleEntry<>("Country", String.class),
+                    new AbstractMap.SimpleEntry<>("CODE", Integer.class))
+                                                                                                  .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+            ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(instancePropertyMap);
+            scenarioGridColumn.setFactory( ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
+        }
     }
 
     /**
@@ -215,25 +234,19 @@ public class ScenarioGrid extends BaseGridWidget {
         return isPropertyAssigned ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
     }
 
-    protected ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
-        return FactoryProvider.getHeaderTextBoxFactory(scenarioGridPanel, scenarioGridLayer);
-    }
-
     protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String
             columnId, String columnGroup, FactMappingType factMappingType, String placeHolder) {
-        ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader = getScenarioHeaderTextBoxSingletonDOMElementFactory();
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
+        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilderLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType);
         return getScenarioGridColumnLocal(headerBuilder, placeHolder);
     }
 
     protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, String placeHolder) {
-        return ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, scenarioGridPanel, scenarioGridLayer, placeHolder);
+        return ScenarioSimulationUtils.getScenarioGridColumn(headerBuilder, ((ScenarioGridModel) model).getScenarioCellTextAreaSingletonDOMElementFactory(), placeHolder);
     }
 
     protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String
-            propertyTitle, String columnId, String columnGroup, FactMappingType
-                                                                                     factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader) {
-        return ScenarioSimulationUtils.getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
+            propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType) {
+        return ScenarioSimulationUtils.getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, ((ScenarioGridModel) model).getScenarioHeaderTextBoxSingletonDOMElementFactory());
     }
 
     protected void appendRows(Simulation simulation) {

@@ -15,20 +15,37 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 public class CollectionEditorPresenter implements CollectionEditorView.Presenter {
 
-
     @Inject
     protected ListEditorElementPresenter listEditorElementPresenter;
 
     @Override
-    public void initStructure() {
+    public void initStructure(Map<String, Class<?>> instancePropertyMap, CollectionEditorView collectionEditorView) {
+        IntStream.range(1, 2).forEach(i -> {
+            final LIElement propertiesContainer = listEditorElementPresenter.getPropertiesContainer(Collections.unmodifiableMap(Stream.of(
+                    new AbstractMap.SimpleEntry<>("City", "City-" + i),
+                    new AbstractMap.SimpleEntry<>("Country", "Country-" + i),
+                    new AbstractMap.SimpleEntry<>("CODE", "Code-"+ 1))
+                                                                                                                                        .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue()))));
+
+            collectionEditorView.getElementsContainer().appendChild(propertiesContainer);
+        });
+
 
     }
 
@@ -50,7 +67,6 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     }
 
     protected void populateList(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
-
     }
 
     protected void populateMap(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
