@@ -1836,6 +1836,10 @@
                       <name>ts-exporter</name>
                       <value>export</value>
                     </property>
+                    <property>
+                      <name>ts-exporter-output-dir</name>
+                      <value>${project.build.directory}</value>
+                    </property>
                   </properties>
                 </configuration>
               </execution>
