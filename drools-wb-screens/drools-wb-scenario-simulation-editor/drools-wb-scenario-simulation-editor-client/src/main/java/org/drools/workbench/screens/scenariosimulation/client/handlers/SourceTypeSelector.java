@@ -54,7 +54,7 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
     }
 
     /**
-     * Returns the selected Type. <b>By default, it returns <code>ScenarioSimulationModel.Type.RULE</code></b>
+     * Returns the selected FactModelType. <b>By default, it returns <code>ScenarioSimulationModel.FactModelType.RULE</code></b>
      * @return
      */
     public ScenarioSimulationModel.Type getSelectedType() {

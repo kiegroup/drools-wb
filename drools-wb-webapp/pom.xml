@@ -1422,11 +1422,6 @@
       <artifactId>errai-jaxrs-client</artifactId>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.appformer</groupId>
-      <artifactId>appformer-js</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
 
   </dependencies>
 
@@ -1435,62 +1430,7 @@
     <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
 
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>properties-maven-plugin</artifactId>
-        <version>1.0.0</version>
-        <executions>
-          <execution>
-            <id>set-ts-exporter-output-dir</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>set-system-properties</goal>
-            </goals>
-            <configuration>
-              <properties>
-                <property>
-                  <name>ts-exporter-output-dir</name>
-                  <value>${project.build.directory}</value>
-                </property>
-                <property>
-                  <name>ts-exporter-project</name>
-                  <value>${project}</value>
-                </property>
-              </properties>
-            </configuration>
-          </execution>
-          <execution>
-            <id>set-ts-exporter-all</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>set-system-properties</goal>
-            </goals>
-            <configuration>
-              <properties>
-                <property>
-                  <name>ts-exporter</name>
-                  <value>export</value>
-                </property>
-              </properties>
-            </configuration>
-          </execution>
-          <execution>
-            <id>set-ts-exporter-none</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>set-system-properties</goal>
-            </goals>
-            <configuration>
-              <properties>
-                <property>
-                  <name>ts-exporter</name>
-                  <value>default</value>
-                </property>
-              </properties>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+      <!-- Include additional sources path for hot reload -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>

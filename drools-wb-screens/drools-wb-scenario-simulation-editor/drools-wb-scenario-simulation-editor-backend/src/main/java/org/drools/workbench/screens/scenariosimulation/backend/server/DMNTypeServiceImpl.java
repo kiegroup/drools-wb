@@ -48,11 +48,11 @@ public class DMNTypeServiceImpl
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
-            visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
+            visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.FactModelType.INPUT));
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
-            visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+            visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.FactModelType.DECISION));
         }
         return new FactModelTuple(visibleFacts, hiddenFacts);
     }
@@ -69,7 +69,7 @@ public class DMNTypeServiceImpl
         return kieContainer.newKieSession().getKieRuntime(DMNRuntime.class);
     }
 
-    private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
+    private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType) {
         Map<String, String> simpleFields = new HashMap<>();
         if (!type.isComposite()) {
             simpleFields.put("value", type.getName());
@@ -84,7 +84,7 @@ public class DMNTypeServiceImpl
             } else {
                 String expandableId = path + "." + entry.getKey();
                 factModelTree.addExpandableProperty(entry.getKey(), expandableId);
-                hiddenFacts.put(expandableId, createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED));
+                hiddenFacts.put(expandableId, createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.FactModelType.UNDEFINED));
             }
         }
         return factModelTree;

@@ -26,7 +26,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactModelTree {
 
-    public enum Type {
+    public enum FactModelType {
         INPUT,
         DECISION,
         UNDEFINED
@@ -38,7 +38,7 @@ public class FactModelTree {
 
     private Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
     private Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
-    private Type type;
+    private FactModelType type;
 
     public FactModelTree() {
         // CDI
@@ -51,7 +51,7 @@ public class FactModelTree {
      * @param simpleProperties
      */
     public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties) {
-        this(factName, fullPackage, simpleProperties, Type.UNDEFINED);
+        this(factName, fullPackage, simpleProperties, FactModelType.UNDEFINED);
     }
 
     /**
@@ -61,7 +61,7 @@ public class FactModelTree {
      * @param simpleProperties
      * @param type
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Type type) {
+    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, FactModelType type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
@@ -104,7 +104,7 @@ public class FactModelTree {
         isSimple = simple;
     }
 
-    public Type getType() {
+    public FactModelType getType() {
         return type;
     }
 

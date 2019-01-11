@@ -37,7 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.uberfire.backend.vfs.Path;
 
-import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.Type;
+import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.FactModelType;
 
 @ApplicationScoped
 public class DMNSimulationCreationStrategy implements SimulationCreationStrategy {
@@ -60,9 +60,9 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         final Map<String, FactModelTree> hiddenValues = factModelTuple.getHiddenFacts();
 
         visibleFactTrees.stream().sorted((a, b) -> {
-            Type aType = a.getType();
-            Type bType = b.getType();
-            return aType.equals(bType) ? 0 : (Type.INPUT.equals(aType) ? -1 : 1);
+            FactModelType aType = a.getType();
+            FactModelType bType = b.getType();
+            return aType.equals(bType) ? 0 : (FactModelTree.FactModelType.INPUT.equals(aType) ? -1 : 1);
         }).forEach(factModelTree -> {
             FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
             FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, row, id, convert(factModelTree.getType()), simulationDescriptor, scenario);
@@ -152,7 +152,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         }
     }
 
-    static private FactMappingType convert(Type modelTreeType) {
+    static private FactMappingType convert(FactModelTree.FactModelType modelTreeType) {
         switch (modelTreeType) {
             case INPUT:
                 return FactMappingType.GIVEN;
