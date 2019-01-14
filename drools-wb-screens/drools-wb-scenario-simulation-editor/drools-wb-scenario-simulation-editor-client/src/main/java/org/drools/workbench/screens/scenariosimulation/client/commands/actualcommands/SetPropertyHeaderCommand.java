@@ -15,13 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.AbstractMap;
-import java.util.Collections;
-import java.util.Map;
 import java.util.SortedMap;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.enterprise.context.Dependent;
 
@@ -93,13 +88,11 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         final String s = factModelTree.getSimpleProperties().get(propertyName);
 
         if (ScenarioSimulationUtils.isCollection(propertyType)) {
-            final Map<String, Class<?>> instancePropertyMap = Collections.unmodifiableMap(Stream.of(
-                    new AbstractMap.SimpleEntry<>("City", String.class),
-                    new AbstractMap.SimpleEntry<>("Country", String.class),
-                    new AbstractMap.SimpleEntry<>("CODE", Integer.class))
-                                                                                                                       .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+            final String genericTypeInfo = factModelTree.getGenericTypeInfo(propertyName);
+            String genericType = genericTypeInfo.substring(genericTypeInfo.lastIndexOf(".")+1);
+            FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
             context.getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(propertyType));
-            context.getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(instancePropertyMap);
+            context.getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(genericFactModelTree.getSimpleProperties());
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());

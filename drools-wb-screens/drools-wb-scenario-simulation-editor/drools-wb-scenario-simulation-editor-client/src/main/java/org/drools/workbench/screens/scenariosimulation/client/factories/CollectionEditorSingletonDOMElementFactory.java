@@ -39,7 +39,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     /**
      * The <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
      */
-    protected Map<String, Class<?>> instancePropertyMap;
+    protected Map<String, String> instancePropertyMap;
 
     public CollectionEditorSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                       final GridLayer gridLayer,
@@ -86,7 +86,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
      * Set the <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
      * @param instancePropertyMap
      */
-    public void setInstancePropertyMap(Map<String, Class<?>> instancePropertyMap) {
+    public void setInstancePropertyMap(Map<String, String> instancePropertyMap) {
         this.instancePropertyMap = instancePropertyMap;
     }
 

@@ -83,7 +83,7 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
      * Set the <code>Map</code> to be used to create the skeleton of the current <code>CollectionEditorViewImpl</code> editor
      * @param instancePropertyMap
      */
-    public void setInstancePropertyMap(Map<String, Class<?>> instancePropertyMap) {
+    public void setInstancePropertyMap(Map<String, String> instancePropertyMap) {
         presenter.initStructure(instancePropertyMap, this);
     }
 

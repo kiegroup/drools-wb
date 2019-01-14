@@ -15,12 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.AbstractMap;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.inject.Inject;
 
@@ -35,18 +31,11 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     protected ListEditorElementPresenter listEditorElementPresenter;
 
     @Override
-    public void initStructure(Map<String, Class<?>> instancePropertyMap, CollectionEditorView collectionEditorView) {
-        IntStream.range(1, 2).forEach(i -> {
-            final LIElement propertiesContainer = listEditorElementPresenter.getPropertiesContainer(Collections.unmodifiableMap(Stream.of(
-                    new AbstractMap.SimpleEntry<>("City", "City-" + i),
-                    new AbstractMap.SimpleEntry<>("Country", "Country-" + i),
-                    new AbstractMap.SimpleEntry<>("CODE", "Code-"+ 1))
-                                                                                                                                        .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue()))));
-
-            collectionEditorView.getElementsContainer().appendChild(propertiesContainer);
-        });
-
-
+    public void initStructure(Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
+        Map<String, String> propertiesMap = new HashMap<>();
+        instancePropertyMap.forEach((key, value) -> propertiesMap.put(key + "(" + value +")", "(insert " + key + ")"));
+        final LIElement propertiesContainer = listEditorElementPresenter.getPropertiesContainer(propertiesMap);
+        collectionEditorView.getElementsContainer().appendChild(propertiesContainer);
     }
 
     @Override

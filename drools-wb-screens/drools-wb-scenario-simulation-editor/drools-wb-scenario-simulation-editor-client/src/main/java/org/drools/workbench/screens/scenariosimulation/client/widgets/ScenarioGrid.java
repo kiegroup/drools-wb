@@ -158,11 +158,11 @@ public class ScenarioGrid extends BaseGridWidget {
     protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, String className) {
         if (ScenarioSimulationUtils.isCollection(className)) {
             ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(className));
-            final Map<String, Class<?>> instancePropertyMap = Collections.unmodifiableMap(Stream.of(
-                    new AbstractMap.SimpleEntry<>("City", String.class),
-                    new AbstractMap.SimpleEntry<>("Country", String.class),
-                    new AbstractMap.SimpleEntry<>("CODE", Integer.class))
-                                                                                                  .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+            final Map<String, String> instancePropertyMap = Collections.unmodifiableMap(Stream.of(
+                    new AbstractMap.SimpleEntry<>("City", "String"),
+                    new AbstractMap.SimpleEntry<>("Country", "String"),
+                    new AbstractMap.SimpleEntry<>("CODE", "String"))
+                                                                                                  .collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
             ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(instancePropertyMap);
             scenarioGridColumn.setFactory( ((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
         }

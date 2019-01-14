@@ -32,7 +32,7 @@ public interface CollectionEditorView {
          *
          * @param instancePropertyMap
          */
-        void initStructure(Map<String, Class<?>> instancePropertyMap, CollectionEditorView collectionEditorView);
+        void initStructure(Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the

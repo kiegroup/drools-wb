@@ -29,19 +29,6 @@ public class PrependColumnCommand extends AbstractInsertColumnCommand {
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
         final int index = context.getModel().getFirstIndexLeftOfGroup(status.getColumnGroup());
-        FactMappingType factMappingType = FactMappingType.valueOf(status.getColumnGroup().toUpperCase());
-        Map.Entry<String, String> validPlaceholders = context.getModel().getValidPlaceholders();
-        String instanceTitle = validPlaceholders.getKey();
-        String propertyTitle = validPlaceholders.getValue();
-        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
-                                                                                      propertyTitle,
-                                                                                      status.getColumnId(),
-                                                                                      status.getColumnGroup(),
-                                                                                      factMappingType,
-                                                                                      context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
-                                                                                      context.getScenarioCellTextAreaSingletonDOMElementFactory(),
-                                                                                      ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
-        context.getModel().insertColumn(index, scenarioGridColumnLocal);
         commonInsertColumnCommand(context, status, index);
     }
 }

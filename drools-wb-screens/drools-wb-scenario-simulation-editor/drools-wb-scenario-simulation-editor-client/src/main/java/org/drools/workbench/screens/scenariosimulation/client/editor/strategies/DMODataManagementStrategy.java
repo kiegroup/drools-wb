@@ -141,18 +141,18 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                     .stream()
                     .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))
                     .forEach(factMapping -> {
-                String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                if (dataObjectName.contains(".")) {
-                    dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                }
-                final String instanceName = factMapping.getFactAlias();
-                if (!instanceName.equals(dataObjectName)) {
-                    final FactModelTree factModelTree = sourceMap.get(dataObjectName);
-                    if (factModelTree != null) {
-                        toReturn.put(instanceName, factModelTree);
-                    }
-                }
-            });
+                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                        if (dataObjectName.contains(".")) {
+                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
+                        }
+                        final String instanceName = factMapping.getFactAlias();
+                        if (!instanceName.equals(dataObjectName)) {
+                            final FactModelTree factModelTree = sourceMap.get(dataObjectName);
+                            if (factModelTree != null) {
+                                toReturn.put(instanceName, factModelTree);
+                            }
+                        }
+                    });
         }
         return toReturn;
     }
@@ -166,18 +166,25 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      */
     protected FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
         Map<String, String> simpleProperties = new HashMap<>();
-        for (ModelField modelField : modelFields) {
-            if (!modelField.getName().equals("this")) {
-                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
-                simpleProperties.put(modelField.getName(), className);
-            }
-        }
+        Map<String, String> genericTypeInfoMap = new HashMap<>();
         String factPackageName = packageName;
         String fullFactClassName = oracle.getFQCNByFactName(factName);
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties);
+        for (ModelField modelField : modelFields) {
+            if (!modelField.getName().equals("this")) {
+                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
+                simpleProperties.put(modelField.getName(), className);
+                if (modelField.getType().equals("Collection")) {
+                    String fullPropertyName = fullFactClassName + "#" + modelField.getName();
+                    final String moduleFieldParametersType = oracle.getModuleFieldParametersType(fullPropertyName);
+                    String genericInfo = className + "#" + moduleFieldParametersType;
+                    genericTypeInfoMap.put(modelField.getName(), genericInfo);
+                }
+            }
+        }
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypeInfoMap);
     }
 
     /**
