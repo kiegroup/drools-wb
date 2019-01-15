@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
+package org.drools.workbench.screens.scenariosimulation.client.utils;
 
-import java.util.Map;
+/**
+ * Class used to store constants used throughout the code
+ */
+public class ConstantHolder {
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.UListElement;
-
-public interface ListEditingBox {
-
-    interface Presenter {
-        DivElement getEditingBox(String propertyName, Map<String, String> instancePropertyMap);
-    }
-
-    DivElement getEditingBox();
-
-    HeadingElement getEditingBoxTitle();
-
-    UListElement getPropertiesContainer();
+    public static final String FA_ANGLE_DOWN = "fa-angle-down";
+    public static final String FA_ANGLE_RIGHT = "fa-angle-right";
+    public static final String HIDDEN = "hidden";
+    public static final String NODE_HIDDEN = "node-hidden";
 }

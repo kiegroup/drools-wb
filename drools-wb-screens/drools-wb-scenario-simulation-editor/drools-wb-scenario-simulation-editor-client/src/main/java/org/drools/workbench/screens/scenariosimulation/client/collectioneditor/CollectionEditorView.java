@@ -62,6 +62,14 @@ public interface CollectionEditorView {
          * @param key
          */
         void showEditingBox(String key);
+
+        /**
+         * Toggle the expansion of the collection.
+         *
+         * @param collectionEditorView
+         * @param isShown the <b>current</b> expansion status of the collection
+         */
+        void onToggleRowExpansion(CollectionEditorView collectionEditorView, boolean isShown);
     }
 
     /**
@@ -95,4 +103,6 @@ public interface CollectionEditorView {
     HeadingElement getEditorTitle();
 
     SpanElement getPropertyTitle();
+
+    void toggleRowExpansion();
 }

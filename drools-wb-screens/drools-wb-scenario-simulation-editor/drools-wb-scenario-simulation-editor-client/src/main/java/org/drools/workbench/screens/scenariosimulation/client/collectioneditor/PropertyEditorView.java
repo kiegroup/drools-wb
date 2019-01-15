@@ -31,13 +31,15 @@ public interface PropertyEditorView {
         String getPropertyValue(String propertyName) throws Exception;
 
         /**
-         *
          * @param propertyName
          * @param propertyValue
-         * @param nodeId
+         * @param baseNodeId the nodeId for the given item
+         * @param currentId the specific id-part for the current property
          * @return the <code>LIElement</code> containing the property' <b>fields</b>
          */
-        LIElement getPropertyFields(String propertyName, String propertyValue, String nodeId);
+        LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId);
+
+        void onToggleRowExpansion(String baseNodeId, boolean isShown);
     }
 
     /**

@@ -17,7 +17,10 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
@@ -28,11 +31,39 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @Templated
 public class ListEditorElementViewImpl implements ListEditorElementView {
 
+    protected ListEditorElementView.Presenter presenter;
+
     @DataField("itemSeparator")
     protected LIElement itemSeparator = Document.get().createLIElement();
+
+    @DataField("faAngleRight")
+    protected SpanElement faAngleRight = Document.get().createSpanElement();
+
+    @Override
+    public void init(ListEditorElementView.Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public LIElement getItemSeparator() {
         return itemSeparator;
+    }
+
+    @Override
+    public SpanElement getFaAngleRight() {
+        return faAngleRight;
+    }
+
+    @EventHandler("faAngleRight")
+    public void onFaAngleRightClick(ClickEvent event) {
+        presenter.onToggleRowExpansion(this, isShown());
+    }
+
+    protected boolean isShown() {
+        return CollectionEditorUtils.isShown(faAngleRight);
+    }
+
+    protected void toggleRowExpansion(boolean toExpand) {
+        CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 }

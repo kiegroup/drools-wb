@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
+package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox;
 
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;

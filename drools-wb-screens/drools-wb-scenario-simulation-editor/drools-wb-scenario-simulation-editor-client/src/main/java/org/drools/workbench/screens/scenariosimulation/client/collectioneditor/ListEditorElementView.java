@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import org.uberfire.client.mvp.HasPresenter;
 
-public interface ListEditorElementView {
+public interface ListEditorElementView extends HasPresenter<ListEditorElementView.Presenter> {
 
 
     interface Presenter {
@@ -33,6 +35,10 @@ public interface ListEditorElementView {
          * @return the <code>List&lt;LIElement&gt;</code> representing all the items of the list
          */
         List<LIElement> getProperties(Map<String, String> propertiesMap, String nodeId);
+
+        void onToggleRowExpansion(boolean isShown);
+
+        void onToggleRowExpansion(ListEditorElementView listEditorElementView, boolean shown);
     }
 
     /**
@@ -40,5 +46,11 @@ public interface ListEditorElementView {
      * @return the <code>LIElement</code> separating each item
      */
     LIElement getItemSeparator();
+
+    /**
+     *
+     * @return the <code>SpanElement</code> with the angle arrow
+     */
+    SpanElement getFaAngleRight();
 
 }

@@ -22,7 +22,10 @@ import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.NODE_HIDDEN;
 
 public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
 
@@ -30,6 +33,8 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     protected ViewsProvider viewsProvider;
 
     protected Map<String, SpanElement> propertySpanElementMap = new HashMap<>();
+
+    protected Map<String, PropertyEditorView> propertyViewMap = new HashMap<>();
 
     @Override
     public String getPropertyValue(String propertyName) throws Exception {
@@ -41,14 +46,34 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     }
 
     @Override
-    public LIElement getPropertyFields(String propertyName, String propertyValue, String nodeId) {
+    public LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId) {
         final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
+
         propertyEditorView.getPropertyName().setInnerText(propertyName);
         final SpanElement propertyTextArea = propertyEditorView.getPropertyValue();
         propertyTextArea.setInnerText(propertyValue);
         propertySpanElementMap.put(propertyName, propertyTextArea);
         final LIElement propertyFields = propertyEditorView.getPropertyFields();
+        String nodeId = baseNodeId + "." + currentId;
+        propertyViewMap.put(nodeId, propertyEditorView);
         propertyFields.setAttribute("data-nodeid", nodeId);
         return propertyFields;
+    }
+
+    @Override
+    public void onToggleRowExpansion(String baseNodeId, boolean isShown) {
+        propertyViewMap.keySet().stream()
+                .filter(key -> key.startsWith(baseNodeId))
+                .forEach(key -> onToggleRowExpansion(propertyViewMap.get(key).getPropertyFields(), isShown));
+    }
+
+    protected void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
+        if (isShown) {
+            liElement.addClassName(NODE_HIDDEN);
+            liElement.getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            liElement.removeClassName(NODE_HIDDEN);
+            liElement.getStyle().setDisplay(Style.Display.BLOCK);
+        }
     }
 }

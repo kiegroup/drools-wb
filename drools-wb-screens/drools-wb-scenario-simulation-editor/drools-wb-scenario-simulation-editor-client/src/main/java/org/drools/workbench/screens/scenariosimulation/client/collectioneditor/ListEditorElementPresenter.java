@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,15 +34,33 @@ public class ListEditorElementPresenter implements ListEditorElementView.Present
     @Inject
     protected ViewsProvider viewsProvider;
 
+
+    protected Map<ListEditorElementView, String> listEditorElementViewMap = new HashMap<>();
+
     @Override
     public List<LIElement> getProperties(Map<String, String> propertiesMap, String nodeId) {
         final List<LIElement> toReturn = new ArrayList<>();
-        final LIElement itemSeparator = viewsProvider.getListEditorElementView().getItemSeparator();
+        final ListEditorElementView listEditorElementView = viewsProvider.getListEditorElementView();
+        listEditorElementView.init(this);
+        final LIElement itemSeparator = listEditorElementView.getItemSeparator();
         itemSeparator.setAttribute("data-nodeid", nodeId);
         toReturn.add(itemSeparator);
+        listEditorElementViewMap.put(listEditorElementView, nodeId);
         AtomicInteger counter = new AtomicInteger(0);
         propertiesMap.forEach((propertyName, propertyValue) ->
-                                      toReturn.add(propertyEditorPresenter.getPropertyFields(propertyName, propertyValue, nodeId + "." + counter.getAndIncrement())));
+                                      toReturn.add(propertyEditorPresenter.getPropertyFields(propertyName, propertyValue, nodeId, counter.getAndIncrement())));
         return toReturn;
+    }
+
+    @Override
+    public void onToggleRowExpansion(boolean isShown) {
+        listEditorElementViewMap.keySet().forEach(listEditorElementView -> onToggleRowExpansion(listEditorElementView, isShown));
+    }
+
+    @Override
+    public void onToggleRowExpansion(ListEditorElementView listEditorElementView, boolean isShown) {
+        CollectionEditorUtils.toggleRowExpansion(listEditorElementView.getFaAngleRight(), !isShown);
+        String baseNodeId = listEditorElementViewMap.get(listEditorElementView);
+        propertyEditorPresenter.onToggleRowExpansion(baseNodeId, isShown);
     }
 }

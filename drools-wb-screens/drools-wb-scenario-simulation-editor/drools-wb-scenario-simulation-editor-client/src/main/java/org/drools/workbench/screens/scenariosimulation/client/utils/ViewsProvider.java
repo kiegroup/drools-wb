@@ -19,11 +19,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ListEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ListEditorElementView;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ObjectSeparator;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyEditingElement;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyEditorView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ListEditingBox;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.PropertyEditingElement;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;

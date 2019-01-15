@@ -67,6 +67,9 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     @DataField("editorTitle")
     protected HeadingElement editorTitle = Document.get().createHElement(4);
 
+    @DataField("faAngleRight")
+    protected SpanElement faAngleRight = Document.get().createSpanElement();
+
     @DataField("propertyTitle")
     protected SpanElement propertyTitle = Document.get().createSpanElement();
 
@@ -74,6 +77,7 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
      */
     protected boolean listWidget;
+
 
     public CollectionEditorViewImpl() {
         setElement(collectionEditor);
@@ -138,5 +142,23 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     @EventHandler("closeCollectionEditorButton")
     public void onCloseCollectionEditorButtonClick(ClickEvent clickEvent) {
         fireEvent(new CloseCompositeEvent());
+    }
+
+    @EventHandler("faAngleRight")
+    public void onFaAngleRightClick(ClickEvent event) {
+        presenter.onToggleRowExpansion(this, isShown());
+    }
+
+    @Override
+    public void toggleRowExpansion() {
+        toggleRowExpansion(!isShown());
+    }
+
+    protected boolean isShown() {
+        return CollectionEditorUtils.isShown(faAngleRight);
+    }
+
+    protected void toggleRowExpansion(boolean toExpand) {
+        CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 }

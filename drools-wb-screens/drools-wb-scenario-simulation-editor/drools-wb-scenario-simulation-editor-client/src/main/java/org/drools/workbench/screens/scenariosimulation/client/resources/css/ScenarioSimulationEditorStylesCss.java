@@ -48,4 +48,10 @@ public interface ScenarioSimulationEditorStylesCss extends CssResource {
 
     @ClassName("ul--plain")
     String ulPlain();
+
+    @ClassName("node-hidden")
+    String nodeHidden();
+
+    @ClassName("treeview")
+    String treeview();
 }

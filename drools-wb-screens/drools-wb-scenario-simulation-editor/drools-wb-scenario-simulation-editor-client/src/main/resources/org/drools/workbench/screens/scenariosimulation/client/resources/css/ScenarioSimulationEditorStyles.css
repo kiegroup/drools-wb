@@ -80,4 +80,8 @@ For RightPanel
     background-color: #edf8ff;
 }
 
+.treeview .node-hidden {
+    display: none;
+}
+
 

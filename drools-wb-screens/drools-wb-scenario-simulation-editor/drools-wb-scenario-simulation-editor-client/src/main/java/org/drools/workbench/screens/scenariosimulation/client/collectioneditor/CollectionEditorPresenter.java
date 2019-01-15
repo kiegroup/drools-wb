@@ -25,6 +25,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ListEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class CollectionEditorPresenter implements CollectionEditorView.Presenter {
@@ -80,6 +81,12 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
         collectionEditorViewMap.get(key).getElementsContainer()
                 .appendChild(listEditingBoxPresenter.getEditingBox(propertyName, instancePropertiesMap.get(key)));
+    }
+
+    @Override
+    public void onToggleRowExpansion(CollectionEditorView collectionEditorView, boolean isShown) {
+        collectionEditorView.toggleRowExpansion();
+        listEditorElementPresenter.onToggleRowExpansion(isShown);
     }
 
     protected void populateList(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
