@@ -15,33 +15,35 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.InputElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
-public class ListEditorElementPresenter implements ListEditorElementView.Presenter {
-
-    @Inject
-    protected PropertyEditorPresenter propertyEditorPresenter;
+public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
 
     @Inject
     protected ViewsProvider viewsProvider;
 
+    @Inject
+    protected PropertyEditingElementPresenter propertyEditingElementPresenter;
+
+    protected Map<String, InputElement> propertyInputElementMap = new HashMap<>();
+
     @Override
-    public List<LIElement> getProperties(Map<String, String> propertiesMap, String nodeId) {
-        final List<LIElement> toReturn = new ArrayList<>();
-        final LIElement itemSeparator = viewsProvider.getListEditorElementView().getItemSeparator();
-        itemSeparator.setAttribute("data-nodeid", nodeId);
-        toReturn.add(itemSeparator);
+    public DivElement getEditingBox(String propertyName, Map<String, String> instancePropertyMap) {
+        final ListEditingBox listEditingBox = viewsProvider.getListEditingBox();
+        listEditingBox.getEditingBoxTitle().setInnerText("Edit " + propertyName);
         AtomicInteger counter = new AtomicInteger(0);
-        propertiesMap.forEach((propertyName, propertyValue) ->
-                                      toReturn.add(propertyEditorPresenter.getPropertyFields(propertyName, propertyValue, nodeId + "." + counter.getAndIncrement())));
-        return toReturn;
+        instancePropertyMap.forEach((key, value) -> {
+            String nodeId = "0." + counter.getAndIncrement();
+            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(key, nodeId));
+        });
+        return listEditingBox.getEditingBox();
     }
 }

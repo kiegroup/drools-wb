@@ -17,7 +17,9 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.UListElement;
 
 /**
  * Interface defining the contract for actual implementations
@@ -30,9 +32,12 @@ public interface CollectionEditorView {
          * Actual implementations should invoke this method first to retrieve information about the collection
          * generic type and the structure of such type
          *
+         * @param className
+         * @param propertyName
          * @param instancePropertyMap
+         * @param collectionEditorView
          */
-        void initStructure(Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
+        void initStructure(String className, String propertyName, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
@@ -50,6 +55,13 @@ public interface CollectionEditorView {
          * @return the json representation of the <code>CollectionEditorView</code>' content
          */
         String getValue(CollectionEditorView collectionEditorView);
+
+        /**
+         * Show the editing box
+         *
+         * @param key
+         */
+        void showEditingBox(String key);
     }
 
     /**
@@ -78,5 +90,9 @@ public interface CollectionEditorView {
      */
     boolean isListWidget();
 
-    DivElement getElementsContainer();
+    UListElement getElementsContainer();
+
+    HeadingElement getEditorTitle();
+
+    SpanElement getPropertyTitle();
 }

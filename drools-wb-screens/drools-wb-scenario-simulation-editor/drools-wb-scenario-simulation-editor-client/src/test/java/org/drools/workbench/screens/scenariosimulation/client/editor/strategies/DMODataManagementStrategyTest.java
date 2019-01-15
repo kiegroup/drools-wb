@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -187,7 +188,7 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
     }
 
     private FactModelTree getFactModelTreeInner(String factName) {
-        return new FactModelTree(factName, SCENARIO_PACKAGE, getSimplePropertiesInner());
+        return new FactModelTree(factName, SCENARIO_PACKAGE, getSimplePropertiesInner(), new HashMap<>());
     }
 
     private SortedMap<String, FactModelTree> getFactTypeFieldsMapInner(Collection<String> keys) {

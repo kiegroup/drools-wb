@@ -20,8 +20,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
@@ -29,24 +29,26 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     @Inject
     protected ViewsProvider viewsProvider;
 
-    protected Map<String, TextAreaElement> propertyTextAreaMap = new HashMap<>();
+    protected Map<String, SpanElement> propertySpanElementMap = new HashMap<>();
 
     @Override
     public String getPropertyValue(String propertyName) throws Exception {
-        if (propertyTextAreaMap.containsKey(propertyName)) {
-            return propertyTextAreaMap.get(propertyName).getValue();
+        if (propertySpanElementMap.containsKey(propertyName)) {
+            return propertySpanElementMap.get(propertyName).getInnerText();
         } else {
             throw new Exception(propertyName + " not found");
         }
     }
 
     @Override
-    public DivElement getPropertyFields(String propertyName, String propertyValue) {
+    public LIElement getPropertyFields(String propertyName, String propertyValue, String nodeId) {
         final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
         propertyEditorView.getPropertyName().setInnerText(propertyName);
-        final TextAreaElement propertyTextArea = propertyEditorView.getPropertyValue();
-        propertyTextArea.setValue(propertyValue);
-        propertyTextAreaMap.put(propertyName, propertyTextArea);
-        return propertyEditorView.getPropertyFields();
+        final SpanElement propertyTextArea = propertyEditorView.getPropertyValue();
+        propertyTextArea.setInnerText(propertyValue);
+        propertySpanElementMap.put(propertyName, propertyTextArea);
+        final LIElement propertyFields = propertyEditorView.getPropertyFields();
+        propertyFields.setAttribute("data-nodeid", nodeId);
+        return propertyFields;
     }
 }

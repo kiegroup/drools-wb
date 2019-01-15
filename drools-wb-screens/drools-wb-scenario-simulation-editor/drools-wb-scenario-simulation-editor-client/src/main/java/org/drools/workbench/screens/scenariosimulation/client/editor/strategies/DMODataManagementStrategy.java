@@ -177,9 +177,8 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                 String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
                 if (modelField.getType().equals("Collection")) {
-                    String fullPropertyName = fullFactClassName + "#" + modelField.getName();
-                    final String moduleFieldParametersType = oracle.getModuleFieldParametersType(fullPropertyName);
-                    String genericInfo = className + "#" + moduleFieldParametersType;
+                    final String moduleFieldParametersType = oracle.getParametricFieldType(factName, modelField.getName());
+                    String genericInfo = className + "#" + packageName + "." + moduleFieldParametersType;
                     genericTypeInfoMap.put(modelField.getName(), genericInfo);
                 }
             }

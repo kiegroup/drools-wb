@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
@@ -28,15 +29,16 @@ public interface ListEditorElementView {
          *
          * @param propertiesMap the properties to be put inside the <code>LIElement</code>
          * representing a single item of the list
-         * @return the <code>LIElement</code> representing a single item of the list
+         * @param nodeId
+         * @return the <code>List&lt;LIElement&gt;</code> representing all the items of the list
          */
-        LIElement getPropertiesContainer(Map<String, String> propertiesMap);
+        List<LIElement> getProperties(Map<String, String> propertiesMap, String nodeId);
     }
 
     /**
      *
-     * @return the <code>LIElement</code> representing a single item of the list
+     * @return the <code>LIElement</code> separating each item
      */
-    LIElement getPropertiesContainer();
+    LIElement getItemSeparator();
 
 }

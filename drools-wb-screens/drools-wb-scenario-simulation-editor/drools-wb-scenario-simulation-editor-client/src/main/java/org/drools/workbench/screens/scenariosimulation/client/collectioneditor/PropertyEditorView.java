@@ -15,9 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.LabelElement;
-import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 
 public interface PropertyEditorView {
 
@@ -32,23 +31,27 @@ public interface PropertyEditorView {
         String getPropertyValue(String propertyName) throws Exception;
 
         /**
-         * @return the <code>DivElement</code> containing the property' <b>fields</b>
+         *
+         * @param propertyName
+         * @param propertyValue
+         * @param nodeId
+         * @return the <code>LIElement</code> containing the property' <b>fields</b>
          */
-        DivElement getPropertyFields(String propertyName, String propertyValue);
+        LIElement getPropertyFields(String propertyName, String propertyValue, String nodeId);
     }
 
     /**
-     * @return the <code>DivElement</code> containing the property' <b>fields</b>
+     * @return the <code>LIElement</code> containing the property' <b>fields</b>
      */
-    DivElement getPropertyFields();
+    LIElement getPropertyFields();
 
     /**
-     * @return the <code>LabelElement</code> showing the property' <b>name</b>
+     * @return the <code>SpanElement</code> showing the property' <b>name</b>
      */
-    LabelElement getPropertyName();
+    SpanElement getPropertyName();
 
     /**
-     * @return the <code>TextAreaElement</code> showing the property' <b>value</b>
+     * @return the <code>SpanElement</code> showing the property' <b>value</b>
      */
-    TextAreaElement getPropertyValue();
+    SpanElement getPropertyValue();
 }

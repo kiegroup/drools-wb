@@ -15,10 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.LabelElement;
-import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
@@ -29,26 +28,26 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 public class PropertyEditorViewImpl implements PropertyEditorView  {
 
     @DataField("propertyFields")
-    protected DivElement propertyFields = Document.get().createDivElement();
+    protected LIElement propertyFields = Document.get().createLIElement();
 
     @DataField("propertyName")
-    protected LabelElement propertyName = Document.get().createLabelElement();
+    protected SpanElement propertyName = Document.get().createSpanElement();
 
     @DataField("propertyValue")
-    protected TextAreaElement propertyValue = Document.get().createTextAreaElement();
+    protected SpanElement propertyValue = Document.get().createSpanElement();
 
     @Override
-    public DivElement getPropertyFields() {
+    public LIElement getPropertyFields() {
         return propertyFields;
     }
 
     @Override
-    public LabelElement getPropertyName() {
+    public SpanElement getPropertyName() {
         return propertyName;
     }
 
     @Override
-    public TextAreaElement getPropertyValue() {
+    public SpanElement getPropertyValue() {
         return propertyValue;
     }
 }

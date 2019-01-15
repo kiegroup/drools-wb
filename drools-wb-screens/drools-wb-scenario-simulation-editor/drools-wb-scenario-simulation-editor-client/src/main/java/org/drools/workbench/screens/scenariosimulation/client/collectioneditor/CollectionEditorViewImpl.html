@@ -1,15 +1,37 @@
-<div id="collectionEditor">
-    <div class="modal-dialog">
+<div class="kie-dataTypesList-modal" tabindex="-1" role="dialog" id="collectionEditor">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-field="closeCollectionEditorButton">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-field="closeCollectionEditorButton">
                     <span class="pficon pficon-close"></span>
                 </button>
+                <h4 class="modal-title" data-field="editorTitle"><span class="fa fa-list"></span></h4>
             </div>
-            <div class="modal-body" style="margin-left: 3em;" data-field="elementsContainer"></div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Data objects -->
+                        <div class="col-xs-12 tab-content">
+                            <!-- first right side panel -->
+                            <div class="tab-pane kie__dock active kie-object-list" id="kie-ObjectListItem1" aria-labelledby="#kie-ObjectListTab1">
+                                <div>
+                                    <div id="treeview-object1">
+                                        <ul class="list-group" data-field="elementsContainer">
+                                            <li class="list-group-item node-treeview-object1 node-selected" data-nodeid="0.0">
+                                                <span class="icon expand-icon fa fa-angle-down"></span>
+                                                <span class="kie-object-list__field-value" data-field="propertyTitle">visitedcities</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" data-field="cancel-button">Cancel</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-field="save-button">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-field="save-button">Save</button>
             </div>
         </div>
     </div>

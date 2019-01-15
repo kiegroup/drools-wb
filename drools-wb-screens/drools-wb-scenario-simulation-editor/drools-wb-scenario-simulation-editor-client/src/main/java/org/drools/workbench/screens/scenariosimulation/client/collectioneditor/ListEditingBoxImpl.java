@@ -15,24 +15,37 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.UListElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-/**
- * This class is used as <code>ListElement</code> <b>editor</b>
- *
- * It represent a single item of the List
- */
 @Templated
-public class ListEditorElementViewImpl implements ListEditorElementView {
+public class ListEditingBoxImpl implements ListEditingBox {
 
-    @DataField("itemSeparator")
-    protected LIElement itemSeparator = Document.get().createLIElement();
+    @DataField("editingBox")
+    protected DivElement editingBox = Document.get().createDivElement();
+
+    @DataField("editingBoxTitle")
+    protected HeadingElement editingBoxTitle = Document.get().createHElement(3);
+
+    @DataField("propertiesContainer")
+    protected UListElement propertiesContainer = Document.get().createULElement();
 
     @Override
-    public LIElement getItemSeparator() {
-        return itemSeparator;
+    public DivElement getEditingBox() {
+        return editingBox;
+    }
+
+    @Override
+    public HeadingElement getEditingBoxTitle() {
+        return editingBoxTitle;
+    }
+
+    @Override
+    public UListElement getPropertiesContainer() {
+        return propertiesContainer;
     }
 }

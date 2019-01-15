@@ -15,24 +15,19 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
-import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.jboss.errai.ui.shared.api.annotations.Templated;
+import com.google.gwt.dom.client.SpanElement;
 
-/**
- * This class is used as <code>ListElement</code> <b>editor</b>
- *
- * It represent a single item of the List
- */
-@Templated
-public class ListEditorElementViewImpl implements ListEditorElementView {
+public interface PropertyEditingElement {
 
-    @DataField("itemSeparator")
-    protected LIElement itemSeparator = Document.get().createLIElement();
-
-    @Override
-    public LIElement getItemSeparator() {
-        return itemSeparator;
+    interface Presenter {
+        LIElement getPropertyContainer(String propertyName, String nodeId);
     }
+
+    LIElement getPropertyContainer();
+
+    InputElement getPropertyValue();
+
+    SpanElement getPropertyName();
 }

@@ -23,6 +23,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -56,10 +59,16 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     protected DivElement collectionEditor = Document.get().createDivElement();
 
     @DataField("elementsContainer")
-    protected DivElement elementsContainer = Document.get().createDivElement();
+    protected UListElement elementsContainer = Document.get().createULElement();
 
     @DataField("closeCollectionEditorButton")
     protected ButtonElement closeCollectionEditorButton = Document.get().createButtonElement();
+
+    @DataField("editorTitle")
+    protected HeadingElement editorTitle = Document.get().createHElement(4);
+
+    @DataField("propertyTitle")
+    protected SpanElement propertyTitle = Document.get().createSpanElement();
 
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
@@ -80,11 +89,14 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     }
 
     /**
-     * Set the <code>Map</code> to be used to create the skeleton of the current <code>CollectionEditorViewImpl</code> editor
+     * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionEditorViewImpl</code> editor
+     *
+     * @param className
+     * @param propertyName
      * @param instancePropertyMap
      */
-    public void setInstancePropertyMap(Map<String, String> instancePropertyMap) {
-        presenter.initStructure(instancePropertyMap, this);
+    public void initStructure(String className, String propertyName, Map<String, String> instancePropertyMap) {
+        presenter.initStructure(className, propertyName, instancePropertyMap, this);
     }
 
     @Override
@@ -109,8 +121,18 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     }
 
     @Override
-    public DivElement getElementsContainer() {
+    public UListElement getElementsContainer() {
         return elementsContainer;
+    }
+
+    @Override
+    public HeadingElement getEditorTitle() {
+        return editorTitle;
+    }
+
+    @Override
+    public SpanElement getPropertyTitle() {
+        return propertyTitle;
     }
 
     @EventHandler("closeCollectionEditorButton")

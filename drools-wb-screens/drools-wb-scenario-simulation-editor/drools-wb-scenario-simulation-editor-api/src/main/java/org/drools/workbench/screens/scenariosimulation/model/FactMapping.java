@@ -58,6 +58,11 @@ public class FactMapping {
      */
     private String expressionAlias;
 
+    /**
+     * Generic type of the given properties, where applicable (ex collections)
+     */
+    private String genericType;
+
     public FactMapping() {
     }
 
@@ -127,6 +132,14 @@ public class FactMapping {
 
     public void setExpressionAlias(String expressionAlias) {
         this.expressionAlias = expressionAlias;
+    }
+
+    public String getGenericType() {
+        return genericType;
+    }
+
+    public void setGenericType(String genericType) {
+        this.genericType = genericType;
     }
 
     public FactMapping cloneFactMapping() {
