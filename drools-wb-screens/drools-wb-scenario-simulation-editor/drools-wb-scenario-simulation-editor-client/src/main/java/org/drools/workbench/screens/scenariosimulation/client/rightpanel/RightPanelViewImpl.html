@@ -125,8 +125,8 @@
 
             <ul>
                 <li><tt>=</tt> (or no symbol) specifies equality of a value. This is the default operator of each column and the only operator that is supported in the GIVEN section of the table.</li>
-                <li><tt>!</tt>, <tt>!=</tt>, <tt><></tt> specify inequality of a value. This operator can be combined with other operators.</li>
-                <li><tt><</tt>, <tt>></tt>, <tt><=</tt>, <tt>>=</tt> specify a comparison: less than, greater than, less or equals than, and greater or equals than.</li>
+                <li><tt>!</tt>, <tt>!=</tt>, <tt>&lt;&gt;</tt> specify inequality of a value. This operator can be combined with other operators.</li>
+                <li><tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&lt;=</tt>, <tt>&gt;=</tt> specify a comparison: less than, greater than, less or equals than, and greater or equals than.</li>
                 <li><tt>[value1, value2, value3]</tt> specifies a list of values. If <b>one or more</b> values are valid, the scenario definition is evaluated as true.</li>
                 <li><tt>expression1; expression2; expression3</tt> specifies a list of expressions. If <b>all</b> expressions are valid, the scenario definition is evaluated as true.</li>
                 <li>An empty cell equals to <tt>null</tt>. To define an empty string, use <tt>=</tt>.</li>
@@ -135,10 +135,10 @@
             <p>Example expressions:</p>
 
             <ul>
-                <li><tt>< 1</tt></li>
-                <li><tt>< 1; ! [-1, 0]</tt></li>
+                <li><tt>&lt; 1</tt></li>
+                <li><tt>&lt; 1; ! [-1, 0]</tt></li>
                 <li><tt>[Jane, Doe]</tt></li>
-                <li><tt><> [1, -1]; = 0</tt></li>
+                <li><tt>&lt;&gt; [1, -1]; = 0</tt></li>
             </ul>
 
             <h4>DMN-based scenarios</h4>
