@@ -64,6 +64,12 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     @DataField("closeCollectionEditorButton")
     protected ButtonElement closeCollectionEditorButton = Document.get().createButtonElement();
 
+    @DataField("cancelButton")
+    protected ButtonElement cancelButton = Document.get().createButtonElement();
+
+    @DataField("saveButton")
+    protected ButtonElement saveButton = Document.get().createButtonElement();
+
     @DataField("editorTitle")
     protected HeadingElement editorTitle = Document.get().createHElement(4);
 
@@ -78,6 +84,10 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
      */
     protected boolean listWidget;
 
+    /**
+     * The <b>json</b> representation of the values of this editor
+     */
+    protected String value;
 
     public CollectionEditorViewImpl() {
         setElement(collectionEditor);
@@ -94,7 +104,6 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     /**
      * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionEditorViewImpl</code> editor
-     *
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param instancePropertyMap
      */
@@ -109,7 +118,8 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     @Override
     public String getValue() {
-        return presenter.getValue(this);
+        GWT.log("getValue " + value);
+        return value;
     }
 
     @Override
@@ -140,7 +150,17 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     @EventHandler("closeCollectionEditorButton")
     public void onCloseCollectionEditorButtonClick(ClickEvent clickEvent) {
-        fireEvent(new CloseCompositeEvent());
+        close();
+    }
+
+    @EventHandler("cancelButton")
+    public void onCancelButton(ClickEvent clickEvent) {
+        close();
+    }
+
+    @EventHandler("saveButton")
+    public void onSaveButton(ClickEvent clickEvent) {
+        presenter.save(this);
     }
 
     @EventHandler("faAngleRight")
@@ -153,11 +173,20 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
         toggleRowExpansion(!isShown());
     }
 
+    public void updateValue(String value) {
+        GWT.log("updateValue " + value);
+        this.value = value;
+    }
+
     protected boolean isShown() {
         return CollectionEditorUtils.isShown(faAngleRight);
     }
 
     protected void toggleRowExpansion(boolean toExpand) {
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
+    }
+
+    protected void close() {
+        fireEvent(new CloseCompositeEvent());
     }
 }

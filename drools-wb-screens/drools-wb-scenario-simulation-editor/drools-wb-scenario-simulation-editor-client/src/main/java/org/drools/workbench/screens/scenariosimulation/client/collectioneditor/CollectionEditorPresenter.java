@@ -15,16 +15,21 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ListEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
@@ -51,9 +56,14 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     protected Map<String, LIElement> objectSeparatorMap = new HashMap<>();
 
     /**
-     * <code>Map</code> used to pair the <code>Map</code> with instance' properties with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
+     * <code>Map</code> used to pair the <code>Map</code> with instance' properties classes with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
      */
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
+
+    /**
+     * <code>List</code> used to store all the items' properties values <code>Map</code>
+     */
+    protected List<Map<String, String>> propertiesValuesList = new ArrayList<>();
 
     @Override
     public void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
@@ -84,11 +94,6 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     }
 
     @Override
-    public String getValue(CollectionEditorView collectionEditorView) {
-        return collectionEditorView.isListWidget() ? getListValue(collectionEditorView) : getMapValue(collectionEditorView);
-    }
-
-    @Override
     public void showEditingBox(String key) {
         elementsContainerMap.get(key)
                 .appendChild(listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key)));
@@ -103,10 +108,22 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     @Override
     public void addItem(String key, Map<String, String> propertiesValues) {
         final UListElement elementsContainer = elementsContainerMap.get(key);
-        int currentItems = elementsContainer.getChildCount() -1;
+        int currentItems = elementsContainer.getChildCount() - 1;
+        propertiesValuesList.add(propertiesValues);
         final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesValues, "0.0." + currentItems);
         final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
         properties.forEach(liElementProperty -> elementsContainer.insertBefore(liElementProperty, objectSeparatorLI));
+    }
+
+    @Override
+    public void save(CollectionEditorView collectionEditorView) {
+        String updatedValue;
+        if (collectionEditorView.isListWidget()) {
+            updatedValue = getListValue();
+        } else {
+            updatedValue = getCollectionValue();
+        }
+        collectionEditorView.updateValue(updatedValue);
     }
 
     protected void populateList(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
@@ -116,15 +133,22 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
 
     }
 
-    protected String getListValue(CollectionEditorView collectionEditorView) {
-        return null;
-    }
-
-    protected String getMapValue(CollectionEditorView collectionEditorView) {
-        return null;
-    }
-
     protected JSONValue getJSONValue(String jsonString) {
         return JSONParser.parseStrict(jsonString);
+    }
+
+    protected String getListValue() {
+        JSONArray jsonArray = new JSONArray();
+        AtomicInteger counter = new AtomicInteger();
+        propertiesValuesList.forEach(stringStringMap -> {
+            JSONObject nestedObject = new JSONObject();
+            stringStringMap.forEach((propertyName, propertyValue) -> nestedObject.put(propertyName, new JSONString(propertyValue)));
+            jsonArray.set(counter.getAndIncrement(), nestedObject);
+        });
+        return jsonArray.toString();
+    }
+
+    protected String getCollectionValue() {
+        return null;
     }
 }

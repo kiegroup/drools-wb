@@ -47,15 +47,6 @@ public interface CollectionEditorView {
         void setValue(String jsonString, CollectionEditorView collectionEditorView);
 
         /**
-         * Actual implementations are meant to retrieve the json representation of the content of the
-         * given <code>CollectionEditorView</code>
-         * @param collectionEditorView
-         *
-         * @return the json representation of the <code>CollectionEditorView</code>' content
-         */
-        String getValue(CollectionEditorView collectionEditorView);
-
-        /**
          * Show the editing box
          *
          * @param key
@@ -77,6 +68,15 @@ public interface CollectionEditorView {
          * @param propertiesValues
          */
         void addItem(String key, Map<String, String> propertiesValues);
+
+        /**
+         * Actual implementations are meant to retrieve the json representation of the content of the
+         * given <code>CollectionEditorView</code> Save the <b>json</b> representation of the values of the given <code>CollectionEditorView</code>
+         *
+         * @param collectionEditorView
+         */
+        void save(CollectionEditorView collectionEditorView);
+
     }
 
     /**
@@ -112,4 +112,10 @@ public interface CollectionEditorView {
     SpanElement getPropertyTitle();
 
     void toggleRowExpansion();
+
+    /**
+     * Updates the <b>json</b> representation of the values shown by this editor
+     * @param toString
+     */
+    void updateValue(String toString);
 }

@@ -106,10 +106,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     protected String getValue() {
-//        if (widget != null) {
-//            return widget.getValue();
-//        }
-        return null;
+        return widget != null ? widget.getValue() : null;
     }
 
     protected CollectionEditorDOMElement internalCreateDomElement(CollectionEditorViewImpl widget, GridLayer gridLayer, GridWidget gridWidget) {
