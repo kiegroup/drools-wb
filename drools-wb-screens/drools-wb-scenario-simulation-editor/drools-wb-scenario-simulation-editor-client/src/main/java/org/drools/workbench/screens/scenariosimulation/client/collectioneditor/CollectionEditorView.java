@@ -32,12 +32,11 @@ public interface CollectionEditorView {
          * Actual implementations should invoke this method first to retrieve information about the collection
          * generic type and the structure of such type
          *
-         * @param className
-         * @param propertyName
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param instancePropertyMap
          * @param collectionEditorView
          */
-        void initStructure(String className, String propertyName, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
+        void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
@@ -70,6 +69,14 @@ public interface CollectionEditorView {
          * @param isShown the <b>current</b> expansion status of the collection
          */
         void onToggleRowExpansion(CollectionEditorView collectionEditorView, boolean isShown);
+
+        /**
+         * Creates a new <b>item</b> element with values taken from given <code>Map</code>
+         *
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+         * @param propertiesValues
+         */
+        void addItem(String key, Map<String, String> propertiesValues);
     }
 
     /**

@@ -93,8 +93,7 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
             FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
             context.getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(propertyType));
             context.getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(genericFactModelTree.getSimpleProperties());
-            context.getCollectionEditorSingletonDOMElementFactory().setClassName(className);
-            context.getCollectionEditorSingletonDOMElementFactory().setPropertyName(propertyName);
+            context.getCollectionEditorSingletonDOMElementFactory().setKey(className + "#" + propertyName);
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());

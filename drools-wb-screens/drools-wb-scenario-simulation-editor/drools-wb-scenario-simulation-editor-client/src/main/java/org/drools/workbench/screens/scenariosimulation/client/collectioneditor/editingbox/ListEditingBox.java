@@ -20,12 +20,33 @@ import java.util.Map;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.UListElement;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
+import org.uberfire.client.mvp.HasPresenter;
 
-public interface ListEditingBox {
+public interface ListEditingBox extends HasPresenter<ListEditingBox.Presenter> {
 
     interface Presenter {
-        DivElement getEditingBox(String propertyName, Map<String, String> instancePropertyMap);
+
+        /**
+         *
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+         * @param instancePropertyMap
+         * @return
+         */
+        DivElement getEditingBox(String key, Map<String, String> instancePropertyMap);
+
+        void save(String key);
+
+        void close(ListEditingBox toClose);
+
+        void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter);
     }
+
+    /**
+     *
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
+    void setKey(String key);
 
     DivElement getEditingBox();
 

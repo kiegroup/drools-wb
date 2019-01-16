@@ -48,15 +48,21 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     @Override
     public LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId) {
         final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
-
-        propertyEditorView.getPropertyName().setInnerText(propertyName);
+        String hashedPropertyName = "#" + propertyName;
+        final SpanElement propertyNameSpan = propertyEditorView.getPropertyName();
+        propertyNameSpan.setInnerText(hashedPropertyName);
+        propertyNameSpan.setAttribute("data-i18n-key", propertyName);
+        propertyNameSpan.setAttribute("data-field", "propertyName" + hashedPropertyName);
         final SpanElement propertyTextArea = propertyEditorView.getPropertyValue();
         propertyTextArea.setInnerText(propertyValue);
+        propertyTextArea.setAttribute("data-i18n-key", propertyName);
+        propertyTextArea.setAttribute("data-field", "propertyValue" + hashedPropertyName);
         propertySpanElementMap.put(propertyName, propertyTextArea);
         final LIElement propertyFields = propertyEditorView.getPropertyFields();
         String nodeId = baseNodeId + "." + currentId;
         propertyViewMap.put(nodeId, propertyEditorView);
         propertyFields.setAttribute("data-nodeid", nodeId);
+        propertyFields.setAttribute("data-field", "propertyFields" + hashedPropertyName);
         return propertyFields;
     }
 

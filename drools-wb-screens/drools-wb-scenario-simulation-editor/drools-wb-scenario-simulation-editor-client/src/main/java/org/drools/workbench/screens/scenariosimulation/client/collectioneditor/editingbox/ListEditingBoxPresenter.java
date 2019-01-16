@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.InputElement;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
@@ -33,17 +33,41 @@ public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
     @Inject
     protected PropertyEditingElementPresenter propertyEditingElementPresenter;
 
-    protected Map<String, InputElement> propertyInputElementMap = new HashMap<>();
+    protected CollectionEditorView.Presenter collectionEditorPresenter;
 
     @Override
-    public DivElement getEditingBox(String propertyName, Map<String, String> instancePropertyMap) {
+    public void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter) {
+        this.collectionEditorPresenter = collectionEditorPresenter;
+    }
+
+    protected Map<String, String> instancePropertyMap;
+
+
+    @Override
+    public DivElement getEditingBox(String key, Map<String, String> instancePropertyMap) {
+        String propertyName = key.substring(key.lastIndexOf("#") + 1);
+        this.instancePropertyMap = instancePropertyMap;
         final ListEditingBox listEditingBox = viewsProvider.getListEditingBox();
+        listEditingBox.init(this);
+        listEditingBox.setKey(key);
         listEditingBox.getEditingBoxTitle().setInnerText("Edit " + propertyName);
         AtomicInteger counter = new AtomicInteger(0);
-        instancePropertyMap.forEach((key, value) -> {
+        instancePropertyMap.forEach((propertyKey, value) -> {
             String nodeId = "0." + counter.getAndIncrement();
-            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(key, nodeId));
+            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey, nodeId));
         });
         return listEditingBox.getEditingBox();
+    }
+
+    @Override
+    public void save(String key) {
+        Map<String, String> propertiesValues = new HashMap<>();
+        instancePropertyMap.keySet().forEach(propertyKey -> propertiesValues.put(propertyKey, propertyEditingElementPresenter.getPropertyValue(propertyKey)));
+        collectionEditorPresenter.addItem(key, propertiesValues);
+    }
+
+    @Override
+    public void close(ListEditingBox toClose) {
+        toClose.getEditingBox().removeFromParent();
     }
 }

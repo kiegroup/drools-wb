@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class PropertyEditingElementPresenter implements PropertyEditingElement.Presenter {
@@ -34,10 +35,28 @@ public class PropertyEditingElementPresenter implements PropertyEditingElement.P
     @Override
     public LIElement getPropertyContainer(String propertyName, String nodeId) {
         final PropertyEditingElement propertyEditingElement = viewsProvider.getPropertyEditingElement();
-        propertyEditingElement.getPropertyName().setInnerText(propertyName);
-        propertyEditingElement.getPropertyValue().setAttribute("placeholder", "#" + propertyName);
-        propertyEditingElement.getPropertyContainer().setAttribute("data-nodeid", nodeId);
-        propertyInputElementMap.put(propertyName, propertyEditingElement.getPropertyValue());
-        return propertyEditingElement.getPropertyContainer();
+        String hashedPropertyName = "#" + propertyName;
+        final SpanElement propertyNameSpan = propertyEditingElement.getPropertyName();
+        propertyNameSpan.setInnerText(hashedPropertyName);
+        propertyNameSpan.setAttribute("data-i18n-key", propertyName);
+        propertyNameSpan.setAttribute("data-field", "propertyName" + hashedPropertyName);
+        final InputElement propertyValueInput = propertyEditingElement.getPropertyValue();
+        propertyValueInput.setAttribute("placeholder", hashedPropertyName);
+        propertyValueInput.setAttribute("data-field", "propertyValue" + hashedPropertyName);
+        propertyValueInput.removeAttribute("disabled");
+        final LIElement propertyContainerLI = propertyEditingElement.getPropertyContainer();
+        propertyContainerLI.setAttribute("data-nodeid", nodeId);
+        propertyContainerLI.setAttribute("data-field", "propertyContainer" + hashedPropertyName);
+        propertyInputElementMap.put(propertyName, propertyValueInput);
+        return propertyContainerLI;
+    }
+
+    @Override
+    public String getPropertyValue(String propertyName) {
+        if (propertyInputElementMap.containsKey(propertyName)) {
+            return propertyInputElementMap.get(propertyName).getValue();
+        } else {
+            return null;
+        }
     }
 }

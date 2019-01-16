@@ -23,6 +23,8 @@ public interface PropertyEditingElement {
 
     interface Presenter {
         LIElement getPropertyContainer(String propertyName, String nodeId);
+
+        String getPropertyValue(String propertyName);
     }
 
     LIElement getPropertyContainer();

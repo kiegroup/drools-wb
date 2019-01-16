@@ -19,12 +19,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Templated
 public class PropertyEditingElementImpl implements PropertyEditingElement {
-
 
     @DataField("propertyContainer")
     protected LIElement propertyContainer = Document.get().createLIElement();
@@ -48,5 +49,11 @@ public class PropertyEditingElementImpl implements PropertyEditingElement {
     @Override
     public SpanElement getPropertyName() {
         return propertyName;
+    }
+
+    @EventHandler("propertyValue")
+    public void onPropertyValueClickEvent(ClickEvent event) {
+        propertyValue.focus();
+        event.stopPropagation();
     }
 }

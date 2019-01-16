@@ -42,14 +42,10 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     protected Map<String, String> instancePropertyMap;
 
     /**
-     * The <b>name</b> of the <b>class</b> to which the <code>Collection</code> property being edited belongs
+     * The <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
      */
-    protected String className;
+    protected String key;
 
-    /**
-     * The <b>name</b> of the <code>Collection</code> property being edited
-     */
-    protected String propertyName;
 
     public CollectionEditorSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                       final GridLayer gridLayer,
@@ -65,7 +61,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     public CollectionEditorViewImpl createWidget() {
         CollectionEditorViewImpl toReturn = (CollectionEditorViewImpl) viewsProvider.getCollectionEditorView();
         toReturn.setListWidget(listWidget);
-        toReturn.initStructure(className, propertyName, instancePropertyMap);
+        toReturn.initStructure(key, instancePropertyMap);
         return toReturn;
     }
 
@@ -101,19 +97,11 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     /**
-     * Set the <b>name</b> of the <b>class</b> to which the <code>Collection</code> property being edited belongs
-     * @param className
+     * Set the <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
+     * @param key
      */
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    /**
-     * Set the <b>name</b> of the <code>Collection</code> property being edited
-     * @param propertyName
-     */
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override

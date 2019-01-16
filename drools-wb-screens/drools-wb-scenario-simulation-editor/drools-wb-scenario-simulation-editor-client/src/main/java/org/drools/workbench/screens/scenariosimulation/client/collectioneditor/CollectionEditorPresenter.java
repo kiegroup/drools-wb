@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ListEditingBoxPresenter;
@@ -39,24 +40,35 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     @Inject
     protected ListEditingBoxPresenter listEditingBoxPresenter;
 
-    protected Map<String, CollectionEditorView> collectionEditorViewMap = new HashMap<>();
+    /**
+     * <code>Map</code> used to pair the <code>UListElement</code> elementsContainer with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
+    protected Map<String, UListElement> elementsContainerMap = new HashMap<>();
 
+    /**
+     * <code>Map</code> used to pair the <code>LIElement</code> objectSeparator with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
+    protected Map<String, LIElement> objectSeparatorMap = new HashMap<>();
+
+    /**
+     * <code>Map</code> used to pair the <code>Map</code> with instance' properties with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
 
     @Override
-    public void initStructure(String className, String propertyName, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
-        Map<String, String> propertiesMap = new HashMap<>();
-        instancePropertyMap.forEach((key, value) -> propertiesMap.put(key + "(" + value + ")", "(insert " + key + ")"));
-        final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesMap, "0.0.0");
-        String key = className + "#" + propertyName;
+    public void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
+        String propertyName = key.substring(key.lastIndexOf("#") + 1);
         collectionEditorView.getEditorTitle().setInnerText(key);
         collectionEditorView.getPropertyTitle().setInnerText(propertyName);
-        properties.forEach(liElementProperty -> collectionEditorView.getElementsContainer().appendChild(liElementProperty));
         final ObjectSeparator objectSeparator = viewsProvider.getObjectSeparator();
         objectSeparator.init(this, key);
-        collectionEditorView.getElementsContainer().appendChild(objectSeparator.getObjectSeparator());
-        collectionEditorViewMap.put(key, collectionEditorView);
+        final LIElement objectSeparatorLI = objectSeparator.getObjectSeparator();
+        objectSeparatorMap.put(key, objectSeparatorLI);
+        final UListElement elementsContainer = collectionEditorView.getElementsContainer();
+        elementsContainer.appendChild(objectSeparatorLI);
+        elementsContainerMap.put(key, elementsContainer);
         instancePropertiesMap.put(key, instancePropertyMap);
+        listEditingBoxPresenter.setCollectionEditorPresenter(this);
     }
 
     @Override
@@ -78,15 +90,23 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
 
     @Override
     public void showEditingBox(String key) {
-        String propertyName = key.substring(key.lastIndexOf("#") + 1);
-        collectionEditorViewMap.get(key).getElementsContainer()
-                .appendChild(listEditingBoxPresenter.getEditingBox(propertyName, instancePropertiesMap.get(key)));
+        elementsContainerMap.get(key)
+                .appendChild(listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key)));
     }
 
     @Override
     public void onToggleRowExpansion(CollectionEditorView collectionEditorView, boolean isShown) {
         collectionEditorView.toggleRowExpansion();
         listEditorElementPresenter.onToggleRowExpansion(isShown);
+    }
+
+    @Override
+    public void addItem(String key, Map<String, String> propertiesValues) {
+        final UListElement elementsContainer = elementsContainerMap.get(key);
+        int currentItems = elementsContainer.getChildCount() -1;
+        final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesValues, "0.0." + currentItems);
+        final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
+        properties.forEach(liElementProperty -> elementsContainer.insertBefore(liElementProperty, objectSeparatorLI));
     }
 
     protected void populateList(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
