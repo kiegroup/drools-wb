@@ -1,0 +1,13 @@
+{
+  "name": "drools-wb-home-screen",
+  "type": "lib",
+  "main": "./dist/index.js",
+  "decorators": {},
+  "components": [
+    {
+      "id": "org.kie.workbench.common.screens.home.client.HomePresenter",
+      "type": "screen",
+      "params": {}
+    }
+  ]
+}

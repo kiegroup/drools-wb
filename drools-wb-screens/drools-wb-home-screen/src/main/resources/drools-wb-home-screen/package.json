@@ -1,0 +1,32 @@
+{
+  "name": "drools-wb-home-screen",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "build:ts-exporter": "npx webpack",
+    "reload": "bash -c 'npx webpack && (find ${0} | grep public/${npm_package_name}.js | xargs -I {} cp -v ${npm_package_main} {})'",
+    "reload:auto": "bash -c 'npx watch \"yarn run reload -- ${0}\" src'"
+  },
+  "devDependencies": {
+    "circular-dependency-plugin": "^5.0.2",
+    "clean-webpack-plugin": "^0.1.19",
+    "ts-loader": "^5.2.0",
+    "typescript": "^3.0.3",
+    "webpack": "^4.20.1",
+    "webpack-clean-plugin": "^0.2.3",
+    "webpack-cli": "^3.1.1"
+  },
+  "optionalDependencies": {
+    "appformer-js": "^1.0.0"
+  },
+  "dependencies": {
+    "@kiegroup-ts-generated/kie-wb-common-profile-api": "^1.0.0",
+    "kie-wb-common-home-api": "^1.0.0",
+    "@types/react": "^16.4.16",
+    "@types/react-dom": "^16.0.9",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  }
+}
