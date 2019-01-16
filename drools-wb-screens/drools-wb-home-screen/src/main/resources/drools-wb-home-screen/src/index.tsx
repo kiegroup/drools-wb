@@ -1,13 +1,15 @@
 import * as AppFormer from "appformer-js";
 import * as HomeApi from "kie-wb-common-home-api";
-import {Profile} from "@kiegroup-ts-generated/kie-wb-common-profile-api";
+import { Profile } from "@kiegroup-ts-generated/kie-wb-common-profile-api";
 
 export class DroolsWbHomeScreenProvider implements HomeApi.HomeScreenProvider {
-
-    get(profile: Profile): HomeApi.HomeScreen {
-
+    public get(profile: Profile): HomeApi.HomeScreen {
         const welcomeText = "Welcome to KIE Workbench";
-        const description = "KIE Workbench offers a set of flexible tools, that support the way you need to work. Select a tool below to get started.";
+
+        const description =
+            "KIE Workbench offers a set of flexible tools, that support the way " +
+            "you need to work. Select a tool below to get started.";
+
         const backgroundImageUrl = "images/home_bg.jpg";
 
         const cards = [this.designCard(), this.devOpsCard()];
