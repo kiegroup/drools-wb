@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationEditCell;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveDown;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveLeft;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveRight;
@@ -58,7 +59,7 @@ public class ScenarioGridPanelProducer {
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false));
         final BaseGridWidgetKeyboardHandler handler = new BaseGridWidgetKeyboardHandler(scenarioGridLayer);
-        handler.addOperation(new EditScenarioSimulationGridCellKeyboardOperation(scenarioGridLayer),
+        handler.addOperation(new KeyboardOperationEditCell(scenarioGridLayer),
                              new KeyboardOperationSelectTopLeftCell(scenarioGridLayer),
                              new KeyboardOperationMoveLeft(scenarioGridLayer),
                              new KeyboardOperationMoveRight(scenarioGridLayer),
