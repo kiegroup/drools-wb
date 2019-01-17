@@ -16,11 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
-import java.util.Map;
+import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -31,38 +38,22 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     protected ViewsProvider viewsProvider;
 
-    /**
-     * Flag to indicate if the <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
-     */
-    protected boolean listWidget = true;
-
-    /**
-     * The <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
-     */
-    protected Map<String, String> instancePropertyMap;
-
-    /**
-     * The <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
-     */
-    protected String key;
-
+    protected ScenarioSimulationContext scenarioSimulationContext;
 
     public CollectionEditorSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                       final GridLayer gridLayer,
                                                       final GridWidget gridWidget,
-                                                      ViewsProvider viewsProvider) {
+                                                      ScenarioSimulationContext scenarioSimulationContext, ViewsProvider viewsProvider) {
         super(gridPanel,
               gridLayer,
               gridWidget);
+        this.scenarioSimulationContext = scenarioSimulationContext;
         this.viewsProvider = viewsProvider;
     }
 
     @Override
     public CollectionEditorViewImpl createWidget() {
-        CollectionEditorViewImpl toReturn = (CollectionEditorViewImpl) viewsProvider.getCollectionEditorView();
-        toReturn.setListWidget(listWidget);
-        toReturn.initStructure(key, instancePropertyMap);
-        return toReturn;
+        return (CollectionEditorViewImpl) viewsProvider.getCollectionEditorView();
     }
 
     @Override
@@ -70,7 +61,12 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                                                        final GridWidget gridWidget,
                                                        final GridBodyCellRenderContext context) {
         this.widget = createWidget();
-        this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
+        final GridData.SelectedCell selectedCellsOrigin = ((ScenarioGrid) gridWidget).getModel().getSelectedCellsOrigin();
+        final ScenarioGridModel model = ((ScenarioGrid) gridWidget).getModel();
+        final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(selectedCellsOrigin.getColumnIndex());
+        setCollectionEditorStructureData(this.widget, factMapping);
+        String key = factMapping.getFactAlias() + "#" + factMapping.getExpressionAlias();
+        this.e = internalCreateDomElement(widget, gridLayer, gridWidget, key);
         widget.addCloseCompositeEventHandler(event -> {
             destroyResources();
             gridLayer.batch();
@@ -79,29 +75,13 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return e;
     }
 
-    /**
-     * Flag to indicate if the <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
-     * Set to <code>true</code> to have the <b>List</b> widget, <code>false</code> for the <b>Map</b> one.
-     * @param listWidget
-     */
-    public void setListWidget(boolean listWidget) {
-        this.listWidget = listWidget;
-    }
-
-    /**
-     * Set the <code>Map</code> to be used to create the skeleton of the <code>CollectionEditorViewImpl</code> editor
-     * @param instancePropertyMap
-     */
-    public void setInstancePropertyMap(Map<String, String> instancePropertyMap) {
-        this.instancePropertyMap = instancePropertyMap;
-    }
-
-    /**
-     * Set the <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
-     * @param key
-     */
-    public void setKey(String key) {
-        this.key = key;
+    @Override
+    public void destroyResources() {
+        if (e != null) {
+            e.detach();
+            widget = null;
+            e = null;
+        }
     }
 
     @Override
@@ -109,8 +89,20 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return widget != null ? widget.getValue() : null;
     }
 
-    protected CollectionEditorDOMElement internalCreateDomElement(CollectionEditorViewImpl widget, GridLayer gridLayer, GridWidget gridWidget) {
-        return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
+    protected void setCollectionEditorStructureData(CollectionEditorViewImpl collectionEditorView, FactMapping factMapping) {
+        String propertyClass = factMapping.getClassName();
+        String className = factMapping.getFactAlias();
+        String propertyName = factMapping.getExpressionAlias();
+        String genericType = factMapping.getGenericType();
+        String key = className + "#" + propertyName;
+        final SortedMap<String, FactModelTree> dataObjectFieldsMap = scenarioSimulationContext.getDataObjectFieldsMap();
+        collectionEditorView.setListWidget(ScenarioSimulationUtils.isList(propertyClass));
+        final FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
+        collectionEditorView.initStructure(key, genericFactModelTree.getSimpleProperties());
+    }
+
+    protected CollectionEditorDOMElement internalCreateDomElement(CollectionEditorViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget, String key) {
+        return new CollectionEditorDOMElement(collectionEditorView, gridLayer, gridWidget, key);
     }
 }
 

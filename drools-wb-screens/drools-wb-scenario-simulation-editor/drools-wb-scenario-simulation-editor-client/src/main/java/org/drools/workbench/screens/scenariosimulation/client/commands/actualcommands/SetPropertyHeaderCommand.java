@@ -25,6 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -76,25 +77,21 @@ public class SetPropertyHeaderCommand extends AbstractScenarioSimulationCommand 
         selectedColumn.getPropertyHeaderMetaData().setTitle(title);
         selectedColumn.getPropertyHeaderMetaData().setReadOnly(false);
         selectedColumn.setPropertyAssigned(true);
-        String propertyType = context.getStatus().getValueClassName();
+        String propertyClass = context.getStatus().getValueClassName();
         String propertyName = title; // TODO GC CHECK
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 value,
-                                                propertyType, context.getStatus().isKeepData());
+                                                propertyClass, context.getStatus().isKeepData());
         final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
         // TODO GC MANAGE WITH EXCEPTION
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
-        final String s = factModelTree.getSimpleProperties().get(propertyName);
-
-        if (ScenarioSimulationUtils.isCollection(propertyType)) {
+        if (ScenarioSimulationUtils.isCollection(propertyClass)) {
             final String genericTypeInfo = factModelTree.getGenericTypeInfo(propertyName);
             String genericType = genericTypeInfo.substring(genericTypeInfo.lastIndexOf(".")+1);
-            FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
-            context.getCollectionEditorSingletonDOMElementFactory().setListWidget(ScenarioSimulationUtils.isList(propertyType));
-            context.getCollectionEditorSingletonDOMElementFactory().setInstancePropertyMap(genericFactModelTree.getSimpleProperties());
-            context.getCollectionEditorSingletonDOMElementFactory().setKey(className + "#" + propertyName);
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
+            final FactMapping factMappingByIndex = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            factMappingByIndex.setGenericType(genericType);
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         }

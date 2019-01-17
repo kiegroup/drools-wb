@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.json.client.JSONArray;
@@ -82,14 +81,12 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     }
 
     @Override
-    public void setValue(String jsonString, CollectionEditorView collectionEditorView) {
-        GWT.log(jsonString);
+    public void setValue(String key, String jsonString, CollectionEditorView collectionEditorView) {
         JSONValue jsonValue = getJSONValue(jsonString);
-        GWT.log(jsonValue.toString());
         if (collectionEditorView.isListWidget()) {
-            populateList(jsonValue, collectionEditorView);
+            populateList(key, jsonValue);
         } else {
-            populateMap(jsonValue, collectionEditorView);
+            populateMap(key, jsonValue);
         }
     }
 
@@ -126,10 +123,20 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
         collectionEditorView.updateValue(updatedValue);
     }
 
-    protected void populateList(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
+    protected void populateList(String key, JSONValue jsonValue) {
+        final JSONArray array = jsonValue.isArray();
+        for (int i = 0; i < array.size(); i++) {
+            Map<String, String> propertiesValues = new HashMap<>();
+            final JSONObject jsonObject = array.get(i).isObject();
+            jsonObject.keySet().forEach(propertyName -> {
+                                            propertiesValues.put(propertyName, jsonObject.get(propertyName).isString().stringValue());
+                                        }
+            );
+            addItem(key, propertiesValues);
+        }
     }
 
-    protected void populateMap(JSONValue jsonValue, CollectionEditorView collectionEditorView) {
+    protected void populateMap(String key, JSONValue jsonValue) {
 
     }
 

@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -28,13 +29,6 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationEditCell;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveDown;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveLeft;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveRight;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveUp;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationSelectTopLeftCell;
 
 /**
  * <code>@Dependent</code> <i>Producer</i> for a given {@link ScenarioGridPanel}
@@ -51,24 +45,21 @@ public class ScenarioGridPanelProducer {
     @Inject
     protected ViewsProvider viewsProvider;
 
+    protected ScenarioSimulationContext scenarioSimulationContext;
+
     @PostConstruct
     public void init() {
         ScenarioGridModel scenarioGridModel = new ScenarioGridModel(false);
         final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false));
-        final BaseGridWidgetKeyboardHandler handler = new BaseGridWidgetKeyboardHandler(scenarioGridLayer);
-        handler.addOperation(new KeyboardOperationEditCell(scenarioGridLayer),
-                             new KeyboardOperationSelectTopLeftCell(scenarioGridLayer),
-                             new KeyboardOperationMoveLeft(scenarioGridLayer),
-                             new KeyboardOperationMoveRight(scenarioGridLayer),
-                             new KeyboardOperationMoveUp(scenarioGridLayer),
-                             new KeyboardOperationMoveDown(scenarioGridLayer));
-        scenarioGridPanel.addKeyDownHandler(handler);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
+        scenarioGridPanel.add(scenarioGridLayer);
+        scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanel);
         scenarioGridModel.setCollectionEditorSingletonDOMElementFactory(new CollectionEditorSingletonDOMElementFactory(scenarioGridPanel,
                                                                                                                        scenarioGridLayer,
                                                                                                                        scenarioGridLayer.getScenarioGrid(),
+                                                                                                                       scenarioSimulationContext,
                                                                                                                        viewsProvider));
         scenarioGridModel.setScenarioCellTextAreaSingletonDOMElementFactory(new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanel,
                                                                                                                                scenarioGridLayer,
@@ -76,10 +67,14 @@ public class ScenarioGridPanelProducer {
         scenarioGridModel.setScenarioHeaderTextBoxSingletonDOMElementFactory(new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
                                                                                                                                  scenarioGridLayer,
                                                                                                                                  scenarioGridLayer.getScenarioGrid()));
-        scenarioGridPanel.add(scenarioGridLayer);
+
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
+    }
+
+    public ScenarioSimulationContext getScenarioSimulationContext() {
+        return scenarioSimulationContext;
     }
 }

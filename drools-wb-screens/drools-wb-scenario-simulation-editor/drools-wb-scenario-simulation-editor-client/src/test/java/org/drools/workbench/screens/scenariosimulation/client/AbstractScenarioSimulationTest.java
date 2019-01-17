@@ -146,7 +146,7 @@ public abstract class AbstractScenarioSimulationTest {
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,
                                                                                                         scenarioGridMock,
-                                                                                                        viewsProviderMock);
+                                                                                                        scenarioSimulationContext, viewsProviderMock);
         scenarioCellTextAreaSingletonDOMElementFactoryTest = new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                                 scenarioGridLayerMock,
                                                                                                                 scenarioGridMock);

@@ -35,9 +35,19 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
 
     protected ScenarioGridCell scenarioGridCell;
 
+    protected String key;
+
+    /**
+     *
+     * @param widget
+     * @param gridLayer
+     * @param gridWidget
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
     public CollectionEditorDOMElement(final CollectionEditorViewImpl widget,
                                       final GridLayer gridLayer,
-                                      final GridWidget gridWidget) {
+                                      final GridWidget gridWidget,
+                                      String key) {
         super(widget,
               gridLayer,
               gridWidget);
@@ -68,10 +78,19 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
         getContainer().getElement().getStyle().setPaddingBottom(5,
                                                                 Style.Unit.PX);
         getContainer().setWidget(widget);
+        this.key = key;
     }
 
     public void setScenarioGridCell(ScenarioGridCell scenarioGridCell) {
         this.scenarioGridCell = scenarioGridCell;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     @Override
@@ -81,7 +100,7 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
 
     @Override
     public void setValue(final String value) {
-        getWidget().setValue(value);
+        getWidget().setValue(key, value);
     }
 
     @Override
@@ -116,7 +135,7 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
             scenarioGridCell.setEditingMode(false);
             String actualValue = value.isEmpty() ? null : value;
             String cellValue = scenarioGridCell.getValue().getValue();
-            String originalValue =  (cellValue == null || cellValue.isEmpty()) ? null : cellValue;
+            String originalValue = (cellValue == null || cellValue.isEmpty()) ? null : cellValue;
             if (Objects.equals(actualValue, originalValue)) {
                 return;
             }
@@ -127,6 +146,6 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
     protected void internalFlush(final String value) {
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
-        ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, false));
+        ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetCellValueEvent(rowIndex, columnIndex, value, false));
     }
 }

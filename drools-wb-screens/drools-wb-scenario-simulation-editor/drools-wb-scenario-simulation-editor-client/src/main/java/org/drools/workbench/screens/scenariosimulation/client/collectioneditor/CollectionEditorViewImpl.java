@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -118,14 +117,12 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     @Override
     public String getValue() {
-        GWT.log("getValue " + value);
         return value;
     }
 
     @Override
-    public void setValue(String jsonString) {
-        GWT.log("setValue " + jsonString);
-        presenter.setValue(jsonString, this);
+    public void setValue(String key, String jsonString) {
+        presenter.setValue(key, jsonString, this);
     }
 
     @Override
@@ -174,7 +171,6 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     }
 
     public void updateValue(String value) {
-        GWT.log("updateValue " + value);
         this.value = value;
     }
 

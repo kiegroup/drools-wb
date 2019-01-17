@@ -41,10 +41,12 @@ public interface CollectionEditorView {
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
          * given <code>CollectionEditorView</code>
+         *
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param jsonString
          * @param collectionEditorView
          */
-        void setValue(String jsonString, CollectionEditorView collectionEditorView);
+        void setValue(String key, String jsonString, CollectionEditorView collectionEditorView);
 
         /**
          * Show the editing box
@@ -81,9 +83,11 @@ public interface CollectionEditorView {
 
     /**
      * Actual implementations are meant to call the <code>Presenter</code> to be populated by this json representation
+     *
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param jsonString
      */
-    void setValue(String jsonString);
+    void setValue(String key, String jsonString);
 
     /**
      * Actual implementations are meant to call the <code>Presenter</code> to retrieve the json representation of their contents

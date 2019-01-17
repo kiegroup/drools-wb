@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.ScenarioCellTextAreaDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -83,6 +84,10 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
                                      if (e instanceof ScenarioCellTextAreaDOMElement) {
                                          ((ScenarioCellTextAreaDOMElement) e).getWidget().setValue(assertCell(cell).getValue().getValue());
                                          ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell) cell);
+                                     } else if (e instanceof CollectionEditorDOMElement) {
+                                         CollectionEditorDOMElement collectionEditorDOMElement = (CollectionEditorDOMElement) e;
+                                         collectionEditorDOMElement.getWidget().setValue(collectionEditorDOMElement.getKey(), assertCell(cell).getValue().getValue());
+                                         collectionEditorDOMElement.setScenarioGridCell((ScenarioGridCell) cell);
                                      }
                                  },
                                  e -> {
