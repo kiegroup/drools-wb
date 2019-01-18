@@ -15,13 +15,14 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -35,9 +36,15 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     @Inject
     protected ViewsProvider viewsProvider;
 
+    /**
+     * <code>Map</code> to pair a given <b>property</b> with the <code>SpanElement</code> showing its value
+     */
     protected Map<String, SpanElement> propertySpanElementMap = new HashMap<>();
 
-    protected Map<String, PropertyEditorView> propertyViewMap = new HashMap<>();
+    /**
+     * <code>Map</code> to pair a given <b>itemId</b> with its <code>PropertyEditorView</code>s
+     */
+    protected Map<Integer, List<PropertyEditorView>> propertyViewMap = new HashMap<>();
 
     @Override
     public String getPropertyValue(String propertyName) throws Exception {
@@ -49,42 +56,67 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     }
 
     @Override
-    public LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId) {
+    public void editProperties(int itemId) {
+        propertyViewMap.get(itemId)
+                .forEach(propertyEditorView -> {
+                    propertyEditorView.getPropertyValueSpan().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    propertyEditorView.getPropertyValueInput().setValue(propertyEditorView.getPropertyValueSpan().getInnerText());
+                    propertyEditorView.getPropertyValueInput().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                    propertyEditorView.getPropertyValueInput().setDisabled(false);
+                });
+    }
+
+    @Override
+    public void stopEditProperties(int itemId) {
+        stopEdit(itemId, false);
+    }
+
+    @Override
+    public void updateProperties(int itemId) {
+        stopEdit(itemId, true);
+    }
+
+    @Override
+    public LIElement getPropertyFields(int itemId, String propertyName, String propertyValue) {
         final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditorView.getPropertyName();
         setSpanAttributeAttributes(propertyName, hashedPropertyName, "propertyName" + hashedPropertyName, propertyNameSpan);
-        final SpanElement propertyTextArea = propertyEditorView.getPropertyValue();
-        setSpanAttributeAttributes(propertyName, propertyValue, "propertyValue" + hashedPropertyName, propertyTextArea);
-        propertySpanElementMap.put(propertyName, propertyTextArea);
+        final SpanElement propertyValueSpan = propertyEditorView.getPropertyValueSpan();
+        setSpanAttributeAttributes(propertyName, propertyValue, "propertyValue" + hashedPropertyName, propertyValueSpan);
+        propertySpanElementMap.put(propertyName, propertyValueSpan);
+        final InputElement propertyValueInput = propertyEditorView.getPropertyValueInput();
+        propertyValueInput.setAttribute("placeholder", hashedPropertyName);
+        propertyValueInput.setAttribute("data-field", "propertyValue" + hashedPropertyName);
+        propertyValueInput.setDisabled(true);
+        propertyValueInput.getStyle().setVisibility(Style.Visibility.HIDDEN);
         final LIElement propertyFields = propertyEditorView.getPropertyFields();
-        String nodeId = baseNodeId + "." + currentId;
-        propertyViewMap.put(nodeId, propertyEditorView);
-        propertyFields.setAttribute("data-nodeid", nodeId);
         propertyFields.setAttribute("data-field", "propertyFields" + hashedPropertyName);
+        if (propertyViewMap.containsKey(itemId)) {
+            propertyViewMap.get(itemId).add(propertyEditorView);
+        } else {
+            List<PropertyEditorView> toPut = new ArrayList<>();
+            toPut.add(propertyEditorView);
+            propertyViewMap.put(itemId, toPut);
+        }
         return propertyFields;
     }
 
     @Override
-    public void onToggleRowExpansion(String baseNodeId, boolean isShown) {
-        propertyViewMap.keySet().stream()
-                .filter(key -> key.startsWith(baseNodeId))
-                .forEach(key -> onToggleRowExpansion(propertyViewMap.get(key).getPropertyFields(), isShown));
+    public void onToggleRowExpansion(int itemId, boolean isShown) {
+        propertyViewMap.get(itemId)
+                .forEach(propertyEditorView -> onToggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
     }
 
     @Override
-    public void deleteProperties(String baseNodeId) {
-        final List<String> toDelete = propertyViewMap.keySet().stream()
-                .filter(key -> key.startsWith(baseNodeId))
-                .collect(Collectors.toList());
-        toDelete.forEach(nodeId -> {
-            final PropertyEditorView propertyEditorView = propertyViewMap.get(nodeId);
+    public void deleteProperties(int itemId) {
+        propertyViewMap.get(itemId)
+                .forEach(propertyEditorView -> {
             String propertyName = propertyEditorView.getPropertyName().getAttribute("data-i18n-key");
             propertyEditorView.getPropertyFields().removeFromParent();
-            propertyViewMap.remove(nodeId);
             propertySpanElementMap.remove(propertyName);
-
         });
+        propertyViewMap.remove(itemId);
     }
 
     protected void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
@@ -97,5 +129,15 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
         }
     }
 
-
+    protected void stopEdit(int itemId, boolean toUpdate) {
+        propertyViewMap.get(itemId)
+                .forEach(propertyEditorView -> {
+                    if (toUpdate) {
+                        propertyEditorView.getPropertyValueSpan().setInnerText(propertyEditorView.getPropertyValueInput().getValue());
+                    }
+                    propertyEditorView.getPropertyValueSpan().getStyle().setVisibility(Style.Visibility.VISIBLE);
+                    propertyEditorView.getPropertyValueInput().getStyle().setVisibility(Style.Visibility.HIDDEN);
+                    propertyEditorView.getPropertyValueInput().setDisabled(true);
+                });
+    }
 }

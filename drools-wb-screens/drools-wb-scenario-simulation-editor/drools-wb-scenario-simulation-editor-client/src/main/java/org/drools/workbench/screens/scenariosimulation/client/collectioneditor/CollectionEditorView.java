@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import java.util.Map;
 
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 
@@ -72,10 +73,10 @@ public interface CollectionEditorView {
         void addItem(String key, Map<String, String> propertiesValues);
 
         /**
-         * Delete from local <code>Map</code>s and final <b>value</b> data belonging to the <b>item</b> with the given <b>nodeId</b>
-         * @param nodeId
+         * Delete from local <code>Map</code>s and final <b>value</b> data belonging to the <b>item</b> with the given <b>itemId</b>
+         * @param itemId
          */
-        void deleteItem(String nodeId);
+        void deleteItem(Integer itemId);
 
         /**
          * Actual implementations are meant to retrieve the json representation of the content of the
@@ -116,6 +117,8 @@ public interface CollectionEditorView {
     boolean isListWidget();
 
     UListElement getElementsContainer();
+
+    LIElement getObjectSeparator();
 
     HeadingElement getEditorTitle();
 

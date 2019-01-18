@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 
@@ -31,20 +32,44 @@ public interface PropertyEditorView {
         String getPropertyValue(String propertyName) throws Exception;
 
         /**
+         * Show the <code>InputElement</code>s to edit the properties shown at the given <b>baseNodeId</b> and hide their <code>SpanElement</code>s
+         * @param itemId the id of the item containing the <code>LIElement</code>
+         */
+        void editProperties(int itemId);
+
+        /**
+         * Show the <code>SpanElement</code>s of the properties shown at the given <b>baseNodeId</b> <b>without</b> change their values, and and hide their  <code>InputElement</code>s
+         * @param itemId the id of the item containing the <code>LIElement</code>
+         */
+        void stopEditProperties(int itemId);
+
+        /**
+         * Show the <code>SpanElement</code>s of the properties shown at the given <b>baseNodeId</b> with the value of their <code>InputElement</code>s, and hide the latters
+         * @param itemId the id of the item containing the <code>LIElement</code>
+         */
+        void updateProperties(int itemId);
+
+        /**
+         * @param itemId the id of the item containing the <code>LIElement</code>
          * @param propertyName
          * @param propertyValue
-         * @param baseNodeId the nodeId for the given item
-         * @param currentId the specific id-part for the current property
          * @return the <code>LIElement</code> containing the property' <b>fields</b>
          */
-        LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId);
+        LIElement getPropertyFields(int itemId, String propertyName, String propertyValue);
 
-        void onToggleRowExpansion(String baseNodeId, boolean isShown);
+        /**
+         *
+         * @param itemId the id of the item containing the <code>LIElement</code>
+         * @param isShown <code>true</code> it the item is currently shown
+         */
+        void onToggleRowExpansion(int itemId, boolean isShown);
 
         /**
          * Remove all the <b>properties</b> belonging to the given <b>baseNodeId</b> from both <code>DOM</code> and internal <code>Map</code>
+         *
+         * @param itemId the id of the item containing the <code>LIElement</code>
          */
-        void deleteProperties(String baseNodeId);
+        void deleteProperties(int itemId);
     }
 
     /**
@@ -60,5 +85,10 @@ public interface PropertyEditorView {
     /**
      * @return the <code>SpanElement</code> showing the property' <b>value</b>
      */
-    SpanElement getPropertyValue();
+    SpanElement getPropertyValueSpan();
+
+    /**
+     * @return the <code>InputElement</code> editing the property' <b>value</b>
+     */
+    InputElement getPropertyValueInput();
 }

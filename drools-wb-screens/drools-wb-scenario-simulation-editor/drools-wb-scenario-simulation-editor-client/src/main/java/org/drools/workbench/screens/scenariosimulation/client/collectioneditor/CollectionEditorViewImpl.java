@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -66,6 +67,9 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     @DataField("closeCollectionEditorButton")
     protected ButtonElement closeCollectionEditorButton = Document.get().createButtonElement();
+
+    @DataField("objectSeparator")
+    protected LIElement objectSeparator = Document.get().createLIElement();
 
     @DataField("cancelButton")
     protected ButtonElement cancelButton = Document.get().createButtonElement();
@@ -142,6 +146,11 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     @Override
     public UListElement getElementsContainer() {
         return elementsContainer;
+    }
+
+    @Override
+    public LIElement getObjectSeparator() {
+        return objectSeparator;
     }
 
     @Override

@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,21 +58,18 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
 
     /**
-     * <code>Map</code> used to pair the <code>Map</code> with the items' properties values with the specific <b>node Id</b> showing them
+     * <code>Map</code> used to pair the <code>Map</code> with the items' properties values with an <b>index</b>
      */
-    protected Map<String, Map<String, String>> propertiesValuesMap = new HashMap<>();
+    protected Map<Integer, Map<String, String>> propertiesValuesMap = new HashMap<>();
 
     @Override
     public void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
         collectionEditorView.getEditorTitle().setInnerText(key);
         collectionEditorView.getPropertyTitle().setInnerText(propertyName);
-        final ObjectSeparator objectSeparator = viewsProvider.getObjectSeparator();
-        objectSeparator.init(this, key);
-        final LIElement objectSeparatorLI = objectSeparator.getObjectSeparator();
+        final LIElement objectSeparatorLI = collectionEditorView.getObjectSeparator();
         objectSeparatorMap.put(key, objectSeparatorLI);
         final UListElement elementsContainer = collectionEditorView.getElementsContainer();
-        elementsContainer.appendChild(objectSeparatorLI);
         elementsContainerMap.put(key, elementsContainer);
         instancePropertiesMap.put(key, instancePropertyMap);
         listEditingBoxPresenter.setCollectionEditorPresenter(this);
@@ -105,17 +101,16 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     @Override
     public void addItem(String key, Map<String, String> propertiesValues) {
         final UListElement elementsContainer = elementsContainerMap.get(key);
-        int currentItems = elementsContainer.getChildCount() - 1;
-        String nodeId = "0.0." + currentItems;
-        propertiesValuesMap.put(nodeId, propertiesValues);
-        final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesValues, nodeId);
+        int itemId = elementsContainer.getChildCount() -1;
+        propertiesValuesMap.put(itemId, propertiesValues);
+        final UListElement itemElement = listEditorElementPresenter.getItemContainer(itemId, propertiesValues);
         final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
-        properties.forEach(liElementProperty -> elementsContainer.insertBefore(liElementProperty, objectSeparatorLI));
+        elementsContainer.insertBefore(itemElement, objectSeparatorLI);
     }
 
     @Override
-    public void deleteItem(String nodeId) {
-        propertiesValuesMap.remove(nodeId);
+    public void deleteItem(Integer itemId) {
+        propertiesValuesMap.remove(itemId);
     }
 
     @Override

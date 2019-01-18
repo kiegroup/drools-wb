@@ -19,6 +19,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -26,7 +27,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
  * This class is used as <code>ListElement</code> <b>editor</b>
- *
+ * <p>
  * It represent a single item of the List
  */
 @Templated
@@ -34,8 +35,16 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
 
     protected ListEditorElementView.Presenter presenter;
 
+    protected int itemId;
+
+    @DataField("itemContainer")
+    protected UListElement itemContainer = Document.get().createULElement();
+
     @DataField("itemSeparator")
     protected LIElement itemSeparator = Document.get().createLIElement();
+
+    @DataField("saveChange")
+    protected LIElement saveChange = Document.get().createLIElement();
 
     @DataField("faAngleRight")
     protected SpanElement faAngleRight = Document.get().createSpanElement();
@@ -46,6 +55,11 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     @DataField("deleteItemButton")
     protected ButtonElement deleteItemButton = Document.get().createButtonElement();
 
+    @DataField("saveChangeButton")
+    protected ButtonElement saveChangeButton = Document.get().createButtonElement();
+
+    @DataField("cancelChangeButton")
+    protected ButtonElement cancelChangeButton = Document.get().createButtonElement();
 
     @Override
     public void init(ListEditorElementView.Presenter presenter) {
@@ -53,8 +67,28 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     }
 
     @Override
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+
+    @Override
+    public int getItemId() {
+        return itemId;
+    }
+
+    @Override
+    public UListElement getItemContainer() {
+        return itemContainer;
+    }
+
+    @Override
     public LIElement getItemSeparator() {
         return itemSeparator;
+    }
+
+    @Override
+    public LIElement getSaveChange() {
+        return saveChange;
     }
 
     @Override
@@ -75,6 +109,16 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     @EventHandler("deleteItemButton")
     public void onDeleteItemButtonClick(ClickEvent event) {
         presenter.onDeleteItem(this);
+    }
+
+    @EventHandler("saveChangeButton")
+    public void onSaveChangeButtonClick(ClickEvent event) {
+        presenter.updateItem(this);
+    }
+
+    @EventHandler("cancelChangeButton")
+    public void onCancelChangeButton(ClickEvent event) {
+        presenter.onStopEditingItem(this);
     }
 
     protected boolean isShown() {
