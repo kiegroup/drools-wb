@@ -72,6 +72,12 @@ public interface CollectionEditorView {
         void addItem(String key, Map<String, String> propertiesValues);
 
         /**
+         * Delete from local <code>Map</code>s and final <b>value</b> data belonging to the <b>item</b> with the given <b>nodeId</b>
+         * @param nodeId
+         */
+        void deleteItem(String nodeId);
+
+        /**
          * Actual implementations are meant to retrieve the json representation of the content of the
          * given <code>CollectionEditorView</code> Save the <b>json</b> representation of the values of the given <code>CollectionEditorView</code>
          *

@@ -36,4 +36,10 @@ public class CollectionEditorUtils {
             faAngleRight.removeClassName(FA_ANGLE_DOWN);
         }
     }
+
+    public static void setSpanAttributeAttributes(String dataI18nKey, String innerText, String dataField, SpanElement spanElement) {
+        spanElement.setInnerText(innerText);
+        spanElement.setAttribute("data-i18n-key", dataI18nKey);
+        spanElement.setAttribute("data-field", dataField);
+    }
 }

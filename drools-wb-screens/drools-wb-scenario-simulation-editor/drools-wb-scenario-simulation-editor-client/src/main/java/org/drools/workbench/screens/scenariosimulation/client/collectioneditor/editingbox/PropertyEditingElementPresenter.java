@@ -25,6 +25,8 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
+import static org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorUtils.setSpanAttributeAttributes;
+
 public class PropertyEditingElementPresenter implements PropertyEditingElement.Presenter {
 
     @Inject
@@ -37,9 +39,7 @@ public class PropertyEditingElementPresenter implements PropertyEditingElement.P
         final PropertyEditingElement propertyEditingElement = viewsProvider.getPropertyEditingElement();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditingElement.getPropertyName();
-        propertyNameSpan.setInnerText(hashedPropertyName);
-        propertyNameSpan.setAttribute("data-i18n-key", propertyName);
-        propertyNameSpan.setAttribute("data-field", "propertyName" + hashedPropertyName);
+        setSpanAttributeAttributes(propertyName, hashedPropertyName, "propertyName" + hashedPropertyName, propertyNameSpan);
         final InputElement propertyValueInput = propertyEditingElement.getPropertyValue();
         propertyValueInput.setAttribute("placeholder", hashedPropertyName);
         propertyValueInput.setAttribute("data-field", "propertyValue" + hashedPropertyName);

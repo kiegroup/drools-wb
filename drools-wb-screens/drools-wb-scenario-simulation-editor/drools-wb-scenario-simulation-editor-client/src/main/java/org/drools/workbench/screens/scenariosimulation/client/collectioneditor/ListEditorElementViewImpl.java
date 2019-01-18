@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -39,6 +40,13 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     @DataField("faAngleRight")
     protected SpanElement faAngleRight = Document.get().createSpanElement();
 
+    @DataField("editItemButton")
+    protected ButtonElement editItemButton = Document.get().createButtonElement();
+
+    @DataField("deleteItemButton")
+    protected ButtonElement deleteItemButton = Document.get().createButtonElement();
+
+
     @Override
     public void init(ListEditorElementView.Presenter presenter) {
         this.presenter = presenter;
@@ -57,6 +65,16 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent event) {
         presenter.onToggleRowExpansion(this, isShown());
+    }
+
+    @EventHandler("editItemButton")
+    public void onEditItemButtonClick(ClickEvent event) {
+        presenter.onEditItem(this);
+    }
+
+    @EventHandler("deleteItemButton")
+    public void onDeleteItemButtonClick(ClickEvent event) {
+        presenter.onDeleteItem(this);
     }
 
     protected boolean isShown() {

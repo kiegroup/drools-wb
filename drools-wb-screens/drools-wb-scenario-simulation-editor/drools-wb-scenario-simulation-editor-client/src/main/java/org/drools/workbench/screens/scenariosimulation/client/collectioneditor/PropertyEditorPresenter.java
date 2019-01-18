@@ -16,7 +16,9 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -25,6 +27,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
+import static org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorUtils.setSpanAttributeAttributes;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.NODE_HIDDEN;
 
 public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
@@ -50,13 +53,9 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
         final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditorView.getPropertyName();
-        propertyNameSpan.setInnerText(hashedPropertyName);
-        propertyNameSpan.setAttribute("data-i18n-key", propertyName);
-        propertyNameSpan.setAttribute("data-field", "propertyName" + hashedPropertyName);
+        setSpanAttributeAttributes(propertyName, hashedPropertyName, "propertyName" + hashedPropertyName, propertyNameSpan);
         final SpanElement propertyTextArea = propertyEditorView.getPropertyValue();
-        propertyTextArea.setInnerText(propertyValue);
-        propertyTextArea.setAttribute("data-i18n-key", propertyName);
-        propertyTextArea.setAttribute("data-field", "propertyValue" + hashedPropertyName);
+        setSpanAttributeAttributes(propertyName, propertyValue, "propertyValue" + hashedPropertyName, propertyTextArea);
         propertySpanElementMap.put(propertyName, propertyTextArea);
         final LIElement propertyFields = propertyEditorView.getPropertyFields();
         String nodeId = baseNodeId + "." + currentId;
@@ -73,6 +72,21 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
                 .forEach(key -> onToggleRowExpansion(propertyViewMap.get(key).getPropertyFields(), isShown));
     }
 
+    @Override
+    public void deleteProperties(String baseNodeId) {
+        final List<String> toDelete = propertyViewMap.keySet().stream()
+                .filter(key -> key.startsWith(baseNodeId))
+                .collect(Collectors.toList());
+        toDelete.forEach(nodeId -> {
+            final PropertyEditorView propertyEditorView = propertyViewMap.get(nodeId);
+            String propertyName = propertyEditorView.getPropertyName().getAttribute("data-i18n-key");
+            propertyEditorView.getPropertyFields().removeFromParent();
+            propertyViewMap.remove(nodeId);
+            propertySpanElementMap.remove(propertyName);
+
+        });
+    }
+
     protected void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
         if (isShown) {
             liElement.addClassName(NODE_HIDDEN);
@@ -82,4 +96,6 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
             liElement.getStyle().setDisplay(Style.Display.BLOCK);
         }
     }
+
+
 }

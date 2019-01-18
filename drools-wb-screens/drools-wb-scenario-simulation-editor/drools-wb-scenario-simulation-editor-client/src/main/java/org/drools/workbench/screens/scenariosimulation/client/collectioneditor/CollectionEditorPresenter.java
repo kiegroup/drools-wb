@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,9 +59,9 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
 
     /**
-     * <code>List</code> used to store all the items' properties values <code>Map</code>
+     * <code>Map</code> used to pair the <code>Map</code> with the items' properties values with the specific <b>node Id</b> showing them
      */
-    protected List<Map<String, String>> propertiesValuesList = new ArrayList<>();
+    protected Map<String, Map<String, String>> propertiesValuesMap = new HashMap<>();
 
     @Override
     public void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView) {
@@ -78,6 +77,7 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
         elementsContainerMap.put(key, elementsContainer);
         instancePropertiesMap.put(key, instancePropertyMap);
         listEditingBoxPresenter.setCollectionEditorPresenter(this);
+        listEditorElementPresenter.setCollectionEditorPresenter(this);
     }
 
     @Override
@@ -106,10 +106,16 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     public void addItem(String key, Map<String, String> propertiesValues) {
         final UListElement elementsContainer = elementsContainerMap.get(key);
         int currentItems = elementsContainer.getChildCount() - 1;
-        propertiesValuesList.add(propertiesValues);
-        final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesValues, "0.0." + currentItems);
+        String nodeId = "0.0." + currentItems;
+        propertiesValuesMap.put(nodeId, propertiesValues);
+        final List<LIElement> properties = listEditorElementPresenter.getProperties(propertiesValues, nodeId);
         final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
         properties.forEach(liElementProperty -> elementsContainer.insertBefore(liElementProperty, objectSeparatorLI));
+    }
+
+    @Override
+    public void deleteItem(String nodeId) {
+        propertiesValuesMap.remove(nodeId);
     }
 
     @Override
@@ -128,9 +134,7 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
         for (int i = 0; i < array.size(); i++) {
             Map<String, String> propertiesValues = new HashMap<>();
             final JSONObject jsonObject = array.get(i).isObject();
-            jsonObject.keySet().forEach(propertyName -> {
-                                            propertiesValues.put(propertyName, jsonObject.get(propertyName).isString().stringValue());
-                                        }
+            jsonObject.keySet().forEach(propertyName -> propertiesValues.put(propertyName, jsonObject.get(propertyName).isString().stringValue())
             );
             addItem(key, propertiesValues);
         }
@@ -147,7 +151,7 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     protected String getListValue() {
         JSONArray jsonArray = new JSONArray();
         AtomicInteger counter = new AtomicInteger();
-        propertiesValuesList.forEach(stringStringMap -> {
+        propertiesValuesMap.values().forEach(stringStringMap -> {
             JSONObject nestedObject = new JSONObject();
             stringStringMap.forEach((propertyName, propertyValue) -> nestedObject.put(propertyName, new JSONString(propertyValue)));
             jsonArray.set(counter.getAndIncrement(), nestedObject);

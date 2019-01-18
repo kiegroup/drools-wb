@@ -27,6 +27,8 @@ public interface ListEditorElementView extends HasPresenter<ListEditorElementVie
 
     interface Presenter {
 
+        void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter);
+
         /**
          *
          * @param propertiesMap the properties to be put inside the <code>LIElement</code>
@@ -39,6 +41,10 @@ public interface ListEditorElementView extends HasPresenter<ListEditorElementVie
         void onToggleRowExpansion(boolean isShown);
 
         void onToggleRowExpansion(ListEditorElementView listEditorElementView, boolean shown);
+
+        void onEditItem(ListEditorElementViewImpl listEditorElementView);
+
+        void onDeleteItem(ListEditorElementViewImpl listEditorElementView);
     }
 
     /**

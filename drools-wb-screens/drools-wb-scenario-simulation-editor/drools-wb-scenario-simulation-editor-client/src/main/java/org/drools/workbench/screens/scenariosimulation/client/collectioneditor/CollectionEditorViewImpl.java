@@ -29,8 +29,11 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.FocusWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.CloseCompositeEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.HasCloseCompositeHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.HasSaveEditorHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.SaveEditorEventHandler;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -49,6 +52,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
  */
 @Templated
 public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCompositeHandler,
+                                                                     HasSaveEditorHandler,
                                                                      CollectionEditorView {
 
     @Inject
@@ -116,6 +120,11 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     }
 
     @Override
+    public HandlerRegistration addSaveEditorEventHandler(SaveEditorEventHandler handler) {
+        return addDomHandler(handler, SaveEditorEvent.getType());
+    }
+
+    @Override
     public String getValue() {
         return value;
     }
@@ -172,6 +181,7 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
 
     public void updateValue(String value) {
         this.value = value;
+        fireEvent(new SaveEditorEvent());
     }
 
     protected boolean isShown() {

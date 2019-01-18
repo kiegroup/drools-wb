@@ -40,6 +40,11 @@ public interface PropertyEditorView {
         LIElement getPropertyFields(String propertyName, String propertyValue, String baseNodeId, int currentId);
 
         void onToggleRowExpansion(String baseNodeId, boolean isShown);
+
+        /**
+         * Remove all the <b>properties</b> belonging to the given <b>baseNodeId</b> from both <code>DOM</code> and internal <code>Map</code>
+         */
+        void deleteProperties(String baseNodeId);
     }
 
     /**

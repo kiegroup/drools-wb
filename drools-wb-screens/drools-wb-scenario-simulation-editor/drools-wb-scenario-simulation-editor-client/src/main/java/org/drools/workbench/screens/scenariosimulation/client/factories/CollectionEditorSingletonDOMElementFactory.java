@@ -72,6 +72,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             gridLayer.batch();
             gridPanel.setFocus(true);
         });
+        widget.addSaveEditorEventHandler(event -> flush());
         return e;
     }
 

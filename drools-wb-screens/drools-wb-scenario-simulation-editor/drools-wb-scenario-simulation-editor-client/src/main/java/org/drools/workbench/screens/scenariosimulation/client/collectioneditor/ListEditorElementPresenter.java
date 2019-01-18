@@ -28,6 +28,8 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 
 public class ListEditorElementPresenter implements ListEditorElementView.Presenter {
 
+    protected CollectionEditorView.Presenter collectionEditorPresenter;
+
     @Inject
     protected PropertyEditorPresenter propertyEditorPresenter;
 
@@ -36,6 +38,11 @@ public class ListEditorElementPresenter implements ListEditorElementView.Present
 
 
     protected Map<ListEditorElementView, String> listEditorElementViewMap = new HashMap<>();
+
+    @Override
+    public void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter) {
+        this.collectionEditorPresenter = collectionEditorPresenter;
+    }
 
     @Override
     public List<LIElement> getProperties(Map<String, String> propertiesMap, String nodeId) {
@@ -62,5 +69,19 @@ public class ListEditorElementPresenter implements ListEditorElementView.Present
         CollectionEditorUtils.toggleRowExpansion(listEditorElementView.getFaAngleRight(), !isShown);
         String baseNodeId = listEditorElementViewMap.get(listEditorElementView);
         propertyEditorPresenter.onToggleRowExpansion(baseNodeId, isShown);
+    }
+
+    @Override
+    public void onEditItem(ListEditorElementViewImpl listEditorElementView) {
+
+    }
+
+    @Override
+    public void onDeleteItem(ListEditorElementViewImpl listEditorElementView) {
+        String baseNodeId = listEditorElementViewMap.get(listEditorElementView);
+        propertyEditorPresenter.deleteProperties(baseNodeId);
+        listEditorElementView.getItemSeparator().removeFromParent();
+        listEditorElementViewMap.remove(listEditorElementView);
+        collectionEditorPresenter.deleteItem(baseNodeId);
     }
 }

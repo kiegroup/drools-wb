@@ -15,20 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
-import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
+import com.google.gwt.event.shared.EventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
 
 /**
- * A widget that implements this interface provides registration for
- * {@link CloseCompositeEventHandler} instances.
+ * <code>EventHandler</code> for {@link SaveEditorEvent}
  */
-public interface HasCloseCompositeHandler extends HasHandlers {
-    /**
-     * Adds a {@link CloseCompositeEvent} handler.
-     *
-     * @param handler the handler
-     * @return {@link HandlerRegistration} used to remove this handler
-     */
-    HandlerRegistration addCloseCompositeEventHandler(CloseCompositeEventHandler handler);
+public interface SaveEditorEventHandler extends EventHandler {
+    void onEvent(SaveEditorEvent event);
 }
