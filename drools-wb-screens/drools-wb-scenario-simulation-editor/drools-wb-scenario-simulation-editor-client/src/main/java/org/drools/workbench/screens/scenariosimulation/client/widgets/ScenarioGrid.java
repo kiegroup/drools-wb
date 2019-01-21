@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.ait.lienzo.client.core.types.Transform;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
@@ -41,10 +43,13 @@ import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationS
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
+import org.uberfire.ext.wires.core.grids.client.util.CellContextUtilities;
 import org.uberfire.ext.wires.core.grids.client.util.ColumnIndexUtilities;
+import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
@@ -53,10 +58,18 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 
 public class ScenarioGrid extends BaseGridWidget {
 
+    private final ScenarioGridPanel scenarioGridPanel;
+    private final GridContextMenu gridContextMenu;
     private EventBus eventBus;
 
-    public ScenarioGrid(ScenarioGridModel model, ScenarioGridLayer scenarioGridLayer, ScenarioGridRenderer renderer) {
+    public ScenarioGrid(ScenarioGridModel model,
+                        ScenarioGridLayer scenarioGridLayer,
+                        ScenarioGridRenderer renderer,
+                        ScenarioGridPanel scenarioGridPanel,
+                        GridContextMenu gridContextMenu) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
+        this.scenarioGridPanel = scenarioGridPanel;
+        this.gridContextMenu = gridContextMenu;
         setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
@@ -75,6 +88,7 @@ public class ScenarioGrid extends BaseGridWidget {
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
         ((ScenarioGridModel) model).setEventBus(eventBus);
+        gridContextMenu.setEventBus(eventBus);
     }
 
     @Override
@@ -240,6 +254,9 @@ public class ScenarioGrid extends BaseGridWidget {
         final boolean selectionChanged = super.adjustSelection(direction, isShiftKeyDown);
 
         signalRightPanelAboutSelectedHeaderCells();
+        if (gridContextMenu.isShown()) {
+            gridContextMenu.hide();
+        }
 
         return selectionChanged;
     }
@@ -263,6 +280,34 @@ public class ScenarioGrid extends BaseGridWidget {
                                                    uiColumnIndex);
             }
         }
+    }
+
+    @Override
+    public boolean showContextMenuForCell(final int uiRowIndex, final int uiColumnIndex) {
+        final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
+        if (column instanceof ScenarioGridColumn && !((ScenarioGridColumn) column).isReadOnly()) {
+            final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) column;
+            final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
+            final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
+            final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
+
+            final GridBodyCellEditContext context = CellContextUtilities.makeRenderContext(this,
+                                                                                           ri,
+                                                                                           ci,
+                                                                                           null,
+                                                                                           uiRowIndex);
+
+            final Transform transform = scenarioGridPanel.getViewport().getTransform();
+
+            gridContextMenu.show((int) ((context.getAbsoluteCellX() * transform.getScaleX()) + transform.getTranslateX()) + scenarioGridPanel.getAbsoluteLeft(),
+                                 (int) ((context.getAbsoluteCellY() * transform.getScaleY()) + transform.getTranslateY()) + scenarioGridPanel.getAbsoluteTop(),
+                                 uiColumnIndex,
+                                 uiRowIndex,
+                                 scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),
+                                 true);
+            return true;
+        }
+        return false;
     }
 
     private void signalRightPanelHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,

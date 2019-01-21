@@ -67,7 +67,6 @@ public class ScenarioGridPanelProducer {
         scenarioGridModel.setScenarioHeaderTextBoxSingletonDOMElementFactory(new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
                                                                                                                                  scenarioGridLayer,
                                                                                                                                  scenarioGridLayer.getScenarioGrid()));
-
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

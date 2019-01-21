@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDele
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationInvokeContextMenuForSelectedCell;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveDown;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveLeft;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveRight;
@@ -84,7 +85,8 @@ public class ScenarioSimulationProducer {
                              new KeyboardOperationMoveLeft(scenarioGridLayer),
                              new KeyboardOperationMoveRight(scenarioGridLayer),
                              new KeyboardOperationMoveUp(scenarioGridLayer),
-                             new KeyboardOperationMoveDown(scenarioGridLayer));
+                             new KeyboardOperationMoveDown(scenarioGridLayer),
+                             new KeyboardOperationInvokeContextMenuForSelectedCell(scenarioGridLayer));
         scenarioGridPanel.addKeyDownHandler(handler);
 
         scenarioSimulationEventHandler.setEventBus(getEventBus());

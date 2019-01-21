@@ -102,6 +102,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
         try {
             internalExecute(context);
+            context.getScenarioGridPanel().setFocus(true);
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
