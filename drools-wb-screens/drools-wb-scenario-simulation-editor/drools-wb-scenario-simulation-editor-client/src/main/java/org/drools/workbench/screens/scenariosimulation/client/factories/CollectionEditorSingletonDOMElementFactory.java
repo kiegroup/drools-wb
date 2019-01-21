@@ -16,10 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.SortedMap;
 
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -36,7 +37,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
-public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, CollectionEditorViewImpl, CollectionEditorDOMElement> {
+public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, CollectionViewImpl, CollectionEditorDOMElement> {
 
     protected ViewsProvider viewsProvider;
 
@@ -54,8 +55,8 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     @Override
-    public CollectionEditorViewImpl createWidget() {
-        return (CollectionEditorViewImpl) viewsProvider.getCollectionEditorView();
+    public CollectionViewImpl createWidget() {
+        return (CollectionViewImpl) viewsProvider.getCollectionEditorView();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                 selectedCellsOrigin.getColumnIndex())
                 .findFirst();
         selectedColumn.ifPresent(col -> {
-            int actualIndex =  model.getColumns().indexOf(col);
+            int actualIndex = model.getColumns().indexOf(col);
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             String key = factMapping.getFactAlias() + "#" + factMapping.getExpressionAlias();
@@ -98,19 +99,26 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return widget != null ? widget.getValue() : null;
     }
 
-    protected void setCollectionEditorStructureData(CollectionEditorViewImpl collectionEditorView, FactMapping factMapping) {
+    protected void setCollectionEditorStructureData(CollectionViewImpl collectionEditorView, FactMapping factMapping) {
         String propertyClass = factMapping.getClassName();
         String className = factMapping.getFactAlias();
         String propertyName = factMapping.getExpressionAlias();
         String genericType = factMapping.getGenericType();
         String key = className + "#" + propertyName;
         final SortedMap<String, FactModelTree> dataObjectFieldsMap = scenarioSimulationContext.getDataObjectFieldsMap();
-        collectionEditorView.setListWidget(ScenarioSimulationUtils.isList(propertyClass));
         final FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
-        collectionEditorView.initStructure(key, genericFactModelTree.getSimpleProperties());
+        if (ScenarioSimulationUtils.isList(propertyClass)) {
+            collectionEditorView.setListWidget(true);
+            collectionEditorView.initListStructure(key, genericFactModelTree.getSimpleProperties());
+        } else {
+            collectionEditorView.setListWidget(false);
+            final HashMap<String, String> keyPropertyMap = new HashMap<>();
+            keyPropertyMap.put("value", String.class.getName());
+            collectionEditorView.initMapStructure(key, keyPropertyMap, genericFactModelTree.getSimpleProperties());
+        }
     }
 
-    protected CollectionEditorDOMElement internalCreateDomElement(CollectionEditorViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget, String key) {
+    protected CollectionEditorDOMElement internalCreateDomElement(CollectionViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget, String key) {
         return new CollectionEditorDOMElement(collectionEditorView, gridLayer, gridWidget, key);
     }
 }

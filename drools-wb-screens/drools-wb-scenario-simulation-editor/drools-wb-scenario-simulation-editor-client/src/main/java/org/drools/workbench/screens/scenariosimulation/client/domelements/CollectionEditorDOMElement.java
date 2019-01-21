@@ -21,7 +21,7 @@ import java.util.Objects;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Focusable;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -30,7 +30,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
-public class CollectionEditorDOMElement extends BaseDOMElement<String, CollectionEditorViewImpl> implements TakesValue<String>,
+public class CollectionEditorDOMElement extends BaseDOMElement<String, CollectionViewImpl> implements TakesValue<String>,
                                                                                                             Focusable {
 
     protected ScenarioGridCell scenarioGridCell;
@@ -44,7 +44,7 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
      * @param gridWidget
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      */
-    public CollectionEditorDOMElement(final CollectionEditorViewImpl widget,
+    public CollectionEditorDOMElement(final CollectionViewImpl widget,
                                       final GridLayer gridLayer,
                                       final GridWidget gridWidget,
                                       String key) {

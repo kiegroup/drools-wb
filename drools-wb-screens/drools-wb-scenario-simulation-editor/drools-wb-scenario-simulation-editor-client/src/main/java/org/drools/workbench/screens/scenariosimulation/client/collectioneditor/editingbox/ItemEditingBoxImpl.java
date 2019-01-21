@@ -26,7 +26,7 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Templated
-public class ListEditingBoxImpl implements ListEditingBox {
+public class ItemEditingBoxImpl implements ItemEditingBox {
 
     @DataField("editingBox")
     protected DivElement editingBox = Document.get().createDivElement();

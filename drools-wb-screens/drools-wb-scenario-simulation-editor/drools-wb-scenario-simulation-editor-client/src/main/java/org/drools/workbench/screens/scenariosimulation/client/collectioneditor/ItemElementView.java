@@ -22,12 +22,12 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import org.uberfire.client.mvp.HasPresenter;
 
-public interface ListEditorElementView extends HasPresenter<ListEditorElementView.Presenter> {
+public interface ItemElementView extends HasPresenter<ItemElementView.Presenter> {
 
 
     interface Presenter {
 
-        void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter);
+        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
 
         /**
          *
@@ -41,34 +41,34 @@ public interface ListEditorElementView extends HasPresenter<ListEditorElementVie
 
         void onToggleRowExpansion(boolean isShown);
 
-        void onToggleRowExpansion(ListEditorElementView listEditorElementView, boolean shown);
+        void onToggleRowExpansion(ItemElementView itemElementView, boolean shown);
 
         /**
-         * Start editing properties of the given <code>listEditorElementView</code>
-         * @param listEditorElementView
+         * Start editing properties of the given <code>itemElementView</code>
+         * @param itemElementView
          */
-        void onEditItem(ListEditorElementViewImpl listEditorElementView);
+        void onEditItem(ItemElementView itemElementView);
 
         /**
-         * Update the values of the properties shown in the given <code>listEditorElementView</code>
+         * Update the values of the properties shown in the given <code>itemElementView</code>
          * and stop the editing mode
-         * @param listEditorElementView
+         * @param itemElementView
          */
-        void updateItem(ListEditorElementViewImpl listEditorElementView);
+        void updateItem(ItemElementView itemElementView);
 
         /**
-         * Stop editing properties of the given <code>listEditorElementView</code>
+         * Stop editing properties of the given <code>itemElementView</code>
          * <b>without</b> updating the properties
          *
-         * @param listEditorElementView
+         * @param itemElementView
          */
-        void onStopEditingItem(ListEditorElementViewImpl listEditorElementView);
+        void onStopEditingItem(ItemElementView itemElementView);
 
         /**
-         * Delete the item and its properties shown on the given <code>listEditorElementView</code>
-         * @param listEditorElementView
+         * Delete the item and its properties shown on the given <code>itemElementView</code>
+         * @param itemElementView
          */
-        void onDeleteItem(ListEditorElementViewImpl listEditorElementView);
+        void onDeleteItem(ItemElementView itemElementView);
     }
 
     /**

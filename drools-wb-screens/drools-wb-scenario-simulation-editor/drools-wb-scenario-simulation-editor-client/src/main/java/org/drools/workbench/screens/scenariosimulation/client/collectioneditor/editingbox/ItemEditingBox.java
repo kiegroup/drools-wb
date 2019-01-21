@@ -20,10 +20,10 @@ import java.util.Map;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.UListElement;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
 import org.uberfire.client.mvp.HasPresenter;
 
-public interface ListEditingBox extends HasPresenter<ListEditingBox.Presenter> {
+public interface ItemEditingBox extends HasPresenter<ItemEditingBox.Presenter> {
 
     interface Presenter {
 
@@ -37,9 +37,9 @@ public interface ListEditingBox extends HasPresenter<ListEditingBox.Presenter> {
 
         void save(String key);
 
-        void close(ListEditingBox toClose);
+        void close(ItemEditingBox toClose);
 
-        void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter);
+        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
     }
 
     /**

@@ -35,7 +35,7 @@ public class PropertyEditingElementPresenter implements PropertyEditingElement.P
     protected Map<String, InputElement> propertyInputElementMap = new HashMap<>();
 
     @Override
-    public LIElement getPropertyContainer(String propertyName, String nodeId) {
+    public LIElement getPropertyContainer(String propertyName) {
         final PropertyEditingElement propertyEditingElement = viewsProvider.getPropertyEditingElement();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditingElement.getPropertyName();
@@ -45,7 +45,6 @@ public class PropertyEditingElementPresenter implements PropertyEditingElement.P
         propertyValueInput.setAttribute("data-field", "propertyValue" + hashedPropertyName);
         propertyValueInput.removeAttribute("disabled");
         final LIElement propertyContainerLI = propertyEditingElement.getPropertyContainer();
-        propertyContainerLI.setAttribute("data-nodeid", nodeId);
         propertyContainerLI.setAttribute("data-field", "propertyContainer" + hashedPropertyName);
         propertyInputElementMap.put(propertyName, propertyValueInput);
         return propertyContainerLI;

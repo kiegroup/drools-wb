@@ -17,15 +17,14 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
-public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
+public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
 
     @Inject
     protected ViewsProvider viewsProvider;
@@ -33,10 +32,10 @@ public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
     @Inject
     protected PropertyEditingElementPresenter propertyEditingElementPresenter;
 
-    protected CollectionEditorView.Presenter collectionEditorPresenter;
+    protected CollectionView.Presenter collectionEditorPresenter;
 
     @Override
-    public void setCollectionEditorPresenter(CollectionEditorView.Presenter collectionEditorPresenter) {
+    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
         this.collectionEditorPresenter = collectionEditorPresenter;
     }
 
@@ -47,15 +46,14 @@ public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
     public DivElement getEditingBox(String key, Map<String, String> instancePropertyMap) {
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
         this.instancePropertyMap = instancePropertyMap;
-        final ListEditingBox listEditingBox = viewsProvider.getListEditingBox();
+        final ItemEditingBox listEditingBox = viewsProvider.getItemEditingBox();
         listEditingBox.init(this);
         listEditingBox.setKey(key);
         listEditingBox.getEditingBoxTitle().setInnerText("Edit " + propertyName);
-        AtomicInteger counter = new AtomicInteger(0);
-        instancePropertyMap.forEach((propertyKey, value) -> {
-            String nodeId = "0." + counter.getAndIncrement();
-            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey, nodeId));
-        });
+        for (Map.Entry<String, String> entry : instancePropertyMap.entrySet()) {
+            String propertyKey = entry.getKey();
+            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey));
+        }
         return listEditingBox.getEditingBox();
     }
 
@@ -63,11 +61,11 @@ public class ListEditingBoxPresenter implements ListEditingBox.Presenter {
     public void save(String key) {
         Map<String, String> propertiesValues = new HashMap<>();
         instancePropertyMap.keySet().forEach(propertyKey -> propertiesValues.put(propertyKey, propertyEditingElementPresenter.getPropertyValue(propertyKey)));
-        collectionEditorPresenter.addItem(key, propertiesValues);
+        collectionEditorPresenter.addListItem(key, propertiesValues);
     }
 
     @Override
-    public void close(ListEditingBox toClose) {
+    public void close(ItemEditingBox toClose) {
         toClose.getEditingBox().removeFromParent();
     }
 }

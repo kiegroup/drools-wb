@@ -26,19 +26,27 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * This class is used as <code>ListElement</code> <b>editor</b>
- * <p>
- * It represent a single item of the List
+ * This class is used to show a <b>key/value</b> <b>item</b> of a collection
+ *
  */
 @Templated
-public class ListEditorElementViewImpl implements ListEditorElementView {
+public class KeyValueElementViewImpl implements KeyValueElementView {
 
-    protected ListEditorElementView.Presenter presenter;
+    protected Presenter presenter;
 
     protected int itemId;
 
     @DataField("itemContainer")
     protected UListElement itemContainer = Document.get().createULElement();
+
+    @DataField("keyValueContainer")
+    protected LIElement keyValueContainer = Document.get().createLIElement();
+
+    @DataField("keyContainer")
+    protected UListElement keyContainer = Document.get().createULElement();
+
+    @DataField("valueContainer")
+    protected UListElement valueContainer = Document.get().createULElement();
 
     @DataField("itemSeparator")
     protected LIElement itemSeparator = Document.get().createLIElement();
@@ -62,7 +70,7 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     protected ButtonElement cancelChangeButton = Document.get().createButtonElement();
 
     @Override
-    public void init(ListEditorElementView.Presenter presenter) {
+    public void init(Presenter presenter) {
         this.presenter = presenter;
     }
 
@@ -79,6 +87,21 @@ public class ListEditorElementViewImpl implements ListEditorElementView {
     @Override
     public UListElement getItemContainer() {
         return itemContainer;
+    }
+
+    @Override
+    public LIElement getKeyValueContainer() {
+        return keyValueContainer;
+    }
+
+    @Override
+    public UListElement getKeyContainer() {
+        return keyContainer;
+    }
+
+    @Override
+    public UListElement getValueContainer() {
+        return valueContainer;
     }
 
     @Override

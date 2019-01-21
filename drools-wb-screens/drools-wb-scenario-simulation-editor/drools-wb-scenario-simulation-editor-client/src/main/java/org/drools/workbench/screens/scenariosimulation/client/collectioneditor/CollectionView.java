@@ -25,7 +25,7 @@ import com.google.gwt.dom.client.UListElement;
 /**
  * Interface defining the contract for actual implementations
  */
-public interface CollectionEditorView {
+public interface CollectionView {
 
     interface Presenter {
 
@@ -37,7 +37,20 @@ public interface CollectionEditorView {
          * @param instancePropertyMap
          * @param collectionEditorView
          */
-        void initStructure(String key, Map<String, String> instancePropertyMap, CollectionEditorView collectionEditorView);
+        void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionEditorView);
+
+        /**
+         * Actual implementations should invoke this method first to retrieve information about the collection
+         * generic type and the structure of such type
+         *
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+         * @param keyPropertyMap
+         * @param valuePropertyMap
+         * @param collectionEditorView
+         *
+         */
+        void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, CollectionView collectionEditorView);
+
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
@@ -47,14 +60,14 @@ public interface CollectionEditorView {
          * @param jsonString
          * @param collectionEditorView
          */
-        void setValue(String key, String jsonString, CollectionEditorView collectionEditorView);
+        void setValue(String key, String jsonString, CollectionView collectionEditorView);
 
         /**
          * Show the editing box in the given <code>CollectionEditorView</code>
          *
          * @param collectionEditorView
          */
-        void showEditingBox(CollectionEditorView collectionEditorView);
+        void showEditingBox(CollectionView collectionEditorView);
 
         /**
          * Toggle the expansion of the collection.
@@ -62,15 +75,25 @@ public interface CollectionEditorView {
          * @param collectionEditorView
          * @param isShown the <b>current</b> expansion status of the collection
          */
-        void onToggleRowExpansion(CollectionEditorView collectionEditorView, boolean isShown);
+        void onToggleRowExpansion(CollectionView collectionEditorView, boolean isShown);
 
         /**
-         * Creates a new <b>item</b> element with values taken from given <code>Map</code>
+         * Creates a new single <b>item</b> element with values taken from given <code>Map</code>
          *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param propertiesValues
          */
-        void addItem(String key, Map<String, String> propertiesValues);
+        void addListItem(String key, Map<String, String> propertiesValues);
+
+        /**
+         * Creates a new <b>key/value</b> <b>item</b> element with values taken from given <code>Map</code>
+         *
+         *
+         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+         * @param keyPropertiesValues
+         * @param valuePropertiesValues
+         */
+        void addMapItem(String key, Map<String, String> keyPropertiesValues,  Map<String, String> valuePropertiesValues);
 
         /**
          * Delete from local <code>Map</code>s and final <b>value</b> data belonging to the <b>item</b> with the given <b>itemId</b>
@@ -84,7 +107,7 @@ public interface CollectionEditorView {
          *
          * @param collectionEditorView
          */
-        void save(CollectionEditorView collectionEditorView);
+        void save(CollectionView collectionEditorView);
 
     }
 
@@ -131,4 +154,24 @@ public interface CollectionEditorView {
      * @param toString
      */
     void updateValue(String toString);
+
+    /**
+     * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
+     * showing a <b>List</b> of elements
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     * @param instancePropertyMap
+     */
+
+    void initListStructure(String key, Map<String, String> instancePropertyMap);
+
+    /**
+     * Set the <b>name</b> of the property and the <code>Map</code>s to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
+     * showing a <b>Map</b> of elements
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     * @param keyPropertyMap
+     * @param valuePropertyMap
+     *
+     */
+    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
+
 }

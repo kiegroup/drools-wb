@@ -19,7 +19,7 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 
-public interface PropertyEditorView {
+public interface PropertyView {
 
     interface Presenter {
 

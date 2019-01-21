@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -176,9 +177,8 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
             if (!modelField.getName().equals("this")) {
                 String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
-                if (modelField.getType().equals("Collection")) {
-                    final String moduleFieldParametersType = oracle.getParametricFieldType(factName, modelField.getName());
-                    String genericInfo = className + "#" + packageName + "." + moduleFieldParametersType;
+                if (ScenarioSimulationUtils.isCollection(className)) {
+                    String genericInfo = oracle.getParametricFieldType(factName, modelField.getName());
                     genericTypeInfoMap.put(modelField.getName(), genericInfo);
                 }
             }

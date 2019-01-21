@@ -22,7 +22,7 @@ import com.google.gwt.dom.client.SpanElement;
 public interface PropertyEditingElement {
 
     interface Presenter {
-        LIElement getPropertyContainer(String propertyName, String nodeId);
+        LIElement getPropertyContainer(String propertyName);
 
         String getPropertyValue(String propertyName);
     }

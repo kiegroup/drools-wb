@@ -18,10 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ListEditorElementView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyEditorView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ListEditingBox;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.ItemElementView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.KeyValueElementView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBox;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.PropertyEditingElement;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
@@ -44,16 +46,22 @@ public class ViewsProvider {
     private ManagedInstance<ListGroupItemView> listGroupItemViewInstance;
 
     @Inject
-    private ManagedInstance<CollectionEditorView> collectionEditorViewInstance;
+    private ManagedInstance<CollectionView> collectionViewInstance;
 
     @Inject
-    private ManagedInstance<ListEditorElementView> listEditorElementViewInstance;
+    private ManagedInstance<ItemElementView> listElementViewInstance;
 
     @Inject
-    private ManagedInstance<PropertyEditorView> propertyEditorViewInstance;
+    private ManagedInstance<KeyValueElementView> keyValueElementViewInstance;
 
     @Inject
-    private ManagedInstance<ListEditingBox> listEditingBoxInstance;
+    private ManagedInstance<PropertyView> propertyViewInstance;
+
+    @Inject
+    private ManagedInstance<ItemEditingBox> listEditingBoxInstance;
+
+    @Inject
+    private ManagedInstance<KeyValueEditingBox> mapEditingBoxInstance;
 
     @Inject
     private ManagedInstance<PropertyEditingElement> propertyEditingElementInstance;
@@ -70,20 +78,28 @@ public class ViewsProvider {
         return listGroupItemViewInstance.get();
     }
 
-    public CollectionEditorView getCollectionEditorView() {
-        return collectionEditorViewInstance.get();
+    public CollectionView getCollectionEditorView() {
+        return collectionViewInstance.get();
     }
 
-    public ListEditorElementView getListEditorElementView() {
-        return listEditorElementViewInstance.get();
+    public ItemElementView getListEditorElementView() {
+        return listElementViewInstance.get();
     }
 
-    public PropertyEditorView getPropertyEditorView() {
-        return propertyEditorViewInstance.get();
+    public KeyValueElementView getKeyValueElementView() {
+        return keyValueElementViewInstance.get();
     }
 
-    public ListEditingBox getListEditingBox() {
+    public PropertyView getPropertyEditorView() {
+        return propertyViewInstance.get();
+    }
+
+    public ItemEditingBox getItemEditingBox() {
         return listEditingBoxInstance.get();
+    }
+
+    public KeyValueEditingBox getKeyValueEditingBox() {
+        return mapEditingBoxInstance.get();
     }
 
     public PropertyEditingElement getPropertyEditingElement() {

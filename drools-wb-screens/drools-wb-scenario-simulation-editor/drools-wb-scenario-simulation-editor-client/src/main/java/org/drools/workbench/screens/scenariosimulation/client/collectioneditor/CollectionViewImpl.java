@@ -52,12 +52,12 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
  * <p>the presenter will be responsible to choose which kind of elements are to be populated</p>
  */
 @Templated
-public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCompositeHandler,
-                                                                     HasSaveEditorHandler,
-                                                                     CollectionEditorView {
+public class CollectionViewImpl extends FocusWidget implements HasCloseCompositeHandler,
+                                                               HasSaveEditorHandler,
+                                                               CollectionView {
 
     @Inject
-    protected CollectionEditorPresenter presenter;
+    protected CollectionPresenter presenter;
 
     @DataField("collectionEditor")
     protected DivElement collectionEditor = Document.get().createDivElement();
@@ -99,7 +99,7 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
      */
     protected String value;
 
-    public CollectionEditorViewImpl() {
+    public CollectionViewImpl() {
         setElement(collectionEditor);
     }
 
@@ -113,12 +113,26 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     }
 
     /**
-     * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionEditorViewImpl</code> editor
+     * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
+     * showing a <b>List</b> of elements
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param instancePropertyMap
      */
-    public void initStructure(String key, Map<String, String> instancePropertyMap) {
-        presenter.initStructure(key, instancePropertyMap, this);
+    @Override
+    public void initListStructure(String key, Map<String, String> instancePropertyMap) {
+        presenter.initListStructure(key, instancePropertyMap, this);
+    }
+
+    /**
+     * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
+     * showing a <b>Map</b> of elements
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     * @param keyPropertyMap
+     * @param valuePropertyMap
+     */
+    @Override
+    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
+        presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
     }
 
     @Override
@@ -190,8 +204,6 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     public void onFaAngleRightClick(ClickEvent event) {
         presenter.onToggleRowExpansion(this, isShown());
     }
-
-
 
     @Override
     public void toggleRowExpansion() {

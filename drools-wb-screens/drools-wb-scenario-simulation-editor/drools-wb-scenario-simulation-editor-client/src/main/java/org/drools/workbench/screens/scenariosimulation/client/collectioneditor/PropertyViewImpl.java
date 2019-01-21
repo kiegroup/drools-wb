@@ -25,10 +25,10 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * This class is used as single <b>property editor</b>
+ * This class is used to show a single <b>property</b> inside an <code>ItemElementView</code>
  */
 @Templated
-public class PropertyEditorViewImpl implements PropertyEditorView  {
+public class PropertyViewImpl implements PropertyView {
 
     @DataField("propertyFields")
     protected LIElement propertyFields = Document.get().createLIElement();

@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import static org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorUtils.setSpanAttributeAttributes;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.NODE_HIDDEN;
 
-public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
+public class PropertyPresenter implements PropertyView.Presenter {
 
     @Inject
     protected ViewsProvider viewsProvider;
@@ -44,7 +44,7 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
     /**
      * <code>Map</code> to pair a given <b>itemId</b> with its <code>PropertyEditorView</code>s
      */
-    protected Map<Integer, List<PropertyEditorView>> propertyViewMap = new HashMap<>();
+    protected Map<Integer, List<PropertyView>> propertyViewMap = new HashMap<>();
 
     @Override
     public String getPropertyValue(String propertyName) throws Exception {
@@ -78,7 +78,7 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
 
     @Override
     public LIElement getPropertyFields(int itemId, String propertyName, String propertyValue) {
-        final PropertyEditorView propertyEditorView = viewsProvider.getPropertyEditorView();
+        final PropertyView propertyEditorView = viewsProvider.getPropertyEditorView();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditorView.getPropertyName();
         setSpanAttributeAttributes(propertyName, hashedPropertyName, "propertyName" + hashedPropertyName, propertyNameSpan);
@@ -95,7 +95,7 @@ public class PropertyEditorPresenter implements PropertyEditorView.Presenter {
         if (propertyViewMap.containsKey(itemId)) {
             propertyViewMap.get(itemId).add(propertyEditorView);
         } else {
-            List<PropertyEditorView> toPut = new ArrayList<>();
+            List<PropertyView> toPut = new ArrayList<>();
             toPut.add(propertyEditorView);
             propertyViewMap.put(itemId, toPut);
         }
