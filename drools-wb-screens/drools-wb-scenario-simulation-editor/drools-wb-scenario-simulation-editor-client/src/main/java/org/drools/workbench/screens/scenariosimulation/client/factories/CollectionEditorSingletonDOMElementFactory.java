@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import java.util.Optional;
 import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorViewImpl;
@@ -27,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
@@ -61,18 +63,24 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                                                        final GridWidget gridWidget,
                                                        final GridBodyCellRenderContext context) {
         this.widget = createWidget();
-        final GridData.SelectedCell selectedCellsOrigin = ((ScenarioGrid) gridWidget).getModel().getSelectedCellsOrigin();
         final ScenarioGridModel model = ((ScenarioGrid) gridWidget).getModel();
-        final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(selectedCellsOrigin.getColumnIndex());
-        setCollectionEditorStructureData(this.widget, factMapping);
-        String key = factMapping.getFactAlias() + "#" + factMapping.getExpressionAlias();
-        this.e = internalCreateDomElement(widget, gridLayer, gridWidget, key);
-        widget.addCloseCompositeEventHandler(event -> {
-            destroyResources();
-            gridLayer.batch();
-            gridPanel.setFocus(true);
+        final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
+        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream().filter(col -> col.getIndex() ==
+                selectedCellsOrigin.getColumnIndex())
+                .findFirst();
+        selectedColumn.ifPresent(col -> {
+            int actualIndex =  model.getColumns().indexOf(col);
+            final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
+            setCollectionEditorStructureData(this.widget, factMapping);
+            String key = factMapping.getFactAlias() + "#" + factMapping.getExpressionAlias();
+            this.e = internalCreateDomElement(widget, gridLayer, gridWidget, key);
+            widget.addCloseCompositeEventHandler(event -> {
+                destroyResources();
+                gridLayer.batch();
+                gridPanel.setFocus(true);
+            });
+            widget.addSaveEditorEventHandler(event -> flush());
         });
-        widget.addSaveEditorEventHandler(event -> flush());
         return e;
     }
 

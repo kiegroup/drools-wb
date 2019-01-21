@@ -78,6 +78,9 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
 
     @Override
     public void setValue(String key, String jsonString, CollectionEditorView collectionEditorView) {
+        if (jsonString == null || jsonString.isEmpty()) {
+            return;
+        }
         JSONValue jsonValue = getJSONValue(jsonString);
         if (collectionEditorView.isListWidget()) {
             populateList(key, jsonValue);
@@ -87,8 +90,9 @@ public class CollectionEditorPresenter implements CollectionEditorView.Presenter
     }
 
     @Override
-    public void showEditingBox(String key) {
-        elementsContainerMap.get(key)
+    public void showEditingBox(CollectionEditorView collectionEditorView) {
+        String key = collectionEditorView.getEditorTitle().getInnerText();
+        collectionEditorView.getElementsContainer()
                 .appendChild(listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key)));
     }
 

@@ -50,11 +50,11 @@ public interface CollectionEditorView {
         void setValue(String key, String jsonString, CollectionEditorView collectionEditorView);
 
         /**
-         * Show the editing box
+         * Show the editing box in the given <code>CollectionEditorView</code>
          *
-         * @param key
+         * @param collectionEditorView
          */
-        void showEditingBox(String key);
+        void showEditingBox(CollectionEditorView collectionEditorView);
 
         /**
          * Toggle the expansion of the collection.

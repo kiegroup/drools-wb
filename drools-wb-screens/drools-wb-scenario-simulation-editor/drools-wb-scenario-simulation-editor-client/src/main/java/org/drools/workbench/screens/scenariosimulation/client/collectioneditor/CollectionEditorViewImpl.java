@@ -77,6 +77,9 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
     @DataField("saveButton")
     protected ButtonElement saveButton = Document.get().createButtonElement();
 
+    @DataField("addItemButton")
+    protected ButtonElement addItemButton = Document.get().createButtonElement();
+
     @DataField("editorTitle")
     protected HeadingElement editorTitle = Document.get().createHElement(4);
 
@@ -178,10 +181,17 @@ public class CollectionEditorViewImpl extends FocusWidget implements HasCloseCom
         presenter.save(this);
     }
 
+    @EventHandler("addItemButton")
+    public void onAddItemButton(ClickEvent clickEvent) {
+        presenter.showEditingBox(this);
+    }
+
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent event) {
         presenter.onToggleRowExpansion(this, isShown());
     }
+
+
 
     @Override
     public void toggleRowExpansion() {
