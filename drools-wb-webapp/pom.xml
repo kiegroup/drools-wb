@@ -1428,11 +1428,6 @@
       <artifactId>errai-jaxrs-client</artifactId>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>org.appformer</groupId>
-      <artifactId>appformer-js</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
-    </dependency>
 
   </dependencies>
 
