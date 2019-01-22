@@ -24,7 +24,6 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.K
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyView;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.PropertyEditingElement;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
@@ -63,9 +62,6 @@ public class ViewsProvider {
     @Inject
     private ManagedInstance<KeyValueEditingBox> mapEditingBoxInstance;
 
-    @Inject
-    private ManagedInstance<PropertyEditingElement> propertyEditingElementInstance;
-
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();
     }
@@ -100,10 +96,6 @@ public class ViewsProvider {
 
     public KeyValueEditingBox getKeyValueEditingBox() {
         return mapEditingBoxInstance.get();
-    }
-
-    public PropertyEditingElement getPropertyEditingElement() {
-        return propertyEditingElementInstance.get();
     }
 
 }

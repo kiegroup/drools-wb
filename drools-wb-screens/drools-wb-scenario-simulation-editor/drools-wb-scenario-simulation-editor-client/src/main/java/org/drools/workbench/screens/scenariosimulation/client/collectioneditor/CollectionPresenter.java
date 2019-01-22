@@ -67,12 +67,12 @@ public class CollectionPresenter implements CollectionView.Presenter {
     /**
      * <code>Map</code> used to pair the <code>Map</code> with the items' properties values with an <b>index</b>
      */
-    protected Map<Integer, Map<String, String>> propertiesValuesMap = new HashMap<>();
+    protected Map<String, Map<String, String>> propertiesValuesMap = new HashMap<>();
 
     /**
      * <code>Map</code> used to pair the <code>Map</code> with the items' key properties values with an <b>index</b>
      */
-    protected Map<Integer, Map<String, String>> keyPropertiesValuesMap = new HashMap<>();
+    protected Map<String, Map<String, String>> keyPropertiesValuesMap = new HashMap<>();
 
     @Override
     public void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionView) {
@@ -125,7 +125,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     @Override
     public void addListItem(String key, Map<String, String> propertiesValues) {
         final UListElement elementsContainer = elementsContainerMap.get(key);
-        int itemId = elementsContainer.getChildCount() - 1;
+        String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         propertiesValuesMap.put(itemId, propertiesValues);
         final UListElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
@@ -135,7 +135,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     @Override
     public void addMapItem(String key, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
         final UListElement elementsContainer = elementsContainerMap.get(key);
-        int itemId = elementsContainer.getChildCount() - 1;
+        String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         keyPropertiesValuesMap.put(itemId, keyPropertiesValues);
         propertiesValuesMap.put(itemId, valuePropertiesValues);
         final UListElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
@@ -144,7 +144,18 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
-    public void deleteItem(Integer itemId) {
+    public void updateListItem(String itemId, Map<String, String> propertiesValues) {
+        propertiesValuesMap.put(itemId, propertiesValues);
+    }
+
+    @Override
+    public void updateMapItem(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
+        keyPropertiesValuesMap.put(itemId, keyPropertiesValues);
+        propertiesValuesMap.put(itemId, valuePropertiesValues);
+    }
+
+    @Override
+    public void deleteItem(String itemId) {
         propertiesValuesMap.remove(itemId);
     }
 

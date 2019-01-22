@@ -47,7 +47,7 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
     }
 
     @Override
-    public UListElement getItemContainer(int itemId, Map<String, String> propertiesMap) {
+    public UListElement getItemContainer(String itemId, Map<String, String> propertiesMap) {
         final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
         itemElementView.init(this);
         itemElementView.setItemId(itemId);
@@ -78,8 +78,9 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
 
     @Override
     public void updateItem(ItemElementView itemElementView) {
-        propertyEditorPresenter.updateProperties(itemElementView.getItemId());
+        final Map<String, String> updatedValues = propertyEditorPresenter.updateProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        collectionEditorPresenter.updateListItem(itemElementView.getItemId(), updatedValues);
     }
 
     @Override

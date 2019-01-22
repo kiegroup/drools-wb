@@ -46,17 +46,19 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
     }
 
     @Override
-    public UListElement getKeyValueContainer(int itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
+    public UListElement getKeyValueContainer(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
         final KeyValueElementView keyValueElementView = viewsProvider.getKeyValueElementView();
         keyValueElementView.init(this);
         keyValueElementView.setItemId(itemId);
         final UListElement keyContainer = keyValueElementView.getKeyContainer();
+        String keyId = itemId+ "#key";
+        String valueId = itemId + "#value";
         keyPropertiesValues.forEach((propertyName, propertyValue) ->
-                                              keyContainer.appendChild(propertyEditorPresenter.getPropertyFields(itemId,propertyName, propertyValue)));
+                                            keyContainer.appendChild(propertyEditorPresenter.getPropertyFields(keyId, propertyName, propertyValue)));
 
         final UListElement valueContainer = keyValueElementView.getValueContainer();
         valuePropertiesValues.forEach((propertyName, propertyValue) ->
-                                              valueContainer.appendChild(propertyEditorPresenter.getPropertyFields(itemId,propertyName, propertyValue)));
+                                              valueContainer.appendChild(propertyEditorPresenter.getPropertyFields(valueId, propertyName, propertyValue)));
         keyValueElementViewList.add(keyValueElementView);
         return keyValueElementView.getItemContainer();
     }
@@ -74,14 +76,23 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
 
     @Override
     public void onEditItem(KeyValueElementView keyValueElementView) {
-        propertyEditorPresenter.editProperties(keyValueElementView.getItemId());
+        String itemId = keyValueElementView.getItemId();
+        String keyId = itemId+ "#key";
+        String valueId = itemId + "#value";
+        propertyEditorPresenter.editProperties(keyId);
+        propertyEditorPresenter.editProperties(valueId);
         keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
     public void updateItem(KeyValueElementView keyValueElementView) {
-        propertyEditorPresenter.updateProperties(keyValueElementView.getItemId());
+        String itemId = keyValueElementView.getItemId();
+        String keyId = itemId+ "#key";
+        String valueId = itemId + "#value";
+        final Map<String, String> keyPropertiesValues = propertyEditorPresenter.updateProperties(keyId);
+        final Map<String, String> valuePropertiesValues = propertyEditorPresenter.updateProperties(valueId);
         keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
+        collectionEditorPresenter.updateMapItem(itemId, keyPropertiesValues, valuePropertiesValues);
     }
 
     @Override

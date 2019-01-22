@@ -15,13 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
@@ -30,7 +30,7 @@ public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
     protected ViewsProvider viewsProvider;
 
     @Inject
-    protected PropertyEditingElementPresenter propertyEditingElementPresenter;
+    protected PropertyPresenter propertyPresenter;
 
     protected CollectionView.Presenter collectionEditorPresenter;
 
@@ -39,28 +39,23 @@ public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
         this.collectionEditorPresenter = collectionEditorPresenter;
     }
 
-    protected Map<String, String> instancePropertyMap;
-
-
     @Override
     public DivElement getEditingBox(String key, Map<String, String> instancePropertyMap) {
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
-        this.instancePropertyMap = instancePropertyMap;
         final ItemEditingBox listEditingBox = viewsProvider.getItemEditingBox();
         listEditingBox.init(this);
         listEditingBox.setKey(key);
         listEditingBox.getEditingBoxTitle().setInnerText("Edit " + propertyName);
         for (Map.Entry<String, String> entry : instancePropertyMap.entrySet()) {
             String propertyKey = entry.getKey();
-            listEditingBox.getPropertiesContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey));
+            listEditingBox.getPropertiesContainer().appendChild(propertyPresenter.getEditingPropertyFields("value", propertyKey, ""));
         }
         return listEditingBox.getEditingBox();
     }
 
     @Override
     public void save(String key) {
-        Map<String, String> propertiesValues = new HashMap<>();
-        instancePropertyMap.keySet().forEach(propertyKey -> propertiesValues.put(propertyKey, propertyEditingElementPresenter.getPropertyValue(propertyKey)));
+        Map<String, String> propertiesValues = propertyPresenter.updateProperties("value");
         collectionEditorPresenter.addListItem(key, propertiesValues);
     }
 

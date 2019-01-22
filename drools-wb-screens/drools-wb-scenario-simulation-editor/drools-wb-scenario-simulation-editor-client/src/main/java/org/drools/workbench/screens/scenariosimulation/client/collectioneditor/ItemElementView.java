@@ -37,7 +37,7 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
          *
          * @return the <code>UListElement</code> representing all the items of the list
          */
-        UListElement getItemContainer(int itemId, Map<String, String> propertiesMap);
+        UListElement getItemContainer(String itemId, Map<String, String> propertiesMap);
 
         void onToggleRowExpansion(boolean isShown);
 
@@ -75,13 +75,13 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
      * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
      * @param itemId
      */
-    void setItemId(int itemId);
+    void setItemId(String itemId);
 
     /**
      *
      * @return the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
      */
-    int getItemId();
+    String getItemId();
 
     /**
      *

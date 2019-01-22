@@ -32,7 +32,6 @@ public interface CollectionView {
         /**
          * Actual implementations should invoke this method first to retrieve information about the collection
          * generic type and the structure of such type
-         *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param instancePropertyMap
          * @param collectionEditorView
@@ -42,20 +41,16 @@ public interface CollectionView {
         /**
          * Actual implementations should invoke this method first to retrieve information about the collection
          * generic type and the structure of such type
-         *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param keyPropertyMap
          * @param valuePropertyMap
          * @param collectionEditorView
-         *
          */
         void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, CollectionView collectionEditorView);
-
 
         /**
          * Actual implementations are meant to transform that json representation to a <code>com.google.gwt.json.client.JSONValue</code> and use that to populate the
          * given <code>CollectionEditorView</code>
-         *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param jsonString
          * @param collectionEditorView
@@ -64,14 +59,12 @@ public interface CollectionView {
 
         /**
          * Show the editing box in the given <code>CollectionEditorView</code>
-         *
          * @param collectionEditorView
          */
         void showEditingBox(CollectionView collectionEditorView);
 
         /**
          * Toggle the expansion of the collection.
-         *
          * @param collectionEditorView
          * @param isShown the <b>current</b> expansion status of the collection
          */
@@ -79,7 +72,6 @@ public interface CollectionView {
 
         /**
          * Creates a new single <b>item</b> element with values taken from given <code>Map</code>
-         *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param propertiesValues
          */
@@ -87,33 +79,43 @@ public interface CollectionView {
 
         /**
          * Creates a new <b>key/value</b> <b>item</b> element with values taken from given <code>Map</code>
-         *
-         *
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
          * @param keyPropertiesValues
          * @param valuePropertiesValues
          */
-        void addMapItem(String key, Map<String, String> keyPropertiesValues,  Map<String, String> valuePropertiesValues);
+        void addMapItem(String key, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues);
+
+        /**
+         * Update the values in the local <code>propertiesValuesMap</code> for the given <b>key</b>
+         * @param itemId
+         * @param propertiesValues
+         */
+        void updateListItem(String itemId, Map<String, String> propertiesValues);
+
+        /**
+         * Update the values in the locals <code>keyPropertiesValuesMap</code> and <code>propertiesValuesMap</code> for the given <b>key</b>
+         * @param itemId
+         * @param keyPropertiesValues
+         * @param valuePropertiesValues
+         */
+        void updateMapItem(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues);
 
         /**
          * Delete from local <code>Map</code>s and final <b>value</b> data belonging to the <b>item</b> with the given <b>itemId</b>
          * @param itemId
          */
-        void deleteItem(Integer itemId);
+        void deleteItem(String itemId);
 
         /**
          * Actual implementations are meant to retrieve the json representation of the content of the
          * given <code>CollectionEditorView</code> Save the <b>json</b> representation of the values of the given <code>CollectionEditorView</code>
-         *
          * @param collectionEditorView
          */
         void save(CollectionView collectionEditorView);
-
     }
 
     /**
      * Actual implementations are meant to call the <code>Presenter</code> to be populated by this json representation
-     *
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param jsonString
      */
@@ -121,7 +123,6 @@ public interface CollectionView {
 
     /**
      * Actual implementations are meant to call the <code>Presenter</code> to retrieve the json representation of their contents
-     *
      * @return the json representation of the current content
      */
     String getValue();
@@ -170,8 +171,6 @@ public interface CollectionView {
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param keyPropertyMap
      * @param valuePropertyMap
-     *
      */
     void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
-
 }

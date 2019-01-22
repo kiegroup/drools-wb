@@ -36,7 +36,7 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
          * representing the value of a single item of the map
          * @return the <code>UListElement</code> representing all the items of the map
          */
-        UListElement getKeyValueContainer(int itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues);
+        UListElement getKeyValueContainer(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues);
 
         void onToggleRowExpansion(boolean isShown);
 
@@ -73,12 +73,12 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
      * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
      * @param itemId
      */
-    void setItemId(int itemId);
+    void setItemId(String itemId);
 
     /**
      * @return the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
      */
-    int getItemId();
+    String getItemId();
 
     /**
      * @return the <code>UListElement</code> containing all the item properties

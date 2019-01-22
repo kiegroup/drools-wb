@@ -34,7 +34,7 @@ public class ItemElementViewImpl implements ItemElementView {
 
     protected ItemElementView.Presenter presenter;
 
-    protected int itemId;
+    protected String itemId;
 
     @DataField("itemContainer")
     protected UListElement itemContainer = Document.get().createULElement();
@@ -66,12 +66,12 @@ public class ItemElementViewImpl implements ItemElementView {
     }
 
     @Override
-    public void setItemId(int itemId) {
+    public void setItemId(String itemId) {
         this.itemId = itemId;
     }
 
     @Override
-    public int getItemId() {
+    public String getItemId() {
         return itemId;
     }
 

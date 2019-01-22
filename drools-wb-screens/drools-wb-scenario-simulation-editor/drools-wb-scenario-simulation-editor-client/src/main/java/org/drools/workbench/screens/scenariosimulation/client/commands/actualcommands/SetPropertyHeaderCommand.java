@@ -20,7 +20,6 @@ import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
 
-import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
@@ -29,8 +28,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyMetaDataGroup;
 
@@ -70,7 +67,7 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
         if (ScenarioSimulationUtils.isCollection(propertyClass)) {
             String genericType = factModelTree.getGenericTypeInfo(propertyName);
-            selectedColumn.setFactory((BaseSingletonDOMElementFactory<String, ? extends Widget, ? extends BaseDOMElement<String, ? extends Widget>>) context.getCollectionEditorSingletonDOMElementFactory());
+            selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
             final FactMapping factMappingByIndex = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             factMappingByIndex.setGenericType(genericType);
         } else {

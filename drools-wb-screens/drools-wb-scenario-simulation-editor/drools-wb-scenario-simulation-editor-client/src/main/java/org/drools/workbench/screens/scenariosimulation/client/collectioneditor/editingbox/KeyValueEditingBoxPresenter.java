@@ -15,13 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter {
@@ -30,7 +30,7 @@ public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter
     protected ViewsProvider viewsProvider;
 
     @Inject
-    protected PropertyEditingElementPresenter propertyEditingElementPresenter;
+    protected PropertyPresenter propertyPresenter;
 
     protected CollectionView.Presenter collectionEditorPresenter;
 
@@ -39,31 +39,23 @@ public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter
         this.collectionEditorPresenter = collectionEditorPresenter;
     }
 
-    protected Map<String, String> keyPropertyMap;
-
-    protected Map<String, String> valuePropertyMap;
-
     @Override
     public DivElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
-        this.keyPropertyMap = keyPropertyMap;
-        this.valuePropertyMap = valuePropertyMap;
         final KeyValueEditingBox mapEditingBox = viewsProvider.getKeyValueEditingBox();
         mapEditingBox.init(this);
         mapEditingBox.setKey(key);
         mapEditingBox.getEditingBoxTitle().setInnerText("Edit " + propertyName);
-        keyPropertyMap.forEach((propertyKey, value) -> mapEditingBox.getKeyContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey))
+        keyPropertyMap.forEach((propertyKey, value) -> mapEditingBox.getKeyContainer().appendChild(propertyPresenter.getEditingPropertyFields("key", propertyKey, ""))
         );
-        valuePropertyMap.forEach((propertyKey, value) -> mapEditingBox.getValueContainer().appendChild(propertyEditingElementPresenter.getPropertyContainer(propertyKey)));
+        valuePropertyMap.forEach((propertyKey, value) -> mapEditingBox.getValueContainer().appendChild(propertyPresenter.getEditingPropertyFields("value", propertyKey, "")));
         return mapEditingBox.getEditingBox();
     }
 
     @Override
     public void save(String key) {
-        Map<String, String> keyPropertiesValues = new HashMap<>();
-        Map<String, String> valuePropertiesMap = new HashMap<>();
-        keyPropertyMap.keySet().forEach(propertyKey -> keyPropertiesValues.put(propertyKey, propertyEditingElementPresenter.getPropertyValue(propertyKey)));
-        valuePropertyMap.keySet().forEach(propertyKey -> valuePropertiesMap.put(propertyKey, propertyEditingElementPresenter.getPropertyValue(propertyKey)));
+        Map<String, String> keyPropertiesValues = propertyPresenter.updateProperties("key");
+        Map<String, String> valuePropertiesMap = propertyPresenter.updateProperties("value");
         collectionEditorPresenter.addMapItem(key, keyPropertiesValues, valuePropertiesMap);
     }
 

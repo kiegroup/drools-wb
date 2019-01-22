@@ -44,7 +44,7 @@ public class PropertyPresenter implements PropertyView.Presenter {
     /**
      * <code>Map</code> to pair a given <b>itemId</b> with its <code>PropertyEditorView</code>s
      */
-    protected Map<Integer, List<PropertyView>> propertyViewMap = new HashMap<>();
+    protected Map<String, List<PropertyView>> propertyViewMap = new HashMap<>();
 
     @Override
     public String getPropertyValue(String propertyName) throws Exception {
@@ -56,7 +56,7 @@ public class PropertyPresenter implements PropertyView.Presenter {
     }
 
     @Override
-    public void editProperties(int itemId) {
+    public void editProperties(String itemId) {
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> {
                     propertyEditorView.getPropertyValueSpan().getStyle().setVisibility(Style.Visibility.HIDDEN);
@@ -67,17 +67,17 @@ public class PropertyPresenter implements PropertyView.Presenter {
     }
 
     @Override
-    public void stopEditProperties(int itemId) {
+    public void stopEditProperties(String itemId) {
         stopEdit(itemId, false);
     }
 
     @Override
-    public void updateProperties(int itemId) {
-        stopEdit(itemId, true);
+    public Map<String, String> updateProperties(String itemId) {
+        return stopEdit(itemId, true);
     }
 
     @Override
-    public LIElement getPropertyFields(int itemId, String propertyName, String propertyValue) {
+    public LIElement getPropertyFields(String itemId, String propertyName, String propertyValue) {
         final PropertyView propertyEditorView = viewsProvider.getPropertyEditorView();
         String hashedPropertyName = "#" + propertyName;
         final SpanElement propertyNameSpan = propertyEditorView.getPropertyName();
@@ -103,19 +103,26 @@ public class PropertyPresenter implements PropertyView.Presenter {
     }
 
     @Override
-    public void onToggleRowExpansion(int itemId, boolean isShown) {
+    public LIElement getEditingPropertyFields(String itemId, String propertyName, String propertyValue) {
+        LIElement toReturn = getPropertyFields(itemId, propertyName, propertyValue);
+        editProperties(itemId);
+        return toReturn;
+    }
+
+    @Override
+    public void onToggleRowExpansion(String itemId, boolean isShown) {
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> onToggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
     }
 
     @Override
-    public void deleteProperties(int itemId) {
+    public void deleteProperties(String itemId) {
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> {
-            String propertyName = propertyEditorView.getPropertyName().getAttribute("data-i18n-key");
-            propertyEditorView.getPropertyFields().removeFromParent();
-            propertySpanElementMap.remove(propertyName);
-        });
+                    String propertyName = propertyEditorView.getPropertyName().getAttribute("data-i18n-key");
+                    propertyEditorView.getPropertyFields().removeFromParent();
+                    propertySpanElementMap.remove(propertyName);
+                });
         propertyViewMap.remove(itemId);
     }
 
@@ -129,7 +136,8 @@ public class PropertyPresenter implements PropertyView.Presenter {
         }
     }
 
-    protected void stopEdit(int itemId, boolean toUpdate) {
+    protected Map<String, String> stopEdit(String itemId, boolean toUpdate) {
+        Map<String, String> toReturn = new HashMap<>();
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> {
                     if (toUpdate) {
@@ -138,6 +146,10 @@ public class PropertyPresenter implements PropertyView.Presenter {
                     propertyEditorView.getPropertyValueSpan().getStyle().setVisibility(Style.Visibility.VISIBLE);
                     propertyEditorView.getPropertyValueInput().getStyle().setVisibility(Style.Visibility.HIDDEN);
                     propertyEditorView.getPropertyValueInput().setDisabled(true);
+                    String propertyName = propertyEditorView.getPropertyName().getInnerText();
+                    propertyName = propertyName.substring(propertyName.lastIndexOf("#") + 1);
+                    toReturn.put(propertyName, propertyEditorView.getPropertyValueSpan().getInnerText());
                 });
+        return toReturn;
     }
 }
