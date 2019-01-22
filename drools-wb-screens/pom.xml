@@ -31,7 +31,6 @@
     <module>drools-wb-test-scenario-editor</module>
     <module>drools-wb-workitems-editor</module>
     <module>drools-wb-scenario-simulation-editor</module>
-    <module>drools-wb-home-screen</module>
   </modules>
 
 </project>
