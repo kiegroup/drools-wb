@@ -86,11 +86,6 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
     UListElement getItemContainer();
 
     /**
-     * @return the <code>LIElement</code> containing all the key/value properties
-     */
-    LIElement getKeyValueContainer();
-
-    /**
      * @return the <code>UListElement</code> containing the <b>key</b> properties
      */
     UListElement getKeyContainer();
@@ -100,10 +95,9 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
      */
     UListElement getValueContainer();
 
-    /**
-     * @return the <code>LIElement</code> separating each item
-     */
-    LIElement getItemSeparator();
+    LIElement getKeyLabel();
+
+    LIElement getValueLabel();
 
     /**
      * @return the <code>LIElement</code> with the item' save/cancel buttons

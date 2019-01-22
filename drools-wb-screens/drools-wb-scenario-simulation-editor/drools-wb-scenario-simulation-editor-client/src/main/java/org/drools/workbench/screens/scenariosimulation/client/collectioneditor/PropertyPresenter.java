@@ -29,7 +29,6 @@ import com.google.gwt.dom.client.Style;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 import static org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionEditorUtils.setSpanAttributeAttributes;
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.NODE_HIDDEN;
 
 public class PropertyPresenter implements PropertyView.Presenter {
 
@@ -112,7 +111,7 @@ public class PropertyPresenter implements PropertyView.Presenter {
     @Override
     public void onToggleRowExpansion(String itemId, boolean isShown) {
         propertyViewMap.get(itemId)
-                .forEach(propertyEditorView -> onToggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
+                .forEach(propertyEditorView -> CollectionEditorUtils.onToggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
     }
 
     @Override
@@ -124,16 +123,6 @@ public class PropertyPresenter implements PropertyView.Presenter {
                     propertySpanElementMap.remove(propertyName);
                 });
         propertyViewMap.remove(itemId);
-    }
-
-    protected void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
-        if (isShown) {
-            liElement.addClassName(NODE_HIDDEN);
-            liElement.getStyle().setDisplay(Style.Display.NONE);
-        } else {
-            liElement.removeClassName(NODE_HIDDEN);
-            liElement.getStyle().setDisplay(Style.Display.BLOCK);
-        }
     }
 
     protected Map<String, String> stopEdit(String itemId, boolean toUpdate) {

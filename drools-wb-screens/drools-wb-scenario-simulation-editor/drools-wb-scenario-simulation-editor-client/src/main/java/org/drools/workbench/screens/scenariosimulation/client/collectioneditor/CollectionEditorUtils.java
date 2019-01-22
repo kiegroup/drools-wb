@@ -15,10 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.FA_ANGLE_DOWN;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.FA_ANGLE_RIGHT;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.NODE_HIDDEN;
 
 public class CollectionEditorUtils {
 
@@ -37,9 +40,21 @@ public class CollectionEditorUtils {
         }
     }
 
+    public static void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
+        if (isShown) {
+            liElement.addClassName(NODE_HIDDEN);
+            liElement.getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            liElement.removeClassName(NODE_HIDDEN);
+            liElement.getStyle().setDisplay(Style.Display.BLOCK);
+        }
+    }
+
     public static void setSpanAttributeAttributes(String dataI18nKey, String innerText, String dataField, SpanElement spanElement) {
         spanElement.setInnerText(innerText);
         spanElement.setAttribute("data-i18n-key", dataI18nKey);
         spanElement.setAttribute("data-field", dataField);
     }
+
+
 }

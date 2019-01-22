@@ -71,7 +71,13 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
     @Override
     public void onToggleRowExpansion(KeyValueElementView keyValueElementView, boolean isShown) {
         CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getFaAngleRight(), !isShown);
-        propertyEditorPresenter.onToggleRowExpansion(keyValueElementView.getItemId(), isShown);
+        String itemId = keyValueElementView.getItemId();
+        String keyId = itemId+ "#key";
+        String valueId = itemId + "#value";
+        CollectionEditorUtils.onToggleRowExpansion(keyValueElementView.getKeyLabel(), isShown);
+        CollectionEditorUtils.onToggleRowExpansion(keyValueElementView.getValueLabel(), isShown);
+        propertyEditorPresenter.onToggleRowExpansion(keyId, isShown);
+        propertyEditorPresenter.onToggleRowExpansion(valueId, isShown);
     }
 
     @Override

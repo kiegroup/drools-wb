@@ -48,6 +48,12 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
     @DataField("valueContainer")
     protected UListElement valueContainer = Document.get().createULElement();
 
+    @DataField("keyLabel")
+    protected LIElement keyLabel = Document.get().createLIElement();
+
+    @DataField("valueLabel")
+    protected LIElement valueLabel = Document.get().createLIElement();
+
     @DataField("itemSeparator")
     protected LIElement itemSeparator = Document.get().createLIElement();
 
@@ -90,11 +96,6 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
     }
 
     @Override
-    public LIElement getKeyValueContainer() {
-        return keyValueContainer;
-    }
-
-    @Override
     public UListElement getKeyContainer() {
         return keyContainer;
     }
@@ -105,8 +106,13 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
     }
 
     @Override
-    public LIElement getItemSeparator() {
-        return itemSeparator;
+    public LIElement getKeyLabel() {
+        return keyLabel;
+    }
+
+    @Override
+    public LIElement getValueLabel() {
+        return valueLabel;
     }
 
     @Override
