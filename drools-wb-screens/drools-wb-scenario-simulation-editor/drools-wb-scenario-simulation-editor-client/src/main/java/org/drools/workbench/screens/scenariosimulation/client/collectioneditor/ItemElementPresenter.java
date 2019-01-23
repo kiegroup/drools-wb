@@ -32,7 +32,7 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
     protected CollectionView.Presenter collectionEditorPresenter;
 
     @Inject
-    protected PropertyView.Presenter propertyEditorPresenter;
+    protected PropertyView.Presenter propertyPresenter;
 
     @Inject
     protected ViewsProvider viewsProvider;
@@ -55,7 +55,7 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
         final UListElement toReturn = itemElementView.getItemContainer();
         final LIElement saveChange = itemElementView.getSaveChange();
         propertiesMap.forEach((propertyName, propertyValue) ->
-                                      toReturn.insertBefore(propertyEditorPresenter.getPropertyFields(itemId,propertyName, propertyValue), saveChange));
+                                      toReturn.insertBefore(propertyPresenter.getPropertyFields(itemId, propertyName, propertyValue), saveChange));
         itemElementViewList.add(itemElementView);
         return toReturn;
     }
@@ -68,30 +68,30 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
     @Override
     public void onToggleRowExpansion(ItemElementView itemElementView, boolean isShown) {
         CollectionEditorUtils.toggleRowExpansion(itemElementView.getFaAngleRight(), !isShown);
-        propertyEditorPresenter.onToggleRowExpansion(itemElementView.getItemId(), isShown);
+        propertyPresenter.onToggleRowExpansion(itemElementView.getItemId(), isShown);
     }
 
     @Override
     public void onEditItem(ItemElementView itemElementView) {
-        propertyEditorPresenter.editProperties(itemElementView.getItemId());
+        propertyPresenter.editProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
     public void updateItem(ItemElementView itemElementView) {
-        propertyEditorPresenter.updateProperties(itemElementView.getItemId());
+        propertyPresenter.updateProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
     }
 
     @Override
     public void onStopEditingItem(ItemElementView itemElementView) {
-        propertyEditorPresenter.stopEditProperties(itemElementView.getItemId());
+        propertyPresenter.stopEditProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
     }
 
     @Override
     public void onDeleteItem(ItemElementView itemElementView) {
-        propertyEditorPresenter.deleteProperties(itemElementView.getItemId());
+        propertyPresenter.deleteProperties(itemElementView.getItemId());
         itemElementView.getItemContainer().removeFromParent();
         itemElementViewList.remove(itemElementView);
         collectionEditorPresenter.deleteItem(itemElementView.getItemId());
@@ -100,7 +100,7 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
     @Override
     public List<Map<String, String>> getItemsProperties() {
         return itemElementViewList.stream()
-                .map(itemElementView -> propertyEditorPresenter.getProperties(itemElementView.getItemId()))
+                .map(itemElementView -> propertyPresenter.getProperties(itemElementView.getItemId()))
                 .collect(Collectors.toList());
 
     }

@@ -7,33 +7,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ObjectSeparatorTest {
+public class ItemElementViewImplTest {
 
     @Mock
-    private CollectionEditorPresenter collectionEditorPresenterMock;
+    private ItemElementView.Presenter listEditorElementViewPresenterMock;
 
-    private ObjectSeparator objectSeparator;
+    private ItemElementViewImpl listEditorElementViewImpl;
 
     @Before
     public void setup() {
-        this.objectSeparator = spy(new ObjectSeparator() {
+        this.listEditorElementViewImpl = spy(new ItemElementViewImpl() {
             {
-                this.collectionEditorPresenter = collectionEditorPresenterMock;
+                this.presenter = listEditorElementViewPresenterMock;
             }
         });
     }
 
     @Test
-    public void onAddItemButtonClick() {
+    public void onFaAngleRightClick() {
         ClickEvent clickEventMock = mock(ClickEvent.class);
-        objectSeparator.onAddItemButtonClick(clickEventMock);
-        verify(collectionEditorPresenterMock, times(1)).showEditingBox(anyString());
+        listEditorElementViewImpl.onFaAngleRightClick(clickEventMock);
+        verify(listEditorElementViewPresenterMock, times(1)).onToggleRowExpansion(eq(listEditorElementViewImpl), anyBoolean());
     }
 }
