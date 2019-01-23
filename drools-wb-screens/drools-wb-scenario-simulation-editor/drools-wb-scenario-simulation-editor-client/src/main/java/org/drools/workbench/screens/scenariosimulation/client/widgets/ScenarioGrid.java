@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.ait.lienzo.client.core.types.Transform;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
@@ -291,16 +290,12 @@ public class ScenarioGrid extends BaseGridWidget {
             final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
             final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
 
-            final GridBodyCellEditContext context = CellContextUtilities.makeRenderContext(this,
-                                                                                           ri,
-                                                                                           ci,
-                                                                                           null,
-                                                                                           uiRowIndex);
-
-            final Transform transform = scenarioGridPanel.getViewport().getTransform();
-
-            gridContextMenu.show((int) ((context.getAbsoluteCellX() * transform.getScaleX()) + transform.getTranslateX()) + scenarioGridPanel.getAbsoluteLeft(),
-                                 (int) ((context.getAbsoluteCellY() * transform.getScaleY()) + transform.getTranslateY()) + scenarioGridPanel.getAbsoluteTop(),
+            final GridBodyCellEditContext context = CellContextUtilities.makeCellRenderContext(this,
+                                                                                               ri,
+                                                                                               ci,
+                                                                                               uiRowIndex);
+            gridContextMenu.show((int) context.getAbsoluteCellX(),
+                                 (int) context.getAbsoluteCellY(),
                                  uiColumnIndex,
                                  uiRowIndex,
                                  scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),
