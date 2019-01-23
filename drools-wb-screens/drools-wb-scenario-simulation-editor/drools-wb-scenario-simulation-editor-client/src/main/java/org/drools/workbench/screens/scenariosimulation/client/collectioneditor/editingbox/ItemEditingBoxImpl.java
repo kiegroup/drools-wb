@@ -74,7 +74,7 @@ public class ItemEditingBoxImpl implements ItemEditingBox {
 
     @EventHandler("saveItem")
     public void onSaveItemClickEvent(ClickEvent event) {
-        presenter.save(key);
+        presenter.save(this);
         close(event);
     }
 

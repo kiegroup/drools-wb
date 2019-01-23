@@ -164,10 +164,14 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * @param factName
      * @param modelFields
      * @return
+     * 
+     * @implNote For the moment being, due to current implementation of <b>DMO</b>, it it not possible to retrieve <b>all</b>
+     * the generic types of a class with more then one, but only the last one. So, for <code>Map</code>, the <b>key</b>
+     * will allways be a <code>java.lang.String</code>
      */
     protected FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
         Map<String, String> simpleProperties = new HashMap<>();
-        Map<String, String> genericTypeInfoMap = new HashMap<>();
+        Map<String, List<String>> genericTypesMap = new HashMap<>();
         String factPackageName = packageName;
         String fullFactClassName = oracle.getFQCNByFactName(factName);
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
@@ -178,12 +182,32 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                 String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
                 if (ScenarioSimulationUtils.isCollection(className)) {
-                    String genericInfo = oracle.getParametricFieldType(factName, modelField.getName());
-                    genericTypeInfoMap.put(modelField.getName(), genericInfo);
+                    populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationUtils.isList(className));
                 }
             }
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypeInfoMap);
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
+    }
+
+    /**
+     * Populate the given <code>Map</code> with the generic type(s) of given property.
+     * If <code>isList</code> is false, the first generic will be <b>java.lang.String</b>
+     * @param toPopulate
+     * @param factName
+     * @param propertyName
+     * @param isList
+     *
+     * @implNote due to current DMO implementation, it is not possible to retrive <b>all</b> generic types of a given class, but only the last one; for the moment being, the generic type
+     * for <code>Map</code> will be <b>java.lang.String</b>
+     */
+    protected void populateGenericTypeMap(Map<String, List<String>> toPopulate, String factName, String propertyName, boolean isList) {
+        List<String> genericTypes = new ArrayList<>();
+        if (!isList) {
+            genericTypes.add(String.class.getName());
+        }
+        String genericInfo = oracle.getParametricFieldType(factName, propertyName);
+        genericTypes.add(genericInfo);
+        toPopulate.put(propertyName, genericTypes);
     }
 
     /**

@@ -15,7 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model.typedescriptor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -37,7 +39,7 @@ public class FactModelTree {
     private boolean isSimple = false;
 
     private Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
-    private Map<String, String> genericTypeInfoMap; // Map of the collection' properties generic-type: key = property name (ex "books"), value = full collection class (ex. "java.util.List") + "#" + generic type (ex "com.Book"): ex "java.util.List#com.Book"
+    private Map<String, List<String>> genericTypesMap; // Map of the collection' properties generic-type: key = property name (ex "books"), value = generic type (ex "com.Book")
     private Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
     private Type type;
 
@@ -51,10 +53,10 @@ public class FactModelTree {
      * @param factName
      * @param fullPackage
      * @param simpleProperties
-     * @param genericTypeInfoMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
+     * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, String> genericTypeInfoMap) {
-        this(factName, fullPackage, simpleProperties, genericTypeInfoMap, Type.UNDEFINED);
+    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap) {
+        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
     /**
@@ -63,14 +65,14 @@ public class FactModelTree {
      * @param factName
      * @param fullPackage
      * @param simpleProperties
-     * @param genericTypeInfoMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
+     * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      * @param type
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, String> genericTypeInfoMap, Type type) {
+    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
-        this.genericTypeInfoMap = genericTypeInfoMap;
+        this.genericTypesMap = genericTypesMap;
         this.type = type;
     }
 
@@ -101,10 +103,10 @@ public class FactModelTree {
     /**
      * Returns the <b>generic type</b> info of the given <b>property</b>
      * @param propertyName
-     * @return the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
+     * @return the <code>List</code> of <b>generic type</b>s, or an <b>empty</b> one
      */
-    public String getGenericTypeInfo(String propertyName) {
-        return genericTypeInfoMap.getOrDefault(propertyName, null);
+    public List<String> getGenericTypeInfo(String propertyName) {
+        return genericTypesMap.getOrDefault(propertyName, new ArrayList<>());
     }
 
     public void removeSimpleProperty(String propertyName) {

@@ -35,7 +35,7 @@ public interface KeyValueEditingBox extends HasPresenter<KeyValueEditingBox.Pres
          */
         DivElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
 
-        void save(String key);
+        void save();
 
         void close(KeyValueEditingBox toClose);
 

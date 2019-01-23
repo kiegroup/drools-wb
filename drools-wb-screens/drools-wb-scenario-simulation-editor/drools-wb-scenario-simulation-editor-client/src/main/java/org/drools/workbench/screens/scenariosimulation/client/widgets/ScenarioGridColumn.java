@@ -86,7 +86,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
                                          ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell) cell);
                                      } else if (e instanceof CollectionEditorDOMElement) {
                                          CollectionEditorDOMElement collectionEditorDOMElement = (CollectionEditorDOMElement) e;
-                                         collectionEditorDOMElement.getWidget().setValue(collectionEditorDOMElement.getKey(), assertCell(cell).getValue().getValue());
+                                         collectionEditorDOMElement.getWidget().setValue(assertCell(cell).getValue().getValue());
                                          collectionEditorDOMElement.setScenarioGridCell((ScenarioGridCell) cell);
                                      }
                                  },

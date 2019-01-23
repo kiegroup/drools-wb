@@ -56,6 +56,12 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
         void updateItem(KeyValueElementView itemElementView);
 
         /**
+         * Retrieves a <code>Map</code> with the <code>Map</code>s of all the items' key/value properties
+         * @return
+         */
+        Map<Map<String, String>, Map<String, String>> getItemsProperties();
+
+        /**
          * Stop editing properties of the given <code>itemElementView</code>
          * <b>without</b> updating the properties
          * @param itemElementView

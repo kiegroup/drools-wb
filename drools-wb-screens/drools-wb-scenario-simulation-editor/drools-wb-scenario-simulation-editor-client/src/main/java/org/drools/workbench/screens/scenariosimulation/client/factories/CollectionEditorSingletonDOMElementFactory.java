@@ -17,8 +17,9 @@
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -28,7 +29,6 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
@@ -36,6 +36,8 @@ import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingl
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
+
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
 
 public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, CollectionViewImpl, CollectionEditorDOMElement> {
 
@@ -73,8 +75,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             int actualIndex = model.getColumns().indexOf(col);
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
-            String key = factMapping.getFactAlias() + "#" + factMapping.getExpressionAlias();
-            this.e = internalCreateDomElement(widget, gridLayer, gridWidget, key);
+            this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
             widget.addCloseCompositeEventHandler(event -> {
                 destroyResources();
                 gridLayer.batch();
@@ -103,23 +104,37 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         String propertyClass = factMapping.getClassName();
         String className = factMapping.getFactAlias();
         String propertyName = factMapping.getExpressionAlias();
-        String genericType = factMapping.getGenericType();
+        List<String> genericTypes = factMapping.getGenericTypes();
         String key = className + "#" + propertyName;
-        final SortedMap<String, FactModelTree> dataObjectFieldsMap = scenarioSimulationContext.getDataObjectFieldsMap();
-        final FactModelTree genericFactModelTree = dataObjectFieldsMap.get(genericType);
         if (ScenarioSimulationUtils.isList(propertyClass)) {
             collectionEditorView.setListWidget(true);
-            collectionEditorView.initListStructure(key, genericFactModelTree.getSimpleProperties());
+            collectionEditorView.initListStructure(key, getPropertiesMap(genericTypes.get(0)));
         } else {
             collectionEditorView.setListWidget(false);
-            final HashMap<String, String> keyPropertyMap = new HashMap<>();
-            keyPropertyMap.put("value", String.class.getName());
-            collectionEditorView.initMapStructure(key, keyPropertyMap, genericFactModelTree.getSimpleProperties());
+            collectionEditorView.initMapStructure(key, getPropertiesMap(genericTypes.get(0)), getPropertiesMap(genericTypes.get(1)));
         }
     }
 
-    protected CollectionEditorDOMElement internalCreateDomElement(CollectionViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget, String key) {
-        return new CollectionEditorDOMElement(collectionEditorView, gridLayer, gridWidget, key);
+    protected CollectionEditorDOMElement internalCreateDomElement(CollectionViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget) {
+        return new CollectionEditorDOMElement(collectionEditorView, gridLayer, gridWidget);
+    }
+
+    /**
+     * Retrieve a <code>Map</code> with the property name/type of the given <b>typeName</b>
+     * <b>If</b> typeName is a <b>simple</b> class (see {@link ScenarioSimulationUtils#isSimpleJavaType(java.lang.String)})
+     * the returned <code>Map</code> will have an entry with <b>value</b> as key and <b>(typeName)</b> as value
+     * @param typeName
+     * @return
+     */
+    protected Map<String, String> getPropertiesMap(String typeName) {
+        Map<String, String> toReturn;
+        if (isSimpleJavaType(typeName)) {
+            toReturn = new HashMap<>();
+            toReturn.put("value", typeName);
+        } else {
+            toReturn =  scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
+        }
+        return toReturn;
     }
 }
 

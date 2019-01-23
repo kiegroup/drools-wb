@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,29 +51,14 @@ public class CollectionPresenter implements CollectionView.Presenter {
     protected KeyValueEditingBoxPresenter mapEditingBoxPresenter;
 
     /**
-     * <code>Map</code> used to pair the <code>UListElement</code> elementsContainer with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
-     */
-    protected Map<String, UListElement> elementsContainerMap = new HashMap<>();
-
-    /**
-     * <code>Map</code> used to pair the <code>LIElement</code> objectSeparator with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
-     */
-    protected Map<String, LIElement> objectSeparatorMap = new HashMap<>();
-
-    /**
      * <code>Map</code> used to pair the <code>Map</code> with instance' properties classes with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
      */
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
 
-    /**
-     * <code>Map</code> used to pair the <code>Map</code> with the items' properties values with an <b>index</b>
-     */
-    protected Map<String, Map<String, String>> propertiesValuesMap = new HashMap<>();
 
-    /**
-     * <code>Map</code> used to pair the <code>Map</code> with the items' key properties values with an <b>index</b>
-     */
-    protected Map<String, Map<String, String>> keyPropertiesValuesMap = new HashMap<>();
+    protected CollectionView collectionView;
+
+    protected LIElement objectSeparatorLI;
 
     @Override
     public void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionView) {
@@ -92,110 +78,95 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
-    public void setValue(String key, String jsonString, CollectionView collectionEditorView) {
+    public void setValue(String jsonString) {
         if (jsonString == null || jsonString.isEmpty()) {
             return;
         }
         JSONValue jsonValue = getJSONValue(jsonString);
-        if (collectionEditorView.isListWidget()) {
-            populateList(key, jsonValue);
+        if (collectionView.isListWidget()) {
+            populateList(jsonValue);
         } else {
-            populateMap(key, jsonValue);
+            populateMap(jsonValue);
         }
     }
 
     @Override
-    public void showEditingBox(CollectionView collectionEditorView) {
-        String key = collectionEditorView.getEditorTitle().getInnerText();
-        if (collectionEditorView.isListWidget()) {
-            collectionEditorView.getElementsContainer()
+    public void showEditingBox() {
+        String key = collectionView.getEditorTitle().getInnerText();
+        if (collectionView.isListWidget()) {
+            collectionView.getElementsContainer()
                     .appendChild(listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key)));
         } else {
-            collectionEditorView.getElementsContainer()
+            collectionView.getElementsContainer()
                     .appendChild(mapEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key + "#key"), instancePropertiesMap.get(key + "#value")));
         }
     }
 
     @Override
-    public void onToggleRowExpansion(CollectionView collectionEditorView, boolean isShown) {
-        collectionEditorView.toggleRowExpansion();
-        if (collectionEditorView.isListWidget()) {
+    public void onToggleRowExpansion(boolean isShown) {
+        collectionView.toggleRowExpansion();
+        if (collectionView.isListWidget()) {
             listElementPresenter.onToggleRowExpansion(isShown);
-        } else  {
+        } else {
             mapElementPresenter.onToggleRowExpansion(isShown);
         }
     }
 
     @Override
-    public void addListItem(String key, Map<String, String> propertiesValues) {
-        final UListElement elementsContainer = elementsContainerMap.get(key);
+    public void addListItem(Map<String, String> propertiesValues) {
+        final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
-        propertiesValuesMap.put(itemId, propertiesValues);
         final UListElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
-        final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
     }
 
     @Override
-    public void addMapItem(String key, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
-        final UListElement elementsContainer = elementsContainerMap.get(key);
+    public void addMapItem(Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
+        final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
-        keyPropertiesValuesMap.put(itemId, keyPropertiesValues);
-        propertiesValuesMap.put(itemId, valuePropertiesValues);
         final UListElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
-        final LIElement objectSeparatorLI = objectSeparatorMap.get(key);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
-    }
-
-    @Override
-    public void updateListItem(String itemId, Map<String, String> propertiesValues) {
-        propertiesValuesMap.put(itemId, propertiesValues);
-    }
-
-    @Override
-    public void updateMapItem(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
-        keyPropertiesValuesMap.put(itemId, keyPropertiesValues);
-        propertiesValuesMap.put(itemId, valuePropertiesValues);
     }
 
     @Override
     public void deleteItem(String itemId) {
-        propertiesValuesMap.remove(itemId);
+//        propertiesValuesMap.remove(itemId);
     }
 
     @Override
-    public void save(CollectionView collectionEditorView) {
+    public void save() {
         String updatedValue;
-        if (collectionEditorView.isListWidget()) {
+        if (collectionView.isListWidget()) {
             updatedValue = getListValue();
         } else {
             updatedValue = getMapValue();
         }
-        collectionEditorView.updateValue(updatedValue);
+        collectionView.updateValue(updatedValue);
     }
 
-    protected void commonInit(String key, CollectionView collectionEditorView) {
+    protected void commonInit(String key, CollectionView collectionView) {
+        this.collectionView = collectionView;
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
-        collectionEditorView.getEditorTitle().setInnerText(key);
-        collectionEditorView.getPropertyTitle().setInnerText(propertyName);
-        final LIElement objectSeparatorLI = collectionEditorView.getObjectSeparator();
-        objectSeparatorMap.put(key, objectSeparatorLI);
-        final UListElement elementsContainer = collectionEditorView.getElementsContainer();
-        elementsContainerMap.put(key, elementsContainer);
+        this.collectionView.getEditorTitle().setInnerText(key);
+        this.collectionView.getPropertyTitle().setInnerText(propertyName);
+        objectSeparatorLI = collectionView.getObjectSeparator();
+//        objectSeparatorMap.put(key, objectSeparatorLI);
+//        final UListElement elementsContainer = collectionEditorView.getElementsContainer();
+//        elementsContainerMap.put(key, elementsContainer);
     }
 
-    protected void populateList(String key, JSONValue jsonValue) {
+    protected void populateList(JSONValue jsonValue) {
         final JSONArray array = jsonValue.isArray();
         for (int i = 0; i < array.size(); i++) {
             Map<String, String> propertiesValues = new HashMap<>();
             final JSONObject jsonObject = array.get(i).isObject();
             jsonObject.keySet().forEach(propertyName -> propertiesValues.put(propertyName, jsonObject.get(propertyName).isString().stringValue())
             );
-            addListItem(key, propertiesValues);
+            addListItem(propertiesValues);
         }
     }
 
-    protected void populateMap(String key, JSONValue jsonValue) {
+    protected void populateMap(JSONValue jsonValue) {
         final JSONArray array = jsonValue.isArray();
         for (int i = 0; i < array.size(); i++) {
             Map<String, String> keyPropertiesValues = new HashMap<>();
@@ -212,7 +183,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             }
             JSONObject nestedValue = jsonObject.get(jsonKey).isObject();
             nestedValue.keySet().forEach(propertyName -> valuePropertiesValues.put(propertyName, nestedValue.get(propertyName).isString().stringValue()));
-            addMapItem(key, keyPropertiesValues, valuePropertiesValues);
+            addMapItem(keyPropertiesValues, valuePropertiesValues);
         }
     }
 
@@ -225,9 +196,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     protected String getListValue() {
+        List<Map<String, String>> itemsProperties = listElementPresenter.getItemsProperties();
         JSONArray jsonArray = new JSONArray();
         AtomicInteger counter = new AtomicInteger();
-        propertiesValuesMap.values().forEach(stringStringMap -> {
+
+        itemsProperties.forEach(stringStringMap -> {
             JSONObject nestedObject = new JSONObject();
             stringStringMap.forEach((propertyName, propertyValue) -> nestedObject.put(propertyName, new JSONString(propertyValue)));
             jsonArray.set(counter.getAndIncrement(), nestedObject);
@@ -239,12 +212,12 @@ public class CollectionPresenter implements CollectionView.Presenter {
      * @return
      */
     protected String getMapValue() {
+        Map<Map<String, String>, Map<String, String>> itemsProperties = mapElementPresenter.getItemsProperties();
         JSONArray jsonArray = new JSONArray();
         AtomicInteger counter = new AtomicInteger();
-        keyPropertiesValuesMap.forEach((itemId, keyPropertiesValues) -> {
-            final Map<String, String> valuePropertiesMap = propertiesValuesMap.get(itemId);
+        itemsProperties.forEach((keyPropertiesValues, valuePropertiesMap) -> {
             String jsonKey;
-            if (keyPropertiesValues.size() == 1) { // simple object
+            if (keyPropertiesValues.size() == 1) { // simple object - TO CHECK WRONG ASSUMPTION
                 jsonKey = keyPropertiesValues.values().iterator().next();
             } else {
                 JSONObject nestedKey = new JSONObject();

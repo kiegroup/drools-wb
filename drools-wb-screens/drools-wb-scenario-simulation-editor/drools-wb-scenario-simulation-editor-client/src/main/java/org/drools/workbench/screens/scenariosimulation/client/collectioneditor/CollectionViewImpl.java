@@ -151,8 +151,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public void setValue(String key, String jsonString) {
-        presenter.setValue(key, jsonString, this);
+    public void setValue(String jsonString) {
+        presenter.setValue(jsonString);
     }
 
     @Override
@@ -192,17 +192,17 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @EventHandler("saveButton")
     public void onSaveButton(ClickEvent clickEvent) {
-        presenter.save(this);
+        presenter.save();
     }
 
     @EventHandler("addItemButton")
     public void onAddItemButton(ClickEvent clickEvent) {
-        presenter.showEditingBox(this);
+        presenter.showEditingBox();
     }
 
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent event) {
-        presenter.onToggleRowExpansion(this, isShown());
+        presenter.onToggleRowExpansion(isShown());
     }
 
     @Override

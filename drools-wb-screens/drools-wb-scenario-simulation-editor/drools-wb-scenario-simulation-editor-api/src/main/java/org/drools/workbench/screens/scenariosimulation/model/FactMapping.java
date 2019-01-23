@@ -59,9 +59,9 @@ public class FactMapping {
     private String expressionAlias;
 
     /**
-     * Generic type of the given properties, where applicable (ex collections)
+     * Generic type(s) of the given properties, where applicable (ex collections)
      */
-    private String genericType;
+    private List<String> genericTypes;
 
     public FactMapping() {
     }
@@ -134,12 +134,12 @@ public class FactMapping {
         this.expressionAlias = expressionAlias;
     }
 
-    public String getGenericType() {
-        return genericType;
+    public List<String> getGenericTypes() {
+        return genericTypes;
     }
 
-    public void setGenericType(String genericType) {
-        this.genericType = genericType;
+    public void setGenericTypes(List<String> genericTypes) {
+        this.genericTypes = genericTypes;
     }
 
     public FactMapping cloneFactMapping() {

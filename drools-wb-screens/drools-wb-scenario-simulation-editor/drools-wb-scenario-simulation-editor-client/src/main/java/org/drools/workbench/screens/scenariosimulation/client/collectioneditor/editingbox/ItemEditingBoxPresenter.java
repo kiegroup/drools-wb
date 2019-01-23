@@ -54,9 +54,9 @@ public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
     }
 
     @Override
-    public void save(String key) {
+    public void save(ItemEditingBox toSave) {
         Map<String, String> propertiesValues = propertyPresenter.updateProperties("value");
-        collectionEditorPresenter.addListItem(key, propertiesValues);
+        collectionEditorPresenter.addListItem(propertiesValues);
     }
 
     @Override

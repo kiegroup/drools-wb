@@ -66,10 +66,9 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
         // TODO GC MANAGE WITH EXCEPTION
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
         if (ScenarioSimulationUtils.isCollection(propertyClass)) {
-            String genericType = factModelTree.getGenericTypeInfo(propertyName);
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
             final FactMapping factMappingByIndex = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-            factMappingByIndex.setGenericType(genericType);
+            factMappingByIndex.setGenericTypes(factModelTree.getGenericTypeInfo(propertyName));
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         }

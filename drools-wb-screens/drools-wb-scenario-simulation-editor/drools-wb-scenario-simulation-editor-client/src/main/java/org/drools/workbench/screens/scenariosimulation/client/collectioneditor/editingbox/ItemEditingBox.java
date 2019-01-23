@@ -35,7 +35,7 @@ public interface ItemEditingBox extends HasPresenter<ItemEditingBox.Presenter> {
          */
         DivElement getEditingBox(String key, Map<String, String> instancePropertyMap);
 
-        void save(String key);
+        void save(ItemEditingBox toSave);
 
         void close(ItemEditingBox toClose);
 

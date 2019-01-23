@@ -35,19 +35,16 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
 
     protected ScenarioGridCell scenarioGridCell;
 
-    protected String key;
 
     /**
      *
      * @param widget
      * @param gridLayer
      * @param gridWidget
-     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      */
     public CollectionEditorDOMElement(final CollectionViewImpl widget,
                                       final GridLayer gridLayer,
-                                      final GridWidget gridWidget,
-                                      String key) {
+                                      final GridWidget gridWidget) {
         super(widget,
               gridLayer,
               gridWidget);
@@ -78,19 +75,10 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
         getContainer().getElement().getStyle().setPaddingBottom(5,
                                                                 Style.Unit.PX);
         getContainer().setWidget(widget);
-        this.key = key;
     }
 
     public void setScenarioGridCell(ScenarioGridCell scenarioGridCell) {
         this.scenarioGridCell = scenarioGridCell;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     @Override
@@ -100,7 +88,7 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
 
     @Override
     public void setValue(final String value) {
-        getWidget().setValue(key, value);
+        getWidget().setValue(value);
     }
 
     @Override

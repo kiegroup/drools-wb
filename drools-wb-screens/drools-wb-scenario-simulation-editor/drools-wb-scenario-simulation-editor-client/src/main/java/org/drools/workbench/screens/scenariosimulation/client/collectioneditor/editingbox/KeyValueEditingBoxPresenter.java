@@ -53,10 +53,10 @@ public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter
     }
 
     @Override
-    public void save(String key) {
+    public void save() {
         Map<String, String> keyPropertiesValues = propertyPresenter.updateProperties("key");
         Map<String, String> valuePropertiesMap = propertyPresenter.updateProperties("value");
-        collectionEditorPresenter.addMapItem(key, keyPropertiesValues, valuePropertiesMap);
+        collectionEditorPresenter.addMapItem(keyPropertiesValues, valuePropertiesMap);
     }
 
     @Override

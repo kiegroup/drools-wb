@@ -76,6 +76,18 @@ public class PropertyPresenter implements PropertyView.Presenter {
     }
 
     @Override
+    public Map<String, String> getProperties(String itemId) {
+        Map<String, String> toReturn = new HashMap<>();
+        propertyViewMap.get(itemId)
+                .forEach(propertyEditorView -> {
+                    String propertyName = propertyEditorView.getPropertyName().getInnerText();
+                    propertyName = propertyName.substring(propertyName.lastIndexOf("#") + 1);
+                    toReturn.put(propertyName, propertyEditorView.getPropertyValueSpan().getInnerText());
+                });
+        return toReturn;
+    }
+
+    @Override
     public LIElement getPropertyFields(String itemId, String propertyName, String propertyValue) {
         final PropertyView propertyEditorView = viewsProvider.getPropertyEditorView();
         String hashedPropertyName = "#" + propertyName;

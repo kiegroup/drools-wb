@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -78,9 +79,8 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
 
     @Override
     public void updateItem(ItemElementView itemElementView) {
-        final Map<String, String> updatedValues = propertyEditorPresenter.updateProperties(itemElementView.getItemId());
+        propertyEditorPresenter.updateProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        collectionEditorPresenter.updateListItem(itemElementView.getItemId(), updatedValues);
     }
 
     @Override
@@ -95,5 +95,13 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
         itemElementView.getItemContainer().removeFromParent();
         itemElementViewList.remove(itemElementView);
         collectionEditorPresenter.deleteItem(itemElementView.getItemId());
+    }
+
+    @Override
+    public List<Map<String, String>> getItemsProperties() {
+        return itemElementViewList.stream()
+                .map(itemElementView -> propertyEditorPresenter.getProperties(itemElementView.getItemId()))
+                .collect(Collectors.toList());
+
     }
 }

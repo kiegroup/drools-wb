@@ -48,7 +48,6 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandle
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 
-import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -243,12 +242,6 @@ public class ScenarioGridTest {
         factMappingInteger.getExpressionElements().clear();
         assertFalse(scenarioGrid.isPropertyAssigned(false, factMappingInteger));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingInteger));
-    }
-
-    @Test
-    public void isSimpleJavaType() {
-        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(scenarioGrid.isSimpleJavaType(clazz.getName())));
-        assertFalse(scenarioGrid.isSimpleJavaType("com.TestBean"));
     }
 
     @Test

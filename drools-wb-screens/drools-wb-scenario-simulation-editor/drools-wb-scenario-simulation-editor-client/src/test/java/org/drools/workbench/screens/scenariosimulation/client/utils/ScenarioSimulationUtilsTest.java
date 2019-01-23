@@ -22,8 +22,11 @@ import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifie
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
@@ -71,5 +74,11 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
         assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Given.name()), 0);
         assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Expected.name()), 0);
         assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Other.name()), 0);
+    }
+
+    @Test
+    public void isSimpleJavaType() {
+        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(ScenarioSimulationUtils.isSimpleJavaType(clazz.getName())));
+        assertFalse(ScenarioSimulationUtils.isSimpleJavaType("com.TestBean"));
     }
 }

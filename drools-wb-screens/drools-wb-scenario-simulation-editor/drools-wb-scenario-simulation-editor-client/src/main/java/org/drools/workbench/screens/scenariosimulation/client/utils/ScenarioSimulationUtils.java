@@ -26,6 +26,8 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 
+import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
+
 public class ScenarioSimulationUtils {
 
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
@@ -51,6 +53,19 @@ public class ScenarioSimulationUtils {
     public static boolean isList(String className) {
         return List.class.getName().equals(className);
     }
+
+    /**
+     * Helper method to know if the given <b>className</b> refers to one of the classes mapped as Simple java type
+     * @param className
+     * @return
+     */
+    public static boolean isSimpleJavaType(String className) {
+        return SIMPLE_CLASSES_MAP.values()
+                .stream()
+                .map(Class::getCanonicalName)
+                .anyMatch(className::equals);
+    }
+
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:

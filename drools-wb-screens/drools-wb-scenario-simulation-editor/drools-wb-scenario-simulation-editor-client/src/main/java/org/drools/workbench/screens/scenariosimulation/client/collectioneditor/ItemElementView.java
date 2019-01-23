@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
@@ -69,6 +70,12 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
          * @param itemElementView
          */
         void onDeleteItem(ItemElementView itemElementView);
+
+        /**
+         * Retrieves a <code>List</code> with the <code>Map</code>s of all the items' properties
+         * @return
+         */
+        List<Map<String, String>> getItemsProperties();
     }
 
     /**

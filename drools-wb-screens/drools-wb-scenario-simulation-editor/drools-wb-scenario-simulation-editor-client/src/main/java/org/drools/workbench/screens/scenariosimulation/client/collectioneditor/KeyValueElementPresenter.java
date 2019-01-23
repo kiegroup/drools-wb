@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -95,10 +96,23 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
         String itemId = keyValueElementView.getItemId();
         String keyId = itemId+ "#key";
         String valueId = itemId + "#value";
-        final Map<String, String> keyPropertiesValues = propertyEditorPresenter.updateProperties(keyId);
-        final Map<String, String> valuePropertiesValues = propertyEditorPresenter.updateProperties(valueId);
+        propertyEditorPresenter.updateProperties(keyId);
+        propertyEditorPresenter.updateProperties(valueId);
         keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
-        collectionEditorPresenter.updateMapItem(itemId, keyPropertiesValues, valuePropertiesValues);
+    }
+
+    @Override
+    public Map<Map<String, String>, Map<String, String>> getItemsProperties() {
+        return keyValueElementViewList.stream()
+                .collect(Collectors.toMap(
+                        keyValueElementView -> {
+                            String itemId = keyValueElementView.getItemId() + "#key";
+                            return propertyEditorPresenter.getProperties(itemId);
+                        },
+                        keyValueElementView -> {
+                            String itemId = keyValueElementView.getItemId() + "#value";
+                            return propertyEditorPresenter.getProperties(itemId);
+                        }));
     }
 
     @Override

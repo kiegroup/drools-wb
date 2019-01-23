@@ -99,7 +99,7 @@ public class KeyValueEditingBoxImpl implements KeyValueEditingBox {
 
     @EventHandler("saveItem")
     public void onSaveItemClickEvent(ClickEvent event) {
-        presenter.save(key);
+        presenter.save();
         close(event);
     }
 

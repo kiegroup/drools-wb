@@ -48,7 +48,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.Selection
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
 
-import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
 
 public class ScenarioGrid extends BaseGridWidget {
 
@@ -206,18 +206,6 @@ public class ScenarioGrid extends BaseGridWidget {
         } else {
             return instanceAssigned && (isSimpleJavaType(factMapping.getClassName()) || !factMapping.getExpressionElements().isEmpty());
         }
-    }
-
-    /**
-     * Helper method to know if the given <b>className</b> refers to one of the classes mapped as Simple java type
-     * @param className
-     * @return
-     */
-    protected boolean isSimpleJavaType(String className) {
-        return SIMPLE_CLASSES_MAP.values()
-                .stream()
-                .map(Class::getCanonicalName)
-                .anyMatch(className::equals);
     }
 
     /**
