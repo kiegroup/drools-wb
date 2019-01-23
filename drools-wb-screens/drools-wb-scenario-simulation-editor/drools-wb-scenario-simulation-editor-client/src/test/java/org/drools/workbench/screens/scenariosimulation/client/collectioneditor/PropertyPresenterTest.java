@@ -77,14 +77,14 @@ public class PropertyPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void onToggleRowExpansionTrue() {
-//        propertyEditorPresenter.onToggleRowExpansion(liElementMock, true);
+//        propertyEditorPresenter.toggleRowExpansion(liElementMock, true);
 //        verify(liElementMock, times(1)).addClassName(ConstantHolder.NODE_HIDDEN);
 //        verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
     }
 
     @Test
     public void onToggleRowExpansionFalse() {
-//        propertyEditorPresenter.onToggleRowExpansion(liElementMock, false);
+//        propertyEditorPresenter.toggleRowExpansion(liElementMock, false);
 //        verify(liElementMock, times(1)).removeClassName(ConstantHolder.NODE_HIDDEN);
 //        verify(styleMock, times(1)).setDisplay(Style.Display.BLOCK);
     }

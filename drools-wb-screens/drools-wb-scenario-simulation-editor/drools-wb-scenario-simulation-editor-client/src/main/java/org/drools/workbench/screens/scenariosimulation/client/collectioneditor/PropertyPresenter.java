@@ -123,7 +123,7 @@ public class PropertyPresenter implements PropertyView.Presenter {
     @Override
     public void onToggleRowExpansion(String itemId, boolean isShown) {
         propertyViewMap.get(itemId)
-                .forEach(propertyEditorView -> CollectionEditorUtils.onToggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
+                .forEach(propertyEditorView -> CollectionEditorUtils.toggleRowExpansion(propertyEditorView.getPropertyFields(), isShown));
     }
 
     @Override

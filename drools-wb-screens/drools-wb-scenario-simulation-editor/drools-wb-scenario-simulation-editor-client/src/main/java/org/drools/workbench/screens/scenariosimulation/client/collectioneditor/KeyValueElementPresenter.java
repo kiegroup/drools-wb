@@ -76,8 +76,8 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
         String itemId = keyValueElementView.getItemId();
         String keyId = itemId+ "#key";
         String valueId = itemId + "#value";
-        CollectionEditorUtils.onToggleRowExpansion(keyValueElementView.getKeyLabel(), isShown);
-        CollectionEditorUtils.onToggleRowExpansion(keyValueElementView.getValueLabel(), isShown);
+        CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getKeyLabel(), isShown);
+        CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getValueLabel(), isShown);
         propertyEditorPresenter.onToggleRowExpansion(keyId, isShown);
         propertyEditorPresenter.onToggleRowExpansion(valueId, isShown);
     }

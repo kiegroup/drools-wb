@@ -40,7 +40,7 @@ public class CollectionEditorUtils {
         }
     }
 
-    public static void onToggleRowExpansion(final LIElement liElement, boolean isShown) {
+    public static void toggleRowExpansion(final LIElement liElement, boolean isShown) {
         if (isShown) {
             liElement.addClassName(NODE_HIDDEN);
             liElement.getStyle().setDisplay(Style.Display.NONE);
