@@ -16,7 +16,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class PropertyEditorPresenterTest extends AbstractCollectionEditorTest {
+public class PropertyPresenterTest extends AbstractCollectionEditorTest {
 
     @Mock
     private PropertyView propertyViewMock;
