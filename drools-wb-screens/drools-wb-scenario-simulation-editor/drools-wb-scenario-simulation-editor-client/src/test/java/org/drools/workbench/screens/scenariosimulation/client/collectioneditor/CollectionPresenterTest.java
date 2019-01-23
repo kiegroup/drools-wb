@@ -1,12 +1,18 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBoxPresenter;
@@ -18,6 +24,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -38,6 +45,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     private final static String TEST_KEY = TEST_CLASSNAME + "#" + TEST_PROPERTYNAME;
     private final static int CHILD_COUNT = 3;
     private final static String ITEM_ID = String.valueOf(CHILD_COUNT - 1);
+    private final static String UPDATED_VALUE = "UPDATED_VALUE";
+    private final static int JSON_ARRAY_SIZE = 2;
+    private final static Set<String> KEY_SET = new HashSet<>(Arrays.asList("prop1", "prop2"));
 
     @Mock
     private ItemElementPresenter listElementPresenterMock;
@@ -75,6 +85,33 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     private JSONValue jsonValueMock;
 
     @Mock
+    private JSONArray jsonArrayMock;
+
+    @Mock
+    private JSONValue jsonValueChildMock;
+
+    @Mock
+    private JSONObject jsonObjectMock;
+
+    @Mock
+    private JSONValue jsonValueNeph1Mock;
+
+    @Mock
+    private JSONValue jsonValueNeph2Mock;
+
+    @Mock
+    private JSONString jsonStringProp1Mock;
+
+    @Mock
+    private JSONString jsonStringProp2Mock;
+
+    @Mock
+    private JSONObject nestedValue1Mock;
+
+    @Mock
+    private JSONObject nestedValue2Mock;
+
+    @Mock
     private LIElement objectSeparatorLIMock;
 
     @Mock
@@ -92,6 +129,30 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.getElementsContainer()).thenReturn(elementsContainerMock);
         when(collectionViewMock.getEditorTitle()).thenReturn(editorTitleMock);
         when(collectionViewMock.getPropertyTitle()).thenReturn(propertyTitleMock);
+        when(collectionViewMock.getObjectSeparator()).thenReturn(objectSeparatorLIMock);
+
+        when(nestedValue1Mock.keySet()).thenReturn(KEY_SET);
+        when(nestedValue1Mock.get(eq("prop1"))).thenReturn(jsonValueNeph1Mock);
+        when(nestedValue1Mock.get(eq("prop2"))).thenReturn(jsonValueNeph2Mock);
+
+        when(nestedValue2Mock.keySet()).thenReturn(KEY_SET);
+        when(nestedValue2Mock.get(eq("prop1"))).thenReturn(jsonValueNeph1Mock);
+        when(nestedValue2Mock.get(eq("prop2"))).thenReturn(jsonValueNeph2Mock);
+
+        when(jsonValueNeph1Mock.isString()).thenReturn(jsonStringProp1Mock);
+        when(jsonValueNeph2Mock.isString()).thenReturn(jsonStringProp2Mock);
+        when(jsonValueNeph1Mock.isObject()).thenReturn(nestedValue1Mock);
+        when(jsonValueNeph2Mock.isObject()).thenReturn(nestedValue2Mock);
+
+        when(jsonObjectMock.keySet()).thenReturn(KEY_SET);
+        when(jsonObjectMock.get(eq("prop1"))).thenReturn(jsonValueNeph1Mock);
+        when(jsonObjectMock.get(eq("prop2"))).thenReturn(jsonValueNeph2Mock);
+
+        when(jsonValueChildMock.isObject()).thenReturn(jsonObjectMock);
+        when(jsonArrayMock.size()).thenReturn(JSON_ARRAY_SIZE);
+        when(jsonArrayMock.get(anyInt())).thenReturn(jsonValueChildMock);
+        when(jsonValueMock.isArray()).thenReturn(jsonArrayMock);
+        when(jsonValueMock.isObject()).thenReturn(jsonObjectMock);
         this.collectionEditorPresenter = spy(new CollectionPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
@@ -103,8 +164,22 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
                 this.collectionView = collectionViewMock;
                 this.objectSeparatorLI = objectSeparatorLIMock;
             }
+
+            @Override
+            protected JSONValue getJSONValue(String jsonString) {
+                return jsonValueMock;
+            }
+
+            @Override
+            protected String getListValue() {
+                return UPDATED_VALUE;
+            }
+
+            @Override
+            protected String getMapValue() {
+                return UPDATED_VALUE;
+            }
         });
-        when(collectionEditorPresenter.getJSONValue(anyString())).thenReturn(jsonValueMock);
         instancePropertiesMapLocal.clear();
         when(listElementPresenterMock.getItemContainer(anyString(), anyMap())).thenReturn(itemElementMock);
         when(mapElementPresenterMock.getKeyValueContainer(anyString(), anyMap(), anyMap())).thenReturn(itemElementMock);
@@ -192,6 +267,58 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(elementsContainerMock, times(1)).insertBefore(eq(itemElementMock), eq(objectSeparatorLIMock));
     }
 
+    @Test
+    public void saveIsListWidgetTrue() {
+        commonSave(true);
+    }
+
+    @Test
+    public void saveIsListWidgetFalse() {
+        commonSave(false);
+    }
+
+    @Test
+    public void commonInit() {
+        collectionEditorPresenter.collectionView = null;
+        collectionEditorPresenter.objectSeparatorLI = null;
+        collectionEditorPresenter.commonInit(TEST_KEY, collectionViewMock);
+        assertEquals(collectionEditorPresenter.collectionView, collectionViewMock);
+        verify(editorTitleMock, times(1)).setInnerText(TEST_KEY);
+        verify(propertyTitleMock, times(1)).setInnerText(TEST_PROPERTYNAME);
+        assertEquals(collectionEditorPresenter.objectSeparatorLI, objectSeparatorLIMock);
+    }
+
+    @Test
+    public void populateList() {
+        collectionEditorPresenter.populateList(jsonValueMock);
+        for (int i = 0; i < JSON_ARRAY_SIZE; i++) {
+            verify(jsonArrayMock, times(1)).get(eq(i));
+        }
+        verify(jsonObjectMock, times(JSON_ARRAY_SIZE)).get("prop1");
+        verify(jsonObjectMock, times(JSON_ARRAY_SIZE)).get("prop2");
+        verify(jsonValueNeph1Mock, times(JSON_ARRAY_SIZE)).isString();
+        verify(jsonValueNeph2Mock, times(JSON_ARRAY_SIZE)).isString();
+        verify(jsonStringProp1Mock, times(JSON_ARRAY_SIZE)).stringValue();
+        verify(jsonStringProp2Mock, times(JSON_ARRAY_SIZE)).stringValue();
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addListItem(anyMap());
+    }
+
+    @Test
+    public void populateMap() {
+        // FIXME - mock everything?
+        collectionEditorPresenter.populateMap(jsonValueMock);
+        for (int i = 0; i < JSON_ARRAY_SIZE; i++) {
+            verify(jsonArrayMock, times(1)).get(eq(i));
+        }
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).getJSONValue("prop2");
+        verify(jsonObjectMock, times(JSON_ARRAY_SIZE)).get("prop1");
+        verify(jsonObjectMock, times(JSON_ARRAY_SIZE * 2)).get("prop2");
+        verify(jsonValueNeph1Mock, times(JSON_ARRAY_SIZE * 2)).isString();
+        verify(jsonValueNeph2Mock, times(JSON_ARRAY_SIZE)).isObject();
+        verify(nestedValue2Mock, times(JSON_ARRAY_SIZE)).keySet();
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addMapItem(anyMap(), anyMap());
+    }
+
     private void commonSetValue(boolean isListWidget) {
         collectionEditorPresenter.setValue(null);
         verify(collectionEditorPresenter, never()).getJSONValue(anyString());
@@ -222,5 +349,16 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(collectionViewMock);
         reset(listElementPresenterMock);
         reset(mapElementPresenterMock);
+    }
+
+    private void commonSave(boolean isListWidget) {
+        when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
+        collectionEditorPresenter.save();
+        if (isListWidget) {
+            verify(collectionEditorPresenter, times(1)).getListValue();
+        } else {
+            verify(collectionEditorPresenter, times(1)).getMapValue();
+        }
+        verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
     }
 }

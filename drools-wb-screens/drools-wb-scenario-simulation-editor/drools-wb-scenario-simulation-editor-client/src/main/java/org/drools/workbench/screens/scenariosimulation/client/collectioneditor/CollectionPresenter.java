@@ -191,7 +191,6 @@ public class CollectionPresenter implements CollectionView.Presenter {
         List<Map<String, String>> itemsProperties = listElementPresenter.getItemsProperties();
         JSONArray jsonArray = new JSONArray();
         AtomicInteger counter = new AtomicInteger();
-
         itemsProperties.forEach(stringStringMap -> {
             JSONObject nestedObject = new JSONObject();
             stringStringMap.forEach((propertyName, propertyValue) -> nestedObject.put(propertyName, new JSONString(propertyValue)));
