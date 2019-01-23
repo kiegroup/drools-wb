@@ -116,7 +116,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     public void addListItem(Map<String, String> propertiesValues) {
         final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
-        final UListElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
+        final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
     }
 
@@ -124,13 +124,8 @@ public class CollectionPresenter implements CollectionView.Presenter {
     public void addMapItem(Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
         final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
-        final UListElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
+        final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
-    }
-
-    @Override
-    public void deleteItem(String itemId) {
-//        propertiesValuesMap.remove(itemId);
     }
 
     @Override
@@ -150,9 +145,6 @@ public class CollectionPresenter implements CollectionView.Presenter {
         this.collectionView.getEditorTitle().setInnerText(key);
         this.collectionView.getPropertyTitle().setInnerText(propertyName);
         objectSeparatorLI = collectionView.getObjectSeparator();
-//        objectSeparatorMap.put(key, objectSeparatorLI);
-//        final UListElement elementsContainer = collectionEditorView.getElementsContainer();
-//        elementsContainerMap.put(key, elementsContainer);
     }
 
     protected void populateList(JSONValue jsonValue) {

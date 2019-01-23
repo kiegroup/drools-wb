@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.UListElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class ItemElementPresenter implements ItemElementView.Presenter {
@@ -48,11 +47,11 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
     }
 
     @Override
-    public UListElement getItemContainer(String itemId, Map<String, String> propertiesMap) {
+    public LIElement getItemContainer(String itemId, Map<String, String> propertiesMap) {
         final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
         itemElementView.init(this);
         itemElementView.setItemId(itemId);
-        final UListElement toReturn = itemElementView.getItemContainer();
+        final LIElement toReturn = itemElementView.getItemContainer();
         final LIElement saveChange = itemElementView.getSaveChange();
         propertiesMap.forEach((propertyName, propertyValue) ->
                                       toReturn.insertBefore(propertyPresenter.getPropertyFields(itemId, propertyName, propertyValue), saveChange));
@@ -94,7 +93,6 @@ public class ItemElementPresenter implements ItemElementView.Presenter {
         propertyPresenter.deleteProperties(itemElementView.getItemId());
         itemElementView.getItemContainer().removeFromParent();
         itemElementViewList.remove(itemElementView);
-        collectionEditorPresenter.deleteItem(itemElementView.getItemId());
     }
 
     @Override

@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox;
 
 import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
@@ -30,7 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 public class KeyValueEditingBoxImpl implements KeyValueEditingBox {
 
     @DataField("editingBox")
-    protected DivElement editingBox = Document.get().createDivElement();
+    protected LIElement editingBox = Document.get().createLIElement();
 
     @DataField("editingBoxTitle")
     protected HeadingElement editingBoxTitle = Document.get().createHElement(3);
@@ -68,7 +67,7 @@ public class KeyValueEditingBoxImpl implements KeyValueEditingBox {
     }
 
     @Override
-    public DivElement getEditingBox() {
+    public LIElement getEditingBox() {
         return editingBox;
     }
 

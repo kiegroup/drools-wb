@@ -20,7 +20,6 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.UListElement;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface ItemElementView extends HasPresenter<ItemElementView.Presenter> {
@@ -36,9 +35,9 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
          * @param propertiesMap the properties to be put inside the <code>UListElement</code>
          * representing a single item of the list
          *
-         * @return the <code>UListElement</code> representing all the items of the list
+         * @return the <code>LIElement</code> representing all the items of the list
          */
-        UListElement getItemContainer(String itemId, Map<String, String> propertiesMap);
+        LIElement getItemContainer(String itemId, Map<String, String> propertiesMap);
 
         void onToggleRowExpansion(boolean isShown);
 
@@ -92,9 +91,9 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
 
     /**
      *
-     * @return the <code>UListElement</code> containing all the item properties
+     * @return the <code>LIElement</code> containing all the item properties
      */
-    UListElement getItemContainer();
+    LIElement getItemContainer();
 
     /**
      *

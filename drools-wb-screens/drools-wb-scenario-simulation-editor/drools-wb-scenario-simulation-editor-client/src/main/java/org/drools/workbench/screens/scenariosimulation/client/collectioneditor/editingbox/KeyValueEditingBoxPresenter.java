@@ -19,7 +19,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
@@ -40,7 +40,7 @@ public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter
     }
 
     @Override
-    public DivElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
+    public LIElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
         final KeyValueEditingBox mapEditingBox = viewsProvider.getKeyValueEditingBox();
         mapEditingBox.init(this);

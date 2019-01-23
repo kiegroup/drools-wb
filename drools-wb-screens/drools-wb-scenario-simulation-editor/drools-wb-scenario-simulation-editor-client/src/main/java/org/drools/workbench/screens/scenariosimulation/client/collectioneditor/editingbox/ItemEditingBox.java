@@ -17,8 +17,8 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
 import org.uberfire.client.mvp.HasPresenter;
@@ -33,7 +33,7 @@ public interface ItemEditingBox extends HasPresenter<ItemEditingBox.Presenter> {
          * @param instancePropertyMap
          * @return
          */
-        DivElement getEditingBox(String key, Map<String, String> instancePropertyMap);
+        LIElement getEditingBox(String key, Map<String, String> instancePropertyMap);
 
         void save(ItemEditingBox toSave);
 
@@ -48,7 +48,7 @@ public interface ItemEditingBox extends HasPresenter<ItemEditingBox.Presenter> {
      */
     void setKey(String key);
 
-    DivElement getEditingBox();
+    LIElement getEditingBox();
 
     HeadingElement getEditingBoxTitle();
 

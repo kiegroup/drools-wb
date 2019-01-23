@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
@@ -47,7 +48,7 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
     }
 
     @Override
-    public UListElement getKeyValueContainer(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
+    public LIElement getKeyValueContainer(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues) {
         final KeyValueElementView keyValueElementView = viewsProvider.getKeyValueElementView();
         keyValueElementView.init(this);
         keyValueElementView.setItemId(itemId);
@@ -126,6 +127,5 @@ public class KeyValueElementPresenter implements KeyValueElementView.Presenter {
         propertyEditorPresenter.deleteProperties(keyValueElementView.getItemId());
         keyValueElementView.getItemContainer().removeFromParent();
         keyValueElementViewList.remove(keyValueElementView);
-        collectionEditorPresenter.deleteItem(keyValueElementView.getItemId());
     }
 }

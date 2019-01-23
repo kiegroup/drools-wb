@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
@@ -33,7 +32,7 @@ public interface KeyValueEditingBox extends HasPresenter<KeyValueEditingBox.Pres
          * @param keyPropertyMap
          * @param valuePropertyMap
          */
-        DivElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
+        LIElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
 
         void save();
 
@@ -47,7 +46,7 @@ public interface KeyValueEditingBox extends HasPresenter<KeyValueEditingBox.Pres
      */
     void setKey(String key);
 
-    DivElement getEditingBox();
+    LIElement getEditingBox();
 
     HeadingElement getEditingBoxTitle();
 

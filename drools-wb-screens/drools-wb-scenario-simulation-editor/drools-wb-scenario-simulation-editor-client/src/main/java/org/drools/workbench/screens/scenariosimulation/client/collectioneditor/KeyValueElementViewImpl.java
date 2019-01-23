@@ -37,7 +37,7 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
     protected String itemId;
 
     @DataField("itemContainer")
-    protected UListElement itemContainer = Document.get().createULElement();
+    protected LIElement itemContainer = Document.get().createLIElement();
 
     @DataField("keyValueContainer")
     protected LIElement keyValueContainer = Document.get().createLIElement();
@@ -91,7 +91,7 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
     }
 
     @Override
-    public UListElement getItemContainer() {
+    public LIElement getItemContainer() {
         return itemContainer;
     }
 
