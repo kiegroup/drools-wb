@@ -1852,7 +1852,7 @@
                   <outputDirectory>${project.build.outputDirectory}/org/uberfire/jsbridge/public</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.outputDirectory}/appformer-js/META-INF/resources/webjars/appformer-js/${version.org.webjars.npm.appformer-js-workbench-screens}/dist</directory>
+                      <directory>${project.build.outputDirectory}/appformer-js-workbench-screens/META-INF/resources/webjars/appformer-js-workbench-screens/${version.org.webjars.npm.appformer-js-workbench-screens}/dist</directory>
                       <includes>
                         <include>home-perspective-bundle.js</include>
                         <include>drools-wb-home-screen-bundle.js</include>
