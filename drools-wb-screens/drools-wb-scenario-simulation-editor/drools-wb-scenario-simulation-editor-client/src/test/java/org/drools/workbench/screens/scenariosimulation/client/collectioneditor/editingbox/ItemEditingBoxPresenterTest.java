@@ -103,7 +103,7 @@ public class ItemEditingBoxPresenterTest {
 
     @Test
     public void save() {
-        itemEditingBoxPresenter.save(itemEditingBoxMock);
+        itemEditingBoxPresenter.save();
         verify(propertyPresenterMock, times(1)).updateProperties("value");
         verify(collectionViewPresenterMock, times(1)).addListItem(anyMap());
     }

@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -30,14 +29,7 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
  *
  */
 @Templated
-public class KeyValueElementViewImpl implements KeyValueElementView {
-
-    protected Presenter presenter;
-
-    protected String itemId;
-
-    @DataField("itemContainer")
-    protected LIElement itemContainer = Document.get().createLIElement();
+public class KeyValueElementViewImpl extends ElementViewImpl<KeyValueElementView.Presenter> implements KeyValueElementView {
 
     @DataField("keyValueContainer")
     protected LIElement keyValueContainer = Document.get().createLIElement();
@@ -53,47 +45,6 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
 
     @DataField("valueLabel")
     protected LIElement valueLabel = Document.get().createLIElement();
-
-    @DataField("itemSeparator")
-    protected LIElement itemSeparator = Document.get().createLIElement();
-
-    @DataField("saveChange")
-    protected LIElement saveChange = Document.get().createLIElement();
-
-    @DataField("faAngleRight")
-    protected SpanElement faAngleRight = Document.get().createSpanElement();
-
-    @DataField("editItemButton")
-    protected ButtonElement editItemButton = Document.get().createButtonElement();
-
-    @DataField("deleteItemButton")
-    protected ButtonElement deleteItemButton = Document.get().createButtonElement();
-
-    @DataField("saveChangeButton")
-    protected ButtonElement saveChangeButton = Document.get().createButtonElement();
-
-    @DataField("cancelChangeButton")
-    protected ButtonElement cancelChangeButton = Document.get().createButtonElement();
-
-    @Override
-    public void init(Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
-    }
-
-    @Override
-    public String getItemId() {
-        return itemId;
-    }
-
-    @Override
-    public LIElement getItemContainer() {
-        return itemContainer;
-    }
 
     @Override
     public UListElement getKeyContainer() {
@@ -125,36 +76,4 @@ public class KeyValueElementViewImpl implements KeyValueElementView {
         return faAngleRight;
     }
 
-    @EventHandler("faAngleRight")
-    public void onFaAngleRightClick(ClickEvent event) {
-        presenter.onToggleRowExpansion(this, isShown());
-    }
-
-    @EventHandler("editItemButton")
-    public void onEditItemButtonClick(ClickEvent event) {
-        presenter.onEditItem(this);
-    }
-
-    @EventHandler("deleteItemButton")
-    public void onDeleteItemButtonClick(ClickEvent event) {
-        presenter.onDeleteItem(this);
-    }
-
-    @EventHandler("saveChangeButton")
-    public void onSaveChangeButtonClick(ClickEvent event) {
-        presenter.updateItem(this);
-    }
-
-    @EventHandler("cancelChangeButton")
-    public void onCancelChangeButton(ClickEvent event) {
-        presenter.onStopEditingItem(this);
-    }
-
-    protected boolean isShown() {
-        return CollectionEditorUtils.isShown(faAngleRight);
-    }
-
-    protected void toggleRowExpansion(boolean toExpand) {
-        CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
-    }
 }

@@ -19,15 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
-import org.uberfire.client.mvp.HasPresenter;
 
-public interface ItemElementView extends HasPresenter<ItemElementView.Presenter> {
+public interface ItemElementView extends ElementView<ItemElementView.Presenter> {
 
 
-    interface Presenter {
-
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
+    interface Presenter extends ElementView.Presenter<ItemElementView> {
 
         /**
          *
@@ -39,78 +35,11 @@ public interface ItemElementView extends HasPresenter<ItemElementView.Presenter>
          */
         LIElement getItemContainer(String itemId, Map<String, String> propertiesMap);
 
-        void onToggleRowExpansion(boolean isShown);
-
-        void onToggleRowExpansion(ItemElementView itemElementView, boolean shown);
-
-        /**
-         * Start editing properties of the given <code>itemElementView</code>
-         * @param itemElementView
-         */
-        void onEditItem(ItemElementView itemElementView);
-
-        /**
-         * Update the values of the properties shown in the given <code>itemElementView</code>
-         * and stop the editing mode
-         * @param itemElementView
-         */
-        void updateItem(ItemElementView itemElementView);
-
-        /**
-         * Stop editing properties of the given <code>itemElementView</code>
-         * <b>without</b> updating the properties
-         *
-         * @param itemElementView
-         */
-        void onStopEditingItem(ItemElementView itemElementView);
-
-        /**
-         * Delete the item and its properties shown on the given <code>itemElementView</code>
-         * @param itemElementView
-         */
-        void onDeleteItem(ItemElementView itemElementView);
-
         /**
          * Retrieves a <code>List</code> with the <code>Map</code>s of all the items' properties
          * @return
          */
         List<Map<String, String>> getItemsProperties();
     }
-
-    /**
-     * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
-     * @param itemId
-     */
-    void setItemId(String itemId);
-
-    /**
-     *
-     * @return the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
-     */
-    String getItemId();
-
-    /**
-     *
-     * @return the <code>LIElement</code> containing all the item properties
-     */
-    LIElement getItemContainer();
-
-    /**
-     *
-     * @return the <code>LIElement</code> separating each item
-     */
-    LIElement getItemSeparator();
-
-    /**
-     *
-     * @return the <code>LIElement</code> with the item' save/cancel buttons
-     */
-    LIElement getSaveChange();
-
-    /**
-     *
-     * @return the <code>SpanElement</code> with the angle arrow
-     */
-    SpanElement getFaAngleRight();
 
 }

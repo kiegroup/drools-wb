@@ -18,15 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
-import org.uberfire.client.mvp.HasPresenter;
 
-public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Presenter> {
+public interface KeyValueElementView extends ElementView<KeyValueElementView.Presenter> {
 
-    interface Presenter {
-
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
+    interface Presenter extends ElementView.Presenter<KeyValueElementView> {
 
         /**
          * @param itemId the id of the current item
@@ -38,58 +34,12 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
          */
         LIElement getKeyValueContainer(String itemId, Map<String, String> keyPropertiesValues, Map<String, String> valuePropertiesValues);
 
-        void onToggleRowExpansion(boolean isShown);
-
-        void onToggleRowExpansion(KeyValueElementView itemElementView, boolean shown);
-
-        /**
-         * Start editing properties of the given <code>itemElementView</code>
-         * @param itemElementView
-         */
-        void onEditItem(KeyValueElementView itemElementView);
-
-        /**
-         * Update the values of the properties shown in the given <code>itemElementView</code>
-         * and stop the editing mode
-         * @param itemElementView
-         */
-        void updateItem(KeyValueElementView itemElementView);
-
         /**
          * Retrieves a <code>Map</code> with the <code>Map</code>s of all the items' key/value properties
          * @return
          */
         Map<Map<String, String>, Map<String, String>> getItemsProperties();
-
-        /**
-         * Stop editing properties of the given <code>itemElementView</code>
-         * <b>without</b> updating the properties
-         * @param itemElementView
-         */
-        void onStopEditingItem(KeyValueElementView itemElementView);
-
-        /**
-         * Delete the item and its properties shown on the given <code>itemElementView</code>
-         * @param itemElementView
-         */
-        void onDeleteItem(KeyValueElementView itemElementView);
     }
-
-    /**
-     * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
-     * @param itemId
-     */
-    void setItemId(String itemId);
-
-    /**
-     * @return the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>
-     */
-    String getItemId();
-
-    /**
-     * @return the <code>LIElement</code> containing all the item properties
-     */
-    LIElement getItemContainer();
 
     /**
      * @return the <code>UListElement</code> containing the <b>key</b> properties
@@ -105,13 +55,4 @@ public interface KeyValueElementView extends HasPresenter<KeyValueElementView.Pr
 
     LIElement getValueLabel();
 
-    /**
-     * @return the <code>LIElement</code> with the item' save/cancel buttons
-     */
-    LIElement getSaveChange();
-
-    /**
-     * @return the <code>SpanElement</code> with the angle arrow
-     */
-    SpanElement getFaAngleRight();
 }

@@ -15,38 +15,32 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox;
 
-import java.util.Map;
-
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.UListElement;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
+import org.uberfire.client.mvp.HasPresenter;
 
-public interface ItemEditingBox extends EditingBox<ItemEditingBox.Presenter> {
+public interface EditingBox<T extends EditingBox.Presenter> extends HasPresenter<T> {
 
-    interface Presenter extends EditingBox.Presenter  {
+    interface Presenter {
 
-        /**
-         *
-         * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-         * @param instancePropertyMap
-         * @return
-         */
-        LIElement getEditingBox(String key, Map<String, String> instancePropertyMap);
+        void save();
 
-       /* void save(ItemEditingBox toSave);
+        void close(EditingBox toClose);
 
-        void close(ItemEditingBox toClose);
-
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);*/
+        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
     }
 
-//    /**
-//     *
-//     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-//     */
-    /*void setKey(String key);
+    /**
+     *
+     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+     */
+    void setKey(String key);
 
     LIElement getEditingBox();
 
     HeadingElement getEditingBoxTitle();
 
-    UListElement getPropertiesContainer();*/
+    UListElement getPropertiesContainer();
 }

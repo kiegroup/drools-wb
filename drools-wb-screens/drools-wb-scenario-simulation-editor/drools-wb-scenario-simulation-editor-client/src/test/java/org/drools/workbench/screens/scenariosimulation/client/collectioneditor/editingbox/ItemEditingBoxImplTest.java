@@ -48,7 +48,7 @@ public class ItemEditingBoxImplTest {
     public void onSaveItemClickEvent() {
         ClickEvent clickEventMock = mock(ClickEvent.class);
         itemEditingBoxImpl.onSaveItemClickEvent(clickEventMock);
-        verify(presenterMock, times(1)).save(itemEditingBoxImpl);
+        verify(presenterMock, times(1)).save();
         verify(itemEditingBoxImpl, times(1)).close(clickEventMock);
     }
 

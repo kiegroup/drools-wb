@@ -89,7 +89,7 @@ public class ItemElementPresenterTest extends AbstractCollectionEditorTest {
             {
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
-                this.itemElementViewList = itemElementViewListLocal;
+                this.elementViewList = itemElementViewListLocal;
             }
         });
     }

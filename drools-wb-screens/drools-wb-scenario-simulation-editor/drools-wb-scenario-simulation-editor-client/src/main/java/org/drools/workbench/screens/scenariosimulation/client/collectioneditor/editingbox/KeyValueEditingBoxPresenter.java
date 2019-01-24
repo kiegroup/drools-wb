@@ -17,27 +17,22 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import com.google.gwt.dom.client.LIElement;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
-public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter {
+public class KeyValueEditingBoxPresenter extends EditingBoxPresenter implements KeyValueEditingBox.Presenter {
 
-    @Inject
-    protected ViewsProvider viewsProvider;
+//    @Inject
+//    protected ViewsProvider viewsProvider;
 
-    @Inject
-    protected PropertyPresenter propertyPresenter;
+//    @Inject
+//    protected PropertyPresenter propertyPresenter;
 
-    protected CollectionView.Presenter collectionEditorPresenter;
+//    protected CollectionView.Presenter collectionEditorPresenter;
 
-    @Override
-    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
-        this.collectionEditorPresenter = collectionEditorPresenter;
-    }
+//    @Override
+//    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
+//        this.collectionEditorPresenter = collectionEditorPresenter;
+//    }
 
     @Override
     public LIElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
@@ -59,8 +54,4 @@ public class KeyValueEditingBoxPresenter implements KeyValueEditingBox.Presenter
         collectionEditorPresenter.addMapItem(keyPropertiesValues, valuePropertiesMap);
     }
 
-    @Override
-    public void close(KeyValueEditingBox toClose) {
-        toClose.getEditingBox().removeFromParent();
-    }
 }

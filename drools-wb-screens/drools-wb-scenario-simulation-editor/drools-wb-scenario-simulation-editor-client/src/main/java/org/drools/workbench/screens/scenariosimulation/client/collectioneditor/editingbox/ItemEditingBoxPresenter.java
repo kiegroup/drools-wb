@@ -17,27 +17,22 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import com.google.gwt.dom.client.LIElement;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
-public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
+public class ItemEditingBoxPresenter extends EditingBoxPresenter implements ItemEditingBox.Presenter {
 
-    @Inject
-    protected ViewsProvider viewsProvider;
+//    @Inject
+//    protected ViewsProvider viewsProvider;
+//
+//    @Inject
+//    protected PropertyPresenter propertyPresenter;
+//
+//    protected CollectionView.Presenter collectionEditorPresenter;
 
-    @Inject
-    protected PropertyPresenter propertyPresenter;
-
-    protected CollectionView.Presenter collectionEditorPresenter;
-
-    @Override
-    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
-        this.collectionEditorPresenter = collectionEditorPresenter;
-    }
+//    @Override
+//    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
+//        this.collectionEditorPresenter = collectionEditorPresenter;
+//    }
 
     @Override
     public LIElement getEditingBox(String key, Map<String, String> instancePropertyMap) {
@@ -54,13 +49,13 @@ public class ItemEditingBoxPresenter implements ItemEditingBox.Presenter {
     }
 
     @Override
-    public void save(ItemEditingBox toSave) {
+    public void save() {
         Map<String, String> propertiesValues = propertyPresenter.updateProperties("value");
         collectionEditorPresenter.addListItem(propertiesValues);
     }
 
-    @Override
-    public void close(ItemEditingBox toClose) {
-        toClose.getEditingBox().removeFromParent();
-    }
+//    @Override
+//    public void close(ItemEditingBox toClose) {
+//        toClose.getEditingBox().removeFromParent();
+//    }
 }

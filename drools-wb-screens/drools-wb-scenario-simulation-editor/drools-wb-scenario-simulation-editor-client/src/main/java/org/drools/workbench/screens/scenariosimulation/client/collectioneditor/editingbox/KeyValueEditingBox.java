@@ -17,15 +17,12 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
-import org.uberfire.client.mvp.HasPresenter;
 
-public interface KeyValueEditingBox extends HasPresenter<KeyValueEditingBox.Presenter> {
+public interface KeyValueEditingBox extends EditingBox<KeyValueEditingBox.Presenter> {
 
-    interface Presenter {
+    interface Presenter extends EditingBox.Presenter {
 
         /**
          * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
@@ -34,23 +31,24 @@ public interface KeyValueEditingBox extends HasPresenter<KeyValueEditingBox.Pres
          */
         LIElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
 
-        void save();
+       /* void save();
 
         void close(KeyValueEditingBox toClose);
 
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
+        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);*/
     }
 
-    /**
-     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-     */
-    void setKey(String key);
-
-    LIElement getEditingBox();
-
-    HeadingElement getEditingBoxTitle();
-
-    UListElement getPropertiesContainer();
+//     /**
+//     *
+//     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
+//     */
+//    void setKey(String key);
+//
+//    LIElement getEditingBox();
+//
+//    HeadingElement getEditingBoxTitle();
+//
+//    UListElement getPropertiesContainer();
 
     LIElement getKeyValueContainer();
 
