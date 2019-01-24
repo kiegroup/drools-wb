@@ -1,3 +1,18 @@
+/*
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.ArrayList;
@@ -14,10 +29,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,9 +55,8 @@ public class ItemElementPresenterTest extends AbstractCollectionEditorTest {
     @Mock
     private LIElement itemSeparatorMock;
 
-    // FIXME - no need to mock map/list
-    @Mock
-    private Map<ItemElementView, String> listEditorElementViewMapMock;
+
+    private List<ItemElementView> itemElementViewListLocal = new ArrayList<>();
 
     @Mock
     private LIElement propertyFieldsMock;
@@ -74,21 +89,22 @@ public class ItemElementPresenterTest extends AbstractCollectionEditorTest {
             {
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
-//                this.itemElementViewList = listEditorElementViewMapMock;
+                this.itemElementViewList = itemElementViewListLocal;
             }
         });
     }
 
     @Test
     public void getItemContainer() {
+        itemElementViewListLocal.clear();
         itemContainerMock = itemElementPresenter.getItemContainer(TEST_ITEM_ID, testPropertiesMap);
         verify(itemElementViewMock, times(1)).init(itemElementPresenter);
         verify(itemElementViewMock, times(1)).setItemId(TEST_ITEM_ID);
         verify(itemElementViewMock, times(1)).getItemContainer();
         verify(itemElementViewMock, times(1)).getSaveChange();
         verify(itemContainerMock, times(1)).insertBefore(propertyFieldsMock, saveChangeMock);
-        // how to verify if itemElementView has been added to itemElementViewList if it doesn't need mocked?
         assertNotNull(itemContainerMock);
+        assertTrue(itemElementViewListLocal.contains(itemElementViewMock));
     }
 
     @Test
@@ -126,10 +142,12 @@ public class ItemElementPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void onDeleteItem() {
+        itemElementViewListLocal.clear();
+        itemElementViewListLocal.add(itemElementViewMock);
         itemElementPresenter.onDeleteItem(itemElementViewMock);
         verify(propertyPresenterMock, times(1)).deleteProperties(anyString());
         verify(itemContainerMock, times(1)).removeFromParent();
-        // need to verify itemElementView was removed from itemElementViewList
+        assertFalse(itemElementViewListLocal.contains(itemElementViewMock));
     }
 
     @Test
