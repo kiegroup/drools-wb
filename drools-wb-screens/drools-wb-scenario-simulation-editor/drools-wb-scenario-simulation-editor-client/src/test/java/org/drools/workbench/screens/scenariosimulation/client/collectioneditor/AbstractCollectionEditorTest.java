@@ -15,12 +15,49 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.UListElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.mockito.Mock;
+
+import static org.mockito.Mockito.when;
 
 public class AbstractCollectionEditorTest {
 
     @Mock
     protected ViewsProvider viewsProviderMock;
+
+    @Mock
+    protected CollectionPresenter collectionEditorPresenterMock;
+
+    @Mock
+    protected PropertyPresenter propertyPresenterMock;
+
+    @Mock
+    protected LIElement saveChangeMock;
+
+    @Mock
+    protected Style styleMock;
+
+    @Mock
+    protected LIElement itemContainerMock;
+
+    @Mock
+    protected UListElement innerItemContainerMock;
+
+    @Mock
+    protected SpanElement faAngleRightMock;
+
+    @Mock
+    protected LIElement itemSeparatorMock;
+
+
+    protected void setup() {
+        when(saveChangeMock.getStyle()).thenReturn(styleMock);
+    }
+
+
 
 }

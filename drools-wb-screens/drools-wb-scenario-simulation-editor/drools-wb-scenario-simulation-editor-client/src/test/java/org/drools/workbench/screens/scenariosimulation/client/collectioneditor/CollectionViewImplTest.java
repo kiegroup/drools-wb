@@ -21,7 +21,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompos
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -31,12 +30,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class CollectionViewImplTest {
+public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     private CollectionViewImpl collectionEditorViewImpl;
-
-    @Mock
-    private CollectionPresenter collectionEditorPresenterMock;
 
     @Before
     public void setup() {
