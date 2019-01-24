@@ -25,7 +25,6 @@ import static org.mockito.Mockito.spy;
 @RunWith(GwtMockitoTestRunner.class)
 public class ItemEditingBoxImplTest extends AbstractEditingBoxImplTest {
 
-
     @Before
     public void setup() {
         presenterMock = mock(ItemEditingBoxPresenter.class);

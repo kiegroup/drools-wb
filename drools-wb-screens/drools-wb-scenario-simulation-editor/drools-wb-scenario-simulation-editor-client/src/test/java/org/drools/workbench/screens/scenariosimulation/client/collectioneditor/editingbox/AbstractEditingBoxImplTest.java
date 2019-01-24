@@ -22,24 +22,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class AbstractEditingBoxImplTest {
+public abstract class AbstractEditingBoxImplTest {
 
     protected EditingBox.Presenter presenterMock;
 
     protected EditingBoxImpl editingBoxImpl;
 
+    protected ClickEvent clickEventMock = mock(ClickEvent.class);
 
     @Test
     public void onSaveItemClickEvent() {
-        ClickEvent clickEventMock = mock(ClickEvent.class);
         editingBoxImpl.onSaveItemClickEvent(clickEventMock);
         verify(presenterMock, times(1)).save();
         verify(editingBoxImpl, times(1)).close(clickEventMock);
     }
 
     @Test
+    public void onDiscardItemClickEvent() {
+        editingBoxImpl.onDiscardItemClickEvent(clickEventMock);
+        verify(editingBoxImpl, times(1)).close(clickEventMock);
+    }
+
+    @Test
     public void close() {
-        ClickEvent clickEventMock = mock(ClickEvent.class);
         editingBoxImpl.close(clickEventMock);
         verify(presenterMock, times(1)).close(editingBoxImpl);
         verify(clickEventMock, times(1)).stopPropagation();

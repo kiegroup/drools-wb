@@ -34,13 +34,14 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ItemEditingBoxPresenterTest {
+public class ItemEditingBoxPresenterTest extends AbstractEditingBoxPresenterTest {
 
     private static final String TEST_KEY = "TEST-CLASSNAME#TEST-PROPERTYNAME";
     private static final String TEST_PROPERTYNAME = "TEST-PROPERTYNAME";
@@ -48,25 +49,22 @@ public class ItemEditingBoxPresenterTest {
     private Map<String, String> testInstancePropertyMap = Collections.singletonMap("TEST-KEY", "TEST-VALUE");
     private Map<String, String> testPropertiesValues = new HashMap<>();
 
-    @Mock
-    private PropertyPresenter propertyPresenterMock;
+//    @Mock
+//    private CollectionView.Presenter collectionViewPresenterMock;
 
-    @Mock
-    private CollectionView.Presenter collectionViewPresenterMock;
+//    @Mock
+//    private ViewsProvider viewsProviderMock;
 
-    @Mock
-    private ViewsProvider viewsProviderMock;
-
-    @Mock
-    private LIElement editingBoxMock;
+//    @Mock
+//    private LIElement editingBoxMock;
 
     @Mock LIElement propertyFieldsMock;
 
     @Mock
     private ItemEditingBox itemEditingBoxMock;
 
-    @Mock
-    private HeadingElement editingBoxTitleMock;
+//    @Mock
+//    private HeadingElement editingBoxTitleMock;
 
     @Mock
     private UListElement propertiesContainerMock;
@@ -75,18 +73,21 @@ public class ItemEditingBoxPresenterTest {
 
     @Before
     public void setup() {
-        when(viewsProviderMock.getItemEditingBox()).thenReturn(itemEditingBoxMock);
-        when(itemEditingBoxMock.getEditingBoxTitle()).thenReturn(editingBoxTitleMock);
-        when(itemEditingBoxMock.getPropertiesContainer()).thenReturn(propertiesContainerMock);
-        when(propertyPresenterMock.getEditingPropertyFields(anyString(), anyString(), anyString())).thenReturn(propertyFieldsMock);
-        when(itemEditingBoxMock.getEditingBox()).thenReturn(editingBoxMock);
-        this.itemEditingBoxPresenter = spy(new ItemEditingBoxPresenter() {
+//        when(viewsProviderMock.getItemEditingBox()).thenReturn(itemEditingBoxMock);
+//        when(itemEditingBoxMock.getEditingBoxTitle()).thenReturn(editingBoxTitleMock);
+//        when(itemEditingBoxMock.getPropertiesContainer()).thenReturn(propertiesContainerMock);
+//        when(propertyPresenterMock.getEditingPropertyFields(anyString(), anyString(), anyString())).thenReturn(propertyFieldsMock);
+//        when(itemEditingBoxMock.getEditingBox()).thenReturn(editingBoxMock);
+
+        editingBoxToCloseMock = mock(ItemEditingBox.class);
+        editingBoxPresenter = spy(new ItemEditingBoxPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
                 this.collectionEditorPresenter = collectionViewPresenterMock;
             }
         });
+        super.setup();
     }
 
     @Test
@@ -103,16 +104,16 @@ public class ItemEditingBoxPresenterTest {
 
     @Test
     public void save() {
-        itemEditingBoxPresenter.save();
+        editingBoxPresenter.save();
         verify(propertyPresenterMock, times(1)).updateProperties("value");
         verify(collectionViewPresenterMock, times(1)).addListItem(anyMap());
     }
 
-    @Test
-    public void close() {
-        itemEditingBoxPresenter.close(itemEditingBoxMock);
-        verify(editingBoxMock, times(1)).removeFromParent();
-    }
+//    @Test
+//    public void close() {
+//        itemEditingBoxPresenter.close(itemEditingBoxMock);
+//        verify(editingBoxToCloseMock, times(1)).removeFromParent();
+//    }
 
 
 }
