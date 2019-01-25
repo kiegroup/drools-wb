@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
@@ -36,36 +34,12 @@ public class ScenarioSimulationUtils {
         return columnGroup + "-" + subGroupCounter.getAndIncrement();
     }
 
-    /**
-     * Returns true if given string equals <code>List.class.getName()</code> or <code>Map.class.getName()</code>
-     * @param className
-     * @return
-     */
-    public static boolean isCollection(String className) {
-        return List.class.getName().equals(className) || Map.class.getName().equals(className);
-    }
-
-    /**
-     * Returns true if given string equals <code>List.class.getName()</code>
-     * @param className
-     * @return
-     */
-    public static boolean isList(String className) {
-        return List.class.getName().equals(className);
-    }
-
-    /**
-     * Helper method to know if the given <b>className</b> refers to one of the classes mapped as Simple java type
-     * @param className
-     * @return
-     */
     public static boolean isSimpleJavaType(String className) {
         return SIMPLE_CLASSES_MAP.values()
                 .stream()
                 .map(Class::getCanonicalName)
                 .anyMatch(className::equals);
     }
-
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:

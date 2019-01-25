@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
@@ -164,7 +164,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * @param factName
      * @param modelFields
      * @return
-     * 
      * @implNote For the moment being, due to current implementation of <b>DMO</b>, it it not possible to retrieve <b>all</b>
      * the generic types of a class with more then one, but only the last one. So, for <code>Map</code>, the <b>key</b>
      * will allways be a <code>java.lang.String</code>
@@ -181,8 +180,8 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
             if (!modelField.getName().equals("this")) {
                 String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
-                if (ScenarioSimulationUtils.isCollection(className)) {
-                    populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationUtils.isList(className));
+                if (ScenarioSimulationSharedUtils.isCollection(className)) {
+                    populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationSharedUtils.isList(className));
                 }
             }
         }
@@ -196,7 +195,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * @param factName
      * @param propertyName
      * @param isList
-     *
      * @implNote due to current DMO implementation, it is not possible to retrive <b>all</b> generic types of a given class, but only the last one; for the moment being, the generic type
      * for <code>Map</code> will be <b>java.lang.String</b>
      */
