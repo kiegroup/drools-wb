@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import com.google.gwt.event.dom.client.ClickEvent;
 import org.junit.Test;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.FA_ANGLE_DOWN;
@@ -24,7 +23,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -47,35 +45,35 @@ public abstract class ElementViewImplTest<E extends ElementView, T extends Eleme
     @Test
     public void onFaAngleRightClick() {
         when(faAngleRightMock.getClassName()).thenReturn(FA_ANGLE_RIGHT);
-        elementView.onFaAngleRightClick(mock(ClickEvent.class));
+        elementView.onFaAngleRightClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onToggleRowExpansion(eq(elementView), eq(false));
         reset(elementPresenterMock);
         when(faAngleRightMock.getClassName()).thenReturn(FA_ANGLE_DOWN);
-        elementView.onFaAngleRightClick(mock(ClickEvent.class));
+        elementView.onFaAngleRightClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onToggleRowExpansion(eq(elementView), eq(true));
     }
 
     @Test
     public void onEditItemButtonClick() {
-        elementView.onEditItemButtonClick(mock(ClickEvent.class));
+        elementView.onEditItemButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onEditItem(eq(elementView));
     }
 
     @Test
     public void onDeleteItemButtonClick() {
-        elementView.onDeleteItemButtonClick(mock(ClickEvent.class));
+        elementView.onDeleteItemButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onDeleteItem(eq(elementView));
     }
 
     @Test
     public void onSaveChangeButtonClick() {
-        elementView.onSaveChangeButtonClick(mock(ClickEvent.class));
+        elementView.onSaveChangeButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).updateItem(eq(elementView));
     }
 
     @Test
     public void onCancelChangeButton() {
-        elementView.onCancelChangeButton(mock(ClickEvent.class));
+        elementView.onCancelChangeButton(clickEventMock);
         verify(elementPresenterMock, times(1)).onStopEditingItem(eq(elementView));
     }
 

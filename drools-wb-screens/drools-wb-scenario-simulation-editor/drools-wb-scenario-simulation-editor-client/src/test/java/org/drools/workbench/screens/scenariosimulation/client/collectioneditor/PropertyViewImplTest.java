@@ -15,42 +15,38 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class CollectionViewImplTest extends AbstractCollectionEditorTest {
+public class PropertyViewImplTest extends AbstractCollectionEditorTest {
 
-    private CollectionViewImpl collectionEditorViewImpl;
+    private PropertyViewImpl propertyViewImpl;
+
+    @Mock
+    InputElement propertyValueInputMock;
 
     @Before
     public void setup() {
-        this.collectionEditorViewImpl = spy(new CollectionViewImpl() {
+        propertyViewImpl = spy(new PropertyViewImpl() {
             {
-                this.presenter = collectionPresenterMock;
+                this.propertyValueInput = propertyValueInputMock;
             }
         });
     }
 
     @Test
-    public void setValue() {
-        String testValue = "TEST-JSON";
-        collectionEditorViewImpl.setValue(testValue);
-        verify(collectionPresenterMock, times(1)).setValue(eq(testValue));
-    }
-
-    @Test
-    public void onCloseCollectionEditorButtonClick() {
-        collectionEditorViewImpl.onCloseCollectionEditorButtonClick(clickEventMock);
-        verify(collectionEditorViewImpl, times(1)).fireEvent(isA(CloseCompositeEvent.class));
+    public void onPropertyValueInputClickEvent() {
+        propertyViewImpl.onPropertyValueInputClickEvent(clickEventMock);
+        verify(propertyValueInputMock, times(1)).focus();
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 }
