@@ -66,13 +66,13 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
     @Test
     public void getItemContainer() {
         elementViewListLocal.clear();
-        elementPresenter.getItemContainer(TEST_ITEM_ID, testPropertiesMap);
+        LIElement itemContainer = elementPresenter.getItemContainer(TEST_ITEM_ID, testPropertiesMap);
         verify(elementView1Mock, times(1)).init(elementPresenter);
         verify(elementView1Mock, times(1)).setItemId(TEST_ITEM_ID);
         verify(elementView1Mock, times(1)).getItemContainer();
         verify(elementView1Mock, times(1)).getSaveChange();
         verify(innerItemContainerMock, times(1)).insertBefore(propertyFieldsMock, saveChangeMock);
-        assertNotNull(itemContainerMock);
+        assertNotNull(itemContainer);
         assertTrue(elementViewListLocal.contains(elementView1Mock));
     }
 

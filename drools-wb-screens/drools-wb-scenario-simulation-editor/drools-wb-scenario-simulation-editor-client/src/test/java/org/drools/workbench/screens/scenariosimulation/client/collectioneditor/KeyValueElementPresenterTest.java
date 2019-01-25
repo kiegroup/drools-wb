@@ -92,14 +92,14 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
     @Test
     public void getKeyValueContainer() {
         elementViewListLocal.clear();
-        elementPresenter.getKeyValueContainer(TEST_ITEM_ID, testKeyPropertyMap, testValuePropertyyMap);
+        LIElement keyValueContainer = elementPresenter.getKeyValueContainer(TEST_ITEM_ID, testKeyPropertyMap, testValuePropertyyMap);
         verify(elementView1Mock, times(1)).init(elementPresenter);
         verify(elementView1Mock, times(1)).setItemId(TEST_ITEM_ID);
         verify(elementView1Mock, times(1)).getKeyContainer();
         verify(keyContainerMock, times(1)).appendChild(propertyFieldsMock);
         verify(elementView1Mock, times(1)).getValueContainer();
         verify(valueContainerMock, times(1)).appendChild(propertyFieldsMock);
-        assertNotNull(itemContainerMock);
+        assertNotNull(keyValueContainer);
         assertTrue(elementViewListLocal.contains(elementView1Mock));
     }
 
