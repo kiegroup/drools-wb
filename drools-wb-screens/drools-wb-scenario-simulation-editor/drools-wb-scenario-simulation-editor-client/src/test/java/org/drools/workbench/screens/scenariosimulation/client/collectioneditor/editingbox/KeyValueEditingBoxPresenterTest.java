@@ -18,13 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 import java.util.Collections;
 import java.util.Map;
 
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,8 +27,6 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -48,23 +41,9 @@ public class KeyValueEditingBoxPresenterTest extends AbstractEditingBoxPresenter
     private Map<String, String> testKeyPropertyMap = Collections.singletonMap("TEST-KEY1", "TEST-KEY2");
     private Map<String, String> testValuePropertyyMap = Collections.singletonMap("TEST-VALUE1", "TEST-VALUE2");
 
-//    @Mock
-//    private PropertyPresenter propertyPresenterMock;
-
-//    @Mock
-//    private CollectionView.Presenter collectionViewPresenterMock;
-
-//    @Mock
-//    private ViewsProvider viewsProviderMock;
 
     @Mock
     private KeyValueEditingBox keyValueEditingBoxMock;
-
-//    @Mock
-//    private LIElement editingBoxMock;
-
-//    @Mock
-//    private HeadingElement editingBoxTitleMock;
 
     @Mock
     private UListElement keyContainerMock;
@@ -72,51 +51,34 @@ public class KeyValueEditingBoxPresenterTest extends AbstractEditingBoxPresenter
     @Mock
     private UListElement valueContainerMock;
 
-    @Mock
-    private LIElement propertyFieldsMock;
-
-    private KeyValueEditingBoxPresenter keyValueEditingBoxPresenter;
-
     @Before
     public void setup() {
-//        when(viewsProviderMock.getKeyValueEditingBox()).thenReturn(keyValueEditingBoxMock);
-//        when(keyValueEditingBoxMock.getEditingBoxTitle()).thenReturn(editingBoxTitleMock);
-//        when(keyValueEditingBoxMock.getKeyContainer()).thenReturn(keyContainerMock);
-//        when(propertyPresenterMock.getEditingPropertyFields(anyString(), anyString(), anyString())).thenReturn(propertyFieldsMock);
-//        when(keyValueEditingBoxMock.getValueContainer()).thenReturn(valueContainerMock);
-//        when(keyValueEditingBoxMock.getEditingBox()).thenReturn(editingBoxMock);
-
-//        this.keyValueEditingBoxPresenter = spy(new KeyValueEditingBoxPresenter() {
-//            {
-//                this.viewsProvider = viewsProviderMock;
-//                this.propertyPresenter = propertyPresenterMock;
-//                this.collectionEditorPresenter = collectionViewPresenterMock;
-//            }
-//        });
-
-        editingBoxToCloseMock = mock(KeyValueEditingBox.class);
+        editingBoxToCloseMock = keyValueEditingBoxMock;
+        when(keyValueEditingBoxMock.getKeyContainer()).thenReturn(keyContainerMock);
+        when(keyValueEditingBoxMock.getValueContainer()).thenReturn(valueContainerMock);
+        when(keyValueEditingBoxMock.getPropertiesContainer()).thenReturn(propertiesContainerMock);
+        when(viewsProviderMock.getKeyValueEditingBox()).thenReturn(keyValueEditingBoxMock);
         editingBoxPresenter = spy(new KeyValueEditingBoxPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
-                this.collectionEditorPresenter = collectionViewPresenterMock;
+                this.collectionEditorPresenter = collectionPresenterMock;
             }
         });
-        keyValueEditingBoxPresenter = spy(new KeyValueEditingBoxPresenter());
         super.setup();
     }
 
     @Test
     public void getEditingBox() {
-//        editingBoxMock = keyValueEditingBoxPresenter.getEditingBox(TEST_KEY, testKeyPropertyMap, testValuePropertyyMap);
-//        verify(viewsProviderMock, times(1)).getKeyValueEditingBox();
-//        verify(keyValueEditingBoxMock, times(1)).init(keyValueEditingBoxPresenter);
-//        verify(keyValueEditingBoxMock, times(1)).setKey(TEST_KEY);
-//        verify(editingBoxTitleMock, times(1)).setInnerText("Edit " + TEST_PROPERTYNAME);
-//        verify(keyContainerMock, times(1)).appendChild(propertyFieldsMock);
-//        verify(valueContainerMock, times(1)).appendChild(propertyFieldsMock);
-//        verify(keyValueEditingBoxMock, times(1)).getEditingBox();
-//        assertNotNull(editingBoxMock);
+        editingBoxMock =  ((KeyValueEditingBoxPresenter)editingBoxPresenter).getEditingBox(TEST_KEY, testKeyPropertyMap, testValuePropertyyMap);
+        verify(viewsProviderMock, times(1)).getKeyValueEditingBox();
+        verify(keyValueEditingBoxMock, times(1)).init((KeyValueEditingBoxPresenter)editingBoxPresenter);
+        verify(keyValueEditingBoxMock, times(1)).setKey(TEST_KEY);
+        verify(editingBoxTitleMock, times(1)).setInnerText("Edit " + TEST_PROPERTYNAME);
+        verify(keyContainerMock, times(1)).appendChild(editingPropertyFieldsMock);
+        verify(valueContainerMock, times(1)).appendChild(editingPropertyFieldsMock);
+        verify(keyValueEditingBoxMock, times(1)).getEditingBox();
+        assertNotNull(editingBoxMock);
     }
 
     @Test
@@ -124,6 +86,6 @@ public class KeyValueEditingBoxPresenterTest extends AbstractEditingBoxPresenter
         editingBoxPresenter.save();
         verify(propertyPresenterMock, times(1)).updateProperties("key");
         verify(propertyPresenterMock, times(1)).updateProperties("value");
-        verify(collectionViewPresenterMock, times(1)).addMapItem(anyMap(), anyMap());
+        verify(collectionPresenterMock, times(1)).addMapItem(anyMap(), anyMap());
     }
 }

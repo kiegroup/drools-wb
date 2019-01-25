@@ -21,18 +21,6 @@ import com.google.gwt.dom.client.LIElement;
 
 public class ItemEditingBoxPresenter extends EditingBoxPresenter implements ItemEditingBox.Presenter {
 
-//    @Inject
-//    protected ViewsProvider viewsProvider;
-//
-//    @Inject
-//    protected PropertyPresenter propertyPresenter;
-//
-//    protected CollectionView.Presenter collectionEditorPresenter;
-
-//    @Override
-//    public void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter) {
-//        this.collectionEditorPresenter = collectionEditorPresenter;
-//    }
 
     @Override
     public LIElement getEditingBox(String key, Map<String, String> instancePropertyMap) {
@@ -54,8 +42,4 @@ public class ItemEditingBoxPresenter extends EditingBoxPresenter implements Item
         collectionEditorPresenter.addListItem(propertiesValues);
     }
 
-//    @Override
-//    public void close(ItemEditingBox toClose) {
-//        toClose.getEditingBox().removeFromParent();
-//    }
 }

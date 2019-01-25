@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.UListElement;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.mockito.Mock;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 public class AbstractCollectionEditorTest {
@@ -30,7 +31,7 @@ public class AbstractCollectionEditorTest {
     protected ViewsProvider viewsProviderMock;
 
     @Mock
-    protected CollectionPresenter collectionEditorPresenterMock;
+    protected CollectionPresenter collectionPresenterMock;
 
     @Mock
     protected PropertyPresenter propertyPresenterMock;
@@ -53,9 +54,13 @@ public class AbstractCollectionEditorTest {
     @Mock
     protected LIElement itemSeparatorMock;
 
+    @Mock
+    protected LIElement editingPropertyFieldsMock;
+
 
     protected void setup() {
         when(saveChangeMock.getStyle()).thenReturn(styleMock);
+        when(propertyPresenterMock.getEditingPropertyFields(anyString(), anyString(), anyString())).thenReturn(editingPropertyFieldsMock);
     }
 
 

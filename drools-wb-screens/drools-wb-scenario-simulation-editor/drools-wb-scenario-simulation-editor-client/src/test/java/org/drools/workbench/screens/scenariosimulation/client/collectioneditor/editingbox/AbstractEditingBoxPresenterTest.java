@@ -17,33 +17,21 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor.
 
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionView;
-import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.PropertyPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+import com.google.gwt.dom.client.UListElement;
+import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.AbstractCollectionEditorTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractEditingBoxPresenterTest {
-
-    @Mock
-    protected ViewsProvider viewsProviderMock;
+public abstract class AbstractEditingBoxPresenterTest extends AbstractCollectionEditorTest {
 
     protected EditingBox editingBoxToCloseMock;
 
     protected EditingBoxPresenter editingBoxPresenter;
-
-    @Mock
-    protected PropertyPresenter propertyPresenterMock;
-
-    @Mock
-    protected CollectionView.Presenter collectionViewPresenterMock;
 
     @Mock
     protected LIElement editingBoxMock;
@@ -51,9 +39,15 @@ public abstract class AbstractEditingBoxPresenterTest {
     @Mock
     protected HeadingElement editingBoxTitleMock;
 
+    @Mock
+    protected UListElement propertiesContainerMock;
+
     @Before
     public void setup() {
+        super.setup();
         when(editingBoxToCloseMock.getEditingBox()).thenReturn(editingBoxMock);
+        when(editingBoxToCloseMock.getEditingBoxTitle()).thenReturn(editingBoxTitleMock);
+        when(editingBoxToCloseMock.getPropertiesContainer()).thenReturn(propertiesContainerMock);
     }
 
     @Test

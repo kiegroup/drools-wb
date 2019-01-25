@@ -38,7 +38,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     public void setup() {
         this.collectionEditorViewImpl = spy(new CollectionViewImpl() {
             {
-                this.presenter = collectionEditorPresenterMock;
+                this.presenter = collectionPresenterMock;
             }
         });
     }
@@ -47,7 +47,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     public void setValue() {
         String testValue = "TEST-JSON";
         collectionEditorViewImpl.setValue(testValue);
-        verify(collectionEditorPresenterMock, times(1)).setValue(eq(testValue));
+        verify(collectionPresenterMock, times(1)).setValue(eq(testValue));
     }
 
     @Test
