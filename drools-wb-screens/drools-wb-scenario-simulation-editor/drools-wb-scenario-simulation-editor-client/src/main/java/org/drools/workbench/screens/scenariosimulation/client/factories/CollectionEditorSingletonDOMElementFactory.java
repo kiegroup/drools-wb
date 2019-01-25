@@ -76,11 +76,12 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
+            final CollectionEditorDOMElement collectionEditorDOMElement = this.e;
             widget.addCloseCompositeEventHandler(event -> {
-                destroyResources();
-                gridLayer.batch();
-                gridPanel.setFocus(true);
-                e.stopEditingMode();
+                commonCloseHandling(collectionEditorDOMElement);
+            });
+            widget.addBlurHandler(event -> {
+                commonCloseHandling(collectionEditorDOMElement);
             });
             widget.addSaveEditorEventHandler(event -> flush());
         });
@@ -136,6 +137,13 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             toReturn =  scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
         }
         return toReturn;
+    }
+
+    protected void commonCloseHandling(final CollectionEditorDOMElement collectionEditorDOMElement) {
+        destroyResources();
+        gridLayer.batch();
+        gridPanel.setFocus(true);
+        collectionEditorDOMElement.stopEditingMode();
     }
 }
 
