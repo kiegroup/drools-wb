@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface ElementView<T extends ElementView.Presenter> extends HasPresenter<T> {
@@ -56,12 +57,21 @@ public interface ElementView<T extends ElementView.Presenter> extends HasPresent
          */
         void onDeleteItem(E itemElementView);
 
-//        /**
-//         * Retrieves a <code>List</code> with the <code>Map</code>s of all the items' properties
-//         * @return
-//         */
-//        List<Map<String, String>> getItemsProperties();
     }
+
+    boolean isShown();
+
+    void onFaAngleRightClick(ClickEvent mock);
+
+    void onEditItemButtonClick(ClickEvent mock);
+
+    void onDeleteItemButtonClick(ClickEvent mock);
+
+    void onSaveChangeButtonClick(ClickEvent mock);
+
+    void onCancelChangeButton(ClickEvent mock);
+
+    void toggleRowExpansion(boolean toExpand);
 
     /**
      * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>

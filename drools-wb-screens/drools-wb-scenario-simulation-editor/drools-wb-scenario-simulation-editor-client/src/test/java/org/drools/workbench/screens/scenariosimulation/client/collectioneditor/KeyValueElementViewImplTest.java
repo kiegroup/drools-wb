@@ -23,12 +23,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ItemElementViewImplTest extends ElementViewImplTest<ItemElementView, ItemElementView.Presenter> {
+public class KeyValueElementViewImplTest extends ElementViewImplTest<KeyValueElementView, KeyValueElementView.Presenter> {
 
     @Before
     public void setup() {
-        elementPresenterMock = mock(ItemElementView.Presenter.class);
-        elementView = spy(new ItemElementViewImpl() {
+        elementPresenterMock = mock(KeyValueElementView.Presenter.class);
+        elementView = spy(new KeyValueElementViewImpl() {
             {
                 this.presenter = elementPresenterMock;
                 this.faAngleRight = faAngleRightMock;

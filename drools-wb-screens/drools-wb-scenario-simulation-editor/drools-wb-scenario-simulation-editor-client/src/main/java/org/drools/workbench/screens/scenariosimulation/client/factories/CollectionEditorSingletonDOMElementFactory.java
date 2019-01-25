@@ -80,6 +80,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                 destroyResources();
                 gridLayer.batch();
                 gridPanel.setFocus(true);
+                e.stopEditingMode();
             });
             widget.addSaveEditorEventHandler(event -> flush());
         });

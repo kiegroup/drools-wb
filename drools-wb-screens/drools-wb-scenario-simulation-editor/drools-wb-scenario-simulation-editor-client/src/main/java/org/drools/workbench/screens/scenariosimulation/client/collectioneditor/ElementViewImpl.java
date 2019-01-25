@@ -101,6 +101,16 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
         return faAngleRight;
     }
 
+    @Override
+    public boolean isShown() {
+        return CollectionEditorUtils.isShown(faAngleRight);
+    }
+
+    @Override
+    public void toggleRowExpansion(boolean toExpand) {
+        CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
+    }
+
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent event) {
         presenter.onToggleRowExpansion(this, isShown());
@@ -124,13 +134,5 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
     @EventHandler("cancelChangeButton")
     public void onCancelChangeButton(ClickEvent event) {
         presenter.onStopEditingItem(this);
-    }
-
-    protected boolean isShown() {
-        return CollectionEditorUtils.isShown(faAngleRight);
-    }
-
-    protected void toggleRowExpansion(boolean toExpand) {
-        CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 }

@@ -64,9 +64,6 @@ public abstract class AbstractScenarioSimulationGridHandlerTest extends Abstract
     protected BaseGridRendererHelper scenarioGridRendererHelperMock;
 
     @Mock
-    protected CommonEditHandler commonEditHandlerMock;
-
-    @Mock
     private BaseGridRendererHelper.RenderingInformation scenarioRenderingInformationMock;
 
     @Mock

@@ -17,6 +17,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.dom.client.Style;
@@ -62,6 +64,10 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
         when(elementView2Mock.getSaveChange()).thenReturn(saveChangeMock);
         elementViewListLocal.add(elementView1Mock);
         elementViewListLocal.add(elementView2Mock);
+        for (String el : Arrays.asList(ELEMENT1_ID, ELEMENT2_ID)) {
+            when(propertyPresenterMock.getProperties(eq(el +"#KEY"))).thenReturn(new HashMap<>());
+            when(propertyPresenterMock.getProperties(eq(el +"#VALUE"))).thenReturn(new HashMap<>());
+        }
     }
 
     @Test

@@ -63,6 +63,4 @@ public class AbstractCollectionEditorTest {
         when(propertyPresenterMock.getEditingPropertyFields(anyString(), anyString(), anyString())).thenReturn(editingPropertyFieldsMock);
     }
 
-
-
 }

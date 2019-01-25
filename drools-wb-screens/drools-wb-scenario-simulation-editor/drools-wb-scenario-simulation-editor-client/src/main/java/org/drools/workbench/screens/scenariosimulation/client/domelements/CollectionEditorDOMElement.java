@@ -81,6 +81,12 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
         this.scenarioGridCell = scenarioGridCell;
     }
 
+    public void stopEditingMode() {
+        if (scenarioGridCell != null) {
+            scenarioGridCell.setEditingMode(false);
+        }
+    }
+
     @Override
     public void initialise(final GridBodyCellRenderContext context) {
         transform(context);
