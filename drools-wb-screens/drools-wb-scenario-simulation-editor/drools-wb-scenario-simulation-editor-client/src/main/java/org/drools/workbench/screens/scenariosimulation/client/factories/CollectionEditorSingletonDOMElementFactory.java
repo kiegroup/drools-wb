@@ -80,9 +80,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             widget.addCloseCompositeEventHandler(event -> {
                 commonCloseHandling(collectionEditorDOMElement);
             });
-            widget.addBlurHandler(event -> {
-                commonCloseHandling(collectionEditorDOMElement);
-            });
             widget.addSaveEditorEventHandler(event -> flush());
         });
         return e;
