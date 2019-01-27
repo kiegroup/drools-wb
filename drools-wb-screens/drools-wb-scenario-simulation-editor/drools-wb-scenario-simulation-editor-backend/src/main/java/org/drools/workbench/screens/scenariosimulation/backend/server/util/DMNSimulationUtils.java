@@ -20,7 +20,6 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
 
-// FIXME to test
 public class DMNSimulationUtils {
 
     private DMNSimulationUtils() {

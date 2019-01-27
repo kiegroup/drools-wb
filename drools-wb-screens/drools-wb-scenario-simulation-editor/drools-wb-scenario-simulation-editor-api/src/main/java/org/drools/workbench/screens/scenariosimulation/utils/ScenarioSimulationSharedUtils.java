@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.utils;
 import java.util.List;
 import java.util.Map;
 
-// FIXME use getCanonicalName()?
 public class ScenarioSimulationSharedUtils {
 
     /**

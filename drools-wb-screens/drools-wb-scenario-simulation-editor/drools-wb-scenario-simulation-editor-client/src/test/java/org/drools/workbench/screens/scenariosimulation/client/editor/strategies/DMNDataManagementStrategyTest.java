@@ -50,7 +50,7 @@ public class DMNDataManagementStrategyTest {
     @Before
     public void init() {
         when(dmnTypeServiceMock.retrieveType(any(), anyString())).thenReturn(mock(FactModelTuple.class));
-        dmnDataManagementStrategy = new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock));
+        dmnDataManagementStrategy = new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock), null);
     }
 
     @Test

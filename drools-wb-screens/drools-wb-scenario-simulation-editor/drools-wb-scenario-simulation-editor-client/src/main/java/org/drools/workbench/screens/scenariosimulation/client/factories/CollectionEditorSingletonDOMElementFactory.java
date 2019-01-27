@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
@@ -110,13 +109,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         String propertyName = factMapping.getExpressionAlias();
         List<String> genericTypes = factMapping.getGenericTypes();
         String key = className + "#" + propertyName;
-        GWT.log("-- INIT --");
-        GWT.log(propertyClass);
-        GWT.log(className);
-        GWT.log(propertyName);
-        GWT.log(String.join(",", genericTypes));
-        GWT.log(key);
-        GWT.log("-- END --");
         if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
             collectionEditorView.setListWidget(true);
             collectionEditorView.initListStructure(key, getPropertiesMap(genericTypes.get(0)));

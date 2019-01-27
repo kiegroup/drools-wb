@@ -378,7 +378,7 @@ public class ScenarioSimulationEditorPresenter
                 dataManagementStrategy = new DMODataManagementStrategy(oracleFactory, context);
             }
             else {
-                dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService);
+                dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, context);
             }
             dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
             populateRightPanel();

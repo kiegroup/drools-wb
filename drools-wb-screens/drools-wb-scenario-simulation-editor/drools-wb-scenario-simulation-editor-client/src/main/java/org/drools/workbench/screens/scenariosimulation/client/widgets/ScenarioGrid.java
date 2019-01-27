@@ -37,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -151,7 +152,7 @@ public class ScenarioGrid extends BaseGridWidget {
      * @param className
      */
     protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, String className) {
-        if (ScenarioSimulationUtils.isCollection(className)) {
+        if (ScenarioSimulationSharedUtils.isCollection(className)) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
         }
     }

@@ -21,6 +21,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
@@ -40,9 +41,11 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     private Path currentPath;
     private ScenarioSimulationModel model;
     private ResultHolder factModelTreeHolder = new ResultHolder();
+    protected ScenarioSimulationContext scenarioSimulationContext;
 
-    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
+    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
         this.dmnTypeService = dmnTypeService;
+        this.scenarioSimulationContext = scenarioSimulationContext;
     }
 
     @Override
@@ -75,6 +78,12 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
             rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
             rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
             rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
+
+            SortedMap<String, FactModelTree> context = new TreeMap<>();
+            context.putAll(factMappingTuple.getVisibleFacts());
+            context.putAll(factMappingTuple.getHiddenFacts());
+            scenarioSimulationContext.setDataObjectFieldsMap(context);
+
         };
     }
 
