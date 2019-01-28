@@ -65,6 +65,9 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     public CollectionEditorDOMElement createDomElement(final GridLayer gridLayer,
                                                        final GridWidget gridWidget,
                                                        final GridBodyCellRenderContext context) {
+        if (this.widget != null) {
+            this.widget.close();
+        }
         this.widget = createWidget();
         final ScenarioGridModel model = ((ScenarioGrid) gridWidget).getModel();
         final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();

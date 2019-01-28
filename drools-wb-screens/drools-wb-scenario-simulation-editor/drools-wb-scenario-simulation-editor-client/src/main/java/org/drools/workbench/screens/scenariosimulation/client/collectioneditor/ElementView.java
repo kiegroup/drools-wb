@@ -27,6 +27,10 @@ public interface ElementView<T extends ElementView.Presenter> extends HasPresent
 
         void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);
 
+        /**
+         *
+         * @param isShown The <b>current</b> status of the <code>ElementView</code>
+         */
         void onToggleRowExpansion(boolean isShown);
 
         void onToggleRowExpansion(E itemElementView, boolean shown);

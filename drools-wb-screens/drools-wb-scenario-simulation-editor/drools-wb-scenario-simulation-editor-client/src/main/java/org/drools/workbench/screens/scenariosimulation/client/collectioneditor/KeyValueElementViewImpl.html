@@ -1,8 +1,7 @@
 <li data-field="itemContainer">
-    <ul data-field="innerItemContainer">
-        <li class="list-group-item node-treeview-object1 kie-drools-object-separator" data-field="itemSeparator">
-            <span class="indent"></span>
-            <span class="icon expand-icon fa fa-angle-down" data-field="faAngleRight"></span>Item
+    <ul class="list-group" data-field="innerItemContainer">
+        <li class="list-group-item kie-object-list__separator" data-field="itemSeparator">
+            <span class="fa fa-angle-down kie-object-list__expander" data-field="faAngleRight"></span> Item
             <div class="pull-right">
                 <button class="btn btn-link" aria-label="Edit item" data-field="editItemButton">
                     <span class="fa fa-pencil" aria-hidden="true"></span>
@@ -12,19 +11,17 @@
                 </button>
             </div>
         </li>
-        <li data-field="keyValueContainer">
-            <div style="display: inline-table;">
-                <ul data-field="keyContainer" style="display: inline-block; vertical-align: top;">
-                    <li class="list-group-item node-treeview-object-edit" data-field="keyLabel">
-                        <span>KEY</span>
-                    </li>
-                </ul>
-                <ul data-field="valueContainer" style="display: inline-block; vertical-align: top;">
-                    <li class="list-group-item node-treeview-object-edit" data-field="valueLabel">
-                        <span>VALUE</span>
-                    </li>
-                </ul>
-            </div>
+        <li class="list-group-item" data-field="keyValueContainer">
+            <ul class="list-group kie-object-list kie-object-list--mapping" data-field="keyContainer">
+                <li class="list-group-item" data-field="keyLabel">
+                    <span data-i18n-key="KEY">KEY</span>
+                </li>
+            </ul>
+            <ul class="list-group kie-object-list kie-object-list--mapping" data-field="valueContainer">
+                <li class="list-group-item node-treeview-object-edit node-hidden" data-field="valueLabel">
+                    <span>VALUE</span>
+                </li>
+            </ul>
         </li>
         <li class="list-group-item" data-field="saveChange" style="visibility: hidden">
             <button class="btn btn-link" data-field="saveChangeButton">

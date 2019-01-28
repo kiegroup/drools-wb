@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -62,6 +63,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("collectionEditor")
     protected DivElement collectionEditor = Document.get().createDivElement();
 
+    @DataField("collectionEditorModalBody")
+    protected DivElement collectionEditorModalBody = Document.get().createDivElement();
+
     @DataField("elementsContainer")
     protected UListElement elementsContainer = Document.get().createULElement();
 
@@ -98,6 +102,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * The <b>json</b> representation of the values of this editor
      */
     protected String value;
+
+    protected double left;
+
+    protected Style.Unit leftUnit;
+
+
 
     public CollectionViewImpl() {
         setElement(collectionEditor);
@@ -210,9 +220,20 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         toggleRowExpansion(!isShown());
     }
 
+    @Override
     public void updateValue(String value) {
         this.value = value;
         fireEvent(new SaveEditorEvent());
+    }
+
+    @Override
+    public void close() {
+        fireEvent(new CloseCompositeEvent());
+    }
+
+    @Override
+    public void setFixedHeight(double value, Style.Unit unit) {
+        collectionEditorModalBody.getStyle().setHeight(value, unit);
     }
 
     protected boolean isShown() {
@@ -221,9 +242,5 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     protected void toggleRowExpansion(boolean toExpand) {
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
-    }
-
-    protected void close() {
-        fireEvent(new CloseCompositeEvent());
     }
 }

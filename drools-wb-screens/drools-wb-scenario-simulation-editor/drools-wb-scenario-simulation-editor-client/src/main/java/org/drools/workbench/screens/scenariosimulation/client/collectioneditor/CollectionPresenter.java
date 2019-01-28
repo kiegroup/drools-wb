@@ -66,6 +66,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         instancePropertiesMap.put(key, instancePropertyMap);
         listEditingBoxPresenter.setCollectionEditorPresenter(this);
         listElementPresenter.setCollectionEditorPresenter(this);
+        listElementPresenter.onToggleRowExpansion(false);
     }
 
     @Override
@@ -75,6 +76,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         instancePropertiesMap.put(key + "#value", valuePropertyMap);
         mapEditingBoxPresenter.setCollectionEditorPresenter(this);
         mapElementPresenter.setCollectionEditorPresenter(this);
+        mapElementPresenter.onToggleRowExpansion(false);
     }
 
     @Override

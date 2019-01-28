@@ -19,12 +19,15 @@ package org.drools.workbench.screens.scenariosimulation.client.domelements;
 import java.util.Objects;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Focusable;
+import com.google.gwt.user.client.ui.SimplePanel;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
+import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -66,15 +69,20 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
         style.setProperty("resize",
                           "none");
 
-        getContainer().getElement().getStyle().setPaddingLeft(5,
-                                                              Style.Unit.PX);
-        getContainer().getElement().getStyle().setPaddingRight(5,
-                                                               Style.Unit.PX);
-        getContainer().getElement().getStyle().setPaddingTop(5,
-                                                             Style.Unit.PX);
-        getContainer().getElement().getStyle().setPaddingBottom(5,
-                                                                Style.Unit.PX);
-        getContainer().setWidget(widget);
+        final SimplePanel widgetContainer = getContainer();
+        final Element widgetContainerElement = widgetContainer.getElement();
+        final Style widgetContainerElementStyle = widgetContainerElement.getStyle();
+
+        widgetContainerElementStyle.setPaddingLeft(5,
+                                                         Style.Unit.PX);
+        widgetContainerElementStyle.setPaddingRight(5,
+                                                          Style.Unit.PX);
+        widgetContainerElementStyle.setPaddingTop(5,
+                                                        Style.Unit.PX);
+        widgetContainerElementStyle.setPaddingBottom(5,
+                                                           Style.Unit.PX);
+
+        widgetContainer.setWidget(widget);
     }
 
     public void setScenarioGridCell(ScenarioGridCell scenarioGridCell) {
@@ -90,6 +98,17 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
     @Override
     public void initialise(final GridBodyCellRenderContext context) {
         transform(context);
+        final Bounds visibleBounds = gridLayer.getVisibleBounds();
+        final double shownWidth = visibleBounds.getWidth() - visibleBounds.getY();
+        final double widgetWidth = (shownWidth * 0.5);
+        final double widgetLeft = ((shownWidth - widgetWidth) / 2) +  visibleBounds.getY();
+        widgetContainer.getElement().getStyle().setWidth(widgetWidth, Style.Unit.PX);
+        widgetContainer.getElement().getStyle().setLeft(widgetLeft, Style.Unit.PX);
+        final double shownHeight = visibleBounds.getHeight() - visibleBounds.getX();
+        final double widgetHeight = (shownHeight * 0.5);
+//        final double widgetTop = ((shownHeight - widgetHeight) / 2) +  visibleBounds.getX();
+        widget.setFixedHeight(widgetHeight, Style.Unit.PX);
+        widgetContainer.getElement().getStyle().setTop(0, Style.Unit.PX);
     }
 
     @Override
