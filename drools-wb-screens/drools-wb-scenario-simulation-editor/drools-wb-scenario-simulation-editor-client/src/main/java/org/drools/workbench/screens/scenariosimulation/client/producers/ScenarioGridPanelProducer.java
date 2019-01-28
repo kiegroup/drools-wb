@@ -20,6 +20,8 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -37,6 +39,12 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class ScenarioGridPanelProducer {
 
     @Inject
+    private GridContextMenu gridContextMenu;
+
+    @Inject
+    private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+
+    @Inject
     protected ScenarioGridLayer scenarioGridLayer;
 
     @Inject
@@ -52,7 +60,10 @@ public class ScenarioGridPanelProducer {
         ScenarioGridModel scenarioGridModel = new ScenarioGridModel(false);
         final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
                                                            scenarioGridLayer,
-                                                           new ScenarioGridRenderer(false));
+                                                           new ScenarioGridRenderer(false),
+                                                           scenarioGridPanel,
+                                                           gridContextMenu,
+                                                           unmodifiableColumnGridContextMenu);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
         scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanel);

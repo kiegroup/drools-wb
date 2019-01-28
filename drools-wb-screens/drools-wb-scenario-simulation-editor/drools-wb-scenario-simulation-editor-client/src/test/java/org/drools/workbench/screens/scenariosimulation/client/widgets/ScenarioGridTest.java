@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
@@ -87,6 +88,8 @@ public class ScenarioGridTest {
     private EventBus eventBusMock;
     @Mock
     private GridContextMenu gridContextMenuMock;
+    @Mock
+    private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
 
     private final String EXPRESSION_ALIAS_DESCRIPTION = "EXPRESSION_ALIAS_DESCRIPTION";
     private final String EXPRESSION_ALIAS_GIVEN = "EXPRESSION_ALIAS_GIVEN";
@@ -121,7 +124,8 @@ public class ScenarioGridTest {
                                             scenarioGridLayerMock,
                                             scenarioGridRendererMock,
                                             scenarioGridPanelMock,
-                                            gridContextMenuMock) {
+                                            gridContextMenuMock,
+                                            unmodifiableColumnGridContextMenu) {
 
             @Override
             protected void appendRow(int rowIndex, Scenario scenario) {

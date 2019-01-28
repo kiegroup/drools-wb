@@ -17,11 +17,13 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
@@ -59,16 +61,19 @@ public class ScenarioGrid extends BaseGridWidget {
 
     private final ScenarioGridPanel scenarioGridPanel;
     private final GridContextMenu gridContextMenu;
+    private final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
     private EventBus eventBus;
 
     public ScenarioGrid(ScenarioGridModel model,
                         ScenarioGridLayer scenarioGridLayer,
                         ScenarioGridRenderer renderer,
                         ScenarioGridPanel scenarioGridPanel,
-                        GridContextMenu gridContextMenu) {
+                        GridContextMenu gridContextMenu,
+                        UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
         this.scenarioGridPanel = scenarioGridPanel;
         this.gridContextMenu = gridContextMenu;
+        this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
         setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
@@ -88,6 +93,7 @@ public class ScenarioGrid extends BaseGridWidget {
         this.eventBus = eventBus;
         ((ScenarioGridModel) model).setEventBus(eventBus);
         gridContextMenu.setEventBus(eventBus);
+        unmodifiableColumnGridContextMenu.setEventBus(eventBus);
     }
 
     @Override
@@ -257,6 +263,10 @@ public class ScenarioGrid extends BaseGridWidget {
             gridContextMenu.hide();
         }
 
+        if (unmodifiableColumnGridContextMenu.isShown()) {
+            unmodifiableColumnGridContextMenu.hide();
+        }
+
         return selectionChanged;
     }
 
@@ -284,7 +294,7 @@ public class ScenarioGrid extends BaseGridWidget {
     @Override
     public boolean showContextMenuForCell(final int uiRowIndex, final int uiColumnIndex) {
         final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
-        if (column instanceof ScenarioGridColumn && !((ScenarioGridColumn) column).isReadOnly()) {
+        if (column instanceof ScenarioGridColumn) {
             final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) column;
             final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
             final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
@@ -294,12 +304,20 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                                                ri,
                                                                                                ci,
                                                                                                uiRowIndex);
-            gridContextMenu.show((int) context.getAbsoluteCellX(),
-                                 (int) context.getAbsoluteCellY(),
-                                 uiColumnIndex,
-                                 uiRowIndex,
-                                 scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),
-                                 true);
+            final FactIdentifier columnFactIdentifier = scenarioGridColumn.getFactIdentifier();
+            if (Objects.equals(FactIdentifier.INDEX, columnFactIdentifier) ||
+                    Objects.equals(FactIdentifier.DESCRIPTION, columnFactIdentifier)) {
+                unmodifiableColumnGridContextMenu.show((int) context.getAbsoluteCellX(),
+                                                       (int) (context.getAbsoluteCellY() + ri.getHeaderRowsHeight()),
+                                                       uiRowIndex);
+            } else {
+                gridContextMenu.show((int) context.getAbsoluteCellX(),
+                                     (int) (context.getAbsoluteCellY() + ri.getHeaderRowsHeight()),
+                                     uiColumnIndex,
+                                     uiRowIndex,
+                                     scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),
+                                     true);
+            }
             return true;
         }
         return false;
