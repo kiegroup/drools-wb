@@ -320,7 +320,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void populateMap() {
-        // FIXME - mock everything?
         collectionEditorPresenter.populateMap(jsonValueMock);
         for (int i = 0; i < JSON_ARRAY_SIZE; i++) {
             verify(jsonArrayMock, times(1)).get(eq(i));

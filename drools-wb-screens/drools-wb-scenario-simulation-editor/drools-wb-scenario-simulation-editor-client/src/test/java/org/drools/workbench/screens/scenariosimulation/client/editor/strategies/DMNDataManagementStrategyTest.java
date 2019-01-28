@@ -16,63 +16,69 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.mocks.CallerMock;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class DMNDataManagementStrategyTest {
+@RunWith(GwtMockitoTestRunner.class)
+public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
     @Mock
     protected DMNTypeService dmnTypeServiceMock;
 
-    DMNDataManagementStrategy dmnDataManagementStrategy;
+    private DMNDataManagementStrategy dmnDataManagementStrategy;
 
     @Before
-    public void init() {
+    public void setup() {
+        super.setup();
         when(dmnTypeServiceMock.retrieveType(any(), anyString())).thenReturn(mock(FactModelTuple.class));
-        dmnDataManagementStrategy = new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock), null);
+        modelLocal.getSimulation().getSimulationDescriptor().setDmnFilePath("dmn_file_path");
+        dmnDataManagementStrategy = spy(new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock), scenarioSimulationContextLocal) {
+            {
+                this.currentPath = mock(Path.class);
+                this.model = modelLocal;
+                this.scenarioSimulationContext = scenarioSimulationContextLocal;
+            }
+        });
     }
 
     @Test
     public void populateRightPanel() {
-        ScenarioSimulationModelContent scenarioSimulationModelContentMock = mock(ScenarioSimulationModelContent.class);
-        ScenarioSimulationModel scenarioSimulationModel = mock(ScenarioSimulationModel.class);
-        when(scenarioSimulationModelContentMock.getModel()).thenReturn(scenarioSimulationModel);
-        Simulation simulationMock = mock(Simulation.class);
-        when(scenarioSimulationModel.getSimulation()).thenReturn(simulationMock);
-        SimulationDescriptor simulationDescriptorMock = mock(SimulationDescriptor.class);
-        when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
-        dmnDataManagementStrategy.manageScenarioSimulationModelContent(mock(ObservablePath.class), scenarioSimulationModelContentMock);
-        dmnDataManagementStrategy.populateRightPanel(mock(RightPanelView.Presenter.class), mock(ScenarioGridModel.class));
+        dmnDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
+        verify(dmnDataManagementStrategy, times(1)).getSuccessCallback(rightPanelPresenterMock);
     }
 
     @Test
     public void manageScenarioSimulationModelContent() {
-        ObservablePath observablePathMock = mock(ObservablePath.class);
-        ScenarioSimulationModelContent scenarioSimulationModelContentMock = mock(ScenarioSimulationModelContent.class);
-        dmnDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, scenarioSimulationModelContentMock);
+        final ScenarioSimulationModelContent contentMock = spy(content);
+        dmnDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, contentMock);
         verify(observablePathMock, times(1)).getOriginal();
-        verify(scenarioSimulationModelContentMock, times(1)).getModel();
+        verify(contentMock, times(1)).getModel();
     }
+
+    @Test
+    public void successCallbackContent() {
+        scenarioSimulationContextLocal.setDataObjectFieldsMap(null);
+        dmnDataManagementStrategy.successCallbackContent(mock(FactModelTuple.class), rightPanelPresenterMock);
+        assertNotNull(scenarioSimulationContextLocal.getDataObjectFieldsMap());
+    }
+
 }

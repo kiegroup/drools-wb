@@ -53,16 +53,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void undoOnUndoable() {
         if (command.isUndoable()) {
-            command.restorableStatus = scenarioSimulationContext.getStatus();
-            command.undo(scenarioSimulationContext);
-            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+            command.restorableStatus = scenarioSimulationContextLocal.getStatus();
+            command.undo(scenarioSimulationContextLocal);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
         }
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void undoOnNotUndoable() {
         if (!command.isUndoable()) {
-            command.undo(scenarioSimulationContext);
+            command.undo(scenarioSimulationContextLocal);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -71,16 +71,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void redoOnRedoable() {
         if (command.isUndoable()) {
-            command.restorableStatus = scenarioSimulationContext.getStatus();
-            command.redo(scenarioSimulationContext);
-            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+            command.restorableStatus = scenarioSimulationContextLocal.getStatus();
+            command.redo(scenarioSimulationContextLocal);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
         }
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void redoOnNotUndoable() {
         if (!command.isUndoable()) {
-            command.redo(scenarioSimulationContext);
+            command.redo(scenarioSimulationContextLocal);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -88,18 +88,18 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     @Test
     public void execute() {
-        final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
-        command.execute(scenarioSimulationContext);
-        verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
+        final ScenarioSimulationContext.Status status = scenarioSimulationContextLocal.getStatus();
+        command.execute(scenarioSimulationContextLocal);
+        verify(command, times(1)).internalExecute(eq(scenarioSimulationContextLocal));
         assertNotEquals(status, command.restorableStatus);
     }
 
     @Test
     public void setCurrentContext() {
         if (command.isUndoable()) {
-            final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
+            final ScenarioSimulationContext.Status status = scenarioSimulationContextLocal.getStatus();
             command.restorableStatus = status;
-            command.setCurrentContext(scenarioSimulationContext);
+            command.setCurrentContext(scenarioSimulationContextLocal);
             verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
             verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
             assertNotEquals(status, command.restorableStatus);
@@ -109,7 +109,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void commonExecution() {
         if (command.isUndoable()) {
-            command.commonExecution(scenarioSimulationContext);
+            command.commonExecution(scenarioSimulationContextLocal);
             verify(scenarioGridPanelMock, times(1)).onResize();
             verify(scenarioGridPanelMock, times(1)).select();
         }

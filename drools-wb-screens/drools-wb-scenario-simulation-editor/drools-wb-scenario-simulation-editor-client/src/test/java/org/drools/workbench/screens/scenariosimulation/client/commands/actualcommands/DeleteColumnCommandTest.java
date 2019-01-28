@@ -56,15 +56,15 @@ public class DeleteColumnCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void execute() {
-        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.getStatus().setColumnGroup(COLUMN_GROUP);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContextLocal.getStatus().setColumnGroup(COLUMN_GROUP);
         doReturn(4l).when(scenarioGridModelMock).getGroupSize(COLUMN_GROUP);
-        command.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModelMock, never()).insertColumn(anyInt(), anyObject());
         reset(scenarioGridModelMock);
         doReturn(0l).when(scenarioGridModelMock).getGroupSize(COLUMN_GROUP);
-        command.execute(scenarioSimulationContext);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(COLUMN_INDEX), eq(gridColumnMock));

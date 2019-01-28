@@ -191,7 +191,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
 //            @Override
 //            protected void loadContent() {
-//                return new ScenarioSimulationModelContent(model,
+//                return new ScenarioSimulationModelContent(modelLocal,
 //                                                   new Overview(),
 //                                                   new PackageDataModelOracleBaselinePayload());
 //            }
@@ -214,12 +214,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         final AsyncPackageDataModelOracle oracle = mock(AsyncPackageDataModelOracle.class);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(any(),
-                                                               eq(model),
+                                                               eq(modelLocal),
                                                                eq(content.getDataModel()))).thenReturn(oracle);
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
         verify(importsWidgetPresenterMock).setContent(oracle,
-                                                      model.getImports(),
+                                                      modelLocal.getImports(),
                                                       false);
         verify(kieViewMock).addImportsTab(importsWidgetPresenterMock);
         verify(scenarioSimulationViewMock).showLoading();
@@ -332,13 +332,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTest() throws Exception {
-        doReturn(new ScenarioSimulationModelContent(model,
+        doReturn(new ScenarioSimulationModelContent(modelLocal,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
         when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(mock(ScenarioSimulationModel.class));
         presenter.onStartup(mock(ObservablePath.class), mock(PlaceRequest.class));
         presenter.onRunScenario();
-        verify(scenarioSimulationServiceMock).runScenario(any(), eq(model));
+        verify(scenarioSimulationServiceMock).runScenario(any(), eq(modelLocal));
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();

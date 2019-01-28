@@ -51,9 +51,9 @@ public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandT
 
     @Test
     public void execute() {
-        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContext.getStatus().setColumnGroup(COLUMN_GROUP);
-        command.execute(scenarioSimulationContext);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnGroup(COLUMN_GROUP);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexLeftOfGroup(eq(COLUMN_GROUP));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(FIRST_INDEX_LEFT), eq(gridColumnMock));

@@ -112,7 +112,7 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ViewsProvider viewsProviderMock;
 
-    protected ScenarioSimulationContext scenarioSimulationContext;
+    protected ScenarioSimulationContext scenarioSimulationContextLocal;
     protected AppendRowCommand appendRowCommandMock;
     protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactoryTest;
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactoryTest;
@@ -146,7 +146,7 @@ public abstract class AbstractScenarioSimulationTest {
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,
                                                                                                         scenarioGridMock,
-                                                                                                        scenarioSimulationContext, viewsProviderMock);
+                                                                                                        scenarioSimulationContextLocal, viewsProviderMock);
         scenarioCellTextAreaSingletonDOMElementFactoryTest = new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                                 scenarioGridLayerMock,
                                                                                                                 scenarioGridMock);
@@ -246,20 +246,20 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-        scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanelMock);
+        scenarioSimulationContextLocal = new ScenarioSimulationContext(scenarioGridPanelMock);
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
-        scenarioSimulationContext.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
-        scenarioSimulationContext.getStatus().setSimulation(simulationMock);
+        scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
-        when(scenarioCommandRegistryMock.undo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
-        when(scenarioCommandRegistryMock.redo(scenarioSimulationContext)).thenReturn(CommandResultBuilder.SUCCESS);
+        when(scenarioCommandRegistryMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
+        when(scenarioCommandRegistryMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
 
         appendRowCommandMock = spy(new AppendRowCommand() {
 
             {
-                this.restorableStatus = scenarioSimulationContext.getStatus();
+                this.restorableStatus = scenarioSimulationContextLocal.getStatus();
             }
 
             @Override

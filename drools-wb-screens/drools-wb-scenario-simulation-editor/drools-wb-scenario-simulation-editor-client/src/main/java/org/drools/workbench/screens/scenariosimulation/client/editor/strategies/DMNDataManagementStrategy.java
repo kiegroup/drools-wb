@@ -38,10 +38,10 @@ import org.uberfire.backend.vfs.Path;
 public class DMNDataManagementStrategy implements DataManagementStrategy {
 
     private final Caller<DMNTypeService> dmnTypeService;
-    private Path currentPath;
-    private ScenarioSimulationModel model;
-    private ResultHolder factModelTreeHolder = new ResultHolder();
     protected ScenarioSimulationContext scenarioSimulationContext;
+    protected Path currentPath;
+    protected ScenarioSimulationModel model;
+    private ResultHolder factModelTreeHolder = new ResultHolder();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
         this.dmnTypeService = dmnTypeService;
@@ -67,24 +67,25 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
         model = toManage.getModel();
     }
 
-    private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
-        return factMappingTuple -> {
-            factModelTreeHolder.setFactModelTuple(factMappingTuple);
-            final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
-            final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
-                    .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
-            final SortedMap<String, FactModelTree> complexDataObjects = new TreeMap<>(partitionBy.get(false).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-            final SortedMap<String, FactModelTree> simpleDataObjects = new TreeMap<>(partitionBy.get(true).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-            rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
-            rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
-            rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
+    protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
+        return factMappingTuple -> successCallbackContent(factMappingTuple, rightPanelPresenter);
+    }
 
-            SortedMap<String, FactModelTree> context = new TreeMap<>();
-            context.putAll(factMappingTuple.getVisibleFacts());
-            context.putAll(factMappingTuple.getHiddenFacts());
-            scenarioSimulationContext.setDataObjectFieldsMap(context);
+    protected void successCallbackContent(FactModelTuple factMappingTuple, RightPanelView.Presenter rightPanelPresenter) {
+        factModelTreeHolder.setFactModelTuple(factMappingTuple);
+        final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
+        final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
+                .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
+        final SortedMap<String, FactModelTree> complexDataObjects = new TreeMap<>(partitionBy.get(false).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        final SortedMap<String, FactModelTree> simpleDataObjects = new TreeMap<>(partitionBy.get(true).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
+        rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
+        rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
 
-        };
+        SortedMap<String, FactModelTree> context = new TreeMap<>();
+        context.putAll(factMappingTuple.getVisibleFacts());
+        context.putAll(factMappingTuple.getHiddenFacts());
+        scenarioSimulationContext.setDataObjectFieldsMap(context);
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {

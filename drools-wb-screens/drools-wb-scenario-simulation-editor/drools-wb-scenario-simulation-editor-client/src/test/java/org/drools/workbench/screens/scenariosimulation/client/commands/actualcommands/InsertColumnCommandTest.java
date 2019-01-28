@@ -51,44 +51,44 @@ public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTe
 
     @Test
     public void executeNotIsRightIsAsProperty() {
-        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.getStatus().setRight(false);
-        scenarioSimulationContext.getStatus().setAsProperty(true);
-        command.execute(scenarioSimulationContext);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContextLocal.getStatus().setRight(false);
+        scenarioSimulationContextLocal.getStatus().setAsProperty(true);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(3), eq(gridColumnMock));
     }
 
     @Test
     public void executeIsRightIsAsProperty() {
-        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.getStatus().setRight(true);
-        scenarioSimulationContext.getStatus().setAsProperty(true);
-        command.execute(scenarioSimulationContext);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContextLocal.getStatus().setRight(true);
+        scenarioSimulationContextLocal.getStatus().setAsProperty(true);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
     }
 
     @Test
     public void executeNotIsRightNotIsAsProperty() {
-        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.getStatus().setRight(false);
-        scenarioSimulationContext.getStatus().setAsProperty(false);
-        command.execute(scenarioSimulationContext);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContextLocal.getStatus().setRight(false);
+        scenarioSimulationContextLocal.getStatus().setAsProperty(false);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(2), eq(gridColumnMock));
     }
 
     @Test
     public void executeIsRightNotIsAsProperty() {
-        scenarioSimulationContext.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContext.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContext.getStatus().setRight(true);
-        scenarioSimulationContext.getStatus().setAsProperty(false);
-        command.execute(scenarioSimulationContext);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+        scenarioSimulationContextLocal.getStatus().setRight(true);
+        scenarioSimulationContextLocal.getStatus().setAsProperty(false);
+        command.execute(scenarioSimulationContextLocal);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
     }
