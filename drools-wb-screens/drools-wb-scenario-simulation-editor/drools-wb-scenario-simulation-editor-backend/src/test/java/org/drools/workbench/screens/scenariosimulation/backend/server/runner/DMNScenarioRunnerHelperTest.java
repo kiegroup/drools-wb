@@ -165,7 +165,6 @@ public class DMNScenarioRunnerHelperTest {
         assertEquals(1, newScenarioRunnerData.getResults().size());
         assertTrue(newScenarioRunnerData.getResults().get(0).getResult());
 
-
         // verify that when expression evaluation fails the corresponding expression is marked as error
         runnerHelper.verifyConditions(simulation.getSimulationDescriptor(),
                                       newScenarioRunnerData,
