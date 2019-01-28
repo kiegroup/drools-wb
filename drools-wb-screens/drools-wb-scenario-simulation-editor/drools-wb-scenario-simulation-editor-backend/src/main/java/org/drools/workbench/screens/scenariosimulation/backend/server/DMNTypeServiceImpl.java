@@ -74,12 +74,21 @@ public class DMNTypeServiceImpl
     }
 
     protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, boolean collectionRecursion) {
+        // a simple type
         if (!type.isComposite()) {
-            if (collectionRecursion) {
+            // if is not a collection or a recursion just retur a simple fact
+            if (!type.isCollection() || collectionRecursion) {
                 return createSimpleFact(name, type.getName(), fmType);
             }
+            // otherwise create the generics and return the simple type
             else {
-                throw new IllegalArgumentException("Top level collections are not supported");
+                Map<String, String> simpleFields = new HashMap<>();
+                Map<String, List<String>> genericTypeInfoMap = new HashMap<>();
+                String genericKey = populateGeneric(simpleFields, genericTypeInfoMap, path, type.getName(), type.getName());
+
+                FactModelTree fact = createSimpleFact(name, type.getName(), fmType);
+                hiddenFacts.put(genericKey, fact);
+                return fact;
             }
         }
 
