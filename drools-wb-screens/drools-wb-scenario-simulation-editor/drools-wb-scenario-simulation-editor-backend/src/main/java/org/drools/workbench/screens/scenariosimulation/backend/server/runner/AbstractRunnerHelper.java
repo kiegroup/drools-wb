@@ -169,7 +169,6 @@ public abstract class AbstractRunnerHelper {
 
             try {
                 Object value = expressionEvaluator.getValueForGiven(factMapping.getClassName(),
-                                                                    factMapping.getGenericTypes(),
                                                                     factMappingValue.getRawValue());
                 paramsForBean.put(pathToField, value);
             } catch (IllegalArgumentException e) {
