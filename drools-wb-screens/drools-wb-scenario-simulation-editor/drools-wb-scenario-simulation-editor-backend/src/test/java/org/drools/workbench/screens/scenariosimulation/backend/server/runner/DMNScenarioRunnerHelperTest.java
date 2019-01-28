@@ -166,13 +166,12 @@ public class DMNScenarioRunnerHelperTest {
         assertTrue(newScenarioRunnerData.getResults().get(0).getResult());
 
 
+        // verify that when expression evaluation fails the corresponding expression is marked as error
         runnerHelper.verifyConditions(simulation.getSimulationDescriptor(),
                                       newScenarioRunnerData,
                                       mock(ExpressionEvaluator.class),
                                       requestContext);
-
-        // FIXME to finish
-//        assertTrue(newScenarioRunnerData.getResults().get(0)..getResult());
+        assertTrue(newScenarioRunnerData.getResults().get(0).getFactMappingValue().isError());
     }
 
     @SuppressWarnings("unchecked")
