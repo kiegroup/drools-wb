@@ -289,7 +289,7 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
 
     @Test
     public void testManageGridLeftClick() {
-        boolean retrieved = scenarioSimulationGridPanelClickHandler.manageGridLeftClick(UI_ROW_INDEX, UI_COLUMN_INDEX, gridColumnMock);
+        boolean retrieved = scenarioSimulationGridPanelClickHandler.manageGridLeftClick(UI_ROW_INDEX, UI_COLUMN_INDEX);
         verify(scenarioGridCellMock, never()).setEditingMode(anyBoolean());
         verify(scenarioGridModelMock, times(1)).selectCell(eq(UI_ROW_INDEX), eq(UI_COLUMN_INDEX));
         assertTrue(retrieved);
