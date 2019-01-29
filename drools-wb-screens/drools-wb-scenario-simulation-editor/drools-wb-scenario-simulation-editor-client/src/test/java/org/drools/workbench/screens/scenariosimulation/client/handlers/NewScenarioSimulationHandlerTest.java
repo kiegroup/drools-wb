@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.security.shared.api.identity.User;
@@ -47,6 +48,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +73,7 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     @Mock
     private SessionInfo sessionInfoMock;
     @Mock
-    private  AssetQueryService assetQueryServiceMock;
+    private AssetQueryService assetQueryServiceMock;
 
     @Mock
     private User userMock;
@@ -78,11 +81,17 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     @Captor
     private ArgumentCaptor<ResourceRef> refArgumentCaptor;
 
+    @Mock
+    private TitledAttachmentFileWidget uploadWidgetMock;
+
+    @Mock
+    private SourceTypeSelector sourceTypeSelectorMock;
+
     private NewScenarioSimulationHandler handler;
 
     @Before
     public void setUp() throws Exception {
-        handler = new NewScenarioSimulationHandler(resourceTypeMock,
+        handler = spy(new NewScenarioSimulationHandler(resourceTypeMock,
                                                    busyIndicatorViewMock,
                                                    notificationEventMock,
                                                    newResourceSuccessEventMock,
@@ -91,8 +100,12 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
                                                    authorizationManagerMock,
                                                    sessionInfoMock,
                                                    libraryPlacesMock,
-                                                   assetQueryServiceMock);
-        handler.setupExtensions();
+                                                   assetQueryServiceMock) {
+            {
+                this.uploadWidget = uploadWidgetMock;
+                this.sourceTypeSelector = sourceTypeSelectorMock;
+            }
+        });
         when(sessionInfoMock.getIdentity()).thenReturn(userMock);
     }
 
@@ -116,6 +129,7 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
 
     @Test
     public void checkRightResourceType() throws Exception {
+        when(sourceTypeSelectorMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         handler.create(new Package(),
                        "newfile.scesim",
                        mock(NewResourcePresenter.class));
@@ -127,6 +141,14 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
         verify(placeManagerMock).goTo(any(Path.class));
     }
 
+    @Test
+    public void getCommandMethod() {
+        NewResourcePresenter newResourcePresenterMock = mock(NewResourcePresenter.class);
+        handler.getCommandMethod(newResourcePresenterMock);
+        verify(uploadWidgetMock, times(1)).updateAssetList();
+        verify(newResourcePresenterMock, times(1)).show(any());
+    }
+
     private void assertResourceRef() {
         verify(authorizationManagerMock).authorize(refArgumentCaptor.capture(),
                                                    eq(ResourceAction.READ),
@@ -136,6 +158,4 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
         assertEquals(ActivityResourceType.EDITOR,
                      refArgumentCaptor.getValue().getResourceType());
     }
-
-
 }
