@@ -72,10 +72,13 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
         int expectedElements = dataObjectsTypes.size();
         // Instantiate a dataObjects container map
-        SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
+        final SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
+
+        // Instantiate a map of already assigned properties
+        final Map<String, List<String>> alreadyAssignedProperties = getAlreadyAssignedProperties(scenarioGridModel);
 
         // Instantiate the aggregator callback
-        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel);
+        Callback<FactModelTree> aggregatorCallback = aggregatorCallback(rightPanelPresenter, expectedElements, dataObjectsFieldsMap, alreadyAssignedProperties, scenarioGridModel);
         // Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType ->
                                          oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
@@ -138,18 +141,18 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                     .stream()
                     .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))
                     .forEach(factMapping -> {
-                String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                if (dataObjectName.contains(".")) {
-                    dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                }
-                final String instanceName = factMapping.getFactAlias();
-                if (!instanceName.equals(dataObjectName)) {
-                    final FactModelTree factModelTree = sourceMap.get(dataObjectName);
-                    if (factModelTree != null) {
-                        toReturn.put(instanceName, factModelTree);
-                    }
-                }
-            });
+                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
+                        if (dataObjectName.contains(".")) {
+                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
+                        }
+                        final String instanceName = factMapping.getFactAlias();
+                        if (!instanceName.equals(dataObjectName)) {
+                            final FactModelTree factModelTree = sourceMap.get(dataObjectName);
+                            if (factModelTree != null) {
+                                toReturn.put(instanceName, factModelTree);
+                            }
+                        }
+                    });
         }
         return toReturn;
     }
@@ -185,8 +188,8 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * @param factTypeFieldsMap
      * @return
      */
-    protected Callback<FactModelTree> aggregatorCallback(final RightPanelView.Presenter rightPanelPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final ScenarioGridModel scenarioGridModel) {
-        return result -> aggregatorCallbackMethod(rightPanelPresenter, expectedElements, factTypeFieldsMap, scenarioGridModel, result);
+    protected Callback<FactModelTree> aggregatorCallback(final RightPanelView.Presenter rightPanelPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final Map<String, List<String>> alreadyAssignedProperties, final ScenarioGridModel scenarioGridModel) {
+        return result -> aggregatorCallbackMethod(rightPanelPresenter, expectedElements, factTypeFieldsMap, alreadyAssignedProperties, scenarioGridModel, result);
     }
 
     /**
@@ -197,10 +200,10 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * @param scenarioGridModel
      * @param result
      */
-    protected void aggregatorCallbackMethod(final RightPanelView.Presenter rightPanelPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final ScenarioGridModel scenarioGridModel, final FactModelTree result) {
+    protected void aggregatorCallbackMethod(final RightPanelView.Presenter rightPanelPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final Map<String, List<String>> alreadyAssignedProperties, final ScenarioGridModel scenarioGridModel, final FactModelTree result) {
         factTypeFieldsMap.put(result.getFactName(), result);
         if (factTypeFieldsMap.size() == expectedElements) {
-            factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
+            factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap, alreadyAssignedProperties));
             rightPanelPresenter.setDataObjectFieldsMap(factTypeFieldsMap);
             SortedMap<String, FactModelTree> instanceFieldsMap = getInstanceMap(factTypeFieldsMap);
             rightPanelPresenter.setInstanceFieldsMap(instanceFieldsMap);
@@ -216,8 +219,9 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
      * element exists.
      * @param toPopulate
      * @param factTypeFieldsMap
+     * @param alreadyAssignedProperties key: the name of the Fact class (ex. Author), value: list of properties already assigned to a column
      */
-    protected void populateFactModelTree(FactModelTree toPopulate, final SortedMap<String, FactModelTree> factTypeFieldsMap) {
+    protected void populateFactModelTree(FactModelTree toPopulate, final SortedMap<String, FactModelTree> factTypeFieldsMap, final Map<String, List<String>> alreadyAssignedProperties) {
         List<String> toRemove = new ArrayList<>();
         toPopulate.getSimpleProperties().forEach((key, value) -> {
             if (factTypeFieldsMap.containsKey(value)) {
@@ -225,6 +229,9 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                 toPopulate.addExpandableProperty(key, factTypeFieldsMap.get(value).getFactName());
             }
         });
+        if (alreadyAssignedProperties.containsKey(toPopulate.getFactName())) {
+            toRemove.addAll(alreadyAssignedProperties.get(toPopulate.getFactName()));
+        }
         toRemove.forEach(toPopulate::removeSimpleProperty);
     }
 }

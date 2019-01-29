@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
@@ -323,6 +324,22 @@ public class ScenarioGridModel extends BaseGridData {
             rightPosition++;
         }
         return new Range(leftPosition, rightPosition);
+    }
+
+    /**
+     * This methods returns the <code>List&lt;ScenarioGridColumn&gt;</code> of a <b>single</b> block of columns of the same instance/data object.
+     * A <code>single</code> block is made of all the columns immediately to the left and right of the selected one with the same "label".
+     * If there is another column with the same "label" but separated by a different column, it is not part of the group.
+     * @param selectedColumn
+     * @return
+     */
+    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn ) {
+        int columnIndex = columns.indexOf(selectedColumn);
+        Range instanceRange = getInstanceLimits(columnIndex);
+        return columns.subList(instanceRange.getMinRowIndex(), instanceRange.getMaxRowIndex() + 1)
+                .stream()
+                .map(gridColumn -> (ScenarioGridColumn) gridColumn)
+                .collect(Collectors.toList());
     }
 
     /**
