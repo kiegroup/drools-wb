@@ -308,11 +308,11 @@ public class ScenarioGrid extends BaseGridWidget {
             if (Objects.equals(FactIdentifier.INDEX, columnFactIdentifier) ||
                     Objects.equals(FactIdentifier.DESCRIPTION, columnFactIdentifier)) {
                 unmodifiableColumnGridContextMenu.show((int) context.getAbsoluteCellX(),
-                                                       (int) (context.getAbsoluteCellY() + ri.getHeaderRowsHeight()),
+                                                       (int) (context.getAbsoluteCellY()),
                                                        uiRowIndex);
             } else {
                 gridContextMenu.show((int) context.getAbsoluteCellX(),
-                                     (int) (context.getAbsoluteCellY() + ri.getHeaderRowsHeight()),
+                                     (int) (context.getAbsoluteCellY()),
                                      uiColumnIndex,
                                      uiRowIndex,
                                      scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),

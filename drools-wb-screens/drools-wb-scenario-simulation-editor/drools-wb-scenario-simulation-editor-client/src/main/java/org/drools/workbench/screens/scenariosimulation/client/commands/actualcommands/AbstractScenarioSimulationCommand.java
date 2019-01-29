@@ -102,7 +102,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
         try {
             internalExecute(context);
-            context.getScenarioGridPanel().setFocus(true);
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
@@ -182,6 +181,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     protected CommandResult<ScenarioSimulationViolation> commonExecution(ScenarioSimulationContext context) {
         context.getScenarioGridPanel().onResize();
         context.getScenarioGridPanel().select();
+        context.getScenarioGridPanel().setFocus(true);
         return CommandResultBuilder.SUCCESS;
     }
 }
