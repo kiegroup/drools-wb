@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -78,6 +79,9 @@ public class RightPanelViewImpl
 
     @DataField("kieTestEditorTabContent")
     protected DivElement kieTestEditorTabContent = Document.get().createDivElement();
+
+    @DataField("cheatSheet")
+    protected SpanElement cheatSheet = Document.get().createSpanElement();
 
     protected List<DivElement> managedDivElements;
 
@@ -203,5 +207,10 @@ public class RightPanelViewImpl
         } else {
             managedDivElements.forEach(divElement -> divElement.removeClassName("disabled"));
         }
+    }
+
+    @Override
+    public void setCheatSheetContent(String content) {
+        cheatSheet.setInnerHTML(content);
     }
 }

@@ -56,6 +56,10 @@ public interface ScenarioSimulationEditorConstants
 
     String scenarioCheatSheet();
 
+    String dmnCheatSheet();
+
+    String ruleCheatSheet();
+
     String runScenarioSimulation();
 
     String expect();
