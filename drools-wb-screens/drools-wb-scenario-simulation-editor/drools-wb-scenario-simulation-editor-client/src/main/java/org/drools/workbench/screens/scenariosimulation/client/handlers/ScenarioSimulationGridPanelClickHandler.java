@@ -276,7 +276,9 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (scenarioGridColumn == null) {
             return false;
         }
-        scenarioGrid.getModel().selectCell(uiRowIndex, uiColumnIndex);
+        if (!isHeader) {
+            scenarioGrid.getModel().selectCell(uiRowIndex, uiColumnIndex);
+        }
         return startEditLocal(uiColumnIndex, scenarioGridColumn, uiRowIndex, isHeader);
     }
 
