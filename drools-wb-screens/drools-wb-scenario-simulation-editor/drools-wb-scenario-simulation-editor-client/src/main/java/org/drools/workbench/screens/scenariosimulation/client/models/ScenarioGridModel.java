@@ -515,7 +515,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
         ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
-        boolean isValid = !headerToEdit.isInstanceHeader() || (!isInstanceName(value) && isUnique(value, rowIndex, columnIndex));
+        boolean isValid = !headerToEdit.isInstanceHeader() || isUnique(value, rowIndex, columnIndex);
         if (!isValid) {
             eventBus.fireEvent(new ScenarioNotificationEvent("Name '" + value + "' can not be used",
                                                              NotificationEvent.NotificationType.ERROR));

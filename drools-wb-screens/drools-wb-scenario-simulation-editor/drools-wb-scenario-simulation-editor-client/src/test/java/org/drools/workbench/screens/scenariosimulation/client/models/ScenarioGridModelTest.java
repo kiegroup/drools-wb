@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -402,7 +403,6 @@ public class ScenarioGridModelTest {
 
     @Test
     public void updateIndexColumn() {
-        reset(scenarioGridModel);
         scenarioGridModel.updateIndexColumn();
         verify(scenarioGridModel, never()).setCellValue(anyInt(), anyInt(), isA(ScenarioGridCellValue.class));
         reset(scenarioGridModel);
@@ -411,6 +411,14 @@ public class ScenarioGridModelTest {
         gridColumns.add(indexColumnPosition, scenarioIndexGridColumnMock);
         when(scenarioGridModel.getColumns()).thenReturn(gridColumns);
         scenarioGridModel.updateIndexColumn();
+    }
+
+    @Test
+    public void validateHeaderUpdate() {
+        commonValidateHeaderUpdate(1, 0, false, false);
+        commonValidateHeaderUpdate(1, 0, true, true);
+        commonValidateHeaderUpdate(2, 0, false, true);
+        commonValidateHeaderUpdate(2, 0, true, true);
     }
 
     @Test
@@ -436,5 +444,18 @@ public class ScenarioGridModelTest {
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValue));
         scenarioGridModel.refreshErrorsRow(0);
         verify(gridCellMock, times(6)).setErrorMode(true);
+    }
+
+    private void commonValidateHeaderUpdate(int rowIndex, int columnIndex, boolean isUnique, boolean expectedValid) {
+        String value = "VALUE";
+        when(scenarioGridModel.isUnique(value, rowIndex, columnIndex)).thenReturn(isUnique);
+        boolean retrieved = scenarioGridModel.validateHeaderUpdate(value, rowIndex, columnIndex);
+        assertEquals(retrieved, expectedValid);
+        if (!expectedValid) {
+            verify(eventBusMock, times(1)).fireEvent(isA(ScenarioNotificationEvent.class));
+        } else {
+            verify(eventBusMock, never()).fireEvent(any());
+        }
+        reset(eventBusMock);
     }
 }
