@@ -68,20 +68,6 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         return factMappingTuple -> {
             getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
-//
-//            // Instantiate a map of already assigned properties
-//            final Map<String, List<String>> alreadyAssignedProperties = getAlreadyAssignedProperties(scenarioGridModel);
-//            factModelTreeHolder.setFactModelTuple(factMappingTuple);
-//            final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
-//            final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
-//                    .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
-//            final SortedMap<String, FactModelTree> complexDataObjects = new TreeMap<>(partitionBy.get(false).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-//            final SortedMap<String, FactModelTree> simpleDataObjects = new TreeMap<>(partitionBy.get(true).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-//            filterFactModelTreeMap(complexDataObjects, alreadyAssignedProperties);
-//            filterFactModelTreeMap(simpleDataObjects, alreadyAssignedProperties);
-//            rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
-//            rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
-//            rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
         };
     }
 
