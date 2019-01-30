@@ -47,34 +47,41 @@ public abstract class ElementViewImplTest<E extends ElementView, T extends Eleme
         when(faAngleRightMock.getClassName()).thenReturn(FA_ANGLE_RIGHT);
         elementView.onFaAngleRightClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onToggleRowExpansion(eq(elementView), eq(false));
+        verify(clickEventMock, times(1)).stopPropagation();
+        reset(clickEventMock);
         reset(elementPresenterMock);
         when(faAngleRightMock.getClassName()).thenReturn(FA_ANGLE_DOWN);
         elementView.onFaAngleRightClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onToggleRowExpansion(eq(elementView), eq(true));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 
     @Test
     public void onEditItemButtonClick() {
         elementView.onEditItemButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onEditItem(eq(elementView));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 
     @Test
     public void onDeleteItemButtonClick() {
         elementView.onDeleteItemButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).onDeleteItem(eq(elementView));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 
     @Test
     public void onSaveChangeButtonClick() {
         elementView.onSaveChangeButtonClick(clickEventMock);
         verify(elementPresenterMock, times(1)).updateItem(eq(elementView));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 
     @Test
     public void onCancelChangeButton() {
         elementView.onCancelChangeButton(clickEventMock);
         verify(elementPresenterMock, times(1)).onStopEditingItem(eq(elementView));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 
     @Test

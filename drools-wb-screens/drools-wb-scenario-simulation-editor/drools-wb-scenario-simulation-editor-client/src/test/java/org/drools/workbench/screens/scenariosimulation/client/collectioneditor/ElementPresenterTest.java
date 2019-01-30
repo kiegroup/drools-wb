@@ -21,10 +21,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import com.google.gwt.dom.client.Style;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -79,22 +77,6 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
     public void onToggleRowExpansionFalse() {
         commonOnToggleRowExpansion(false);
     }
-
-    @Test
-    public void onStopEditingItem() {
-        elementPresenter.onStopEditingItem(elementView1Mock);
-        verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID));
-        verify(styleMock, times(1)).setVisibility(eq(Style.Visibility.HIDDEN));
-    }
-
-    @Test
-    public void onDeleteItem() {
-        elementPresenter.onDeleteItem(elementView1Mock);
-        verify(propertyPresenterMock, times(1)).deleteProperties(eq(ELEMENT1_ID));
-        verify(itemContainerMock, times(1)).removeFromParent();
-        assertFalse(elementViewListLocal.contains(elementView1Mock));
-    }
-
 
     private void commonOnToggleRowExpansion(boolean isShown) {
         elementPresenter.onToggleRowExpansion(isShown);

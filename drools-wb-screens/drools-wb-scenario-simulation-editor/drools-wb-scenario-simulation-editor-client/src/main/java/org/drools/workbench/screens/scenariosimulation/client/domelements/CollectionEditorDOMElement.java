@@ -106,7 +106,6 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
         widgetContainer.getElement().getStyle().setLeft(widgetLeft, Style.Unit.PX);
         final double shownHeight = visibleBounds.getHeight() - visibleBounds.getX();
         final double widgetHeight = (shownHeight * 0.5);
-//        final double widgetTop = ((shownHeight - widgetHeight) / 2) +  visibleBounds.getX();
         widget.setFixedHeight(widgetHeight, Style.Unit.PX);
         widgetContainer.getElement().getStyle().setTop(0, Style.Unit.PX);
     }

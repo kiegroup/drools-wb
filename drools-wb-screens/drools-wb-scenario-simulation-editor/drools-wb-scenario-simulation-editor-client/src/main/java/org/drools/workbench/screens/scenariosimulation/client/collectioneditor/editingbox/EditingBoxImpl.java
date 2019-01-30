@@ -71,18 +71,20 @@ public abstract class EditingBoxImpl<T extends EditingBox.Presenter> implements 
     }
 
     @EventHandler("saveItem")
-    public void onSaveItemClickEvent(ClickEvent event) {
+    public void onSaveItemClickEvent(ClickEvent clickEvent) {
         presenter.save();
-        close(event);
+        close(clickEvent);
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("discardItem")
-    public void onDiscardItemClickEvent(ClickEvent event) {
-        close(event);
+    public void onDiscardItemClickEvent(ClickEvent clickEvent) {
+        close(clickEvent);
+        clickEvent.stopPropagation();
     }
 
-    protected void close(ClickEvent event) {
+    protected void close(ClickEvent clickEvent) {
         presenter.close(this);
-        event.stopPropagation();
+        clickEvent.stopPropagation();
     }
 }

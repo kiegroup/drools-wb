@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,14 +32,13 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         keyValueElementView.init(this);
         keyValueElementView.setItemId(itemId);
         final UListElement keyContainer = keyValueElementView.getKeyContainer();
-        String keyId = itemId+ "#key";
-        String valueId = itemId + "#value";
+        List<String> keyValueIds = getKeyValueIds(itemId);
         keyPropertiesValues.forEach((propertyName, propertyValue) ->
-                                            keyContainer.appendChild(propertyPresenter.getPropertyFields(keyId, propertyName, propertyValue)));
+                                            keyContainer.appendChild(propertyPresenter.getPropertyFields(keyValueIds.get(0), propertyName, propertyValue)));
 
         final UListElement valueContainer = keyValueElementView.getValueContainer();
         valuePropertiesValues.forEach((propertyName, propertyValue) ->
-                                              valueContainer.appendChild(propertyPresenter.getPropertyFields(valueId, propertyName, propertyValue)));
+                                              valueContainer.appendChild(propertyPresenter.getPropertyFields(keyValueIds.get(1), propertyName, propertyValue)));
         elementViewList.add(keyValueElementView);
         return keyValueElementView.getItemContainer();
     }
@@ -45,32 +46,38 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
     @Override
     public void onToggleRowExpansion(KeyValueElementView keyValueElementView, boolean isShown) {
         CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getFaAngleRight(), !isShown);
-        String itemId = keyValueElementView.getItemId();
-        String keyId = itemId+ "#key";
-        String valueId = itemId + "#value";
         CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getKeyLabel(), isShown);
         CollectionEditorUtils.toggleRowExpansion(keyValueElementView.getValueLabel(), isShown);
-        propertyPresenter.onToggleRowExpansion(keyId, isShown);
-        propertyPresenter.onToggleRowExpansion(valueId, isShown);
+        List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
+        keyValueIds.forEach(id -> propertyPresenter.onToggleRowExpansion(id, isShown));
     }
 
     @Override
     public void onEditItem(KeyValueElementView keyValueElementView) {
-        String itemId = keyValueElementView.getItemId();
-        String keyId = itemId+ "#key";
-        String valueId = itemId + "#value";
-        propertyPresenter.editProperties(keyId);
-        propertyPresenter.editProperties(valueId);
+        List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
+        keyValueIds.forEach(id -> propertyPresenter.editProperties(id));
         keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.VISIBLE);
     }
 
     @Override
+    public void onStopEditingItem(KeyValueElementView keyValueElementView) {
+        List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
+        keyValueIds.forEach(id -> propertyPresenter.stopEditProperties(id));
+        keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
+    }
+
+    @Override
+    public void onDeleteItem(KeyValueElementView keyValueElementView) {
+        List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
+        keyValueIds.forEach(id -> propertyPresenter.deleteProperties(id));
+        keyValueElementView.getItemContainer().removeFromParent();
+        elementViewList.remove(keyValueElementView);
+    }
+
+    @Override
     public void updateItem(KeyValueElementView keyValueElementView) {
-        String itemId = keyValueElementView.getItemId();
-        String keyId = itemId+ "#key";
-        String valueId = itemId + "#value";
-        propertyPresenter.updateProperties(keyId);
-        propertyPresenter.updateProperties(valueId);
+        List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
+        keyValueIds.forEach(id -> propertyPresenter.updateProperties(id));
         keyValueElementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
     }
 
@@ -88,4 +95,12 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
                         }));
     }
 
+    /**
+     * Returns a <code>List</code>> with (itemId)#key at pos. 0 and (itemId)#value at pos. 1
+     * @param itemId
+     * @return
+     */
+    private List<String> getKeyValueIds(String itemId) {
+        return Arrays.asList(itemId + "#key", itemId + "#value");
+    }
 }

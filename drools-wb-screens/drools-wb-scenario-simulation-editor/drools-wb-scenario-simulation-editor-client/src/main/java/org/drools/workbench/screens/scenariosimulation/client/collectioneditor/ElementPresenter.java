@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.Style;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public abstract class ElementPresenter<E extends ElementView> implements ElementView.Presenter<E> {
@@ -48,16 +47,16 @@ public abstract class ElementPresenter<E extends ElementView> implements Element
         elementViewList.forEach(elementView -> onToggleRowExpansion(elementView, isShown));
     }
 
-    @Override
+/*    @Override
     public void onStopEditingItem(E elementView) {
         propertyPresenter.stopEditProperties(elementView.getItemId());
         elementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
-    }
+    }*/
 
-    @Override
+ /*   @Override
     public void onDeleteItem(E elementView) {
         propertyPresenter.deleteProperties(elementView.getItemId());
         elementView.getItemContainer().removeFromParent();
         elementViewList.remove(elementView);
-    }
+    }*/
 }

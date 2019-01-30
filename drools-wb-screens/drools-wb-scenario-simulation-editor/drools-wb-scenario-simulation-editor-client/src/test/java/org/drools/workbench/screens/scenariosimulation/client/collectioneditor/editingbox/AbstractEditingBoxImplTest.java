@@ -35,12 +35,14 @@ public abstract class AbstractEditingBoxImplTest {
         editingBoxImpl.onSaveItemClickEvent(clickEventMock);
         verify(presenterMock, times(1)).save();
         verify(editingBoxImpl, times(1)).close(clickEventMock);
+        verify(clickEventMock, times(2)).stopPropagation();
     }
 
     @Test
     public void onDiscardItemClickEvent() {
         editingBoxImpl.onDiscardItemClickEvent(clickEventMock);
         verify(editingBoxImpl, times(1)).close(clickEventMock);
+        verify(clickEventMock, times(2)).stopPropagation();
     }
 
     @Test

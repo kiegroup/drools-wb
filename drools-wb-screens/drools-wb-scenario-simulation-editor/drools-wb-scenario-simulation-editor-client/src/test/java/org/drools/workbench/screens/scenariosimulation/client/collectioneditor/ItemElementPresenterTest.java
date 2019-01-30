@@ -27,9 +27,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -81,6 +83,21 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
         elementPresenter.onEditItem(elementView1Mock);
         verify(propertyPresenterMock, times(1)).editProperties(anyString());
         verify(styleMock, times(1)).setVisibility(Style.Visibility.VISIBLE);
+    }
+
+    @Test
+    public void onStopEditingItem() {
+        elementPresenter.onStopEditingItem(elementView1Mock);
+        verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID));
+        verify(styleMock, times(1)).setVisibility(eq(Style.Visibility.HIDDEN));
+    }
+
+    @Test
+    public void onDeleteItem() {
+        elementPresenter.onDeleteItem(elementView1Mock);
+        verify(propertyPresenterMock, times(1)).deleteProperties(eq(ELEMENT1_ID));
+        verify(itemContainerMock, times(1)).removeFromParent();
+        assertFalse(elementViewListLocal.contains(elementView1Mock));
     }
 
     @Test

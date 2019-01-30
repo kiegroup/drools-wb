@@ -65,17 +65,17 @@ public interface ElementView<T extends ElementView.Presenter> extends HasPresent
 
     boolean isShown();
 
-    void onFaAngleRightClick(ClickEvent mock);
+    void onFaAngleRightClick(ClickEvent clickEvent);
 
-    void onEditItemButtonClick(ClickEvent mock);
+    void onEditItemButtonClick(ClickEvent clickEvent);
 
-    void onDeleteItemButtonClick(ClickEvent mock);
+    void onDeleteItemButtonClick(ClickEvent clickEvent);
 
-    void onSaveChangeButtonClick(ClickEvent mock);
+    void onSaveChangeButtonClick(ClickEvent clickEvent);
 
-    void onCancelChangeButton(ClickEvent mock);
+    void onCancelChangeButton(ClickEvent clickEvent);
 
-    void toggleRowExpansion(boolean toExpand);
+    void toggleRowExpansion(boolean clickEvent);
 
     /**
      * Set the <b>id</b> of the item shown by the current <code><ListEditorElementView/code>

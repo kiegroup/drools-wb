@@ -62,8 +62,8 @@ public class PropertyViewImpl implements PropertyView {
     }
 
     @EventHandler("propertyValueInput")
-    public void onPropertyValueInputClickEvent(ClickEvent event) {
+    public void onPropertyValueInputClickEvent(ClickEvent clickEvent) {
         propertyValueInput.focus();
-        event.stopPropagation();
+        clickEvent.stopPropagation();
     }
 }

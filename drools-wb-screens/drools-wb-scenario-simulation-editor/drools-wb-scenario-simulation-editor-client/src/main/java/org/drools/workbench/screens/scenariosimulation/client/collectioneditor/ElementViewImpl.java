@@ -112,27 +112,32 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
     }
 
     @EventHandler("faAngleRight")
-    public void onFaAngleRightClick(ClickEvent event) {
+    public void onFaAngleRightClick(ClickEvent clickEvent) {
         presenter.onToggleRowExpansion(this, isShown());
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("editItemButton")
-    public void onEditItemButtonClick(ClickEvent event) {
+    public void onEditItemButtonClick(ClickEvent clickEvent) {
         presenter.onEditItem(this);
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("deleteItemButton")
-    public void onDeleteItemButtonClick(ClickEvent event) {
+    public void onDeleteItemButtonClick(ClickEvent clickEvent) {
         presenter.onDeleteItem(this);
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("saveChangeButton")
-    public void onSaveChangeButtonClick(ClickEvent event) {
+    public void onSaveChangeButtonClick(ClickEvent clickEvent) {
         presenter.updateItem(this);
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("cancelChangeButton")
-    public void onCancelChangeButton(ClickEvent event) {
+    public void onCancelChangeButton(ClickEvent clickEvent) {
         presenter.onStopEditingItem(this);
+        clickEvent.stopPropagation();
     }
 }

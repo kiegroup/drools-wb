@@ -193,26 +193,31 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @EventHandler("closeCollectionEditorButton")
     public void onCloseCollectionEditorButtonClick(ClickEvent clickEvent) {
         close();
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("cancelButton")
     public void onCancelButton(ClickEvent clickEvent) {
         close();
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("saveButton")
     public void onSaveButton(ClickEvent clickEvent) {
         presenter.save();
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("addItemButton")
     public void onAddItemButton(ClickEvent clickEvent) {
         presenter.showEditingBox();
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("faAngleRight")
-    public void onFaAngleRightClick(ClickEvent event) {
+    public void onFaAngleRightClick(ClickEvent clickEvent) {
         presenter.onToggleRowExpansion(isShown());
+        clickEvent.stopPropagation();
     }
 
     @Override

@@ -27,9 +27,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -40,7 +42,6 @@ import static org.mockito.Mockito.when;
 public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueElementView, KeyValueElementView.Presenter> {
 
     private static final String TEST_ITEM_ID = "TEST-ITEM-ID";
-
 
     private Map<String, String> testKeyPropertyMap = Collections.singletonMap("TEST-KEY1", "TEST-KEY2");
     private Map<String, String> testValuePropertyyMap = Collections.singletonMap("TEST-VALUE1", "TEST-VALUE2");
@@ -59,7 +60,6 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
 
     @Mock
     private LIElement valueLabelMock;
-
 
     @Before
     public void setup() {
@@ -111,10 +111,26 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
     }
 
     @Test
+    public void onStopEditingItem() {
+        elementPresenter.onStopEditingItem(elementView1Mock);
+        verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#key"));
+        verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#value"));
+        verify(styleMock, times(1)).setVisibility(eq(Style.Visibility.HIDDEN));
+    }
+
+    @Test
+    public void onDeleteItem() {
+        elementPresenter.onDeleteItem(elementView1Mock);
+        verify(propertyPresenterMock, times(1)).deleteProperties(eq(ELEMENT1_ID + "#key"));
+        verify(propertyPresenterMock, times(1)).deleteProperties(eq(ELEMENT1_ID + "#value"));
+        verify(itemContainerMock, times(1)).removeFromParent();
+        assertFalse(elementViewListLocal.contains(elementView1Mock));
+    }
+
+    @Test
     public void updateItem() {
         elementPresenter.updateItem(elementView1Mock);
         verify(propertyPresenterMock, times(2)).updateProperties(anyString());
         verify(styleMock, times(1)).setVisibility(Style.Visibility.HIDDEN);
     }
-
 }

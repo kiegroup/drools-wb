@@ -52,5 +52,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     public void onCloseCollectionEditorButtonClick() {
         collectionEditorViewImpl.onCloseCollectionEditorButtonClick(clickEventMock);
         verify(collectionEditorViewImpl, times(1)).fireEvent(isA(CloseCompositeEvent.class));
+        verify(clickEventMock, times(1)).stopPropagation();
     }
 }
