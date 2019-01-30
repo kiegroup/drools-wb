@@ -250,6 +250,7 @@ public class ScenarioSimulationEditorPresenter
 
     public void onRunScenario() {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+        model.setSimulation(context.getStatus().getSimulation());
         service.call(refreshModel()).runScenario(versionRecordManager.getCurrentPath(), model);
     }
 
@@ -284,6 +285,7 @@ public class ScenarioSimulationEditorPresenter
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
+        dataManagementStrategy.setModel(model);
     }
 
     protected void registerRightPanelCallback() {

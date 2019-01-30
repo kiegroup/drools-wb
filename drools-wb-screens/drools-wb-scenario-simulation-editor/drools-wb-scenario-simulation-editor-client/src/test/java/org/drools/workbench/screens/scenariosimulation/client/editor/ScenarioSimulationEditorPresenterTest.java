@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
@@ -58,6 +59,7 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
@@ -128,6 +130,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioMenuItem undoMenuItemMock;
     @Mock
     private ScenarioMenuItem redoMenuItemMock;
+    @Mock
+    private DataManagementStrategy dataManagementStrategyMock;
 
     @Before
     public void setup() {
@@ -171,6 +175,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.packageName = SCENARIO_PACKAGE;
                 this.eventBus = eventBusMock;
                 this.context = contextMock;
+                this.dataManagementStrategy = dataManagementStrategyMock;
             }
 
             @Override
@@ -191,13 +196,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             protected void clearRightPanelStatus() {
 
             }
-
-//            @Override
-//            protected void loadContent() {
-//                return new ScenarioSimulationModelContent(model,
-//                                                   new Overview(),
-//                                                   new PackageDataModelOracleBaselinePayload());
-//            }
 
             @Override
             protected String getJsonModel(ScenarioSimulationModel model) {
@@ -338,13 +336,17 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(new ScenarioSimulationModelContent(model,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-        when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(mock(ScenarioSimulationModel.class));
-        presenter.onStartup(mock(ObservablePath.class), mock(PlaceRequest.class));
+        when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(scenarioSimulationModelMock);
+        when(statusMock.getSimulation()).thenReturn(simulationMock);
+        when(contextMock.getStatus()).thenReturn(statusMock);
+        assertFalse(model.getSimulation().equals(simulationMock));
+        presenter.onStartup(observablePathMock, placeRequestMock);
         presenter.onRunScenario();
         verify(scenarioSimulationServiceMock).runScenario(any(), eq(model));
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
+        assertTrue(model.getSimulation().equals(simulationMock));
     }
 
     @Test
@@ -354,6 +356,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
         verify(statusMock, times(1)).setSimulation(eq(simulationMock));
+        verify(dataManagementStrategyMock, times(1)).setModel(eq(scenarioSimulationModelMock));
     }
 
     @Test

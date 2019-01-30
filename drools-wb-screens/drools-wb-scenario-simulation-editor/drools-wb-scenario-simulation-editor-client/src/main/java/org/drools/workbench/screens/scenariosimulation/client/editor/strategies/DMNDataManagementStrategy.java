@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -34,11 +33,10 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 
-public class DMNDataManagementStrategy implements DataManagementStrategy {
+public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
     private final Caller<DMNTypeService> dmnTypeService;
     private Path currentPath;
-    private ScenarioSimulationModel model;
     private ResultHolder factModelTreeHolder = new ResultHolder();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
