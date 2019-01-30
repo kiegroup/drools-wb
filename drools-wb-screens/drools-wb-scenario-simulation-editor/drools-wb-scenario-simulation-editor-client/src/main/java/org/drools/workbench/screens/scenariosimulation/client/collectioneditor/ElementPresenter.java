@@ -47,16 +47,10 @@ public abstract class ElementPresenter<E extends ElementView> implements Element
         elementViewList.forEach(elementView -> onToggleRowExpansion(elementView, isShown));
     }
 
-/*    @Override
-    public void onStopEditingItem(E elementView) {
-        propertyPresenter.stopEditProperties(elementView.getItemId());
-        elementView.getSaveChange().getStyle().setVisibility(Style.Visibility.HIDDEN);
-    }*/
+    @Override
+    public void remove() {
+        List<E> newList = new ArrayList<>(elementViewList);
+        newList.forEach(elementView -> onDeleteItem(elementView));
+    }
 
- /*   @Override
-    public void onDeleteItem(E elementView) {
-        propertyPresenter.deleteProperties(elementView.getItemId());
-        elementView.getItemContainer().removeFromParent();
-        elementViewList.remove(elementView);
-    }*/
 }

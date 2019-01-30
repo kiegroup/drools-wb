@@ -78,6 +78,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("cancelButton")
     protected ButtonElement cancelButton = Document.get().createButtonElement();
 
+    @DataField("removeButton")
+    protected ButtonElement removeButton = Document.get().createButtonElement();
+
     @DataField("saveButton")
     protected ButtonElement saveButton = Document.get().createButtonElement();
 
@@ -197,13 +200,19 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @EventHandler("cancelButton")
-    public void onCancelButton(ClickEvent clickEvent) {
+    public void onCancelButtonClick(ClickEvent clickEvent) {
         close();
         clickEvent.stopPropagation();
     }
 
+    @EventHandler("removeButton")
+    public void onRemoveButtonClick(ClickEvent clickEvent) {
+        presenter.remove();
+        clickEvent.stopPropagation();
+    }
+
     @EventHandler("saveButton")
-    public void onSaveButton(ClickEvent clickEvent) {
+    public void onSaveButtonClick(ClickEvent clickEvent) {
         presenter.save();
         clickEvent.stopPropagation();
     }

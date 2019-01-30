@@ -78,6 +78,14 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
         commonOnToggleRowExpansion(false);
     }
 
+    @Test
+    public void remove() {
+        elementPresenter.remove();
+        elementViewListLocal.forEach(elementViewMock -> {
+            verify(elementPresenter, times(1)).onDeleteItem(eq(elementViewMock));
+        });
+    }
+
     private void commonOnToggleRowExpansion(boolean isShown) {
         elementPresenter.onToggleRowExpansion(isShown);
         elementViewListLocal.forEach(elementViewMock -> {

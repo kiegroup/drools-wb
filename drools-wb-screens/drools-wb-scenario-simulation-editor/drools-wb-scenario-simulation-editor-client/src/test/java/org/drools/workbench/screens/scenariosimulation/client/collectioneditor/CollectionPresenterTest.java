@@ -284,12 +284,30 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void saveIsListWidgetTrue() {
-        commonSave(true);
+        commonSave(true, true);
+        commonSave(true, false);
     }
 
     @Test
     public void saveIsListWidgetFalse() {
-        commonSave(false);
+        commonSave(true, true);
+        commonSave(true, false);
+    }
+
+    @Test
+    public void removeIsListWidgetTrue() {
+        when(collectionViewMock.isListWidget()).thenReturn(true);
+        collectionEditorPresenter.remove();
+        verify(listElementPresenterMock, times(1)).remove();
+        verify(mapElementPresenterMock, never()).remove();
+    }
+
+    @Test
+    public void removeIsListWidgetFalse() {
+        when(collectionViewMock.isListWidget()).thenReturn(false);
+        collectionEditorPresenter.remove();
+        verify(mapElementPresenterMock, times(1)).remove();
+        verify(listElementPresenterMock, never()).remove();
     }
 
     @Test
@@ -365,14 +383,21 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(mapElementPresenterMock);
     }
 
-    private void commonSave(boolean isListWidget) {
+    private void commonSave(boolean isListWidget, boolean toRemove) {
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
+        collectionEditorPresenter.toRemove = toRemove;
         collectionEditorPresenter.save();
-        if (isListWidget) {
-            verify(collectionEditorPresenter, times(1)).getListValue();
+        if (toRemove) {
+            verify(collectionViewMock, times(1)).updateValue(eq(null));
         } else {
-            verify(collectionEditorPresenter, times(1)).getMapValue();
+            if (isListWidget) {
+                verify(collectionEditorPresenter, times(1)).getListValue();
+            } else {
+                verify(collectionEditorPresenter, times(1)).getMapValue();
+            }
+            verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
         }
-        verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
+        reset(collectionEditorPresenter);
+        reset(collectionViewMock);
     }
 }

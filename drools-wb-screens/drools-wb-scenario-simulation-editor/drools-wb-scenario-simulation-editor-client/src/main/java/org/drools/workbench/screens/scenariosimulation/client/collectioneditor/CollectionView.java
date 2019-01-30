@@ -91,6 +91,11 @@ public interface CollectionView {
          *
          */
         void save();
+
+        /**
+         * Completely remove the given <code>Collection</code>, i.e. set it to <code>null</code>
+         */
+        void remove();
     }
 
     /**

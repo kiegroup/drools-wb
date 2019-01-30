@@ -145,7 +145,7 @@ public class CollectionEditorDOMElement extends BaseDOMElement<String, Collectio
     public void flush(final String value) {
         if (scenarioGridCell != null) {
             scenarioGridCell.setEditingMode(false);
-            String actualValue = value.isEmpty() ? null : value;
+            String actualValue = (value == null || value.isEmpty()) ? null : value;
             String cellValue = scenarioGridCell.getValue().getValue();
             String originalValue = (cellValue == null || cellValue.isEmpty()) ? null : cellValue;
             if (Objects.equals(actualValue, originalValue)) {

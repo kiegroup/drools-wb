@@ -61,6 +61,11 @@ public interface ElementView<T extends ElementView.Presenter> extends HasPresent
          */
         void onDeleteItem(E itemElementView);
 
+        /**
+         * Completely remove the elements of the given <code>Collection</code>
+         */
+        void remove();
+
     }
 
     boolean isShown();

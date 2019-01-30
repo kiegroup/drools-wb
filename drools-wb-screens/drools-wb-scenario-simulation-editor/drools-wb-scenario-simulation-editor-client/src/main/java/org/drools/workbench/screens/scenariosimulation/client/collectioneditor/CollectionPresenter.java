@@ -55,10 +55,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
      */
     protected Map<String, Map<String, String>> instancePropertiesMap = new HashMap<>();
 
-
     protected CollectionView collectionView;
 
     protected LIElement objectSeparatorLI;
+
+    protected boolean toRemove = false;
 
     @Override
     public void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionView) {
@@ -81,6 +82,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     @Override
     public void setValue(String jsonString) {
+        toRemove = false;
         if (jsonString == null || jsonString.isEmpty()) {
             return;
         }
@@ -133,15 +135,30 @@ public class CollectionPresenter implements CollectionView.Presenter {
     @Override
     public void save() {
         String updatedValue;
-        if (collectionView.isListWidget()) {
-            updatedValue = getListValue();
+        if (toRemove) {
+            updatedValue = null;
         } else {
-            updatedValue = getMapValue();
+            if (collectionView.isListWidget()) {
+                updatedValue = getListValue();
+            } else {
+                updatedValue = getMapValue();
+            }
         }
         collectionView.updateValue(updatedValue);
     }
 
+    @Override
+    public void remove() {
+        if (collectionView.isListWidget()) {
+            listElementPresenter.remove();
+        } else {
+            mapElementPresenter.remove();
+        }
+        toRemove = true;
+    }
+
     protected void commonInit(String key, CollectionView collectionView) {
+        toRemove = false;
         this.collectionView = collectionView;
         String propertyName = key.substring(key.lastIndexOf("#") + 1);
         this.collectionView.getEditorTitle().setInnerText(key);
