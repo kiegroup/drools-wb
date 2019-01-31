@@ -145,7 +145,7 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     public void getCommandMethod() {
         NewResourcePresenter newResourcePresenterMock = mock(NewResourcePresenter.class);
         handler.getCommandMethod(newResourcePresenterMock);
-        verify(uploadWidgetMock, times(1)).updateAssetList();
+        verify(uploadWidgetMock, times(1)).clearStatus();
         verify(newResourcePresenterMock, times(1)).show(any());
     }
 

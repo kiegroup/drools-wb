@@ -64,9 +64,14 @@ public class TitledAttachmentFileWidget extends Composite implements ValueChange
         comboBox.addValueChangeHandler(this);
     }
 
+    public void clearStatus() {
+        updateAssetList();
+        comboBox.setText(null);
+    }
+
     public void updateAssetList() {
         comboBox.clear();
-        getAssets(this::addAssets);
+        updateAssets(this::addAssets);
     }
 
     public String getSelectedPath() {
@@ -78,7 +83,7 @@ public class TitledAttachmentFileWidget extends Composite implements ValueChange
         selectedPath = event.getValue();
     }
 
-    protected void getAssets(RemoteCallback<AssetQueryResult> callback) {
+    protected void updateAssets(RemoteCallback<AssetQueryResult> callback) {
         ProjectAssetsQuery query = createProjectQuery();
         assetQueryService.getAssets(query)
                 .call(callback, new DefaultErrorCallback());

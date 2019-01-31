@@ -159,7 +159,7 @@ public class NewScenarioSimulationHandler
     }
 
     protected void getCommandMethod(NewResourcePresenter newResourcePresenter) {
-        uploadWidget.updateAssetList();
+        uploadWidget.clearStatus();
         newResourcePresenter.show(NewScenarioSimulationHandler.this);
     }
 }

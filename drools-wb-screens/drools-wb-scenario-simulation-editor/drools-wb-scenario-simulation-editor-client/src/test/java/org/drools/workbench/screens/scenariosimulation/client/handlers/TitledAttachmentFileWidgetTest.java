@@ -76,16 +76,23 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
     }
 
     @Test
+    public void clearStatus() {
+        titledAttachmentFileWidget.clearStatus();
+        verify(comboBoxMock, times(1)).setText(eq(null));
+        verify(titledAttachmentFileWidget, times(1)).updateAssetList();
+    }
+
+    @Test
     public void updateAssetList() {
         titledAttachmentFileWidget.updateAssetList();
         verify(comboBoxMock, times(1)).clear();
-        verify(titledAttachmentFileWidget, times(1)).getAssets(isA(RemoteCallback.class));
+        verify(titledAttachmentFileWidget, times(1)).updateAssets(isA(RemoteCallback.class));
     }
 
     @Test
     public void getAssets() {
         RemoteCallback<AssetQueryResult> callbackMock = mock(RemoteCallback.class);
-        titledAttachmentFileWidget.getAssets(callbackMock);
+        titledAttachmentFileWidget.updateAssets(callbackMock);
         verify(titledAttachmentFileWidget, times(1)).createProjectQuery();
         verify(assetQueryServiceMock, times(1)).getAssets(isA(ProjectAssetsQuery.class));
         verify(invokerMock, times(1)).call(eq(callbackMock), isA(DefaultErrorCallback.class));
