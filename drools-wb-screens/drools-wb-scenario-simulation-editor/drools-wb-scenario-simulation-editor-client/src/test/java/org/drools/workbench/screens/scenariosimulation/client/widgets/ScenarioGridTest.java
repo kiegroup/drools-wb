@@ -22,11 +22,10 @@ import java.util.stream.IntStream;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -67,7 +66,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
@@ -102,9 +100,7 @@ public class ScenarioGridTest {
     @Mock
     private Viewport viewportMock;
     @Mock
-    private GridContextMenu gridContextMenuMock;
-    @Mock
-    private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+    private ScenarioContextMenuRegistry scenarioContextMenuRegistryMock;
 
     private final String EXPRESSION_ALIAS_DESCRIPTION = "EXPRESSION_ALIAS_DESCRIPTION";
     private final String EXPRESSION_ALIAS_GIVEN = "EXPRESSION_ALIAS_GIVEN";
@@ -141,8 +137,7 @@ public class ScenarioGridTest {
                                             scenarioGridLayerMock,
                                             scenarioGridRendererMock,
                                             scenarioGridPanelMock,
-                                            gridContextMenuMock,
-                                            unmodifiableColumnGridContextMenu) {
+                                            scenarioContextMenuRegistryMock) {
 
             @Override
             protected void appendRow(int rowIndex, Scenario scenario) {
@@ -317,19 +312,8 @@ public class ScenarioGridTest {
         verify(scenarioGrid).setSelectedColumnAndHeader(uiRowIndex, uiColumnIndex);
         verify(eventBusMock).fireEvent(any(EnableRightPanelEvent.class));
 
-        // context menus not shown till now
-        verify(gridContextMenuMock, never()).hide();
-        verify(unmodifiableColumnGridContextMenu, never()).hide();
-
-        // show context menus
-        when(gridContextMenuMock.isShown()).thenReturn(true);
-        when(unmodifiableColumnGridContextMenu.isShown()).thenReturn(true);
-
-        // change selection
-        scenarioGrid.adjustSelection(mock(SelectionExtension.class), false);
-
-        verify(gridContextMenuMock).hide();
-        verify(unmodifiableColumnGridContextMenu).hide();
+        // context menus could be shown
+        verify(scenarioContextMenuRegistryMock).hideMenus();
     }
 
     @Test
@@ -351,17 +335,6 @@ public class ScenarioGridTest {
 
         when(rendererHelperMock.getColumnInformation(50.0)).thenReturn(columnInformationMock);
         when(columnInformationMock.getColumn()).thenReturn(columnMock);
-
-        // touched by setEventBus
-        reset(gridContextMenuMock);
-        reset(unmodifiableColumnGridContextMenu);
-
-        scenarioGrid.showContextMenuForCell(uiRowIndex, uiColumnIndex);
-
-        verifyZeroInteractions(gridContextMenuMock);
-        verify(unmodifiableColumnGridContextMenu).show(eq((int) columnWidth / 2),
-                                                       eq((int) (HEADER_ROWS_HEIGHT + (rowHeight / 2))),
-                                                       eq(uiRowIndex));
     }
 
     @Test
@@ -388,20 +361,6 @@ public class ScenarioGridTest {
 
         when(rendererHelperMock.getColumnInformation(50.0)).thenReturn(columnInformationMock);
         when(columnInformationMock.getColumn()).thenReturn(columnMock);
-
-        // touched by setEventBus
-        reset(gridContextMenuMock);
-        reset(unmodifiableColumnGridContextMenu);
-
-        scenarioGrid.showContextMenuForCell(uiRowIndex, uiColumnIndex);
-
-        verify(gridContextMenuMock).show(eq((int) columnWidth / 2),
-                                         eq((int) (HEADER_ROWS_HEIGHT + (rowHeight / 2))),
-                                         eq(uiColumnIndex),
-                                         eq(uiRowIndex),
-                                         eq(columnGroup),
-                                         eq(true));
-        verifyZeroInteractions(unmodifiableColumnGridContextMenu);
     }
 
     private Simulation getSimulation() {

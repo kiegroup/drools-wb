@@ -17,14 +17,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,19 +34,7 @@ import static org.mockito.Mockito.verify;
 public class ScenarioSimulationGridPanelClickHandlerProducerTest {
 
     @Mock
-    private OtherContextMenu otherContextMenuMock;
-    @Mock
-    private HeaderGivenContextMenu headerGivenContextMenuMock;
-    @Mock
-    private HeaderExpectedContextMenu headerExpectedContextMenuMock;
-    @Mock
-    private GivenContextMenu givenContextMenuMock;
-    @Mock
-    private ExpectedContextMenu expectedContextMenuMock;
-    @Mock
-    private GridContextMenu gridContextMenuMock;
-    @Mock
-    private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenuMock;
+    private ScenarioContextMenuRegistry scenarioContextMenuRegistryMock;
 
     @Mock
     private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandlerMock;
@@ -63,13 +45,7 @@ public class ScenarioSimulationGridPanelClickHandlerProducerTest {
     public void setUp() {
         scenarioSimulationGridPanelClickHandlerProducer = spy(new ScenarioSimulationGridPanelClickHandlerProducer() {
             {
-                this.expectedContextMenu = expectedContextMenuMock;
-                this.givenContextMenu = givenContextMenuMock;
-                this.gridContextMenu = gridContextMenuMock;
-                this.headerExpectedContextMenu = headerExpectedContextMenuMock;
-                this.headerGivenContextMenu = headerGivenContextMenuMock;
-                this.otherContextMenu = otherContextMenuMock;
-                this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenuMock;
+                this.scenarioContextMenuRegistry = scenarioContextMenuRegistryMock;
                 this.scenarioSimulationGridPanelClickHandler = scenarioSimulationGridPanelClickHandlerMock;
             }
         });
@@ -79,12 +55,6 @@ public class ScenarioSimulationGridPanelClickHandlerProducerTest {
     public void getScenarioSimulationGridPanelClickHandler() {
         final ScenarioSimulationGridPanelClickHandler retrieved = scenarioSimulationGridPanelClickHandlerProducer.getScenarioSimulationGridPanelClickHandler();
         assertEquals(scenarioSimulationGridPanelClickHandlerMock, retrieved);
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setExpectedContextMenu(eq(expectedContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setGivenContextMenu(eq(givenContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setGridContextMenu(eq(gridContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setHeaderExpectedContextMenu(eq(headerExpectedContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setHeaderGivenContextMenu(eq(headerGivenContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setOtherContextMenu(eq(otherContextMenuMock));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setUnmodifiableColumnGridContextMenu(eq(unmodifiableColumnGridContextMenuMock));
+        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setScenarioContextMenuRegistry(eq(scenarioContextMenuRegistryMock));
     }
 }

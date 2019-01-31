@@ -18,14 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 
 /**
  * <code>@Dependent</code> <i>Producer</i> for a given {@link ScenarioSimulationGridPanelClickHandler}
@@ -34,30 +28,13 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 public class ScenarioSimulationGridPanelClickHandlerProducer {
 
     @Inject
-    protected OtherContextMenu otherContextMenu;
-    @Inject
-    protected HeaderGivenContextMenu headerGivenContextMenu;
-    @Inject
-    protected HeaderExpectedContextMenu headerExpectedContextMenu;
-    @Inject
-    protected GivenContextMenu givenContextMenu;
-    @Inject
-    protected ExpectedContextMenu expectedContextMenu;
-    @Inject
-    protected GridContextMenu gridContextMenu;
-    @Inject
-    protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+    protected ScenarioContextMenuRegistry scenarioContextMenuRegistry;
+
     @Inject
     protected ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
 
     public ScenarioSimulationGridPanelClickHandler getScenarioSimulationGridPanelClickHandler() {
-        scenarioSimulationGridPanelClickHandler.setExpectedContextMenu(expectedContextMenu);
-        scenarioSimulationGridPanelClickHandler.setGivenContextMenu(givenContextMenu);
-        scenarioSimulationGridPanelClickHandler.setGridContextMenu(gridContextMenu);
-        scenarioSimulationGridPanelClickHandler.setUnmodifiableColumnGridContextMenu(unmodifiableColumnGridContextMenu);
-        scenarioSimulationGridPanelClickHandler.setHeaderExpectedContextMenu(headerExpectedContextMenu);
-        scenarioSimulationGridPanelClickHandler.setHeaderGivenContextMenu(headerGivenContextMenu);
-        scenarioSimulationGridPanelClickHandler.setOtherContextMenu(otherContextMenu);
+        scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
         return scenarioSimulationGridPanelClickHandler;
     }
 }

@@ -17,16 +17,14 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -59,21 +57,15 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 
 public class ScenarioGrid extends BaseGridWidget {
 
-    private final ScenarioGridPanel scenarioGridPanel;
-    private final GridContextMenu gridContextMenu;
-    private final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+    private ScenarioContextMenuRegistry scenarioContextMenuRegistry;
     private EventBus eventBus;
 
     public ScenarioGrid(ScenarioGridModel model,
                         ScenarioGridLayer scenarioGridLayer,
                         ScenarioGridRenderer renderer,
-                        ScenarioGridPanel scenarioGridPanel,
-                        GridContextMenu gridContextMenu,
-                        UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
+                        ScenarioContextMenuRegistry scenarioContextMenuRegistry) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.gridContextMenu = gridContextMenu;
-        this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
+        this.scenarioContextMenuRegistry = scenarioContextMenuRegistry;
         setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
@@ -92,8 +84,7 @@ public class ScenarioGrid extends BaseGridWidget {
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
         ((ScenarioGridModel) model).setEventBus(eventBus);
-        gridContextMenu.setEventBus(eventBus);
-        unmodifiableColumnGridContextMenu.setEventBus(eventBus);
+        scenarioContextMenuRegistry.setEventBus(eventBus);
     }
 
     @Override
@@ -259,13 +250,6 @@ public class ScenarioGrid extends BaseGridWidget {
         final boolean selectionChanged = super.adjustSelection(direction, isShiftKeyDown);
 
         signalRightPanelAboutSelectedHeaderCells();
-        if (gridContextMenu.isShown()) {
-            gridContextMenu.hide();
-        }
-
-        if (unmodifiableColumnGridContextMenu.isShown()) {
-            unmodifiableColumnGridContextMenu.hide();
-        }
 
         return selectionChanged;
     }
@@ -295,7 +279,6 @@ public class ScenarioGrid extends BaseGridWidget {
     public boolean showContextMenuForCell(final int uiRowIndex, final int uiColumnIndex) {
         final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
         if (column instanceof ScenarioGridColumn) {
-            final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) column;
             final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
             final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
             final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
@@ -304,21 +287,11 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                                                ri,
                                                                                                ci,
                                                                                                uiRowIndex);
-            final FactIdentifier columnFactIdentifier = scenarioGridColumn.getFactIdentifier();
-            if (Objects.equals(FactIdentifier.INDEX, columnFactIdentifier) ||
-                    Objects.equals(FactIdentifier.DESCRIPTION, columnFactIdentifier)) {
-                unmodifiableColumnGridContextMenu.show((int) context.getAbsoluteCellX(),
-                                                       (int) (context.getAbsoluteCellY()),
-                                                       uiRowIndex);
-            } else {
-                gridContextMenu.show((int) context.getAbsoluteCellX(),
-                                     (int) (context.getAbsoluteCellY()),
-                                     uiColumnIndex,
-                                     uiRowIndex,
-                                     scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup(),
-                                     true);
-            }
-            return true;
+            return scenarioContextMenuRegistry.manageScenarioBodyRightClick(this,
+                                                                            (int) context.getAbsoluteCellX(),
+                                                                            (int) context.getAbsoluteCellY(),
+                                                                            uiRowIndex,
+                                                                            uiColumnIndex);
         }
         return false;
     }
