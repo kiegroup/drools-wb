@@ -62,6 +62,7 @@ import org.uberfire.workbench.model.menu.MenuItem;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
@@ -363,6 +364,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void isDirty() {
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenThrow(new RuntimeException());
         assertFalse(presenter.isDirty());
+    }
+
+    @Test
+    public void getModelSuccessCallbackMethod() {
+        presenterSpy.getModelSuccessCallbackMethod(content);
+        verify(presenterSpy, times(1)).populateRightPanel();
+        verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
+        verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
+        verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
+        verify(presenterSpy, times(1)).setOriginalHash(anyInt());
     }
 
     private void onClosePlaceStatusOpen() {
