@@ -35,9 +35,9 @@ import org.uberfire.backend.vfs.Path;
 
 public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
+    protected ResultHolder factModelTreeHolder = new ResultHolder();
     private final Caller<DMNTypeService> dmnTypeService;
     private Path currentPath;
-    private ResultHolder factModelTreeHolder = new ResultHolder();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
         this.dmnTypeService = dmnTypeService;
@@ -62,6 +62,11 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         model = toManage.getModel();
     }
 
+    @Override
+    public boolean isADataType(String value) {
+        return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
+    }
+
     private RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
         return factMappingTuple -> {
             factModelTreeHolder.setFactModelTuple(factMappingTuple);
@@ -83,7 +88,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         };
     }
 
-    static private class ResultHolder {
+    static protected class ResultHolder {
         FactModelTuple factModelTuple;
 
         public FactModelTuple getFactModelTuple() {

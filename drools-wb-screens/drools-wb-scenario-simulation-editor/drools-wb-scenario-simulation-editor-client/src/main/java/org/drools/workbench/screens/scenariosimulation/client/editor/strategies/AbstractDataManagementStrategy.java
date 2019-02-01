@@ -41,4 +41,6 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         String packageName = fullName.substring(0, fullName.lastIndexOf("."));
         return new FactModelTree(key, packageName, simpleProperties);
     }
+
+
 }

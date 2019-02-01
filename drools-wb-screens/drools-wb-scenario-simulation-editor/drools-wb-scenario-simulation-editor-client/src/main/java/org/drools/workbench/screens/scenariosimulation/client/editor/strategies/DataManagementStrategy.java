@@ -46,4 +46,11 @@ public interface DataManagementStrategy {
     void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage);
 
     void setModel(ScenarioSimulationModel model);
+
+    /**
+     * Returns <code>true</code> if the given value is a <b>data</b> type (e.g. a <b>FactType</b> for DMO)
+     * @param value
+     * @return
+     */
+    boolean isADataType(String value);
 }

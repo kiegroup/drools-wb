@@ -275,6 +275,10 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getDownloadMenuItem(getPathSupplier()));
     }
 
+    public DataManagementStrategy getDataManagementStrategy() {
+        return dataManagementStrategy;
+    }
+
     protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
         return this::refreshModelContent;
     }

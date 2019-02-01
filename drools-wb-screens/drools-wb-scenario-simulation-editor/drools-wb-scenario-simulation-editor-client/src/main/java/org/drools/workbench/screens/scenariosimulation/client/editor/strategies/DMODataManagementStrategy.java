@@ -87,6 +87,11 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
                                                                toManage.getDataModel());
     }
 
+    @Override
+    public boolean isADataType(String value) {
+        return oracle != null && Arrays.asList(oracle.getFactTypes()).contains(value);
+    }
+
     public AsyncPackageDataModelOracle getOracle() {
         return oracle;
     }
