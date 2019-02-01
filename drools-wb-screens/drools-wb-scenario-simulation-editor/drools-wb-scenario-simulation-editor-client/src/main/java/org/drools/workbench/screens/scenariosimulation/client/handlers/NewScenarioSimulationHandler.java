@@ -112,9 +112,9 @@ public class NewScenarioSimulationHandler
     @Override
     public boolean canCreate() {
         return authorizationManager.authorize(new ResourceRef(ScenarioSimulationEditorPresenter.IDENTIFIER,
-                                                              ActivityResourceType.EDITOR),
-                                              ResourceAction.READ,
-                                              sessionInfo.getIdentity());
+                                                                           ActivityResourceType.EDITOR),
+                                                           ResourceAction.READ,
+                                                           sessionInfo.getIdentity());
     }
 
     @Override
@@ -126,14 +126,14 @@ public class NewScenarioSimulationHandler
     public void create(final Package pkg,
                        final String baseFileName,
                        final NewResourcePresenter presenter) {
+        if (!sourceTypeSelector.validate()) {
+            return;
+        }
         final ScenarioSimulationModel.Type selectedType = sourceTypeSelector.getSelectedType();
         String value;
         switch (selectedType) {
             case DMN:
                 value = uploadWidget.getSelectedPath();
-                if (value == null || value.isEmpty()) {
-                    return;
-                }
                 break;
             case RULE:
             default:
@@ -162,4 +162,5 @@ public class NewScenarioSimulationHandler
         uploadWidget.clearStatus();
         newResourcePresenter.show(NewScenarioSimulationHandler.this);
     }
+
 }
