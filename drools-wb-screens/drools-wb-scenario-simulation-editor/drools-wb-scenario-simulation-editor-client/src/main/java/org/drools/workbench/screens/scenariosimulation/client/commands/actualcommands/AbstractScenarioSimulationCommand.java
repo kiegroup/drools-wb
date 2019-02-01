@@ -117,6 +117,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
                 context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
                 context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
+                context.getScenarioSimulationEditorPresenter().reloadRightPanel(true);
                 context.setStatus(restorableStatus);
                 restorableStatus = originalStatus;
                 return commonExecution(context);
