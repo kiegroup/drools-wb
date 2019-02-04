@@ -20,9 +20,11 @@ import java.io.InputStream;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
 import org.drools.compiler.compiler.DecisionTableFactory;
 import org.drools.workbench.screens.dtablexls.type.DecisionTableXLSResourceTypeDefinition;
+import org.kie.internal.builder.DecisionTableConfiguration;
+import org.kie.internal.builder.DecisionTableInputType;
+import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.soup.project.datamodel.oracle.ModuleDataModelOracle;
 import org.kie.workbench.common.services.datamodel.backend.server.service.DataModelService;
 import org.kie.workbench.common.services.refactoring.backend.server.indexing.IndexBuilder;
@@ -51,8 +53,11 @@ public class DecisionTableXLSFileIndexer extends AbstractDrlFileIndexer {
         try {
             inputStream = ioService.newInputStream(path,
                                                    StandardOpenOption.READ);
-            final String drl = DecisionTableFactory.loadFromInputStream(inputStream,
-                                                                        null);
+
+            DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
+            configuration.setInputType( DecisionTableInputType.XLS );
+
+            final String drl = DecisionTableFactory.loadFromInputStream(inputStream, configuration);
 
             return fillDrlIndexBuilder(path, drl);
         } finally {
