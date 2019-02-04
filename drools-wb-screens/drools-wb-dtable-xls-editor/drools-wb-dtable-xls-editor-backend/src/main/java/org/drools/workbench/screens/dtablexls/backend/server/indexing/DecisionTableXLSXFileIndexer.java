@@ -51,7 +51,7 @@ public class DecisionTableXLSXFileIndexer extends AbstractDrlFileIndexer {
     public IndexBuilder fillIndexBuilder(final Path path) throws Exception {
         try (final InputStream inputStream = ioService.newInputStream(path, StandardOpenOption.READ)) {
             DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
-            configuration.setInputType( DecisionTableInputType.XLS );
+            configuration.setInputType( DecisionTableInputType.XLSX );
 
             final String drl = DecisionTableFactory.loadFromInputStream(inputStream, configuration);
 
