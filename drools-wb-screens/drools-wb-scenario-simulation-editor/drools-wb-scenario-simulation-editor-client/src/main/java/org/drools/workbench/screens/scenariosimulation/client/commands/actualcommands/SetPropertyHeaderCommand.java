@@ -63,7 +63,6 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
                                                 value,
                                                 propertyClass, context.getStatus().isKeepData());
         final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
-        // TODO GC MANAGE WITH EXCEPTION
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());

@@ -189,13 +189,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             }
 
-//            @Override
-//            protected void loadContent() {
-//                return new ScenarioSimulationModelContent(modelLocal,
-//                                                   new Overview(),
-//                                                   new PackageDataModelOracleBaselinePayload());
-//            }
-
             @Override
             protected String getJsonModel(ScenarioSimulationModel model) {
                 return "";

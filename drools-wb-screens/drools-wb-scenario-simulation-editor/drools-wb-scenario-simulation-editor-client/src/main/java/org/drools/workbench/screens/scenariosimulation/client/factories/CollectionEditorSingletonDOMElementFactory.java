@@ -135,6 +135,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             toReturn = new HashMap<>();
             toReturn.put("value", typeName);
         } else {
+            typeName = typeName.substring(typeName.lastIndexOf(".") + 1);
             toReturn = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
         }
         return toReturn;

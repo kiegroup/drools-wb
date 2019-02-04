@@ -30,23 +30,6 @@ public interface ItemEditingBox extends EditingBox<ItemEditingBox.Presenter> {
          * @return
          */
         LIElement getEditingBox(String key, Map<String, String> instancePropertyMap);
-
-       /* void save(ItemEditingBox toSave);
-
-        void close(ItemEditingBox toClose);
-
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);*/
     }
 
-//    /**
-//     *
-//     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-//     */
-    /*void setKey(String key);
-
-    LIElement getEditingBox();
-
-    HeadingElement getEditingBoxTitle();
-
-    UListElement getPropertiesContainer();*/
 }

@@ -30,25 +30,7 @@ public interface KeyValueEditingBox extends EditingBox<KeyValueEditingBox.Presen
          * @param valuePropertyMap
          */
         LIElement getEditingBox(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
-
-       /* void save();
-
-        void close(KeyValueEditingBox toClose);
-
-        void setCollectionEditorPresenter(CollectionView.Presenter collectionEditorPresenter);*/
     }
-
-//     /**
-//     *
-//     * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-//     */
-//    void setKey(String key);
-//
-//    LIElement getEditingBox();
-//
-//    HeadingElement getEditingBoxTitle();
-//
-//    UListElement getPropertiesContainer();
 
     LIElement getKeyValueContainer();
 

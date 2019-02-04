@@ -68,7 +68,6 @@ public class ItemEditingBoxPresenterTest extends AbstractEditingBoxPresenterTest
         verify(listEditingBoxMock, times(1)).init(((ItemEditingBoxPresenter)editingBoxPresenter));
         verify(listEditingBoxMock, times(1)).setKey(TEST_KEY);
         verify(editingBoxTitleMock, times(1)).setInnerText("Edit " + TEST_PROPERTYNAME);
-        //verify(propertiesContainerMock, times(1)).appendChild(editingPropertyFieldsMock);
         verify(listEditingBoxMock, times(1)).getEditingBox();
     }
 
