@@ -171,6 +171,31 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
         assertNotNull(retrieved);
     }
 
+    @Test
+    public void populateGenericTypeMap() {
+        commonPopulateGenericTypeMap(true);
+        commonPopulateGenericTypeMap(false);
+    }
+
+    private void commonPopulateGenericTypeMap(boolean isList) {
+        Map<String, List<String>> toPopulate = new HashMap<>();
+        String factName = "FACT_NAME";
+        String propertyName = "PROPERTY_NAME";
+        String factType = "Book";
+        String fullFactType = "com." + factType;
+        when(oracleMock.getParametricFieldType(factName, propertyName)).thenReturn(factType);
+        when(oracleMock.getFQCNByFactName(factType)).thenReturn(fullFactType);
+        dmoDataManagementStrategy.populateGenericTypeMap(toPopulate, factName, propertyName, isList);
+        assertTrue(toPopulate.containsKey(propertyName));
+        final List<String> retrieved = toPopulate.get(propertyName);
+        if (!isList) {
+            assertEquals(String.class.getName(), retrieved.get(0));
+        }
+        assertEquals(fullFactType, retrieved.get(retrieved.size()-1));
+
+    }
+
+
     private ModelField[] getModelFieldsInner(Map<String, String> simpleProperties) {
         List<ModelField> toReturn = new ArrayList<>();
         simpleProperties.forEach((key, value) -> toReturn.add(getModelFieldInner(key, value, "String")));

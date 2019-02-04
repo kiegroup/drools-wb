@@ -204,7 +204,8 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
             genericTypes.add(String.class.getName());
         }
         String genericInfo = oracle.getParametricFieldType(factName, propertyName);
-        genericTypes.add(genericInfo);
+        String fullGenericInfoClassName = oracle.getFQCNByFactName(genericInfo);
+        genericTypes.add(fullGenericInfoClassName);
         toPopulate.put(propertyName, genericTypes);
     }
 
