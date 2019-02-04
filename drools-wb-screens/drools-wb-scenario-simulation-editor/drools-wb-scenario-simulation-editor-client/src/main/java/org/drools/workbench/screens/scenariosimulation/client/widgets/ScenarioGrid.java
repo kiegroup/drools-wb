@@ -250,6 +250,7 @@ public class ScenarioGrid extends BaseGridWidget {
         final boolean selectionChanged = super.adjustSelection(direction, isShiftKeyDown);
 
         signalRightPanelAboutSelectedHeaderCells();
+        scenarioContextMenuRegistry.hideMenus();
 
         return selectionChanged;
     }

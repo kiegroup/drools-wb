@@ -78,10 +78,11 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
 
     @Test
     public void onContextMenu() {
+        doReturn(true).when(scenarioContextMenuRegistryMock).manageRightClick(scenarioGridMock, contextMenuEventMock);
         scenarioSimulationGridPanelClickHandler.onContextMenu(contextMenuEventMock);
         verify(contextMenuEventMock, times(1)).preventDefault();
         verify(contextMenuEventMock, times(1)).stopPropagation();
-        commonCheck();
+        verify(scenarioContextMenuRegistryMock, times(1)).hideMenus();
     }
 
     @Test
@@ -203,9 +204,5 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
             verify(eventBusMock, never()).fireEvent(any());
             return;
         }
-    }
-
-    private void commonCheck() {
-        verify(scenarioSimulationGridPanelClickHandler, times(1)).hideMenus();
     }
 }

@@ -44,20 +44,30 @@ import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.
 @Dependent
 public class ScenarioContextMenuRegistry {
 
-    @Inject
     protected OtherContextMenu otherContextMenu;
-    @Inject
     protected HeaderGivenContextMenu headerGivenContextMenu;
-    @Inject
     protected HeaderExpectedContextMenu headerExpectedContextMenu;
-    @Inject
     protected GivenContextMenu givenContextMenu;
-    @Inject
     protected ExpectedContextMenu expectedContextMenu;
-    @Inject
     protected GridContextMenu gridContextMenu;
-    @Inject
     protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+
+    @Inject
+    public ScenarioContextMenuRegistry(final OtherContextMenu otherContextMenu,
+                                       final HeaderGivenContextMenu headerGivenContextMenu,
+                                       final HeaderExpectedContextMenu headerExpectedContextMenu,
+                                       final GivenContextMenu givenContextMenu,
+                                       final ExpectedContextMenu expectedContextMenu,
+                                       final GridContextMenu gridContextMenu,
+                                       final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
+        this.otherContextMenu = otherContextMenu;
+        this.headerGivenContextMenu = headerGivenContextMenu;
+        this.headerExpectedContextMenu = headerExpectedContextMenu;
+        this.givenContextMenu = givenContextMenu;
+        this.expectedContextMenu = expectedContextMenu;
+        this.gridContextMenu = gridContextMenu;
+        this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
+    }
 
     public void setEventBus(final EventBus eventBus) {
         otherContextMenu.setEventBus(eventBus);
