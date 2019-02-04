@@ -111,6 +111,21 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 
+    @EventHandler("itemContainer")
+    public void onItemContainerClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("innerItemContainer")
+    public void onInnerItemContainerClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("itemSeparator")
+    public void onItemSeparatorClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent clickEvent) {
         presenter.onToggleRowExpansion(this, isShown());
@@ -126,6 +141,11 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
     @EventHandler("deleteItemButton")
     public void onDeleteItemButtonClick(ClickEvent clickEvent) {
         presenter.onDeleteItem(this);
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("saveChange")
+    public void onSaveChangeClick(ClickEvent clickEvent) {
         clickEvent.stopPropagation();
     }
 

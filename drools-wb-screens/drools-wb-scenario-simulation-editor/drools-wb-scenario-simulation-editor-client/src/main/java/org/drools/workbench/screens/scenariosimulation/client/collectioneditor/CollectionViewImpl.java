@@ -63,6 +63,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("collectionEditor")
     protected DivElement collectionEditor = Document.get().createDivElement();
 
+    @DataField("collectionEditorModalDialog")
+    protected DivElement collectionEditorModalDialog = Document.get().createDivElement();
+
     @DataField("collectionEditorModalBody")
     protected DivElement collectionEditorModalBody = Document.get().createDivElement();
 
@@ -193,6 +196,26 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         return propertyTitle;
     }
 
+    @EventHandler("collectionEditor")
+    public void onCollectionEditorClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("collectionEditorModalDialog")
+    public void onCollectionEditorModalDialogClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("editorTitle")
+    public void onEditorTitleClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("elementsContainer")
+    public void onElementsContainerClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
     @EventHandler("closeCollectionEditorButton")
     public void onCloseCollectionEditorButtonClick(ClickEvent clickEvent) {
         close();
@@ -226,6 +249,16 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent clickEvent) {
         presenter.onToggleRowExpansion(isShown());
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("propertyTitle")
+    public void onPropertyTitleClick(ClickEvent clickEvent) {
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("objectSeparator")
+    public void onObjectSeparatorClick(ClickEvent clickEvent) {
         clickEvent.stopPropagation();
     }
 

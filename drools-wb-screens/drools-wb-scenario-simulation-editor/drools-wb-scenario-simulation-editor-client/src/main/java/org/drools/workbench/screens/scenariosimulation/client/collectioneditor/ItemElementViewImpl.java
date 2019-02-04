@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * This class is used to show a single <b>item</b> of a collection
+ * This class is used to show a single <b>item</b> of a <b>list</b>
  *
  */
 @Templated

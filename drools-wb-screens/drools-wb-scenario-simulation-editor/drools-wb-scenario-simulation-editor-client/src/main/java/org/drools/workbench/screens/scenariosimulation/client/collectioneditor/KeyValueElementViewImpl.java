@@ -23,7 +23,7 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * This class is used to show a <b>key/value</b> <b>item</b> of a collection
+ * This class is used to show a <b>key/value</b> <b>item</b> of a <b>map</b>
  *
  */
 @Templated
