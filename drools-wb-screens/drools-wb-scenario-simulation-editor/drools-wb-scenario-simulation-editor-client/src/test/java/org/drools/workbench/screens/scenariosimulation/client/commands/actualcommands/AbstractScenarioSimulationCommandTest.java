@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -86,8 +87,12 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     public void execute() {
         final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
         command.execute(scenarioSimulationContext);
-        verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
-        assertNotEquals(status, command.restorableStatus);
+        try {
+            verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
+            assertNotEquals(status, command.restorableStatus);
+        } catch(Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test

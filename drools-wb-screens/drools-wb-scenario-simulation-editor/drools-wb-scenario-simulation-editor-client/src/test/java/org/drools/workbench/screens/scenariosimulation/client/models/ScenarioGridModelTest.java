@@ -26,7 +26,6 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import junit.framework.TestCase;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -438,7 +437,7 @@ public class ScenarioGridModelTest {
         commonValidateHeaderUpdate(1, 0, false, true, true, true);
         commonValidateHeaderUpdate(1, 0, true, false, false, false);
         commonValidateHeaderUpdate(1, 0, true, false, true, false);
-        commonValidateHeaderUpdate(1, 0, true, true, false, true);
+        commonValidateHeaderUpdate(1, 0, true, true, false, false);
         commonValidateHeaderUpdate(1, 0, true, true, true, true);
 
         commonValidateHeaderUpdate(2, 0, false, false, false, true);
@@ -498,11 +497,6 @@ public class ScenarioGridModelTest {
         doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex);
         boolean retrieved = scenarioGridModel.validateHeaderUpdate(value, rowIndex, columnIndex, isADataType);
         assertEquals(retrieved, expectedValid);
-        if (!expectedValid) {
-            verify(eventBusMock, times(1)).fireEvent(isA(ScenarioNotificationEvent.class));
-        } else {
-            verify(eventBusMock, never()).fireEvent(any());
-        }
         reset(eventBusMock);
     }
 }

@@ -533,12 +533,7 @@ public class ScenarioGridModel extends BaseGridData {
     public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex, boolean isADataType) {
         ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
         boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, value);
-        boolean isValid = !headerToEdit.isInstanceHeader() || (isADataType && isSameInstanceHeader) || (!isADataType && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex));
-        if (!isValid) {
-            eventBus.fireEvent(new ScenarioNotificationEvent("Name '" + value + "' can not be used",
-                                                             NotificationEvent.NotificationType.ERROR));
-        }
-        return isValid;
+        return !headerToEdit.isInstanceHeader() || (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex));
     }
 
     public void resetErrors() {
