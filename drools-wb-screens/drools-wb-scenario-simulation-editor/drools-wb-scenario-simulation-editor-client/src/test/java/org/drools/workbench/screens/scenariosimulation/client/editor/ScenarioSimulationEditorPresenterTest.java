@@ -367,6 +367,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void setRightPanel() {
+        presenter.setRightPanel(rightPanelPresenterMock);
+        verify(contextMock, times(1)).setRightPanelPresenter(rightPanelPresenterMock);
+        verify(rightPanelPresenterMock, times(1)).setEventBus(eventBusMock);
+        verify(dataManagementStrategyMock, times(1)).populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        verify(rightPanelPresenterMock, times(1)).initCheatSheet(any());
+    }
+
+    @Test
     public void getModelSuccessCallbackMethod() {
         presenterSpy.getModelSuccessCallbackMethod(content);
         verify(presenterSpy, times(1)).populateRightPanel();
