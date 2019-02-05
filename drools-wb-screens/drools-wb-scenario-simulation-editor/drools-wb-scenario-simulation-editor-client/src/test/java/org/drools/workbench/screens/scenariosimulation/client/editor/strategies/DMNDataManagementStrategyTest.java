@@ -23,7 +23,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -45,7 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
+public class DMNDataManagementStrategyTest extends AbstractDataManagementStrategyTest {
 
     @Mock
     private DMNTypeService dmnTypeServiceMock;
@@ -68,6 +67,7 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
                 this.factModelTreeHolder = factModelTreeHolderMock;
             }
         });
+        abstractDataManagementStrategySpy = dmnDataManagementStrategySpy;
     }
 
     @Test
@@ -92,9 +92,9 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         when(factMappingTupleMock.getHiddenFacts()).thenReturn(hiddenFacts);
-        doReturn(alreadyAssignedProperties).when(dmnDataManagementStrategySpy).getAlreadyAssignedProperties(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(dmnDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         dmnDataManagementStrategySpy.getSuccessCallbackMethod(factMappingTupleMock, rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmnDataManagementStrategySpy, times(1)).getAlreadyAssignedProperties(eq(scenarioGridModelMock));
+        verify(dmnDataManagementStrategySpy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
         verify(factModelTreeHolderMock, times(1)).setFactModelTuple(eq(factMappingTupleMock));
         verify(dmnDataManagementStrategySpy, times(2)).filterFactModelTreeMap(isA(SortedMap.class), eq(alreadyAssignedProperties));
         verify(rightPanelPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));

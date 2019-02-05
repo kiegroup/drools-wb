@@ -73,7 +73,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
     protected void getSuccessCallbackMethod(final FactModelTuple factMappingTuple, final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a map of already assigned properties
-        final Map<String, List<String>> alreadyAssignedProperties = getAlreadyAssignedProperties(scenarioGridModel);
+        final Map<String, List<String>> alreadyAssignedProperties = getPropertiesToHide(scenarioGridModel);
         factModelTreeHolder.setFactModelTuple(factMappingTuple);
         final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
         final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()

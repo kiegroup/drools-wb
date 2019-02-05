@@ -28,7 +28,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.jgroups.util.Util;
 import org.junit.Before;
@@ -59,7 +58,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
+public class DMODataManagementStrategyTest extends AbstractDataManagementStrategyTest {
 
     private DMODataManagementStrategy dmoDataManagementStrategy;
 
@@ -80,12 +79,13 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
                 this.oracle = oracleMock;
             }
         });
+        abstractDataManagementStrategySpy = dmoDataManagementStrategy;
     }
 
     @Test
     public void populateRightPanel() {
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
-        doReturn(alreadyAssignedProperties).when(dmoDataManagementStrategy).getAlreadyAssignedProperties(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(dmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
         String[] emptyFactTypes = {};
         when(oracleMock.getFactTypes()).thenReturn(emptyFactTypes);
         dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
@@ -95,7 +95,7 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
         String[] notEmptyFactTypes = getRandomStringArray();
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
         dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmoDataManagementStrategy, times(1)).getAlreadyAssignedProperties(eq(scenarioGridModelMock));
+        verify(dmoDataManagementStrategy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
         verify(dmoDataManagementStrategy, times(1)).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(alreadyAssignedProperties), eq(scenarioGridModelMock));
         for (String factType : notEmptyFactTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
