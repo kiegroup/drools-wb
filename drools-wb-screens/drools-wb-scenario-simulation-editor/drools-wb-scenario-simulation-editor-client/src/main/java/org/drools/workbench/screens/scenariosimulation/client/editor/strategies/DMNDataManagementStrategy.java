@@ -35,13 +35,13 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 
-public class DMNDataManagementStrategy implements DataManagementStrategy {
+public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
+    protected ResultHolder factModelTreeHolder = new ResultHolder();
     private final Caller<DMNTypeService> dmnTypeService;
     protected ScenarioSimulationContext scenarioSimulationContext;
     protected Path currentPath;
     protected ScenarioSimulationModel model;
-    private ResultHolder factModelTreeHolder = new ResultHolder();
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
         this.dmnTypeService = dmnTypeService;
@@ -65,6 +65,11 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
     public void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage) {
         this.currentPath = currentPath.getOriginal();
         model = toManage.getModel();
+    }
+
+    @Override
+    public boolean isADataType(String value) {
+        return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
     }
 
     protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter) {
@@ -95,7 +100,7 @@ public class DMNDataManagementStrategy implements DataManagementStrategy {
         };
     }
 
-    static private class ResultHolder {
+    static protected class ResultHolder {
         FactModelTuple factModelTuple;
 
         public FactModelTuple getFactModelTuple() {

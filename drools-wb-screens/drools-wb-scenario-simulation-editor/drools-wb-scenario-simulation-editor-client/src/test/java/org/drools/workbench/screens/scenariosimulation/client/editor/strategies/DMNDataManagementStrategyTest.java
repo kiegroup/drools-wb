@@ -16,9 +16,15 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.junit.Before;
@@ -28,6 +34,8 @@ import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.mocks.CallerMock;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -41,8 +49,14 @@ import static org.mockito.Mockito.when;
 public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
     @Mock
-    protected DMNTypeService dmnTypeServiceMock;
+    private DMNTypeService dmnTypeServiceMock;
 
+
+    private DMNDataManagementStrategy.ResultHolder factModelTreeHolderlocal;
+
+    private FactModelTuple factModelTupleLocal;
+    private SortedMap<String, FactModelTree> visibleFactsLocal = new TreeMap<>();
+    private SortedMap<String, FactModelTree> hiddenFactsLocal = new TreeMap<>();
     private DMNDataManagementStrategy dmnDataManagementStrategy;
 
     @Before
@@ -57,6 +71,7 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
                 this.scenarioSimulationContext = scenarioSimulationContextLocal;
             }
         });
+        dmnDataManagementStrategy.factModelTreeHolder = factModelTreeHolderlocal;
     }
 
     @Test
@@ -81,4 +96,27 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
         assertNotNull(scenarioSimulationContextLocal.getDataObjectFieldsMap());
     }
 
+
+    @Test
+    public void isADataType() {
+        visibleFactsLocal.clear();
+        hiddenFactsLocal.clear();
+        commonIsADataType("TEST", false);
+        visibleFactsLocal.put("TEST", new FactModelTree());
+        commonIsADataType("TOAST", false);
+        commonIsADataType("TEST", true);
+        visibleFactsLocal.clear();
+        hiddenFactsLocal.put("TEST", new FactModelTree());
+        commonIsADataType("TOAST", false);
+        commonIsADataType("TEST", true);
+    }
+
+    private void commonIsADataType(String value, boolean expected) {
+        boolean retrieved = dmnDataManagementStrategy.isADataType(value);
+        if (expected) {
+            assertTrue(retrieved);
+        } else {
+            assertFalse(retrieved);
+        }
+    }
 }

@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -108,6 +109,9 @@ public abstract class AbstractScenarioSimulationTest {
     protected ScenarioCommandManager scenarioCommandManagerMock;
     @Mock
     protected ScenarioSimulationModel scenarioSimulationModelMock;
+    @Mock
+    protected DataManagementStrategy dataManagementStrategyMock;
+
 
     @Mock
     protected ViewsProvider viewsProviderMock;
@@ -237,22 +241,32 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
+            public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex, boolean isDataType) {
                 return true;
             }
         });
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
+
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+
         when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+
         scenarioSimulationContextLocal = new ScenarioSimulationContext(scenarioGridPanelMock);
+        scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
+        scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        when(scenarioSimulationEditorPresenterMock.getDataManagementStrategy()).thenReturn(dataManagementStrategyMock);
+
         when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
+
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
+
         when(scenarioCommandRegistryMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
 
