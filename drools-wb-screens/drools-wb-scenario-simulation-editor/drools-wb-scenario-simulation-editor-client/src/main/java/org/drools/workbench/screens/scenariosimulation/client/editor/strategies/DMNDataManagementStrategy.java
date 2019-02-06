@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -41,7 +40,6 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     private final Caller<DMNTypeService> dmnTypeService;
     protected ScenarioSimulationContext scenarioSimulationContext;
     protected Path currentPath;
-    protected ScenarioSimulationModel model;
 
     public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
         this.dmnTypeService = dmnTypeService;
