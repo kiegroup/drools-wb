@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -39,6 +40,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
+import static org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel.Type.RULE;
 
 public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOMElementFactory<String, CollectionViewImpl, CollectionEditorDOMElement> {
 
@@ -135,7 +137,10 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             toReturn = new HashMap<>();
             toReturn.put("value", typeName);
         } else {
-            typeName = typeName.substring(typeName.lastIndexOf(".") + 1);
+            Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
+            if(simulation.isPresent() && RULE.equals(simulation.get().getSimulationDescriptor().getType())) {
+                typeName = typeName.substring(typeName.lastIndexOf(".") + 1);
+            }
             toReturn = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
         }
         return toReturn;

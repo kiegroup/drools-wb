@@ -263,8 +263,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
     protected boolean manageLeftClick(final int canvasX, final int canvasY) {
         final Point2D gridClickPoint = convertDOMToGridCoordinateLocal(canvasX, canvasY);
         Integer uiRowIndex = getUiHeaderRowIndexLocal(gridClickPoint);
+        boolean isHeader = true;
         if (uiRowIndex == null) {
             uiRowIndex = getUiRowIndexLocal(gridClickPoint.getY());
+            isHeader = false;
         }
         if (uiRowIndex == null) {
             return false;
@@ -278,10 +280,10 @@ public class ScenarioSimulationGridPanelClickHandler implements ClickHandler,
         if (scenarioGridColumn == null) {
             return false;
         }
-        if (!manageHeaderLeftClick(uiColumnIndex, scenarioGridColumn, gridClickPoint)) {
-            return manageGridLeftClick(uiRowIndex, uiColumnIndex);
+        if (isHeader) {
+            return manageHeaderLeftClick(uiColumnIndex, scenarioGridColumn, gridClickPoint);
         } else {
-            return true;
+            return manageGridLeftClick(uiRowIndex, uiColumnIndex);
         }
     }
 
