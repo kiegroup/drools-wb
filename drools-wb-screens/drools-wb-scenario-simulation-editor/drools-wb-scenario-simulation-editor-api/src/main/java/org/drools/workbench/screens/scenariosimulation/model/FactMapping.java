@@ -84,6 +84,7 @@ public class FactMapping {
         this.className = original.className;
         this.factAlias = original.factAlias;
         this.expressionAlias = original.expressionAlias;
+        this.genericTypes = original.genericTypes;
     }
 
     public String getFullExpression() {
