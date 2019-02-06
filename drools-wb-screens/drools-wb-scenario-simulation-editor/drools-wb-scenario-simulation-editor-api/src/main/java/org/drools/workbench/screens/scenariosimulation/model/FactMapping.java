@@ -92,7 +92,7 @@ public class FactMapping {
     }
 
     public List<ExpressionElement> getExpressionElementsWithoutClass() {
-        if(expressionElements.size() == 0) {
+        if (expressionElements.size() == 0) {
             throw new IllegalStateException("ExpressionElements malformed");
         }
         return expressionElements.subList(1, expressionElements.size());
@@ -177,11 +177,14 @@ public class FactMapping {
                 Objects.equals(getFactIdentifier(), that.getFactIdentifier()) &&
                 Objects.equals(getClassName(), that.getClassName()) &&
                 Objects.equals(getFactAlias(), that.getFactAlias()) &&
-                Objects.equals(getExpressionAlias(), that.getExpressionAlias());
+                Objects.equals(getExpressionAlias(), that.getExpressionAlias()) &&
+                Objects.equals(getGenericTypes(), that.getGenericTypes());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getExpressionElements(), getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias());
+        return Objects.hash(
+                getExpressionElements(),
+                getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias(), getGenericTypes());
     }
 }
