@@ -33,6 +33,11 @@ public abstract class AbstractKieContainerService {
 
     protected KieContainer getKieContainer(Path path) {
         KieModule kieModule = moduleService.resolveModule(path);
-        return buildInfoService.getBuildInfo(kieModule).getKieContainer();
+        KieContainer kieContainer = buildInfoService.getBuildInfo(kieModule).getKieContainer();
+        if (kieContainer == null) {
+            throw new IllegalArgumentException("Impossible to retrieve KieContainer, please fix compilation errors of " +
+                                                       "the project and then build it again.");
+        }
+        return kieContainer;
     }
 }
