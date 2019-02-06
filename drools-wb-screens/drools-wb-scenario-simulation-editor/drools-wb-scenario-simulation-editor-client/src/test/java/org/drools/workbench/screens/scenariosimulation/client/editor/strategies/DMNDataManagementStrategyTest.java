@@ -22,8 +22,6 @@ import java.util.TreeMap;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -40,6 +38,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -62,6 +61,9 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
     @Before
     public void setup() {
         super.setup();
+        factModelTupleLocal = new FactModelTuple(visibleFactsLocal, hiddenFactsLocal);
+        factModelTreeHolderlocal = new DMNDataManagementStrategy.ResultHolder();
+        factModelTreeHolderlocal.factModelTuple = factModelTupleLocal;
         when(dmnTypeServiceMock.retrieveType(any(), anyString())).thenReturn(mock(FactModelTuple.class));
         modelLocal.getSimulation().getSimulationDescriptor().setDmnFilePath("dmn_file_path");
         dmnDataManagementStrategy = spy(new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock), scenarioSimulationContextLocal) {
@@ -75,9 +77,17 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
     }
 
     @Test
-    public void populateRightPanel() {
+    public void populateRightPanelWithoutFactModelTuple() {
+        factModelTreeHolderlocal.factModelTuple = null;
         dmnDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
+        verify(dmnDataManagementStrategy, times(1)).getSuccessCallback(rightPanelPresenterMock);
+    }
+
+    @Test
+    public void populateRightPanelWithFactModelTuple() {
+        dmnDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        verify(dmnTypeServiceMock, never()).retrieveType(any(), anyString());
         verify(dmnDataManagementStrategy, times(1)).getSuccessCallback(rightPanelPresenterMock);
     }
 

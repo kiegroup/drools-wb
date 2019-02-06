@@ -337,14 +337,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(scenarioSimulationModelMock);
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
-        assertFalse(model.getSimulation().equals(simulationMock));
+        assertFalse(modelLocal.getSimulation().equals(simulationMock));
         presenter.onStartup(observablePathMock, placeRequestMock);
         presenter.onRunScenario();
         verify(scenarioSimulationServiceMock).runScenario(any(), eq(modelLocal));
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
-        assertTrue(model.getSimulation().equals(simulationMock));
+        assertTrue(modelLocal.getSimulation().equals(simulationMock));
     }
 
     @Test
