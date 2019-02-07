@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -35,8 +35,6 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
-
-import static org.uberfire.workbench.events.NotificationEvent.NotificationType.ERROR;
 
 public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
@@ -101,28 +99,25 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     }
 
     private void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
+        StringBuilder builder = new StringBuilder();
         if (factModelTuple.getTopLevelCollectionError().size() > 0) {
-            eventBus.fireEvent(
-                    new ScenarioNotificationEvent("Top level collections are not supported:" +
-                                                          String.join(",",
-                                                                      factModelTuple.getTopLevelCollectionError()),
-                                                  ERROR));
+            builder.append("Top level collections are not supported:<br/>");
+            factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
+            builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
-            eventBus.fireEvent(
-                    new ScenarioNotificationEvent("Multiple collections nested are not supported: " +
-                                                          String.join(",", factModelTuple.getMultipleNestedCollectionError()),
-                                                  ERROR));
+            builder.append("Multiple collections nested are not supported:<br/>");
+            factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
+            builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
-            eventBus.fireEvent(
-                    new ScenarioNotificationEvent("Multiple nested objects inside a collection are not supported: " +
-                                                          String.join(",", factModelTuple.getMultipleNestedObjectError()),
-                                                  ERROR));
+            builder.append("Multiple nested objects inside a collection are not supported:<br/>");
+            factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
         }
         factModelTuple.getTopLevelCollectionError().clear();
         factModelTuple.getMultipleNestedCollectionError().clear();
         factModelTuple.getMultipleNestedObjectError().clear();
+        eventBus.fireEvent(new UnsupportedDMNEvent(builder.toString()));
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {
