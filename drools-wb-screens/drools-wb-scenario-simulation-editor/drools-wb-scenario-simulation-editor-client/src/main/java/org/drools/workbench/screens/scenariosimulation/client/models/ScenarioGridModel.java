@@ -24,15 +24,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.IntPredicate;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -747,36 +742,12 @@ public class ScenarioGridModel extends BaseGridData {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return IntStream.range(0, getColumnCount())
-                .filter((IntPredicate) index -> {
-                    GWT.log("index " + index);
-                    return index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex();
-                })
-                .filter((IntPredicate) index -> {
-                    GWT.log("index " + index);
-                    return !Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier());
-                })
-                .mapToObj(new IntFunction<GridColumn<?>>() {
-                    @Override
-                    public GridColumn<?> apply(int index) {
-                        GWT.log("index " + index);
-                        return getColumns().get(index);
-                    }
-                })
-                .filter((Predicate<? super GridColumn<?>>) gridColumn -> {
-                    GWT.log("gridColumn " + gridColumn);
-                    return gridColumn.getHeaderMetaData().size() > rowIndex;
-                })
-                .map(new Function<GridColumn<?>, ScenarioHeaderMetaData>() {
-                    @Override
-                    public ScenarioHeaderMetaData apply(GridColumn<?> gridColumn) {
-                        GWT.log("gridColumn " + gridColumn);
-                        return (ScenarioHeaderMetaData) gridColumn.getHeaderMetaData().get(rowIndex);
-                    }
-                })
-                .noneMatch((Predicate<? super ScenarioHeaderMetaData>) scenarioHeaderMetaData -> {
-                    GWT.log("scenarioHeaderMetaData " + scenarioHeaderMetaData);
-                    return Objects.equals(scenarioHeaderMetaData.getTitle(), value);
-                });
+                .filter(index -> index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex())
+                .filter(index -> !Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
+                .mapToObj(index -> getColumns().get(index))
+                .filter(gridColumn -> gridColumn.getHeaderMetaData().size() > rowIndex)
+                .map(gridColumn -> (ScenarioHeaderMetaData) gridColumn.getHeaderMetaData().get(rowIndex))
+                .noneMatch(scenarioHeaderMetaData -> Objects.equals(scenarioHeaderMetaData.getTitle(), value));
     }
 
     protected boolean isNewInstanceName(String value) {
