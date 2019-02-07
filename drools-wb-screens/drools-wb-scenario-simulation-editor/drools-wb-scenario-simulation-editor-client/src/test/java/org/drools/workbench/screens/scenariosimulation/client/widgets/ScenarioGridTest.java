@@ -78,8 +78,6 @@ public class ScenarioGridTest {
     @Mock
     private ScenarioGridRenderer scenarioGridRendererMock;
     @Mock
-    private ScenarioGridPanel scenarioGridPanelMock;
-    @Mock
     private ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactoryMock;
     @Mock
     private ScenarioSimulationBuilders.HeaderBuilder headerBuilderMock;
@@ -136,7 +134,6 @@ public class ScenarioGridTest {
         scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock,
                                             scenarioGridLayerMock,
                                             scenarioGridRendererMock,
-                                            scenarioGridPanelMock,
                                             scenarioContextMenuRegistryMock) {
 
             @Override

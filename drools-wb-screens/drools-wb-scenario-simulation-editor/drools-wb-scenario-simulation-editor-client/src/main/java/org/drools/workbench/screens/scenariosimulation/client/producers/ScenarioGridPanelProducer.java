@@ -31,10 +31,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 
-<<<<<<<HEAD
-        =======
-        >>>>>>>DROOLS-3175:Context menu registry
-
 /**
  * <code>@Dependent</code> <i>Producer</i> for a given {@link ScenarioGridPanel}
  */
@@ -61,7 +57,6 @@ public class ScenarioGridPanelProducer {
         final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false),
-                                                           scenarioGridPanel,
                                                            scenarioContextMenuRegistry);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
@@ -87,3 +82,4 @@ public class ScenarioGridPanelProducer {
         return scenarioSimulationContext;
     }
 }
+
