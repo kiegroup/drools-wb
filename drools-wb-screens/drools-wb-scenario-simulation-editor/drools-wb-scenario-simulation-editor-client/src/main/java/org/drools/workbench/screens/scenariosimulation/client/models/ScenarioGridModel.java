@@ -32,6 +32,9 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
+import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -67,6 +70,11 @@ public class ScenarioGridModel extends BaseGridData {
     protected Set<String> dataObjectsInstancesName;
 
     protected Set<String> simpleJavaTypeInstancesName;
+    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory;
+    protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory;
+    protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory;
+
+
 
     public ScenarioGridModel() {
     }
@@ -104,6 +112,30 @@ public class ScenarioGridModel extends BaseGridData {
         } while (!isNewInstanceName(instanceTitle) ||
                 !isNewPropertyName(propertyTitle));
         return new AbstractMap.SimpleEntry<>(instanceTitle, propertyTitle);
+    }
+
+    public CollectionEditorSingletonDOMElementFactory getCollectionEditorSingletonDOMElementFactory() {
+        return collectionEditorSingletonDOMElementFactory;
+    }
+
+    public void setCollectionEditorSingletonDOMElementFactory(CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory) {
+        this.collectionEditorSingletonDOMElementFactory = collectionEditorSingletonDOMElementFactory;
+    }
+
+    public ScenarioCellTextAreaSingletonDOMElementFactory getScenarioCellTextAreaSingletonDOMElementFactory() {
+        return scenarioCellTextAreaSingletonDOMElementFactory;
+    }
+
+    public void setScenarioCellTextAreaSingletonDOMElementFactory(ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory) {
+        this.scenarioCellTextAreaSingletonDOMElementFactory = scenarioCellTextAreaSingletonDOMElementFactory;
+    }
+
+    public ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
+        return scenarioHeaderTextBoxSingletonDOMElementFactory;
+    }
+
+    public void setScenarioHeaderTextBoxSingletonDOMElementFactory(ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory) {
+        this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactory;
     }
 
     /**
@@ -510,7 +542,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Returns <code>true</code> if type mapped to the selected column is the same as the provided one
+     * Returns <code>true</code> if no column is selected <b>OR</b> if type of the property mapped to the selected column is the same as the provided one
      * @param className
      * @return
      */
@@ -519,7 +551,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Returns <code>true</code> if type mapped to the column at given index is the same as the provided one
+     * Returns <code>true</code> if type of the property mapped to the column at given index is the same as the provided one
      * @param columnIndex
      * @param className
      * @return
@@ -530,14 +562,27 @@ public class ScenarioGridModel extends BaseGridData {
         return factMappingByIndex.getClassName().equals(className);
     }
 
-    public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex) {
-        ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
-        boolean isValid = !headerToEdit.isInstanceHeader() || (!isInstanceName(value) && isUnique(value, rowIndex, columnIndex));
-        if (!isValid) {
-            eventBus.fireEvent(new ScenarioNotificationEvent("Name '" + value + "' can not be used",
-                                                             NotificationEvent.NotificationType.ERROR));
+    /**
+     * Returns <code>true</code> if type given <b>headerName</b> is the same as the <b>Fact</b> mapped to the
+     * column at given index
+     * @param columnIndex
+     * @param headerName
+     * @return
+     */
+    public boolean isSameInstanceHeader(int columnIndex, String headerName) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
+        String columnClassName = factIdentifierByIndex.getClassName();
+        if (columnClassName.contains(".")) {
+            columnClassName = columnClassName.substring(columnClassName.lastIndexOf(".") + 1);
         }
-        return isValid;
+        return Objects.equals(columnClassName, headerName);
+    }
+
+    public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex, boolean isADataType) {
+        ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
+        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, value);
+        return !headerToEdit.isInstanceHeader() || (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex));
     }
 
     public void resetErrors() {
@@ -630,7 +675,6 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
-            selectColumn(columns.indexOf(column));
         } catch (Throwable t) {
             eventBus.fireEvent(new ScenarioNotificationEvent("Error during column creation: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
             eventBus.fireEvent(new ScenarioGridReloadEvent());
@@ -674,7 +718,14 @@ public class ScenarioGridModel extends BaseGridData {
         Objects.requireNonNull(simulation, "Bind a simulation to the ScenarioGridModel to use it");
     }
 
-    protected boolean isUnique(String value, int rowIndex, int columnIndex) {
+    /**
+     * Verify the given value is not already used as instance header name
+     * @param value
+     * @param rowIndex
+     * @param columnIndex
+     * @return
+     */
+    protected boolean isUniqueInstanceHeaderTitle(String value, int rowIndex, int columnIndex) {
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
@@ -701,6 +752,11 @@ public class ScenarioGridModel extends BaseGridData {
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
+    /**
+     * Verify if the given name is the name of an already existing instance.
+     * @param value
+     * @return
+     */
     protected boolean isInstanceName(String value) {
         Set<String> aggregated = new HashSet<>();
         if (dataObjectsInstancesName != null) {

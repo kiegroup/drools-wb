@@ -28,7 +28,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -59,8 +58,10 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
@@ -95,8 +96,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioGrid scenarioGridMock;
     @Mock
     private ScenarioGridLayer scenarioGridLayerMock;
-    @Mock
-    private ScenarioGridPanel scenarioGridPanelMock;
     @Mock
     private ScenarioSimulationView scenarioSimulationViewMock;
     @Mock
@@ -196,13 +195,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             }
 
-//            @Override
-//            protected void loadContent() {
-//                return new ScenarioSimulationModelContent(model,
-//                                                   new Overview(),
-//                                                   new PackageDataModelOracleBaselinePayload());
-//            }
-
             @Override
             protected String getJsonModel(ScenarioSimulationModel model) {
                 return "";
@@ -221,12 +213,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         final AsyncPackageDataModelOracle oracle = mock(AsyncPackageDataModelOracle.class);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(any(),
-                                                               eq(model),
+                                                               eq(modelLocal),
                                                                eq(content.getDataModel()))).thenReturn(oracle);
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
         verify(importsWidgetPresenterMock).setContent(oracle,
-                                                      model.getImports(),
+                                                      modelLocal.getImports(),
                                                       false);
         verify(kieViewMock).addImportsTab(importsWidgetPresenterMock);
         verify(scenarioSimulationViewMock).showLoading();
@@ -339,16 +331,20 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTest() throws Exception {
-        doReturn(new ScenarioSimulationModelContent(model,
+        doReturn(new ScenarioSimulationModelContent(modelLocal,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-        when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(mock(ScenarioSimulationModel.class));
-        presenter.onStartup(mock(ObservablePath.class), mock(PlaceRequest.class));
+        when(scenarioSimulationServiceMock.runScenario(any(), any())).thenReturn(scenarioSimulationModelMock);
+        when(statusMock.getSimulation()).thenReturn(simulationMock);
+        when(contextMock.getStatus()).thenReturn(statusMock);
+        assertFalse(modelLocal.getSimulation().equals(simulationMock));
+        presenter.onStartup(observablePathMock, placeRequestMock);
         presenter.onRunScenario();
-        verify(scenarioSimulationServiceMock).runScenario(any(), eq(model));
+        verify(scenarioSimulationServiceMock).runScenario(any(), eq(modelLocal));
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
+        assertTrue(modelLocal.getSimulation().equals(simulationMock));
     }
 
     @Test
@@ -358,6 +354,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
         verify(statusMock, times(1)).setSimulation(eq(simulationMock));
+        verify(dataManagementStrategyMock, times(1)).setModel(eq(scenarioSimulationModelMock));
     }
 
     @Test
@@ -373,6 +370,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(rightPanelPresenterMock, times(1)).setEventBus(eventBusMock);
         verify(dataManagementStrategyMock, times(1)).populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
         verify(rightPanelPresenterMock, times(1)).initCheatSheet(any());
+    }
+
+    @Test
+    public void getModelSuccessCallbackMethod() {
+        presenterSpy.getModelSuccessCallbackMethod(content);
+        verify(presenterSpy, times(1)).populateRightPanel();
+        verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
+        verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
+        verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
+        verify(presenterSpy, times(1)).setOriginalHash(anyInt());
     }
 
     private void onClosePlaceStatusOpen() {

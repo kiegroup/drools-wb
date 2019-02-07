@@ -22,9 +22,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -39,11 +39,12 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
     protected ResultHolder factModelTreeHolder = new ResultHolder();
     private final Caller<DMNTypeService> dmnTypeService;
-    private Path currentPath;
-    private ScenarioSimulationModel model;
+    protected ScenarioSimulationContext scenarioSimulationContext;
+    protected Path currentPath;
 
-    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService) {
+    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
         this.dmnTypeService = dmnTypeService;
+        this.scenarioSimulationContext = scenarioSimulationContext;
     }
 
     @Override
@@ -63,6 +64,11 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     public void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage) {
         this.currentPath = currentPath.getOriginal();
         model = toManage.getModel();
+    }
+
+    @Override
+    public boolean isADataType(String value) {
+        return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
     }
 
     protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
@@ -85,6 +91,11 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
         rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
         rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
+
+        SortedMap<String, FactModelTree> context = new TreeMap<>();
+        context.putAll(factMappingTuple.getVisibleFacts());
+        context.putAll(factMappingTuple.getHiddenFacts());
+        scenarioSimulationContext.setDataObjectFieldsMap(context);
     }
 
     protected void filterFactModelTreeMap(SortedMap<String, FactModelTree> toFilter, Map<String, List<String>> alreadyAssignedProperties) {

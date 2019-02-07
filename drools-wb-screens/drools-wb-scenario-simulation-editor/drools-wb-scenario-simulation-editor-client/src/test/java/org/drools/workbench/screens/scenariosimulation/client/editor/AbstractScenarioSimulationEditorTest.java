@@ -82,7 +82,7 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     protected AsyncPackageDataModelOracleFactory oracleFactoryMock;
 
     protected ScenarioSimulationModelContent content;
-    protected ScenarioSimulationModel model;
+    protected ScenarioSimulationModel modelLocal;
 
     public void setup() {
         super.setup();
@@ -98,9 +98,9 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(workbenchContextMock.getActiveWorkspaceProject()).thenReturn(Optional.empty());
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
-        this.model = new ScenarioSimulationModel();
-        model.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, "default"));
-        this.content = new ScenarioSimulationModelContent(model,
+        this.modelLocal = new ScenarioSimulationModel();
+        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, "default"));
+        this.content = new ScenarioSimulationModelContent(modelLocal,
                                                           overviewMock,
                                                           mock(PackageDataModelOracleBaselinePayload.class));
         when(scenarioSimulationServiceMock.loadContent(observablePathMock)).thenReturn(content);

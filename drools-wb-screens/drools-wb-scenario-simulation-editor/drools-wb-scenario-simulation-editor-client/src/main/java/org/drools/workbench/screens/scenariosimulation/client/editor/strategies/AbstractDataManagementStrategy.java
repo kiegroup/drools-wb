@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
@@ -32,13 +33,20 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
  */
 public abstract class AbstractDataManagementStrategy implements DataManagementStrategy {
 
+    protected ScenarioSimulationModel model;
+
+    @Override
+    public void setModel(ScenarioSimulationModel model) {
+        this.model = model;
+    }
+
     protected static FactModelTree getSimpleClassFactModelTree(Class clazz) {
         String key = clazz.getSimpleName();
         Map<String, String> simpleProperties = new HashMap<>();
         String fullName = clazz.getCanonicalName();
         simpleProperties.put("value", fullName);
         String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-        return new FactModelTree(key, packageName, simpleProperties);
+        return new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
     }
 
     /**
