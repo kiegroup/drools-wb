@@ -74,6 +74,8 @@ public class ScenarioGridModel extends BaseGridData {
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory;
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory;
 
+
+
     public ScenarioGridModel() {
     }
 
@@ -363,7 +365,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param selectedColumn
      * @return
      */
-    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn) {
+    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn ) {
         int columnIndex = columns.indexOf(selectedColumn);
         Range instanceRange = getInstanceLimits(columnIndex);
         return columns.subList(instanceRange.getMinRowIndex(), instanceRange.getMaxRowIndex() + 1)
@@ -579,7 +581,8 @@ public class ScenarioGridModel extends BaseGridData {
 
     public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex, boolean isADataType) {
         ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
-        return isValidPropertyHeaderName(headerToEdit, value, rowIndex, columnIndex) || isValidInstanceHeaderName(headerToEdit, value, rowIndex, columnIndex, isADataType);
+        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, value);
+        return !headerToEdit.isInstanceHeader() || (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex));
     }
 
     public void resetErrors() {
@@ -610,21 +613,6 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void setSimpleJavaTypeInstancesName(Set<String> simpleJavaTypeInstancesName) {
         this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
-    }
-
-    protected boolean isValidInstanceHeaderName(ScenarioHeaderMetaData headerToEdit, String value, int rowIndex, int columnIndex, boolean isADataType) {
-        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, value);
-        if (!headerToEdit.isInstanceHeader()) {
-            return false;
-        }
-        return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex));
-    }
-
-    protected boolean isValidPropertyHeaderName(ScenarioHeaderMetaData headerToEdit, String value, int rowIndex, int columnIndex) {
-        if (!headerToEdit.isPropertyHeader()) {
-            return false;
-        }
-        return isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex);
     }
 
     /**
@@ -745,9 +733,9 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(index -> index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex())
                 .filter(index -> !Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
                 .mapToObj(index -> getColumns().get(index))
-                .filter(gridColumn -> gridColumn.getHeaderMetaData().size() > rowIndex)
-                .map(gridColumn -> (ScenarioHeaderMetaData) gridColumn.getHeaderMetaData().get(rowIndex))
-                .noneMatch(scenarioHeaderMetaData -> Objects.equals(scenarioHeaderMetaData.getTitle(), value));
+                .filter(elem -> elem.getHeaderMetaData().size() > rowIndex)
+                .map(elem -> (ScenarioHeaderMetaData) elem.getHeaderMetaData().get(rowIndex))
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 
     protected boolean isNewInstanceName(String value) {
