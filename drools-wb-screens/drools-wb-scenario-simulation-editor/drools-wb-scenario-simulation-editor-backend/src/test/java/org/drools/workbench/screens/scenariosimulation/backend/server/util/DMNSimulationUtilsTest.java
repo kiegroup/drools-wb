@@ -46,9 +46,10 @@ public class DMNSimulationUtilsTest {
 
         Assertions.assertThatThrownBy(() -> DMNSimulationUtils.findDMNModel(models, impossibleToFind, 1))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Impossible to retrieve DMNModel. Please verify if your model has any " +
-                                    "compilation errors or if there are multiple DMN files in the project " +
-                                    "with the same namespace and name. After that, please build again the project");
+                .hasMessage("Retrieving the DMNModel has failed. Make sure the used DMN asset does not " +
+                                    "produce any compilation errors and that the project does not " +
+                                    "contain multiple DMN assets with the same name and namespace. " +
+                                    "After addressing the issues, build the project again.");
     }
 
     private DMNModel createDMNModelMock(String path) {

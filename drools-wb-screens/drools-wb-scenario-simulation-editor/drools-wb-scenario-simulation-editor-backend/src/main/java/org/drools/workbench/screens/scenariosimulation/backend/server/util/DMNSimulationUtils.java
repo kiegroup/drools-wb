@@ -52,9 +52,10 @@ public class DMNSimulationUtils {
             }
         }
         if (result.size() == 0) {
-            throw new IllegalArgumentException("Impossible to retrieve DMNModel. Please verify if your model has any " +
-                                                       "compilation errors or if there are multiple DMN files in the project " +
-                                                       "with the same namespace and name. After that, please build again the project");
+            throw new IllegalArgumentException("Retrieving the DMNModel has failed. Make sure the used DMN asset does not " +
+                                                       "produce any compilation errors and that the project does not " +
+                                                       "contain multiple DMN assets with the same name and namespace. " +
+                                                       "After addressing the issues, build the project again.");
         } else if (result.size() == 1) {
             return result.get(0);
         } else {

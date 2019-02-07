@@ -157,7 +157,7 @@ public class ScenarioRunnerServiceImplTest {
         when(buildInfoMock.getKieContainer()).thenReturn(null);
         Assertions.assertThatThrownBy(() -> scenarioRunnerService.getKieContainer(mock(Path.class)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Impossible to retrieve KieContainer, please fix compilation errors of " +
-                                    "the project and then build it again.");
+                .hasMessage("Retrieving KieContainer has failed. Fix all compilation errors within the " +
+                                    "project and build the project again.");
     }
 }

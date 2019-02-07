@@ -35,8 +35,8 @@ public abstract class AbstractKieContainerService {
         KieModule kieModule = moduleService.resolveModule(path);
         KieContainer kieContainer = buildInfoService.getBuildInfo(kieModule).getKieContainer();
         if (kieContainer == null) {
-            throw new IllegalArgumentException("Impossible to retrieve KieContainer, please fix compilation errors of " +
-                                                       "the project and then build it again.");
+            throw new IllegalArgumentException("Retrieving KieContainer has failed. Fix all compilation errors within the " +
+                                                       "project and build the project again.");
         }
         return kieContainer;
     }
