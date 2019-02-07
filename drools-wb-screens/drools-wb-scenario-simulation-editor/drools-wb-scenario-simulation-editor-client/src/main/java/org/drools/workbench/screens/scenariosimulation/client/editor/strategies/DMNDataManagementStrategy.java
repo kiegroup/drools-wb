@@ -81,41 +81,48 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         return factMappingTuple -> successCallbackContent(factMappingTuple, rightPanelPresenter);
     }
 
-    protected void successCallbackContent(FactModelTuple factMappingTuple, RightPanelView.Presenter rightPanelPresenter) {
-        factModelTreeHolder.setFactModelTuple(factMappingTuple);
-        final SortedMap<String, FactModelTree> visibleFacts = factMappingTuple.getVisibleFacts();
+    protected void successCallbackContent(FactModelTuple factModelTuple, RightPanelView.Presenter rightPanelPresenter) {
+        factModelTreeHolder.setFactModelTuple(factModelTuple);
+        final SortedMap<String, FactModelTree> visibleFacts = factModelTuple.getVisibleFacts();
         final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
                 .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
         final SortedMap<String, FactModelTree> complexDataObjects = new TreeMap<>(partitionBy.get(false).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         final SortedMap<String, FactModelTree> simpleDataObjects = new TreeMap<>(partitionBy.get(true).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         rightPanelPresenter.setDataObjectFieldsMap(complexDataObjects);
         rightPanelPresenter.setSimpleJavaTypeFieldsMap(simpleDataObjects);
-        rightPanelPresenter.setHiddenFieldsMap(factMappingTuple.getHiddenFacts());
+        rightPanelPresenter.setHiddenFieldsMap(factModelTuple.getHiddenFacts());
 
         SortedMap<String, FactModelTree> context = new TreeMap<>();
-        context.putAll(factMappingTuple.getVisibleFacts());
-        context.putAll(factMappingTuple.getHiddenFacts());
+        context.putAll(factModelTuple.getVisibleFacts());
+        context.putAll(factModelTuple.getHiddenFacts());
         scenarioSimulationContext.setDataObjectFieldsMap(context);
 
-        if (factMappingTuple.getTopLevelCollectionError().size() > 0) {
+        showErrorsAndCleanupState(factModelTuple);
+    }
+
+    private void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
+        if (factModelTuple.getTopLevelCollectionError().size() > 0) {
             eventBus.fireEvent(
                     new ScenarioNotificationEvent("Top level collections are not supported:" +
                                                           String.join(",",
-                                                                      factMappingTuple.getTopLevelCollectionError()),
+                                                                      factModelTuple.getTopLevelCollectionError()),
                                                   ERROR));
         }
-        if (factMappingTuple.getMultipleNestedCollectionError().size() > 0) {
+        if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
             eventBus.fireEvent(
                     new ScenarioNotificationEvent("Multiple collections nested are not supported: " +
-                                                          String.join(",", factMappingTuple.getMultipleNestedCollectionError()),
+                                                          String.join(",", factModelTuple.getMultipleNestedCollectionError()),
                                                   ERROR));
         }
-        if (factMappingTuple.getMultipleNestedObjectError().size() > 0) {
+        if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
             eventBus.fireEvent(
                     new ScenarioNotificationEvent("Multiple nested objects inside a collection are not supported: " +
-                                                          String.join(",", factMappingTuple.getMultipleNestedObjectError()),
+                                                          String.join(",", factModelTuple.getMultipleNestedObjectError()),
                                                   ERROR));
         }
+        factModelTuple.getTopLevelCollectionError().clear();
+        factModelTuple.getMultipleNestedCollectionError().clear();
+        factModelTuple.getMultipleNestedObjectError().clear();
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {
