@@ -21,7 +21,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -34,25 +36,30 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 
+import static org.uberfire.workbench.events.NotificationEvent.NotificationType.ERROR;
+
 public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
     protected ResultHolder factModelTreeHolder = new ResultHolder();
     private final Caller<DMNTypeService> dmnTypeService;
     protected ScenarioSimulationContext scenarioSimulationContext;
+    private final EventBus eventBus;
     protected Path currentPath;
 
-    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService, ScenarioSimulationContext scenarioSimulationContext) {
+    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService,
+                                     ScenarioSimulationContext scenarioSimulationContext,
+                                     EventBus eventBus) {
         this.dmnTypeService = dmnTypeService;
         this.scenarioSimulationContext = scenarioSimulationContext;
+        this.eventBus = eventBus;
     }
 
     @Override
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
-        if(factModelTreeHolder.getFactModelTuple() != null) {
+        if (factModelTreeHolder.getFactModelTuple() != null) {
             getSuccessCallback(rightPanelPresenter).callback(factModelTreeHolder.getFactModelTuple());
-        }
-        else {
+        } else {
             dmnTypeService.call(getSuccessCallback(rightPanelPresenter),
                                 getErrorCallback(rightPanelPresenter))
                     .retrieveType(currentPath, dmnFilePath);
@@ -89,6 +96,26 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         context.putAll(factMappingTuple.getVisibleFacts());
         context.putAll(factMappingTuple.getHiddenFacts());
         scenarioSimulationContext.setDataObjectFieldsMap(context);
+
+        if (factMappingTuple.getTopLevelCollectionError().size() > 0) {
+            eventBus.fireEvent(
+                    new ScenarioNotificationEvent("Top level collections are not supported:" +
+                                                          String.join(",",
+                                                                      factMappingTuple.getTopLevelCollectionError()),
+                                                  ERROR));
+        }
+        if (factMappingTuple.getMultipleNestedCollectionError().size() > 0) {
+            eventBus.fireEvent(
+                    new ScenarioNotificationEvent("Multiple collections nested are not supported: " +
+                                                          String.join(",", factMappingTuple.getMultipleNestedCollectionError()),
+                                                  ERROR));
+        }
+        if (factMappingTuple.getMultipleNestedObjectError().size() > 0) {
+            eventBus.fireEvent(
+                    new ScenarioNotificationEvent("Multiple nested objects inside a collection are not supported: " +
+                                                          String.join(",", factMappingTuple.getMultipleNestedObjectError()),
+                                                  ERROR));
+        }
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {
@@ -99,6 +126,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     }
 
     static protected class ResultHolder {
+
         FactModelTuple factModelTuple;
 
         public FactModelTuple getFactModelTuple() {

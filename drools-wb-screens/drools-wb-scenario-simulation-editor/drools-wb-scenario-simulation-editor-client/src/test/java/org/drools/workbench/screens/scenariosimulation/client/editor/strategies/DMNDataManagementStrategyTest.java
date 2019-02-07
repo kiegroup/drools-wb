@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -66,7 +67,9 @@ public class DMNDataManagementStrategyTest extends AbstractScenarioSimulationEdi
         factModelTreeHolderlocal.factModelTuple = factModelTupleLocal;
         when(dmnTypeServiceMock.retrieveType(any(), anyString())).thenReturn(mock(FactModelTuple.class));
         modelLocal.getSimulation().getSimulationDescriptor().setDmnFilePath("dmn_file_path");
-        dmnDataManagementStrategy = spy(new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock), scenarioSimulationContextLocal) {
+        dmnDataManagementStrategy = spy(new DMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock),
+                                                                      scenarioSimulationContextLocal,
+                                                                      mock(EventBus.class)) {
             {
                 this.currentPath = mock(Path.class);
                 this.model = modelLocal;
