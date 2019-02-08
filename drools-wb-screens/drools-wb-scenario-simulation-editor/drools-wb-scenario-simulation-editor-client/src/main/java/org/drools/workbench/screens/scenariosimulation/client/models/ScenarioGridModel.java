@@ -75,8 +75,6 @@ public class ScenarioGridModel extends BaseGridData {
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory;
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory;
 
-
-
     public ScenarioGridModel() {
     }
 
@@ -380,7 +378,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param selectedColumn
      * @return
      */
-    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn ) {
+    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn) {
         int columnIndex = columns.indexOf(selectedColumn);
         Range instanceRange = getInstanceLimits(columnIndex);
         return columns.subList(instanceRange.getMinRowIndex(), instanceRange.getMaxRowIndex() + 1)
@@ -533,6 +531,38 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(rowIndex -> getCellValue(getCell(rowIndex, columnIndex)).isPresent())
                 .findFirst()
                 .isPresent();
+    }
+
+    /**
+     * Returns <code>true</code> if property mapped to the selected column is already assigned to
+     * another column of the same <b>instance</b>
+     * @param propertyName
+     * @return
+     */
+    public boolean isAlreadyAssignedProperty(String propertyName) {
+        return selectedColumn == null || isAlreadyAssignedProperty(getColumns().indexOf(selectedColumn), propertyName);
+    }
+
+    /**
+     * Returns <code>true</code> if property mapped to the column at given index is already assigned to
+     * another column of the same <b>instance</b>
+     * @param columnIndex
+     * @param propertyName
+     * @return
+     */
+    public boolean isAlreadyAssignedProperty(int columnIndex, String propertyName) {
+        Range instanceLimits = getInstanceLimits(columnIndex);
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex()+1)
+                .filter(index -> index != columnIndex)
+                .mapToObj(simulationDescriptor::getFactMappingByIndex)
+                .anyMatch(factMapping -> {
+                    String columnProperty = factMapping.getExpressionElements()
+                            .stream()
+                            .map(expressionElement -> expressionElement.getStep())
+                            .collect(Collectors.joining("."));
+                    return Objects.equals(columnProperty, propertyName);
+                });
     }
 
     /**
