@@ -70,13 +70,7 @@ public class BaseExpressionEvaluator extends AbstractExpressionEvaluator {
     @Override
     protected Object extractFieldValue(Object result, String fieldName) {
         try {
-            if(result instanceof Map) {
-                return ((Map) result).get(fieldName);
-            } else {
-                Field declaredField = result.getClass().getDeclaredField(fieldName);
-                declaredField.setAccessible(true);
-                return declaredField.get(result);
-            }
+            return result.getClass().getDeclaredField(fieldName).get(result);
         } catch (Exception e) {
             throw new IllegalArgumentException("Impossible to find field: " + fieldName, e);
         }
