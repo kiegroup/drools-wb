@@ -104,6 +104,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             collectionView.getElementsContainer()
                     .appendChild(mapEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key + "#key"), instancePropertiesMap.get(key + "#value")));
         }
+        collectionView.getAddItemButton().setDisabled(true);
     }
 
     @Override
@@ -122,6 +123,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
+        enableAddItemButton();
     }
 
     @Override
@@ -130,6 +132,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
         elementsContainer.insertBefore(itemElement, objectSeparatorLI);
+        enableAddItemButton();
     }
 
     @Override
@@ -155,6 +158,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
             mapElementPresenter.remove();
         }
         toRemove = true;
+    }
+
+    @Override
+    public void enableAddItemButton() {
+        collectionView.getAddItemButton().setDisabled(false);
     }
 
     protected void commonInit(String key, CollectionView collectionView) {

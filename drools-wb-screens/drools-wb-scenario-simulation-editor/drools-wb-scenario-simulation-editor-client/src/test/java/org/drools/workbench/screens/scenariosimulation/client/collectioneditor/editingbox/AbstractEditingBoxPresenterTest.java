@@ -54,5 +54,6 @@ public abstract class AbstractEditingBoxPresenterTest extends AbstractCollection
     public void close() {
         editingBoxPresenter.close(editingBoxToCloseMock);
         verify(editingBoxMock, times(1)).removeFromParent();
+        verify(collectionPresenterMock, times(1)).enableAddItemButton();
     }
 }

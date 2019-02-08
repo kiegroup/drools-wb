@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.Map;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -96,6 +97,11 @@ public interface CollectionView {
          * Completely remove the given <code>Collection</code>, i.e. set it to <code>null</code>
          */
         void remove();
+
+        /**
+         * Reenables addItem button
+         */
+        void enableAddItemButton();
     }
 
     /**
@@ -131,6 +137,8 @@ public interface CollectionView {
     HeadingElement getEditorTitle();
 
     SpanElement getPropertyTitle();
+
+    ButtonElement getAddItemButton();
 
     void toggleRowExpansion();
 
