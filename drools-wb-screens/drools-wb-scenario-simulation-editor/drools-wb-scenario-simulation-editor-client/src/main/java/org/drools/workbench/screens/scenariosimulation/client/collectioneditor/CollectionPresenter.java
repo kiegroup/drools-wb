@@ -121,7 +121,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
-        elementsContainer.insertBefore(itemElement, objectSeparatorLI);
+        elementsContainer.appendChild(itemElement);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
-        elementsContainer.insertBefore(itemElement, objectSeparatorLI);
+        elementsContainer.appendChild(itemElement);
     }
 
     @Override

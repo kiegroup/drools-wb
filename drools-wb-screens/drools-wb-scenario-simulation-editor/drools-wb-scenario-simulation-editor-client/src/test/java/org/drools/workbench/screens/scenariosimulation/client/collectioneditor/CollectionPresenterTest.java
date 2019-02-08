@@ -270,7 +270,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
         verify(listElementPresenterMock, times(1)).getItemContainer(eq(ITEM_ID), eq(propertyMapLocal));
-        verify(elementsContainerMock, times(1)).insertBefore(eq(itemElementMock), eq(objectSeparatorLIMock));
+        verify(elementsContainerMock, times(1)).appendChild(eq(itemElementMock));
     }
 
     @Test
@@ -279,7 +279,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
         verify(mapElementPresenterMock, times(1)).getKeyValueContainer(eq(ITEM_ID), eq(keyPropertyMapLocal), eq(propertyMapLocal));
-        verify(elementsContainerMock, times(1)).insertBefore(eq(itemElementMock), eq(objectSeparatorLIMock));
+        verify(elementsContainerMock, times(1)).appendChild(eq(itemElementMock));
     }
 
     @Test
