@@ -163,7 +163,7 @@ public class DMNTypeServiceImpl
         visitType(type, false, errorHolder, path);
     }
 
-    protected void visitType(DMNType type,
+    private void visitType(DMNType type,
                              boolean alreadyInCollection,
                              ErrorHolder errorHolder,
                              String path) {
