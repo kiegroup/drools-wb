@@ -100,24 +100,30 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
     private void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
         StringBuilder builder = new StringBuilder();
+        boolean showError = false;
         if (factModelTuple.getTopLevelCollectionError().size() > 0) {
+            showError = true;
             builder.append("Top level collections are not supported:<br/>");
             factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
+            showError = true;
             builder.append("Multiple collections nested are not supported:<br/>");
             factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
+            showError = true;
             builder.append("Multiple nested objects inside a collection are not supported:<br/>");
             factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
         }
-        factModelTuple.getTopLevelCollectionError().clear();
-        factModelTuple.getMultipleNestedCollectionError().clear();
-        factModelTuple.getMultipleNestedObjectError().clear();
-        eventBus.fireEvent(new UnsupportedDMNEvent(builder.toString()));
+        if (showError) {
+            factModelTuple.getTopLevelCollectionError().clear();
+            factModelTuple.getMultipleNestedCollectionError().clear();
+            factModelTuple.getMultipleNestedObjectError().clear();
+            eventBus.fireEvent(new UnsupportedDMNEvent(builder.toString()));
+        }
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {
