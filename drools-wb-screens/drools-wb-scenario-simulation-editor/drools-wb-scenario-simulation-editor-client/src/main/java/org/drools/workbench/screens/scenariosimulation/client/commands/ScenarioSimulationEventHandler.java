@@ -374,7 +374,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(UnsupportedDMNEvent event) {
-        confirmPopupPresenter.show("Unsupported DMN", event.getMessage());
+        confirmPopupPresenter.show("Unsupported DMN asset", event.getMessage());
     }
 
     /**

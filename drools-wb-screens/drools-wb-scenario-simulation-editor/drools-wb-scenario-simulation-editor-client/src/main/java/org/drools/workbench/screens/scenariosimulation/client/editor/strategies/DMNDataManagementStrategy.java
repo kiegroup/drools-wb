@@ -111,19 +111,19 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         boolean showError = false;
         if (factModelTuple.getTopLevelCollectionError().size() > 0) {
             showError = true;
-            builder.append("Top level collections are not supported:<br/>");
+            builder.append("Top-level collections are not supported! Violated by:<br/>");
             factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
             showError = true;
-            builder.append("Multiple collections nested are not supported:<br/>");
+            builder.append("Nested collections are not supported! Violated by:<br/>");
             factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
             showError = true;
-            builder.append("Multiple nested objects inside a collection are not supported:<br/>");
+            builder.append("Complex nested objects inside a collection are not supported! Violated by:<br/>");
             factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
         }
         if (showError) {
