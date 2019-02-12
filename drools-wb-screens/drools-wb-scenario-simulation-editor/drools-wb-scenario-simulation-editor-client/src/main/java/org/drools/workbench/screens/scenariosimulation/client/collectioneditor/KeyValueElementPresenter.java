@@ -60,7 +60,8 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
         keyValueIds.forEach(id -> propertyPresenter.editProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.INLINE);
-        elementViewList.forEach(element -> element.getEditItemButton().setDisabled(true));
+        toggleEditItemButtonStatus(true);
+        collectionEditorPresenter.toggleAddItemButtonStatus(true);
     }
 
     @Override
@@ -69,6 +70,7 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         keyValueIds.forEach(id -> propertyPresenter.stopEditProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
         toggleEditItemButtonStatus(false);
+        collectionEditorPresenter.toggleAddItemButtonStatus(false);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         keyValueIds.forEach(id -> propertyPresenter.updateProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
         toggleEditItemButtonStatus(false);
+        collectionEditorPresenter.toggleAddItemButtonStatus(false);
     }
 
     @Override

@@ -32,7 +32,6 @@ import static org.mockito.Mockito.when;
 
 public abstract class ElementPresenterTest<E extends ElementView, T extends ElementView.Presenter<E>> extends AbstractCollectionEditorTest {
 
-
     protected final static String ELEMENT1_ID = "ELEMENT1_ID";
     protected final static String ELEMENT2_ID = "ELEMENT2_ID";
 
@@ -48,8 +47,6 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
 
     @Mock
     protected ButtonElement editItemButtonMock;
-
-
 
     protected void setup() {
         super.setup();
@@ -70,8 +67,8 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
         elementViewListLocal.add(elementView1Mock);
         elementViewListLocal.add(elementView2Mock);
         for (String el : Arrays.asList(ELEMENT1_ID, ELEMENT2_ID)) {
-            when(propertyPresenterMock.getProperties(eq(el +"#KEY"))).thenReturn(new HashMap<>());
-            when(propertyPresenterMock.getProperties(eq(el +"#VALUE"))).thenReturn(new HashMap<>());
+            when(propertyPresenterMock.getProperties(eq(el + "#KEY"))).thenReturn(new HashMap<>());
+            when(propertyPresenterMock.getProperties(eq(el + "#VALUE"))).thenReturn(new HashMap<>());
         }
     }
 
@@ -93,14 +90,28 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
         });
     }
 
+    @Test
+    public void toggleEditItemButtonStatusToDisableTrue() {
+        elementPresenter.toggleEditItemButtonStatus(true);
+        elementViewListLocal.forEach(elementViewMock -> {
+            verify(elementViewMock, times(1)).getEditItemButton();
+        });
+        verify(editItemButtonMock, times(2)).setDisabled(true);
+    }
+
+    @Test
+    public void toggleEditItemButtonStatusToDisableFalse() {
+        elementPresenter.toggleEditItemButtonStatus(false);
+        elementViewListLocal.forEach(elementViewMock -> {
+            verify(elementViewMock, times(1)).getEditItemButton();
+        });
+        verify(editItemButtonMock, times(2)).setDisabled(false);
+    }
+
     private void commonOnToggleRowExpansion(boolean isShown) {
         elementPresenter.onToggleRowExpansion(isShown);
         elementViewListLocal.forEach(elementViewMock -> {
             verify(elementPresenter, times(1)).onToggleRowExpansion(eq(elementViewMock), eq(isShown));
         });
     }
-
-
-
-
 }

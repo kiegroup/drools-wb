@@ -87,6 +87,7 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
                 this.elementViewList = elementViewListLocal;
+                this.collectionEditorPresenter = collectionPresenterMock;
             }
         });
     }
@@ -112,6 +113,8 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         verify(elementPresenter, never()).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(2)).editProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.INLINE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(true));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(true));
     }
 
     @Test
@@ -129,6 +132,8 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#key"));
         verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#value"));
         verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
     }
 
     @Test
@@ -145,5 +150,7 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         elementPresenter.updateItem(elementView1Mock);
         verify(propertyPresenterMock, times(2)).updateProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
     }
 }

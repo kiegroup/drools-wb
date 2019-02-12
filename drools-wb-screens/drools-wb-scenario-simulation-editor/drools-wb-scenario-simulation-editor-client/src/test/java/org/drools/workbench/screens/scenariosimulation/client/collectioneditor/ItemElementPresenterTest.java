@@ -62,6 +62,7 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
                 this.viewsProvider = viewsProviderMock;
                 this.propertyPresenter = propertyPresenterMock;
                 this.elementViewList = elementViewListLocal;
+                this.collectionEditorPresenter = collectionPresenterMock;
             }
         });
     }
@@ -86,6 +87,8 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
         verify(elementPresenter, never()).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(1)).editProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.INLINE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(true));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(true));
     }
 
     @Test
@@ -95,6 +98,8 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
         verify(elementPresenter, times(1)).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(1)).editProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.INLINE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(true));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(true));
     }
 
     @Test
@@ -103,6 +108,8 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
         verify(elementPresenter, never()).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID));
         verify(styleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
     }
 
     @Test
@@ -118,6 +125,8 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
         elementPresenter.updateItem(elementView1Mock);
         verify(propertyPresenterMock, times(1)).updateProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
+        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
     }
 
     @Test

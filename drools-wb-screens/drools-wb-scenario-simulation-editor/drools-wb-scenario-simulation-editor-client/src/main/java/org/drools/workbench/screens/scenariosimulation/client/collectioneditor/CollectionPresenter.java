@@ -107,7 +107,9 @@ public class CollectionPresenter implements CollectionView.Presenter {
             collectionView.getElementsContainer()
                     .appendChild(editingBox);
         }
-        collectionView.getAddItemButton().setDisabled(true);
+        toggleAddItemButtonStatus(true);
+        listElementPresenter.toggleEditItemButtonStatus(true);
+        mapElementPresenter.toggleEditItemButtonStatus(true);
     }
 
     @Override
@@ -127,6 +129,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         elementsContainer.appendChild(itemElement);
         toggleAddItemButtonStatus(false);
+        listElementPresenter.toggleEditItemButtonStatus(false);
     }
 
     @Override
@@ -136,6 +139,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
         elementsContainer.appendChild(itemElement);
         toggleAddItemButtonStatus(false);
+        mapElementPresenter.toggleEditItemButtonStatus(false);
     }
 
     @Override
