@@ -35,12 +35,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
-import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.convertDOMToGridCoordinate;
-import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getRelativeXOfEvent;
-import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getRelativeYOfEvent;
-import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getUiColumnIndex;
-import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.getUiRowIndex;
-
 @Dependent
 public class ScenarioContextMenuRegistry {
 
@@ -91,28 +85,50 @@ public class ScenarioContextMenuRegistry {
 
     public boolean manageRightClick(final ScenarioGrid scenarioGrid,
                                     final ContextMenuEvent event) {
-        final int canvasX = getRelativeXOfEvent(event);
-        final int canvasY = getRelativeYOfEvent(event);
-        final Point2D gridClickPoint = convertDOMToGridCoordinate(scenarioGrid,
-                                                                  new Point2D(canvasX,
-                                                                              canvasY));
-        final Integer uiColumnIndex = getUiColumnIndex(scenarioGrid,
-                                                       gridClickPoint.getX());
+
+        final int canvasX = CoordinateUtilities.getRelativeXOfEvent(event);
+        final int canvasY = CoordinateUtilities.getRelativeYOfEvent(event);
+        return manageRightClick(scenarioGrid,
+                                canvasX,
+                                canvasY);
+    }
+
+    public boolean manageRightClick(final ScenarioGrid scenarioGrid,
+                                    final int canvasX,
+                                    final int canvasY) {
+
+        final Point2D gridClickPoint = CoordinateUtilities.convertDOMToGridCoordinate(scenarioGrid,
+                                                                                      new Point2D(canvasX, canvasY));
+        Integer uiRowIndex = CoordinateUtilities.getUiHeaderRowIndex(scenarioGrid, gridClickPoint);
+        boolean isHeader = true;
+        if (uiRowIndex == null) {
+            uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, gridClickPoint.getY());
+            isHeader = false;
+        }
+        if (uiRowIndex == null) {
+            return false;
+        }
+
+        final Integer uiColumnIndex = CoordinateUtilities.getUiColumnIndex(scenarioGrid, gridClickPoint.getX());
         if (uiColumnIndex == null) {
             return false;
         }
-        if (!manageHeaderRightClick(scenarioGrid,
-                                    event.getNativeEvent().getClientX(),
-                                    event.getNativeEvent().getClientY(),
-                                    gridClickPoint,
-                                    uiColumnIndex)) {
-            return manageBodyRightClickLocal(scenarioGrid,
-                                             event.getNativeEvent().getClientX(),
-                                             event.getNativeEvent().getClientY(),
-                                             gridClickPoint.getY(),
-                                             uiColumnIndex);
+        ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex);
+        if (scenarioGridColumn == null) {
+            return false;
+        }
+        if (isHeader) {
+            return manageHeaderRightClick(scenarioGrid,
+                                          canvasX,
+                                          canvasY,
+                                          uiRowIndex,
+                                          uiColumnIndex);
         } else {
-            return true;
+            return manageBodyRightClickLocal(scenarioGrid,
+                                             canvasX,
+                                             canvasY,
+                                             uiRowIndex,
+                                             uiColumnIndex);
         }
     }
 
@@ -122,17 +138,16 @@ public class ScenarioContextMenuRegistry {
      * @param scenarioGrid
      * @param left
      * @param top
-     * @param gridY
+     * @param uiRowIndex
      * @param uiColumnIndex
      * @return
      */
     private boolean manageBodyRightClickLocal(final ScenarioGrid scenarioGrid,
                                               final int left,
                                               final int top,
-                                              final double gridY,
+                                              final Integer uiRowIndex,
                                               final Integer uiColumnIndex) {
 
-        final Integer uiRowIndex = getUiRowIndex(scenarioGrid, gridY);
         if (uiRowIndex == null) {
             return false;
         }
@@ -149,11 +164,11 @@ public class ScenarioContextMenuRegistry {
      * @param uiColumnIndex
      * @return
      */
-    public boolean manageScenarioBodyRightClick(final ScenarioGrid scenarioGrid,
-                                                final int left,
-                                                final int top,
-                                                final int uiRowIndex,
-                                                final int uiColumnIndex) {
+    private boolean manageScenarioBodyRightClick(final ScenarioGrid scenarioGrid,
+                                                 final int left,
+                                                 final int top,
+                                                 final int uiRowIndex,
+                                                 final int uiColumnIndex) {
         scenarioGrid.deselect();
         ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex);
         if (scenarioGridColumn == null) {
@@ -177,21 +192,23 @@ public class ScenarioContextMenuRegistry {
      * @param scenarioGrid
      * @param left
      * @param top
-     * @param clickPoint - coordinates relative to the grid top left corner
+     * @param uiHeaderRowIndex - coordinates relative to the grid top left corner
      * @param uiColumnIndex
      * @return
      */
     private boolean manageHeaderRightClick(final ScenarioGrid scenarioGrid,
                                            final int left,
                                            final int top,
-                                           final Point2D clickPoint,
+                                           final Integer uiHeaderRowIndex,
                                            final Integer uiColumnIndex) {
-        ScenarioHeaderMetaData columnMetadata = ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData(scenarioGrid, clickPoint);
+        final ScenarioGridColumn column = (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex);
+        if (column == null) {
+            return false;
+        }
+        ScenarioHeaderMetaData columnMetadata = ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData(column, uiHeaderRowIndex);
         if (columnMetadata == null) {
             return false;
         }
-        //Get row index
-        final Integer uiHeaderRowIndex = CoordinateUtilities.getUiHeaderRowIndex(scenarioGrid, clickPoint);
         if (uiHeaderRowIndex == null) {
             return false;
         }

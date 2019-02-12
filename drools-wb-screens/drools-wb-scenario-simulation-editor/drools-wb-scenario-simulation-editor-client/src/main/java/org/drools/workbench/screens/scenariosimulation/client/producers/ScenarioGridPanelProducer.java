@@ -23,6 +23,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -49,6 +50,9 @@ public class ScenarioGridPanelProducer {
     @Inject
     protected ViewsProvider viewsProvider;
 
+    @Inject
+    protected ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler;
+
     protected ScenarioSimulationContext scenarioSimulationContext;
 
     @PostConstruct
@@ -74,12 +78,20 @@ public class ScenarioGridPanelProducer {
                                                                                                                                  scenarioGridLayer.getScenarioGrid()));
     }
 
+    public ScenarioSimulationGridPanelClickHandler getScenarioSimulationGridPanelClickHandler() {
+        return scenarioSimulationGridPanelClickHandler;
+    }
+
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {
         return scenarioSimulationContext;
+    }
+
+    public ScenarioContextMenuRegistry getScenarioContextMenuRegistry() {
+        return scenarioContextMenuRegistry;
     }
 }
 

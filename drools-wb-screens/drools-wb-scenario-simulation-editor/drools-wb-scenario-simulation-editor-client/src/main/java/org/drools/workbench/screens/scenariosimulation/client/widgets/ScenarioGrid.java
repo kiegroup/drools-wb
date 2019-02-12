@@ -42,13 +42,10 @@ import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationS
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.util.CellContextUtilities;
 import org.uberfire.ext.wires.core.grids.client.util.ColumnIndexUtilities;
-import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
@@ -274,27 +271,6 @@ public class ScenarioGrid extends BaseGridWidget {
                                                    uiColumnIndex);
             }
         }
-    }
-
-    @Override
-    public boolean showContextMenuForCell(final int uiRowIndex, final int uiColumnIndex) {
-        final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
-        if (column instanceof ScenarioGridColumn) {
-            final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
-            final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
-            final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
-
-            final GridBodyCellEditContext context = CellContextUtilities.makeCellRenderContext(this,
-                                                                                               ri,
-                                                                                               ci,
-                                                                                               uiRowIndex);
-            return scenarioContextMenuRegistry.manageScenarioBodyRightClick(this,
-                                                                            (int) context.getAbsoluteCellX(),
-                                                                            (int) context.getAbsoluteCellY(),
-                                                                            uiRowIndex,
-                                                                            uiColumnIndex);
-        }
-        return false;
     }
 
     private void signalRightPanelHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,
