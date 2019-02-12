@@ -99,9 +99,11 @@ public interface CollectionView {
         void remove();
 
         /**
-         * Reenables addItem button
+         * Toggles the status of the addItem button
+         *
+         * @param toDisable
          */
-        void enableAddItemButton();
+        void toggleAddItemButtonStatus(boolean toDisable);
     }
 
     /**

@@ -21,7 +21,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.google.gwt.dom.client.ButtonElement;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
@@ -44,10 +46,15 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
     protected E elementView1Mock;
     protected E elementView2Mock;
 
+    @Mock
+    protected ButtonElement editItemButtonMock;
+
 
 
     protected void setup() {
         super.setup();
+        when(elementView1Mock.getEditItemButton()).thenReturn(editItemButtonMock);
+        when(elementView2Mock.getEditItemButton()).thenReturn(editItemButtonMock);
         when(elementView1Mock.getItemId()).thenReturn(ELEMENT1_ID);
         when(elementView2Mock.getItemId()).thenReturn(ELEMENT2_ID);
         when(elementView1Mock.getItemSeparator()).thenReturn(itemSeparatorMock);
@@ -92,6 +99,8 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
             verify(elementPresenter, times(1)).onToggleRowExpansion(eq(elementViewMock), eq(isShown));
         });
     }
+
+
 
 
 }

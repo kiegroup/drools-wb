@@ -99,11 +99,13 @@ public class CollectionPresenter implements CollectionView.Presenter {
     public void showEditingBox() {
         String key = collectionView.getEditorTitle().getInnerText();
         if (collectionView.isListWidget()) {
+            LIElement editingBox = listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key));
             collectionView.getElementsContainer()
-                    .appendChild(listEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key)));
+                    .appendChild(editingBox);
         } else {
+            LIElement editingBox = mapEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key + "#key"), instancePropertiesMap.get(key + "#value"));
             collectionView.getElementsContainer()
-                    .appendChild(mapEditingBoxPresenter.getEditingBox(key, instancePropertiesMap.get(key + "#key"), instancePropertiesMap.get(key + "#value")));
+                    .appendChild(editingBox);
         }
         collectionView.getAddItemButton().setDisabled(true);
     }
@@ -124,7 +126,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         elementsContainer.appendChild(itemElement);
-        enableAddItemButton();
+        toggleAddItemButtonStatus(false);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
         elementsContainer.appendChild(itemElement);
-        enableAddItemButton();
+        toggleAddItemButtonStatus(false);
     }
 
     @Override
@@ -162,8 +164,8 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
-    public void enableAddItemButton() {
-        collectionView.getAddItemButton().setDisabled(false);
+    public void toggleAddItemButtonStatus(boolean toDisable) {
+        collectionView.getAddItemButton().setDisabled(toDisable);
     }
 
     protected void commonInit(String key, CollectionView collectionView) {
