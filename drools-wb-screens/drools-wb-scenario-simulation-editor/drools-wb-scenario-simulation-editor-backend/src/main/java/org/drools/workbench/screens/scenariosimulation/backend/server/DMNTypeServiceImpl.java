@@ -85,17 +85,12 @@ public class DMNTypeServiceImpl
         return DMNSimulationUtils.extractDMNRuntime(kieContainer);
     }
 
-<<<<<<< HEAD
-    private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType) {
-        Map<String, String> simpleFields = new HashMap<>();
-=======
-    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
+    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType) {
         return createFactModelTree(name, path, type, hiddenFacts, fmType, false);
     }
 
-    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, boolean collectionRecursion) {
+    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType, boolean collectionRecursion) {
         // a simple type
->>>>>>> origin/master
         if (!type.isComposite()) {
             // if is not a collection or a recursion just retur a simple fact
             if (!type.isCollection() || collectionRecursion) {
@@ -124,7 +119,7 @@ public class DMNTypeServiceImpl
             if (entry.getValue().isCollection()) {
                 String genericKey = populateGeneric(simpleFields, genericTypeInfoMap, path, entry.getValue().getName(), entry.getKey());
 
-                FactModelTree fact = createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, true);
+                FactModelTree fact = createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.FactModelType.UNDEFINED, true);
                 hiddenFacts.put(genericKey, fact);
             }
             // a simple type is just name -> type
@@ -140,7 +135,7 @@ public class DMNTypeServiceImpl
         return factModelTree;
     }
 
-    private FactModelTree createSimpleFact(String name, String type, FactModelTree.Type fmType) {
+    private FactModelTree createSimpleFact(String name, String type, FactModelTree.FactModelType fmType) {
         Map<String, String> simpleFields = new HashMap<>();
         Map<String, List<String>> genericTypeInfoMap = new HashMap<>();
         FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
