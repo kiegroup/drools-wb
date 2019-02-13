@@ -113,17 +113,16 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         verify(elementPresenter, never()).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(2)).editProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.INLINE);
-        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(true));
-        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(true));
+        verify(collectionPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
 
     @Test
     public void onEditItemNotShown() {
         doReturn(false).when(elementView1Mock).isShown();
         elementPresenter.onEditItem(elementView1Mock);
-        verify(elementPresenter, times(1)).onToggleRowExpansion(eq(elementView1Mock), eq((false)));
         verify(propertyPresenterMock, times(2)).editProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.INLINE);
+        verify(collectionPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
 
     @Test
@@ -132,8 +131,7 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#key"));
         verify(propertyPresenterMock, times(1)).stopEditProperties(eq(ELEMENT1_ID + "#value"));
         verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
-        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
-        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }
 
     @Test
@@ -143,6 +141,7 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         verify(propertyPresenterMock, times(1)).deleteProperties(eq(ELEMENT1_ID + "#value"));
         verify(itemContainerMock, times(1)).removeFromParent();
         assertFalse(elementViewListLocal.contains(elementView1Mock));
+        verify(collectionPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }
 
     @Test
@@ -150,7 +149,6 @@ public class KeyValueElementPresenterTest extends ElementPresenterTest<KeyValueE
         elementPresenter.updateItem(elementView1Mock);
         verify(propertyPresenterMock, times(2)).updateProperties(anyString());
         verify(styleMock, times(1)).setDisplay(Style.Display.NONE);
-        verify(elementPresenter, times(1)).toggleEditItemButtonStatus(eq(false));
-        verify(collectionPresenterMock, times(1)).toggleAddItemButtonStatus(eq(false));
+        verify(collectionPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }
 }

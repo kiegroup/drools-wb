@@ -54,8 +54,11 @@ public abstract class ElementPresenter<E extends ElementView> implements Element
     }
 
     @Override
-    public void toggleEditItemButtonStatus(boolean toDisable) {
-        elementViewList.forEach(element -> element.getEditItemButton().setDisabled(toDisable));
+    public void toggleEditingStatus(boolean toDisable) {
+        elementViewList.forEach(element -> {
+            element.getEditItemButton().setDisabled(toDisable);
+            element.getDeleteItemButton().setDisabled(toDisable);
+        });
     }
 
 

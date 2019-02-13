@@ -51,24 +51,21 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
         }
         propertyPresenter.editProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.INLINE);
-        toggleEditItemButtonStatus(true);
-        collectionEditorPresenter.toggleAddItemButtonStatus(true);
+        collectionEditorPresenter.toggleEditingStatus(true);
     }
 
     @Override
     public void onStopEditingItem(ItemElementView itemElementView) {
         propertyPresenter.stopEditProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
-        toggleEditItemButtonStatus(false);
-        collectionEditorPresenter.toggleAddItemButtonStatus(false);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override
     public void updateItem(ItemElementView itemElementView) {
         propertyPresenter.updateProperties(itemElementView.getItemId());
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
-        toggleEditItemButtonStatus(false);
-        collectionEditorPresenter.toggleAddItemButtonStatus(false);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override
@@ -76,6 +73,7 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
         propertyPresenter.deleteProperties(itemElementView.getItemId());
         itemElementView.getItemContainer().removeFromParent();
         elementViewList.remove(itemElementView);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override

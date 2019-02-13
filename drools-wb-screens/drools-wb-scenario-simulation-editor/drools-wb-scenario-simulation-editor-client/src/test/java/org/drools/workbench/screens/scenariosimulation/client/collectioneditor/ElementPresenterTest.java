@@ -47,11 +47,15 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
 
     @Mock
     protected ButtonElement editItemButtonMock;
+    @Mock
+    protected ButtonElement deleteItemButtonMock;
 
     protected void setup() {
         super.setup();
         when(elementView1Mock.getEditItemButton()).thenReturn(editItemButtonMock);
         when(elementView2Mock.getEditItemButton()).thenReturn(editItemButtonMock);
+        when(elementView1Mock.getDeleteItemButton()).thenReturn(deleteItemButtonMock);
+        when(elementView2Mock.getDeleteItemButton()).thenReturn(deleteItemButtonMock);
         when(elementView1Mock.getItemId()).thenReturn(ELEMENT1_ID);
         when(elementView2Mock.getItemId()).thenReturn(ELEMENT2_ID);
         when(elementView1Mock.getItemSeparator()).thenReturn(itemSeparatorMock);
@@ -92,20 +96,24 @@ public abstract class ElementPresenterTest<E extends ElementView, T extends Elem
 
     @Test
     public void toggleEditItemButtonStatusToDisableTrue() {
-        elementPresenter.toggleEditItemButtonStatus(true);
+        elementPresenter.toggleEditingStatus(true);
         elementViewListLocal.forEach(elementViewMock -> {
             verify(elementViewMock, times(1)).getEditItemButton();
+            verify(elementViewMock, times(1)).getDeleteItemButton();
         });
         verify(editItemButtonMock, times(2)).setDisabled(true);
+        verify(deleteItemButtonMock, times(2)).setDisabled(true);
     }
 
     @Test
     public void toggleEditItemButtonStatusToDisableFalse() {
-        elementPresenter.toggleEditItemButtonStatus(false);
+        elementPresenter.toggleEditingStatus(false);
         elementViewListLocal.forEach(elementViewMock -> {
             verify(elementViewMock, times(1)).getEditItemButton();
+            verify(elementViewMock, times(1)).getDeleteItemButton();
         });
         verify(editItemButtonMock, times(2)).setDisabled(false);
+        verify(deleteItemButtonMock, times(2)).setDisabled(false);
     }
 
     private void commonOnToggleRowExpansion(boolean isShown) {

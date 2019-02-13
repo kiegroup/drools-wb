@@ -107,9 +107,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             collectionView.getElementsContainer()
                     .appendChild(editingBox);
         }
-        toggleAddItemButtonStatus(true);
-        listElementPresenter.toggleEditItemButtonStatus(true);
-        mapElementPresenter.toggleEditItemButtonStatus(true);
+        toggleEditingStatus(true);
     }
 
     @Override
@@ -128,8 +126,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = listElementPresenter.getItemContainer(itemId, propertiesValues);
         elementsContainer.appendChild(itemElement);
-        toggleAddItemButtonStatus(false);
-        listElementPresenter.toggleEditItemButtonStatus(false);
+        toggleEditingStatus(false);
     }
 
     @Override
@@ -138,8 +135,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
         final LIElement itemElement = mapElementPresenter.getKeyValueContainer(itemId, keyPropertiesValues, valuePropertiesValues);
         elementsContainer.appendChild(itemElement);
-        toggleAddItemButtonStatus(false);
-        mapElementPresenter.toggleEditItemButtonStatus(false);
+        toggleEditingStatus(false);
     }
 
     @Override
@@ -168,8 +164,10 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
-    public void toggleAddItemButtonStatus(boolean toDisable) {
+    public void toggleEditingStatus(boolean toDisable) {
         collectionView.getAddItemButton().setDisabled(toDisable);
+        mapElementPresenter.toggleEditingStatus(toDisable);
+        listElementPresenter.toggleEditingStatus(toDisable);
     }
 
     protected void commonInit(String key, CollectionView collectionView) {

@@ -67,10 +67,12 @@ public interface ElementView<T extends ElementView.Presenter> extends HasPresent
          */
         void remove();
 
-        void toggleEditItemButtonStatus(boolean toDisable);
+        void toggleEditingStatus(boolean toDisable);
     }
 
     ButtonElement getEditItemButton();
+
+    ButtonElement getDeleteItemButton();
 
     boolean isShown();
 

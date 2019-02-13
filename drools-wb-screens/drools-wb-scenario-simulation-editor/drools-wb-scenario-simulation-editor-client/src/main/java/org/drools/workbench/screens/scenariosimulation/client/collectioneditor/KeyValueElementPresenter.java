@@ -60,8 +60,8 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
         keyValueIds.forEach(id -> propertyPresenter.editProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.INLINE);
-        toggleEditItemButtonStatus(true);
-        collectionEditorPresenter.toggleAddItemButtonStatus(true);
+        toggleEditingStatus(true);
+        collectionEditorPresenter.toggleEditingStatus(true);
     }
 
     @Override
@@ -69,8 +69,8 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
         keyValueIds.forEach(id -> propertyPresenter.stopEditProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
-        toggleEditItemButtonStatus(false);
-        collectionEditorPresenter.toggleAddItemButtonStatus(false);
+        toggleEditingStatus(false);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override
@@ -79,6 +79,8 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         keyValueIds.forEach(id -> propertyPresenter.deleteProperties(id));
         keyValueElementView.getItemContainer().removeFromParent();
         elementViewList.remove(keyValueElementView);
+        toggleEditingStatus(false);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override
@@ -86,8 +88,8 @@ public class KeyValueElementPresenter extends ElementPresenter<KeyValueElementVi
         List<String> keyValueIds = getKeyValueIds( keyValueElementView.getItemId());
         keyValueIds.forEach(id -> propertyPresenter.updateProperties(id));
         keyValueElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
-        toggleEditItemButtonStatus(false);
-        collectionEditorPresenter.toggleAddItemButtonStatus(false);
+        toggleEditingStatus(false);
+        collectionEditorPresenter.toggleEditingStatus(false);
     }
 
     @Override

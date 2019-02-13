@@ -103,7 +103,7 @@ public interface CollectionView {
          *
          * @param toDisable
          */
-        void toggleAddItemButtonStatus(boolean toDisable);
+        void toggleEditingStatus(boolean toDisable);
     }
 
     /**

@@ -104,6 +104,11 @@ public abstract class ElementViewImpl<T extends ElementView.Presenter> implement
     public ButtonElement getEditItemButton() { return editItemButton; }
 
     @Override
+    public ButtonElement getDeleteItemButton() {
+        return deleteItemButton;
+    }
+
+    @Override
     public boolean isShown() {
         return CollectionEditorUtils.isShown(faAngleRight);
     }
