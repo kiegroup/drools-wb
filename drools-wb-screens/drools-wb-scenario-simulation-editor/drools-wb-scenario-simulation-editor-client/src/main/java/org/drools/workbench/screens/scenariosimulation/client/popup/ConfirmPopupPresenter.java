@@ -13,25 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import java.util.List;
-import java.util.stream.Collectors;
+package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import com.ait.lienzo.client.core.shape.Group;
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
-public class ScenarioMenu extends Group {
+@Dependent
+public class ConfirmPopupPresenter implements ConfirmPopup.Presenter {
 
-    private List<ScenarioMenuItem> items;
+    @Inject
+    protected ConfirmPopup confirmPopupView;
 
-    public ScenarioMenu() {
-        this.items = getMenuItems();
+    @Override
+    public void show(String mainTitleText, String mainText) {
+        confirmPopupView.show(mainTitleText, mainText);
     }
 
-    private List<ScenarioMenuItem> getMenuItems() {
-        return asList("One", "Two", "Three")
-                .stream()
-                .map(ScenarioMenuItem::new)
-                .collect(Collectors.toList());
+    @Override
+    public void hide() {
+        confirmPopupView.hide();
     }
 }

@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,7 +28,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
+import junit.framework.TestCase;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.jgroups.util.Util;
 import org.junit.Before;
@@ -41,6 +42,7 @@ import org.uberfire.client.callbacks.Callback;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.kie.soup.project.datamodel.oracle.ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS;
@@ -49,6 +51,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -57,7 +60,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
+public class DMODataManagementStrategyTest extends AbstractDataManagementStrategyTest {
 
     private DMODataManagementStrategy dmoDataManagementStrategy;
 
@@ -72,26 +75,30 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
     public void setup() {
         super.setup();
         when(oracleMock.getFQCNByFactName(FACT_NAME)).thenReturn(FULL_FACT_CLASSNAME);
-        when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, model, content.getDataModel())).thenReturn(oracleMock);
-        this.dmoDataManagementStrategy = spy(new DMODataManagementStrategy(oracleFactoryMock) {
+        when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, modelLocal, content.getDataModel())).thenReturn(oracleMock);
+        this.dmoDataManagementStrategy = spy(new DMODataManagementStrategy(oracleFactoryMock, scenarioSimulationContextLocal) {
             {
                 this.oracle = oracleMock;
             }
         });
+        abstractDataManagementStrategySpy = dmoDataManagementStrategy;
     }
 
     @Test
     public void populateRightPanel() {
+        Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
+        doReturn(alreadyAssignedProperties).when(dmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
         String[] emptyFactTypes = {};
         when(oracleMock.getFactTypes()).thenReturn(emptyFactTypes);
         dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmoDataManagementStrategy, never()).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
+        verify(dmoDataManagementStrategy, never()).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(alreadyAssignedProperties), eq(scenarioGridModelMock));
         verify(oracleMock, never()).getFieldCompletions(anyString(), any(Callback.class));
         //
         String[] notEmptyFactTypes = getRandomStringArray();
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
         dmoDataManagementStrategy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmoDataManagementStrategy, times(1)).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock));
+        verify(dmoDataManagementStrategy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
+        verify(dmoDataManagementStrategy, times(1)).aggregatorCallback(eq(rightPanelPresenterMock), anyInt(), any(SortedMap.class), eq(alreadyAssignedProperties), eq(scenarioGridModelMock));
         for (String factType : notEmptyFactTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
         }
@@ -101,6 +108,15 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
     public void manageScenarioSimulationModelContent() {
         dmoDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, content);
         assertEquals(dmoDataManagementStrategy.oracle, oracleMock);
+    }
+
+    @Test
+    public void isADataType() {
+        when(oracleMock.getFactTypes()).thenReturn(new String[]{});
+        commonIsADataType("TEST", false);
+        when(oracleMock.getFactTypes()).thenReturn(new String[]{"TEST"});
+        commonIsADataType("TOAST", false);
+        commonIsADataType("TEST", true);
     }
 
     @Test
@@ -130,7 +146,7 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
         final Set<String> keys = simpleProperties.keySet();
         final Collection<String> values = simpleProperties.values();
         SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
-        dmoDataManagementStrategy.populateFactModelTree(toPopulate, factTypeFieldsMap);
+        dmoDataManagementStrategy.populateFactModelTree(toPopulate, factTypeFieldsMap, new HashMap<>());
         keys.forEach(key -> {
             final String value = simpleProperties.get(key);
             final String factName = factTypeFieldsMap.get(value).getFactName();
@@ -161,14 +177,48 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
     }
 
     @Test
-    public void  getInstanceMap() {
+    public void getInstanceMap() {
         FactModelTree toPopulate = getFactModelTreeInner(randomAlphabetic(3));
         final Map<String, String> simpleProperties = toPopulate.getSimpleProperties();
         final Collection<String> values = simpleProperties.values();
         SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
-        SortedMap<String, FactModelTree> retrieved  = dmoDataManagementStrategy.getInstanceMap(factTypeFieldsMap);
+        SortedMap<String, FactModelTree> retrieved = dmoDataManagementStrategy.getInstanceMap(factTypeFieldsMap);
         assertNotNull(retrieved);
     }
+
+    @Test
+    public void populateGenericTypeMap() {
+        commonPopulateGenericTypeMap(true);
+        commonPopulateGenericTypeMap(false);
+    }
+
+    private void commonIsADataType(String value, boolean expected) {
+        boolean retrieved = dmoDataManagementStrategy.isADataType(value);
+        if (expected) {
+            TestCase.assertTrue(retrieved);
+        } else {
+            assertFalse(retrieved);
+        }
+    }
+
+    private void commonPopulateGenericTypeMap(boolean isList) {
+        Map<String, List<String>> toPopulate = new HashMap<>();
+        String factName = "FACT_NAME";
+        String propertyName = "PROPERTY_NAME";
+        String factType = "Book";
+        String fullFactType = "com." + factType;
+        when(oracleMock.getParametricFieldType(factName, propertyName)).thenReturn(factType);
+        when(oracleMock.getFQCNByFactName(factType)).thenReturn(fullFactType);
+        dmoDataManagementStrategy.populateGenericTypeMap(toPopulate, factName, propertyName, isList);
+        assertTrue(toPopulate.containsKey(propertyName));
+        final List<String> retrieved = toPopulate.get(propertyName);
+        if (!isList) {
+            assertEquals(String.class.getName(), retrieved.get(0));
+        }
+        assertEquals(fullFactType, retrieved.get(retrieved.size()-1));
+
+    }
+
 
     private ModelField[] getModelFieldsInner(Map<String, String> simpleProperties) {
         List<ModelField> toReturn = new ArrayList<>();
@@ -187,7 +237,7 @@ public class DMODataManagementStrategyTest extends AbstractScenarioSimulationEdi
     }
 
     private FactModelTree getFactModelTreeInner(String factName) {
-        return new FactModelTree(factName, SCENARIO_PACKAGE, getSimplePropertiesInner());
+        return new FactModelTree(factName, SCENARIO_PACKAGE, getSimplePropertiesInner(), new HashMap<>());
     }
 
     private SortedMap<String, FactModelTree> getFactTypeFieldsMapInner(Collection<String> keys) {

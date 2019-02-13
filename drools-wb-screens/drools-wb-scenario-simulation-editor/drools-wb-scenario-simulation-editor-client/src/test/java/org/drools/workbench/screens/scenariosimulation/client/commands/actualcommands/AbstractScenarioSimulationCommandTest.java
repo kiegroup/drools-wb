@@ -19,21 +19,18 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
-
-    @Mock
-    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
 
     @Mock
     protected RightPanelPresenter rightPanelPresenterMock;
@@ -53,16 +50,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void undoOnUndoable() {
         if (command.isUndoable()) {
-            command.restorableStatus = scenarioSimulationContext.getStatus();
-            command.undo(scenarioSimulationContext);
-            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+            command.restorableStatus = scenarioSimulationContextLocal.getStatus();
+            command.undo(scenarioSimulationContextLocal);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
         }
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void undoOnNotUndoable() {
         if (!command.isUndoable()) {
-            command.undo(scenarioSimulationContext);
+            command.undo(scenarioSimulationContextLocal);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -71,16 +68,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void redoOnRedoable() {
         if (command.isUndoable()) {
-            command.restorableStatus = scenarioSimulationContext.getStatus();
-            command.redo(scenarioSimulationContext);
-            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContext));
+            command.restorableStatus = scenarioSimulationContextLocal.getStatus();
+            command.redo(scenarioSimulationContextLocal);
+            verify(command, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
         }
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void redoOnNotUndoable() {
         if (!command.isUndoable()) {
-            command.redo(scenarioSimulationContext);
+            command.redo(scenarioSimulationContextLocal);
         } else {
             throw new UnsupportedOperationException();
         }
@@ -88,20 +85,25 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     @Test
     public void execute() {
-        final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
-        command.execute(scenarioSimulationContext);
-        verify(command, times(1)).internalExecute(eq(scenarioSimulationContext));
-        assertNotEquals(status, command.restorableStatus);
+        final ScenarioSimulationContext.Status status = scenarioSimulationContextLocal.getStatus();
+        command.execute(scenarioSimulationContextLocal);
+        try {
+            verify(command, times(1)).internalExecute(eq(scenarioSimulationContextLocal));
+            assertNotEquals(status, command.restorableStatus);
+        } catch(Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void setCurrentContext() {
         if (command.isUndoable()) {
-            final ScenarioSimulationContext.Status status = scenarioSimulationContext.getStatus();
+            final ScenarioSimulationContext.Status status = scenarioSimulationContextLocal.getStatus();
             command.restorableStatus = status;
-            command.setCurrentContext(scenarioSimulationContext);
+            command.setCurrentContext(scenarioSimulationContextLocal);
             verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
             verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
+            verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
             assertNotEquals(status, command.restorableStatus);
         }
     }
@@ -109,7 +111,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void commonExecution() {
         if (command.isUndoable()) {
-            command.commonExecution(scenarioSimulationContext);
+            command.commonExecution(scenarioSimulationContextLocal);
             verify(scenarioGridPanelMock, times(1)).onResize();
             verify(scenarioGridPanelMock, times(1)).select();
         }

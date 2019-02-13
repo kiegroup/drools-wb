@@ -22,7 +22,6 @@ import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSi
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
@@ -81,13 +80,12 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     protected RightPanelPresenter rightPanelPresenterMock;
     @Mock
     protected AsyncPackageDataModelOracleFactory oracleFactoryMock;
-    @Mock
-    protected ScenarioGridModel scenarioGridModelMock;
 
     protected ScenarioSimulationModelContent content;
-    protected ScenarioSimulationModel model;
+    protected ScenarioSimulationModel modelLocal;
 
     public void setup() {
+        super.setup();
         // Mock FileMenuBuilder usage since we cannot use FileMenuBuilderImpl either
         when(fileMenuBuilderMock.addSave(any(MenuItem.class))).thenReturn(fileMenuBuilderMock);
         when(fileMenuBuilderMock.addCopy(any(ObservablePath.class), any(DefaultFileNameValidator.class))).thenReturn(fileMenuBuilderMock);
@@ -100,9 +98,9 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(workbenchContextMock.getActiveWorkspaceProject()).thenReturn(Optional.empty());
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
-        this.model = new ScenarioSimulationModel();
-        model.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, "default"));
-        this.content = new ScenarioSimulationModelContent(model,
+        this.modelLocal = new ScenarioSimulationModel();
+        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, "default"));
+        this.content = new ScenarioSimulationModelContent(modelLocal,
                                                           overviewMock,
                                                           mock(PackageDataModelOracleBaselinePayload.class));
         when(scenarioSimulationServiceMock.loadContent(observablePathMock)).thenReturn(content);

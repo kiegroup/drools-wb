@@ -63,7 +63,10 @@ public class DeletePopupViewTest extends ScenarioConfirmationPopupViewTest {
                                            TEXT_DANGER_TEXT,
                                            OKDELETE_BUTTON_TEXT,
                                            okDeleteCommandMock);
-        verifyShow();
+        verifyShow(MAIN_TITLE_TEXT,
+                   MAIN_QUESTION_TEXT,
+                   TEXT1_TEXT,
+                   TEXT_QUESTION_TEXT);
         verify(textDangerMock, times(1)).setInnerText(eq(TEXT_DANGER_TEXT));
     }
 

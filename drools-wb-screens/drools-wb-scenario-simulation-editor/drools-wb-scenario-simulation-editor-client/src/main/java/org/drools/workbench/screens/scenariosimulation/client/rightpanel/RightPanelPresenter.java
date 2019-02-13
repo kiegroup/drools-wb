@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -64,7 +65,7 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
 
     protected Map<String, FactModelTree> simpleJavaInstanceFieldsMap = new TreeMap<>();
 
-    protected Map<String, FactModelTree> hiddenFieldsMap;
+    protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
 
     protected EventBus eventBus;
 
@@ -375,6 +376,15 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
             return !terms.contains(key);
         } else {
             return terms.contains(key);
+        }
+    }
+
+    public void initCheatSheet(ScenarioSimulationModel.Type type) {
+        if (type.equals(ScenarioSimulationModel.Type.RULE)) {
+            view.setRuleCheatSheetContent();
+        }
+        if (type.equals(ScenarioSimulationModel.Type.DMN)) {
+            view.setDMNCheatSheetContent();
         }
     }
 }
