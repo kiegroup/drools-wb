@@ -447,8 +447,6 @@ public class ScenarioSimulationEditorPresenter
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
             final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
-            GWT.log("rightPanelActivity " + rightPanelActivity.hashCode());
-            GWT.log("rightPanelActivity.getWidget " + rightPanelActivity.getWidget().hashCode());
             return Optional.of((RightPanelView) rightPanelActivity.getWidget());
         } else {
             return Optional.empty();
