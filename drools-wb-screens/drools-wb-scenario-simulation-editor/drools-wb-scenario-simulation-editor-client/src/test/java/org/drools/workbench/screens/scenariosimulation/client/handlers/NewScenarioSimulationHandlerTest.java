@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -25,7 +26,6 @@ import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.screens.library.client.screens.assets.AssetQueryService;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.mockito.ArgumentCaptor;
@@ -74,8 +74,6 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     private AuthorizationManager authorizationManagerMock;
     @Mock
     private SessionInfo sessionInfoMock;
-    @Mock
-    private AssetQueryService assetQueryServiceMock;
 
     @Mock
     private User userMock;
@@ -89,12 +87,17 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     @Mock
     private SourceTypeSelector sourceTypeSelectorMock;
 
+    @Mock
+    private PopupPanel loadingPopupMock;
+
+
     private NewScenarioSimulationHandler handler;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationServiceCallerMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() throws Exception {
+        super.setup();
         scenarioSimulationServiceCallerMock = new CallerMock<>(scenarioSimulationServiceMock);
         handler = spy(new NewScenarioSimulationHandler(resourceTypeMock,
                                                        busyIndicatorViewMock,
@@ -109,6 +112,12 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
             {
                 this.uploadWidget = uploadWidgetMock;
                 this.sourceTypeSelector = sourceTypeSelectorMock;
+                this.loadingPopup = loadingPopupMock;
+            }
+
+            @Override
+            protected PopupPanel getPopupPanel() {
+                return loadingPopupMock;
             }
         });
         when(sessionInfoMock.getIdentity()).thenReturn(userMock);
@@ -156,6 +165,7 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
                        mock(NewResourcePresenter.class));
 
         verify(busyIndicatorViewMock).showBusyIndicator("Saving");
+        verify(loadingPopupMock, times(1)).center();
         verify(busyIndicatorViewMock).hideBusyIndicator();
         verify(notificationEventMock).fire(any(NotificationEvent.class));
         verify(newResourceSuccessEventMock).fire(any(NewResourcePresenter.class));

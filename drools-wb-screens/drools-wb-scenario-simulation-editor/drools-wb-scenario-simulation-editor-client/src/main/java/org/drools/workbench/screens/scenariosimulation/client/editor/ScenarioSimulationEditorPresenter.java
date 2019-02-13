@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.PopupPanel;
 import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
@@ -33,6 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.NewScenarioSimulationHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
@@ -121,6 +123,8 @@ public class ScenarioSimulationEditorPresenter
 
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
+    private PopupPanel loadingPopup;
+
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
     }
@@ -134,7 +138,8 @@ public class ScenarioSimulationEditorPresenter
                                              final PlaceManager placeManager,
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
-                                             final Caller<DMNTypeService> dmnTypeService) {
+                                             final Caller<DMNTypeService> dmnTypeService,
+                                             final NewScenarioSimulationHandler newScenarioSimulationHandler) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -152,6 +157,7 @@ public class ScenarioSimulationEditorPresenter
         view.init(this);
         populateRightPanelCommand = getPopulateRightPanelCommand();
         scenarioGridPanel.select();
+        this.loadingPopup = newScenarioSimulationHandler.getLoadingPopup();
     }
 
     @OnStartup
@@ -430,6 +436,7 @@ public class ScenarioSimulationEditorPresenter
         view.setContent(model.getSimulation());
         context.getStatus().setSimulation(model.getSimulation());
         setOriginalHash(getJsonModel(model).hashCode());
+        loadingPopup.hide(true);
     }
 
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {

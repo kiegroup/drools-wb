@@ -25,4 +25,7 @@ public interface ScenarioSimulationEditorImageResources
 
     @Source("BPM_FileIcons_ScenarioSimulation.png")
     ImageResource typeScenarioSimulation();
+
+    @Source("loading.gif")
+    ImageResource loading();
 }

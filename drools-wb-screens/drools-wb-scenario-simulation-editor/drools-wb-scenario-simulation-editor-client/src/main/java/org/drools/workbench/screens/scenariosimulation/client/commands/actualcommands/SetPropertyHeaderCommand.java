@@ -57,7 +57,7 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
         setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), title, false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
         selectedColumn.setPropertyAssigned(true);
         String propertyClass = context.getStatus().getValueClassName();
-        String propertyName = title; // TODO GC CHECK
+        String propertyName = title;
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 value,
