@@ -61,8 +61,6 @@ public class NewScenarioSimulationHandler
 
     protected SourceTypeSelector sourceTypeSelector;
 
-//    protected CustomBusyPopup loadingPopup;
-
     private Caller<ScenarioSimulationService> scenarioSimulationService;
 
     private ScenarioSimulationResourceType resourceType;
@@ -160,10 +158,6 @@ public class NewScenarioSimulationHandler
         extensions.add(Pair.newPair(ScenarioSimulationEditorConstants.INSTANCE.sourceType(), sourceTypeSelector));
         extensions.add(Pair.newPair("", uploadWidget));
     }
-
-//    public PopupPanel getLoadingPopup() {
-//        return loadingPopup;
-//    }
 
     protected void getCommandMethod(NewResourcePresenter newResourcePresenter) {
         uploadWidget.clearStatus();
