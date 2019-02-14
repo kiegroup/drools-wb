@@ -23,8 +23,8 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.PopupPanel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.resources.ScenarioSimulationEditorResources;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -61,7 +61,7 @@ public class NewScenarioSimulationHandler
 
     protected SourceTypeSelector sourceTypeSelector;
 
-    protected PopupPanel loadingPopup;
+//    protected CustomBusyPopup loadingPopup;
 
     private Caller<ScenarioSimulationService> scenarioSimulationService;
 
@@ -94,7 +94,6 @@ public class NewScenarioSimulationHandler
         this.notificationEvent = notificationEvent;
         this.libraryPlaces = libraryPlaces;
         this.assetQueryService = assetQueryService;
-        this.loadingPopup = getPopupPanel();
     }
 
     @Override
@@ -143,9 +142,9 @@ public class NewScenarioSimulationHandler
                 value = "default";
         }
         busyIndicatorView.showBusyIndicator(CommonConstants.INSTANCE.Saving());
-        loadingPopup.center();
+        CustomBusyPopup.showMessage(CommonConstants.INSTANCE.Saving());
         scenarioSimulationService.call(getSuccessCallback(presenter),
-                                       new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(busyIndicatorView, loadingPopup)).create(pkg.getPackageTestResourcesPath(),
+                                       new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(busyIndicatorView)).create(pkg.getPackageTestResourcesPath(),
                                                                                                                          buildFileName(baseFileName,
                                                                                                                          resourceType),
                                                                                                                          new ScenarioSimulationModel(),
@@ -162,21 +161,14 @@ public class NewScenarioSimulationHandler
         extensions.add(Pair.newPair("", uploadWidget));
     }
 
-    public PopupPanel getLoadingPopup() {
-        return loadingPopup;
-    }
+//    public PopupPanel getLoadingPopup() {
+//        return loadingPopup;
+//    }
 
     protected void getCommandMethod(NewResourcePresenter newResourcePresenter) {
         uploadWidget.clearStatus();
         newResourcePresenter.show(NewScenarioSimulationHandler.this);
     }
 
-    // Indirection add for test
-    protected PopupPanel getPopupPanel() {
-        PopupPanel toReturn = new PopupPanel(false, true);
-        toReturn.setWidget(new Image(ScenarioSimulationEditorResources.INSTANCE.images().loading()));
-        toReturn.setGlassEnabled(true);
-        return toReturn;
-    }
 
 }

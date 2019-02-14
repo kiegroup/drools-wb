@@ -16,14 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -34,18 +32,14 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationHasBusyIndicatorDefaultErrorCallbackTest extends AbstractScenarioSimulationEditorTest {
 
-    @Mock
-    private PopupPanel loadingPopupMock;
-
     private ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 
     @Before
     public void setup() {
         super.setup();
-        scenarioSimulationHasBusyIndicatorDefaultErrorCallback = spy(new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationViewMock, loadingPopupMock) {
+        scenarioSimulationHasBusyIndicatorDefaultErrorCallback = spy(new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationViewMock) {
             {
                 this.view = scenarioSimulationViewMock;
-                this.loadingPopup = loadingPopupMock;
             }
 
             @Override
@@ -60,14 +54,12 @@ public class ScenarioSimulationHasBusyIndicatorDefaultErrorCallbackTest extends 
         Message messageMock = mock(Message.class);
         Throwable throwableMock = mock(Throwable.class);
         scenarioSimulationHasBusyIndicatorDefaultErrorCallback.error(messageMock, throwableMock);
-        verify(loadingPopupMock, times(1)).hide(eq(true));
         verify(scenarioSimulationHasBusyIndicatorDefaultErrorCallback, times(1)).errorLocal(eq(messageMock), eq(throwableMock));
     }
 
     @Test
     public void hideBusyIndicator() {
         scenarioSimulationHasBusyIndicatorDefaultErrorCallback.hideBusyIndicator();
-        verify(loadingPopupMock, times(1)).hide(eq(true));
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
     }
 }

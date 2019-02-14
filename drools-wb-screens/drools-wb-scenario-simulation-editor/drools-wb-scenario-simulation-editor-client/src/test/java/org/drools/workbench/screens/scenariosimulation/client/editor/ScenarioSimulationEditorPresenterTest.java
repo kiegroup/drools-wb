@@ -16,13 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.NewScenarioSimulationHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
@@ -131,15 +129,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioMenuItem redoMenuItemMock;
     @Mock
     private DataManagementStrategy dataManagementStrategyMock;
-    @Mock
-    private NewScenarioSimulationHandler newScenarioSimulationHandlerMock;
-    @Mock
-    private PopupPanel loadingPopupMock;
 
     @Before
     public void setup() {
         super.setup();
-        when(newScenarioSimulationHandlerMock.getLoadingPopup()).thenReturn(loadingPopupMock);
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
@@ -164,8 +157,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                placeManagerMock,
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
-                                                               new CallerMock<>(dmnTypeServiceMock),
-                                                               newScenarioSimulationHandlerMock) {
+                                                               new CallerMock<>(dmnTypeServiceMock)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -386,7 +378,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
-        verify(loadingPopupMock, times(1)).hide(eq(true));
         verify(presenterSpy, times(1)).setOriginalHash(anyInt());
     }
 

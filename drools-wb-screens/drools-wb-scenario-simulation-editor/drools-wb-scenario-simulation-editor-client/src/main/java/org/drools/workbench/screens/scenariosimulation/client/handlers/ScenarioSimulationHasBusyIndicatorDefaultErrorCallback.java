@@ -15,31 +15,29 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.user.client.ui.PopupPanel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.common.HasBusyIndicator;
 
 public class ScenarioSimulationHasBusyIndicatorDefaultErrorCallback extends HasBusyIndicatorDefaultErrorCallback {
 
-    protected PopupPanel loadingPopup;
 
-    public ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(HasBusyIndicator view, PopupPanel loadingPopup) {
+    public ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(HasBusyIndicator view) {
         super(view);
-        this.loadingPopup = loadingPopup;
     }
 
 
     @Override
     public boolean error(final Message message,
                          final Throwable throwable) {
-        loadingPopup.hide(true);
+        CustomBusyPopup.close();
         return errorLocal(message,
                            throwable);
     }
 
     public void hideBusyIndicator() {
-        loadingPopup.hide(true);
+        CustomBusyPopup.close();
         super.hideBusyIndicator();
     }
 

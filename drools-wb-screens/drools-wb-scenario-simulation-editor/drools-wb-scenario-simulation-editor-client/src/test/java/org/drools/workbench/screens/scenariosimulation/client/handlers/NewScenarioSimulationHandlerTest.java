@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -87,10 +86,6 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
     @Mock
     private SourceTypeSelector sourceTypeSelectorMock;
 
-    @Mock
-    private PopupPanel loadingPopupMock;
-
-
     private NewScenarioSimulationHandler handler;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationServiceCallerMock;
@@ -112,12 +107,6 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
             {
                 this.uploadWidget = uploadWidgetMock;
                 this.sourceTypeSelector = sourceTypeSelectorMock;
-                this.loadingPopup = loadingPopupMock;
-            }
-
-            @Override
-            protected PopupPanel getPopupPanel() {
-                return loadingPopupMock;
             }
         });
         when(sessionInfoMock.getIdentity()).thenReturn(userMock);
@@ -165,7 +154,6 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
                        mock(NewResourcePresenter.class));
 
         verify(busyIndicatorViewMock).showBusyIndicator("Saving");
-        verify(loadingPopupMock, times(1)).center();
         verify(busyIndicatorViewMock).hideBusyIndicator();
         verify(notificationEventMock).fire(any(NotificationEvent.class));
         verify(newResourceSuccessEventMock).fire(any(NewResourcePresenter.class));
