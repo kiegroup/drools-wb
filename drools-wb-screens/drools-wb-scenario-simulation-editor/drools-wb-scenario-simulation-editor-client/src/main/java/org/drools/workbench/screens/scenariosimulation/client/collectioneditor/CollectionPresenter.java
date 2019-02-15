@@ -32,6 +32,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBoxPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
@@ -54,6 +55,9 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     @Inject
     protected ScenarioConfirmationPopupPresenter scenarioConfirmationPopupPresenter;
+
+    @Inject
+    protected ConfirmPopupPresenter confirmPopupPresenter;
 
     /**
      * <code>Map</code> used to pair the <code>Map</code> with instance' properties classes with a specific <b>key</b> representing the property, i.e Classname#propertyname (e.g Author#books)
@@ -141,13 +145,17 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     @Override
     public void save() {
-        String updatedValue;
-        if (collectionView.isListWidget()) {
-            updatedValue = getListValue();
-        } else {
-            updatedValue = getMapValue();
+        try {
+            String updatedValue;
+            if (collectionView.isListWidget()) {
+                updatedValue = getListValue();
+            } else {
+                updatedValue = getMapValue();
+            }
+            collectionView.updateValue(updatedValue);
+        } catch (IllegalStateException e) {
+            confirmPopupPresenter.show("Collection Error", e.getMessage());
         }
-        collectionView.updateValue(updatedValue);
     }
 
     @Override
@@ -253,7 +261,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     /**
      * @return
      */
-    protected String getMapValue() {
+    protected String getMapValue() throws IllegalStateException {
         Map<Map<String, String>, Map<String, String>> itemsProperties = mapElementPresenter.getItemsProperties();
         JSONObject toReturnModel = new JSONObject();
         itemsProperties.forEach((keyPropertiesValues, valuePropertiesMap) -> {

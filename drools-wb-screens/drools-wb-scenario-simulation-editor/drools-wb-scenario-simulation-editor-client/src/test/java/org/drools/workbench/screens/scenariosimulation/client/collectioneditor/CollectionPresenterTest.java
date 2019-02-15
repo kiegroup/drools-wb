@@ -34,6 +34,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBoxPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
 import org.junit.Before;
 import org.junit.Test;
@@ -148,6 +149,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Mock
     private ScenarioConfirmationPopupPresenter scenarioConfirmationPopupPresenterMock;
 
+    @Mock
+    private ConfirmPopupPresenter confirmPopupPresenterMock;
+
     private CollectionPresenter collectionEditorPresenter;
 
     @Before
@@ -194,6 +198,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
                 this.collectionView = collectionViewMock;
                 this.objectSeparatorLI = objectSeparatorLIMock;
                 this.scenarioConfirmationPopupPresenter = scenarioConfirmationPopupPresenterMock;
+                this.confirmPopupPresenter = confirmPopupPresenterMock;
             }
 
             @Override
@@ -305,12 +310,14 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void saveIsListWidgetTrue() {
-        commonSave(true);
+        commonSave(true, false);
+        commonSave(true, true);
     }
 
     @Test
     public void saveIsListWidgetFalse() {
-        commonSave(true);
+        commonSave(false, false);
+        commonSave(false, true);
     }
 
     @Test
@@ -443,14 +450,31 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(mapElementPresenterMock);
     }
 
-    private void commonSave(boolean isListWidget) {
+    private void commonSave(boolean isListWidget, boolean throwException) {
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
+        if (throwException) {
+            if (isListWidget) {
+                when(collectionEditorPresenter.getListValue()).thenThrow(IllegalStateException.class);
+            } else {
+                when(collectionEditorPresenter.getMapValue()).thenThrow(IllegalStateException.class);
+            }
+        }
         collectionEditorPresenter.save();
         if (isListWidget) {
             verify(collectionEditorPresenter, times(1)).getListValue();
         } else {
             verify(collectionEditorPresenter, times(1)).getMapValue();
         }
-        verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
+        if (throwException) {
+            verify(confirmPopupPresenterMock, times(1)).show(anyString(), anyString());
+            verify(collectionViewMock, never()).updateValue(anyString());
+        } else {
+            verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
+            verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
+        }
+        reset(confirmPopupPresenterMock);
+        reset(collectionViewMock);
+        reset(collectionEditorPresenter);
+
     }
 }
