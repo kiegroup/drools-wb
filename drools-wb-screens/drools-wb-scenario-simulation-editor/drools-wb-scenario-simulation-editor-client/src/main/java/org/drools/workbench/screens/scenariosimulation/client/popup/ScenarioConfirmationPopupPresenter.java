@@ -16,11 +16,13 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.uberfire.mvp.Command;
 
-public abstract class ScenarioConfirmationPopupPresenter implements ScenarioConfirmationPopup.Presenter {
+@Dependent
+public class ScenarioConfirmationPopupPresenter implements ScenarioConfirmationPopup.Presenter {
 
     @Inject
     protected ScenarioConfirmationPopupView scenarioConfirmationPopupView;
