@@ -65,11 +65,19 @@ public interface CollectionView {
         void showEditingBox();
 
         /**
-         * Toggle the expansion of the collection.
+         * Toggle the expansion of the items included in the collection.
          *
          * @param isShown the <b>current</b> expansion status of the collection
          */
         void onToggleRowExpansion(boolean isShown);
+
+        /**
+         * Updates the <b>expanded</b> status of main collection container to reflect
+         * the status of all contained items, when they have the same <b>expanded</b> status
+         *
+         * @param isShown the <b>current</b> expansion status of the collection
+         */
+        void updateRowExpansionStatus(boolean isShown);
 
         /**
          * Creates a new single <b>item</b> element with values taken from given <code>Map</code>
@@ -143,6 +151,14 @@ public interface CollectionView {
     ButtonElement getAddItemButton();
 
     void toggleRowExpansion();
+
+    /**
+     * Updates the <b>expanded</b> status of main collection container to reflect
+     * the status of all contained items, when they have the same <b>expanded</b> status
+     *
+     * @param isShown the <b>current</b> expansion status of the collection
+     */
+    void updateRowExpansionStatus(boolean isShown);
 
     /**
      * Updates the <b>json</b> representation of the values shown by this editor

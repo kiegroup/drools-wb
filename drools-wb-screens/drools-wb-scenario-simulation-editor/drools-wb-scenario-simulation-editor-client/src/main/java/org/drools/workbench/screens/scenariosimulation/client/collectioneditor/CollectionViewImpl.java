@@ -273,6 +273,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
+    public void updateRowExpansionStatus(boolean isShown) {
+        toggleRowExpansion(!isShown);
+    }
+
+    @Override
     public void updateValue(String value) {
         this.value = value;
         fireEvent(new SaveEditorEvent());

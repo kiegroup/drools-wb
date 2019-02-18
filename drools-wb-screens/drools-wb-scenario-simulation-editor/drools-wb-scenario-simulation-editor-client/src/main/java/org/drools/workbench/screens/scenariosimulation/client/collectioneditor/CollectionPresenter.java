@@ -127,6 +127,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
+    public void updateRowExpansionStatus(boolean isShown) {
+        collectionView.updateRowExpansionStatus(isShown);
+    }
+
+    @Override
     public void addListItem(Map<String, String> propertiesValues) {
         final UListElement elementsContainer = collectionView.getElementsContainer();
         String itemId = String.valueOf(elementsContainer.getChildCount() - 1);
