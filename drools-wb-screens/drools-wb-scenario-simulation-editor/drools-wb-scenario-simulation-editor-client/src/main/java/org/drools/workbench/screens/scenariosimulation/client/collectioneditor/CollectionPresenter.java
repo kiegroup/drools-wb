@@ -33,6 +33,7 @@ import com.google.gwt.json.client.JSONValue;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 public class CollectionPresenter implements CollectionView.Presenter {
@@ -153,11 +154,12 @@ public class CollectionPresenter implements CollectionView.Presenter {
     @Override
     public void remove() {
         org.uberfire.mvp.Command okRemoveCommand = this::okRemoveCommandMethod;
-        scenarioConfirmationPopupPresenter.show("Remove collection confirmation",
-                                                "Are you sure you want to remove the collection?",
-                                                "The operation will completely delete the collection data and it is irreversible.",
-                                                "Proceed ?",
-                                                "REMOVE",
+        scenarioConfirmationPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainTitle(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainQuestion(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.removeCollectionText1(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.removeCollectionQuestion(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.removeCollectionWarningText(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.remove(),
                                                 okRemoveCommand);
     }
 

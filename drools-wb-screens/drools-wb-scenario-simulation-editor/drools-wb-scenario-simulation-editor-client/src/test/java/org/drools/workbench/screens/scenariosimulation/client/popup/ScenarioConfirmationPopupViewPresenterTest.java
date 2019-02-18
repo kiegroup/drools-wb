@@ -51,9 +51,10 @@ public class ScenarioConfirmationPopupViewPresenterTest extends AbstractDeletePo
                                                 MAIN_QUESTION_TEXT,
                                                 TEXT1_TEXT,
                                                 TEXT_QUESTION_TEXT,
+                                                TEXT_WARNING_TEXT,
                                                 OKDELETE_BUTTON_TEXT,
                                                 okDeleteCommandMock);
-        verify(scenarioConfirmationPopupViewMock, times(1)).show(eq(MAIN_TITLE_TEXT), eq(MAIN_QUESTION_TEXT), eq(TEXT1_TEXT), eq(TEXT_QUESTION_TEXT), eq(OKDELETE_BUTTON_TEXT), eq(okDeleteCommandMock));
+        verify(scenarioConfirmationPopupViewMock, times(1)).show(eq(MAIN_TITLE_TEXT), eq(MAIN_QUESTION_TEXT), eq(TEXT1_TEXT), eq(TEXT_QUESTION_TEXT), eq(TEXT_WARNING_TEXT), eq(OKDELETE_BUTTON_TEXT), eq(okDeleteCommandMock));
     }
 
     @Test
