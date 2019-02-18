@@ -146,6 +146,16 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Mock
     private ButtonElement addItemButtonMock;
 
+
+    @Mock
+    private ButtonElement cancelButtonMock;
+
+    @Mock
+    private ButtonElement removeButtonMock;
+
+    @Mock
+    private ButtonElement saveButtonMock;
+
     @Mock
     private ScenarioConfirmationPopupPresenter scenarioConfirmationPopupPresenterMock;
 
@@ -160,6 +170,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.getPropertyTitle()).thenReturn(propertyTitleMock);
         when(collectionViewMock.getObjectSeparator()).thenReturn(objectSeparatorLIMock);
         when(collectionViewMock.getAddItemButton()).thenReturn(addItemButtonMock);
+        when(collectionViewMock.getCancelButton()).thenReturn(cancelButtonMock);
+        when(collectionViewMock.getRemoveButton()).thenReturn(removeButtonMock);
+        when(collectionViewMock.getSaveButton()).thenReturn(saveButtonMock);
         when(objectSeparatorLIMock.getStyle()).thenReturn(styleMock);
 
         when(nestedValue1Mock.keySet()).thenReturn(KEY_SET);
@@ -371,6 +384,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         collectionEditorPresenter.toggleEditingStatus(true);
         verify(collectionViewMock, times(1)).getAddItemButton();
         verify(addItemButtonMock, times(1)).setDisabled(eq(true));
+        verify(cancelButtonMock, times(1)).setDisabled(eq(true));
+        verify(removeButtonMock, times(1)).setDisabled(eq(true));
+        verify(saveButtonMock, times(1)).setDisabled(eq(true));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
@@ -380,6 +396,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         collectionEditorPresenter.toggleEditingStatus(false);
         verify(collectionViewMock, times(1)).getAddItemButton();
         verify(addItemButtonMock, times(1)).setDisabled(eq(false));
+        verify(cancelButtonMock, times(1)).setDisabled(eq(false));
+        verify(removeButtonMock, times(1)).setDisabled(eq(false));
+        verify(saveButtonMock, times(1)).setDisabled(eq(false));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }
