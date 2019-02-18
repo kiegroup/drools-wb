@@ -487,10 +487,10 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
             verify(collectionEditorPresenter, times(1)).getMapValue();
         }
         if (throwException) {
-            verify(confirmPopupPresenterMock, times(1)).show(anyString(), anyString());
+            verify(confirmPopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.collectionError()), anyString());
             verify(collectionViewMock, never()).updateValue(anyString());
         } else {
-            verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
+            verify(confirmPopupPresenterMock, never()).show(eq(ScenarioSimulationEditorConstants.INSTANCE.collectionError()), anyString());
             verify(collectionViewMock, times(1)).updateValue(eq(UPDATED_VALUE));
         }
         reset(confirmPopupPresenterMock);

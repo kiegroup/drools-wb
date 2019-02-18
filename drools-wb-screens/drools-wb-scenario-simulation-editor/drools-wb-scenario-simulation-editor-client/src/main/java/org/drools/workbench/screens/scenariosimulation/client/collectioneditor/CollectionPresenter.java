@@ -160,7 +160,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             }
             collectionView.updateValue(updatedValue);
         } catch (IllegalStateException e) {
-            confirmPopupPresenter.show("Collection Error", e.getMessage());
+            confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.collectionError(), e.getMessage());
         }
     }
 
