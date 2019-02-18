@@ -150,6 +150,12 @@ public interface CollectionView {
 
     ButtonElement getAddItemButton();
 
+    ButtonElement getCancelButton();
+
+    ButtonElement getRemoveButton();
+
+    ButtonElement getSaveButton();
+
     void toggleRowExpansion();
 
     /**
