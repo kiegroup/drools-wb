@@ -139,4 +139,14 @@ public interface ScenarioSimulationEditorConstants
     String chooseDMN();
 
     String chooseValidDMNAsset();
+
+    String removeCollectionMainTitle();
+
+    String removeCollectionMainQuestion();
+
+    String removeCollectionText1();
+
+    String removeCollectionQuestion();
+
+    String removeCollectionWarningText();
 }

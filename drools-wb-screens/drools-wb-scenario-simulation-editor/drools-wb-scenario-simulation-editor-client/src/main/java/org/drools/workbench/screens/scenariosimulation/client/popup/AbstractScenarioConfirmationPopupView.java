@@ -33,7 +33,7 @@ import org.uberfire.client.views.pfly.widgets.Button;
 import org.uberfire.client.views.pfly.widgets.Modal;
 import org.uberfire.mvp.Command;
 
-public abstract class AbstractScenarioConfirmationPopupView implements ScenarioConfirmationPopup {
+public abstract class AbstractScenarioConfirmationPopupView implements AbstractScenarioConfirmationPopup {
 
     @DataField("main-title")
     protected HeadingElement mainTitle = Document.get().createHElement(4);

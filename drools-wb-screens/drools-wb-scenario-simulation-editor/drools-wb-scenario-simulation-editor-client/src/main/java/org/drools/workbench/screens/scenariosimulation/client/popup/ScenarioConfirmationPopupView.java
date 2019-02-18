@@ -16,12 +16,30 @@
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
+import com.google.gwt.dom.client.ParagraphElement;
+import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class ScenarioConfirmationPopupView extends AbstractScenarioConfirmationPopupView {
+public class ScenarioConfirmationPopupView extends AbstractScenarioConfirmationPopupView implements ScenarioConfirmationPopup {
 
+    @Inject
+    @DataField("text-warning")
+    protected ParagraphElement textWarning;
 
+    @Override
+    public void show(final String mainTitleText,
+                     final String mainQuestionText,
+                     final String text1Text,
+                     final String textQuestionText,
+                     final String textWarningText,
+                     final String okDeleteButtonText,
+                     final Command okDeleteCommand) {
+        conditionalShow(textWarning, textWarningText);
+        show(mainTitleText, mainQuestionText, text1Text, textQuestionText, okDeleteButtonText, okDeleteCommand);
+    }
 }

@@ -32,9 +32,10 @@ public class ScenarioConfirmationPopupPresenter implements ScenarioConfirmationP
                      final String mainQuestionText,
                      final String text1Text,
                      final String textQuestionText,
+                     final String textWarningText,
                      final String okDeleteButtonText,
                      final Command okDeleteCommand) {
-        scenarioConfirmationPopupView.show(mainTitleText, mainQuestionText, text1Text, textQuestionText, okDeleteButtonText, okDeleteCommand);
+        scenarioConfirmationPopupView.show(mainTitleText, mainQuestionText, text1Text, textQuestionText, textWarningText, okDeleteButtonText, okDeleteCommand);
     }
 
     @Override

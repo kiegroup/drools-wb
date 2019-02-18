@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBoxPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -394,11 +395,12 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.isListWidget()).thenReturn(isWidget);
         collectionEditorPresenter.remove();
         verify(scenarioConfirmationPopupPresenterMock, times(1)).show(
-                anyString(),
-                anyString(),
-                anyString(),
-                anyString(),
-                anyString(),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainTitle()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainQuestion()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionText1()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionQuestion()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionWarningText()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.remove()),
                 isA(Command.class));
         verify(mapElementPresenterMock, never()).remove();
         verify(listElementPresenterMock, never()).remove();
