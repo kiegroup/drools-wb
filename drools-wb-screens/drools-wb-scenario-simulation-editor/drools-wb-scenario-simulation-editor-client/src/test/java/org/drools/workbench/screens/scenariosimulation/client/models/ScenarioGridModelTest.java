@@ -52,6 +52,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -121,7 +122,6 @@ public class ScenarioGridModelTest {
 
     private List<GridColumn.HeaderMetaData> headerMetaDataList = new ArrayList<>();
 
-
     private List<GridRow> gridRows = new ArrayList<>();
 
     private List<GridColumn<?>> gridColumns = new ArrayList<>();
@@ -149,11 +149,13 @@ public class ScenarioGridModelTest {
         doReturn(gridCellValueMock).when(gridCellMock).getValue();
 
         when(informationHeaderMetaDataMock.isInstanceHeader()).thenReturn(true);
+        when(informationHeaderMetaDataMock.isPropertyHeader()).thenReturn(false);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
         when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
+        when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
         when(propertyHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(propertyHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
@@ -362,7 +364,6 @@ public class ScenarioGridModelTest {
         verify(eventBusMock, never()).fireEvent(any());
     }
 
-
     @Test
     public void updateFactMapping() {
         final int INDEX = 0;
@@ -453,24 +454,18 @@ public class ScenarioGridModelTest {
     }
 
     @Test
-    public void validateHeaderUpdate() {
-        commonValidateHeaderUpdate(1, 0, false, false, false, false);
-        commonValidateHeaderUpdate(1, 0, false, false, true, true);
-        commonValidateHeaderUpdate(1, 0, false, true, false, false);
-        commonValidateHeaderUpdate(1, 0, false, true, true, true);
-        commonValidateHeaderUpdate(1, 0, true, false, false, false);
-        commonValidateHeaderUpdate(1, 0, true, false, true, false);
-        commonValidateHeaderUpdate(1, 0, true, true, false, false);
-        commonValidateHeaderUpdate(1, 0, true, true, true, true);
+    public void validateHeaderUpdateGroupHeader() {
+        commonValidateHeaderUpdate(0, false, false);
+    }
 
-        commonValidateHeaderUpdate(2, 0, false, false, false, true);
-        commonValidateHeaderUpdate(2, 0, false, false, true, true);
-        commonValidateHeaderUpdate(2, 0, false, true, false, true);
-        commonValidateHeaderUpdate(2, 0, false, true, true, true);
-        commonValidateHeaderUpdate(2, 0, true, false, false, true);
-        commonValidateHeaderUpdate(2, 0, true, false, true, true);
-        commonValidateHeaderUpdate(2, 0, true, true, false, true);
-        commonValidateHeaderUpdate(2, 0, true, true, true, true);
+    @Test
+    public void validateHeaderUpdateInstanceHeader() {
+        commonValidateHeaderUpdate(1, true, false);
+    }
+
+    @Test
+    public void validateHeaderUpdatePropertyHeader() {
+        commonValidateHeaderUpdate(2, false, true);
     }
 
     @Test
@@ -498,13 +493,25 @@ public class ScenarioGridModelTest {
         verify(gridCellMock, times(6)).setErrorMode(true);
     }
 
+    @Test
+    public void validateInstanceHeaderUpdate() {
+        commonValidateInstanceHeaderUpdate(1, false, false, false, false);
+        commonValidateInstanceHeaderUpdate(1, false, false, true, true);
+        commonValidateInstanceHeaderUpdate(1, false, true, false, false);
+        commonValidateInstanceHeaderUpdate(1, false, true, true, true);
+        commonValidateInstanceHeaderUpdate(1, true, false, false, false);
+        commonValidateInstanceHeaderUpdate(1, true, false, true, false);
+        commonValidateInstanceHeaderUpdate(1, true, true, false, false);
+        commonValidateInstanceHeaderUpdate(1, true, true, true, true);
+    }
+
     private void commonIsSameInstanceHeader(String columnClassName, String value, boolean expected) {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassName()).thenReturn(columnClassName);
         int colIndex = 3;
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(simulationDescriptorMock.getFactMappingByIndex(colIndex)).thenReturn(factMappingMock);
-        boolean retrieved =scenarioGridModel.isSameInstanceHeader(colIndex, value);
+        boolean retrieved = scenarioGridModel.isSameInstanceHeader(colIndex, value);
         if (expected) {
             TestCase.assertTrue(retrieved);
         } else {
@@ -514,11 +521,30 @@ public class ScenarioGridModelTest {
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(colIndex));
     }
 
-    private void commonValidateHeaderUpdate(int rowIndex, int columnIndex,  boolean isADataType,  boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) {
+    private void commonValidateHeaderUpdate(int rowIndex, boolean isInstanceHeader, boolean isPropertyHeader) {
+        doReturn(isInstanceHeader).when(scenarioGridModel).validateInstanceHeaderUpdate(anyString(), anyInt(), anyBoolean());
+        doReturn(isPropertyHeader).when(scenarioGridModel).validatePropertyHeaderUpdate(anyString(), anyInt(), anyBoolean());
+        String value = "VALUE";
+        int columnIndex = 0;
+        boolean isADataType = true;
+//        scenarioGridModel.validateHeaderUpdate(value, rowIndex, columnIndex, isADataType);
+        if (isInstanceHeader) {
+            verify(scenarioGridModel, times(1)).validateInstanceHeaderUpdate(eq(value), eq(columnIndex), eq(isADataType));
+            verify(scenarioGridModel, never()).validatePropertyHeaderUpdate(eq(value), eq(columnIndex), anyBoolean());
+        } else if (isPropertyHeader) {
+            verify(scenarioGridModel, times(1)).validatePropertyHeaderUpdate(eq(value), eq(columnIndex), anyBoolean());
+            verify(scenarioGridModel, never()).validateInstanceHeaderUpdate(eq(value), eq(columnIndex), eq(isADataType));
+        } else {
+            verify(scenarioGridModel, never()).validatePropertyHeaderUpdate(eq(value), eq(columnIndex), anyBoolean());
+            verify(scenarioGridModel, never()).validateInstanceHeaderUpdate(eq(value), eq(columnIndex), eq(isADataType));
+        }
+    }
+
+    private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) {
         String value = "VALUE";
         doReturn(isSameInstanceHeader).when(scenarioGridModel).isSameInstanceHeader(columnIndex, value);
-        doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(value, rowIndex, columnIndex);
-        boolean retrieved = scenarioGridModel.validateHeaderUpdate(value, rowIndex, columnIndex, isADataType);
+        doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(value, columnIndex);
+        boolean retrieved = scenarioGridModel.validateInstanceHeaderUpdate(value, columnIndex, isADataType);
         assertEquals(retrieved, expectedValid);
         reset(eventBusMock);
     }
