@@ -34,6 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableRightPanelCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
@@ -50,6 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
@@ -70,6 +72,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRow
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DisableRightPanelEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.EnableRightPanelEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
@@ -105,6 +108,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        DeleteColumnEventHandler,
                                                        DeleteRowEventHandler,
                                                        DisableRightPanelEventHandler,
+                                                       DuplicateColumnEventHandler,
                                                        DuplicateRowEventHandler,
                                                        EnableRightPanelEventHandler,
                                                        InsertColumnEventHandler,
@@ -207,6 +211,13 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     @Override
     public void onEvent(DisableRightPanelEvent event) {
         commonExecution(context, new DisableRightPanelCommand());
+    }
+
+    @Override
+    public void onEvent(DuplicateColumnEvent event) {
+        context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
+        context.getStatus().setColumnIndex(event.getColumnIndex());
+        commonExecution(context, new DuplicateColumnCommand());
     }
 
     @Override
@@ -416,6 +427,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DeleteColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DeleteRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DisableRightPanelEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(DuplicateColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(EnableRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));

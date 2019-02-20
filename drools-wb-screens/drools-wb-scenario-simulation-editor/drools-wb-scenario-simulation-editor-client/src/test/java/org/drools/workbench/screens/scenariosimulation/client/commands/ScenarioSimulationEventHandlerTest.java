@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableRightPanelCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
@@ -44,6 +45,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
@@ -105,6 +107,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration disableRightPanelEventHandlerMock;
     @Mock
+    private HandlerRegistration duplicateColumnHandlerRegistrationMock;
+    @Mock
     private HandlerRegistration duplicateHandlerRegistrationMock;
     @Mock
     private HandlerRegistration enableRightPanelEventHandlerMock;
@@ -151,6 +155,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DisableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(disableRightPanelEventHandlerMock);
+        when(eventBusMock.addHandler(eq(DuplicateColumnEvent.TYPE), isA((ScenarioSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(EnableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableRightPanelEventHandlerMock);
         when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
@@ -229,6 +234,13 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         DisableRightPanelEvent event = new DisableRightPanelEvent();
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DisableRightPanelCommand.class));
+    }
+
+    @Test
+    public void onDuplicateColumnEvent() {
+        DuplicateColumnEvent event = new DuplicateColumnEvent(COLUMN_INDEX, false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DuplicateColumnCommand.class));
     }
 
     @Test
@@ -437,6 +449,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DisableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(disableRightPanelEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(DuplicateColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(duplicateColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(EnableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class));

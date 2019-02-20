@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 
 /**
@@ -29,12 +30,14 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     protected String COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT;
     protected String COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT;
     protected String COLUMNCONTEXTMENU_DELETE_COLUMN;
+    protected String COLUMNCONTEXTMENU_DUPLICATE_COLUMN;
     protected String COLUMNCONTEXTMENU_LABEL;
     protected String COLUMNCONTEXTMENU_I18N;
 
     private LIElement insertColumnLeftLIElement;
     private LIElement insertColumnRightLIElement;
     private LIElement deleteColumnLIElement;
+    private LIElement duplicateColumnLIElement;
     protected LIElement columnContextLIElement;
 
     /**
@@ -45,6 +48,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         insertColumnLeftLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft");
         insertColumnRightLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight");
         deleteColumnLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
+        duplicateColumnLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_COLUMN, constants.duplicateColumn(), "duplicateColumn");
         super.initMenu();
     }
 
@@ -53,5 +57,6 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(columnIndex, true, asProperty));
         mapEvent(deleteColumnLIElement, new DeleteColumnEvent(columnIndex, group));
+        mapEvent(duplicateColumnLIElement, new DuplicateColumnEvent(columnIndex));
     }
 }
