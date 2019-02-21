@@ -676,7 +676,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public boolean validatePropertyHeaderUpdate(String value, int columnIndex, boolean isPropertyType) {
-        return (isPropertyType && isSamePropertyHeader(columnIndex, value)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, value));
+        return (isPropertyType && isSamePropertyHeader(columnIndex, value) && isUniquePropertyHeaderTitle(value, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, value) && isUniquePropertyHeaderTitle(value, columnIndex));
     }
 
     /**
@@ -804,6 +804,22 @@ public class ScenarioGridModel extends BaseGridData {
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getInformationHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getInformationHeaderMetaData)
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
+    }
+
+    /**
+     * Verify the given value is not already used as property header name <b>inside the same group</b>
+     * @param value
+     * @param columnIndex
+     * @return
+     */
+    protected boolean isUniquePropertyHeaderTitle(String value, int columnIndex) {
+        Range instanceLimits = getInstanceLimits(columnIndex);
+        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() +1 )
+                .filter(index -> index != columnIndex)
+                .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
+                .filter(elem -> elem.getPropertyHeaderMetaData() != null)
+                .map(ScenarioGridColumn::getPropertyHeaderMetaData)
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
     }
 

@@ -451,6 +451,18 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidateInstanceHeaderUpdate(1, true, true, true, true);
     }
 
+    @Test
+    public void validatePropertyHeaderUpdate() {
+        commonValidatePropertyUpdate(1, false, false, false, false);
+        commonValidatePropertyUpdate(1, false, false, true, true);
+        commonValidatePropertyUpdate(1, false, true, false, false);
+        commonValidatePropertyUpdate(1, false, true, true, true);
+        commonValidatePropertyUpdate(1, true, false, false, false);
+        commonValidatePropertyUpdate(1, true, false, true, false);
+        commonValidatePropertyUpdate(1, true, true, false, false);
+        commonValidatePropertyUpdate(1, true, true, true, true);
+    }
+
     private void commonIsSameInstanceHeader(String columnClassName, String value, boolean expected) {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassName()).thenReturn(columnClassName);
@@ -472,6 +484,15 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         doReturn(isSameInstanceHeader).when(scenarioGridModel).isSameInstanceHeader(columnIndex, value);
         doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(value, columnIndex);
         boolean retrieved = scenarioGridModel.validateInstanceHeaderUpdate(value, columnIndex, isADataType);
+        assertEquals(retrieved, expectedValid);
+        reset(eventBusMock);
+    }
+
+    private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) {
+        String value = "VALUE";
+        doReturn(isSamePropertyHeader).when(scenarioGridModel).isSamePropertyHeader(columnIndex, value);
+        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(value, columnIndex);
+        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(value, columnIndex, isPropertyType);
         assertEquals(retrieved, expectedValid);
         reset(eventBusMock);
     }
