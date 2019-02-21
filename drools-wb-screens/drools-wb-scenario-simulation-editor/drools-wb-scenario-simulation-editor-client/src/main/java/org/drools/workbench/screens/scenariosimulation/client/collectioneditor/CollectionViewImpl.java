@@ -203,6 +203,21 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         return addItemButton;
     }
 
+    @Override
+    public ButtonElement getCancelButton() {
+        return cancelButton;
+    }
+
+    @Override
+    public ButtonElement getRemoveButton() {
+        return removeButton;
+    }
+
+    @Override
+    public ButtonElement getSaveButton() {
+        return saveButton;
+    }
+
     @EventHandler("collectionEditor")
     public void onCollectionEditorClick(ClickEvent clickEvent) {
         clickEvent.stopPropagation();
@@ -272,6 +287,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public void toggleRowExpansion() {
         toggleRowExpansion(!isShown());
+    }
+
+    @Override
+    public void updateRowExpansionStatus(boolean isShown) {
+        toggleRowExpansion(!isShown);
     }
 
     @Override
