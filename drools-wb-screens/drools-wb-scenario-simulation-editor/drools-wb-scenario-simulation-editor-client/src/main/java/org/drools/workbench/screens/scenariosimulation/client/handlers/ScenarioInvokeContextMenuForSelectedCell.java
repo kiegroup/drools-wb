@@ -84,7 +84,10 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
                                                                  uiRowIndex);
             return scenarioContextMenuRegistry.manageRightClick((ScenarioGrid) gridWidget,
                                                                 (int) context.getAbsoluteCellX(),
-                                                                (int) context.getAbsoluteCellY());
+                                                                (int) context.getAbsoluteCellY(),
+                                                                uiRowIndex,
+                                                                uiColumnIndex,
+                                                                isHeader);
         }
         return false;
     }

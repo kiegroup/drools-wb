@@ -88,19 +88,12 @@ public class ScenarioContextMenuRegistry {
 
         final int canvasX = CoordinateUtilities.getRelativeXOfEvent(event);
         final int canvasY = CoordinateUtilities.getRelativeYOfEvent(event);
-        return manageRightClick(scenarioGrid,
-                                canvasX,
-                                canvasY);
-    }
-
-    public boolean manageRightClick(final ScenarioGrid scenarioGrid,
-                                    final int canvasX,
-                                    final int canvasY) {
 
         final Point2D gridClickPoint = CoordinateUtilities.convertDOMToGridCoordinate(scenarioGrid,
                                                                                       new Point2D(canvasX, canvasY));
-        Integer uiRowIndex = CoordinateUtilities.getUiHeaderRowIndex(scenarioGrid, gridClickPoint);
         boolean isHeader = true;
+        Integer uiRowIndex = CoordinateUtilities.getUiHeaderRowIndex(scenarioGrid, gridClickPoint);
+
         if (uiRowIndex == null) {
             uiRowIndex = CoordinateUtilities.getUiRowIndex(scenarioGrid, gridClickPoint.getY());
             isHeader = false;
@@ -113,20 +106,36 @@ public class ScenarioContextMenuRegistry {
         if (uiColumnIndex == null) {
             return false;
         }
+
+        return manageRightClick(scenarioGrid,
+                                event.getNativeEvent().getClientX(),
+                                event.getNativeEvent().getClientY(),
+                                uiRowIndex,
+                                uiColumnIndex,
+                                isHeader);
+    }
+
+    public boolean manageRightClick(final ScenarioGrid scenarioGrid,
+                                    final int clientXPosition,
+                                    final int clientYPosition,
+                                    final Integer uiRowIndex,
+                                    final Integer uiColumnIndex,
+                                    final boolean isHeader) {
+
         ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex);
         if (scenarioGridColumn == null) {
             return false;
         }
         if (isHeader) {
             return manageHeaderRightClick(scenarioGrid,
-                                          canvasX,
-                                          canvasY,
+                                          clientXPosition,
+                                          clientYPosition,
                                           uiRowIndex,
                                           uiColumnIndex);
         } else {
             return manageBodyRightClickLocal(scenarioGrid,
-                                             canvasX,
-                                             canvasY,
+                                             clientXPosition,
+                                             clientYPosition,
                                              uiRowIndex,
                                              uiColumnIndex);
         }
