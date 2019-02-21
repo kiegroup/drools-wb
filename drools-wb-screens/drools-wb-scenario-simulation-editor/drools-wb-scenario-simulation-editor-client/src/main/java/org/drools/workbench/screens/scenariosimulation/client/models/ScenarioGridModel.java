@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -635,19 +634,11 @@ public class ScenarioGridModel extends BaseGridData {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
         String columnPropertyName = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
+        if (columnPropertyName.contains(".")) {
+            columnPropertyName = columnPropertyName.substring(columnPropertyName.indexOf(".")+1);
+        }
         return Objects.equals(columnPropertyName, headerName);
     }
-
-//    public boolean validateHeaderUpdate(String value, int rowIndex, int columnIndex, boolean isADataType) {
-//        ScenarioHeaderMetaData headerToEdit = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(rowIndex);
-//        if (headerToEdit.isInstanceHeader()) {
-//            return validateInstanceHeaderUpdate(value, columnIndex, isADataType);
-//        } else if (headerToEdit.isPropertyHeader()) {
-//            return validatePropertyHeaderUpdate(value, columnIndex);
-//        } else {
-//            return false;
-//        }
-//    }
 
     public void resetErrors() {
         IntStream.range(0, getRowCount()).forEach(this::resetErrors);
@@ -828,22 +819,6 @@ public class ScenarioGridModel extends BaseGridData {
                 .map(elem -> ((ScenarioGridColumn) elem).getPropertyHeaderMetaData())
                 .filter(Objects::nonNull)
                 .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
-    }
-
-    /**
-     * Verify if the given name is the name of an already existing instance.
-     * @param value
-     * @return
-     */
-    protected boolean isInstanceName(String value) {
-        Set<String> aggregated = new HashSet<>();
-        if (dataObjectsInstancesName != null) {
-            aggregated.addAll(dataObjectsInstancesName);
-        }
-        if (simpleJavaTypeInstancesName != null) {
-            aggregated.addAll(simpleJavaTypeInstancesName);
-        }
-        return aggregated.contains(value);
     }
 
     protected void refreshErrorsRow(int rowIndex) {

@@ -27,8 +27,8 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 @Dependent
 public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand {
 
-    private final boolean isInstanceHeader;
-    private final boolean isPropertyHeader;
+    protected boolean isInstanceHeader;
+    protected boolean isPropertyHeader;
 
     public SetHeaderCellValueCommand() {
         this(false, false);
@@ -69,9 +69,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
             className = className.substring(className.lastIndexOf(".")+1);
         }
         final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
-
         boolean isPropertyType = factModelTree != null && (factModelTree.getSimpleProperties().containsKey(headerValue) || factModelTree.getExpandableProperties().containsKey(headerValue));
-
         return context.getModel().validatePropertyHeaderUpdate(headerValue, columnIndex, isPropertyType);
     }
 }

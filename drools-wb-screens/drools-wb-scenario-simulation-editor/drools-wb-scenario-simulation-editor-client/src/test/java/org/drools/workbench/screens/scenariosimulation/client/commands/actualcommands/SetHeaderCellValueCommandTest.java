@@ -16,16 +16,22 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Map;
+import java.util.SortedMap;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,27 +51,95 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
     }
 
     @Test
-    public void executeNotValid() {
-        commonExecute(false, false);
+    public void executeInstanceHeaderValid() {
+        commonExecute(true, false, true);
     }
 
     @Test
-    public void executeValid() {
-        commonExecute(true, true);
+    public void executeInstanceHeaderInvalid() {
+        commonExecute(true, false, false);
     }
 
-    private void commonExecute(boolean validateHeaderUpdate, boolean executed) {
-//        when(scenarioGridModelMock.validateHeaderUpdate(eq(VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX), anyBoolean())).thenReturn(validateHeaderUpdate);
+    @Test
+    public void executePropertyHeaderValid() {
+        commonExecute(false, true, true);
+    }
 
-        when(scenarioGridModelMock.validateInstanceHeaderUpdate(eq(VALUE), eq(COLUMN_INDEX), anyBoolean())).thenReturn(validateHeaderUpdate);
-        when(scenarioGridModelMock.validatePropertyHeaderUpdate(eq(VALUE), eq(COLUMN_INDEX), anyBoolean())).thenReturn(validateHeaderUpdate);
+    @Test
+    public void executePropertyHeaderInvalid() {
+        commonExecute(false, true, false);
+    }
 
+    @Test
+    public void executeOtherHeader() {
+        commonExecute(false, false, false);
+    }
+
+    @Test
+    public void validateInstanceHeader() {
+        commonValidateInstanceHeader(false);
+        commonValidateInstanceHeader(true);
+    }
+
+    @Test
+    public void validatePropertyHeaderNoFactModelMapped() {
+        commonValidatePropertyHeader(false, false);
+    }
+
+    @Test
+    public void validatePropertyHeaderFactModelMappedNoProperty() {
+        commonValidatePropertyHeader(true, true);
+    }
+
+    @Test
+    public void validatePropertyHeaderFactModelMappedProperty() {
+        commonValidatePropertyHeader(true, true);
+    }
+
+    private void commonExecute(boolean isInstanceHeader, boolean isPropertyHeader, boolean isValid) {
+        ((SetHeaderCellValueCommand) command).isInstanceHeader = isInstanceHeader;
+        ((SetHeaderCellValueCommand) command).isPropertyHeader = isPropertyHeader;
+        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
+        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
         command.execute(scenarioSimulationContextLocal);
-        verify(dataManagementStrategyMock, times(1)).isADataType(anyString());
-        if (executed) {
-            verify(scenarioGridModelMock, times(1)).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
+        if (isInstanceHeader) {
+            verify(((SetHeaderCellValueCommand) command), times(1)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
+        } else if (isPropertyHeader) {
+            verify(((SetHeaderCellValueCommand) command), times(1)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
         } else {
-            verify(scenarioGridModelMock, never()).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
+            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
+            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE), eq(COLUMN_INDEX));
         }
+        if (isValid) {
+            verify(scenarioGridModelMock, times(1)).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE));
+        }
+    }
+
+    private void commonValidateInstanceHeader(boolean isADataType) {
+        doReturn(isADataType).when(dataObjectFieldsMapMock).containsKey(VALUE);
+        ((SetHeaderCellValueCommand) command).validateInstanceHeader(scenarioSimulationContextLocal, VALUE, COLUMN_INDEX);
+        verify(dataObjectFieldsMapMock, times(1)).containsKey(eq(VALUE));
+        verify(scenarioGridModelMock, times(1)).validateInstanceHeaderUpdate(eq(VALUE), eq(COLUMN_INDEX), eq(isADataType));
+        reset(dataObjectFieldsMapMock);
+        reset(scenarioGridModelMock);
+    }
+
+    private void commonValidatePropertyHeader(boolean factModelPresent, boolean simplePropertyPresent) {
+        FactModelTree factModelTreeMock = mock(FactModelTree.class);
+        if (factModelPresent) {
+            Map<String, String> simplePropertiesMock = mock(SortedMap.class);
+            when(factModelTreeMock.getSimpleProperties()).thenReturn(simplePropertiesMock);
+            when(factModelTreeMock.getExpandableProperties()).thenReturn(mock(SortedMap.class));
+            when(dataObjectFieldsMapMock.get(anyString())).thenReturn(factModelTreeMock);
+            doReturn(simplePropertyPresent).when(simplePropertiesMock).containsKey(eq(VALUE));
+        } else {
+            when(dataObjectFieldsMapMock.get(anyString())).thenReturn(null);
+        }
+        boolean isPropertyType = factModelPresent && simplePropertyPresent;
+        ((SetHeaderCellValueCommand) command).validatePropertyHeader(scenarioSimulationContextLocal, VALUE, COLUMN_INDEX);
+        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
+        verify(scenarioGridModelMock, times(1)).validatePropertyHeaderUpdate(eq(VALUE), eq(COLUMN_INDEX), eq(isPropertyType));
+        reset(simulationDescriptorMock);
+        reset(scenarioGridModelMock);
     }
 }
