@@ -115,12 +115,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
         doReturn(gridCellValueMock).when(gridCellMock).getValue();
 
+        when(informationHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.INSTANCE);
         when(informationHeaderMetaDataMock.isInstanceHeader()).thenReturn(true);
         when(informationHeaderMetaDataMock.isPropertyHeader()).thenReturn(false);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
+        when(propertyHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
         when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
         when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
@@ -315,7 +317,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         reset(eventBusMock);
         scenarioGridModel.updateHeader(COLUMN_INDEX, 2, newValue); // This is property header
         verify(eventBusMock, never()).fireEvent(any());
-
         reset(eventBusMock);
         // if update with same value, no event should be raised
         String title = scenarioGridModel.getColumns().get(COLUMN_INDEX).getHeaderMetaData().get(1).getTitle();
@@ -324,7 +325,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
-    public void updateFactMapping() {
+    public void updateFactMappingInstance() {
         final int INDEX = 0;
         final String VALUE = "VALUE";
         final String ALIAS_1 = "ALIAS_1";
@@ -339,14 +340,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         when(factMappingReference.getFactAlias()).thenReturn(ALIAS_1);
         when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
         when(simulationDescriptorMock.getFactMappingByIndex(INDEX)).thenReturn(factMappingToCheck);
-        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.INSTANCE);
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
         verify(factMappingToCheck, times(1)).setFactAlias(eq(VALUE));
         reset(informationHeaderMetaDataMock);
         reset(factMappingToCheck);
         // Should not execute the if in the first if
         when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_2);
-        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.INSTANCE);
         verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
         verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
         reset(informationHeaderMetaDataMock);
@@ -354,23 +355,61 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         // Should not execute the if in the first if
         when(factMappingReference.getFactIdentifier()).thenReturn(factIdentifier1);
         when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
-        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.INSTANCE);
         verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
         verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
         reset(informationHeaderMetaDataMock);
         reset(factMappingToCheck);
         // Should execute the second if
         when(factMappingToCheck.getFactIdentifier()).thenReturn(factIdentifier1);
-        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.INSTANCE);
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
         verify(factMappingToCheck, times(1)).setFactAlias(eq(VALUE));
         reset(informationHeaderMetaDataMock);
         reset(factMappingToCheck);
         // Should not execute the second if
         when(factMappingToCheck.getFactIdentifier()).thenReturn(factIdentifier2);
-        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.INSTANCE);
         verify(informationHeaderMetaDataMock, never()).setTitle(eq(VALUE));
         verify(factMappingToCheck, never()).setFactAlias(eq(VALUE));
+    }
+
+    @Test
+    public void updateFactMappingProperty() {
+        final int INDEX = 0;
+        final String VALUE = "VALUE";
+        final String ALIAS_1 = "ALIAS_1";
+        final String ALIAS_2 = "ALIAS_2";
+        FactMapping factMappingReference = mock(FactMapping.class);
+        FactMapping factMappingToCheck = mock(FactMapping.class);
+        FactIdentifier factIdentifier1 = mock(FactIdentifier.class);
+        // Should execute
+        when(factMappingReference.getFactIdentifier()).thenReturn(FactIdentifier.EMPTY);
+        when(factMappingToCheck.getFactIdentifier()).thenReturn(FactIdentifier.EMPTY);
+        when(factMappingReference.getFactAlias()).thenReturn(ALIAS_1);
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
+        when(factMappingReference.getFullExpression()).thenReturn(ALIAS_1);
+        when(factMappingToCheck.getFullExpression()).thenReturn(ALIAS_1);
+        when(simulationDescriptorMock.getFactMappingByIndex(INDEX)).thenReturn(factMappingToCheck);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.PROPERTY);
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(eq(VALUE));
+        verify(factMappingToCheck, times(1)).setExpressionAlias(eq(VALUE));
+        reset(propertyHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should not execute
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_2);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.PROPERTY);
+        verify(propertyHeaderMetaDataMock, never()).setTitle(eq(VALUE));
+        verify(factMappingToCheck, never()).setExpressionAlias(eq(VALUE));
+        reset(propertyHeaderMetaDataMock);
+        reset(factMappingToCheck);
+        // Should not execute
+        when(factMappingReference.getFactIdentifier()).thenReturn(factIdentifier1);
+        when(factMappingToCheck.getFactAlias()).thenReturn(ALIAS_1);
+        when(factMappingToCheck.getFullExpression()).thenReturn(ALIAS_2);
+        scenarioGridModel.updateFactMapping(simulationDescriptorMock, factMappingReference, INDEX, VALUE, ScenarioHeaderMetaData.MetadataType.PROPERTY);
+        verify(propertyHeaderMetaDataMock, never()).setTitle(eq(VALUE));
+        verify(factMappingToCheck, never()).setExpressionAlias(eq(VALUE));
     }
 
     @Test

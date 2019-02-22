@@ -444,14 +444,10 @@ public class ScenarioGridModel extends BaseGridData {
         }
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactMapping factMappingToEdit = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        if (editedMetadata.isInstanceHeader()) { // we have to update title and value for every column of the group
-            IntStream.range(0, getColumnCount()).forEach(index -> {
-                updateFactMapping(simulationDescriptor, factMappingToEdit, index, value);
-            });
+        ScenarioHeaderMetaData.MetadataType metadataType = editedMetadata.getMetadataType();
+        IntStream.range(0, getColumnCount()).forEach(index -> updateFactMapping(simulationDescriptor, factMappingToEdit, index, value, metadataType));
+        if (editedMetadata.isInstanceHeader()) {
             eventBus.fireEvent(new ReloadRightPanelEvent(false));
-        } else {
-            editedMetadata.setTitle(value);
-            factMappingToEdit.setExpressionAlias(value);
         }
     }
 
@@ -635,7 +631,7 @@ public class ScenarioGridModel extends BaseGridData {
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
         String columnPropertyName = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
         if (columnPropertyName.contains(".")) {
-            columnPropertyName = columnPropertyName.substring(columnPropertyName.indexOf(".")+1);
+            columnPropertyName = columnPropertyName.substring(columnPropertyName.indexOf(".") + 1);
         }
         return Objects.equals(columnPropertyName, headerName);
     }
@@ -687,18 +683,28 @@ public class ScenarioGridModel extends BaseGridData {
      * @param index
      * @param value
      */
-    protected void updateFactMapping(SimulationDescriptor simulationDescriptor, FactMapping factMappingReference, int index, String value) {
+    protected void updateFactMapping(SimulationDescriptor simulationDescriptor, FactMapping factMappingReference, int index, String value, ScenarioHeaderMetaData.MetadataType metadataType) {
         final FactIdentifier factIdentifierReference = factMappingReference.getFactIdentifier();
         FactMapping factMappingToCheck = simulationDescriptor.getFactMappingByIndex(index);
         final FactIdentifier factIdentifierToCheck = factMappingToCheck.getFactIdentifier();
-        if (Objects.equals(FactIdentifier.EMPTY, factIdentifierReference)) {
-            if (Objects.equals(factIdentifierToCheck, factIdentifierReference) && Objects.equals(factMappingReference.getFactAlias(), factMappingToCheck.getFactAlias())) {
-                ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-                factMappingToCheck.setFactAlias(value);
+        boolean toUpdate = (Objects.equals(FactIdentifier.EMPTY, factIdentifierReference) &&
+                (Objects.equals(factIdentifierToCheck, factIdentifierReference) && Objects.equals(factMappingReference.getFactAlias(), factMappingToCheck.getFactAlias())))
+                || (Objects.equals(factIdentifierToCheck, factIdentifierReference));
+        if (toUpdate) {
+            switch (metadataType) {
+                case INSTANCE:
+                    ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
+                    factMappingToCheck.setFactAlias(value);
+                    break;
+                case PROPERTY:
+                    if (Objects.equals(factMappingToCheck.getFullExpression(), factMappingReference.getFullExpression())) {
+                        ((ScenarioGridColumn) columns.get(index)).getPropertyHeaderMetaData().setTitle(value);
+                        factMappingToCheck.setExpressionAlias(value);
+                    }
+                    break;
+                default:
+                    break;
             }
-        } else if (Objects.equals(factIdentifierToCheck, factIdentifierReference)) {
-            ((ScenarioGridColumn) columns.get(index)).getInformationHeaderMetaData().setTitle(value);
-            factMappingToCheck.setFactAlias(value);
         }
     }
 
@@ -815,7 +821,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     protected boolean isUniquePropertyHeaderTitle(String value, int columnIndex) {
         Range instanceLimits = getInstanceLimits(columnIndex);
-        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() +1 )
+        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .filter(index -> index != columnIndex)
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
