@@ -126,7 +126,7 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                                    0);
 
         assertNotNull(context);
-        assertEquals(0.0,
+        assertEquals(50.0,
                      context.getAbsoluteCellX(),
                      0.0);
         assertEquals(100.0,
