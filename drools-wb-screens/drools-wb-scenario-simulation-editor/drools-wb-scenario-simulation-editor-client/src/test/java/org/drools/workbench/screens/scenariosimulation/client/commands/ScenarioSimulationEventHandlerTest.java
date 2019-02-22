@@ -238,7 +238,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onDuplicateColumnEvent() {
-        DuplicateColumnEvent event = new DuplicateColumnEvent(COLUMN_INDEX, false);
+        DuplicateColumnEvent event = new DuplicateColumnEvent(COLUMN_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DuplicateColumnCommand.class));
     }
