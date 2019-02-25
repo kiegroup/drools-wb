@@ -25,6 +25,7 @@ import java.util.stream.IntStream;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import junit.framework.TestCase;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -37,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +54,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -77,6 +80,9 @@ public class ScenarioGridModelTest {
 
     @Mock
     private ScenarioGridColumn scenarioIndexGridColumnMock;
+
+    @Mock
+    private ScenarioGridColumn scenarioGridColumnLocalMock;
 
     @Mock
     private BaseGridRow gridRowMock;
@@ -119,6 +125,21 @@ public class ScenarioGridModelTest {
     @Mock
     private FactMappingValue factMappingValueMock;
 
+    @Mock
+    private FactIdentifier factIdentiferMock;
+
+    @Mock
+    private ScenarioSimulationContext scenarioSimulationContextMock;
+
+    @Mock
+    private ScenarioSimulationContext.Status scenarioSimulationContextStatusMock;
+
+    @Mock
+    private ScenarioHeaderMetaData scenarioHeaderMetaDataMock;
+
+    @Mock
+    private ScenarioSimulationSharedUtils scenarioSimulationSharedUtilsMock;
+
     private List<GridColumn.HeaderMetaData> headerMetaDataList = new ArrayList<>();
 
 
@@ -135,10 +156,14 @@ public class ScenarioGridModelTest {
     private final String GRID_CELL_TEXT = "GRID_CELL_TEXT";
     private final String FULL_PACKAGE = "test.scesim";
     private final String VALUE = "VALUE";
+    private final String COLUMN_ID = "COLUMN_ID";
+    private final String CLASS_NAME = "CLASS_NAME";
+    //private final String COLUMN_GROUP = "COLUMN_GROUP";
     private final String VALUE_CLASS_NAME = String.class.getName();
     private final int ROW_COUNT = 4;
     private final int ROW_INDEX = 3;
     private final int COLUMN_INDEX = 5;
+    private final int NEW_COLUMN_INDEX = 6;
 
     @Before
     public void setup() {
@@ -190,6 +215,17 @@ public class ScenarioGridModelTest {
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValueMock));
         when(factMappingValueMock.isError()).thenReturn(true);
 
+        when(scenarioGridColumnMock.getFactIdentifier()).thenReturn(factIdentiferMock);
+        when(scenarioSimulationContextMock.getStatus()).thenReturn(scenarioSimulationContextStatusMock);
+        when(scenarioSimulationContextStatusMock.getSimulation()).thenReturn(simulationMock);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_INDEX)).thenReturn(factMappingMock);
+        when(scenarioSimulationContextStatusMock.getColumnId()).thenReturn(COLUMN_ID);
+        when(factIdentiferMock.getClassName()).thenReturn(CLASS_NAME);
+        when(scenarioGridColumnLocalMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
+        when(scenarioGridColumnLocalMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
+        when(factMappingMock.getClassName()).thenReturn(CLASS_NAME);
+        //when(scenarioSimulationSharedUtilsMock.isCollection((CLASS_NAME))).thenReturn(true);
+             //when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
         gridCellSupplier = () -> gridCellMock;
         scenarioGridModel = spy(new ScenarioGridModel(false) {
             {
@@ -275,6 +311,21 @@ public class ScenarioGridModelTest {
         verify(scenarioGridModel, times(1)).insertRowGridOnly(eq(ROW_INDEX + 1), eq(gridRowMock), isA(Scenario.class));
         verify(scenarioGridModel, never()).insertRow(eq(ROW_INDEX), eq(gridRowMock));
         verify(scenarioGridModel, times(1)).updateIndexColumn();
+    }
+
+    @Test
+    public void duplicateSingleColumn() {
+        reset(scenarioGridModel);
+        scenarioGridModel.duplicateSingleColumn(scenarioSimulationContextMock, scenarioGridColumnMock, scenarioGridColumnLocalMock, NEW_COLUMN_INDEX);
+        verify(scenarioGridModel, atLeast(1)).checkSimulation();
+        FactIdentifier factIdentifierClone = FactIdentifier.create(scenarioSimulationContextStatusMock.getColumnId(), factIdentiferMock.getClassName());
+        verify(scenarioGridColumnLocalMock, times(1)).setInstanceAssigned(scenarioGridColumnMock.isInstanceAssigned());
+        verify(scenarioGridColumnLocalMock, times(1)).setPropertyAssigned(scenarioGridColumnMock.isPropertyAssigned());
+        verify(scenarioGridColumnLocalMock, times(1)).setFactIdentifier(factIdentifierClone);
+        verify(scenarioGridColumnLocalMock, times(1)).setFactory(scenarioGridColumnMock.getFactory());
+        verify(scenarioGridModel, times(1)).insertColumn(COLUMN_INDEX, scenarioGridColumnLocalMock);
+        verify(simulationDescriptorMock, times(1)).addFactMapping(COLUMN_INDEX, factMappingMock);
+        verify(scenarioGridModel, times(1)).duplicateColumnValues(COLUMN_INDEX, NEW_COLUMN_INDEX);
     }
 
     @Test
