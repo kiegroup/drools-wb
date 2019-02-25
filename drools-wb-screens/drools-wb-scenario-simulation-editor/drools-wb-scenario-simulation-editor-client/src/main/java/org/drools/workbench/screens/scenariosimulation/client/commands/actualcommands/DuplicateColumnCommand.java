@@ -26,6 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioH
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
@@ -44,14 +45,14 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final List<GridColumn<?>> columns = context.getModel().getColumns();
         final ScenarioSimulationContext.Status status = context.getStatus();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(status.getColumnIndex());
-        int columnPosition = context.getModel().getInstanceLimits(selectedColumn.getIndex()).getMaxRowIndex() + 1;
+        int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
-        FactIdentifier factIdentifier = selectedColumn.getFactIdentifier();
-        FactIdentifier factIdentifierClone = new FactIdentifier(status.getColumnId(), factIdentifier.getClassName());
-        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn -> duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn, factIdentifierClone));
+        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn -> {
+            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn);
+        });
     }
 
-    protected void duplicateSingleColumn(ScenarioSimulationContext context, int columnPosition, ScenarioGridColumn originalColumn, FactIdentifier factIdentifier) {
+    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = originalColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
@@ -66,9 +67,7 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
                                                                                       context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
                                                                                       context.getScenarioCellTextAreaSingletonDOMElementFactory(),
                                                                                       placeHolder);
-        scenarioGridColumnLocal.setInstanceAssigned(originalColumn.isInstanceAssigned());
-        scenarioGridColumnLocal.setPropertyAssigned(originalColumn.isPropertyAssigned());
-        scenarioGridColumnLocal.setFactIdentifier(factIdentifier);
-        context.getModel().insertColumn(columnPosition, scenarioGridColumnLocal);
+
+        context.getModel().duplicateSingleColumn(context, originalColumn, scenarioGridColumnLocal, newColumnPosition);
     }
 }
