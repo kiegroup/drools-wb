@@ -22,6 +22,7 @@ import java.util.stream.IntStream;
 
 import javax.enterprise.event.Event;
 
+import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
@@ -66,6 +67,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -121,7 +123,6 @@ public abstract class AbstractScenarioSimulationTest {
     protected DataManagementStrategy dataManagementStrategyMock;
     @Mock
     protected SortedMap<String, FactModelTree> dataObjectFieldsMapMock;
-
 
     @Mock
     protected ViewsProvider viewsProviderMock;
@@ -179,7 +180,6 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioHeaderTextBoxSingletonDOMElementFactoryTest = new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                                   scenarioGridLayerMock,
                                                                                                                   scenarioGridMock);
-
 
         scenarioGridModelMock = spy(new ScenarioGridModel(false) {
             {
@@ -274,6 +274,10 @@ public abstract class AbstractScenarioSimulationTest {
         });
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
+        final Point2D computedLocation = mock(Point2D.class);
+        when(computedLocation.getX()).thenReturn(0.0);
+        when(computedLocation.getY()).thenReturn(0.0);
+        when(scenarioGridMock.getComputedLocation()).thenReturn(computedLocation);
 
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
 
