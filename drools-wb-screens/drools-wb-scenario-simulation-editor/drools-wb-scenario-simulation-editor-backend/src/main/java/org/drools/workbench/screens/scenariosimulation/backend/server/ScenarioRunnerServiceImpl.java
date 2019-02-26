@@ -18,15 +18,18 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
@@ -36,6 +39,7 @@ import org.junit.runner.Runner;
 import org.kie.api.runtime.KieContainer;
 import org.uberfire.backend.vfs.Path;
 
+import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner.toScenarioMap;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.JunitRunnerHelper.runWithJunit;
 
 @Service
@@ -46,7 +50,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
     @Inject
     private Event<TestResultMessage> defaultTestResultMessageEvent;
 
-    private BiFunction<KieContainer, Simulation, AbstractScenarioRunner> runnerSupplier = null;
+    private ScenarioRunnerProvider runnerSupplier = null;
 
     @Override
     public void runAllTests(final String identifier,
@@ -77,10 +81,23 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
     public ScenarioSimulationModel runTest(final String identifier,
                                            final Path path,
                                            final ScenarioSimulationModel model) {
+        Simulation simulation = model.getSimulation();
+        runTest(identifier,
+                path,
+                model.getSimulation().getSimulationDescriptor(),
+                toScenarioMap(simulation));
 
+        return model;
+    }
+
+    @Override
+    public Map<Integer, Scenario> runTest(final String identifier,
+                                          final Path path,
+                                          final SimulationDescriptor simulationDescriptor,
+                                          final Map<Integer, Scenario> scenarioMap) {
         KieContainer kieContainer = getKieContainer(path);
-        Runner scenarioRunner = getOrCreateRunnerSupplier(model.getSimulation())
-                .apply(kieContainer, model.getSimulation());
+        Runner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
+                .create(kieContainer, simulationDescriptor, scenarioMap);
 
         final List<Failure> failures = new ArrayList<>();
 
@@ -95,17 +112,17 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                         result.getRunTime(),
                         failures));
 
-        return model;
+        return scenarioMap;
     }
 
-    public BiFunction<KieContainer, Simulation, AbstractScenarioRunner> getOrCreateRunnerSupplier(Simulation simulation) {
+    public ScenarioRunnerProvider getOrCreateRunnerSupplier(SimulationDescriptor simulationDescriptor) {
         if (runnerSupplier != null) {
             return runnerSupplier;
         }
-        return AbstractScenarioRunner.getSpecificRunnerProvider(simulation);
+        return AbstractScenarioRunner.getSpecificRunnerProvider(simulationDescriptor);
     }
 
-    public void setRunnerSupplier(BiFunction<KieContainer, Simulation, AbstractScenarioRunner> runnerSupplier) {
+    public void setRunnerSupplier(ScenarioRunnerProvider runnerSupplier) {
         this.runnerSupplier = runnerSupplier;
     }
 }

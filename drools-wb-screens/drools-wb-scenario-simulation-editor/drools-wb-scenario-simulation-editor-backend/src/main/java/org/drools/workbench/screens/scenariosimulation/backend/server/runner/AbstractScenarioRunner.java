@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
@@ -167,13 +166,13 @@ public abstract class AbstractScenarioRunner extends Runner {
                                                  String.format("#%d: %s", index, scenario.getDescription()));
     }
 
-    public static BiFunction<KieContainer, Simulation, AbstractScenarioRunner> getSpecificRunnerProvider(Simulation simulation) {
-        if (Type.RULE.equals(simulation.getSimulationDescriptor().getType())) {
+    public static ScenarioRunnerProvider getSpecificRunnerProvider(SimulationDescriptor simulationDescriptor) {
+        if (Type.RULE.equals(simulationDescriptor.getType())) {
             return RuleScenarioRunner::new;
-        } else if (Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
+        } else if (Type.DMN.equals(simulationDescriptor.getType())) {
             return DMNScenarioRunner::new;
         } else {
-            throw new IllegalArgumentException("Impossible to run simulation of type " + simulation.getSimulationDescriptor().getType());
+            throw new IllegalArgumentException("Impossible to run simulation of type " + simulationDescriptor.getType());
         }
     }
 

@@ -34,6 +34,10 @@ public class DMNScenarioRunner extends AbstractScenarioRunner {
         this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation), fileName);
     }
 
+    public DMNScenarioRunner(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
+        this(kieContainer, simulationDescriptor, scenarios, null);
+    }
+
     public DMNScenarioRunner(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios, String fileName) {
         super(kieContainer, simulationDescriptor, scenarios, fileName, DMNFeelExpressionEvaluator::new);
     }
