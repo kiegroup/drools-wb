@@ -122,7 +122,7 @@ public class ScenarioSimulationServiceImpl
     private Properties props = new Properties();
 
     private static final String KIE_VERSION = "kie.version";
-    private static final String junitActivatorPackageName = "test";
+    private static final String junitActivatorPackageName = "testscenario";
 
     {
         String propertyFileName = "kie.properties";
