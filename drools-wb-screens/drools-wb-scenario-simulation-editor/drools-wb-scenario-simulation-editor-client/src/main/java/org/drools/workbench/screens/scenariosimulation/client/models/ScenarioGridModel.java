@@ -820,9 +820,11 @@ public class ScenarioGridModel extends BaseGridData {
      * @return
      */
     protected boolean isUniquePropertyHeaderTitle(String value, int columnIndex) {
-        Range instanceLimits = getInstanceLimits(columnIndex);
-        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
+        return IntStream.range(0, getColumnCount())
                 .filter(index -> index != columnIndex)
+                .filter(index -> Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getPropertyHeaderMetaData)
