@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import java.util.List;
+import java.util.stream.IntStream;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
@@ -36,13 +36,11 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -109,124 +107,111 @@ public class ScenarioSimulationGridWidgetMouseEventHandlerTest extends AbstractS
     }
 
     @Test
-    public void testHandleHeaderCell_NullColumn() {
+    public void handleHeaderCell_NullColumn() {
         when(columnInformation.getColumn()).thenReturn(null);
-        assertFalse(handler.handleHeaderCell(scenarioGridMock,
-                                             relativeLocation,
-                                             0,
-                                             0,
-                                             clickEvent));
-        verify(handler, never()).startEditLocal(any(), any(), any(), any(), any());
+        commonHandleHeaderCell(true, true, 1, false, false);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testHandleHeaderCell_NonEditableColumn() {
-        doReturn(false).when(handler).editSuppertedLocal(any(), any());
-        assertTrue(handler.handleHeaderCell(scenarioGridMock,
-                                            relativeLocation,
-                                            0,
-                                            0,
-                                            clickEvent));
-        verify(handler, never()).startEditLocal(any(), any(), any(), any(), any());
+    public void handleHeaderCell_NonEditableColumn() {
+        commonHandleHeaderCell(false, false, 1, false, true);
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testHandleHeaderCell_EditableColumn_NotStartEdit() {
+    public void handleHeaderCell_EditableColumn_NotStartEdit() {
+        commonHandleHeaderCell(true, false, 1, true, false);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleHeaderCell_EditableColumn_StartEdit() {
+        commonHandleHeaderCell(true, true, 1, true, true);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleHeaderCell_EditableColumn_WrongSelectedSize() {
+        commonHandleHeaderCell(true, true, 3, false, true);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleBodyCell_NotEditSupportedLocal() {
+        commonHandleBodyCell(false, true, 1, false, false);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleBodyCell_NotStartEditLocal() {
+        commonHandleBodyCell(true, false, 1, true, false);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleBodyCell_StartEditLocal() {
+        commonHandleBodyCell(true, true, 1, true, true);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void handleBodyCell_WrongSelectedSize() {
+        commonHandleBodyCell(true, true, 3, false, false);
+    }
+
+    private void commonHandleHeaderCell(boolean editSupportedLocal, boolean startEditLocal, int selectedHeaderCellsSize, boolean startEditLocalCalled, boolean expectedResult) {
         int uiHeaderColumnIndex = 0;
         int uiHeaderRowIndex = 0;
         scenarioGridMock.getModel().getSelectedHeaderCells().clear();
-        scenarioGridMock.getModel().getSelectedHeaderCells().add(mock(GridData.SelectedCell.class));
-        doReturn(true).when(handler).editSuppertedLocal(any(), any());
-        doReturn(false).when(handler).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
-        assertFalse(handler.handleHeaderCell(scenarioGridMock,
-                                             relativeLocation,
-                                             uiHeaderRowIndex,
-                                             uiHeaderColumnIndex,
-                                             clickEvent));
-        verify(handler, times(1)).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testHandleHeaderCell_EditableColumn_StartEdit() {
-        int uiHeaderColumnIndex = 0;
-        int uiHeaderRowIndex = 0;
-        scenarioGridMock.getModel().getSelectedHeaderCells().clear();
-        scenarioGridMock.getModel().getSelectedHeaderCells().add(mock(GridData.SelectedCell.class));
-        doReturn(true).when(handler).editSuppertedLocal(any(), any());
-        doReturn(true).when(handler).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
-        assertTrue(handler.handleHeaderCell(scenarioGridMock,
-                                             relativeLocation,
-                                             uiHeaderRowIndex,
-                                             uiHeaderColumnIndex,
-                                             clickEvent));
-        verify(handler, times(1)).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
-    }
-
-    @Test
-    public void handleBodyCell() {
-        commonHandleBodyCell(0, false, gridCellEditActionMock, false);
-        commonHandleBodyCell(2, false, gridCellEditActionMock, false);
-        commonHandleBodyCell(1, true, mock(GridCellEditAction.class), false);
-        commonHandleBodyCell(1, true, gridCellEditActionMock, true);
-    }
-
-    @Test
-    public void manageStartEditingGridCellNullCell() {
-        doReturn(null).when(scenarioGridModelMock).getCell(eq(0), eq(0));
-//        assertFalse(handler.manageStartEditingGridCell(scenarioGridMock, 0, 0, gridColumnMock));
-    }
-
-    @Test
-    public void manageStartEditingGridCellAlreadyEditingCell() {
-        when(scenarioGridCellMock.isEditingMode()).thenReturn(true);
-        doReturn(scenarioGridCellMock).when(scenarioGridModelMock).getCell(eq(0), eq(0));
-//        assertTrue(handler.manageStartEditingGridCell(scenarioGridMock, 0, 0, gridColumnMock));
-//        verify(scenarioGridCellMock, times(1)).isEditingMode();
-        verify(scenarioGridCellMock, never()).setEditingMode(anyBoolean());
-    }
-
-    @Test
-    public void manageStartEditingGridCellNotEditingCell() {
-        commonManageStartEditingGridCellNotEditingCell(true, false, false);
-        commonManageStartEditingGridCellNotEditingCell(false, false, false);
-        commonManageStartEditingGridCellNotEditingCell(true, true, false);
-        commonManageStartEditingGridCellNotEditingCell(false, true, true);
-    }
-
-    private void commonHandleBodyCell(int selectedSize, boolean selectedCellRightSize, GridCellEditAction gridCellEditAction, boolean expectCall) {
-        List<GridData.SelectedCell> selectedCellsMock = mock(List.class);
-        when(selectedCellsMock.size()).thenReturn(selectedSize);
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(selectedCellsMock);
-        when(scenarioGridCellMock.getSupportedEditAction()).thenReturn(gridCellEditAction);
-        doReturn(gridCellEditActionMock).when(handler).getSupportedEditActionLocal(any());
-        doReturn(scenarioGridCellMock).when(scenarioGridModelMock).getCell(eq(0), eq(0));
-        boolean retrieved = handler.handleBodyCell(scenarioGridMock,
-                                                   relativeLocation,
-                                                   0,
-                                                   0,
-                                                   doubleClickEvent);
-        if (selectedCellRightSize) {
-            if (expectCall) {
-//                verify(handler, times(1)).manageStartEditingGridCell(eq(scenarioGridMock), eq(0), eq(0), eq(gridColumnMock));
-            } else {
-//                verify(handler, never()).manageStartEditingGridCell(any(),any(), any(), any());
-            }
+        IntStream.range(0, selectedHeaderCellsSize).forEach(i -> scenarioGridMock.getModel().getSelectedHeaderCells().add(mock(GridData.SelectedCell.class)));
+        doReturn(editSupportedLocal).when(handler).editSupportedLocal(any(), any());
+        doReturn(startEditLocal).when(handler).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
+        if (expectedResult) {
+            assertTrue(handler.handleHeaderCell(scenarioGridMock,
+                                                relativeLocation,
+                                                uiHeaderRowIndex,
+                                                uiHeaderColumnIndex,
+                                                clickEvent));
         } else {
-            assertFalse(retrieved);
-//            verify(handler, never()).manageStartEditingGridCell(any(),any(), any(), any());
+            assertFalse(handler.handleHeaderCell(scenarioGridMock,
+                                                 relativeLocation,
+                                                 uiHeaderRowIndex,
+                                                 uiHeaderColumnIndex,
+                                                 clickEvent));
         }
-        reset(handler);
+        if (startEditLocalCalled) {
+            verify(handler, times(1)).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
+        } else {
+            verify(handler, never()).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(true));
+        }
     }
 
-    private void commonManageStartEditingGridCellNotEditingCell(boolean columnReadOnly, boolean startEditingCell, boolean expected) {
-        when(scenarioGridCellMock.isEditingMode()).thenReturn(false);
-        when(gridColumnMock.isReadOnly()).thenReturn(columnReadOnly);
-        when(scenarioGridMock.startEditingCell(0, 0)).thenReturn(startEditingCell);
-        doReturn(scenarioGridCellMock).when(scenarioGridModelMock).getCell(eq(0), eq(0));
-//        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(expected));
-        reset(scenarioGridCellMock);
+    private void commonHandleBodyCell(boolean editSupportedLocal, boolean startEditLocal, int selectedCellsSize, boolean startEditLocalCalled, boolean expectedResult) {
+        int uiHeaderColumnIndex = 0;
+        int uiHeaderRowIndex = 0;
+        scenarioGridMock.getModel().getSelectedCells().clear();
+        IntStream.range(0, selectedCellsSize).forEach(i -> scenarioGridMock.getModel().getSelectedCells().add(mock(GridData.SelectedCell.class)));
+        doReturn(editSupportedLocal).when(handler).editSupportedLocal(any(), any());
+        doReturn(startEditLocal).when(handler).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(false));
+        if (expectedResult) {
+            assertTrue(handler.handleBodyCell(scenarioGridMock,
+                                                relativeLocation,
+                                                uiHeaderRowIndex,
+                                                uiHeaderColumnIndex,
+                                                clickEvent));
+        } else {
+            assertFalse(handler.handleBodyCell(scenarioGridMock,
+                                                 relativeLocation,
+                                                 uiHeaderRowIndex,
+                                                 uiHeaderColumnIndex,
+                                                 clickEvent));
+        }
+        if (startEditLocalCalled) {
+            verify(handler, times(1)).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(false));
+        } else {
+            verify(handler, never()).startEditLocal(eq(scenarioGridMock), eq(uiHeaderColumnIndex), eq(gridColumnMock), eq(uiHeaderRowIndex), eq(false));
+        }
     }
+
 }

@@ -48,7 +48,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandler extends DefaultGridWi
         }
         final ScenarioHeaderMetaData headerMetaData = (ScenarioHeaderMetaData) column.getHeaderMetaData().get(uiHeaderRowIndex);
         final GridData gridData = gridWidget.getModel();
-        if (gridData.getSelectedHeaderCells().size() == 1 && editSuppertedLocal(headerMetaData.getSupportedEditAction(), event)) {
+        if (gridData.getSelectedHeaderCells().size() == 1 && editSupportedLocal(headerMetaData.getSupportedEditAction(), event)) {
             return startEditLocal((ScenarioGrid) gridWidget, uiHeaderColumnIndex, (ScenarioGridColumn) column, uiHeaderRowIndex, true);
         }
         return true;
@@ -70,7 +70,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandler extends DefaultGridWi
         if (gridData.getSelectedCells().size() == 1) {
             final GridCell<?> cell = gridData.getCell(uiRowIndex, uiColumnIndex);
             final GridCellEditAction cellEditAction = cell == null ? GridCell.DEFAULT_EDIT_ACTION : cell.getSupportedEditAction();
-            if (editSuppertedLocal(cellEditAction, event)) {
+            if (editSupportedLocal(cellEditAction, event)) {
                 ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) gridWidget.getModel().getColumns().get(uiColumnIndex);
                 return startEditLocal((ScenarioGrid) gridWidget, uiColumnIndex, scenarioGridColumn, uiRowIndex, false);
             }
@@ -81,7 +81,7 @@ public class ScenarioSimulationGridWidgetMouseEventHandler extends DefaultGridWi
 
 
     // Indirection add for test
-    protected boolean editSuppertedLocal(GridCellEditAction gridCellEditAction, final AbstractNodeMouseEvent event) {
+    protected boolean editSupportedLocal(GridCellEditAction gridCellEditAction, final AbstractNodeMouseEvent event) {
         return Objects.equals(gridCellEditAction, GridCellEditAction.getSupportedEditAction(event));
     }
 
