@@ -82,9 +82,16 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
                                                                  ri,
                                                                  ci,
                                                                  uiRowIndex);
+            final int cellXMiddle = (int) (context.getAbsoluteCellX() +
+                    context.getCellWidth() / 2 +
+                    gridLayer.getDomElementContainer().getAbsoluteLeft());
+            final int cellYMiddle = (int) (context.getAbsoluteCellY() +
+                    context.getCellHeight() / 2 +
+                    gridLayer.getDomElementContainer().getAbsoluteTop());
+
             return scenarioContextMenuRegistry.manageRightClick((ScenarioGrid) gridWidget,
-                                                                (int) (context.getAbsoluteCellX() + gridLayer.getDomElementContainer().getAbsoluteLeft()),
-                                                                (int) (context.getAbsoluteCellY() + gridLayer.getDomElementContainer().getAbsoluteTop()),
+                                                                cellXMiddle,
+                                                                cellYMiddle,
                                                                 uiRowIndex,
                                                                 uiColumnIndex,
                                                                 isHeader);
