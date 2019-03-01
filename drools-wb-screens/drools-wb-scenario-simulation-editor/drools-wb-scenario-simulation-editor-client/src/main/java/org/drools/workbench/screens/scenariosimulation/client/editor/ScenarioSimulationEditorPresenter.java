@@ -16,8 +16,13 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
@@ -40,6 +45,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -101,11 +107,11 @@ public class ScenarioSimulationEditorPresenter
 
     protected DataManagementStrategy dataManagementStrategy;
 
+    protected ScenarioSimulationModel model;
+
     private ImportsWidgetPresenter importsWidget;
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
-
-    private ScenarioSimulationModel model;
 
     private Caller<ScenarioSimulationService> service;
 
@@ -254,9 +260,23 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
+        List<Integer> indexes = new ArrayList<>(context.getStatus().getSimulation().getScenarioMap().keySet());
+        onRunScenario(indexes);
+    }
+
+    public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
-        service.call(refreshModel(), new HasBusyIndicatorDefaultErrorCallback(view)).runScenario(versionRecordManager.getCurrentPath(), model);
+        Simulation simulation = model.getSimulation();
+        Map<Integer, Scenario> scenarioMap = indexOfScenarioToRun.stream()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        simulation::getScenarioByIndex
+                ));
+        service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
+                .runScenario(versionRecordManager.getCurrentPath(),
+                             simulation.getSimulationDescriptor(),
+                             scenarioMap);
     }
 
     public void onUndo() {
@@ -284,13 +304,19 @@ public class ScenarioSimulationEditorPresenter
         return dataManagementStrategy;
     }
 
-    protected RemoteCallback<ScenarioSimulationModel> refreshModel() {
+    protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
         return this::refreshModelContent;
     }
 
-    protected void refreshModelContent(ScenarioSimulationModel newModel) {
-        this.model = newModel;
-        final Simulation simulation = newModel.getSimulation();
+    protected void refreshModelContent(Map<Integer, Scenario> newData) {
+        if (this.model == null) {
+            return;
+        }
+        Simulation simulation = this.model.getSimulation();
+        for (Map.Entry<Integer, Scenario> entry : newData.entrySet()) {
+            int index = entry.getKey() - 1;
+            simulation.replaceScenario(index, entry.getValue());
+        }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
@@ -417,10 +443,9 @@ public class ScenarioSimulationEditorPresenter
         }
         packageName = content.getDataModel().getPackageName();
         resetEditorPages(content.getOverview());
-        if(ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
+        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
             dataManagementStrategy = new DMODataManagementStrategy(oracleFactory, context);
-        }
-        else {
+        } else {
             dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, context, eventBus);
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);

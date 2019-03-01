@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import javax.enterprise.event.Event;
@@ -110,6 +111,8 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioSimulationModel scenarioSimulationModelMock;
     @Mock
+    protected Map<Integer, Scenario> scenarioMapMock;
+    @Mock
     protected DataManagementStrategy dataManagementStrategyMock;
 
 
@@ -145,6 +148,7 @@ public abstract class AbstractScenarioSimulationTest {
     @Before
     public void setup() {
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
+        when(simulationMock.getScenarioMap()).thenReturn(scenarioMapMock);
         IntStream.range(0, 4).forEach(index -> gridColumns.add(gridColumnMock));
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,

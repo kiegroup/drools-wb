@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +49,7 @@ public abstract class AbstractScenarioRunner extends Runner {
                                   Simulation simulation,
                                   String fileName,
                                   Function<ClassLoader, ExpressionEvaluator> expressionEvaluatorFactory) {
-        this(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation), fileName, expressionEvaluatorFactory);
+        this(kieContainer, simulation.getSimulationDescriptor(), simulation.getScenarioMap(), fileName, expressionEvaluatorFactory);
     }
 
     public AbstractScenarioRunner(KieContainer kieContainer,
@@ -143,22 +142,13 @@ public abstract class AbstractScenarioRunner extends Runner {
     }
 
     public static Description getDescriptionForSimulation(Optional<String> filename, Simulation simulation) {
-        return getDescriptionForSimulation(filename, simulation.getSimulationDescriptor(), toScenarioMap(simulation));
+        return getDescriptionForSimulation(filename, simulation.getSimulationDescriptor(), simulation.getScenarioMap());
     }
 
     public static Description getDescriptionForSimulation(Optional<String> filename, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
         Description suiteDescription = Description.createSuiteDescription("Test Scenarios (Preview) tests");
         scenarios.forEach((index, scenario) -> suiteDescription.addChild(getDescriptionForScenario(filename, index, scenario)));
         return suiteDescription;
-    }
-
-    public static Map<Integer, Scenario> toScenarioMap(Simulation simulation) {
-        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
-        Map<Integer, Scenario> indexToScenario = new HashMap<>();
-        for (int index = 0; index < scenarios.size(); index += 1) {
-            indexToScenario.put(index + 1, scenarios.get(index));
-        }
-        return indexToScenario;
     }
 
     public static Description getDescriptionForScenario(Optional<String> className, int index, Scenario scenario) {

@@ -37,7 +37,6 @@ import org.junit.runners.model.InitializationError;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner.toScenarioMap;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.ResourceHelper.getResourcesByExtension;
 
 public class ScenarioJunitActivator extends ParentRunner<SimulationWithFileName> {
@@ -94,7 +93,7 @@ public class ScenarioJunitActivator extends ParentRunner<SimulationWithFileName>
 
     AbstractScenarioRunner newRunner(KieContainer kieContainer, Simulation simulation, String fileName) {
         AbstractScenarioRunner runner = AbstractScenarioRunner.getSpecificRunnerProvider(simulation.getSimulationDescriptor())
-                .create(kieContainer, simulation.getSimulationDescriptor(), toScenarioMap(simulation));
+                .create(kieContainer, simulation.getSimulationDescriptor(), simulation.getScenarioMap());
         runner.setFileName(fileName);
         return runner;
     }

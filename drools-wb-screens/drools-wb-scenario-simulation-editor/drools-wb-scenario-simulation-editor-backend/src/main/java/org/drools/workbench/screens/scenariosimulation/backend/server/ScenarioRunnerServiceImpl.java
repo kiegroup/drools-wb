@@ -27,8 +27,6 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
@@ -39,7 +37,6 @@ import org.junit.runner.Runner;
 import org.kie.api.runtime.KieContainer;
 import org.uberfire.backend.vfs.Path;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner.toScenarioMap;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.JunitRunnerHelper.runWithJunit;
 
 @Service
@@ -75,19 +72,6 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                         1,
                         1,
                         new ArrayList<>()));
-    }
-
-    @Override
-    public ScenarioSimulationModel runTest(final String identifier,
-                                           final Path path,
-                                           final ScenarioSimulationModel model) {
-        Simulation simulation = model.getSimulation();
-        runTest(identifier,
-                path,
-                model.getSimulation().getSimulationDescriptor(),
-                toScenarioMap(simulation));
-
-        return model;
     }
 
     @Override
