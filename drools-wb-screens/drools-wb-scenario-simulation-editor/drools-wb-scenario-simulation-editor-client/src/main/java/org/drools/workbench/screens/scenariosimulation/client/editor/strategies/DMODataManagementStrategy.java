@@ -77,7 +77,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
             // Iterate over all dataObjects to retrieve their modelfields
             dataObjectsTypes.forEach(factType ->
                                              oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
-//            populateSimpleJavaTypes(simpleJavaTypes, rightPanelPresenter, scenarioGridModel);
         }
     }
 
@@ -121,16 +120,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
         FactModelTree toSend = getFactModelTree(factName, result);
         aggregatorCallback.callback(toSend);
     }
-
-//    protected SortedMap<String, FactModelTree> getSimpleJavaTypes(List<String> simpleJavaTypes) {
-//        // Instantiate a simpleJavaTypes container map
-//        SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
-//        simpleJavaTypes.forEach(factType -> simpleJavaTypeFieldsMap.put(factType, getSimpleClassFactModelTree(SIMPLE_CLASSES_MAP.get(factType))));
-////        SortedMap<String, FactModelTree> simpleJavaTypeInstanceFieldsMap = getInstanceMap(simpleJavaTypeFieldsMap);
-////        Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleJavaTypeFieldsMap.keySet());
-////        simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
-////        scenarioGridModel.setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
-//    }
 
     /**
      * Create a <code>FactModelTree</code> for a given <b>factName</b> populating it with the given
