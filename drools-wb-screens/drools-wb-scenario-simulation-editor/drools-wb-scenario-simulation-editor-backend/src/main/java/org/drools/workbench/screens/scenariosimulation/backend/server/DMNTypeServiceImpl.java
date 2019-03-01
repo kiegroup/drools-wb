@@ -56,14 +56,14 @@ public class DMNTypeServiceImpl
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
 
-            checkTypeSupport(type, errorHolder, input.getName());
+            checkType(type, errorHolder, input.getName());
 
             visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
 
-            checkTypeSupport(type, errorHolder, decision.getName());
+            checkType(type, errorHolder, decision.getName());
 
             visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
         }
@@ -92,12 +92,12 @@ public class DMNTypeServiceImpl
     protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, boolean collectionRecursion) {
         // a simple type
         if (!type.isComposite()) {
-            // if is not a collection or a recursion just retur a simple fact
+            // if is not a collection or a recursion just return a simple fact
             if (!type.isCollection() || collectionRecursion) {
                 return createSimpleFact(name, type.getName(), fmType);
             }
             // otherwise create the generics and return the simple type
-            else {
+            else { // TOP LEVEL COLLECTION
                 Map<String, String> simpleFields = new HashMap<>();
                 Map<String, List<String>> genericTypeInfoMap = new HashMap<>();
                 String genericKey = populateGeneric(simpleFields, genericTypeInfoMap, path, type.getName(), type.getName());
@@ -156,17 +156,31 @@ public class DMNTypeServiceImpl
         return genericKey;
     }
 
-    protected void checkTypeSupport(DMNType type, ErrorHolder errorHolder, String path) {
+    /**
+     * Check the given <code>DMNType</code> to eventually detect and add errors to given <code>ErrorHolder</code>
+     * @param type
+     * @param errorHolder
+     * @param path
+     */
+    protected void checkType(DMNType type, ErrorHolder errorHolder, String path) {
         if (type.isCollection()) {
             errorHolder.getTopLevelCollection().add(path);
         }
-        visitType(type, false, errorHolder, path);
+        visitCompositeType(type, false, errorHolder, path);
     }
 
-    private void visitType(DMNType type,
-                             boolean alreadyInCollection,
-                             ErrorHolder errorHolder,
-                             String path) {
+    /**
+     * Recursively visit a <i>composite</i> <code>DMNType</code> to eventually detect and add errors to given <code>ErrorHolder</code>
+     *
+     * @param type
+     * @param alreadyInCollection
+     * @param errorHolder
+     * @param path
+     */
+    private void visitCompositeType(DMNType type,
+                                    boolean alreadyInCollection,
+                                    ErrorHolder errorHolder,
+                                    String path) {
         if (type.isComposite()) {
             for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
                 String name = entry.getKey();
@@ -178,10 +192,10 @@ public class DMNTypeServiceImpl
                 if (alreadyInCollection && nestedType.isComposite()) {
                     errorHolder.getMultipleNestedObject().add(nestedPath);
                 }
-                visitType(nestedType,
-                          alreadyInCollection || nestedType.isCollection(),
-                          errorHolder,
-                          nestedPath);
+                visitCompositeType(nestedType,
+                                   alreadyInCollection || nestedType.isCollection(),
+                                   errorHolder,
+                                   nestedPath);
             }
         }
     }
