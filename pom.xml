@@ -176,7 +176,7 @@
 
   </build>
 
-   <profiles>
+  <profiles>
     <profile>
       <id>ts-exporter-build</id>
       <dependencies>
