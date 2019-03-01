@@ -136,23 +136,6 @@ public class DMODataManagementStrategyTest extends AbstractDataManagementStrateg
         assertEquals("", retrieved.getFullPackage());
     }
 
-//    @Test
-//    public void populateFactModelTree() {
-//        FactModelTree toPopulate = getFactModelTreeInner(randomAlphabetic(3));
-//        final FactModelTree spied = spy(toPopulate);
-//        final Map<String, String> simpleProperties = toPopulate.getSimpleProperties();
-//        final Set<String> keys = simpleProperties.keySet();
-//        final Collection<String> values = simpleProperties.values();
-//        SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
-//        dmoDataManagementStrategy.populateFactModelTree(toPopulate, factTypeFieldsMap, new HashMap<>());
-//        keys.forEach(key -> {
-//            final String value = simpleProperties.get(key);
-//            final String factName = factTypeFieldsMap.get(value).getFactName();
-//            verify(spied, times(1)).addExpandableProperty(eq(key), eq(factName));
-//        });
-//        assertTrue(toPopulate.getSimpleProperties().isEmpty());
-//    }
-
     @Test
     public void getSimpleClassFactModelTree() {
         Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
