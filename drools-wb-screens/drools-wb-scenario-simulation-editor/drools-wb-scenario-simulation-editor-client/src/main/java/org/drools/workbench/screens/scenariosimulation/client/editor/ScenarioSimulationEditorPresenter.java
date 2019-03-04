@@ -16,13 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
@@ -260,19 +259,23 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = new ArrayList<>(context.getStatus().getSimulation().getScenarioMap().keySet());
+        List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableScenarios().size())
+                .boxed()
+                .collect(Collectors.toList());
         onRunScenario(indexes);
     }
 
+    // FIXME to test
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
-        Map<Integer, Scenario> scenarioMap = indexOfScenarioToRun.stream()
-                .collect(Collectors.toMap(
-                        Function.identity(),
+        Map<Integer, Scenario> scenarioMap = indexOfScenarioToRun.stream().collect(
+                Collectors.toMap(
+                        index -> index + 1,
                         simulation::getScenarioByIndex
-                ));
+                )
+        );
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulation.getSimulationDescriptor(),
@@ -308,6 +311,7 @@ public class ScenarioSimulationEditorPresenter
         return this::refreshModelContent;
     }
 
+    // FIXME to test
     protected void refreshModelContent(Map<Integer, Scenario> newData) {
         if (this.model == null) {
             return;
