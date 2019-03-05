@@ -26,7 +26,6 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
  * <code>Command</code> to <b>reload</b> the <code>RightPanelView</code>, <b>eventually</b> showing it (if required by original event)
  */
 @Dependent
-// FIXME to test
 public class RunSingleScenarioCommand extends AbstractScenarioSimulationCommand {
 
     public RunSingleScenarioCommand() {

@@ -265,7 +265,6 @@ public class ScenarioSimulationEditorPresenter
         onRunScenario(indexes);
     }
 
-    // FIXME to test
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
@@ -311,7 +310,6 @@ public class ScenarioSimulationEditorPresenter
         return this::refreshModelContent;
     }
 
-    // FIXME to test
     protected void refreshModelContent(Map<Integer, Scenario> newData) {
         if (this.model == null) {
             return;

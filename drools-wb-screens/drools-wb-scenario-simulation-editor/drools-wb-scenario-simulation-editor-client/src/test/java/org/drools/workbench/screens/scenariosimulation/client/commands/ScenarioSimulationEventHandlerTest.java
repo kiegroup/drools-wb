@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.RunSingleScenarioCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetInstanceHeaderCommand;
@@ -52,6 +53,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetCellValueEvent;
@@ -61,6 +63,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RedoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.RunSingleScenarioEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetCellValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
@@ -121,6 +124,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration reloadRightPanelHandlerRegistrationMock;
     @Mock
+    private HandlerRegistration runSingleScenarioHandlerRegistrationMock;
+    @Mock
     private HandlerRegistration scenarioGridReloadHandlerRegistrationMock;
     @Mock
     private HandlerRegistration setCellValueEventHandlerMock;
@@ -132,7 +137,6 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     private HandlerRegistration undoEventHandlerRegistrationMock;
     @Mock
     private HandlerRegistration unsupportedDMNEventHandlerRegistrationMock;
-
 
     @Mock
     private DeletePopupPresenter deletePopupPresenterMock;
@@ -159,6 +163,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class))).thenReturn(redoEventHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadRightPanelHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class))).thenReturn(runSingleScenarioHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(SetCellValueEvent.TYPE), isA(SetCellValueEventHandler.class))).thenReturn(setCellValueEventHandlerMock);
         when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(setInstanceHeaderEventHandlerMock);
@@ -285,6 +290,13 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         ReloadRightPanelEvent event = new ReloadRightPanelEvent(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(ReloadRightPanelCommand.class));
+    }
+
+    @Test
+    public void onRunSingleScenarioPanelEvent() {
+        RunSingleScenarioEvent event = new RunSingleScenarioEvent(ROW_INDEX);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(RunSingleScenarioCommand.class));
     }
 
     @Test
@@ -453,6 +465,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(redoEventHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ReloadRightPanelEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(reloadRightPanelHandlerRegistrationMock));
+        verify(eventBusMock, times(1)).addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(runSingleScenarioHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(scenarioGridReloadHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetCellValueEvent.TYPE), isA(SetCellValueEventHandler.class));
