@@ -16,26 +16,25 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.drools.workbench.screens.scenariosimulation.backend.server.exceptions.WrongDMNTypeException;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
-@RunWith(MockitoJUnitRunner.class)
 public class DMNTypeServiceImplTest extends AbstractDMNTest {
 
     private DMNTypeServiceImpl dmnTypeServiceImpl;
@@ -46,121 +45,141 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         dmnTypeServiceImpl = new DMNTypeServiceImpl() {
             @Override
             public DMNModel getDMNModel(Path path, String stringPath) {
-                return dmnModelMock;
+                return dmnModelLocal;
             }
         };
     }
 
     @Test
-    public void retrieveType() {
-        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveType(mock(Path.class), null);
-        assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getFactName());
-        assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).getSimpleProperties().get("value"));
-        assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_TYPE_NAME).isSimple());
+    public void retrieveFactModelTuple() throws WrongDMNTypeException {
+        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
+        assertTrue(factModelTuple.getVisibleFacts().containsKey(SIMPLE_INPUT_DATA_NAME));
+        assertEquals(SIMPLE_INPUT_DATA_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_INPUT_DATA_NAME).getFactName());
+        assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_INPUT_DATA_NAME).getSimpleProperties().get("value"));
+        assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_INPUT_DATA_NAME).isSimple());
 
-        assertEquals(SIMPLE_DECISION_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_TYPE_NAME).getFactName());
-        assertEquals(BASE_TYPE, factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_TYPE_NAME).getSimpleProperties().get("value"));
-        assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_TYPE_NAME).isSimple());
+        assertTrue(factModelTuple.getVisibleFacts().containsKey(SIMPLE_DECISION_DATA_NAME));
+        assertEquals(SIMPLE_DECISION_DATA_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_DATA_NAME).getFactName());
+        assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_DATA_NAME).getSimpleProperties().get("value"));
+        assertTrue(factModelTuple.getVisibleFacts().get(SIMPLE_DECISION_DATA_NAME).isSimple());
 
-        assertEquals(COMPLEX_DECISION_TYPE_NAME, factModelTuple.getVisibleFacts().get(COMPLEX_DECISION_TYPE_NAME).getFactName());
-        String hiddenKey = factModelTuple.getVisibleFacts().get(COMPLEX_DECISION_TYPE_NAME).getExpandableProperties().get(COMPLEX_DECISION_TYPE_NAME);
-        assertEquals(BASE_TYPE, factModelTuple.getHiddenFacts().get(hiddenKey).getSimpleProperties().get(SIMPLE_DECISION_TYPE_NAME));
+        assertTrue(factModelTuple.getVisibleFacts().containsKey(COMPOSITE_DECISION_DATA_NAME));
+        assertEquals(COMPOSITE_DECISION_DATA_NAME, factModelTuple.getVisibleFacts().get(COMPOSITE_DECISION_DATA_NAME).getFactName());
+        assertTrue(factModelTuple.getVisibleFacts().get(COMPOSITE_DECISION_DATA_NAME).getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_PHONENUMBERS));
+        String hiddenKey = factModelTuple.getVisibleFacts().get(COMPOSITE_DECISION_DATA_NAME).getExpandableProperties().get(EXPANDABLE_PROPERTY_PHONENUMBERS);
+        assertTrue(factModelTuple.getHiddenFacts().containsKey(hiddenKey));
+        assertEquals(SIMPLE_TYPE_NAME, factModelTuple.getHiddenFacts().get(hiddenKey).getSimpleProperties().get(PHONENUMBER_NUMBER));
     }
 
     @Test
-    public void createFactModelTree() {
+    public void createTopLevelFactModelTreeSimpleNoCollection() throws WrongDMNTypeException {
         // Single property retrieve
-        DMNType simpleString = new SimpleTypeImpl(null, "string", null);
-
-        FactModelTree simpleStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
-
-        assertEquals(1, simpleStringFactModelTree.getSimpleProperties().size());
-        assertTrue(simpleStringFactModelTree.getSimpleProperties().containsKey("value"));
-        assertEquals("string", simpleStringFactModelTree.getSimpleProperties().get("value"));
-
-        // Single property collection retrieve
-        DMNType simpleCollectionString = new SimpleTypeImpl(null, "string", null);
-        ((SimpleTypeImpl) simpleCollectionString).setCollection(true);
-
-        TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
-        FactModelTree simpleCollectionStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
-
-        assertEquals(1, simpleCollectionStringFactModelTree.getSimpleProperties().size());
-        assertTrue(simpleCollectionStringFactModelTree.getSimpleProperties().containsKey("value"));
-        assertEquals("string", simpleCollectionStringFactModelTree.getSimpleProperties().get("value"));
-
-        // Complex object retrieve
-        DMNType person = new CompositeTypeImpl();
-
-        DMNType phoneNumberCompositeCollection = new CompositeTypeImpl(null, "tPhoneNumber", null, true);
-        ((CompositeTypeImpl) phoneNumberCompositeCollection).addField("prefix", new SimpleTypeImpl(null, "string", null));
-        ((CompositeTypeImpl) phoneNumberCompositeCollection).addField("number", new SimpleTypeImpl(null, "string", null));
-
-        DMNType detailsComposite = new CompositeTypeImpl(null, "tDetails", "tDetails");
-        ((CompositeTypeImpl) detailsComposite).addField("gender", new SimpleTypeImpl(null, "string", null));
-        ((CompositeTypeImpl) detailsComposite).addField("weight", new SimpleTypeImpl(null, "string", null));
-
-        DMNType nameSimple = new SimpleTypeImpl(null, "string", null);
-
-        DMNType friendsSimpleCollection = new SimpleTypeImpl(null, "string", null);
-        ((SimpleTypeImpl) friendsSimpleCollection).setCollection(true);
-
-        ((CompositeTypeImpl) person).addField("friends", friendsSimpleCollection);
-        ((CompositeTypeImpl) person).addField("phoneNumbers", phoneNumberCompositeCollection);
-        ((CompositeTypeImpl) person).addField("details", detailsComposite);
-        ((CompositeTypeImpl) person).addField("name", nameSimple);
-
-        TreeMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-        FactModelTree factModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", person, hiddenFacts, FactModelTree.Type.INPUT);
-
-        assertEquals(3, factModelTree.getSimpleProperties().size());
-        assertEquals(1, factModelTree.getExpandableProperties().size());
-        assertEquals(List.class.getCanonicalName(), factModelTree.getSimpleProperties().get("friends"));
-        assertEquals(List.class.getCanonicalName(), factModelTree.getSimpleProperties().get("phoneNumbers"));
-        assertEquals(1, factModelTree.getGenericTypeInfo("friends").size());
+        DMNType simpleString = getSimpleNoCollection();
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", new HashMap<>(), simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
+        assertNotNull(retrieved);
+        assertEquals("testPath", retrieved.getFactName());
+        assertEquals(1, retrieved.getSimpleProperties().size());
+        assertTrue(retrieved.getSimpleProperties().containsKey("value"));
+        assertEquals(simpleString.getName(), retrieved.getSimpleProperties().get("value"));
+        assertTrue(retrieved.getExpandableProperties().isEmpty());
+        assertTrue(retrieved.getGenericTypesMap().isEmpty());
     }
 
     @Test
-    public void checkTypeSupport() {
+    public void createTopLevelFactModelTreeSimpleCollection() throws WrongDMNTypeException {
+        // Single property collection retrieve
+        DMNType simpleCollectionString = getSimpleCollection();
+        TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", new HashMap<>(), simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
+        assertNotNull(retrieved);
+        assertEquals("testPath", retrieved.getFactName());
+        assertEquals(1, retrieved.getSimpleProperties().size());
+        assertTrue(retrieved.getSimpleProperties().containsKey("value"));
+        assertEquals("java.util.List", retrieved.getSimpleProperties().get("value"));
+        assertTrue(retrieved.getExpandableProperties().isEmpty());
+        assertEquals(1, retrieved.getGenericTypesMap().size());
+        assertTrue(retrieved.getGenericTypesMap().containsKey("value"));
+        assertNotNull(retrieved.getGenericTypesMap().get("value"));
+        assertEquals(1, retrieved.getGenericTypesMap().get("value").size());
+        assertEquals(simpleCollectionString.getName(), retrieved.getGenericTypesMap().get("value").get(0));
+    }
+
+    @Test
+    public void createTopLevelFactModelTreeCompositeNoCollection() throws WrongDMNTypeException {
+        // Single property retrieve
+        DMNType compositePerson = getSingleCompositeWithSimpleCollection();
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", new HashMap<>(), compositePerson, new TreeMap<>(), FactModelTree.Type.INPUT);
+        assertNotNull(retrieved);
+        assertEquals("testPath", retrieved.getFactName());
+        assertEquals(2, retrieved.getSimpleProperties().size());
+        assertTrue(retrieved.getSimpleProperties().containsKey("friends"));
+        assertEquals("java.util.List", retrieved.getSimpleProperties().get("friends"));
+        assertTrue(retrieved.getSimpleProperties().containsKey("name"));
+        assertEquals(SIMPLE_TYPE_NAME, retrieved.getSimpleProperties().get("name"));
+        //
+        assertEquals(1, retrieved.getGenericTypesMap().size());
+        assertTrue(retrieved.getGenericTypesMap().containsKey("value"));
+        assertEquals(SIMPLE_TYPE_NAME, retrieved.getGenericTypesMap().get("value").get(0));
+        //
+        assertEquals(2, retrieved.getExpandableProperties().size());
+        assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_PHONENUMBERS));
+        assertEquals("tPhoneNumber", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_PHONENUMBERS));
+        assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_DETAILS));
+        assertEquals("tDetails", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_DETAILS));
+    }
+
+    @Test
+    public void createTopLevelFactModelTreeCompositeCollection() throws WrongDMNTypeException {
+        // Single property collection retrieve
+        DMNType compositePerson = getCompositeCollection();
+        TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", new HashMap<>(), compositePerson, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
+        assertNotNull(retrieved);
+        assertEquals("testPath", retrieved.getFactName());
+        assertEquals(1, retrieved.getSimpleProperties().size());
+        assertTrue(retrieved.getSimpleProperties().containsKey("value"));
+        assertEquals("java.util.List", retrieved.getSimpleProperties().get("value"));
+        assertTrue(retrieved.getExpandableProperties().isEmpty());
+        assertEquals(1, retrieved.getGenericTypesMap().size());
+        assertTrue(retrieved.getGenericTypesMap().containsKey("value"));
+        assertNotNull(retrieved.getGenericTypesMap().get("value"));
+        assertEquals(1, retrieved.getGenericTypesMap().get("value").size());
+        assertEquals(compositePerson.getName(), retrieved.getGenericTypesMap().get("value").get(0));
+    }
+
+    @Test
+    public void checkTypeSimpleTopLevelCollection() {
         // top level collection
-        DMNType topLevelCollection = new SimpleTypeImpl(null, "string", null);
-        ((SimpleTypeImpl) topLevelCollection).setCollection(true);
+        SimpleTypeImpl topLevelCollection = getSimpleCollection();
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkType(topLevelCollection, errorHolder, "fieldName");
         assertEquals(1, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
         assertEquals("fieldName", errorHolder.getTopLevelCollection().get(0));
+    }
 
+    @Test
+    public void checkTypeSingleCompositeWithNestedCompositeCollection() {
         // nested collection
-        DMNType person = new CompositeTypeImpl();
-
-        SimpleTypeImpl numbers = new SimpleTypeImpl(null, "string", null);
-        numbers.setCollection(true);
-
-        DMNType phoneNumberCompositeCollection = new CompositeTypeImpl(null, "tPhoneNumber", null, true);
-        ((CompositeTypeImpl) phoneNumberCompositeCollection).addField("numbers", numbers);
-
-        ((CompositeTypeImpl) person).addField("phoneNumbers", phoneNumberCompositeCollection);
-
-        errorHolder = new DMNTypeServiceImpl.ErrorHolder();
-        dmnTypeServiceImpl.checkType(person, errorHolder, "fieldName");
+        CompositeTypeImpl singleCompositeWithComplexCollection = getSingleCompositeWithNestedCollection();
+        DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
+        dmnTypeServiceImpl.checkType(singleCompositeWithComplexCollection, errorHolder, "fieldName");
         assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(1, errorHolder.getMultipleNestedCollection().size());
         assertEquals("fieldName.phoneNumbers.numbers", errorHolder.getMultipleNestedCollection().get(0));
+    }
 
+    @Test
+    public void checkTypeSingleCompositeWithCollection() {
         // nested object into collection
-        person = new CompositeTypeImpl();
-
+        CompositeTypeImpl person = new CompositeTypeImpl();
         CompositeTypeImpl complexNumbers = new CompositeTypeImpl(null, "tPhoneNumber", null, false);
-
-        phoneNumberCompositeCollection = new CompositeTypeImpl(null, "tPhoneNumber", null, true);
-        ((CompositeTypeImpl) phoneNumberCompositeCollection).addField("complexNumbers", complexNumbers);
-
-        ((CompositeTypeImpl) person).addField("phoneNumbers", phoneNumberCompositeCollection);
-
-        errorHolder = new DMNTypeServiceImpl.ErrorHolder();
+        CompositeTypeImpl phoneNumberCompositeCollection = new CompositeTypeImpl(null, "tPhoneNumber", null, true);
+        phoneNumberCompositeCollection.addField("complexNumbers", complexNumbers);
+        person.addField(EXPANDABLE_PROPERTY_PHONENUMBERS, phoneNumberCompositeCollection);
+        DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkType(person, errorHolder, "fieldName");
         assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(1, errorHolder.getMultipleNestedObject().size());

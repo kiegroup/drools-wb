@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -35,6 +36,7 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.workbench.events.NotificationEvent;
 
 public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
@@ -57,9 +59,13 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
             getSuccessCallback(rightPanelPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
         }
         else {
-            dmnTypeService.call(getSuccessCallback(rightPanelPresenter, scenarioGridModel),
-                                getErrorCallback(rightPanelPresenter))
-                    .retrieveType(currentPath, dmnFilePath);
+            try {
+                dmnTypeService.call(getSuccessCallback(rightPanelPresenter, scenarioGridModel),
+                                    getErrorCallback(rightPanelPresenter))
+                        .retrieveFactModelTuple(currentPath, dmnFilePath);
+            } catch (Exception e) {
+                eventBus.fireEvent(new ScenarioNotificationEvent("Failed to parse DMN", NotificationEvent.NotificationType.ERROR));
+            }
         }
     }
 
@@ -75,9 +81,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     }
 
     protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
-        return factMappingTuple -> {
-            getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
-        };
+        return factMappingTuple -> getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
     }
 
     protected void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
