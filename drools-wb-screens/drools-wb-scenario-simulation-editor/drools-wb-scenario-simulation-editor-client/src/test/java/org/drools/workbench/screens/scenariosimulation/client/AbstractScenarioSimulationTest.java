@@ -125,7 +125,6 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected SortedMap<String, FactModelTree> dataObjectFieldsMapMock;
 
-
     @Mock
     protected ViewsProvider viewsProviderMock;
 
@@ -172,7 +171,6 @@ public abstract class AbstractScenarioSimulationTest {
     public void setup() {
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioMap()).thenReturn(scenarioMapMock);
-        IntStream.range(0, 4).forEach(index -> gridColumns.add(gridColumnMock));
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,
@@ -184,7 +182,6 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioHeaderTextBoxSingletonDOMElementFactoryTest = new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                                   scenarioGridLayerMock,
                                                                                                                   scenarioGridMock);
-
 
         scenarioGridModelMock = spy(new ScenarioGridModel(false) {
             {
@@ -335,7 +332,5 @@ public abstract class AbstractScenarioSimulationTest {
         when(factIdentifierMock.getName()).thenReturn(FACT_IDENTIFIER_NAME);
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
-
-
     }
 }
