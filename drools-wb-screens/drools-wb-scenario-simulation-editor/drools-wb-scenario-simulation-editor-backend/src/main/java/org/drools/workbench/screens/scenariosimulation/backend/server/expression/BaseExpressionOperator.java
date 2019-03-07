@@ -43,7 +43,7 @@ public enum BaseExpressionOperator {
             List<Boolean> results = Arrays.stream(rawValue.split(symbols.get(0)))
                     .map(elem -> findOperator(elem.trim()).eval(elem.trim(), resultValue, resultClass, classLoader))
                     .collect(Collectors.toList());
-            return results.stream().allMatch(a -> a);
+            return results.size() != 0 && results.stream().allMatch(a -> a);
         }
     },
     LIST_OF_VALUES(1, "[") {
