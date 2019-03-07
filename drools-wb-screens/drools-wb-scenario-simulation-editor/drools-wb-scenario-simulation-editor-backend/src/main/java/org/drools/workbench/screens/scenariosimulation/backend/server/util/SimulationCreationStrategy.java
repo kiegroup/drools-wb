@@ -23,7 +23,7 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
 import org.uberfire.backend.vfs.Path;
 
 /**
- * <b>Strategy</b> that actually builds the required <code>Simulation</code> based on <code>ScenarioSimulationModel.FactModelType</code>
+ * <b>Strategy</b> that actually builds the required <code>Simulation</code> based on <code>ScenarioSimulationModel.Type</code>
  */
 public interface SimulationCreationStrategy {
 

@@ -58,14 +58,14 @@ public class DMNTypeServiceImpl
 
             checkTypeSupport(type, errorHolder, input.getName());
 
-            visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.FactModelType.INPUT));
+            visibleFacts.put(input.getName(), createFactModelTree(input.getName(), input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
 
             checkTypeSupport(type, errorHolder, decision.getName());
 
-            visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.FactModelType.DECISION));
+            visibleFacts.put(decision.getName(), createFactModelTree(decision.getName(), decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
         }
         FactModelTuple factModelTuple = new FactModelTuple(visibleFacts, hiddenFacts);
 
@@ -85,11 +85,11 @@ public class DMNTypeServiceImpl
         return DMNSimulationUtils.extractDMNRuntime(kieContainer);
     }
 
-    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType) {
+    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
         return createFactModelTree(name, path, type, hiddenFacts, fmType, false);
     }
 
-    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.FactModelType fmType, boolean collectionRecursion) {
+    protected FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, boolean collectionRecursion) {
         // a simple type
         if (!type.isComposite()) {
             // if is not a collection or a recursion just retur a simple fact
@@ -119,7 +119,7 @@ public class DMNTypeServiceImpl
             if (entry.getValue().isCollection()) {
                 String genericKey = populateGeneric(simpleFields, genericTypeInfoMap, path, entry.getValue().getName(), entry.getKey());
 
-                FactModelTree fact = createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.FactModelType.UNDEFINED, true);
+                FactModelTree fact = createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, true);
                 hiddenFacts.put(genericKey, fact);
             }
             // a simple type is just name -> type
@@ -129,13 +129,13 @@ public class DMNTypeServiceImpl
             // a complex type needs the expandable property and then in the hidden map, its fact model tree
             else {
                 factModelTree.addExpandableProperty(entry.getKey(), expandableId);
-                hiddenFacts.put(expandableId, createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.FactModelType.UNDEFINED));
+                hiddenFacts.put(expandableId, createFactModelTree(entry.getKey(), expandableId, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED));
             }
         }
         return factModelTree;
     }
 
-    private FactModelTree createSimpleFact(String name, String type, FactModelTree.FactModelType fmType) {
+    private FactModelTree createSimpleFact(String name, String type, FactModelTree.Type fmType) {
         Map<String, String> simpleFields = new HashMap<>();
         Map<String, List<String>> genericTypeInfoMap = new HashMap<>();
         FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);

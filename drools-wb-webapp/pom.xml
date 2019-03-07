@@ -515,11 +515,6 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-data-modeller-backend</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.kie.workbench.screens</groupId>
-      <artifactId>kie-wb-common-home-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-home-client</artifactId>
@@ -1811,9 +1806,6 @@
           <name>!ts-exporter-build</name>
         </property>
       </activation>
-      <properties>
-        <version.org.webjars.npm.appformer-js-workbench-screens>0.2.6-ALPHA</version.org.webjars.npm.appformer-js-workbench-screens>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -1829,12 +1821,12 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.webjars.npm</groupId>
+                      <groupId>org.appformer</groupId>
                       <artifactId>appformer-js-workbench-screens</artifactId>
-                      <version>${version.org.webjars.npm.appformer-js-workbench-screens}</version>
+                      <version>${project.version}</version>
                       <type>jar</type>
                       <overWrite>true</overWrite>
-                      <outputDirectory>${project.build.outputDirectory}/appformer-js-workbench-screens</outputDirectory>
+                      <outputDirectory>${project.build.directory}/appformer-js-workbench-screens</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                   <overWriteReleases>false</overWriteReleases>
@@ -1857,7 +1849,7 @@
                   <outputDirectory>${project.build.outputDirectory}/org/uberfire/jsbridge/public</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.outputDirectory}/appformer-js-workbench-screens/META-INF/resources/webjars/appformer-js-workbench-screens/${version.org.webjars.npm.appformer-js-workbench-screens}/dist</directory>
+                      <directory>${project.build.directory}/appformer-js-workbench-screens/META-INF/resources/webjars/appformer-js-workbench-screens/${project.version}</directory>
                       <includes>
                         <include>home-perspective-bundle.js</include>
                         <include>drools-wb-home-screen-bundle.js</include>

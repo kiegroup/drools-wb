@@ -72,7 +72,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         // Single property retrieve
         DMNType simpleString = new SimpleTypeImpl(null, "string", null);
 
-        FactModelTree simpleStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleString, new TreeMap<>(), FactModelTree.FactModelType.INPUT);
+        FactModelTree simpleStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
 
         assertEquals(1, simpleStringFactModelTree.getSimpleProperties().size());
         assertTrue(simpleStringFactModelTree.getSimpleProperties().containsKey("value"));
@@ -83,7 +83,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         ((SimpleTypeImpl) simpleCollectionString).setCollection(true);
 
         TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
-        FactModelTree simpleCollectionStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.FactModelType.INPUT);
+        FactModelTree simpleCollectionStringFactModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
 
         assertEquals(1, simpleCollectionStringFactModelTree.getSimpleProperties().size());
         assertTrue(simpleCollectionStringFactModelTree.getSimpleProperties().containsKey("value"));
@@ -111,7 +111,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         ((CompositeTypeImpl) person).addField("name", nameSimple);
 
         TreeMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-        FactModelTree factModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", person, hiddenFacts, FactModelTree.FactModelType.INPUT);
+        FactModelTree factModelTree = dmnTypeServiceImpl.createFactModelTree("testProperty", "testProperty", person, hiddenFacts, FactModelTree.Type.INPUT);
 
         assertEquals(3, factModelTree.getSimpleProperties().size());
         assertEquals(1, factModelTree.getExpandableProperties().size());

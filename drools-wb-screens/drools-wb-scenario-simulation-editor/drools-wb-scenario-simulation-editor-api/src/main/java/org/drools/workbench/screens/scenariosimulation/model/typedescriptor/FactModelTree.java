@@ -28,7 +28,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactModelTree {
 
-    public enum FactModelType {
+    public enum Type {
         INPUT,
         DECISION,
         UNDEFINED
@@ -41,7 +41,7 @@ public class FactModelTree {
     private Map<String, String> simpleProperties; // Map of the properties: key = property name, value = property value
     private Map<String, List<String>> genericTypesMap; // Map of the collection' properties generic-type: key = property name (ex "books"), value = generic type (ex "com.Book")
     private Map<String, String> expandableProperties = new HashMap<>(); // Map of the expandable properties: key = property name, value = property value
-    private FactModelType type;
+    private Type type;
 
     public FactModelTree() {
         // CDI
@@ -56,7 +56,7 @@ public class FactModelTree {
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      */
     public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, FactModelType.UNDEFINED);
+        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
     /**
@@ -68,7 +68,7 @@ public class FactModelTree {
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      * @param type
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap, FactModelType type) {
+    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
@@ -121,7 +121,7 @@ public class FactModelTree {
         isSimple = simple;
     }
 
-    public FactModelType getType() {
+    public Type getType() {
         return type;
     }
 
