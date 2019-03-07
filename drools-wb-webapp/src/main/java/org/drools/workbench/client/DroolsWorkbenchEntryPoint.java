@@ -16,14 +16,12 @@
 package org.drools.workbench.client;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.drools.workbench.client.resources.i18n.AppConstants;
 import org.guvnor.common.services.shared.config.AppConfigService;
 import org.guvnor.common.services.shared.preferences.GuvnorPreferenceScopes;
 import org.jboss.errai.common.client.api.Caller;
-import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.kie.soup.commons.util.Sets;
 import org.kie.workbench.common.widgets.client.handlers.workbench.configuration.LanguageConfigurationHandler;
@@ -37,9 +35,7 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.widgets.menu.megamenu.WorkbenchMegaMenuPresenter;
 import org.uberfire.ext.preferences.client.admin.page.AdminPage;
 import org.uberfire.jsbridge.client.AppFormerJsBridge;
-import org.uberfire.jsbridge.client.loading.ActivityLazyLoaded;
 import org.uberfire.preferences.shared.PreferenceScopeFactory;
-import org.uberfire.workbench.model.ActivityResourceType;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 
@@ -98,14 +94,9 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
     }
 
     @Override
-    @AfterInitialization
-    public void startDefaultWorkbench() {
-        super.startDefaultWorkbench();
-    }
-
-    @Override
     public void setupMenu() {
-        menuBar.clear();
+        setupAdminPage();
+
         menusHelper.addUtilitiesMenuItems();
 
         final Menus menus = MenuFactory
@@ -144,14 +135,5 @@ public class DroolsWorkbenchEntryPoint extends DefaultWorkbenchEntryPoint {
                           () -> {
                               workbenchConfigurationPresenter.show(languageConfigurationHandler);
                           });
-    }
-
-    private void refreshMenu(@Observes ActivityLazyLoaded event) {
-
-        if (event.getActivity().getResourceType() != ActivityResourceType.PERSPECTIVE) {
-            return;
-        }
-
-        setupMenu();
     }
 }
