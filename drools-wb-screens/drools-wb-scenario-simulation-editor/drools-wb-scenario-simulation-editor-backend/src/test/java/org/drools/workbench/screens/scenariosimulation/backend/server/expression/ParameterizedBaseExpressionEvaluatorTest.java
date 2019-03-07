@@ -68,6 +68,8 @@ public class ParameterizedBaseExpressionEvaluatorTest {
                 {true, 10, "[> 1]", int.class},
                 {true, 10, "[< 1, > 1]", int.class},
                 {false, null, ";", Integer.class},
+                {false, 3, ";", int.class},
+                {true, "", ";", String.class},
                 {true, Error.class, "!= false; <> false, ! false", boolean.class},
                 {true, Error.class, "<> false, ! false", boolean.class},
                 {true, Error.class, "! tru", void.class},
