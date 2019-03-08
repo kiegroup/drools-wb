@@ -1427,6 +1427,10 @@
       <artifactId>appformer-js-bridge</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-library-spaces-screen</artifactId>
+    </dependency>
 
   </dependencies>
 
@@ -1819,7 +1823,7 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
-                <id>unpack-appformer-js</id>
+                <id>unpack-spaces-screen</id>
                 <phase>process-resources</phase>
                 <goals>
                   <goal>unpack</goal>
@@ -1827,12 +1831,11 @@
                 <configuration>
                   <artifactItems>
                     <artifactItem>
-                      <groupId>org.appformer</groupId>
-                      <artifactId>appformer-js-workbench-screens</artifactId>
-                      <version>${project.version}</version>
+                      <groupId>org.kie.workbench.screens</groupId>
+                      <artifactId>kie-wb-common-library-spaces-screen</artifactId>
                       <type>jar</type>
                       <overWrite>true</overWrite>
-                      <outputDirectory>${project.build.directory}/appformer-js-workbench-screens</outputDirectory>
+                      <outputDirectory>${project.build.directory}/kie-wb-common-library-spaces-screen</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                   <overWriteReleases>false</overWriteReleases>
@@ -1846,7 +1849,7 @@
             <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
-                <id>copy-appformer-js-resources</id>
+                <id>copy-spaces-screen</id>
                 <phase>process-resources</phase>
                 <goals>
                   <goal>copy-resources</goal>
@@ -1855,7 +1858,7 @@
                   <outputDirectory>${project.build.outputDirectory}/org/uberfire/jsbridge/public</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/appformer-js-workbench-screens/META-INF/resources/webjars/appformer-js-workbench-screens/${project.version}</directory>
+                      <directory>${project.build.directory}/kie-wb-common-library-spaces-screen/META-INF/resources/webjars/kie-wb-common-library-spaces-screen/${project.version}</directory>
                       <includes>
                         <include>spaces-screen-bundle.js</include>
                       </includes>
