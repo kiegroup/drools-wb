@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -104,7 +105,7 @@ public class ScenarioSimulationGridHeaderUtilities {
         if (!scenarioGridColumn.isInstanceAssigned()) {
             String complexSearch = getExistingInstances(columnGroup, scenarioGrid.getModel());
             return new EnableRightPanelEvent(complexSearch, true);
-        } else if (clickedScenarioHeaderMetadata.isPropertyHeader()) {
+        } else if (Objects.equals(clickedScenarioHeaderMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY)) {
             String propertyName = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
                 final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
@@ -135,12 +136,5 @@ public class ScenarioSimulationGridHeaderUtilities {
                 .stream()
                 .map(ExpressionElement::getStep)
                 .collect(Collectors.toList()));
-    }
-
-    public static boolean isHeaderEditable(BaseGridRendererHelper rendererHelper, ScenarioHeaderMetaData clickedScenarioHeaderMetadata, ScenarioGridColumn scenarioGridColumn) {
-        if (rendererHelper == null || clickedScenarioHeaderMetadata.isEditingMode() || !scenarioGridColumn.isInstanceAssigned() || !scenarioGridColumn.isEditableHeaders()) {
-            return false;
-        }
-        return (clickedScenarioHeaderMetadata.isInstanceHeader() || (clickedScenarioHeaderMetadata.isPropertyHeader() && scenarioGridColumn.isPropertyAssigned()));
     }
 }
