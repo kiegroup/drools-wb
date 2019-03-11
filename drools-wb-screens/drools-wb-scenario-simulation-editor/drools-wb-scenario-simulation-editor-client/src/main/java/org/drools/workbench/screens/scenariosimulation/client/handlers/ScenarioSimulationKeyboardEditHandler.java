@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -27,20 +26,20 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
 public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEditCell {
 
-    protected EventBus eventBus;
-
-    public ScenarioSimulationKeyboardEditHandler(GridLayer gridLayer, EventBus eventBus) {
+    public ScenarioSimulationKeyboardEditHandler(GridLayer gridLayer) {
         super(gridLayer);
-        this.eventBus = eventBus;
     }
 
     @Override
     public boolean isExecutable(final GridWidget gridWidget) {
         final GridData model = gridWidget.getModel();
-        if (model.getSelectedHeaderCells().size() > 0 && model.getSelectedCells().size() > 0) {
-            return false;
+        if (model.getSelectedHeaderCells().size() == 1 && model.getSelectedCells().size() == 0) {
+            return true;
         }
-        return model.getSelectedHeaderCells().size() == 1 || model.getSelectedCells().size() == 1;
+        if (model.getSelectedHeaderCells().size() == 0 && model.getSelectedCells().size() == 1) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -54,12 +53,12 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
         boolean isHeader = true;
         if (scenarioGridModel.getSelectedHeaderCells().size() > 0) {
             selectedCell = scenarioGridModel.getSelectedHeaderCells().get(0);
-        } else if (scenarioGridModel.getSelectedCells().size() >0) {
+        } else if (scenarioGridModel.getSelectedCells().size() > 0) {
             selectedCell = scenarioGridModel.getSelectedCellsOrigin();
             isHeader = false;
         }
         if (selectedCell == null) {
-            return  false;
+            return false;
         }
         final int uiRowIndex = selectedCell.getRowIndex();
         final int uiColumnIndex = ColumnIndexUtilities.findUiColumnIndex(scenarioGridModel.getColumns(),
@@ -68,6 +67,6 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
         if (scenarioGridColumn == null) {
             return false;
         }
-        return CommonEditHandler.startEdit(scenarioGrid, uiColumnIndex, scenarioGridColumn, uiRowIndex, isHeader, eventBus);
+        return CommonEditHandler.startEdit(scenarioGrid, uiColumnIndex, scenarioGridColumn, uiRowIndex, isHeader);
     }
 }

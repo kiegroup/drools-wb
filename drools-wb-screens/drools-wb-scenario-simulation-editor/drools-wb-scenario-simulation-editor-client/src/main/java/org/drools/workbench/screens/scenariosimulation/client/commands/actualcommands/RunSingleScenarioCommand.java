@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,27 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 
 /**
- * <code>Command</code> to to set the <i>value</i> of a grid' cell
+ * <code>Command</code> to <b>reload</b> the <code>RightPanelView</code>, <b>eventually</b> showing it (if required by original event)
  */
 @Dependent
-public class SetCellValueCommand extends AbstractScenarioSimulationCommand {
+public class RunSingleScenarioCommand extends AbstractScenarioSimulationCommand {
 
-    public SetCellValueCommand() {
-        super(true);
+    public RunSingleScenarioCommand() {
+        super(false);
     }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        final ScenarioSimulationContext.Status status = context.getStatus();
-        context.getModel().setCellValue(status.getRowIndex(),
-                                        status.getColumnIndex(),
-                                        new ScenarioGridCellValue(status.getCellValue(), ScenarioSimulationEditorConstants.INSTANCE.insertValue()));
-        context.getModel().resetErrors(status.getRowIndex());
+        int numberOfScenario = context.getStatus().getRowIndex();
+        List<Integer> indexOfScenarioToRun = Collections.singletonList(numberOfScenario);
+        context.getScenarioSimulationEditorPresenter().onRunScenario(indexOfScenarioToRun);
     }
 }
