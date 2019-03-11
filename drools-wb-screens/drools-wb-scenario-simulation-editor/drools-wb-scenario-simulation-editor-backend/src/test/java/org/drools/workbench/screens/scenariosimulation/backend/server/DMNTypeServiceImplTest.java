@@ -123,8 +123,8 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals(SIMPLE_TYPE_NAME, retrieved.getSimpleProperties().get("name"));
         //
         assertEquals(1, retrieved.getGenericTypesMap().size());
-        assertTrue(retrieved.getGenericTypesMap().containsKey("value"));
-        assertEquals(SIMPLE_TYPE_NAME, retrieved.getGenericTypesMap().get("value").get(0));
+        assertTrue(retrieved.getGenericTypesMap().containsKey("friends"));
+        assertEquals(compositePerson.getFields().get("friends").getName(), retrieved.getGenericTypesMap().get("friends").get(0));
         //
         assertEquals(2, retrieved.getExpandableProperties().size());
         assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_PHONENUMBERS));

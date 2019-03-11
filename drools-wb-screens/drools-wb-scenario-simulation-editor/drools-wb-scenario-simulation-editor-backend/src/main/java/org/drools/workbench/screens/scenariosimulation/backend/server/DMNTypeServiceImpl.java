@@ -123,17 +123,8 @@ public class DMNTypeServiceImpl
         }
         populateGeneric(genericTypeInfoMap, "value", type.getName());
         FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
-
-
-        //createFactModelTreeForNoCollection();
-        if (type.getBaseType() != null) {
-            // TODO avoid using basetype 'cause looking at implementation it seems it could be wrong
-            DMNType genericType = type.getBaseType();
-            FactModelTree genericFactModelTree = createInnerFactModelTree(genericTypeInfoMap, genericType.getName(), genericType.getName(), genericType, hiddenFacts, fmType);
-            hiddenFacts.put(type.getName(), genericFactModelTree);
-        } else {
-            hiddenFacts.put(type.getName(), toReturn);
-        }
+        FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), type.getName(), "value", type.getName(), type, hiddenFacts, fmType);
+        hiddenFacts.put(type.getName(), genericFactModelTree);
         return toReturn;
     }
 
@@ -151,6 +142,19 @@ public class DMNTypeServiceImpl
         if (type.isCollection()) {
             throw new WrongDMNTypeException();
         }
+        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+    }
+
+    /**
+     * Creates a <code>FactModelTree</code> for <code>DMNType</code>
+     * @param propertyName
+     * @param fullPropertyPath
+     * @param type
+     * @param hiddenFacts
+     * @param fmType
+     * @return
+     */
+    protected FactModelTree createFactModelTreeForGenericType(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
         return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
@@ -192,6 +196,7 @@ public class DMNTypeServiceImpl
                 FactModelTree fact = createInnerFactModelTree(new HashMap<>(), entry.getKey(), expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
                 hiddenFacts.put(entry.getKey(), fact);
                 simpleFields.put(entry.getKey(), List.class.getCanonicalName());
+                genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo("value"));
             } else {
                 if (entry.getValue().isComposite()) { // a complex type needs the expandable property and then in the hidden map, its fact model tree
                     FactModelTree fact = createInnerFactModelTree(genericTypeInfoMap, entry.getKey(), expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
