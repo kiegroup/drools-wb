@@ -16,26 +16,17 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.kie.api.io.Resource;
-import org.kie.dmn.api.core.DMNMessage;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
-import org.kie.dmn.api.core.ast.BusinessKnowledgeModelNode;
 import org.kie.dmn.api.core.ast.DecisionNode;
-import org.kie.dmn.api.core.ast.DecisionServiceNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
-import org.kie.dmn.api.core.ast.ItemDefNode;
 import org.kie.dmn.core.ast.DecisionNodeImpl;
 import org.kie.dmn.core.ast.InputDataNodeImpl;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
-import org.kie.dmn.model.api.Definitions;
 import org.kie.dmn.model.v1_2.TDecision;
 import org.kie.dmn.model.v1_2.TInputData;
 
@@ -44,7 +35,10 @@ public class AbstractDMNTest {
 //    @Mock
     protected DMNModel dmnModelLocal;
 
-    protected static final String SIMPLE_INPUT_DATA_NAME = "SIMPLE_INPUT_DATA_NAME";
+    protected static final String SIMPLE_INPUT_DATA_NAME_NO_COLLECTION = "SIMPLE_INPUT_DATA_NAME_NO_COLLECTION";
+    protected static final String SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_SIMPLE = "SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_SIMPLE";
+    protected static final String SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_COMPOSITE = "SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_COMPOSITE";
+    protected static final String COMPOSITE_INPUT_DATA_NAME_COLLECTION = "COMPOSITE_INPUT_DATA_NAME_COLLECTION";
     protected static final String SIMPLE_DECISION_DATA_NAME = "SIMPLE_DECISION_DATA_NAME";
     protected static final String COMPOSITE_DECISION_DATA_NAME = "COMPOSITE_DECISION_DATA_NAME";
     protected static final String SIMPLE_TYPE_NAME = "string";
@@ -55,156 +49,160 @@ public class AbstractDMNTest {
     protected static final String PHONENUMBER_PREFIX = "prefix";
 
     protected DMNType simpleTypeNoCollection;
-    protected DMNType compositeNoCollection;
-    protected DMNType nestedComplexTypeMock;
-    protected Map<String, DMNType> complexFields;
-    protected Map<String, DMNType> nestedComplexFields;
+    protected DMNType simpleTypeSimpleCollectionOfSimple;
+    protected DMNType simpleTypeSimpleCollectionOfComposite;
+    protected DMNType compositeTypeNoCollection;
+    protected DMNType compositeTypeCollection;
     protected Set<InputDataNode> inputDataNodes;
     protected Set<DecisionNode> decisionNodes;
 
     protected void init() {
         inputDataNodes = new HashSet<>();
         simpleTypeNoCollection = getSimpleNoCollection();
-        InputDataNode inputDataNodeSimpleNoCollection = getInputDataNodeSimpleNoCollection(simpleTypeNoCollection);
+        InputDataNode inputDataNodeSimpleNoCollection = getInputDataNode(simpleTypeNoCollection, SIMPLE_INPUT_DATA_NAME_NO_COLLECTION);
         inputDataNodes.add(inputDataNodeSimpleNoCollection);
+        simpleTypeSimpleCollectionOfSimple = getSimpleCollection();
+        InputDataNode inputDataNodeSimpleCollectionOfSimple = getInputDataNode(simpleTypeSimpleCollectionOfSimple, SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_SIMPLE);
+        inputDataNodes.add(inputDataNodeSimpleCollectionOfSimple);
+        compositeTypeNoCollection = getSingleCompositeWithSimpleCollection();
+        simpleTypeSimpleCollectionOfComposite = getSimpleCollection(compositeTypeNoCollection);
+        InputDataNode inputDataNodeSimpleCollectionOfComposite = getInputDataNode(simpleTypeSimpleCollectionOfComposite, SIMPLE_INPUT_DATA_NAME_SIMPLE_COLLECTION_OF_COMPOSITE);
+        inputDataNodes.add(inputDataNodeSimpleCollectionOfComposite);
+        compositeTypeCollection = getCompositeCollection();
+        InputDataNode inputDataNodeCompositeCollection = getInputDataNode(compositeTypeCollection, COMPOSITE_INPUT_DATA_NAME_COLLECTION);
+        inputDataNodes.add(inputDataNodeCompositeCollection);
+
         decisionNodes = new HashSet<>();
-        DecisionNode decisionNodeSimpleNoCollection = getDecisionNodeSimpleNoCollection(simpleTypeNoCollection);
+        DecisionNode decisionNodeSimpleNoCollection = getDecisionNode(simpleTypeNoCollection, SIMPLE_DECISION_DATA_NAME);
         decisionNodes.add(decisionNodeSimpleNoCollection);
-        compositeNoCollection = getSingleCompositeWithSimpleCollection();
-        DecisionNode decisionNodeCompositeNoCollection = getDecisionNodeCompositeNoCollection(compositeNoCollection);
+        DecisionNode decisionNodeCompositeNoCollection = getDecisionNode(compositeTypeNoCollection, COMPOSITE_DECISION_DATA_NAME);
         decisionNodes.add(decisionNodeCompositeNoCollection);
-        dmnModelLocal = new DMNModel() {
 
-            @Override
-            public List<DMNMessage> getMessages() {
-                return null;
-            }
-
-            @Override
-            public List<DMNMessage> getMessages(DMNMessage.Severity... sevs) {
-                return null;
-            }
-
-            @Override
-            public boolean hasErrors() {
-                return false;
-            }
-
-            @Override
-            public String getNamespace() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public Definitions getDefinitions() {
-                return null;
-            }
-
-            @Override
-            public InputDataNode getInputById(String id) {
-                return null;
-            }
-
-            @Override
-            public InputDataNode getInputByName(String name) {
-                return null;
-            }
-
-            @Override
-            public Set<InputDataNode> getInputs() {
-                return inputDataNodes;
-            }
-
-            @Override
-            public DecisionNode getDecisionById(String id) {
-                return null;
-            }
-
-            @Override
-            public DecisionNode getDecisionByName(String name) {
-                return null;
-            }
-
-            @Override
-            public Set<DecisionNode> getDecisions() {
-                return decisionNodes;
-            }
-
-            @Override
-            public Set<InputDataNode> getRequiredInputsForDecisionName(String decisionName) {
-                return null;
-            }
-
-            @Override
-            public Set<InputDataNode> getRequiredInputsForDecisionId(String decisionId) {
-                return null;
-            }
-
-            @Override
-            public BusinessKnowledgeModelNode getBusinessKnowledgeModelById(String id) {
-                return null;
-            }
-
-            @Override
-            public BusinessKnowledgeModelNode getBusinessKnowledgeModelByName(String name) {
-                return null;
-            }
-
-            @Override
-            public Set<BusinessKnowledgeModelNode> getBusinessKnowledgeModels() {
-                return null;
-            }
-
-            @Override
-            public ItemDefNode getItemDefinitionById(String id) {
-                return null;
-            }
-
-            @Override
-            public ItemDefNode getItemDefinitionByName(String name) {
-                return null;
-            }
-
-            @Override
-            public Set<ItemDefNode> getItemDefinitions() {
-                return null;
-            }
-
-            @Override
-            public Resource getResource() {
-                return null;
-            }
-
-            @Override
-            public Collection<DecisionServiceNode> getDecisionServices() {
-                return null;
-            }
-        };
+//        dmnModelLocal = new DMNModel() {
+//
+//            @Override
+//            public List<DMNMessage> getMessages() {
+//                return null;
+//            }
+//
+//            @Override
+//            public List<DMNMessage> getMessages(DMNMessage.Severity... sevs) {
+//                return null;
+//            }
+//
+//            @Override
+//            public boolean hasErrors() {
+//                return false;
+//            }
+//
+//            @Override
+//            public String getNamespace() {
+//                return null;
+//            }
+//
+//            @Override
+//            public String getName() {
+//                return null;
+//            }
+//
+//            @Override
+//            public Definitions getDefinitions() {
+//                return definitions;
+//            }
+//
+//            @Override
+//            public InputDataNode getInputById(String id) {
+//                return null;
+//            }
+//
+//            @Override
+//            public InputDataNode getInputByName(String name) {
+//                return null;
+//            }
+//
+//            @Override
+//            public Set<InputDataNode> getInputs() {
+//                return inputDataNodes;
+//            }
+//
+//            @Override
+//            public DecisionNode getDecisionById(String id) {
+//                return null;
+//            }
+//
+//            @Override
+//            public DecisionNode getDecisionByName(String name) {
+//                return null;
+//            }
+//
+//            @Override
+//            public Set<DecisionNode> getDecisions() {
+//                return decisionNodes;
+//            }
+//
+//            @Override
+//            public Set<InputDataNode> getRequiredInputsForDecisionName(String decisionName) {
+//                return null;
+//            }
+//
+//            @Override
+//            public Set<InputDataNode> getRequiredInputsForDecisionId(String decisionId) {
+//                return null;
+//            }
+//
+//            @Override
+//            public BusinessKnowledgeModelNode getBusinessKnowledgeModelById(String id) {
+//                return null;
+//            }
+//
+//            @Override
+//            public BusinessKnowledgeModelNode getBusinessKnowledgeModelByName(String name) {
+//                return null;
+//            }
+//
+//            @Override
+//            public Set<BusinessKnowledgeModelNode> getBusinessKnowledgeModels() {
+//                return null;
+//            }
+//
+//            @Override
+//            public ItemDefNode getItemDefinitionById(String id) {
+//                return null;
+//            }
+//
+//            @Override
+//            public ItemDefNode getItemDefinitionByName(String name) {
+//                return null;
+//            }
+//
+//            @Override
+//            public Set<ItemDefNode> getItemDefinitions() {
+//                return null;
+//            }
+//
+//            @Override
+//            public Resource getResource() {
+//                return null;
+//            }
+//
+//            @Override
+//            public Collection<DecisionServiceNode> getDecisionServices() {
+//                return null;
+//            }
+//        };
 
     }
 
-    protected InputDataNode getInputDataNodeSimpleNoCollection(DMNType dmnType) {
+    protected InputDataNode getInputDataNode(DMNType dmnType, String name) {
         TInputData inputData = new TInputData();
-        inputData.setName(SIMPLE_INPUT_DATA_NAME);
+        inputData.setName(name);
         InputDataNode toReturn = new InputDataNodeImpl(inputData, dmnType);
         return toReturn;
     }
 
-    protected DecisionNode getDecisionNodeSimpleNoCollection(DMNType dmnType) {
+    protected DecisionNode getDecisionNode(DMNType dmnType, String name) {
         TDecision decision = new TDecision();
-        decision.setName(SIMPLE_DECISION_DATA_NAME);
-        DecisionNode toReturn = new DecisionNodeImpl(decision, dmnType);
-        return toReturn;
-    }
-
-    protected DecisionNode getDecisionNodeCompositeNoCollection(DMNType dmnType) {
-        TDecision decision = new TDecision();
-        decision.setName(COMPOSITE_DECISION_DATA_NAME);
+        decision.setName(name);
         DecisionNode toReturn = new DecisionNodeImpl(decision, dmnType);
         return toReturn;
     }
@@ -225,6 +223,20 @@ public class AbstractDMNTest {
         // Single property collection retrieve
         SimpleTypeImpl simpleCollectionString = new SimpleTypeImpl("simpleNameSpace", SIMPLE_TYPE_NAME, null);
         simpleCollectionString.setCollection(true);
+        return simpleCollectionString;
+    }
+
+    /**
+     * Returns a <code>DMNType</code>  <b>collection</b> <code>SimpleTypeImpl</code>
+     * @param typeOfCollection the <b>type</b> of this collection
+     * @return
+     */
+    protected SimpleTypeImpl getSimpleCollection(DMNType typeOfCollection) {
+        // Single property collection retrieve
+        String name = typeOfCollection.getName() + "list";
+        SimpleTypeImpl simpleCollectionString = new SimpleTypeImpl("simpleNameSpace", name, null);
+        simpleCollectionString.setCollection(true);
+        simpleCollectionString.setBaseType(typeOfCollection);
         return simpleCollectionString;
     }
 
