@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
@@ -27,8 +28,13 @@ import org.kie.dmn.core.ast.DecisionNodeImpl;
 import org.kie.dmn.core.ast.InputDataNodeImpl;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
+import org.kie.dmn.core.util.DMNRuntimeUtil;
 import org.kie.dmn.model.v1_2.TDecision;
 import org.kie.dmn.model.v1_2.TInputData;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 public class AbstractDMNTest {
 
@@ -78,119 +84,10 @@ public class AbstractDMNTest {
         DecisionNode decisionNodeCompositeNoCollection = getDecisionNode(compositeTypeNoCollection, COMPOSITE_DECISION_DATA_NAME);
         decisionNodes.add(decisionNodeCompositeNoCollection);
 
-//        dmnModelLocal = new DMNModel() {
-//
-//            @Override
-//            public List<DMNMessage> getMessages() {
-//                return null;
-//            }
-//
-//            @Override
-//            public List<DMNMessage> getMessages(DMNMessage.Severity... sevs) {
-//                return null;
-//            }
-//
-//            @Override
-//            public boolean hasErrors() {
-//                return false;
-//            }
-//
-//            @Override
-//            public String getNamespace() {
-//                return null;
-//            }
-//
-//            @Override
-//            public String getName() {
-//                return null;
-//            }
-//
-//            @Override
-//            public Definitions getDefinitions() {
-//                return definitions;
-//            }
-//
-//            @Override
-//            public InputDataNode getInputById(String id) {
-//                return null;
-//            }
-//
-//            @Override
-//            public InputDataNode getInputByName(String name) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Set<InputDataNode> getInputs() {
-//                return inputDataNodes;
-//            }
-//
-//            @Override
-//            public DecisionNode getDecisionById(String id) {
-//                return null;
-//            }
-//
-//            @Override
-//            public DecisionNode getDecisionByName(String name) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Set<DecisionNode> getDecisions() {
-//                return decisionNodes;
-//            }
-//
-//            @Override
-//            public Set<InputDataNode> getRequiredInputsForDecisionName(String decisionName) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Set<InputDataNode> getRequiredInputsForDecisionId(String decisionId) {
-//                return null;
-//            }
-//
-//            @Override
-//            public BusinessKnowledgeModelNode getBusinessKnowledgeModelById(String id) {
-//                return null;
-//            }
-//
-//            @Override
-//            public BusinessKnowledgeModelNode getBusinessKnowledgeModelByName(String name) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Set<BusinessKnowledgeModelNode> getBusinessKnowledgeModels() {
-//                return null;
-//            }
-//
-//            @Override
-//            public ItemDefNode getItemDefinitionById(String id) {
-//                return null;
-//            }
-//
-//            @Override
-//            public ItemDefNode getItemDefinitionByName(String name) {
-//                return null;
-//            }
-//
-//            @Override
-//            public Set<ItemDefNode> getItemDefinitions() {
-//                return null;
-//            }
-//
-//            @Override
-//            public Resource getResource() {
-//                return null;
-//            }
-//
-//            @Override
-//            public Collection<DecisionServiceNode> getDecisionServices() {
-//                return null;
-//            }
-//        };
-
+        final DMNRuntime runtime = DMNRuntimeUtil.createRuntime("dmn-list-composite.dmn", AbstractDMNTest.class);
+        dmnModelLocal = runtime.getModel("https://github.com/kiegroup/drools/kie-dmn/_25BF2679-3109-488F-9AD1-DDBCCEBBE5F1", "dmn-list-composite");
+        assertThat(dmnModelLocal, notNullValue());
+        assertThat(DMNRuntimeUtil.formatMessages(dmnModelLocal.getMessages()), dmnModelLocal.hasErrors(), is(false));
     }
 
     protected InputDataNode getInputDataNode(DMNType dmnType, String name) {

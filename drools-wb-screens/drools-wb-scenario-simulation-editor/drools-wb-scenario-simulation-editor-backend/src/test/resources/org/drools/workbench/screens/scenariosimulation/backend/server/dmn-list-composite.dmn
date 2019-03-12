@@ -43,6 +43,9 @@
   <dmn:inputData id="_122768F9-F85B-4ABB-BCA1-C5FDCA15DB18" name="node-list">
     <dmn:variable id="_569FA866-C10A-48C8-87E9-B8C9D96F4F67" name="node-list" typeRef="klaraslist"/>
   </dmn:inputData>
+  <dmn:inputData id="_122768F9-F85B-4ABB-BCA1-C5FDCA15DB81" name="node-person">
+    <dmn:variable id="_CCA572C0-FAD8-4245-9CB6-C7ADF20682F7" name="node-person" typeRef="tPerson"/>
+  </dmn:inputData>
   <dmn:decision id="_F9AC781A-BF9C-4B9F-9229-17E7A6B9E117" name="Is an item in the list?">
     <dmn:variable id="_BFBF7AEE-1134-4540-B045-AF376D8B63E5" name="Is an item in the list?" typeRef="boolean"/>
     <dmn:informationRequirement id="_DC35EB0E-2B48-42EF-99F8-154352E4807D">

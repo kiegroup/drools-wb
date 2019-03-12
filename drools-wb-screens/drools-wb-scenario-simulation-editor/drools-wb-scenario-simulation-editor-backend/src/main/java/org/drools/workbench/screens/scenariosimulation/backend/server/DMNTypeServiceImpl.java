@@ -52,16 +52,15 @@ public class DMNTypeServiceImpl
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
-        Map<String, List<String>> genericTypeInfoMap = new HashMap<>();
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
-            checkType(type, errorHolder, input.getName());
-            visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), genericTypeInfoMap, type, hiddenFacts, FactModelTree.Type.INPUT));
+            checkTypeSupport(type, errorHolder, input.getName());
+            visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
-            checkType(type, errorHolder, decision.getName());
-            visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), genericTypeInfoMap, type, hiddenFacts, FactModelTree.Type.DECISION));
+            checkTypeSupport(type, errorHolder, decision.getName());
+            visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
         }
         FactModelTuple factModelTuple = new FactModelTuple(visibleFacts, hiddenFacts);
 
@@ -90,8 +89,8 @@ public class DMNTypeServiceImpl
      * @return
      * @throws WrongDMNTypeException
      */
-    protected FactModelTree createTopLevelFactModelTree(String factName, Map<String, List<String>> genericTypeInfoMap, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        return type.isCollection() ? createFactModelTreeForCollection(genericTypeInfoMap, factName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(genericTypeInfoMap, factName, factName, type.getName(), type, hiddenFacts, fmType);
+    protected FactModelTree createTopLevelFactModelTree(String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
+        return type.isCollection() ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType);
     }
 
     /**
@@ -211,12 +210,12 @@ public class DMNTypeServiceImpl
     }
 
     /**
-     * Check the given <code>DMNType</code> to eventually detect and add errors to given <code>ErrorHolder</code>
+     * Check the given <code>DMNType</code> to eventually detect if it is currently supported and add errors to given <code>ErrorHolder</code>
      * @param type
      * @param errorHolder
      * @param fullPropertyPath
      */
-    protected void checkType(DMNType type, ErrorHolder errorHolder, String fullPropertyPath) {
+    protected void checkTypeSupport(DMNType type, ErrorHolder errorHolder, String fullPropertyPath) {
         if (type.isCollection()) {
             errorHolder.getTopLevelCollection().add(fullPropertyPath);
         }
