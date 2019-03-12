@@ -29,6 +29,7 @@ public interface ScenarioConfirmationPopup {
          * @param mainQuestionText
          * @param text1Text
          * @param textQuestionText
+         * @param textWarningText
          * @param okDeleteButtonText
          * @param okDeleteCommand
          */
@@ -36,6 +37,7 @@ public interface ScenarioConfirmationPopup {
                   final String mainQuestionText,
                   final String text1Text,
                   final String textQuestionText,
+                  final String textWarningText,
                   final String okDeleteButtonText,
                   final Command okDeleteCommand);
 
@@ -53,6 +55,7 @@ public interface ScenarioConfirmationPopup {
      * @param mainQuestionText
      * @param text1Text
      * @param textQuestionText
+     * @param textWarningText
      * @param okDeleteButtonText
      * @param okDeleteCommand
      */
@@ -60,6 +63,7 @@ public interface ScenarioConfirmationPopup {
               final String mainQuestionText,
               final String text1Text,
               final String textQuestionText,
+              final String textWarningText,
               final String okDeleteButtonText,
               final Command okDeleteCommand);
 
