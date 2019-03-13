@@ -36,7 +36,6 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -113,9 +112,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Mock
     private ScenarioSimulationContext.Status scenarioSimulationContextStatusMock;
-
-    @Mock
-    private ScenarioSimulationSharedUtils scenarioSimulationSharedUtilsMock;
 
     private List<GridColumn.HeaderMetaData> headerMetaDataList = new ArrayList<>();
 
@@ -287,7 +283,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     @Test
     public void duplicateSingleColumn() {
         reset(scenarioGridModel);
-        scenarioGridModel.duplicateSingleColumn(scenarioSimulationContextMock, scenarioGridColumnMock, scenarioGridColumnLocalMock, NEW_COLUMN_INDEX);
+        scenarioGridModel.duplicateSingleColumn(scenarioGridColumnMock, scenarioGridColumnLocalMock, NEW_COLUMN_INDEX);
         verify(scenarioGridModel, atLeast(1)).checkSimulation();
         FactIdentifier factIdentifierClone = FactIdentifier.create(scenarioSimulationContextStatusMock.getColumnId(), factIdentiferMock.getClassName());
         verify(scenarioGridColumnLocalMock, times(1)).setInstanceAssigned(scenarioGridColumnMock.isInstanceAssigned());

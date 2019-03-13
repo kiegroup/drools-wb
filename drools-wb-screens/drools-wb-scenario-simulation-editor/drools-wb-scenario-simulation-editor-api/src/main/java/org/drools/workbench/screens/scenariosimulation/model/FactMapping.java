@@ -87,6 +87,16 @@ public class FactMapping {
         this.genericTypes = original.genericTypes;
     }
 
+    private FactMapping(FactMapping original, String factAlias, FactIdentifier factIdentifier) {
+        original.expressionElements.forEach(expressionElement -> this.addExpressionElement(expressionElement.getStep(), original.className));
+        this.expressionIdentifier = original.expressionIdentifier;
+        this.factIdentifier = factIdentifier;
+        this.className = original.className;
+        this.factAlias = factAlias;
+        this.expressionAlias = original.expressionAlias;
+        this.genericTypes = original.genericTypes;
+    }
+
     public String getFullExpression() {
         return expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
     }
@@ -145,6 +155,10 @@ public class FactMapping {
 
     public FactMapping cloneFactMapping() {
         return new FactMapping(this);
+    }
+
+    public FactMapping cloneFactMapping(String factAlias, FactIdentifier factIdentifier) {
+        return new FactMapping(this, factAlias, factIdentifier);
     }
 
     public static String getPlaceHolder(FactMappingType factMappingType) {

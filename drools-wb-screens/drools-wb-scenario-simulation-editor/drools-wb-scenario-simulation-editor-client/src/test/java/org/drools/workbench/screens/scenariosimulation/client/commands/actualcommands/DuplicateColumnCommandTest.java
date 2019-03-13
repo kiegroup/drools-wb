@@ -121,6 +121,6 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     public void duplicateSingleColumn() {
         ((DuplicateColumnCommand) command).duplicateSingleColumn(scenarioSimulationContextLocal, 4, scenarioGridColumn1Mock);
         verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(scenarioGridModelMock, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumn1Mock), eq(gridColumnMock), eq(4));
+        verify(scenarioGridModelMock, times(1)).duplicateSingleColumn(eq(scenarioGridColumn1Mock), eq(gridColumnMock), eq(4));
     }
 }

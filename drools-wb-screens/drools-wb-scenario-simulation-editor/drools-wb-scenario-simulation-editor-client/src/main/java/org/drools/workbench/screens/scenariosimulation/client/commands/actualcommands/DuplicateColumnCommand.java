@@ -45,9 +45,9 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(status.getColumnIndex());
         int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
-        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn -> {
-            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn);
-        });
+        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn ->
+            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn)
+        );
     }
 
     protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn) {
@@ -65,7 +65,11 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
                                                                                       context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
                                                                                       context.getScenarioCellTextAreaSingletonDOMElementFactory(),
                                                                                       placeHolder);
+        scenarioGridColumnLocal.setInstanceAssigned(originalColumn.isInstanceAssigned());
+        scenarioGridColumnLocal.setPropertyAssigned(originalColumn.isPropertyAssigned());
+        scenarioGridColumnLocal.setFactory(originalColumn.getFactory());
+        scenarioGridColumnLocal.setPlaceHolder(originalColumn.getPlaceHolder());
 
-        context.getModel().duplicateSingleColumn(context, originalColumn, scenarioGridColumnLocal, newColumnPosition);
+        context.getModel().duplicateSingleColumn(originalColumn, scenarioGridColumnLocal, newColumnPosition);
     }
 }

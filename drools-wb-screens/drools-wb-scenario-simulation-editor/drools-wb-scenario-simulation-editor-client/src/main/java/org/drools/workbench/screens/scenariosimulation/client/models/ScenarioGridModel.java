@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -218,24 +217,22 @@ public class ScenarioGridModel extends BaseGridData {
 
     /**
      * This method <i>duplicates</i> a column and its values into its corresponding new column position
-     * @param context
      * @param originalColumn
-     * @param scenarioGridColumnLocal
+     * @param duplicatedColumn
      * @param newColumnIndex
      */
-    public void duplicateSingleColumn(ScenarioSimulationContext context, ScenarioGridColumn originalColumn, ScenarioGridColumn scenarioGridColumnLocal, int newColumnIndex) {
+    public void duplicateSingleColumn(ScenarioGridColumn originalColumn, ScenarioGridColumn duplicatedColumn, int newColumnIndex) {
         checkSimulation();
-        FactIdentifier factIdentifier = originalColumn.getFactIdentifier();
-        FactIdentifier factIdentifierClone = new FactIdentifier(context.getStatus().getColumnId(), factIdentifier.getClassName());
-        scenarioGridColumnLocal.setInstanceAssigned(originalColumn.isInstanceAssigned());
-        scenarioGridColumnLocal.setPropertyAssigned(originalColumn.isPropertyAssigned());
-        scenarioGridColumnLocal.setFactIdentifier(factIdentifierClone);
-        scenarioGridColumnLocal.setFactory(originalColumn.getFactory());
 
-        insertColumn(newColumnIndex, scenarioGridColumnLocal);
         int originalColumnIndex = getColumns().indexOf(originalColumn);
-        FactMapping originalFactMapping = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
-        context.getStatus().getSimulation().getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping);
+        FactMapping originalFactMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+        String alias = duplicatedColumn.getInformationHeaderMetaData().getTitle();
+        FactIdentifier originalFactIdentifier = originalColumn.getFactIdentifier();
+        FactIdentifier duplicatedFactIdentifier = new FactIdentifier(duplicatedColumn.getInformationHeaderMetaData().getColumnId(), originalFactIdentifier.getClassName());
+        simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedFactIdentifier);
+        duplicatedColumn.setFactIdentifier(duplicatedFactIdentifier);
+
+        super.insertColumn(newColumnIndex, duplicatedColumn);
 
         duplicateColumnValues(originalColumnIndex, newColumnIndex);
     }

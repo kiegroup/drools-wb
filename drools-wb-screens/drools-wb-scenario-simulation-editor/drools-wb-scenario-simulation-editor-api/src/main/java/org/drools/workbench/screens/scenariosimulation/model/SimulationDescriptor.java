@@ -134,6 +134,21 @@ public class SimulationDescriptor {
         return toReturn;
     }
 
+    /**
+     * This method clones the given <code>FactMapping</code> and assigns the given <code>FactIdentifier</code>
+     * and factAlias at the specified index
+     * @param index
+     * @param toClone
+     * @param factAlias
+     * @param factIdentifier
+     * @return the <b>cloned</b> <code>FactMapping</code>
+     */
+    public FactMapping addFactMapping(int index, FactMapping toClone, String factAlias, FactIdentifier factIdentifier) {
+        FactMapping toReturn = toClone.cloneFactMapping(factAlias, factIdentifier);
+        factMappings.add(index, toReturn);
+        return toReturn;
+    }
+
     public FactMapping addFactMapping(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
         return addFactMapping(factMappings.size(), factIdentifier, expressionIdentifier);
     }
