@@ -36,9 +36,10 @@ public interface CollectionView {
          * generic type and the structure of such type
          * @param key The key representing the property, i.e classname#propertyname (e.g Author#books)
          * @param instancePropertyMap
-         * @param collectionEditorView
+         * @param expandablePropertiesMap
+         * @param collectionView
          */
-        void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionEditorView);
+        void initListStructure(String key, Map<String, String> instancePropertyMap, Map<String, Map<String, String>> expandablePropertiesMap, CollectionView collectionView);
 
         /**
          * Actual implementations should invoke this method first to retrieve information about the collection
@@ -182,8 +183,9 @@ public interface CollectionView {
      * showing a <b>List</b> of elements
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param instancePropertyMap
+     * @param expandablePropertiesMap
      */
-    void initListStructure(String key, Map<String, String> instancePropertyMap);
+    void initListStructure(String key, Map<String, String> instancePropertyMap, Map<String, Map<String, String>> expandablePropertiesMap);
 
     /**
      * Set the <b>name</b> of the property and the <code>Map</code>s to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor

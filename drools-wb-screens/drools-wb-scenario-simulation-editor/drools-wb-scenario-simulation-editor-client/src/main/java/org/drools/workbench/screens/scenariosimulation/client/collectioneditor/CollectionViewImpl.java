@@ -135,10 +135,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * showing a <b>List</b> of elements
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param instancePropertyMap
+     * @param expandablePropertiesMap
      */
     @Override
-    public void initListStructure(String key, Map<String, String> instancePropertyMap) {
-        presenter.initListStructure(key, instancePropertyMap, this);
+    public void initListStructure(String key, Map<String, String> instancePropertyMap, Map<String, Map<String, String>> expandablePropertiesMap) {
+        presenter.initListStructure(key, instancePropertyMap, expandablePropertiesMap, this);
     }
 
     /**

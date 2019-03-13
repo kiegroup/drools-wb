@@ -239,7 +239,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void initListStructure() {
-        collectionEditorPresenter.initListStructure(TEST_KEY, propertyMapLocal, collectionViewMock);
+        collectionEditorPresenter.initListStructure(TEST_KEY, propertyMapLocal, new HashMap<>(), collectionViewMock);
         verify(collectionEditorPresenter, times(1)).commonInit(eq(TEST_KEY), eq(collectionViewMock));
         assertTrue(instancePropertiesMapLocal.containsKey(TEST_KEY));
         assertEquals(instancePropertiesMapLocal.get(TEST_KEY), propertyMapLocal);

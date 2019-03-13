@@ -70,7 +70,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     protected LIElement objectSeparatorLI;
 
     @Override
-    public void initListStructure(String key, Map<String, String> instancePropertyMap, CollectionView collectionView) {
+    public void initListStructure(String key, Map<String, String> instancePropertyMap, Map<String, Map<String, String>> expandablePropertiesMap, CollectionView collectionView) {
         commonInit(key, collectionView);
         instancePropertiesMap.put(key, instancePropertyMap);
         listEditingBoxPresenter.setCollectionEditorPresenter(this);
