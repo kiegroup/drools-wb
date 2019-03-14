@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSi
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -174,6 +175,20 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
         Assertions.assertThat(event.getFilterTerm()).isEqualTo(columnOneTitle);
         Assertions.assertThat(event.getPropertyName()).isNull();
         Assertions.assertThat(event.isNotEqualsSearch()).isFalse();
+    }
+
+    @Test
+    public void testIsEditableHeader() {
+        when(scenarioGridColumnOne.isEditableHeaders()).thenReturn(true);
+        when(((ScenarioHeaderMetaData) scenarioGridColumnOne.getHeaderMetaData().get(0)).isReadOnly()).thenReturn(true);
+        Assert.assertFalse("Failure: If isReadyOnly = true and isEditableHeader = true, the result should be false", ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumnOne, 0));
+        when(((ScenarioHeaderMetaData) scenarioGridColumnOne.getHeaderMetaData().get(0)).isReadOnly()).thenReturn(false);
+        Assert.assertTrue("Failure: If isReadyOnly = false and isEditableHeader = true, the result should be true", ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumnOne, 0));
+        when(scenarioGridColumnOne.isEditableHeaders()).thenReturn(false);
+        when(((ScenarioHeaderMetaData) scenarioGridColumnOne.getHeaderMetaData().get(0)).isReadOnly()).thenReturn(true);
+        Assert.assertFalse("Failure: If isReadyOnly = true and isEditableHeader = false, the result should be false", ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumnOne, 0));
+        when(((ScenarioHeaderMetaData) scenarioGridColumnOne.getHeaderMetaData().get(0)).isReadOnly()).thenReturn(false);
+        Assert.assertFalse("Failure: If isReadyOnly = false and isEditableHeader = false, the result should be false", ScenarioSimulationGridHeaderUtilities.isEditableHeader(scenarioGridColumnOne, 0));
     }
 
     private ScenarioGridColumn mockGridColumn(final double width) {
