@@ -90,10 +90,10 @@ public class ScenarioSimulationGridHeaderUtilities {
         return ci.getColumn();
     }
 
-    public static boolean isEditableHeader(final GridColumn<?> column,
+    public static boolean isEditableHeader(final ScenarioGridColumn column,
                                            final Integer uiHeaderRowIndex) {
         GridColumn.HeaderMetaData headerMetaData = column.getHeaderMetaData().get(uiHeaderRowIndex);
-        return headerMetaData instanceof ScenarioHeaderMetaData && !((ScenarioHeaderMetaData) headerMetaData).isReadOnly();
+        return headerMetaData instanceof ScenarioHeaderMetaData && !((ScenarioHeaderMetaData) headerMetaData).isReadOnly() && column.isEditableHeaders();
     }
 
     public static EnableRightPanelEvent getEnableRightPanelEvent(final ScenarioGrid scenarioGrid,
