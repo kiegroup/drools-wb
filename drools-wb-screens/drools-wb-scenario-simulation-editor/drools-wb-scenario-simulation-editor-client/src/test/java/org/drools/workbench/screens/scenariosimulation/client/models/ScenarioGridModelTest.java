@@ -350,6 +350,13 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
+    public void getInstancesCount() {
+        long count = scenarioGridModel.getInstancesCount(FULL_CLASS_NAME);
+        assertEquals(1, count);
+    }
+
+
+    @Test
     public void getInstanceLimits() {
         final GridData.Range retrieved = scenarioGridModel.getInstanceLimits(2);
         assertNotNull(retrieved);

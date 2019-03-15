@@ -54,10 +54,16 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = originalColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        String instanceTitle = originalColumn.getInformationHeaderMetaData().getTitle() + "_copy";
+        long instanceNumber = context.getModel().getInstancesCount(originalColumn.getFactIdentifier().getClassName());
+        StringBuilder instanceTitle = new StringBuilder();
+        instanceTitle.append(originalColumn.getInformationHeaderMetaData().getTitle());
+        instanceTitle.append("_copy");
+        if (instanceNumber > 1) {
+            instanceTitle.append("_").append(instanceNumber);
+        }
         String propertyTitle = originalColumn.getPropertyHeaderMetaData().getTitle();
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
-        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
+        final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle.toString(),
                                                                                       propertyTitle,
                                                                                       String.valueOf(new Date().getTime()),
                                                                                       columnGroup,
