@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNSi
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
@@ -47,7 +48,7 @@ public class DMNTypeServiceImpl
         implements DMNTypeService {
 
     @Override
-    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) throws WrongDMNTypeException {
+    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath){
         DMNModel dmnModel = getDMNModel(path, dmnPath);
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
@@ -55,19 +56,25 @@ public class DMNTypeServiceImpl
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
             checkTypeSupport(type, errorHolder, input.getName());
-            visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
+            try {
+                visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
+            } catch (WrongDMNTypeException e) {
+                throw ExceptionUtilities.handleException(e);
+            }
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
             checkTypeSupport(type, errorHolder, decision.getName());
-            visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+            try {
+                visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+            } catch (WrongDMNTypeException e) {
+                throw ExceptionUtilities.handleException(e);
+            }
         }
         FactModelTuple factModelTuple = new FactModelTuple(visibleFacts, hiddenFacts);
-
         errorHolder.getTopLevelCollection().forEach(factModelTuple::addTopLevelCollectionError);
         errorHolder.getMultipleNestedCollection().forEach(factModelTuple::addMultipleNestedCollectionError);
         errorHolder.getMultipleNestedObject().forEach(factModelTuple::addMultipleNestedObjectError);
-
         return factModelTuple;
     }
 

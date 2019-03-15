@@ -29,5 +29,5 @@ public interface DMNTypeService {
      * @return
      * @throws Exception
      */
-    FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) throws Exception;
+    FactModelTuple retrieveFactModelTuple(Path path, String dmnPath);
 }
