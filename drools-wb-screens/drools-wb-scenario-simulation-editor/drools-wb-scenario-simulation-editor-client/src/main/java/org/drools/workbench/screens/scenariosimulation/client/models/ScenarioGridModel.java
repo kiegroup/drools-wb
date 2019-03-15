@@ -258,8 +258,6 @@ public class ScenarioGridModel extends BaseGridData {
                     .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
     }
 
-
-
     /**
      * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model
      * @param index
@@ -478,6 +476,18 @@ public class ScenarioGridModel extends BaseGridData {
         return this.getColumns()
                 .stream()
                 .filter(gridColumn -> ((ScenarioGridColumn) gridColumn).getInformationHeaderMetaData().getColumnGroup().equals(groupName))
+                .count();
+    }
+
+    /**
+     * Returns the count of instantiated facts given a classname.
+     * @param className
+     * @return
+     */
+    public long getInstancesCount(String className) {
+        return simulation.getSimulationDescriptor().getFactIdentifiers()
+                .stream()
+                .filter(factIdentifier -> factIdentifier.getClassName().equals(className))
                 .count();
     }
 

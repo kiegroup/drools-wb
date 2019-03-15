@@ -16,8 +16,10 @@
 package org.drools.workbench.screens.scenariosimulation.client;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
 
@@ -166,6 +168,7 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected final String FACT_IDENTIFIER_NAME = "FACT_IDENTIFIER_NAME";
 
+    protected final Set<FactIdentifier> factIdentifierSet = new HashSet<>();
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     protected List<GridColumn<?>> gridColumns = new ArrayList<>();
 
@@ -332,10 +335,12 @@ public abstract class AbstractScenarioSimulationTest {
         IntStream.range(0, COLUMN_INDEX + 1).forEach(columnIndex -> {
             gridColumns.add(gridColumnMock);
             factMappingValuesLocal.add(factMappingValueMock);
+            factIdentifierSet.add(factIdentifierMock);
             when(simulationDescriptorMock.getFactMappingByIndex(columnIndex)).thenReturn(factMappingMock);
         });
         when(factIdentifierMock.getClassName()).thenReturn(FULL_CLASS_NAME);
         when(factIdentifierMock.getName()).thenReturn(FACT_IDENTIFIER_NAME);
+        when(simulationDescriptorMock.getFactIdentifiers()).thenReturn(factIdentifierSet);
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
     }
