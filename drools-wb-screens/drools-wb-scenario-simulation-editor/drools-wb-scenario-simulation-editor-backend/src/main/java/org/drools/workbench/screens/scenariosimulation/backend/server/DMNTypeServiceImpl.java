@@ -94,20 +94,6 @@ public class DMNTypeServiceImpl
     }
 
     /**
-     * This method is meant to create <code>FactModelTree</code>s for <b>inner</b> <code>DMNType</code>s
-     * @param propertyName
-     * @param fullPropertyPath
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @return
-     * @throws WrongDMNTypeException
-     */
-    protected FactModelTree createInnerFactModelTree(Map<String, List<String>> genericTypeInfoMap, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        return type.isCollection() ? createFactModelTreeForCollection(genericTypeInfoMap, propertyName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(genericTypeInfoMap, propertyName, "value", fullPropertyPath, type, hiddenFacts, fmType);
-    }
-
-    /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isCollection()</code> == <code>true</code>
      * @param factName
      * @param type
@@ -122,7 +108,7 @@ public class DMNTypeServiceImpl
         }
         populateGeneric(genericTypeInfoMap, "value", type.getName());
         FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
-        FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), type.getName(), "value", type.getName(), type, hiddenFacts, fmType);
+        FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), type.getName(), type.getName(), type.getName(), type, hiddenFacts, fmType);
         hiddenFacts.put(type.getName(), genericFactModelTree);
         return toReturn;
     }
@@ -192,13 +178,12 @@ public class DMNTypeServiceImpl
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (entry.getValue().isCollection()) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
-                FactModelTree fact = createInnerFactModelTree(new HashMap<>(), entry.getKey(), expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
-                hiddenFacts.put(entry.getKey(), fact);
+                FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
                 simpleFields.put(entry.getKey(), List.class.getCanonicalName());
                 genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo("value"));
             } else {
                 if (entry.getValue().isComposite()) { // a complex type needs the expandable property and then in the hidden map, its fact model tree
-                    FactModelTree fact = createInnerFactModelTree(genericTypeInfoMap, entry.getKey(), expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
+                    FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), "value", expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
                     hiddenFacts.put(entry.getValue().getName(), fact);
                     toReturn.addExpandableProperty(entry.getKey(), entry.getValue().getName());
                 } else {  // a simple type is just name -> type

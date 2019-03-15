@@ -38,7 +38,6 @@ import static org.junit.Assert.assertThat;
 
 public class AbstractDMNTest {
 
-//    @Mock
     protected DMNModel dmnModelLocal;
 
     protected static final String SIMPLE_INPUT_DATA_NAME_NO_COLLECTION = "SIMPLE_INPUT_DATA_NAME_NO_COLLECTION";
@@ -83,9 +82,12 @@ public class AbstractDMNTest {
         decisionNodes.add(decisionNodeSimpleNoCollection);
         DecisionNode decisionNodeCompositeNoCollection = getDecisionNode(compositeTypeNoCollection, COMPOSITE_DECISION_DATA_NAME);
         decisionNodes.add(decisionNodeCompositeNoCollection);
+        setDmnModelLocal("dmn-list.dmn", "https://github.com/kiegroup/drools/kie-dmn/_CC8924B0-D729-4D70-9588-039B5824FFE9", "dmn-list");
+    }
 
-        final DMNRuntime runtime = DMNRuntimeUtil.createRuntime("dmn-list-composite.dmn", AbstractDMNTest.class);
-        dmnModelLocal = runtime.getModel("https://github.com/kiegroup/drools/kie-dmn/_25BF2679-3109-488F-9AD1-DDBCCEBBE5F1", "dmn-list-composite");
+    protected void setDmnModelLocal(String resourceName, String namespace, String modelName) {
+        final DMNRuntime runtime = DMNRuntimeUtil.createRuntime(resourceName, AbstractDMNTest.class);
+        dmnModelLocal = runtime.getModel(namespace, modelName);
         assertThat(dmnModelLocal, notNullValue());
         assertThat(DMNRuntimeUtil.formatMessages(dmnModelLocal.getMessages()), dmnModelLocal.hasErrors(), is(false));
     }
