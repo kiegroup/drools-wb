@@ -34,10 +34,11 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 @Dependent
 public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
 
+    private final static String COPY_LABEL = "_copy";
+
     public DuplicateColumnCommand() {
         super(true);
     }
-
 
     protected void internalExecute(ScenarioSimulationContext context) {
         final List<GridColumn<?>> columns = context.getModel().getColumns();
@@ -56,8 +57,8 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         long instanceNumber = context.getModel().getInstancesCount(originalColumn.getFactIdentifier().getClassName());
         StringBuilder instanceTitle = new StringBuilder();
-        instanceTitle.append(originalColumn.getInformationHeaderMetaData().getTitle());
-        instanceTitle.append("_copy");
+        instanceTitle.append(originalColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0]);
+        instanceTitle.append(COPY_LABEL);
         if (instanceNumber > 1) {
             instanceTitle.append("_").append(instanceNumber);
         }
