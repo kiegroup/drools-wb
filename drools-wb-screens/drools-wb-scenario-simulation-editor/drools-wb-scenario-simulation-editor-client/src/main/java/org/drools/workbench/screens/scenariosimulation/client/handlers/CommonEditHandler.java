@@ -120,11 +120,7 @@ public class CommonEditHandler {
         if (((ScenarioGridCell) cell).isEditingMode()) {
             return true;
         }
-        ((ScenarioGridCell) cell).setEditingMode((!scenarioGridColumn.isReadOnly()));
-        if (scenarioGridColumn.isReadOnly()) {
-            return false;
-        }
-        scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex);
+        ((ScenarioGridCell) cell).setEditingMode((!scenarioGridColumn.isReadOnly()) && scenarioGrid.startEditingCell(uiRowIndex, uiColumnIndex));
         return ((ScenarioGridCell) cell).isEditingMode();
     }
 
