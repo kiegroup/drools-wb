@@ -492,7 +492,6 @@ public class ScenarioGridModel extends BaseGridData {
             selectHeaderCell(selectedHeaderCell.getRowIndex(), columnIndex);
         }
         selectedColumn = getColumns().get(columnIndex);
-        System.out.println();
     }
 
     /**
