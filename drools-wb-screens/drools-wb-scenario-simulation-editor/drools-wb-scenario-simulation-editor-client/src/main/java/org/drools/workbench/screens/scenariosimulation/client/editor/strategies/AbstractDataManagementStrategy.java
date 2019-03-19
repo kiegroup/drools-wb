@@ -98,7 +98,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
      */
     protected List<String> getPropertiesToHide(ScenarioGridColumn selectedColumn, ScenarioGridModel scenarioGridModel) {
         List<String> toReturn = new ArrayList<>();
-        if (!selectedColumn.isPropertyAssigned()) {
+        if (selectedColumn != null && !selectedColumn.isPropertyAssigned()) {
             scenarioGridModel.getSimulation().ifPresent(simulation -> {
                 final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
                 List<ScenarioGridColumn> instanceColumns = scenarioGridModel.getInstanceScenarioGridColumns(selectedColumn);

@@ -38,6 +38,8 @@ import static org.mockito.Mockito.verify;
 
 public abstract class AbstractDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
+    protected ScenarioGridColumn scenarioGridColumnMock;
+
     protected AbstractDataManagementStrategy abstractDataManagementStrategySpy;
 
     public void setUp() throws Exception {
@@ -68,6 +70,23 @@ public abstract class AbstractDataManagementStrategyTest extends AbstractScenari
     @Test
     public void getPropertiesToHideListPropertyAssigned() {
         commonGetPropertiesToHideList(true);
+    }
+
+    @Test
+    public void getPropertiesToHideListWithSelectedColumnNotInGridModel() {
+        doReturn(true).when(gridColumnMock).isPropertyAssigned();
+        List<String> retrieved = abstractDataManagementStrategySpy.getPropertiesToHide(scenarioGridColumnMock, scenarioGridModelMock);
+        assertTrue(retrieved.isEmpty());
+        reset(scenarioGridModelMock);
+    }
+
+    @Test
+    public void getPropertiesToHideListWithSelectedColumnIsNull() {
+        doReturn(true).when(gridColumnMock).isPropertyAssigned();
+        List<String> retrieved = abstractDataManagementStrategySpy.getPropertiesToHide(null, scenarioGridModelMock);
+        assertTrue(retrieved.isEmpty());
+        verify(scenarioGridModelMock, never()).getSimulation();
+        reset(scenarioGridModelMock);
     }
 
     private void commonGetPropertiesToHideMap(boolean selectedColumnNull, boolean isInstanceAssigned) {

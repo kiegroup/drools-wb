@@ -379,7 +379,14 @@ public class ScenarioGridModel extends BaseGridData {
      * @return
      */
     public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn) {
+        if (selectedColumn == null) {
+            return new ArrayList<>();
+        }
         int columnIndex = columns.indexOf(selectedColumn);
+        /* In case the selected column is no more present (eg after an UNDO action), it returns an empty list */
+        if (columnIndex == -1) {
+            return new ArrayList<>();
+        }
         Range instanceRange = getInstanceLimits(columnIndex);
         return columns.subList(instanceRange.getMinRowIndex(), instanceRange.getMaxRowIndex() + 1)
                 .stream()
@@ -485,6 +492,7 @@ public class ScenarioGridModel extends BaseGridData {
             selectHeaderCell(selectedHeaderCell.getRowIndex(), columnIndex);
         }
         selectedColumn = getColumns().get(columnIndex);
+        System.out.println();
     }
 
     /**
