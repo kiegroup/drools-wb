@@ -72,7 +72,6 @@ public class DMNTypeServiceImpl
             }
         }
         FactModelTuple factModelTuple = new FactModelTuple(visibleFacts, hiddenFacts);
-        errorHolder.getTopLevelCollection().forEach(factModelTuple::addTopLevelCollectionError);
         errorHolder.getMultipleNestedCollection().forEach(factModelTuple::addMultipleNestedCollectionError);
         errorHolder.getMultipleNestedObject().forEach(factModelTuple::addMultipleNestedObjectError);
         return factModelTuple;
