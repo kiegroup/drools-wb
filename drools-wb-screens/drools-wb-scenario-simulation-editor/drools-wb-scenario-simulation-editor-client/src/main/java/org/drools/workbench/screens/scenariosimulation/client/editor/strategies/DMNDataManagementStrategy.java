@@ -53,13 +53,12 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     @Override
     public void populateRightPanel(final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
-        if(factModelTreeHolder.getFactModelTuple() != null) {
+        if (factModelTreeHolder.getFactModelTuple() != null) {
             getSuccessCallback(rightPanelPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
-        }
-        else {
+        } else {
             dmnTypeService.call(getSuccessCallback(rightPanelPresenter, scenarioGridModel),
                                 getErrorCallback(rightPanelPresenter))
-                    .retrieveType(currentPath, dmnFilePath);
+                    .retrieveFactModelTuple(currentPath, dmnFilePath);
         }
     }
 
@@ -75,9 +74,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     }
 
     protected RemoteCallback<FactModelTuple> getSuccessCallback(RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
-        return factMappingTuple -> {
-            getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
-        };
+        return factMappingTuple -> getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
     }
 
     protected void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
@@ -93,19 +90,19 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         if (factModelTuple.getTopLevelCollectionError().size() > 0) {
             showError = true;
             builder.append("Top-level collections are not supported! Violated by:<br/>");
-            factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
+            factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
             showError = true;
             builder.append("Nested collections are not supported! Violated by:<br/>");
-            factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
+            factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
             builder.append("<br/>");
         }
         if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
             showError = true;
             builder.append("Complex nested objects inside a collection are not supported! Violated by:<br/>");
-            factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>"+ error + "</b><br/>"));
+            factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
         }
         if (showError) {
             factModelTuple.getTopLevelCollectionError().clear();
@@ -131,5 +128,4 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
             return false;
         };
     }
-
 }
