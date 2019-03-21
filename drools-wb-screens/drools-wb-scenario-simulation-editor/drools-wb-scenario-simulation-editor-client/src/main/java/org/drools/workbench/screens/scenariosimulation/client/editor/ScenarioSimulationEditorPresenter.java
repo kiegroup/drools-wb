@@ -341,6 +341,8 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getExportToCsvMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getImportFromCsvMenuItem());
         view.getUndoMenuItem().setEnabled(false);
         view.getRedoMenuItem().setEnabled(false);
         super.makeMenuBar();

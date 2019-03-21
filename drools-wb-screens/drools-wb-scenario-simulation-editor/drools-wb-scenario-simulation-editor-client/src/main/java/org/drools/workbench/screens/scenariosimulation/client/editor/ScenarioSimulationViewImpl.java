@@ -53,6 +53,10 @@ public class ScenarioSimulationViewImpl
 
     private ScenarioMenuItem downloadMenuItem;
 
+    private ScenarioMenuItem exportToCsvMenuItem;
+
+    private ScenarioMenuItem importFromCsvMenuItem;
+
     /**
      * This method also set <code>ScenarioGridLayer</code> taken the instance from given <code>ScenarioGridPanel</code>
      * @param scenarioGridPanel
@@ -119,6 +123,32 @@ public class ScenarioSimulationViewImpl
                                                     () -> presenter.onDownload(pathSupplier));
         }
         return downloadMenuItem;
+    }
+
+    // FIXME to test
+    @Override
+    public MenuItem getExportToCsvMenuItem() {
+        if (exportToCsvMenuItem == null) {
+            exportToCsvMenuItem = new ScenarioMenuItem("Export",
+                                                       () -> {
+                                                            // FIXME
+                                                           throw new UnsupportedOperationException();
+                                                       });
+        }
+        return exportToCsvMenuItem;
+    }
+
+    // FIXME to test
+    @Override
+    public MenuItem getImportFromCsvMenuItem() {
+        if (importFromCsvMenuItem == null) {
+            importFromCsvMenuItem = new ScenarioMenuItem("Import",
+                                                         () -> {
+                                                             // FIXME
+                                                             throw new UnsupportedOperationException();
+                                                         });
+        }
+        return importFromCsvMenuItem;
     }
 
     @Override

@@ -158,6 +158,13 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <!-- FIXME move to bom -->
+      <version>1.6</version>
+    </dependency>
+
   </dependencies>
 
   <build>
