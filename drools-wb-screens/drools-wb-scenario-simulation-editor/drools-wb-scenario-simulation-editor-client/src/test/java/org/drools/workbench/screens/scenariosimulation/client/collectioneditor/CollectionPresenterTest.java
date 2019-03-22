@@ -208,7 +208,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
                 this.mapElementPresenter = mapElementPresenterMock;
                 this.listEditingBoxPresenter = listEditingBoxPresenterMock;
                 this.mapEditingBoxPresenter = mapEditingBoxPresenterMock;
-                this.instancePropertiesMap = instancePropertiesMapLocal;
+                this.simplePropertiesMap = instancePropertiesMapLocal;
                 this.collectionView = collectionViewMock;
                 this.objectSeparatorLI = objectSeparatorLIMock;
                 this.scenarioConfirmationPopupPresenter = scenarioConfirmationPopupPresenterMock;
@@ -231,9 +231,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
             }
         });
         instancePropertiesMapLocal.clear();
-        when(listElementPresenterMock.getItemContainer(anyString(), anyMap())).thenReturn(itemElementMock);
+        when(listElementPresenterMock.getItemContainer(anyString(), anyMap(), anyMap())).thenReturn(itemElementMock);
         when(mapElementPresenterMock.getKeyValueContainer(anyString(), anyMap(), anyMap())).thenReturn(itemElementMock);
-        when(listEditingBoxPresenterMock.getEditingBox(anyString(), anyMap())).thenReturn(listEditingBoxMock);
+        when(listEditingBoxPresenterMock.getEditingBox(anyString(), anyMap(), anyMap())).thenReturn(listEditingBoxMock);
         when(mapEditingBoxPresenterMock.getEditingBox(anyString(), anyMap(), anyMap())).thenReturn(mapEditingBoxMock);
     }
 
@@ -274,7 +274,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.isListWidget()).thenReturn(true);
         collectionEditorPresenter.showEditingBox();
         verify(collectionViewMock, times(1)).getElementsContainer();
-        verify(listEditingBoxPresenterMock, times(1)).getEditingBox(eq(TEST_KEY), anyMap());
+        verify(listEditingBoxPresenterMock, times(1)).getEditingBox(eq(TEST_KEY), anyMap(), anyMap());
         verify(elementsContainerMock, times(1)).appendChild(eq(listEditingBoxMock));
     }
 
@@ -304,10 +304,10 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void addListItem() {
-        collectionEditorPresenter.addListItem(propertyMapLocal);
+        collectionEditorPresenter.addListItem(propertyMapLocal, anyMap());
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
-        verify(listElementPresenterMock, times(1)).getItemContainer(eq(ITEM_ID), eq(propertyMapLocal));
+        verify(listElementPresenterMock, times(1)).getItemContainer(eq(ITEM_ID), eq(propertyMapLocal), anyMap());
         verify(elementsContainerMock, times(1)).appendChild(eq(itemElementMock));
         verify(collectionEditorPresenter, times(1)).toggleEditingStatus(eq(false));
     }
@@ -377,7 +377,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(jsonValueNeph2Mock, times(JSON_ARRAY_SIZE)).isString();
         verify(jsonStringProp1Mock, times(JSON_ARRAY_SIZE)).stringValue();
         verify(jsonStringProp2Mock, times(JSON_ARRAY_SIZE)).stringValue();
-        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addListItem(anyMap());
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addListItem(anyMap(), anyMap());
     }
 
     @Test

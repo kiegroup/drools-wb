@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.dom.client.LIElement;
@@ -30,6 +29,7 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -70,7 +70,7 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
     @Test
     public void getItemContainer() {
         elementViewListLocal.clear();
-        LIElement itemContainer = elementPresenter.getItemContainer(TEST_ITEM_ID, testPropertiesMap);
+        LIElement itemContainer = elementPresenter.getItemContainer(TEST_ITEM_ID, testPropertiesMap, anyMap());
         verify(elementView1Mock, times(1)).init(elementPresenter);
         verify(elementView1Mock, times(1)).setItemId(TEST_ITEM_ID);
         verify(elementView1Mock, times(1)).getItemContainer();
@@ -128,7 +128,7 @@ public class ItemElementPresenterTest extends ElementPresenterTest<ItemElementVi
 
     @Test
     public void getItemsProperties() {
-        List<Map<String, String>> itemsProperties = elementPresenter.getItemsProperties();
+        Map<String, Map<String, String>> itemsProperties = elementPresenter.getSimpleItemsProperties();
         assertNotNull(itemsProperties);
     }
 }

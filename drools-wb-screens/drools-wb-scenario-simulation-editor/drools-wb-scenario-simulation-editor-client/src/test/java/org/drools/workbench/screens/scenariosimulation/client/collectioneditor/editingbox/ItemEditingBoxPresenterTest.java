@@ -63,7 +63,7 @@ public class ItemEditingBoxPresenterTest extends AbstractEditingBoxPresenterTest
 
     @Test
     public void getEditingBox() {
-        ((ItemEditingBoxPresenter)editingBoxPresenter).getEditingBox(TEST_KEY, testInstancePropertyMap);
+        ((ItemEditingBoxPresenter)editingBoxPresenter).getEditingBox(TEST_KEY, testInstancePropertyMap, anyMap());
         verify(viewsProviderMock, times(1)).getItemEditingBox();
         verify(listEditingBoxMock, times(1)).init(((ItemEditingBoxPresenter)editingBoxPresenter));
         verify(listEditingBoxMock, times(1)).setKey(TEST_KEY);
@@ -75,7 +75,7 @@ public class ItemEditingBoxPresenterTest extends AbstractEditingBoxPresenterTest
     public void save() {
         editingBoxPresenter.save();
         verify(propertyPresenterMock, times(1)).updateProperties("value");
-        verify(collectionPresenterMock, times(1)).addListItem(anyMap());
+        verify(collectionPresenterMock, times(1)).addListItem(anyMap(), anyMap());
     }
 
 }

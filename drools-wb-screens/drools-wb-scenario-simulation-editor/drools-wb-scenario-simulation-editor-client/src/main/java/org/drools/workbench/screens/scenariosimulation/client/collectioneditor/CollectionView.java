@@ -83,9 +83,10 @@ public interface CollectionView {
         /**
          * Creates a new single <b>item</b> element with values taken from given <code>Map</code>
          *
-         * @param propertiesValues
+         * @param simplePropertiesValues
+         * @param expandablePropertiesValues
          */
-        void addListItem(Map<String, String> propertiesValues);
+        void addListItem(Map<String, String> simplePropertiesValues, Map<String, Map<String, String>> expandablePropertiesValues);
 
         /**
          * Creates a new <b>key/value</b> <b>item</b> element with values taken from given <code>Map</code>

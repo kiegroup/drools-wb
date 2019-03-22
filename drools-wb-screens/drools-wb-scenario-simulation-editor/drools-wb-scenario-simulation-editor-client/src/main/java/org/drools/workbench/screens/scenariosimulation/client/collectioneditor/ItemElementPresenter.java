@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -26,14 +25,17 @@ import com.google.gwt.dom.client.UListElement;
 public class ItemElementPresenter extends ElementPresenter<ItemElementView> implements ItemElementView.Presenter {
 
     @Override
-    public LIElement getItemContainer(String itemId, Map<String, String> propertiesMap) {
+    public LIElement getItemContainer(String itemId, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesValues) {
         final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
         itemElementView.init(this);
         itemElementView.setItemId(itemId);
         final UListElement innerItemContainer = itemElementView.getInnerItemContainer();
         final LIElement saveChange = itemElementView.getSaveChange();
-        propertiesMap.forEach((propertyName, propertyValue) ->
+        simplePropertiesMap.forEach((propertyName, propertyValue) ->
                                       innerItemContainer.insertBefore(propertyPresenter.getPropertyFields(itemId, propertyName, propertyValue), saveChange));
+        expandablePropertiesValues.forEach((nestedPropertyName, nestedPropertiesValues) -> {
+            addNestedItemElementView(itemElementView, nestedPropertiesValues, itemId);
+        });
         elementViewList.add(itemElementView);
         return itemElementView.getItemContainer();
     }
@@ -78,9 +80,28 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     }
 
     @Override
-    public List<Map<String, String>> getItemsProperties() {
+    public Map<String, Map<String, String>> getSimpleItemsProperties() {
         return elementViewList.stream()
-                .map(itemElementView -> propertyPresenter.getProperties(itemElementView.getItemId()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(ElementView::getItemId,
+                                          itemElementView -> propertyPresenter.getSimpleProperties(itemElementView.getItemId())));
+    }
+
+    @Override
+    public Map<String, Map<String, Map<String, String>>> getNestedItemsProperties() {
+        return elementViewList.stream()
+                .collect(Collectors.toMap(ElementView::getItemId,
+                                          itemElementView -> propertyPresenter.getNestedProperties(itemElementView.getItemId())));
+    }
+
+    protected void addNestedItemElementView(ItemElementView containerItemElementView, Map<String, String> propertiesMap, String parentItemId) {
+        final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
+        itemElementView.init(this);
+        final UListElement innerItemContainer = itemElementView.getInnerItemContainer();
+        itemElementView.getSaveChange().removeFromParent();
+        String itemId = parentItemId + "." + innerItemContainer.getChildCount();
+        itemElementView.setItemId(itemId);
+        propertiesMap.forEach((propertyName, propertyValue) ->
+                                            innerItemContainer.appendChild(propertyPresenter.getPropertyFields(itemId, propertyName, propertyValue)));
+        containerItemElementView.getInnerItemContainer().insertBefore(itemElementView.getItemContainer(), containerItemElementView.getSaveChange());
     }
 }

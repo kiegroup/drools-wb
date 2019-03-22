@@ -76,7 +76,7 @@ public class PropertyPresenter implements PropertyView.Presenter {
     }
 
     @Override
-    public Map<String, String> getProperties(String itemId) {
+    public Map<String, String> getSimpleProperties(String itemId) {
         Map<String, String> toReturn = new HashMap<>();
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> {
@@ -84,6 +84,16 @@ public class PropertyPresenter implements PropertyView.Presenter {
                     propertyName = propertyName.substring(propertyName.lastIndexOf("#") + 1);
                     toReturn.put(propertyName, propertyEditorView.getPropertyValueSpan().getInnerText());
                 });
+        return toReturn;
+    }
+
+    @Override
+    public Map<String, Map<String, String>> getNestedProperties(String itemId) {
+        Map<String, Map<String, String>>  toReturn = new HashMap<>();
+        propertyViewMap.keySet().stream().filter(key -> key.startsWith(itemId + ".")).forEach(nestedItemId -> {
+            Map<String, String> nestedSimplePropertiesMap = getSimpleProperties(nestedItemId);
+            toReturn.put(nestedItemId, nestedSimplePropertiesMap);
+        });
         return toReturn;
     }
 
