@@ -40,9 +40,8 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 import org.kie.dmn.api.core.DMNDecisionResult;
 import org.kie.dmn.api.core.DMNMessage;
-import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNResult;
-import org.kie.dmn.api.core.ast.InputDataNode;
+import org.kie.dmn.model.api.NamedElement;
 
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createErrorResult;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createResult;
@@ -74,9 +73,8 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                  RequestContext requestContext) {
         DMNResult dmnResult = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_RESULT);
 
-        DMNModel dmnModel = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_MODEL);
-
-        validateInputConstraints(dmnResult.getMessages(), dmnModel, scenarioRunnerData.getGivens());
+        // report input validation errors
+        verifyInputConstraints(dmnResult.getMessages(), scenarioRunnerData.getGivens());
 
         for (ScenarioExpect output : scenarioRunnerData.getExpects()) {
             FactIdentifier factIdentifier = output.getFactIdentifier();
@@ -99,28 +97,25 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
         }
     }
 
-    // FIXME to test
-    protected void validateInputConstraints(List<DMNMessage> messages, DMNModel dmnModel, List<ScenarioGiven> givens) {
+    protected void verifyInputConstraints(List<DMNMessage> messages, List<ScenarioGiven> givens) {
 
         messages.stream()
                 // filter out invalid messages (only errors with sourceId)
                 .filter(message -> Message.Level.ERROR.equals(message.getLevel()) &&
-                        message.getSourceId() != null)
-                .flatMap(message -> getInputNodeName(dmnModel, message.getSourceId()))
+                        message.getSourceReference() != null)
+                .flatMap(this::retrieveInputNodeName)
                 .forEach(name -> applyErrorIfUsed(name, givens));
     }
 
-    // FIXME to test
-    protected Stream<String> getInputNodeName(DMNModel dmnModel, String sourceId) {
-        for (InputDataNode input : dmnModel.getInputs()) {
-            if (sourceId.equals(input.getId())) {
-                return Stream.of(input.getName());
-            }
+    protected Stream<String> retrieveInputNodeName(DMNMessage message) {
+        Object sourceReference = message.getSourceReference();
+        if (sourceReference instanceof NamedElement &&
+                ((NamedElement) sourceReference).getName() != null) {
+            return Stream.of(((NamedElement) sourceReference).getName());
         }
         return Stream.empty();
     }
 
-    // FIXME to test
     protected void applyErrorIfUsed(String name, List<ScenarioGiven> givens) {
         for (ScenarioGiven given : givens) {
             if (name.equals(given.getFactIdentifier().getName())) {
