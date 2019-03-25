@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.apache.commons.csv.CSVFormat;
@@ -27,42 +28,69 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 
 public class ScenarioCsvImportExport {
 
     private static int HEADER_SIZE = 3;
 
-    public static String exportData(Simulation simulation) {
+    // FIXME to test
+    public static String exportData(Simulation simulation) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
 
-        CSVPrinter printer;
-        try {
-            printer = new CSVPrinter(stringBuilder, CSVFormat.EXCEL);
-        } catch (IOException e) {
-            throw ExceptionUtilities.handleException(e);
-        }
-
-
+        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.EXCEL);
 
         generateHeader(factMappings, printer);
 
-
-        // FIXME what to do with index and description? skip?
-
-        for (Scenario unmodifiableScenario : simulation.getUnmodifiableScenarios()) {
-            for (int i = 0; i < factMappings.size(); i += 1) {
-
+        for (Scenario scenario : simulation.getUnmodifiableScenarios()) {
+            List<Object> values = new ArrayList<>();
+            for (FactMapping factMapping : factMappings) {
+                Optional<FactMappingValue> factMappingValue = scenario.getFactMappingValue(factMapping.getFactIdentifier(),
+                                                                                           factMapping.getExpressionIdentifier());
+                values.add(factMappingValue.map(FactMappingValue::getRawValue).orElse(""));
             }
+            printer.printRecord(values.toArray());
         }
-        // FIXME
-        return null;
+
+        printer.close();
+
+        return stringBuilder.toString();
     }
 
-    private static void generateHeader(List<FactMapping> factMappings, CSVPrinter printer) throws IOException {
+    // FIXME to test
+    public static Simulation importData(String raw, Simulation originalSimulation) throws IOException {
+
+        CSVParser csvParser = CSVFormat.EXCEL.parse(new StringReader(raw));
+
+        Simulation toReturn = originalSimulation.cloneSimulation();
+        IntStream.range(0, toReturn.getUnmodifiableScenarios().size())
+                .forEach(toReturn::removeScenarioByIndex);
+
+        List<FactMapping> factMappings = toReturn.getSimulationDescriptor().getUnmodifiableFactMappings();
+
+        List<CSVRecord> csvRecords = csvParser.getRecords();
+        csvRecords = csvRecords.subList(HEADER_SIZE, csvRecords.size());
+
+        for (CSVRecord csvRecord : csvRecords) {
+            Scenario scenarioToFill = toReturn.addScenario();
+            if (csvRecord.size() != factMappings.size()) {
+                throw new IllegalArgumentException("Malformed row " + csvRecord);
+            }
+            // starting from 1 to skip index
+            for (int i = 1; i < factMappings.size(); i += 1) {
+                FactMapping factMapping = factMappings.get(i);
+                scenarioToFill.addMappingValue(factMapping.getFactIdentifier(),
+                                               factMapping.getExpressionIdentifier(),
+                                               csvRecord.get(i));
+            }
+        }
+        return toReturn;
+    }
+
+    protected static void generateHeader(List<FactMapping> factMappings, CSVPrinter printer) throws IOException {
         List<String> firstLineHeader = new ArrayList<>();
         List<String> secondLineHeader = new ArrayList<>();
         List<String> thirdLineHeader = new ArrayList<>();
@@ -76,43 +104,5 @@ public class ScenarioCsvImportExport {
         printer.printRecord(firstLineHeader.toArray());
         printer.printRecord(secondLineHeader.toArray());
         printer.printRecord(thirdLineHeader.toArray());
-    }
-
-    public static Simulation importData(String raw, Simulation originalSimulation) {
-
-        CSVParser csvParser;
-        try {
-            csvParser = CSVFormat.EXCEL.parse(new StringReader(raw));
-        } catch (IOException e) {
-            throw ExceptionUtilities.handleException(e);
-        }
-
-        Simulation toReturn = originalSimulation.cloneSimulation();
-        IntStream.range(0, toReturn.getUnmodifiableScenarios().size())
-                .forEach(toReturn::removeScenarioByIndex);
-
-        List<FactMapping> factMappings = toReturn.getSimulationDescriptor().getUnmodifiableFactMappings();
-
-        List<CSVRecord> csvRecords;
-        try {
-            csvRecords = csvParser.getRecords();
-            csvRecords = csvRecords.subList(HEADER_SIZE, csvRecords.size());
-        } catch (IOException e) {
-            throw ExceptionUtilities.handleException(e);
-        }
-
-        for (CSVRecord csvRecord : csvRecords) {
-            Scenario scenarioToFill = toReturn.addScenario();
-            if (csvRecord.size() != factMappings.size()) {
-                throw new IllegalArgumentException("Malformed row " + csvRecord);
-            }
-            for (int i = 0; i < factMappings.size(); i += 1) {
-                FactMapping factMapping = factMappings.get(i);
-                scenarioToFill.addMappingValue(factMapping.getFactIdentifier(),
-                                               factMapping.getExpressionIdentifier(),
-                                               csvRecord.get(i));
-            }
-        }
-        return toReturn;
     }
 }

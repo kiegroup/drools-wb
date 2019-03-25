@@ -21,29 +21,39 @@ import javax.enterprise.context.ApplicationScoped;
 import org.drools.workbench.screens.scenariosimulation.backend.server.importexport.ScenarioCsvImportExport;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
+import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
 
+// FIXME to test
 @Service
 @ApplicationScoped
 public class ImportExportServiceImpl implements ImportExportService {
 
     @Override
     public Object exportSimulation(Type type, Simulation simulation) {
-        switch (type) {
-            case CSV:
-                return ScenarioCsvImportExport.exportData(simulation);
-            default:
-                throw new IllegalArgumentException("Impossible to parse " + type);
+        try {
+            switch (type) {
+                case CSV:
+                    return ScenarioCsvImportExport.exportData(simulation);
+                default:
+                    throw new IllegalArgumentException("Impossible to parse " + type);
+            }
+        } catch (Exception e) {
+            throw ExceptionUtilities.handleException(e);
         }
     }
 
     @Override
     public Simulation importSimulation(Type type, Object raw, Simulation originalSimulation) {
-        switch (type) {
-            case CSV:
-                return ScenarioCsvImportExport.importData((String) raw, originalSimulation);
-            default:
-                throw new IllegalArgumentException("Impossible to parse " + type);
+        try {
+            switch (type) {
+                case CSV:
+                    return ScenarioCsvImportExport.importData((String) raw, originalSimulation);
+                default:
+                    throw new IllegalArgumentException("Impossible to parse " + type);
+            }
+        } catch (Exception e) {
+            throw ExceptionUtilities.handleException(e);
         }
     }
 }

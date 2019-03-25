@@ -280,6 +280,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
+    // FIXME to test
     @Test
     public void makeMenuBar() {
         presenter.makeMenuBar();
