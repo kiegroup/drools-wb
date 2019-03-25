@@ -91,10 +91,29 @@ public class ScenarioSimulationGridHeaderUtilities {
         return ci.getColumn();
     }
 
-    public static boolean isEditableHeader(final GridColumn<?> column,
+    /**
+     * Checks whether the edit mode can be invoked on header cell from given column on given row.
+     * @param column
+     * @param uiHeaderRowIndex
+     * @return true if conditions are met, false otherwise
+     */
+    public static boolean isEditableHeader(final ScenarioGridColumn column,
                                            final Integer uiHeaderRowIndex) {
-        GridColumn.HeaderMetaData headerMetaData = column.getHeaderMetaData().get(uiHeaderRowIndex);
-        return headerMetaData instanceof ScenarioHeaderMetaData && !((ScenarioHeaderMetaData) headerMetaData).isReadOnly();
+        final GridColumn.HeaderMetaData headerMetaData = column.getHeaderMetaData().get(uiHeaderRowIndex);
+        if (!(headerMetaData instanceof ScenarioHeaderMetaData)) {
+            throw new IllegalStateException("Header metadata has to be an instance of ScenarioHeaderMetaData");
+        }
+
+        final ScenarioHeaderMetaData scenarioHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData;
+        if (scenarioHeaderMetaData.isEditingMode() || scenarioHeaderMetaData.isReadOnly()) {
+            return false;
+        }
+
+        if (!column.isInstanceAssigned() || !column.isEditableHeaders()) {
+            return false;
+        }
+
+        return scenarioHeaderMetaData.isInstanceHeader() || (scenarioHeaderMetaData.isPropertyHeader() && column.isPropertyAssigned());
     }
 
     public static EnableRightPanelEvent getEnableRightPanelEvent(final ScenarioGrid scenarioGrid,
