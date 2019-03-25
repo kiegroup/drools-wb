@@ -141,6 +141,11 @@
       <artifactId>kie-dmn-core</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-model</artifactId>
+    </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.uberfire</groupId>
