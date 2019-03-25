@@ -493,10 +493,12 @@ public class ScenarioGridModel extends BaseGridData {
      * @return
      */
     public long getInstancesCount(String className) {
-        return simulation.getSimulationDescriptor().getFactIdentifiers()
+        return simulation.getSimulationDescriptor().getUnmodifiableFactMappings()
                 .stream()
-                .filter(factIdentifier -> factIdentifier.getClassName().equals(className))
-                .count();
+                .filter(factMapping-> factMapping.getFactIdentifier().getClassName().equals(className))
+                .collect(Collectors.groupingBy(FactMapping::getFactAlias))
+                .keySet()
+                .size();
     }
 
     public void updateHeader(int columnIndex, int headerRowIndex, String value) {

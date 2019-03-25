@@ -45,17 +45,17 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final ScenarioSimulationContext.Status status = context.getStatus();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(status.getColumnIndex());
         int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
+        long instanceNumber = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
         context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn ->
-            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn)
+            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn, instanceNumber)
         );
     }
 
-    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn) {
+    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn, long instanceNumber) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = originalColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
-        long instanceNumber = context.getModel().getInstancesCount(originalColumn.getFactIdentifier().getClassName());
         StringBuilder instanceTitle = new StringBuilder();
         instanceTitle.append(originalColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0]);
         instanceTitle.append(COPY_LABEL);
