@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
@@ -60,8 +61,8 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     @Mock
     private ScenarioHeaderMetaData propertyHeaderMetaDataMock;
 
-    @Mock
-    private List<GridColumn<?>> gridColumnsMock;
+//    @Mock
+//    private List<GridColumn<?>> gridColumnsMock;
 
     @Mock
     private ScenarioSimulationContext scenarioSimulationContextMock;
@@ -79,17 +80,22 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     @Before
     public void setup() {
         super.setup();
-        command = spy(new DuplicateColumnCommand() {
-            @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
-                                                                    ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
-                return gridColumnMock;
-            }
-        });
-        scenarioGridColumnList.add(scenarioGridColumn1Mock);
-        //scenarioGridColumnList.add(scenarioGridColumn2);
+//        command = spy(new DuplicateColumnCommand() {
+//            @Override
+//            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+//                                                                    ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
+//                return gridColumnMock;
+//            }
+//        });
+        command = spy(new DuplicateColumnCommand());
         assertTrue(command.isUndoable());
+        //scenarioGridColumnList.add(scenarioGridColumn1Mock);
+        //scenarioGridColumnList.add(scenarioGridColumn2);
         when(scenarioGridModelMock.getInstanceScenarioGridColumns(gridColumnMock)).thenReturn(scenarioGridColumnList);
+        //when(scenarioGridModelMock.getInstanceScenarioGridColumns(scenarioGridColumn1Mock)).thenReturn((List<ScenarioGridColumn>) gridColumns);
+        gridColumns.clear();
+        gridColumns.add(scenarioGridColumn1Mock);
+        gridColumns.add(scenarioGridColumn2Mock);
         when(scenarioGridColumn1Mock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(scenarioGridColumn1Mock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
         when(scenarioGridColumn2Mock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
@@ -97,7 +103,7 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(TITLE);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(TITLE);
-        when(scenarioGridModelMock.getColumns()).thenReturn(gridColumnsMock);
+        when(scenarioGridModelMock.getColumns()).thenReturn(gridColumns);
         when(scenarioSimulationContextMock.getStatus()).thenReturn(scenarioSimulationContextStatusMock);
         when(scenarioSimulationContextStatusMock.getColumnId()).thenReturn(COLUMN_ID);
         when(scenarioGridColumn1Mock.getFactIdentifier()).thenReturn(factIdentifierMock);
@@ -110,11 +116,10 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
         command.execute(scenarioSimulationContextLocal);
         int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
-        scenarioGridColumnList.forEach(scenarioGridColumn -> {
-            System.out.println("Before incrementing:" + columnPositionAtomic);
-            verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(scenarioSimulationContextLocal, columnPositionAtomic.getAndIncrement(), scenarioGridColumn);
-            System.out.println("After incrementing:" + columnPositionAtomic);
-        });
+//        gridColumns.forEach(scenarioGridColumn -> {
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPositionAtomic.getAndIncrement()), eq(scenarioGridColumn1Mock));
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPositionAtomic.getAndIncrement()), eq(scenarioGridColumn2Mock));
+        //        });
     }
 
     @Test
