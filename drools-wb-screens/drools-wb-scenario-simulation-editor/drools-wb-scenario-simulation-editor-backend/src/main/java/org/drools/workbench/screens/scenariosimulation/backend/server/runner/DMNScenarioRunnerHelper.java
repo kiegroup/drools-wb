@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.fluent.DMNScenarioExecutableBuilder;
@@ -34,10 +35,14 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.kie.api.builder.Message;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
 import org.kie.dmn.api.core.DMNDecisionResult;
+import org.kie.dmn.api.core.DMNMessage;
+import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNResult;
+import org.kie.dmn.api.core.ast.InputDataNode;
 
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createErrorResult;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper.createResult;
@@ -69,6 +74,10 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                  RequestContext requestContext) {
         DMNResult dmnResult = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_RESULT);
 
+        DMNModel dmnModel = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_MODEL);
+
+        validateInputConstraints(dmnResult.getMessages(), dmnModel, scenarioRunnerData.getGivens());
+
         for (ScenarioExpect output : scenarioRunnerData.getExpects()) {
             FactIdentifier factIdentifier = output.getFactIdentifier();
             String decisionName = factIdentifier.getName();
@@ -86,6 +95,37 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                 ScenarioResult scenarioResult = fillResult(expectedResult, factIdentifier, () -> getSingleFactValueResult(factMapping, expectedResult, decisionResult, expressionEvaluator));
 
                 scenarioRunnerData.addResult(scenarioResult);
+            }
+        }
+    }
+
+    // FIXME to test
+    protected void validateInputConstraints(List<DMNMessage> messages, DMNModel dmnModel, List<ScenarioGiven> givens) {
+
+        messages.stream()
+                // filter out invalid messages (only errors with sourceId)
+                .filter(message -> Message.Level.ERROR.equals(message.getLevel()) &&
+                        message.getSourceId() != null)
+                .flatMap(message -> getInputNodeName(dmnModel, message.getSourceId()))
+                .forEach(name -> applyErrorIfUsed(name, givens));
+    }
+
+    // FIXME to test
+    protected Stream<String> getInputNodeName(DMNModel dmnModel, String sourceId) {
+        for (InputDataNode input : dmnModel.getInputs()) {
+            if (sourceId.equals(input.getId())) {
+                return Stream.of(input.getName());
+            }
+        }
+        return Stream.empty();
+    }
+
+    // FIXME to test
+    protected void applyErrorIfUsed(String name, List<ScenarioGiven> givens) {
+        for (ScenarioGiven given : givens) {
+            if (name.equals(given.getFactIdentifier().getName())) {
+                given.getFactMappingValues().forEach(fmv -> fmv.setError(true));
+                return;
             }
         }
     }
