@@ -42,7 +42,7 @@ public class ItemEditingBoxPresenter extends EditingBoxPresenter implements Item
         for (Map.Entry<String, Map<String, String>> entry : expandablePropertiesMap.entrySet()) {
             String nestedPropertyName = entry.getKey();
             String nestedPropertyKey = key + "#" + propertyName;
-            addNestedItemEditingBox(listEditingBox, entry.getValue(), nestedPropertyKey, nestedPropertyName);
+            addExpandableItemEditingBox(listEditingBox, entry.getValue(), nestedPropertyKey, nestedPropertyName);
         }
         return listEditingBox.getEditingBox();
     }
@@ -64,7 +64,7 @@ public class ItemEditingBoxPresenter extends EditingBoxPresenter implements Item
      * @param key
      * @param propertyName
      */
-    protected void addNestedItemEditingBox(ItemEditingBox containerItemEditingBox, Map<String, String> propertiesMap, String key, String propertyName) {
+    protected void addExpandableItemEditingBox(ItemEditingBox containerItemEditingBox, Map<String, String> propertiesMap, String key, String propertyName) {
         final ItemEditingBox listEditingBox = viewsProvider.getItemEditingBox();
         listEditingBox.init(this);
         listEditingBox.setKey(key);

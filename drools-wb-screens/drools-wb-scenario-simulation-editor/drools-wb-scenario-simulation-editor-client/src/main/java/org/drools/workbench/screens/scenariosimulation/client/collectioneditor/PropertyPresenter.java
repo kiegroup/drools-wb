@@ -57,12 +57,14 @@ public class PropertyPresenter implements PropertyView.Presenter {
     @Override
     public void editProperties(String itemId) {
         propertyViewMap.get(itemId)
-                .forEach(propertyEditorView -> {
-                    propertyEditorView.getPropertyValueSpan().getStyle().setDisplay(Style.Display.NONE);
-                    propertyEditorView.getPropertyValueInput().setValue(propertyEditorView.getPropertyValueSpan().getInnerText());
-                    propertyEditorView.getPropertyValueInput().getStyle().setDisplay(Style.Display.INLINE);
-                    propertyEditorView.getPropertyValueInput().setDisabled(false);
-                });
+                .forEach(this::startEditPropertyView);
+//        for (String key : propertyViewMap.keySet()) {
+//            if (key.startsWith(itemId + ".")) {
+//                for (PropertyView propertyEditorView : propertyViewMap.get(key)) {
+//                    startEditPropertyView(propertyEditorView);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -86,16 +88,16 @@ public class PropertyPresenter implements PropertyView.Presenter {
                 });
         return toReturn;
     }
-
-    @Override
-    public Map<String, Map<String, String>> getNestedProperties(String itemId) {
-        Map<String, Map<String, String>>  toReturn = new HashMap<>();
-        propertyViewMap.keySet().stream().filter(key -> key.startsWith(itemId + ".")).forEach(nestedItemId -> {
-            Map<String, String> nestedSimplePropertiesMap = getSimpleProperties(nestedItemId);
-            toReturn.put(nestedItemId, nestedSimplePropertiesMap);
-        });
-        return toReturn;
-    }
+//
+//    @Override
+//    public Map<String, Map<String, String>> getNestedProperties(String itemId) {
+//        Map<String, Map<String, String>> toReturn = new HashMap<>();
+//        propertyViewMap.keySet().stream().filter(key -> key.startsWith(itemId + ".")).forEach(nestedItemId -> {
+//            Map<String, String> nestedSimplePropertiesMap = getSimpleProperties(nestedItemId);
+//            toReturn.put(nestedItemId, nestedSimplePropertiesMap);
+//        });
+//        return toReturn;
+//    }
 
     @Override
     public LIElement getPropertyFields(String itemId, String propertyName, String propertyValue) {
@@ -139,28 +141,65 @@ public class PropertyPresenter implements PropertyView.Presenter {
     @Override
     public void deleteProperties(String itemId) {
         propertyViewMap.get(itemId)
-                .forEach(propertyEditorView -> {
-                    String propertyName = propertyEditorView.getPropertyName().getAttribute("data-i18n-key");
-                    propertyEditorView.getPropertyFields().removeFromParent();
-                    propertySpanElementMap.remove(propertyName);
-                });
+                .forEach(this::deletePropertyView);
         propertyViewMap.remove(itemId);
+//        for (String key : propertyViewMap.keySet()) {
+//            if (key.startsWith(itemId + ".")) {
+//                propertyViewMap.get(key).forEach(this::deletePropertyView);
+//                propertyViewMap.remove(key);
+//            }
+//        }
     }
 
     protected Map<String, String> stopEdit(String itemId, boolean toUpdate) {
         Map<String, String> toReturn = new HashMap<>();
         propertyViewMap.get(itemId)
                 .forEach(propertyEditorView -> {
-                    if (toUpdate) {
-                        propertyEditorView.getPropertyValueSpan().setInnerText(propertyEditorView.getPropertyValueInput().getValue());
-                    }
-                    propertyEditorView.getPropertyValueSpan().getStyle().setDisplay(Style.Display.INLINE);
-                    propertyEditorView.getPropertyValueInput().getStyle().setDisplay(Style.Display.NONE);
-                    propertyEditorView.getPropertyValueInput().setDisabled(true);
-                    String propertyName = propertyEditorView.getPropertyName().getInnerText();
-                    propertyName = propertyName.substring(propertyName.lastIndexOf("#") + 1);
-                    toReturn.put(propertyName, propertyEditorView.getPropertyValueSpan().getInnerText());
+                    stopEditPropertyView(toReturn, propertyEditorView, toUpdate);
                 });
+//        for (String key : propertyViewMap.keySet()) {
+//            if (key.startsWith(itemId + ".")) {
+//                for (PropertyView propertyEditorView : propertyViewMap.get(key)) {
+//                    stopEditPropertyView(toReturn, propertyEditorView, toUpdate);
+//                }
+//            }
+//        }
         return toReturn;
+    }
+
+    /**
+     * Enable editing a property
+     * @param toEdit
+     */
+    protected void startEditPropertyView(PropertyView toEdit) {
+        toEdit.getPropertyValueSpan().getStyle().setDisplay(Style.Display.NONE);
+        toEdit.getPropertyValueInput().setValue(toEdit.getPropertyValueSpan().getInnerText());
+        toEdit.getPropertyValueInput().getStyle().setDisplay(Style.Display.INLINE);
+        toEdit.getPropertyValueInput().setDisabled(false);
+    }
+
+    /**
+     * Disable editing a property and put its value in given <code>Map</code>
+     * @param toPopulate
+     * @param toStopEdit
+     * @param toUpdate
+     */
+    protected void stopEditPropertyView(Map<String, String> toPopulate, PropertyView toStopEdit, boolean toUpdate) {
+        if (toUpdate) {
+            toStopEdit.getPropertyValueSpan().setInnerText(toStopEdit.getPropertyValueInput().getValue());
+        }
+        toStopEdit.getPropertyValueSpan().getStyle().setDisplay(Style.Display.INLINE);
+        toStopEdit.getPropertyValueInput().getStyle().setDisplay(Style.Display.NONE);
+        toStopEdit.getPropertyValueInput().setDisabled(true);
+        String propertyName = toStopEdit.getPropertyName().getInnerText();
+        propertyName = propertyName.substring(propertyName.lastIndexOf("#") + 1);
+        toPopulate.put(propertyName, toStopEdit.getPropertyValueSpan().getInnerText());
+    }
+
+    protected void deletePropertyView(PropertyView toDelete) {
+        String propertyName = toDelete.getPropertyName().getAttribute("data-i18n-key");
+        toDelete.getPropertyFields().removeFromParent();
+        propertySpanElementMap.remove(propertyName);
+
     }
 }

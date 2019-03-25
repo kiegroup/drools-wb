@@ -46,7 +46,7 @@ public interface ItemElementView extends ElementView<ItemElementView.Presenter> 
          * Retrieves a <code>Map</code> with the <code>Map</code>s of all the items' <b>nested</b> properties
          * @return a <code>Map</code> where the <b>key</b> is the itemId of the item container, and the value is the map of <b>nested</b> properties
          */
-        Map<String, Map<String, Map<String, String>>> getNestedItemsProperties();
+        Map<String, Map<String, Map<String, String>>> getExpandableItemsProperties();
 
     }
 

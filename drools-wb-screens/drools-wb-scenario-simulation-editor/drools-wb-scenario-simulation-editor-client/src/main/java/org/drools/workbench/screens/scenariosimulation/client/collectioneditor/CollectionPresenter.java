@@ -262,7 +262,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     protected String getListValue() {
         Map<String, Map<String, String>> simpleItemsProperties = listElementPresenter.getSimpleItemsProperties();
-        Map<String, Map<String, Map<String, String>>> nestedItemsProperties = listElementPresenter.getNestedItemsProperties();
+        Map<String, Map<String, Map<String, String>>> nestedItemsProperties = listElementPresenter.getExpandableItemsProperties();
         JSONArray jsonArray = new JSONArray();
         AtomicInteger counter = new AtomicInteger();
         simpleItemsProperties.forEach((itemId, simpleProperties) -> {

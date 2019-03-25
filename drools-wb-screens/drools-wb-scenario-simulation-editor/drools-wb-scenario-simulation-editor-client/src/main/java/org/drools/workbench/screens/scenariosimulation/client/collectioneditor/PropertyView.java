@@ -53,13 +53,13 @@ public interface PropertyView {
          */
         Map<String, String> getSimpleProperties(String itemId);
 
-        /**
-         * Retrieve the <b>nested</b> properties shown at the given <b>itemId</b>
-         *
-         * @param itemId the id of the item containing the <code>LIElement</code>
-         * @return the map with updated values
-         */
-        Map<String, Map<String, String>> getNestedProperties(String itemId);
+//        /**
+//         * Retrieve the <b>nested</b> properties shown at the given <b>itemId</b>
+//         *
+//         * @param itemId the id of the item containing the <code>LIElement</code>
+//         * @return the map with updated values
+//         */
+//        Map<String, Map<String, String>> getNestedProperties(String itemId);
 
         /**
          * Show the <code>SpanElement</code>s of the properties shown at the given <b>baseNodeId</b> with the value of their <code>InputElement</code>s, and hide the latters
