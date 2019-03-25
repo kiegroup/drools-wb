@@ -28,7 +28,7 @@ import com.google.gwt.dom.client.UListElement;
 public class ItemElementPresenter extends ElementPresenter<ItemElementView> implements ItemElementView.Presenter {
 
     /**
-     * Thhis <code>Map</code> is used to map all the <b>expandable</b> properties names of a given itemId
+     * This <code>Map</code> is used to map all the <b>expandable</b> properties names of a given itemId
      */
     protected Map<String, List<String>> itemIdExpandablePropertiesMap = new HashMap<>();
 

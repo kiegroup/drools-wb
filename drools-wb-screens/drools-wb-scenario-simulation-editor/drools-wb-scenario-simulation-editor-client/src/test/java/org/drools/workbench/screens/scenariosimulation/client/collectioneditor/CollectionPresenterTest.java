@@ -45,6 +45,7 @@ import org.uberfire.mvp.Command;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -146,7 +147,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Mock
     private ButtonElement addItemButtonMock;
-
 
     @Mock
     private ButtonElement cancelButtonMock;
@@ -304,7 +304,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void addListItem() {
-        collectionEditorPresenter.addListItem(propertyMapLocal, anyMap());
+        collectionEditorPresenter.addListItem(propertyMapLocal, new HashMap<>());
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
         verify(listElementPresenterMock, times(1)).getItemContainer(eq(ITEM_ID), eq(propertyMapLocal), anyMap());
@@ -371,12 +371,8 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         for (int i = 0; i < JSON_ARRAY_SIZE; i++) {
             verify(jsonArrayMock, times(1)).get(eq(i));
         }
-        verify(jsonObjectMock, times(JSON_ARRAY_SIZE)).get("prop1");
-        verify(jsonObjectMock, times(JSON_ARRAY_SIZE)).get("prop2");
-        verify(jsonValueNeph1Mock, times(JSON_ARRAY_SIZE)).isString();
-        verify(jsonValueNeph2Mock, times(JSON_ARRAY_SIZE)).isString();
-        verify(jsonStringProp1Mock, times(JSON_ARRAY_SIZE)).stringValue();
-        verify(jsonStringProp2Mock, times(JSON_ARRAY_SIZE)).stringValue();
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE * 3)).getSimplePropertiesMap(any()); // Multiply x 3 because getSimplePropertiesMap is called by getExpandablePropertiesValues
+        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).getExpandablePropertiesValues(any());
         verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addListItem(anyMap(), anyMap());
     }
 
@@ -496,6 +492,5 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(confirmPopupPresenterMock);
         reset(collectionViewMock);
         reset(collectionEditorPresenter);
-
     }
 }

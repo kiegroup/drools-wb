@@ -25,7 +25,7 @@ import com.google.gwt.dom.client.LIElement;
 public class ItemEditingBoxPresenter extends EditingBoxPresenter implements ItemEditingBox.Presenter {
 
 
-    private List<String> nestedPropertiesNamesList = new ArrayList<>(); // Map a given ItemEditingBox' key with its nested properties
+    protected List<String> nestedPropertiesNamesList = new ArrayList<>(); // Map a given ItemEditingBox' key with its nested properties
 
     @Override
     public LIElement getEditingBox(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap) {
