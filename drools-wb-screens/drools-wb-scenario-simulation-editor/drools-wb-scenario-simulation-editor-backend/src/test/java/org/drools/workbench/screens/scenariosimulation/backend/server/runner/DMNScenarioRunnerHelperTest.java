@@ -241,7 +241,7 @@ public class DMNScenarioRunnerHelperTest {
     }
 
     @Test
-    public void applyErrorIfUsed() {
+    public void reportErrorIfUsed() {
         String TEST = "TEST";
         FactIdentifier factIdentifier = FactIdentifier.create(TEST, String.class.getCanonicalName());
         FactMappingValue fmv = new FactMappingValue(factIdentifier, mock(ExpressionIdentifier.class), "");

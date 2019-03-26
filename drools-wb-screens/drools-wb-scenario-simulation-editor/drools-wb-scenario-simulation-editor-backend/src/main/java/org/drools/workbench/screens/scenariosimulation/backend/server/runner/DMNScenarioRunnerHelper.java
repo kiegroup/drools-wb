@@ -98,7 +98,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     /**
-     * Iterate over DMNMessages to report errors on input data (validation errors)
+     * Iterate over <code>DMNMessage</code>s to report errors on input data (validation errors)
      * @param messages
      * @param givens
      */
@@ -113,7 +113,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     /**
-     * Return the name of the input node that failed if exists (a DMNMessage can have no source)
+     * Return the name of the input node that failed if exists (a <code>DMNMessage</code> can have no source)
      * @param message
      * @return
      */
@@ -127,7 +127,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     /**
-     * Look for an input node with the required name and set the error status
+     * Look for a <code>ScenarioGiven</code> mapped to the given <b>name</b> and set its errore status to <code>true</code>
      * @param name
      * @param givens
      */
