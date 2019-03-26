@@ -97,16 +97,26 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
         }
     }
 
+    /**
+     * Iterate over DMNMessages to report errors on input data (validation errors)
+     * @param messages
+     * @param givens
+     */
     protected void verifyInputConstraints(List<DMNMessage> messages, List<ScenarioGiven> givens) {
 
         messages.stream()
-                // filter out invalid messages (only errors with sourceId)
+                // filter out invalid messages (only errors with sourceReference)
                 .filter(message -> Message.Level.ERROR.equals(message.getLevel()) &&
                         message.getSourceReference() != null)
                 .flatMap(this::retrieveInputNodeName)
-                .forEach(name -> applyErrorIfUsed(name, givens));
+                .forEach(name -> reportErrorIfUsed(name, givens));
     }
 
+    /**
+     * Return the name of the input node that failed if exists (a DMNMessage can have no source)
+     * @param message
+     * @return
+     */
     protected Stream<String> retrieveInputNodeName(DMNMessage message) {
         Object sourceReference = message.getSourceReference();
         if (sourceReference instanceof NamedElement &&
@@ -116,7 +126,12 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
         return Stream.empty();
     }
 
-    protected void applyErrorIfUsed(String name, List<ScenarioGiven> givens) {
+    /**
+     * Look for an input node with the required name and set the error status
+     * @param name
+     * @param givens
+     */
+    protected void reportErrorIfUsed(String name, List<ScenarioGiven> givens) {
         for (ScenarioGiven given : givens) {
             if (name.equals(given.getFactIdentifier().getName())) {
                 given.getFactMappingValues().forEach(fmv -> fmv.setError(true));

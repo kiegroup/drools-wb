@@ -215,14 +215,14 @@ public class DMNScenarioRunnerHelperTest {
         runnerHelper.verifyInputConstraints(dmnMessages, Collections.emptyList());
 
         verify(runnerHelper, never()).retrieveInputNodeName(any());
-        verify(runnerHelper, never()).applyErrorIfUsed(any(), any());
+        verify(runnerHelper, never()).reportErrorIfUsed(any(), any());
 
         when(dmnMessageMock.getSourceReference()).thenReturn(namedElementMock);
         when(dmnMessageMock.getLevel()).thenReturn(Message.Level.ERROR);
         runnerHelper.verifyInputConstraints(dmnMessages, Collections.emptyList());
 
         verify(runnerHelper, times(1)).retrieveInputNodeName(any());
-        verify(runnerHelper, times(1)).applyErrorIfUsed(any(), any());
+        verify(runnerHelper, times(1)).reportErrorIfUsed(any(), any());
     }
 
     @Test
@@ -250,11 +250,11 @@ public class DMNScenarioRunnerHelperTest {
 
         List<ScenarioGiven> scenarioGivens = singletonList(new ScenarioGiven(factIdentifier, "", factMappingValues));
 
-        runnerHelper.applyErrorIfUsed("noMatch", scenarioGivens);
+        runnerHelper.reportErrorIfUsed("noMatch", scenarioGivens);
 
         assertFalse(fmv.isError());
 
-        runnerHelper.applyErrorIfUsed(TEST, scenarioGivens);
+        runnerHelper.reportErrorIfUsed(TEST, scenarioGivens);
 
         assertTrue(fmv.isError());
     }
