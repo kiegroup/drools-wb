@@ -169,7 +169,10 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected final String FACT_IDENTIFIER_NAME = "FACT_IDENTIFIER_NAME";
 
+    protected static final String FACT_ALIAS = "FACT_ALIAS" ;
+
     protected final Set<FactIdentifier> factIdentifierSet = new HashSet<>();
+    protected final List<FactMapping> factMappingLocal = new ArrayList<>();
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     protected List<GridColumn<?>> gridColumns = new ArrayList<>();
 
@@ -332,17 +335,21 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
+        when(gridColumnMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         IntStream.range(0, COLUMN_NUMBER).forEach(columnIndex -> {
             gridColumns.add(gridColumnMock);
             factMappingValuesLocal.add(factMappingValueMock);
             factIdentifierSet.add(factIdentifierMock);
+            factMappingLocal.add(factMappingMock);
             when(simulationDescriptorMock.getFactMappingByIndex(columnIndex)).thenReturn(factMappingMock);
         });
         when(factIdentifierMock.getClassName()).thenReturn(FULL_CLASS_NAME);
         when(factIdentifierMock.getName()).thenReturn(FACT_IDENTIFIER_NAME);
         when(simulationDescriptorMock.getFactIdentifiers()).thenReturn(factIdentifierSet);
+        when(simulationDescriptorMock.getUnmodifiableFactMappings()).thenReturn(factMappingLocal);
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
+        when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
     }
 }
