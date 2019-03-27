@@ -62,11 +62,11 @@ public class SettingsViewImpl
     @DataField("dmnSettings")
     protected DivElement dmnSettings = Document.get().createDivElement();
 
-    @DataField("dmnModelLabel")
-    protected LabelElement dmnModelLabel = Document.get().createLabelElement();
+    @DataField("dmnFileLabel")
+    protected LabelElement dmnFileLabel = Document.get().createLabelElement();
 
-    @DataField("dmnModelPath")
-    protected SpanElement dmnModelPath = Document.get().createSpanElement();
+    @DataField("dmnFilePath")
+    protected SpanElement dmnFilePath = Document.get().createSpanElement();
 
     @DataField("dmnNamespaceLabel")
     protected LabelElement dmnNamespaceLabel = Document.get().createLabelElement();
@@ -139,13 +139,13 @@ public class SettingsViewImpl
     }
 
     @Override
-    public LabelElement getDmnModelLabel() {
-        return dmnModelLabel;
+    public LabelElement getDmnFileLabel() {
+        return dmnFileLabel;
     }
 
     @Override
-    public SpanElement getDmnModelPath() {
-        return dmnModelPath;
+    public SpanElement getDmnFilePath() {
+        return dmnFilePath;
     }
 
     @Override

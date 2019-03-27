@@ -51,8 +51,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getKieBase()).thenReturn(kieBaseMock);
         when(settingsViewMock.getRuleFlowGroup()).thenReturn(ruleFlowGroupMock);
         when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
-        when(settingsViewMock.getDmnModelLabel()).thenReturn(dmnModelLabelMock);
-        when(settingsViewMock.getDmnModelPath()).thenReturn(dmnModelPathMock);
+        when(settingsViewMock.getDmnFileLabel()).thenReturn(dmnModelLabelMock);
+        when(settingsViewMock.getDmnFilePath()).thenReturn(dmnModelPathMock);
         when(settingsViewMock.getDmnNamespaceLabel()).thenReturn(dmnNamespaceLabelMock);
         when(settingsViewMock.getDmnNamespace()).thenReturn(dmnNamespaceMock);
         when(settingsViewMock.getDmnNameLabel()).thenReturn(dmnNameLabelMock);

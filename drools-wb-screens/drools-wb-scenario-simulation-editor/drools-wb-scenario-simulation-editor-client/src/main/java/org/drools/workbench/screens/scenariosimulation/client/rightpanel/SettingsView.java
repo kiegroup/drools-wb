@@ -53,9 +53,9 @@ public interface SettingsView
 
     DivElement getDmnSettings();
 
-    LabelElement getDmnModelLabel();
+    LabelElement getDmnFileLabel();
 
-    SpanElement getDmnModelPath();
+    SpanElement getDmnFilePath();
 
     LabelElement getDmnNamespaceLabel();
 
