@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,23 +45,21 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final ScenarioSimulationContext.Status status = context.getStatus();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(status.getColumnIndex());
         int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
-        long instanceNumber = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
+        long instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
         context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn ->
-            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn, instanceNumber)
+            duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn, instancesCount)
         );
     }
 
-    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn, long instanceNumber) {
+    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn, long instancesCount) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = originalColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         StringBuilder instanceTitle = new StringBuilder();
         instanceTitle.append(originalColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0]);
         instanceTitle.append(COPY_LABEL);
-        if (instanceNumber > 1) {
-            instanceTitle.append("_").append(instanceNumber);
-        }
+        instanceTitle.append("_").append(instancesCount);
         String propertyTitle = originalColumn.getPropertyHeaderMetaData().getTitle();
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle.toString(),

@@ -503,7 +503,6 @@ public class ScenarioGridModel extends BaseGridData {
                 .stream()
                 .filter(factMapping-> factMapping.getFactIdentifier().getClassName().equals(className))
                 .collect(Collectors.groupingBy(FactMapping::getFactAlias))
-                .keySet()
                 .size();
     }
 

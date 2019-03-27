@@ -92,7 +92,7 @@ public class FactMapping {
     }
 
     /**
-     * It <b>clones</b> the given <code>FactMapping</code> with a specified factAlias and <code>FactIdentifier</code>
+     * It <b>duplicates</b> the given <code>FactMapping</code> with a specified factAlias and <code>FactIdentifier</code>
      * @param original The original <code>FactMapping</code>
      * @param factAlias The label to assign
      * @param factIdentifier The <code>FactIdentifier</code> to assign
@@ -171,12 +171,12 @@ public class FactMapping {
     }
 
     /**
-     * It creates a new <code>FactMapping</code> cloning the instanced one and specifying a factAlias and a <code>FactIdentifier</code>
+     * It creates a new <code>FactMapping</code> duplicating the instanced one and specifying a factAlias and a <code>FactIdentifier</code>
      * @param factAlias The label to assign
      * @param factIdentifier The <code>FactIdentifier</code> to assign
      * @return
      */
-    public FactMapping cloneFactMapping(String factAlias, FactIdentifier factIdentifier) {
+    public FactMapping duplicateFactMapping(String factAlias, FactIdentifier factIdentifier) {
         return new FactMapping(this, factAlias, factIdentifier);
     }
 
