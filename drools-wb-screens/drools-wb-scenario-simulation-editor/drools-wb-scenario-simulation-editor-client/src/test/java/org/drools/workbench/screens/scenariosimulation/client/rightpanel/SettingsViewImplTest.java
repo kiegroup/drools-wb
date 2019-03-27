@@ -35,13 +35,23 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
     public void setup() {
         this.settingsView = spy(new SettingsViewImpl() {
             {
+                this.nameLabel = nameLabelMock;
+                this.fileName = fileNameMock;
+                this.typeLabel = typeLabelMock;
                 this.scenarioType = scenarioTypeMock;
-                this.dmnSettings = dmnSettingsMock;
                 this.ruleSettings = ruleSettingsMock;
+                this.kieSession = kieSessionMock;
+                this.kieBase = kieBaseMock;
+                this.ruleFlowGroup = ruleFlowGroupMock;
+                this.dmnSettings = dmnSettingsMock;
+                this.dmnModelLabel = dmnModelLabelMock;
+                this.dmnModelPath = dmnModelPathMock;
+                this.dmnNamespaceLabel = dmnNamespaceLabelMock;
+                this.dmnNamespace = dmnNamespaceMock;
+                this.dmnNameLabel = dmnNameLabelMock;
+                this.dmnName = dmnNameMock;
             }
         });
         settingsView.init(settingsPresenterMock);
     }
-
-
 }

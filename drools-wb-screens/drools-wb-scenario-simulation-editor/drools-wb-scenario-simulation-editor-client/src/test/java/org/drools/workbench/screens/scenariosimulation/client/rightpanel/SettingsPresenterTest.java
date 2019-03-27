@@ -42,9 +42,22 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Before
     public void setup() {
+        when(settingsViewMock.getNameLabel()).thenReturn(nameLabelMock);
+        when(settingsViewMock.getFileName()).thenReturn(fileNameMock);
+        when(settingsViewMock.getTypeLabel()).thenReturn(typeLabelMock);
         when(settingsViewMock.getScenarioType()).thenReturn(scenarioTypeMock);
-        when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
         when(settingsViewMock.getRuleSettings()).thenReturn(ruleSettingsMock);
+        when(settingsViewMock.getKieSession()).thenReturn(kieSessionMock);
+        when(settingsViewMock.getKieBase()).thenReturn(kieBaseMock);
+        when(settingsViewMock.getRuleFlowGroup()).thenReturn(ruleFlowGroupMock);
+        when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
+        when(settingsViewMock.getDmnModelLabel()).thenReturn(dmnModelLabelMock);
+        when(settingsViewMock.getDmnModelPath()).thenReturn(dmnModelPathMock);
+        when(settingsViewMock.getDmnNamespaceLabel()).thenReturn(dmnNamespaceLabelMock);
+        when(settingsViewMock.getDmnNamespace()).thenReturn(dmnNamespaceMock);
+        when(settingsViewMock.getDmnNameLabel()).thenReturn(dmnNameLabelMock);
+        when(settingsViewMock.getDmnName()).thenReturn(dmnNameMock);
+
         this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock) {
             {
             }
@@ -67,8 +80,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.RULE);
         verify(settingsViewMock, times(1)).getScenarioType();
         verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.RULE.name()));
-        verify(settingsViewMock, times(1)).getDmnSettings();
-        verify(dmnSettingsMock, times(1)).removeFromParent();
+        verify(settingsPresenter, times(1)).setRuleSettings();
     }
 
     @Test
@@ -76,6 +88,19 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.DMN);
         verify(settingsViewMock, times(1)).getScenarioType();
         verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.DMN.name()));
+        verify(settingsPresenter, times(1)).setDMNSettings();
+    }
+
+    @Test
+    public void setRuleSettings() {
+        settingsPresenter.setRuleSettings();
+        verify(settingsViewMock, times(1)).getDmnSettings();
+        verify(dmnSettingsMock, times(1)).removeFromParent();
+    }
+
+    @Test
+    public void setDMNSettings() {
+        settingsPresenter.setDMNSettings();
         verify(settingsViewMock, times(1)).getRuleSettings();
         verify(ruleSettingsMock, times(1)).removeFromParent();
     }

@@ -17,6 +17,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
@@ -26,17 +28,40 @@ public interface SettingsView
         extends IsWidget,
                 HasPresenter<SettingsView.Presenter> {
 
-
     Presenter getPresenter();
 
     interface Presenter {
+
         void setScenarioType(ScenarioSimulationModel.Type scenarioType);
     }
+
+    LabelElement getNameLabel();
+
+    SpanElement getFileName();
+
+    LabelElement getTypeLabel();
 
     SpanElement getScenarioType();
 
     DivElement getRuleSettings();
 
+    InputElement getKieSession();
+
+    InputElement getKieBase();
+
+    InputElement getRuleFlowGroup();
+
     DivElement getDmnSettings();
 
+    LabelElement getDmnModelLabel();
+
+    SpanElement getDmnModelPath();
+
+    LabelElement getDmnNamespaceLabel();
+
+    SpanElement getDmnNamespace();
+
+    LabelElement getDmnNameLabel();
+
+    SpanElement getDmnName();
 }

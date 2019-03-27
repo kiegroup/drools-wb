@@ -17,10 +17,21 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import org.mockito.Mock;
 
 abstract class AbstractSettingsTest {
+
+    @Mock
+    protected LabelElement nameLabelMock;
+
+    @Mock
+    protected SpanElement fileNameMock;
+
+    @Mock
+    protected LabelElement typeLabelMock;
 
     @Mock
     protected SpanElement scenarioTypeMock;
@@ -29,9 +40,32 @@ abstract class AbstractSettingsTest {
     protected DivElement ruleSettingsMock;
 
     @Mock
+    protected InputElement kieSessionMock;
+
+    @Mock
+    protected InputElement kieBaseMock;
+
+    @Mock
+    protected InputElement ruleFlowGroupMock;
+
+    @Mock
     protected DivElement dmnSettingsMock;
 
+    @Mock
+    protected LabelElement dmnModelLabelMock;
 
+    @Mock
+    protected SpanElement dmnModelPathMock;
 
+    @Mock
+    protected LabelElement dmnNamespaceLabelMock;
 
+    @Mock
+    protected SpanElement dmnNamespaceMock;
+
+    @Mock
+    protected LabelElement dmnNameLabelMock;
+
+    @Mock
+    protected SpanElement dmnNameMock;
 }

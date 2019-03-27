@@ -77,10 +77,19 @@ public class SettingsPresenter implements SettingsView.Presenter {
         view.getScenarioType().setInnerText(scenarioType.name());
         switch (scenarioType) {
             case RULE:
-                view.getDmnSettings().removeFromParent();
+                setRuleSettings();
                 break;
             case DMN:
-                view.getRuleSettings().removeFromParent();
+                setDMNSettings();
+                break;
         }
+    }
+
+    protected void setRuleSettings() {
+        view.getDmnSettings().removeFromParent();
+    }
+
+    protected void setDMNSettings() {
+        view.getRuleSettings().removeFromParent();
     }
 }
