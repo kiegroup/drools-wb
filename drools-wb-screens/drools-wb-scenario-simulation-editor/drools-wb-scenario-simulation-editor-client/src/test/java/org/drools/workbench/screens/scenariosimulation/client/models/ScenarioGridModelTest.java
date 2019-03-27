@@ -39,7 +39,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Not;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -101,9 +100,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     private Supplier<GridCell<?>> gridCellSupplier;
 
     private final String GRID_COLUMN_TITLE = "GRID_COLUMN_TITLE";
-    private final String GRID_PROPERTY_TITLE = "GRID_PROPERTY_TITLE";
-    private final String GRID_COLUMN_GROUP = "GIVEN";
-    private final String GRID_COLUMN_ID = "GRID_COLUMN_ID";
     private final String GRID_CELL_TEXT = "GRID_CELL_TEXT";
     private final String GRID_COLUMN_TITLE_COPY = GRID_COLUMN_TITLE + "_copy";
     private final String VALUE = "VALUE";
@@ -126,13 +122,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
-
-        when(propertyHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
-        when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
-        when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
-        when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
-        when(propertyHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
-        when(propertyHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
         when(indexHeaderMetaDataMock.getTitle()).thenReturn(ExpressionIdentifier.INDEX.getName());
         when(scenarioGridColumnMock.getInformationHeaderMetaData()).thenReturn(indexHeaderMetaDataMock);

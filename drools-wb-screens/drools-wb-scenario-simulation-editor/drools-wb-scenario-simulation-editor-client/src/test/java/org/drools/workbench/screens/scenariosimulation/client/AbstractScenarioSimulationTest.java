@@ -171,9 +171,9 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected static final String FACT_ALIAS = "FACT_ALIAS" ;
 
-    private final String GRID_PROPERTY_TITLE = "GRID_PROPERTY_TITLE";
-    private final String GRID_COLUMN_GROUP = "GIVEN";
-    private final String GRID_COLUMN_ID = "GRID_COLUMN_ID";
+    protected final String GRID_PROPERTY_TITLE = "GRID_PROPERTY_TITLE";
+    protected final String GRID_COLUMN_GROUP = "GIVEN";
+    protected final String GRID_COLUMN_ID = "GRID_COLUMN_ID";
 
     protected final Set<FactIdentifier> factIdentifierSet = new HashSet<>();
     protected final List<FactMapping> factMappingLocal = new ArrayList<>();
