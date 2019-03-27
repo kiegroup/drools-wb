@@ -223,16 +223,22 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void duplicateSingleColumn(ScenarioGridColumn originalColumn, ScenarioGridColumn duplicatedColumn, int newColumnIndex) {
         checkSimulation();
-
         int originalColumnIndex = getColumns().indexOf(originalColumn);
-        FactMapping originalFactMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
-        String alias = duplicatedColumn.getInformationHeaderMetaData().getTitle();
-        FactIdentifier originalFactIdentifier = originalColumn.getFactIdentifier();
-        FactIdentifier duplicatedFactIdentifier = new FactIdentifier(duplicatedColumn.getInformationHeaderMetaData().getColumnId(), originalFactIdentifier.getClassName());
-        simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedFactIdentifier);
-        duplicatedColumn.setFactIdentifier(duplicatedFactIdentifier);
 
-        super.insertColumn(newColumnIndex, duplicatedColumn);
+        try {
+            FactMapping originalFactMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+            String alias = duplicatedColumn.getInformationHeaderMetaData().getTitle();
+            FactIdentifier originalFactIdentifier = originalColumn.getFactIdentifier();
+            FactIdentifier duplicatedFactIdentifier = new FactIdentifier(duplicatedColumn.getInformationHeaderMetaData().getColumnId(), originalFactIdentifier.getClassName());
+            simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedFactIdentifier);
+            duplicatedColumn.setFactIdentifier(duplicatedFactIdentifier);
+
+            super.insertColumn(newColumnIndex, duplicatedColumn);
+        } catch (Throwable t) {
+            eventBus.fireEvent(new ScenarioNotificationEvent("Error during column duplication: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
+            eventBus.fireEvent(new ScenarioGridReloadEvent());
+            return;
+        }
 
         duplicateColumnValues(originalColumnIndex, newColumnIndex);
     }
