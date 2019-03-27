@@ -135,6 +135,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioMenuItem redoMenuItemMock;
     @Mock
+    private ScenarioMenuItem exportToCsvMenuItemMock;
+    @Mock
+    private ScenarioMenuItem importFromCsvMenuItemMock;
+    @Mock
     private DataManagementStrategy dataManagementStrategyMock;
 
     @Before
@@ -146,6 +150,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
+        when(scenarioSimulationViewMock.getExportToCsvMenuItem()).thenReturn(exportToCsvMenuItemMock);
+        when(scenarioSimulationViewMock.getImportFromCsvMenuItem()).thenReturn(importFromCsvMenuItemMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
@@ -280,13 +286,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
-    // FIXME to test
     @Test
     public void makeMenuBar() {
         presenter.makeMenuBar();
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(exportToCsvMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(importFromCsvMenuItemMock);
         verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }

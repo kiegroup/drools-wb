@@ -34,10 +34,9 @@ import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 
 public class ScenarioCsvImportExport {
 
-    private static int HEADER_SIZE = 3;
+    public static int HEADER_SIZE = 3;
 
-    // FIXME to test
-    public static String exportData(Simulation simulation) throws IOException {
+    public String exportData(Simulation simulation) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
 
@@ -60,8 +59,7 @@ public class ScenarioCsvImportExport {
         return stringBuilder.toString();
     }
 
-    // FIXME to test
-    public static Simulation importData(String raw, Simulation originalSimulation) throws IOException {
+    public Simulation importData(String raw, Simulation originalSimulation) throws IOException {
 
         CSVParser csvParser = CSVFormat.EXCEL.parse(new StringReader(raw));
 
@@ -79,8 +77,7 @@ public class ScenarioCsvImportExport {
             if (csvRecord.size() != factMappings.size()) {
                 throw new IllegalArgumentException("Malformed row " + csvRecord);
             }
-            // starting from 1 to skip index
-            for (int i = 1; i < factMappings.size(); i += 1) {
+            for (int i = 0; i < factMappings.size(); i += 1) {
                 FactMapping factMapping = factMappings.get(i);
                 scenarioToFill.addMappingValue(factMapping.getFactIdentifier(),
                                                factMapping.getExpressionIdentifier(),
@@ -90,14 +87,17 @@ public class ScenarioCsvImportExport {
         return toReturn;
     }
 
-    protected static void generateHeader(List<FactMapping> factMappings, CSVPrinter printer) throws IOException {
+    protected void generateHeader(List<FactMapping> factMappings, CSVPrinter printer) throws IOException {
         List<String> firstLineHeader = new ArrayList<>();
         List<String> secondLineHeader = new ArrayList<>();
         List<String> thirdLineHeader = new ArrayList<>();
 
         for (FactMapping factMapping : factMappings) {
+            // GIVEN/EXPECT/OTHER
             firstLineHeader.add(factMapping.getExpressionIdentifier().getType().name());
+            // Instance
             secondLineHeader.add(factMapping.getFactAlias());
+            // Property
             thirdLineHeader.add(factMapping.getExpressionAlias());
         }
 

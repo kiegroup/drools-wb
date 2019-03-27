@@ -24,17 +24,18 @@ import org.drools.workbench.screens.scenariosimulation.service.ImportExportServi
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
 
-// FIXME to test
 @Service
 @ApplicationScoped
 public class ImportExportServiceImpl implements ImportExportService {
+
+    protected ScenarioCsvImportExport scenarioCsvImportExport = new ScenarioCsvImportExport();
 
     @Override
     public Object exportSimulation(Type type, Simulation simulation) {
         try {
             switch (type) {
                 case CSV:
-                    return ScenarioCsvImportExport.exportData(simulation);
+                    return scenarioCsvImportExport.exportData(simulation);
                 default:
                     throw new IllegalArgumentException("Impossible to parse " + type);
             }
@@ -48,7 +49,7 @@ public class ImportExportServiceImpl implements ImportExportService {
         try {
             switch (type) {
                 case CSV:
-                    return ScenarioCsvImportExport.importData((String) raw, originalSimulation);
+                    return scenarioCsvImportExport.importData((String) raw, originalSimulation);
                 default:
                     throw new IllegalArgumentException("Impossible to parse " + type);
             }
