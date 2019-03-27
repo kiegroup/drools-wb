@@ -40,6 +40,18 @@ public class SimulationDescriptor {
 
     private ScenarioSimulationModel.Type type;
 
+    private String fileName;
+
+    private String kieSession;
+
+    private String kieBase;
+
+    private String ruleFlowGroup;
+
+    private String dmnNamespace;
+
+    private String dmnName;
+
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
@@ -74,6 +86,58 @@ public class SimulationDescriptor {
 
     public void setType(ScenarioSimulationModel.Type type) {
         this.type = type;
+    }
+
+    public List<FactMapping> getFactMappings() {
+        return factMappings;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getKieSession() {
+        return kieSession;
+    }
+
+    public void setKieSession(String kieSession) {
+        this.kieSession = kieSession;
+    }
+
+    public String getKieBase() {
+        return kieBase;
+    }
+
+    public void setKieBase(String kieBase) {
+        this.kieBase = kieBase;
+    }
+
+    public String getRuleFlowGroup() {
+        return ruleFlowGroup;
+    }
+
+    public void setRuleFlowGroup(String ruleFlowGroup) {
+        this.ruleFlowGroup = ruleFlowGroup;
+    }
+
+    public String getDmnNamespace() {
+        return dmnNamespace;
+    }
+
+    public void setDmnNamespace(String dmnNamespace) {
+        this.dmnNamespace = dmnNamespace;
+    }
+
+    public String getDmnName() {
+        return dmnName;
+    }
+
+    public void setDmnName(String dmnName) {
+        this.dmnName = dmnName;
     }
 
     public void moveFactMapping(int oldIndex, int newIndex) {

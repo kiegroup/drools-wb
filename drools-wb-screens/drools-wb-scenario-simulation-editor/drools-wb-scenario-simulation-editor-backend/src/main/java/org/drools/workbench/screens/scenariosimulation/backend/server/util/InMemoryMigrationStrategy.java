@@ -52,4 +52,29 @@ public class InMemoryMigrationStrategy implements MigrationStrategy {
             return xmlPersistence.marshal(model).replaceAll("<ScenarioSimulationModel version=\"1.2\">", "<ScenarioSimulationModel version=\"1.3\">");
         };
     }
+
+    @Override
+    public Function<String, String> from1_3to1_4() {
+        return rawXml -> {
+            if (rawXml.contains("<type>")) {
+                return rawXml.replaceAll("<ScenarioSimulationModel version=\"1.3\">", "<ScenarioSimulationModel version=\"1.4\">")
+                        .replaceAll("<simulationDescriptor>", "<simulationDescriptor>\n  <fileName></fileName>")
+                        .replaceAll("<type>RULE</type>", "<kieSession>default</kieSession>\n<kieBase>default</kieBase>\n<ruleFlowGroup>default</ruleFlowGroup><type>RULE</type>")
+                        /*
+<dmnNamespace></dmnNamespace>
+<dmnName></dmnName>
+*/
+                        .replaceAll("<type>DMN</type>", "<dmnNamespace></dmnNamespace>\n<dmnName></dmnName>\n<type>DMN</type>");
+                /*
+                <kieSession></kieSession>
+<kieBase></kieBase>
+<ruleFlowGroup></ruleFlowGroup>
+<dmoSession></dmoSession>
+
+                 */
+            } else {
+                return rawXml;
+            }
+        };
+    }
 }
