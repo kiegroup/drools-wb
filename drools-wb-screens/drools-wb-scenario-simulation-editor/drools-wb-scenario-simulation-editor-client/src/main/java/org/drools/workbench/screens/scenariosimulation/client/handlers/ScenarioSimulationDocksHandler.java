@@ -23,6 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.kie.workbench.common.workbench.client.docks.impl.AbstractWorkbenchDocksHandler;
@@ -36,9 +37,10 @@ public class ScenarioSimulationDocksHandler
         extends AbstractWorkbenchDocksHandler {
 
     @Inject
-  private   AuthoringWorkbenchDocks authoringWorkbenchDocks;
+    private AuthoringWorkbenchDocks authoringWorkbenchDocks;
 
     private UberfireDock toolsDock;
+    private UberfireDock cheatSheetDock;
     private UberfireDock reportDock;
 
     @Override
@@ -50,6 +52,11 @@ public class ScenarioSimulationDocksHandler
                                      new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER),
                                      perspectiveIdentifier);
         result.add(toolsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testTools()));
+        cheatSheetDock = new UberfireDock(UberfireDockPosition.EAST,
+                                          "kieDockPanelCheatSheet",
+                                          new DefaultPlaceRequest(CheatSheetPresenter.IDENTIFIER),
+                                          perspectiveIdentifier);
+        result.add(cheatSheetDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet()));
         reportDock = new UberfireDock(UberfireDockPosition.EAST,
                                       "PLAY_CIRCLE",
                                       new DefaultPlaceRequest("org.kie.guvnor.TestResults"),
@@ -73,7 +80,15 @@ public class ScenarioSimulationDocksHandler
         authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
 
+    public void expandCheatSheetDock() {
+        authoringWorkbenchDocks.expandAuthoringDock(cheatSheetDock);
+    }
+
     public void expandTestResultsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(reportDock);
+    }
+
+    public void setScesimPath(String scesimPath) {
+        cheatSheetDock.getPlaceRequest().addParameter("scesimpath", scesimPath);
     }
 }

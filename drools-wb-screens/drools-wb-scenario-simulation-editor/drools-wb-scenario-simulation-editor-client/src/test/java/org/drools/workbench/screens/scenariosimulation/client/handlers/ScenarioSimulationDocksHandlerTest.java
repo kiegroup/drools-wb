@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import java.util.Collection;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
@@ -27,6 +26,7 @@ import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -40,7 +40,7 @@ public class ScenarioSimulationDocksHandlerTest {
 
     @Test
     public void correctAmountOfItems() {
-        assertEquals(2, scenarioSimulationDocksHandler.provideDocks("identifier").size());
+        assertEquals(3, scenarioSimulationDocksHandler.provideDocks("identifier").size());
     }
 
     @Test
@@ -54,12 +54,32 @@ public class ScenarioSimulationDocksHandlerTest {
     }
 
     @Test
+    public void expandCheatSheetDock() {
+        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
+        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[1];
+
+        scenarioSimulationDocksHandler.expandCheatSheetDock();
+
+        verify(authoringWorkbenchDocks).expandAuthoringDock(cheatSheetDock);
+    }
+
+    @Test
     public void expandTestResultsDock() {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock reportDock = (UberfireDock) docks.toArray()[1];
+        final UberfireDock reportDock = (UberfireDock) docks.toArray()[2];
 
         scenarioSimulationDocksHandler.expandTestResultsDock();
 
         verify(authoringWorkbenchDocks).expandAuthoringDock(reportDock);
+    }
+
+    @Test
+    public void setScesimPath() {
+        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
+        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[1];
+        String SCESIM_PATH = "SCESIM_PATH";
+        scenarioSimulationDocksHandler.setScesimPath(SCESIM_PATH);
+        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey("scesimpath"));
+        assertEquals(SCESIM_PATH, cheatSheetDock.getPlaceRequest().getParameter("scesimpath", "null"));
     }
 }

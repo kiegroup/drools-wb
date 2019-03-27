@@ -27,7 +27,6 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
@@ -264,17 +263,5 @@ public class RightPanelPresenterTest extends AbstractRightPanelTest {
         search += ";" + key;
         assertTrue(rightPanelPresenter.filterTerm(key, search, false));
         assertFalse(rightPanelPresenter.filterTerm(key, search, true));
-    }
-
-    @Test
-    public void initCheatSheetRule() {
-        rightPanelPresenter.initCheatSheet(ScenarioSimulationModel.Type.RULE);
-        verify(rightPanelViewMock, times(1)).setRuleCheatSheetContent();
-    }
-
-    @Test
-    public void initCheatSheetDMN() {
-        rightPanelPresenter.initCheatSheet(ScenarioSimulationModel.Type.DMN);
-        verify(rightPanelViewMock, times(1)).setDMNCheatSheetContent();
     }
 }

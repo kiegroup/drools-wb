@@ -40,6 +40,8 @@ import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -70,6 +72,8 @@ import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+import org.uberfire.client.workbench.events.AbstractPlaceEvent;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
 import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
@@ -203,13 +207,9 @@ public class ScenarioSimulationEditorPresenter
 
     // Observing to show RightPanel when ScenarioSimulationScreen is put in foreground
     public void onPlaceGainFocusEvent(@Observes PlaceGainFocusEvent placeGainFocusEvent) {
-        if (!(placeGainFocusEvent.getPlace() instanceof PathPlaceRequest)) {  // Ignoring other requests
-            return;
-        }
-        PathPlaceRequest placeRequest = (PathPlaceRequest) placeGainFocusEvent.getPlace();
-        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)) {
+        if (isAbstractPlaceEventToManage(placeGainFocusEvent)) {
             scenarioSimulationDocksHandler.addDocks();
+            scenarioSimulationDocksHandler.setScesimPath(path.toString());
             expandToolsDock();
             registerRightPanelCallback();
             populateRightPanel();
@@ -218,17 +218,18 @@ public class ScenarioSimulationEditorPresenter
 
     // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
     public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
-        if (!(placeHiddenEvent.getPlace() instanceof PathPlaceRequest)) {  // Ignoring other requests
-            return;
-        }
-        PathPlaceRequest placeRequest = (PathPlaceRequest) placeHiddenEvent.getPlace();
-        if (placeRequest.getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && placeRequest.getPath().equals(this.path)) {
+        if (isAbstractPlaceEventToManage(placeHiddenEvent)) {
             scenarioSimulationDocksHandler.removeDocks();
             view.getScenarioGridLayer().getScenarioGrid().clearSelections();
             unRegisterRightPanelCallback();
             clearRightPanelStatus();
             testRunnerReportingScreen.reset();
+        }
+    }
+
+    public void onUberfireDocksInteractionEvent(@Observes final UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
+        if (isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEvent) && uberfireDocksInteractionEvent.getTargetDock().getIdentifier().equals(CheatSheetPresenter.IDENTIFIER) && dataManagementStrategy != null) {
+            getCheatSheetPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setCheatSheet);
         }
     }
 
@@ -304,6 +305,34 @@ public class ScenarioSimulationEditorPresenter
 
     public DataManagementStrategy getDataManagementStrategy() {
         return dataManagementStrategy;
+    }
+
+    /**
+     * Method to verify if the given <code>AbstractPlaceEvent</code> is to be processed by current instance.
+     *
+     * @param abstractPlaceEvent
+     * @return <code>true</code> if <code>AbstractPlaceEvent.getPlace() instanceof PathPlaceRequest</code> <b>and</b>
+     *      the <b>identifier</b> of the <code>PathPlaceRequest</code>
+     *      is equals to <code>ScenarioSimulationEditorPresenter.IDENTIFIER</code> <b>and</b>
+     *      the <b>path</b> of the <code>PathPlaceRequest</code>
+     *      is equals to the <b>path</b> of the current instance; <code>false</code> otherwise
+     */
+    protected boolean isAbstractPlaceEventToManage(AbstractPlaceEvent abstractPlaceEvent) {
+        return ((abstractPlaceEvent.getPlace() instanceof PathPlaceRequest)
+                && (abstractPlaceEvent.getPlace().getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
+                && abstractPlaceEvent.getPlace().getPath().equals(this.path)));
+    }
+
+    /**
+     * Method to verify if the given <code>UberfireDocksInteractionEvent</code> is to be processed by current instance.
+     *
+     * @param uberfireDocksInteractionEvent
+     * @return <code>true</code> if <code>UberfireDocksInteractionEvent.getTargetDock() != null</code> <b>and</b>
+     * the <b>scesimpath</b> parameter of <code>UberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()</code>
+     * is equals to the <b>path</b> (toString) of the current instance; <code>false</code> otherwise
+     */
+    protected boolean isUberfireDocksInteractionEventToManage(UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
+        return uberfireDocksInteractionEvent.getTargetDock() != null && uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest().getParameter("scesimpath", "").equals(this.path.toString());
     }
 
     protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
@@ -386,9 +415,7 @@ public class ScenarioSimulationEditorPresenter
     protected void populateRightPanel() {
         // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available
         if (dataManagementStrategy != null) {
-            getRightPanelPresenter().ifPresent(presenter -> {
-                setRightPanel(presenter);
-            });
+            getRightPanelPresenter().ifPresent(this::setRightPanel);
         }
     }
 
@@ -396,12 +423,15 @@ public class ScenarioSimulationEditorPresenter
         context.setRightPanelPresenter(presenter);
         presenter.setEventBus(eventBus);
         dataManagementStrategy.populateRightPanel(presenter, scenarioGridPanel.getScenarioGrid().getModel());
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
-        presenter.initCheatSheet(type);
     }
 
     protected void clearRightPanelStatus() {
         getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
+    }
+
+    protected void setCheatSheet(CheatSheetView.Presenter presenter) {
+        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        presenter.initCheatSheet(type);
     }
 
     protected String getJsonModel(ScenarioSimulationModel model) {
@@ -466,6 +496,11 @@ public class ScenarioSimulationEditorPresenter
         CustomBusyPopup.close();
     }
 
+    protected Optional<CheatSheetView.Presenter> getCheatSheetPresenter(PlaceRequest placeRequest) {
+        final Optional<CheatSheetView> cheatSheetView = getCheatSheetView(placeRequest);
+        return cheatSheetView.map(CheatSheetView::getPresenter);
+    }
+
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
@@ -487,6 +522,16 @@ public class ScenarioSimulationEditorPresenter
     private Optional<RightPanelView.Presenter> getRightPanelPresenter() {
         return getRightPanelView().isPresent() ? Optional.of(getRightPanelView().get().getPresenter()) : Optional.empty();
     }
+
+    private Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
+            final AbstractWorkbenchActivity cheatSheetActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
+            return Optional.of((CheatSheetView) cheatSheetActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
 
     private Command getPopulateRightPanelCommand() {
         return this::populateRightPanel;

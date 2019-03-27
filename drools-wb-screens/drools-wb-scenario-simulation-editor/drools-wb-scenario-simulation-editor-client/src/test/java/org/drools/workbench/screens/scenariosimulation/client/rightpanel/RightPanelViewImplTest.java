@@ -17,9 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -34,7 +32,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class RightPanelViewImplTest {
@@ -53,18 +50,6 @@ public class RightPanelViewImplTest {
     @Mock
     private ButtonElement clearSearchButtonMock;
 
-    @Mock
-    private DivElement ruleCheatSheetMock;
-
-    @Mock
-    private DivElement dmnCheatSheetMock;
-
-    @Mock
-    private Style ruleCheatSheetStyleMock;
-
-    @Mock
-    private Style dmnCheatSheetStyleMock;
-
     @Before
     public void setup() {
         this.rightPanelView = spy(new RightPanelViewImpl() {
@@ -72,13 +57,9 @@ public class RightPanelViewImplTest {
                 this.inputSearch = inputSearchMock;
                 this.clearSearchButton = clearSearchButtonMock;
                 this.nameField = nameFieldMock;
-                this.ruleCheatSheet = ruleCheatSheetMock;
-                this.dmnCheatSheet = dmnCheatSheetMock;
             }
         });
         rightPanelView.init(rightPanelPresenterMock);
-        when(ruleCheatSheetMock.getStyle()).thenReturn(ruleCheatSheetStyleMock);
-        when(dmnCheatSheetMock.getStyle()).thenReturn(dmnCheatSheetStyleMock);
     }
 
     @Test
@@ -120,19 +101,5 @@ public class RightPanelViewImplTest {
         rightPanelView.showClearButton();
         verify(clearSearchButtonMock, times(1)).setDisabled(eq(false));
         verify(clearSearchButtonMock, times(1)).removeAttribute(eq("style"));
-    }
-
-    @Test
-    public void setRuleCheatSheetContent() {
-        rightPanelView.setRuleCheatSheetContent();
-        verify(ruleCheatSheetStyleMock, times(1)).setDisplay(Style.Display.BLOCK);
-        verify(dmnCheatSheetStyleMock, times(1)).setDisplay(Style.Display.NONE);
-    }
-
-    @Test
-    public void setDMNCheatSheetContent() {
-        rightPanelView.setDMNCheatSheetContent();
-        verify(ruleCheatSheetStyleMock, times(1)).setDisplay(Style.Display.NONE);
-        verify(dmnCheatSheetStyleMock, times(1)).setDisplay(Style.Display.BLOCK);
     }
 }

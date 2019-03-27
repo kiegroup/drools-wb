@@ -24,7 +24,6 @@ import java.util.SortedMap;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
@@ -67,10 +66,6 @@ public interface RightPanelView
      * It is enabled only by selection of a property/data object
      */
     void enableAddButton();
-
-    void setRuleCheatSheetContent();
-
-    void setDMNCheatSheetContent();
 
     interface Presenter {
 
@@ -179,10 +174,5 @@ public interface RightPanelView
          */
         void setSelectedElement(FieldItemView selected);
 
-        /**
-         * Method to initialize cheat sheet content based on <code>ScenarioSimulationModel.Type</code>
-         * @param type
-         */
-        void initCheatSheet(ScenarioSimulationModel.Type type);
     }
 }
