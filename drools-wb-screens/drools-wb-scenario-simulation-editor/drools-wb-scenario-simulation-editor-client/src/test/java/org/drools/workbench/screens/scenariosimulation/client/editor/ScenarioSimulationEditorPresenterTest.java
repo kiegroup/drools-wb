@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -330,7 +331,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void onUberfireDocksInteractionEvent() {
+    public void onUberfireDocksInteractionEventCheatSheet() {
         UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
         doReturn(false).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
         presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
@@ -338,6 +339,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(uberfireDocksInteractionEventMock, never()).getTargetDock();
         //
         reset(presenterSpy);
+        presenterSpy.dataManagementStrategy = null;
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
+        //
+        reset(presenterSpy);
+        reset(uberfireDocksInteractionEventMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
@@ -345,13 +354,58 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(1)).getTargetDock();
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
         //
         reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.empty()).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
+        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
+        verify(presenterSpy, never()).setCheatSheet(eq(cheatSheetPresenterMock));
+        //
+        reset(presenterSpy);
+        reset(uberfireDocksInteractionEventMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
+        when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
+        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
+    }
+
+    @Test
+    public void onUberfireDocksInteractionEventSettings() {
+        UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
+        doReturn(false).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(uberfireDocksInteractionEventMock, never()).getTargetDock();
+        //
+        reset(presenterSpy);
         presenterSpy.dataManagementStrategy = null;
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
+        //
+        reset(presenterSpy);
+        reset(uberfireDocksInteractionEventMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        UberfireDock targetDockMock = mock(UberfireDock.class);
+        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        when(targetDockMock.getIdentifier()).thenReturn("UNKNOWN");
         presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(1)).getTargetDock();
@@ -359,44 +413,31 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         //
         reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.empty()).when(presenterSpy).getCheatSheetPresenter(any());
-        when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
-        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        doReturn(Optional.empty()).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        when(targetDockMock.getIdentifier()).thenReturn(SettingsPresenter.IDENTIFIER);
+        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
         presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenterSpy, times(1)).getCheatSheetPresenter(any());
-        verify(presenterSpy, never()).setCheatSheet(any());
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
+        verify(presenterSpy, never()).setSettings(eq(settingsPresenterMock));
         //
         reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.empty()).when(presenterSpy).getCheatSheetPresenter(any());
-        when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
         presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        when(targetDockMock.getIdentifier()).thenReturn(SettingsPresenter.IDENTIFIER);
+        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
         presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
-        verify(presenterSpy, never()).setCheatSheet(any());
-        //
-        reset(presenterSpy);
-        reset(uberfireDocksInteractionEventMock);
-        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(any());
-        when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
-        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
-        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
-        verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
-        verify(presenterSpy, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).setSettings(eq(settingsPresenterMock));
     }
 
     @Test

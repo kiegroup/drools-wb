@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.kie.workbench.common.workbench.client.docks.impl.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.workbench.client.resources.i18n.DefaultWorkbenchConstants;
@@ -39,6 +40,7 @@ public class ScenarioSimulationDocksHandler
     @Inject
     private AuthoringWorkbenchDocks authoringWorkbenchDocks;
 
+    private UberfireDock settingsDock;
     private UberfireDock toolsDock;
     private UberfireDock cheatSheetDock;
     private UberfireDock reportDock;
@@ -46,14 +48,18 @@ public class ScenarioSimulationDocksHandler
     @Override
     public Collection<UberfireDock> provideDocks(final String perspectiveIdentifier) {
         List<UberfireDock> result = new ArrayList<>();
-
+        settingsDock = new UberfireDock(UberfireDockPosition.EAST,
+                                     "SLIDERS",
+                                     new DefaultPlaceRequest(SettingsPresenter.IDENTIFIER),
+                                     perspectiveIdentifier);
+        result.add(settingsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.settings()));
         toolsDock = new UberfireDock(UberfireDockPosition.EAST,
                                      "INFO_CIRCLE",
                                      new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER),
                                      perspectiveIdentifier);
         result.add(toolsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testTools()));
         cheatSheetDock = new UberfireDock(UberfireDockPosition.EAST,
-                                          "kieDockPanelCheatSheet",
+                                          "FILE_TEXT",
                                           new DefaultPlaceRequest(CheatSheetPresenter.IDENTIFIER),
                                           perspectiveIdentifier);
         result.add(cheatSheetDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet()));
@@ -80,15 +86,12 @@ public class ScenarioSimulationDocksHandler
         authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
 
-    public void expandCheatSheetDock() {
-        authoringWorkbenchDocks.expandAuthoringDock(cheatSheetDock);
-    }
-
     public void expandTestResultsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(reportDock);
     }
 
     public void setScesimPath(String scesimPath) {
         cheatSheetDock.getPlaceRequest().addParameter("scesimpath", scesimPath);
+        settingsDock.getPlaceRequest().addParameter("scesimpath", scesimPath);
     }
 }

@@ -237,4 +237,6 @@ public interface ScenarioSimulationEditorConstants
     String removeCollectionWarningText();
 
     String collectionError();
+
+    String settings();
 }

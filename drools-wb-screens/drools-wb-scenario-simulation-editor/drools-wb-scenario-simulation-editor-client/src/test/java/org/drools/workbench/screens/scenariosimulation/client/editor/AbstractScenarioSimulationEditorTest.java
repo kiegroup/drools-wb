@@ -24,6 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridCo
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
@@ -81,6 +82,8 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     protected RightPanelPresenter rightPanelPresenterMock;
     @Mock
     protected CheatSheetPresenter cheatSheetPresenterMock;
+    @Mock
+    protected SettingsPresenter settingsPresenterMock;
     @Mock
     protected AsyncPackageDataModelOracleFactory oracleFactoryMock;
 

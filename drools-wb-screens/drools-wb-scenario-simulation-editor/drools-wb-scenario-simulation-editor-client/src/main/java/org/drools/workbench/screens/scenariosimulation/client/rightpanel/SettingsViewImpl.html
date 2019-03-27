@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright 2019 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~       http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!-- GLOBAL SETTINGS TAB  NEW FOR DROOLS-3675-->
+<div class="tab-pane" id="kieDockPanelGlobalSettings">
+    <hr class="kie-dock__divider"/>
+    <div class="pf-c-form">
+        <div class="pf-c-form__group">
+            <label for="kieScenarioSettingsName">
+                Name
+            </label>
+            <span class="form-control" data-field="fileName" id="kieScenarioSettingsName"></span>
+        </div>
+        <br/>
+        <div class="pf-c-form__group">
+            <label for="kieScenarioSettingsType">
+                Type
+            </label>
+            <span data-field="scenarioType" id="kieScenarioSettingsType"></span>
+        </div>
+        <br/>
+        <div data-field="ruleSettings">
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsKieSession">
+                    KieSession
+                </label>
+                <input class="form-control" data-field="kieSession" id="kieScenarioSettingsKieSession">
+            </div>
+            <br/>
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsKieBase">
+                    KieBase
+                </label>
+                <input class="form-control" data-field="kieBase" id="kieScenarioSettingsKieBase">
+            </div>
+            <br/>
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsRuleFlowGroup">
+                    RuleFlowGroup
+                </label>
+                <input class="form-control" data-field="ruleFlowGroup" id="kieScenarioSettingsRuleFlowGroup">
+            </div>
+        </div>
+        <div data-field="dmnSettings">
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsModelPath">
+                    DMN model
+                </label>
+                <span class="form-control" data-field="dmnModelPath" id="kieScenarioSettingsModelPath"></span>
+            </div>
+            <br/>
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsDMNNamespace">
+                    DMN namespace
+                </label>
+                <span class="form-control" data-field="dmnNamespace" id="kieScenarioSettingsDMNNamespace"></span>
+            </div>
+            <br/>
+            <div class="pf-c-form__group">
+                <label for="kieScenarioSettingsDMNName">
+                    DMN name
+                </label>
+                <span class="form-control" data-field="dmnName" id="kieScenarioSettingsDMNName"></span>
+            </div>
+        </div>
+        <br/>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"> Skip this simulation during the build
+            </label>
+        </div>
+    </div>
+</div>

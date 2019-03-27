@@ -44,6 +44,8 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSh
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -228,8 +230,15 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void onUberfireDocksInteractionEvent(@Observes final UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
-        if (isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEvent) && uberfireDocksInteractionEvent.getTargetDock().getIdentifier().equals(CheatSheetPresenter.IDENTIFIER) && dataManagementStrategy != null) {
-            getCheatSheetPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setCheatSheet);
+        if (isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEvent) && dataManagementStrategy != null) {
+            switch (uberfireDocksInteractionEvent.getTargetDock().getIdentifier()) {
+                case CheatSheetPresenter.IDENTIFIER:
+                    getCheatSheetPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setCheatSheet);
+                    break;
+                case SettingsPresenter.IDENTIFIER:
+                    getSettingsPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setSettings);
+                    break;
+            }
         }
     }
 
@@ -434,6 +443,11 @@ public class ScenarioSimulationEditorPresenter
         presenter.initCheatSheet(type);
     }
 
+    protected void setSettings(SettingsView.Presenter presenter) {
+        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        presenter.setScenarioType(type);
+    }
+
     protected String getJsonModel(ScenarioSimulationModel model) {
         return MarshallingWrapper.toJSON(model);
     }
@@ -501,6 +515,11 @@ public class ScenarioSimulationEditorPresenter
         return cheatSheetView.map(CheatSheetView::getPresenter);
     }
 
+    protected Optional<SettingsView.Presenter> getSettingsPresenter(PlaceRequest placeRequest) {
+        final Optional<SettingsView> settingsView = getSettingsView(placeRequest);
+        return settingsView.map(SettingsView::getPresenter);
+    }
+
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
@@ -527,6 +546,15 @@ public class ScenarioSimulationEditorPresenter
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
             final AbstractWorkbenchActivity cheatSheetActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
             return Optional.of((CheatSheetView) cheatSheetActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<SettingsView> getSettingsView(PlaceRequest placeRequest) {
+        if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
+            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
+            return Optional.of((SettingsView) settingsActivity.getWidget());
         } else {
             return Optional.empty();
         }

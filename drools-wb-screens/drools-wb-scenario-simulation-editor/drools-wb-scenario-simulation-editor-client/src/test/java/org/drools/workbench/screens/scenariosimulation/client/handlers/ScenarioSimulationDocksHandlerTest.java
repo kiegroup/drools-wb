@@ -38,15 +38,29 @@ public class ScenarioSimulationDocksHandlerTest {
     @InjectMocks
     ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
+
+    private enum MANAGED_DOCKS {
+        SETTINGS(0),
+        TOOLS(1),
+        CHEATSHEET(2),
+        REPORT(3);
+
+        private int index;
+
+        MANAGED_DOCKS(int index) {
+            this.index = index;
+        }
+    }
+
     @Test
     public void correctAmountOfItems() {
-        assertEquals(3, scenarioSimulationDocksHandler.provideDocks("identifier").size());
+        assertEquals(MANAGED_DOCKS.values().length, scenarioSimulationDocksHandler.provideDocks("identifier").size());
     }
 
     @Test
     public void expandToolsDock() {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock toolsDock = (UberfireDock) docks.toArray()[0];
+        final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.index];
 
         scenarioSimulationDocksHandler.expandToolsDock();
 
@@ -54,19 +68,9 @@ public class ScenarioSimulationDocksHandlerTest {
     }
 
     @Test
-    public void expandCheatSheetDock() {
-        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[1];
-
-        scenarioSimulationDocksHandler.expandCheatSheetDock();
-
-        verify(authoringWorkbenchDocks).expandAuthoringDock(cheatSheetDock);
-    }
-
-    @Test
     public void expandTestResultsDock() {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock reportDock = (UberfireDock) docks.toArray()[2];
+        final UberfireDock reportDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.REPORT.index];
 
         scenarioSimulationDocksHandler.expandTestResultsDock();
 
@@ -76,10 +80,13 @@ public class ScenarioSimulationDocksHandlerTest {
     @Test
     public void setScesimPath() {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[1];
+        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.index];
+        final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.index];
         String SCESIM_PATH = "SCESIM_PATH";
         scenarioSimulationDocksHandler.setScesimPath(SCESIM_PATH);
         assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey("scesimpath"));
         assertEquals(SCESIM_PATH, cheatSheetDock.getPlaceRequest().getParameter("scesimpath", "null"));
+        assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey("scesimpath"));
+        assertEquals(SCESIM_PATH, settingsDock.getPlaceRequest().getParameter("scesimpath", "null"));
     }
 }
