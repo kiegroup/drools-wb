@@ -135,8 +135,8 @@ public class SimulationDescriptor {
     }
 
     /**
-     * This method clones the given <code>FactMapping</code> and assigns the given <code>FactIdentifier</code>
-     * and factAlias at the specified index
+     * This method <b>clones</b> the given <code>FactMapping</code> and assigns the given <code>FactIdentifier</code>
+     * and factAlias at the specified index of factMappings list
      * @param index
      * @param toClone
      * @param factAlias

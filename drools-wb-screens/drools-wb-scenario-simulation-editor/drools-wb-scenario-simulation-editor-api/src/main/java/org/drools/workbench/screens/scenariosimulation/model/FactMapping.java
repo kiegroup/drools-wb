@@ -77,6 +77,10 @@ public class FactMapping {
         this.factIdentifier = factIdentifier;
     }
 
+    /**
+     * It <b>clones</b> the given <code>FactMapping</code>
+     * @param original The original <code>FactMapping</code>
+     */
     private FactMapping(FactMapping original) {
         original.expressionElements.forEach(expressionElement -> this.addExpressionElement(expressionElement.getStep(), original.className));
         this.expressionIdentifier = original.expressionIdentifier;
@@ -87,6 +91,12 @@ public class FactMapping {
         this.genericTypes = original.genericTypes;
     }
 
+    /**
+     * It <b>clones</b> the given <code>FactMapping</code> with a specified factAlias and <code>FactIdentifier</code>
+     * @param original The original <code>FactMapping</code>
+     * @param factAlias The label to assign
+     * @param factIdentifier The <code>FactIdentifier</code> to assign
+     */
     private FactMapping(FactMapping original, String factAlias, FactIdentifier factIdentifier) {
         original.expressionElements.forEach(expressionElement -> this.addExpressionElement(expressionElement.getStep(), original.className));
         this.expressionIdentifier = original.expressionIdentifier;
@@ -153,10 +163,19 @@ public class FactMapping {
         this.genericTypes = genericTypes;
     }
 
+    /**
+     * It creates a new <code>FactMapping</code> cloning the instanced one.
+     */
     public FactMapping cloneFactMapping() {
         return new FactMapping(this);
     }
 
+    /**
+     * It creates a new <code>FactMapping</code> cloning the instanced one and specifying a factAlias and a <code>FactIdentifier</code>
+     * @param factAlias The label to assign
+     * @param factIdentifier The <code>FactIdentifier</code> to assign
+     * @return
+     */
     public FactMapping cloneFactMapping(String factAlias, FactIdentifier factIdentifier) {
         return new FactMapping(this, factAlias, factIdentifier);
     }
