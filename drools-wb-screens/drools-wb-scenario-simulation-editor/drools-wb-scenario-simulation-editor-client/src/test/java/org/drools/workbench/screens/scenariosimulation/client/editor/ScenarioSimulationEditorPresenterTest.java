@@ -519,6 +519,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void setSettings() {
+        presenter.setSettings(settingsPresenterMock);
+        verify(settingsPresenterMock, times(1)).setScenarioType(any(), any());
+    }
+
+    @Test
     public void isUberfireDocksInteractionEventToManage() {
         UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
         doReturn(null).when(uberfireDocksInteractionEventMock).getTargetDock();

@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
@@ -73,23 +74,51 @@ public class SettingsPresenter implements SettingsView.Presenter {
     }
 
     @Override
-    public void setScenarioType(ScenarioSimulationModel.Type scenarioType) {
+    public void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor) {
         view.getScenarioType().setInnerText(scenarioType.name());
+        view.getFileName().setInnerText(simulationDescriptor.getFileName());
         switch (scenarioType) {
             case RULE:
-                setRuleSettings();
+                setRuleSettings(simulationDescriptor);
                 break;
             case DMN:
-                setDMNSettings();
+                setDMNSettings(simulationDescriptor);
                 break;
         }
     }
 
-    protected void setRuleSettings() {
-        view.getDmnSettings().removeFromParent();
+    @Override
+    public void onKieSessionKeyDownEvent(String value) {
+
     }
 
-    protected void setDMNSettings() {
+    @Override
+    public void onKieBaseKeyDownEvent(String value) {
+
+    }
+
+    @Override
+    public void onRuleFlowGroupKeyDownEvent(String value) {
+
+    }
+
+    @Override
+    public void onDmoSessionKeyDownEvent(String value) {
+
+    }
+
+    protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
+        view.getDmnSettings().removeFromParent();
+        view.getDmoSession().setValue(simulationDescriptor.getDmoSession());
+        view.getKieBase().setValue(simulationDescriptor.getKieBase());
+        view.getKieSession().setValue(simulationDescriptor.getKieSession());
+        view.getRuleFlowGroup().setValue(simulationDescriptor.getRuleFlowGroup());
+    }
+
+    protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
         view.getRuleSettings().removeFromParent();
+        view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
+        view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
+        view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
     }
 }

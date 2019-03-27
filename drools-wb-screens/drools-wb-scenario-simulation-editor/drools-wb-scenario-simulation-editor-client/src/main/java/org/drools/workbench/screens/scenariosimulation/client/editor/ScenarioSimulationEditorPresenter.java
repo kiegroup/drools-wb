@@ -445,7 +445,7 @@ public class ScenarioSimulationEditorPresenter
 
     protected void setSettings(SettingsView.Presenter presenter) {
         ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
-        presenter.setScenarioType(type);
+        presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor());
     }
 
     protected String getJsonModel(ScenarioSimulationModel model) {

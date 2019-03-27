@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface SettingsView
@@ -32,7 +33,15 @@ public interface SettingsView
 
     interface Presenter {
 
-        void setScenarioType(ScenarioSimulationModel.Type scenarioType);
+        void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor);
+
+        void onKieSessionKeyDownEvent(String value);
+
+        void onKieBaseKeyDownEvent(String value);
+
+        void onRuleFlowGroupKeyDownEvent(String value);
+
+        void onDmoSessionKeyDownEvent(String value);
     }
 
     LabelElement getNameLabel();
@@ -50,6 +59,8 @@ public interface SettingsView
     InputElement getKieBase();
 
     InputElement getRuleFlowGroup();
+
+    InputElement getDmoSession();
 
     DivElement getDmnSettings();
 

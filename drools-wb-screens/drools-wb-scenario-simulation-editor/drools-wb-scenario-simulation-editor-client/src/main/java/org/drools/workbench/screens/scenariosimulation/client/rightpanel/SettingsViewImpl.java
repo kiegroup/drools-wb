@@ -23,8 +23,11 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 @Dependent
@@ -58,6 +61,9 @@ public class SettingsViewImpl
 
     @DataField("ruleFlowGroup")
     protected InputElement ruleFlowGroup = Document.get().createTextInputElement();
+
+    @DataField("dmoSession")
+    protected InputElement dmoSession = Document.get().createTextInputElement();
 
     @DataField("dmnSettings")
     protected DivElement dmnSettings = Document.get().createDivElement();
@@ -134,6 +140,11 @@ public class SettingsViewImpl
     }
 
     @Override
+    public InputElement getDmoSession() {
+        return dmoSession;
+    }
+
+    @Override
     public DivElement getDmnSettings() {
         return dmnSettings;
     }
@@ -167,4 +178,33 @@ public class SettingsViewImpl
     public SpanElement getDmnName() {
         return dmnName;
     }
+
+    @EventHandler("kieSession")
+    public void onKieSessionKeyDownEvent(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            presenter.onKieSessionKeyDownEvent(kieSession.getValue());
+        }
+    }
+
+    @EventHandler("kieBase")
+    public void onKieBaseKeyDownEvent(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            presenter.onKieBaseKeyDownEvent(kieBase.getValue());
+        }
+    }
+
+    @EventHandler("ruleFlowGroup")
+    public void onRuleFlowGroupKeyDownEvent(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            presenter.onRuleFlowGroupKeyDownEvent(ruleFlowGroup.getValue());
+        }
+    }
+
+    @EventHandler("dmoSession")
+    public void onDmoSessionKeyDownEvent(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            presenter.onDmoSessionKeyDownEvent(dmoSession.getValue());
+        }
+    }
+
 }

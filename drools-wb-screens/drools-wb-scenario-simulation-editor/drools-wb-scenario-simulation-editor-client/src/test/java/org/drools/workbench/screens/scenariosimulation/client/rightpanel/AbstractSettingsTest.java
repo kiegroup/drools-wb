@@ -49,13 +49,16 @@ abstract class AbstractSettingsTest {
     protected InputElement ruleFlowGroupMock;
 
     @Mock
+    protected InputElement dmoSessionMock;
+
+    @Mock
     protected DivElement dmnSettingsMock;
 
     @Mock
     protected LabelElement dmnModelLabelMock;
 
     @Mock
-    protected SpanElement dmnModelPathMock;
+    protected SpanElement dmnFilePathMock;
 
     @Mock
     protected LabelElement dmnNamespaceLabelMock;
