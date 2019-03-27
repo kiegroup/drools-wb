@@ -39,6 +39,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.internal.matchers.Not;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
@@ -263,6 +264,15 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         verify(simulationDescriptorMock, times(1)).addFactMapping(eq(COLUMN_NUMBER), eq(factMappingMock), eq(GRID_COLUMN_TITLE_COPY), isA(FactIdentifier.class));
         verify(scenarioGridColumnMock, times(1)).setFactIdentifier(isA(FactIdentifier.class));
         verify(scenarioGridModel, times(1)).duplicateColumnValues(isA(Integer.class), eq(COLUMN_NUMBER));
+    }
+
+    @Test
+    public void duplicateColumnValues() {
+        scenarioGridModel.duplicateColumnValues(COLUMN_INDEX, COLUMN_INDEX - 1);
+        verify(scenarioGridModel, times(scenarioGridModel.getRowCount())).getCell(anyInt(), eq(COLUMN_INDEX));
+        verify(scenarioGridModel, times(scenarioGridModel.getRowCount())).setCellValue(anyInt(), eq(COLUMN_INDEX - 1), any());
+        assertTrue(IntStream.range(0, scenarioGridModel.getRowCount())
+                           .allMatch(i -> scenarioGridModel.getCell(i, COLUMN_INDEX).getValue().equals(scenarioGridModel.getCell(i, COLUMN_INDEX).getValue())));
     }
 
     @Test

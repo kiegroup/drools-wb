@@ -34,7 +34,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 @Dependent
 public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
 
-    private final static String COPY_LABEL = "_copy";
+    public final static String COPY_LABEL = "_copy";
 
     public DuplicateColumnCommand() {
         super(true);
@@ -45,14 +45,14 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         final ScenarioSimulationContext.Status status = context.getStatus();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(status.getColumnIndex());
         int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
-        long instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
+        int instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         AtomicInteger columnPositionAtomic = new AtomicInteger(columnPosition);
         context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(originalColumn ->
             duplicateSingleColumn(context, columnPositionAtomic.getAndIncrement(), originalColumn, instancesCount)
         );
     }
 
-    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn, long instancesCount) {
+    protected void duplicateSingleColumn(ScenarioSimulationContext context, int newColumnPosition, ScenarioGridColumn originalColumn, int instancesCount) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = originalColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());

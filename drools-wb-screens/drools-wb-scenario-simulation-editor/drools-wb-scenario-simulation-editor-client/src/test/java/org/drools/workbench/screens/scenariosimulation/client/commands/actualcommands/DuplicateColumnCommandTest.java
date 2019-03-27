@@ -44,17 +44,25 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     }
 
     @Test
-    public void execute() {
+    public void internalExecute() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         command.execute(scenarioSimulationContextLocal);
         int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
-        verify(command, times(2)).getScenarioGridColumnLocal(eq(gridColumnMock.getInformationHeaderMetaData().getTitle() + "_copy"),
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition), eq(gridColumnMock), eq(1));
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition + 1), eq(gridColumnMock), eq(1));
+    }
+
+    @Test
+    public void duplicateSingleColumn() {
+        int instancesCount = 1;
+        int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
+        ((DuplicateColumnCommand) command).duplicateSingleColumn(scenarioSimulationContextLocal, columnPosition, gridColumnMock, instancesCount);
+        verify(command, times(1)).getScenarioGridColumnLocal(eq(gridColumnMock.getInformationHeaderMetaData().getTitle() + DuplicateColumnCommand.COPY_LABEL + "_" + instancesCount),
                                                              anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType),
                                                              eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest),
                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).duplicateSingleColumn(eq(gridColumnMock), and(not(eq(gridColumnMock)), notNull(ScenarioGridColumn.class)), eq(columnPosition));
-        verify(scenarioGridModelMock, times(1)).duplicateSingleColumn(eq(gridColumnMock), and(not(eq(gridColumnMock)), notNull(ScenarioGridColumn.class)), eq(columnPosition + 1));
     }
 
 }

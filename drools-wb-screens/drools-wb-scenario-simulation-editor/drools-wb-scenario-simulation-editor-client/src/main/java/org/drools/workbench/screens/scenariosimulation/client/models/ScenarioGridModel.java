@@ -498,7 +498,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param className
      * @return
      */
-    public long getInstancesCount(String className) {
+    public int getInstancesCount(String className) {
         return simulation.getSimulationDescriptor().getUnmodifiableFactMappings()
                 .stream()
                 .filter(factMapping-> factMapping.getFactIdentifier().getClassName().equals(className))
