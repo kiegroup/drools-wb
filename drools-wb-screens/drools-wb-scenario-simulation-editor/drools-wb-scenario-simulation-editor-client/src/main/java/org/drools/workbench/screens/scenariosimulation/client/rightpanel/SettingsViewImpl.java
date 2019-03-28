@@ -187,6 +187,8 @@ public class SettingsViewImpl
         return saveButton;
     }
 
+
+
     @EventHandler("saveButton")
     public void onSaveButtonClickEvent(ClickEvent event) {
         presenter.onSaveButton(scenarioType.getInnerText());

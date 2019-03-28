@@ -29,6 +29,15 @@ abstract class AbstractSettingsTest {
 
     protected final String SCENARIO_TYPE = "SCENARIO_TYPE";
 
+    protected static final String FILE_NAME = "FILE_NAME";
+    protected static final String KIE_SESSION = "KIE_SESSION";
+    protected static final String KIE_BASE = "KIE_BASE";
+    protected static final String RULE_FLOW_GROUP = "RULE_FLOW_GROUP";
+    protected static final String DMO_SESSION = "DMO_SESSION";
+    protected static final String DMN_FILE_PATH = "DMN_FILE_PATH";
+    protected static final String DMN_NAMESPACE = "DMN_NAMESPACE";
+    protected static final String DMN_NAME = "DMN_NAME";
+
     @Mock
     protected LabelElement nameLabelMock;
 
@@ -82,5 +91,14 @@ abstract class AbstractSettingsTest {
 
     protected void setup() {
         when(scenarioTypeMock.getInnerText()).thenReturn(SCENARIO_TYPE);
+        when(fileNameMock.getInnerText()).thenReturn(FILE_NAME);
+        when(scenarioTypeMock.getInnerText()).thenReturn(SCENARIO_TYPE);
+        when(kieSessionMock.getValue()).thenReturn(KIE_SESSION);
+        when(kieBaseMock.getValue()).thenReturn(KIE_BASE);
+        when(ruleFlowGroupMock.getValue()).thenReturn(RULE_FLOW_GROUP);
+        when(dmoSessionMock.getValue()).thenReturn(DMO_SESSION);
+        when(dmnFilePathMock.getInnerText()).thenReturn(DMN_FILE_PATH);
+        when(dmnNamespaceMock.getInnerText()).thenReturn(DMN_NAMESPACE);
+        when(dmnNameMock.getInnerText()).thenReturn(DMN_NAME);
     }
 }

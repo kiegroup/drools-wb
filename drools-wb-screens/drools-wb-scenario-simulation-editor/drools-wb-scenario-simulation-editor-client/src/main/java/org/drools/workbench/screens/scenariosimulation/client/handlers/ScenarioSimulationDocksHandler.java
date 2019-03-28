@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
-import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.kie.workbench.common.workbench.client.resources.i18n.DefaultWorkbenchConstants;
 import org.uberfire.client.workbench.docks.UberfireDock;
@@ -36,6 +36,8 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 @ApplicationScoped
 public class ScenarioSimulationDocksHandler
         extends AbstractWorkbenchDocksHandler {
+
+    public static final String SCESIM_PATH = "scesimpath";
 
     @Inject
     private AuthoringWorkbenchDocks authoringWorkbenchDocks;
@@ -91,7 +93,7 @@ public class ScenarioSimulationDocksHandler
     }
 
     public void setScesimPath(String scesimPath) {
-        cheatSheetDock.getPlaceRequest().addParameter("scesimpath", scesimPath);
-        settingsDock.getPlaceRequest().addParameter("scesimpath", scesimPath);
+        cheatSheetDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
+        settingsDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
     }
 }

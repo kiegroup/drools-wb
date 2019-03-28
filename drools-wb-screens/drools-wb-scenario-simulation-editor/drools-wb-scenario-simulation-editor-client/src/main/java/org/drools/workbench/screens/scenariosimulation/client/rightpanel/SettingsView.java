@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.uberfire.client.mvp.HasPresenter;
+import org.uberfire.mvp.Command;
 
 public interface SettingsView
         extends IsWidget,
@@ -37,6 +38,8 @@ public interface SettingsView
         void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor);
 
         void onSaveButton(String type);
+
+        void setSaveCommand(Command saveCommand);
     }
 
     LabelElement getNameLabel();

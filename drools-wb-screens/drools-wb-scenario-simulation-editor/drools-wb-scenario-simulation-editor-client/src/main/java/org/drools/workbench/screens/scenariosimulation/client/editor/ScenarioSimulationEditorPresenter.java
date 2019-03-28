@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -74,9 +75,6 @@ import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
-import org.uberfire.client.workbench.events.AbstractPlaceEvent;
-import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
-import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
 import org.uberfire.ext.editor.commons.service.support.SupportsRename;
@@ -91,6 +89,7 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
+import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIM_PATH;
 
 @Dependent
 @WorkbenchEditor(identifier = IDENTIFIER, supportedTypes = {ScenarioSimulationResourceType.class})
@@ -202,6 +201,7 @@ public class ScenarioSimulationEditorPresenter
     public void showDocks() {
         super.showDocks();
         scenarioSimulationDocksHandler.addDocks();
+        scenarioSimulationDocksHandler.setScesimPath(path.toString());
         expandToolsDock();
         registerRightPanelCallback();
         populateRightPanel();
@@ -305,31 +305,14 @@ public class ScenarioSimulationEditorPresenter
     }
 
     /**
-     * Method to verify if the given <code>AbstractPlaceEvent</code> is to be processed by current instance.
-     *
-     * @param abstractPlaceEvent
-     * @return <code>true</code> if <code>AbstractPlaceEvent.getPlace() instanceof PathPlaceRequest</code> <b>and</b>
-     *      the <b>identifier</b> of the <code>PathPlaceRequest</code>
-     *      is equals to <code>ScenarioSimulationEditorPresenter.IDENTIFIER</code> <b>and</b>
-     *      the <b>path</b> of the <code>PathPlaceRequest</code>
-     *      is equals to the <b>path</b> of the current instance; <code>false</code> otherwise
-     */
-    protected boolean isAbstractPlaceEventToManage(AbstractPlaceEvent abstractPlaceEvent) {
-        return ((abstractPlaceEvent.getPlace() instanceof PathPlaceRequest)
-                && (abstractPlaceEvent.getPlace().getIdentifier().equals(ScenarioSimulationEditorPresenter.IDENTIFIER)
-                && abstractPlaceEvent.getPlace().getPath().equals(this.path)));
-    }
-
-    /**
      * Method to verify if the given <code>UberfireDocksInteractionEvent</code> is to be processed by current instance.
-     *
      * @param uberfireDocksInteractionEvent
      * @return <code>true</code> if <code>UberfireDocksInteractionEvent.getTargetDock() != null</code> <b>and</b>
      * the <b>scesimpath</b> parameter of <code>UberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()</code>
      * is equals to the <b>path</b> (toString) of the current instance; <code>false</code> otherwise
      */
     protected boolean isUberfireDocksInteractionEventToManage(UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
-        return uberfireDocksInteractionEvent.getTargetDock() != null && uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest().getParameter("scesimpath", "").equals(this.path.toString());
+        return uberfireDocksInteractionEvent.getTargetDock() != null && uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest().getParameter(SCESIM_PATH, "").equals(this.path.toString());
     }
 
     protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
@@ -434,6 +417,7 @@ public class ScenarioSimulationEditorPresenter
     protected void setSettings(SettingsView.Presenter presenter) {
         ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor());
+        presenter.setSaveCommand(getSaveCommand());
     }
 
     protected String getJsonModel(ScenarioSimulationModel model) {
@@ -513,6 +497,10 @@ public class ScenarioSimulationEditorPresenter
         return settingsView.map(SettingsView::getPresenter);
     }
 
+    protected Command getSaveCommand() {
+        return () -> this.save("Save");
+    }
+
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
@@ -553,8 +541,8 @@ public class ScenarioSimulationEditorPresenter
         }
     }
 
-
     private Command getPopulateRightPanelCommand() {
         return this::populateRightPanel;
     }
+
 }

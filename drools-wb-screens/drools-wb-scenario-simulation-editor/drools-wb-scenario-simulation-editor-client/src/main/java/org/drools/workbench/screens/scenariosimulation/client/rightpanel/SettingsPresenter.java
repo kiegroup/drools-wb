@@ -28,6 +28,7 @@ import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
+import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
@@ -41,6 +42,10 @@ public class SettingsPresenter implements SettingsView.Presenter {
     public static final int DEFAULT_PREFERRED_WIDHT = 300;
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.Settings";
+
+    protected SimulationDescriptor simulationDescriptor;
+
+    protected Command saveCommand;
 
     private SettingsView view;
 
@@ -75,6 +80,7 @@ public class SettingsPresenter implements SettingsView.Presenter {
 
     @Override
     public void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor) {
+        this.simulationDescriptor = simulationDescriptor;
         view.getScenarioType().setInnerText(scenarioType.name());
         view.getFileName().setInnerText(simulationDescriptor.getFileName());
         switch (scenarioType) {
@@ -88,6 +94,11 @@ public class SettingsPresenter implements SettingsView.Presenter {
     }
 
     @Override
+    public void setSaveCommand(Command saveCommand) {
+        this.saveCommand = saveCommand;
+    }
+
+    @Override
     public void onSaveButton(String scenarioType) {
         switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
             case RULE:
@@ -97,6 +108,7 @@ public class SettingsPresenter implements SettingsView.Presenter {
                 saveDMNSettings();
                 break;
         }
+        saveCommand.execute();
     }
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
@@ -115,17 +127,15 @@ public class SettingsPresenter implements SettingsView.Presenter {
     }
 
     protected void saveRuleSettings() {
-//        view.getDmnSettings().removeFromParent();
-//        view.getDmoSession().setValue(simulationDescriptor.getDmoSession());
-//        view.getKieBase().setValue(simulationDescriptor.getKieBase());
-//        view.getKieSession().setValue(simulationDescriptor.getKieSession());
-//        view.getRuleFlowGroup().setValue(simulationDescriptor.getRuleFlowGroup());
+        simulationDescriptor.setDmoSession(view.getDmoSession().getValue());
+        simulationDescriptor.setKieBase(view.getKieBase().getValue());
+        simulationDescriptor.setKieSession(view.getKieSession().getValue());
+        simulationDescriptor.setRuleFlowGroup(view.getRuleFlowGroup().getValue());
     }
 
     protected void saveDMNSettings() {
-//        view.getRuleSettings().removeFromParent();
-//        view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
-//        view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
-//        view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
+        simulationDescriptor.setDmnFilePath(view.getDmnFilePath().getInnerText());
+        simulationDescriptor.setDmnName(view.getDmnName().getInnerText());
+        simulationDescriptor.setDmnNamespace(view.getDmnNamespace().getInnerText());
     }
 }

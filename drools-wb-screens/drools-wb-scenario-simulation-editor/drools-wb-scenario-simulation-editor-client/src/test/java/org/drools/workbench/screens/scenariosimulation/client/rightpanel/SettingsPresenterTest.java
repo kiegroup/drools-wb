@@ -24,9 +24,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.uberfire.mvp.Command;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,20 +39,15 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     private SettingsPresenter settingsPresenter;
 
-    private static final String FILE_NAME = "FILE_NAME";
-    private static final String KIE_SESSION = "KIE_SESSION";
-    private static final String KIE_BASE = "KIE_BASE";
-    private static final String RULE_FLOW_GROUP = "RULE_FLOW_GROUP";
-    private static final String DMO_SESSION = "DMO_SESSION";
-    private static final String DMN_FILE_PATH = "DMN_FILE_PATH";
-    private static final String DMN_NAMESPACE = "DMN_NAMESPACE";
-    private static final String DMN_NAME = "DMN_NAME";
 
     @Mock
     private SettingsView settingsViewMock;
 
     @Mock
     private SimulationDescriptor simulationDescriptorMock;
+
+    @Mock
+    private Command saveCommandMock;
 
     @Before
     public void setup() {
@@ -84,6 +81,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
         this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock) {
             {
+                this.simulationDescriptor = simulationDescriptorMock;
+                this.saveCommand = saveCommandMock;
             }
         });
     }
@@ -97,6 +96,17 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test
     public void getTitle() {
         assertEquals(ScenarioSimulationEditorConstants.INSTANCE.settings(), settingsPresenter.getTitle());
+    }
+
+    @Test
+    public void onSaveButton() {
+        settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.RULE.name());
+        verify(settingsPresenter, times(1)).saveRuleSettings();
+        verify(saveCommandMock, times(1)).execute();
+        reset(saveCommandMock);
+        settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.DMN.name());
+        verify(settingsPresenter, times(1)).saveDMNSettings();
+        verify(saveCommandMock, times(1)).execute();
     }
 
     @Test
@@ -141,5 +151,29 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnNameMock, times(1)).setInnerText(eq(DMN_NAME));
         verify(settingsViewMock, times(1)).getDmnNamespace();
         verify(dmnNamespaceMock, times(1)).setInnerText(eq(DMN_NAMESPACE));
+    }
+
+    @Test
+    public void saveRuleSettings() {
+        settingsPresenter.saveRuleSettings();
+        verify(settingsViewMock, times(1)).getDmoSession();
+        verify(simulationDescriptorMock, times(1)).setDmoSession(eq(DMO_SESSION));
+        verify(settingsViewMock, times(1)).getKieBase();
+        verify(simulationDescriptorMock, times(1)).setKieBase(eq(KIE_BASE));
+        verify(settingsViewMock, times(1)).getKieSession();
+        verify(simulationDescriptorMock, times(1)).setKieSession(eq(KIE_SESSION));
+        verify(settingsViewMock, times(1)).getRuleFlowGroup();
+        verify(simulationDescriptorMock, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
+    }
+
+    @Test
+    public void saveDMNSettings() {
+        settingsPresenter.saveDMNSettings();
+        verify(settingsViewMock, times(1)).getDmnFilePath();
+        verify(simulationDescriptorMock, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
+        verify(settingsViewMock, times(1)).getDmnName();
+        verify(simulationDescriptorMock, times(1)).setDmnName(eq(DMN_NAME));
+        verify(settingsViewMock, times(1)).getDmnNamespace();
+        verify(simulationDescriptorMock, times(1)).setDmnNamespace(eq(DMN_NAMESPACE));
     }
 }

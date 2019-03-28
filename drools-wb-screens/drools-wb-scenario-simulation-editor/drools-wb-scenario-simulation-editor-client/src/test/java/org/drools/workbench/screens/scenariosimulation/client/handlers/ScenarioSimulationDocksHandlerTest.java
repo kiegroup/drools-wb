@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIM_PATH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -82,11 +83,11 @@ public class ScenarioSimulationDocksHandlerTest {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
         final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.index];
         final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.index];
-        String SCESIM_PATH = "SCESIM_PATH";
-        scenarioSimulationDocksHandler.setScesimPath(SCESIM_PATH);
-        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey("scesimpath"));
-        assertEquals(SCESIM_PATH, cheatSheetDock.getPlaceRequest().getParameter("scesimpath", "null"));
-        assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey("scesimpath"));
-        assertEquals(SCESIM_PATH, settingsDock.getPlaceRequest().getParameter("scesimpath", "null"));
+        String TEST_PATH = "TEST_PATH";
+        scenarioSimulationDocksHandler.setScesimPath(TEST_PATH);
+        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
+        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
+        assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
+        assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
     }
 }

@@ -62,8 +62,6 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
-import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
-import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
@@ -74,6 +72,7 @@ import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIM_PATH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyInt;
@@ -148,6 +147,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private DefaultEditorDock docksMock;
     @Mock
     private PerspectiveManager perspectiveManagerMock;
+    @Mock
+    private Command saveCommandMock;
 
     @Before
     public void setup() {
@@ -317,32 +318,23 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void onPlaceGainFocusEvent() {
-        PlaceGainFocusEvent mockPlaceGainFocusEvent = mock(PlaceGainFocusEvent.class);
-        when(mockPlaceGainFocusEvent.getPlace()).thenReturn(placeRequestMock);
-        when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.CLOSE);
-
-        presenterSpy.onStartup(mock(ObservablePath.class), placeRequestMock);
-        presenter.onShowDiagramEditorDocks(mockPlaceGainFocusEvent);
+    public void showDocks() {
+        presenterSpy.showDocks();
         verify(scenarioSimulationDocksHandlerMock).addDocks();
         verify(scenarioSimulationDocksHandlerMock).setScesimPath(eq(pathMock.toString()));
-        verify(scenarioSimulationDocksHandlerMock).expandToolsDock();
+        verify(presenterSpy).expandToolsDock();
         verify(presenterSpy, times(1)).registerRightPanelCallback();
         verify(presenterSpy, times(1)).populateRightPanel();
     }
 
     @Test
-    public void onPlaceHiddenEvent() {
-        PlaceHiddenEvent mockPlaceHiddenEvent = mock(PlaceHiddenEvent.class);
-        when(mockPlaceHiddenEvent.getPlace()).thenReturn(placeRequestMock);
-        when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.OPEN);
-
-        presenter.onStartup(mock(ObservablePath.class), placeRequestMock);
-        presenter.onHideDocks(mockPlaceHiddenEvent);
-
+    public void hideDocks() {
+        presenterSpy.hideDocks();
         verify(scenarioSimulationDocksHandlerMock).removeDocks();
-        verify(testRunnerReportingScreenMock).reset();
         verify(scenarioGridMock, times(1)).clearSelections();
+        verify(presenterSpy).unRegisterRightPanelCallback();
+        verify(presenterSpy).clearRightPanelStatus();
+        verify(testRunnerReportingScreenMock).reset();
     }
 
     @Test
@@ -452,6 +444,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
         verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).getSaveCommand();
         verify(presenterSpy, times(1)).setSettings(eq(settingsPresenterMock));
     }
 
@@ -535,8 +528,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setSettings() {
-        presenter.setSettings(settingsPresenterMock);
+        Command saveCommandMock = mock(Command.class);
+        when(presenterSpy.getSaveCommand()).thenReturn(saveCommandMock);
+        presenterSpy.setSettings(settingsPresenterMock);
         verify(settingsPresenterMock, times(1)).setScenarioType(any(), any());
+        verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
     @Test
@@ -548,9 +544,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        when(placeRequestMock.getParameter(eq("scesimpath"), eq(""))).thenReturn("UNKNOWN");
+        when(placeRequestMock.getParameter(eq(SCESIM_PATH), eq(""))).thenReturn("UNKNOWN");
         assertFalse(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
-        doReturn(pathMock.toString()).when(placeRequestMock).getParameter(eq("scesimpath"), eq(""));
+        doReturn(pathMock.toString()).when(placeRequestMock).getParameter(eq(SCESIM_PATH), eq(""));
         assertTrue(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
     }
 
