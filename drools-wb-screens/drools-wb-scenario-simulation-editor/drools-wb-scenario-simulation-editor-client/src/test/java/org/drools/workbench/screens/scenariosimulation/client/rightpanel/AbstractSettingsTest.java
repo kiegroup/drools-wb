@@ -16,13 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import org.mockito.Mock;
 
+import static org.mockito.Mockito.when;
+
 abstract class AbstractSettingsTest {
+
+    protected final String SCENARIO_TYPE = "SCENARIO_TYPE";
 
     @Mock
     protected LabelElement nameLabelMock;
@@ -71,4 +76,11 @@ abstract class AbstractSettingsTest {
 
     @Mock
     protected SpanElement dmnNameMock;
+
+    @Mock
+    protected ButtonElement saveButtonMock;
+
+    protected void setup() {
+        when(scenarioTypeMock.getInnerText()).thenReturn(SCENARIO_TYPE);
+    }
 }

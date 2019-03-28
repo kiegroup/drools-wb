@@ -54,6 +54,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Before
     public void setup() {
+        super.setup();
         when(settingsViewMock.getNameLabel()).thenReturn(nameLabelMock);
         when(settingsViewMock.getFileName()).thenReturn(fileNameMock);
         when(settingsViewMock.getTypeLabel()).thenReturn(typeLabelMock);
@@ -70,6 +71,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getDmnNamespace()).thenReturn(dmnNamespaceMock);
         when(settingsViewMock.getDmnNameLabel()).thenReturn(dmnNameLabelMock);
         when(settingsViewMock.getDmnName()).thenReturn(dmnNameMock);
+        when(settingsViewMock.getSaveButton()).thenReturn(saveButtonMock);
 
         when(simulationDescriptorMock.getFileName()).thenReturn(FILE_NAME);
         when(simulationDescriptorMock.getKieSession()).thenReturn(KIE_SESSION);

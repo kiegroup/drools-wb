@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
@@ -35,13 +36,7 @@ public interface SettingsView
 
         void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor);
 
-        void onKieSessionKeyDownEvent(String value);
-
-        void onKieBaseKeyDownEvent(String value);
-
-        void onRuleFlowGroupKeyDownEvent(String value);
-
-        void onDmoSessionKeyDownEvent(String value);
+        void onSaveButton(String type);
     }
 
     LabelElement getNameLabel();
@@ -75,4 +70,6 @@ public interface SettingsView
     LabelElement getDmnNameLabel();
 
     SpanElement getDmnName();
+
+    ButtonElement getSaveButton();
 }

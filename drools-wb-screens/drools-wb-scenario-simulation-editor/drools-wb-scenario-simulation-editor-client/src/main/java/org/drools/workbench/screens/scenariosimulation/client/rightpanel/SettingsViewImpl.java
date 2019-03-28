@@ -18,13 +18,13 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.Dependent;
 
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
@@ -85,6 +85,9 @@ public class SettingsViewImpl
 
     @DataField("dmnName")
     protected SpanElement dmnName = Document.get().createSpanElement();
+
+    @DataField("saveButton")
+    protected ButtonElement saveButton = Document.get().createButtonElement();
 
     public SettingsViewImpl() {
     }
@@ -179,32 +182,14 @@ public class SettingsViewImpl
         return dmnName;
     }
 
-    @EventHandler("kieSession")
-    public void onKieSessionKeyDownEvent(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            presenter.onKieSessionKeyDownEvent(kieSession.getValue());
-        }
+    @Override
+    public ButtonElement getSaveButton() {
+        return saveButton;
     }
 
-    @EventHandler("kieBase")
-    public void onKieBaseKeyDownEvent(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            presenter.onKieBaseKeyDownEvent(kieBase.getValue());
-        }
-    }
-
-    @EventHandler("ruleFlowGroup")
-    public void onRuleFlowGroupKeyDownEvent(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            presenter.onRuleFlowGroupKeyDownEvent(ruleFlowGroup.getValue());
-        }
-    }
-
-    @EventHandler("dmoSession")
-    public void onDmoSessionKeyDownEvent(KeyDownEvent event) {
-        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-            presenter.onDmoSessionKeyDownEvent(dmoSession.getValue());
-        }
+    @EventHandler("saveButton")
+    public void onSaveButtonClickEvent(ClickEvent event) {
+        presenter.onSaveButton(scenarioType.getInnerText());
     }
 
 }

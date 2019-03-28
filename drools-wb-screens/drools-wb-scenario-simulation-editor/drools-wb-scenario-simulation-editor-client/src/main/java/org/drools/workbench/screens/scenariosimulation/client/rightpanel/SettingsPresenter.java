@@ -88,23 +88,15 @@ public class SettingsPresenter implements SettingsView.Presenter {
     }
 
     @Override
-    public void onKieSessionKeyDownEvent(String value) {
-
-    }
-
-    @Override
-    public void onKieBaseKeyDownEvent(String value) {
-
-    }
-
-    @Override
-    public void onRuleFlowGroupKeyDownEvent(String value) {
-
-    }
-
-    @Override
-    public void onDmoSessionKeyDownEvent(String value) {
-
+    public void onSaveButton(String scenarioType) {
+        switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
+            case RULE:
+                saveRuleSettings();
+                break;
+            case DMN:
+                saveDMNSettings();
+                break;
+        }
     }
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
@@ -120,5 +112,20 @@ public class SettingsPresenter implements SettingsView.Presenter {
         view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
         view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
         view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
+    }
+
+    protected void saveRuleSettings() {
+//        view.getDmnSettings().removeFromParent();
+//        view.getDmoSession().setValue(simulationDescriptor.getDmoSession());
+//        view.getKieBase().setValue(simulationDescriptor.getKieBase());
+//        view.getKieSession().setValue(simulationDescriptor.getKieSession());
+//        view.getRuleFlowGroup().setValue(simulationDescriptor.getRuleFlowGroup());
+    }
+
+    protected void saveDMNSettings() {
+//        view.getRuleSettings().removeFromParent();
+//        view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
+//        view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
+//        view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
     }
 }
