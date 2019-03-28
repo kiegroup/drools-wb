@@ -234,13 +234,15 @@ public class ScenarioGridModel extends BaseGridData {
             duplicatedColumn.setFactIdentifier(duplicatedFactIdentifier);
 
             super.insertColumn(newColumnIndex, duplicatedColumn);
+
+            duplicateColumnValues(originalColumnIndex, newColumnIndex);
+
+            eventBus.fireEvent(new ReloadRightPanelEvent(false));
         } catch (Throwable t) {
             eventBus.fireEvent(new ScenarioNotificationEvent("Error during column duplication: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
         }
-
-        duplicateColumnValues(originalColumnIndex, newColumnIndex);
     }
 
     /**
