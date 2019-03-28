@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
@@ -89,7 +88,6 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
@@ -111,23 +109,14 @@ public class ScenarioSimulationEditorPresenter
     protected ScenarioGridPanel scenarioGridPanel;
 
     protected DataManagementStrategy dataManagementStrategy;
-
-    protected ScenarioSimulationModel model;
-
-    private ImportsWidgetPresenter importsWidget;
-
-    private AsyncPackageDataModelOracleFactory oracleFactory;
-
-    private Caller<ScenarioSimulationService> service;
-
-    private Caller<DMNTypeService> dmnTypeService;
-
-    private ScenarioSimulationResourceType type;
-
-    private ScenarioSimulationView view;
-
     protected ScenarioSimulationContext context;
-
+    private ImportsWidgetPresenter importsWidget;
+    private AsyncPackageDataModelOracleFactory oracleFactory;
+    protected ScenarioSimulationModel model;
+    private Caller<ScenarioSimulationService> service;
+    private Caller<DMNTypeService> dmnTypeService;
+    private ScenarioSimulationResourceType type;
+    private ScenarioSimulationView view;
     private Command populateRightPanelCommand;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
@@ -177,9 +166,11 @@ public class ScenarioSimulationEditorPresenter
     }
 
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
         scenarioGridPanel.unregister();
+        super.onClose();
     }
 
     @OnMayClose
@@ -207,26 +198,23 @@ public class ScenarioSimulationEditorPresenter
         return menus;
     }
 
-    // Observing to show RightPanel when ScenarioSimulationScreen is put in foreground
-    public void onPlaceGainFocusEvent(@Observes PlaceGainFocusEvent placeGainFocusEvent) {
-        if (isAbstractPlaceEventToManage(placeGainFocusEvent)) {
-            scenarioSimulationDocksHandler.addDocks();
-            scenarioSimulationDocksHandler.setScesimPath(path.toString());
-            expandToolsDock();
-            registerRightPanelCallback();
-            populateRightPanel();
-        }
+    @Override
+    public void showDocks() {
+        super.showDocks();
+        scenarioSimulationDocksHandler.addDocks();
+        expandToolsDock();
+        registerRightPanelCallback();
+        populateRightPanel();
     }
 
-    // Observing to hide RightPanel when ScenarioSimulationScreen is put in background
-    public void onPlaceHiddenEvent(@Observes PlaceHiddenEvent placeHiddenEvent) {
-        if (isAbstractPlaceEventToManage(placeHiddenEvent)) {
-            scenarioSimulationDocksHandler.removeDocks();
-            view.getScenarioGridLayer().getScenarioGrid().clearSelections();
-            unRegisterRightPanelCallback();
-            clearRightPanelStatus();
-            testRunnerReportingScreen.reset();
-        }
+    @Override
+    public void hideDocks() {
+        super.hideDocks();
+        scenarioSimulationDocksHandler.removeDocks();
+        view.getScenarioGridLayer().getScenarioGrid().clearSelections();
+        unRegisterRightPanelCallback();
+        clearRightPanelStatus();
+        testRunnerReportingScreen.reset();
     }
 
     public void onUberfireDocksInteractionEvent(@Observes final UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
@@ -480,6 +468,11 @@ public class ScenarioSimulationEditorPresenter
     @Override
     protected Caller<? extends SupportsSaveAndRename<ScenarioSimulationModel, Metadata>> getSaveAndRenameServiceCaller() {
         return service;
+    }
+
+    @Override
+    protected String getEditorIdentifier() {
+        return IDENTIFIER;
     }
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModelContent content) {

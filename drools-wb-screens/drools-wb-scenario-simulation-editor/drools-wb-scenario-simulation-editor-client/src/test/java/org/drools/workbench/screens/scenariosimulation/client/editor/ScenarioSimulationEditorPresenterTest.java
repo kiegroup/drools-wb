@@ -47,6 +47,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
@@ -55,6 +56,8 @@ import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
+import org.uberfire.client.mvp.PerspectiveActivity;
+import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
@@ -141,6 +144,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioMenuItem redoMenuItemMock;
     @Mock
     private DataManagementStrategy dataManagementStrategyMock;
+    @Mock
+    private DefaultEditorDock docksMock;
+    @Mock
+    private PerspectiveManager perspectiveManagerMock;
 
     @Before
     public void setup() {
@@ -160,6 +167,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(rightPanelActivityMock.getWidget()).thenReturn(rightPanelViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
+        when(perspectiveManagerMock.getCurrentPerspective()).thenReturn(mock(PerspectiveActivity.class));
 
         this.presenter = new ScenarioSimulationEditorPresenter(new CallerMock<>(scenarioSimulationServiceMock),
                                                                scenarioSimulationProducerMock,
@@ -186,6 +194,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.context = contextMock;
                 this.dataManagementStrategy = dataManagementStrategyMock;
                 this.model = scenarioSimulationModelMock;
+                this.docks = docksMock;
+                this.perspectiveManager = perspectiveManagerMock;
             }
 
             @Override
@@ -311,7 +321,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         PlaceGainFocusEvent mockPlaceGainFocusEvent = mock(PlaceGainFocusEvent.class);
         when(mockPlaceGainFocusEvent.getPlace()).thenReturn(placeRequestMock);
         when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.CLOSE);
-        presenterSpy.onPlaceGainFocusEvent(mockPlaceGainFocusEvent);
+
+        presenterSpy.onStartup(mock(ObservablePath.class), placeRequestMock);
+        presenter.onShowDiagramEditorDocks(mockPlaceGainFocusEvent);
         verify(scenarioSimulationDocksHandlerMock).addDocks();
         verify(scenarioSimulationDocksHandlerMock).setScesimPath(eq(pathMock.toString()));
         verify(scenarioSimulationDocksHandlerMock).expandToolsDock();
@@ -324,7 +336,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         PlaceHiddenEvent mockPlaceHiddenEvent = mock(PlaceHiddenEvent.class);
         when(mockPlaceHiddenEvent.getPlace()).thenReturn(placeRequestMock);
         when(placeManagerMock.getStatus(placeRequestMock)).thenReturn(PlaceStatus.OPEN);
-        presenter.onPlaceHiddenEvent(mockPlaceHiddenEvent);
+
+        presenter.onStartup(mock(ObservablePath.class), placeRequestMock);
+        presenter.onHideDocks(mockPlaceHiddenEvent);
+
         verify(scenarioSimulationDocksHandlerMock).removeDocks();
         verify(testRunnerReportingScreenMock).reset();
         verify(scenarioGridMock, times(1)).clearSelections();
