@@ -220,11 +220,21 @@ public class ScenarioSimulationEditorPresenter
     public void onUberfireDocksInteractionEvent(@Observes final UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
         if (isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEvent) && dataManagementStrategy != null) {
             switch (uberfireDocksInteractionEvent.getTargetDock().getIdentifier()) {
-                case CheatSheetPresenter.IDENTIFIER:
-                    getCheatSheetPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setCheatSheet);
-                    break;
                 case SettingsPresenter.IDENTIFIER:
-                    getSettingsPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(this::setSettings);
+                    getSettingsPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(presenter -> {
+                        if (!presenter.isCurrentlyShow(path)) {
+                            setSettings(presenter);
+                            presenter.setCurrentPath(path);
+                        }
+                    });
+                    break;
+                case CheatSheetPresenter.IDENTIFIER:
+                    getCheatSheetPresenter(uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest()).ifPresent(presenter -> {
+                        if (!presenter.isCurrentlyShow(path)) {
+                            setCheatSheet(presenter);
+                            presenter.setCurrentPath(path);
+                        }
+                    });
                     break;
             }
         }
@@ -544,5 +554,4 @@ public class ScenarioSimulationEditorPresenter
     private Command getPopulateTestToolsCommand() {
         return this::populateTestTools;
     }
-
 }

@@ -81,13 +81,16 @@ public class ScenarioSimulationDocksHandlerTest {
     @Test
     public void setScesimPath() {
         final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.index];
         final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.index];
+        final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.index];
+        final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.index];
         String TEST_PATH = "TEST_PATH";
         scenarioSimulationDocksHandler.setScesimPath(TEST_PATH);
-        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
-        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
         assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
         assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
+        assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
+        assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
+        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
+        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
     }
 }

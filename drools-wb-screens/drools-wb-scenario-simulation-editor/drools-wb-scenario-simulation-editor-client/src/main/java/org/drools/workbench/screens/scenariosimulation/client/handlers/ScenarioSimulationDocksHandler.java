@@ -93,7 +93,8 @@ public class ScenarioSimulationDocksHandler
     }
 
     public void setScesimPath(String scesimPath) {
-        cheatSheetDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
         settingsDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
+        toolsDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
+        cheatSheetDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
     }
 }

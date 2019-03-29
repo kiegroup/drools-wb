@@ -16,27 +16,31 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 
 import com.google.gwt.user.client.ui.Widget;
+import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.DefaultPosition;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.workbench.model.CompassPosition;
 import org.uberfire.workbench.model.Position;
 
-public abstract class AbstractSubDockPresenter<E extends SubDockView> implements SubDockView.Presenter {
+public abstract class AbstractSubDockPresenter<T extends SubDockView> implements SubDockView.Presenter {
 
     public static final int DEFAULT_PREFERRED_WIDHT = 300;
 
 
     protected String title;
-    protected E view;
+    protected T view;
+    protected ObservablePath currentPath;
 
     public AbstractSubDockPresenter() {
     }
 
-    public AbstractSubDockPresenter(E view) {
+    public AbstractSubDockPresenter(T view) {
         this.view = view;
     }
 
@@ -60,5 +64,13 @@ public abstract class AbstractSubDockPresenter<E extends SubDockView> implements
         return view.asWidget();
     }
 
+    @Override
+    public void setCurrentPath(ObservablePath path) {
+        currentPath = path;
+    }
 
+    @Override
+    public boolean isCurrentlyShow(ObservablePath path) {
+        return Objects.equals(currentPath, path);
+    }
 }

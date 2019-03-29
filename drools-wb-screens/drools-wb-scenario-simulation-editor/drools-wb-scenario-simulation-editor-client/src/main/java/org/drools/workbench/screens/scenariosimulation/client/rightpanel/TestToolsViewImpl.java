@@ -29,7 +29,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -37,10 +36,8 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class TestToolsViewImpl
-        extends Composite
+        extends AbstractSubDockView<TestToolsView.Presenter>
         implements TestToolsView {
-
-    private Presenter presenter;
 
     @DataField("clearSearchButton")
     protected ButtonElement clearSearchButton = Document.get().createButtonElement();
@@ -82,15 +79,10 @@ public class TestToolsViewImpl
     }
 
     @Override
-    public void init(Presenter presenter) {
-        this.presenter = presenter;
+    public void init(TestToolsView.Presenter presenter) {
+        super.init(presenter);
         disableEditorTab();
         addButton.setDisabled(true);
-    }
-
-    @Override
-    public Presenter getPresenter() {
-        return presenter;
     }
 
     @EventHandler("clearSearchButton")

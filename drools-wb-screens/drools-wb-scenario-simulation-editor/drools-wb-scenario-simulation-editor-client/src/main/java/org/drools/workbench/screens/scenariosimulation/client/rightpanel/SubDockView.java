@@ -17,17 +17,32 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.mvp.HasPresenter;
 
-public interface SubDockView<E extends SubDockView.Presenter>
+public interface SubDockView<T extends SubDockView.Presenter>
         extends IsWidget,
-                HasPresenter<E> {
+                HasPresenter<T> {
 
 
-    E getPresenter();
+    T getPresenter();
 
 
     interface Presenter {
+
+        /**
+         * Set the <code>ObservablePath</code> of the currently shown editor view
+         * @param path
+         */
+        void setCurrentPath(ObservablePath path);
+
+        /**
+         * Verify if the current <code>SubDock</code> already shows data of the currently shown <b>editor</b>.
+         * This is used to avoid unneeded re-population of the <code>SubDock</code>
+         * @param path
+         * @return <code>true</code> if given <code>ObservablePath</code> is equals to the current path of this <code>SubDock</code>
+         */
+        boolean isCurrentlyShow(ObservablePath path);
 
     }
 }

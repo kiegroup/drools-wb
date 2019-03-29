@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -33,10 +32,8 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class SettingsViewImpl
-        extends Composite
+        extends AbstractSubDockView<SettingsView.Presenter>
         implements SettingsView {
-
-    private Presenter presenter;
 
     @DataField("nameLabel")
     protected LabelElement nameLabel = Document.get().createLabelElement();
@@ -90,16 +87,6 @@ public class SettingsViewImpl
     protected ButtonElement saveButton = Document.get().createButtonElement();
 
     public SettingsViewImpl() {
-    }
-
-    @Override
-    public void init(Presenter presenter) {
-        this.presenter = presenter;
-    }
-
-    @Override
-    public Presenter getPresenter() {
-        return presenter;
     }
 
     @Override
@@ -186,8 +173,6 @@ public class SettingsViewImpl
     public ButtonElement getSaveButton() {
         return saveButton;
     }
-
-
 
     @EventHandler("saveButton")
     public void onSaveButtonClickEvent(ClickEvent event) {
