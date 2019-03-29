@@ -253,6 +253,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         verify(simulationDescriptorMock, times(1)).addFactMapping(eq(COLUMN_NUMBER), eq(factMappingMock), eq(GRID_COLUMN_TITLE_COPY), isA(FactIdentifier.class));
         verify(scenarioGridColumnMock, times(1)).setFactIdentifier(isA(FactIdentifier.class));
         verify(scenarioGridModel, times(1)).duplicateColumnValues(isA(Integer.class), eq(COLUMN_NUMBER));
+        verify(eventBusMock, times(1)).fireEvent(isA(ReloadRightPanelEvent.class));
     }
 
     @Test

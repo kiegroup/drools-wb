@@ -204,6 +204,7 @@ public abstract class AbstractScenarioSimulationTest {
                 this.collectionEditorSingletonDOMElementFactory = collectionEditorSingletonDOMElementFactoryTest;
                 this.scenarioCellTextAreaSingletonDOMElementFactory = scenarioCellTextAreaSingletonDOMElementFactoryTest;
                 this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
+                this.eventBus = eventBusMock;
             }
 
             @Override
