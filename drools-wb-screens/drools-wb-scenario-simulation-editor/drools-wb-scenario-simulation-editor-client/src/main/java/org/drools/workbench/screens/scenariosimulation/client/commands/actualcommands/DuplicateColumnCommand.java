@@ -64,7 +64,7 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle.toString(),
                                                                                       propertyTitle,
-                                                                                      String.valueOf(new Date().getTime()),
+                                                                                      context.getStatus().getColumnId(),
                                                                                       columnGroup,
                                                                                       factMappingType,
                                                                                       context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
