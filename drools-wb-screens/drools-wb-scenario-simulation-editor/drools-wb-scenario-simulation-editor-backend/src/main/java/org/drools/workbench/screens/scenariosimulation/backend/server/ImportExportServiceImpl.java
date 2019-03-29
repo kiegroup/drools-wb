@@ -21,6 +21,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.drools.workbench.screens.scenariosimulation.backend.server.importexport.ScenarioCsvImportExport;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
 
@@ -31,7 +32,7 @@ public class ImportExportServiceImpl implements ImportExportService {
     protected ScenarioCsvImportExport scenarioCsvImportExport = new ScenarioCsvImportExport();
 
     @Override
-    public Object exportSimulation(Type type, Simulation simulation) {
+    public Object exportSimulation(ImportExportType type, Simulation simulation) {
         try {
             switch (type) {
                 case CSV:
@@ -45,7 +46,7 @@ public class ImportExportServiceImpl implements ImportExportService {
     }
 
     @Override
-    public Simulation importSimulation(Type type, Object raw, Simulation originalSimulation) {
+    public Simulation importSimulation(ImportExportType type, Object raw, Simulation originalSimulation) {
         try {
             switch (type) {
                 case CSV:

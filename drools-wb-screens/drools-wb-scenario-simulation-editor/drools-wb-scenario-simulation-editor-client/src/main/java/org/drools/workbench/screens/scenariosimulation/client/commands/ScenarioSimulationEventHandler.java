@@ -41,6 +41,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadSimulationCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.RunSingleScenarioCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetGridCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderCellValueCommand;
@@ -275,8 +276,10 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         commonExecution(context, new ReloadRightPanelCommand());
     }
 
+    // FIXME to test
     @Override
     public void onEvent(ReloadSimulationEvent event) {
+        // FIXME
         commonExecution(context, new ReloadSimulationCommand());
     }
 
@@ -435,6 +438,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         notificationEvent.fire(new NotificationEvent(message, NotificationEvent.NotificationType.ERROR));
     }
 
+    // FIXME to test
     protected void registerHandlers() {
         handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(AppendRowEvent.TYPE, this));
@@ -449,6 +453,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(PrependRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(RedoEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ReloadRightPanelEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ReloadSimulationEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(RunSingleScenarioEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioNotificationEvent.TYPE, this));

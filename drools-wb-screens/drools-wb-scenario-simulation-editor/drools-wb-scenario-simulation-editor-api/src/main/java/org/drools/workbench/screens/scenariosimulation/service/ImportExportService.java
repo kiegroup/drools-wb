@@ -30,7 +30,7 @@ public interface ImportExportService {
      * @param simulation
      * @return
      */
-    Object exportSimulation(Type type, Simulation simulation);
+    Object exportSimulation(ImportExportType type, Simulation simulation);
 
     /**
      * This method parse the raw value and return a new simulation. The originalSimulation can be used to retrieve
@@ -40,23 +40,5 @@ public interface ImportExportService {
      * @param originalSimulation
      * @return
      */
-    Simulation importSimulation(Type type, Object raw, Simulation originalSimulation);
-
-    enum Type {
-        CSV();
-
-        private final String extension;
-
-        Type(String extension) {
-            this.extension = extension;
-        }
-
-        Type() {
-            this.extension = name().toLowerCase();
-        }
-
-        public String getExtension() {
-            return extension;
-        }
-    }
+    Simulation importSimulation(ImportExportType type, Object raw, Simulation originalSimulation);
 }

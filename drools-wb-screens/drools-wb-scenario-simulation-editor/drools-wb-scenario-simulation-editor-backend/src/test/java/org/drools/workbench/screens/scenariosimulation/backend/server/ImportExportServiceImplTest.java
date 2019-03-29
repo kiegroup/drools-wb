@@ -19,7 +19,7 @@ import java.io.IOException;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.importexport.ScenarioCsvImportExport;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.guvnor.common.services.shared.exceptions.GenericPortableException;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,24 +57,24 @@ public class ImportExportServiceImplTest {
 
     @Test
     public void exportSimulation() throws IOException {
-        importExportService.exportSimulation(ImportExportService.Type.CSV, simulationMock);
+        importExportService.exportSimulation(ImportExportType.CSV, simulationMock);
         verify(scenarioCsvImportExportMock, times(1)).exportData(eq(simulationMock));
 
         when(scenarioCsvImportExportMock.exportData(any())).thenThrow(new IllegalStateException());
         assertThatThrownBy(() -> importExportService
-                .exportSimulation(ImportExportService.Type.CSV, simulationMock))
+                .exportSimulation(ImportExportType.CSV, simulationMock))
                 .isInstanceOf(GenericPortableException.class);
     }
 
     @Test
     public void importSimulation() throws IOException {
         String raw = "";
-        importExportService.importSimulation(ImportExportService.Type.CSV, raw, simulationMock);
+        importExportService.importSimulation(ImportExportType.CSV, raw, simulationMock);
         verify(scenarioCsvImportExportMock, times(1)).importData(eq(raw), eq(simulationMock));
 
         when(scenarioCsvImportExportMock.importData(anyString(), any())).thenThrow(new IllegalStateException());
         assertThatThrownBy(() -> importExportService
-                .importSimulation(ImportExportService.Type.CSV, raw, simulationMock))
+                .importSimulation(ImportExportType.CSV, raw, simulationMock))
                 .isInstanceOf(GenericPortableException.class);
     }
 }

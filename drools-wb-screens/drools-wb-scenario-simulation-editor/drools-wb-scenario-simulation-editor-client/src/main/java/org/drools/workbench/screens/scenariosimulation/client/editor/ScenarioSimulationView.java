@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.function.Supplier;
 
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -48,6 +49,8 @@ public interface ScenarioSimulationView extends KieEditorView,
     MenuItem getExportToCsvMenuItem();
 
     MenuItem getImportFromCsvMenuItem();
+
+    AnchorElement getExportAnchorElement(String filename, String text);
 
     void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
 

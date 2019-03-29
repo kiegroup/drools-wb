@@ -170,7 +170,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                placeManagerMock,
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
-                                                               new CallerMock<>(dmnTypeServiceMock)) {
+                                                               new CallerMock<>(dmnTypeServiceMock),
+                                                               // FIXME
+                                                               new CallerMock<>(null)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;

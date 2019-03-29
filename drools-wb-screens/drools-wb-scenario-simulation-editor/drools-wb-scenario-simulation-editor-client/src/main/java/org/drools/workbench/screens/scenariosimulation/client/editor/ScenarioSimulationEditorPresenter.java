@@ -28,6 +28,7 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
@@ -36,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
@@ -50,7 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
-import org.drools.workbench.screens.scenariosimulation.service.ImportExportService.Type;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.bus.client.api.base.DefaultErrorCallback;
@@ -146,11 +148,13 @@ public class ScenarioSimulationEditorPresenter
                                              final PlaceManager placeManager,
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
-                                             final Caller<DMNTypeService> dmnTypeService) {
+                                             final Caller<DMNTypeService> dmnTypeService,
+                                             final Caller<ImportExportService> importExportService) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.dmnTypeService = dmnTypeService;
+        this.importExportService = importExportService;
         this.view = (ScenarioSimulationView) baseView;
         this.service = service;
         this.type = type;
@@ -392,16 +396,27 @@ public class ScenarioSimulationEditorPresenter
 
     // FIXME to test
     protected void onExportToCsv() {
-        importExportService.call(result -> System.out.println("result:" + result),
+        importExportService.call(getExportCallBack(),
                                  new DefaultErrorCallback())
-                .exportSimulation(Type.CSV, context.getStatus().getSimulation());
+                .exportSimulation(ImportExportType.CSV, context.getStatus().getSimulation());
     }
+
+    public RemoteCallback<Object> getExportCallBack() {
+        return rawResult -> {
+            final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + ".csv");
+            clickElement(exportAnchorElement);
+        };
+    }
+
+    public static native void clickElement(AnchorElement elem) /*-{
+        elem.click();
+    }-*/;
 
     // FIXME to test
     protected void onImportFromCsv() {
-        importExportService.call(simulation -> eventBus.fireEvent(new ReloadSimulation(simulation)),
+        importExportService.call(simulation -> eventBus.fireEvent(new ReloadSimulationEvent((Simulation) simulation)),
                                  new DefaultErrorCallback())
-                .importSimulation(Type.CSV, "", context.getStatus().getSimulation());
+                .importSimulation(ImportExportType.CSV, "", context.getStatus().getSimulation());
     }
 
     protected void populateRightPanel() {
