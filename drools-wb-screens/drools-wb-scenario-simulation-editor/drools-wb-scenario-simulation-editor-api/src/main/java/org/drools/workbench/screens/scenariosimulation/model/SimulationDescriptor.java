@@ -52,6 +52,8 @@ public class SimulationDescriptor {
 
     private String dmnName;
 
+    private boolean skipFromBuild;
+
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * @return
@@ -138,6 +140,14 @@ public class SimulationDescriptor {
 
     public void setDmnName(String dmnName) {
         this.dmnName = dmnName;
+    }
+
+    public boolean isSkipFromBuild() {
+        return skipFromBuild;
+    }
+
+    public void setSkipFromBuild(boolean skipFromBuild) {
+        this.skipFromBuild = skipFromBuild;
     }
 
     public void moveFactMapping(int oldIndex, int newIndex) {

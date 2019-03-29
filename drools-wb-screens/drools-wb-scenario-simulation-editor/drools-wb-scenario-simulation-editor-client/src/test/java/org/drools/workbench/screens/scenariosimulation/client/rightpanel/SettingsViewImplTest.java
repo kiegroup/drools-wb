@@ -57,6 +57,8 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
                 this.dmnNamespace = dmnNamespaceMock;
                 this.dmnNameLabel = dmnNameLabelMock;
                 this.dmnName = dmnNameMock;
+                this.skipFromBuild = skipFromBuildMock;
+                this.saveButton = saveButtonMock;
             }
         });
         settingsView.init(settingsPresenterMock);

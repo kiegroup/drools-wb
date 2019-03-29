@@ -76,6 +76,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.handlers.Sc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
@@ -531,7 +532,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         Command saveCommandMock = mock(Command.class);
         when(presenterSpy.getSaveCommand()).thenReturn(saveCommandMock);
         presenterSpy.setSettings(settingsPresenterMock);
-        verify(settingsPresenterMock, times(1)).setScenarioType(any(), any());
+        verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
         verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 

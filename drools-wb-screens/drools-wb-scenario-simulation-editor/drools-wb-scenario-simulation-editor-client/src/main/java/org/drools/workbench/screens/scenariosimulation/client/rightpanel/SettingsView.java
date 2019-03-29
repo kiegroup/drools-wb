@@ -31,7 +31,7 @@ public interface SettingsView
 
     interface Presenter extends SubDockView.Presenter {
 
-        void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor);
+        void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor, String fileName);
 
         void onSaveButton(String type);
 
@@ -69,6 +69,8 @@ public interface SettingsView
     LabelElement getDmnNameLabel();
 
     SpanElement getDmnName();
+
+    InputElement getSkipFromBuild();
 
     ButtonElement getSaveButton();
 }

@@ -59,19 +59,12 @@ public class InMemoryMigrationStrategy implements MigrationStrategy {
             if (rawXml.contains("<type>")) {
                 return rawXml.replaceAll("<ScenarioSimulationModel version=\"1.3\">", "<ScenarioSimulationModel version=\"1.4\">")
                         .replaceAll("<simulationDescriptor>", "<simulationDescriptor>\n  <fileName></fileName>")
-                        .replaceAll("<type>RULE</type>", "<kieSession>default</kieSession>\n<kieBase>default</kieBase>\n<ruleFlowGroup>default</ruleFlowGroup><type>RULE</type>")
+                        .replaceAll("<type>RULE</type>", "<kieSession>default</kieSession>\n<kieBase>default</kieBase>\n<ruleFlowGroup>default</ruleFlowGroup>\n<skipFromBuild>false</skipFromBuild>\n<type>RULE</type>")
                         /*
 <dmnNamespace></dmnNamespace>
 <dmnName></dmnName>
 */
-                        .replaceAll("<type>DMN</type>", "<dmnNamespace></dmnNamespace>\n<dmnName></dmnName>\n<type>DMN</type>");
-                /*
-                <kieSession></kieSession>
-<kieBase></kieBase>
-<ruleFlowGroup></ruleFlowGroup>
-<dmoSession></dmoSession>
-
-                 */
+                        .replaceAll("<type>DMN</type>", "<dmnNamespace></dmnNamespace>\n<dmnName></dmnName>\n<skipFromBuild>false</skipFromBuild>\n<type>DMN</type>");
             } else {
                 return rawXml;
             }

@@ -53,10 +53,11 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     @Override
-    public void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor) {
+    public void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor, String fileName) {
         this.simulationDescriptor = simulationDescriptor;
         view.getScenarioType().setInnerText(scenarioType.name());
-        view.getFileName().setInnerText(simulationDescriptor.getFileName());
+        view.getFileName().setInnerText(fileName);
+        view.getSkipFromBuild().setChecked(simulationDescriptor.isSkipFromBuild());
         switch (scenarioType) {
             case RULE:
                 setRuleSettings(simulationDescriptor);
@@ -74,6 +75,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     @Override
     public void onSaveButton(String scenarioType) {
+        simulationDescriptor.setSkipFromBuild(view.getSkipFromBuild().isChecked());
+        simulationDescriptor.setFileName(view.getFileName().getInnerText());
         switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
             case RULE:
                 saveRuleSettings();

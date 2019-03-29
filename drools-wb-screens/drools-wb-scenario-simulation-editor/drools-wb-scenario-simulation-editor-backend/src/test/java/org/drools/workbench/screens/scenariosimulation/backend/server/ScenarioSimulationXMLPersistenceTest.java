@@ -98,6 +98,7 @@ public class ScenarioSimulationXMLPersistenceTest {
         assertTrue(migrated.contains("<kieBase>default</kieBase>"));
         assertTrue(migrated.contains("<ruleFlowGroup>default</ruleFlowGroup>"));
         assertTrue(migrated.contains("<dmoSession></dmoSession>"));
+        assertTrue(migrated.contains("<skipFromBuild>false</skipFromBuild>"));
         assertTrue(migrated.contains("<type>RULE</type>"));
         try {
             instance.internalUnmarshal(migrated);
@@ -111,6 +112,7 @@ public class ScenarioSimulationXMLPersistenceTest {
         assertTrue(migrated.contains("<ScenarioSimulationModel version=\"1.4\">"));
         assertTrue(migrated.contains("<dmnNamespace></dmnNamespace>"));
         assertTrue(migrated.contains("<dmnName></dmnName>"));
+        assertTrue(migrated.contains("<skipFromBuild>false</skipFromBuild>"));
         assertTrue(migrated.contains("<type>DMN</type>"));
         try {
             instance.internalUnmarshal(migrated);

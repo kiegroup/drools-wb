@@ -87,6 +87,9 @@ abstract class AbstractSettingsTest {
     protected SpanElement dmnNameMock;
 
     @Mock
+    protected InputElement skipFromBuildMock;
+
+    @Mock
     protected ButtonElement saveButtonMock;
 
     protected void setup() {

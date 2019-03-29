@@ -39,7 +39,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     private SettingsPresenter settingsPresenter;
 
-
     @Mock
     private SettingsView settingsViewMock;
 
@@ -68,6 +67,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getDmnNamespace()).thenReturn(dmnNamespaceMock);
         when(settingsViewMock.getDmnNameLabel()).thenReturn(dmnNameLabelMock);
         when(settingsViewMock.getDmnName()).thenReturn(dmnNameMock);
+        when(settingsViewMock.getSkipFromBuild()).thenReturn(skipFromBuildMock);
         when(settingsViewMock.getSaveButton()).thenReturn(saveButtonMock);
 
         when(simulationDescriptorMock.getFileName()).thenReturn(FILE_NAME);
@@ -99,29 +99,82 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     }
 
     @Test
-    public void onSaveButton() {
+    public void onSaveButtonSkipTrue() {
+        when(skipFromBuildMock.isChecked()).thenReturn(true);
         settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.RULE.name());
+        verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(true));
+        verify(simulationDescriptorMock, times(1)).setFileName(eq(FILE_NAME));
         verify(settingsPresenter, times(1)).saveRuleSettings();
         verify(saveCommandMock, times(1)).execute();
         reset(saveCommandMock);
+        reset(simulationDescriptorMock);
         settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.DMN.name());
+        verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(true));
         verify(settingsPresenter, times(1)).saveDMNSettings();
         verify(saveCommandMock, times(1)).execute();
     }
 
     @Test
-    public void setScenarioTypeRULE() {
-        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.RULE, simulationDescriptorMock);
+    public void onSaveButtonSkipFalse() {
+        when(skipFromBuildMock.isChecked()).thenReturn(false);
+        settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.RULE.name());
+        verify(settingsPresenter, times(1)).saveRuleSettings();
+        verify(simulationDescriptorMock, times(1)).setFileName(eq(FILE_NAME));
+        verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(false));
+        verify(saveCommandMock, times(1)).execute();
+        reset(saveCommandMock);
+        reset(simulationDescriptorMock);
+        settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.DMN.name());
+        verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(false));
+        verify(settingsPresenter, times(1)).saveDMNSettings();
+        verify(saveCommandMock, times(1)).execute();
+    }
+
+    @Test
+    public void setScenarioTypeRULESkipTrue() {
+        when(simulationDescriptorMock.isSkipFromBuild()).thenReturn(true);
+        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.RULE, simulationDescriptorMock, FILE_NAME);
         verify(settingsViewMock, times(1)).getScenarioType();
         verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.RULE.name()));
+        verify(settingsViewMock, times(1)).getFileName();
+        verify(fileNameMock, times(1)).setInnerText(eq(FILE_NAME));
+        verify(skipFromBuildMock, times(1)).setChecked(eq(true));
         verify(settingsPresenter, times(1)).setRuleSettings(simulationDescriptorMock);
     }
 
     @Test
-    public void setScenarioTypeDMN() {
-        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.DMN, simulationDescriptorMock);
+    public void setScenarioTypeRULESkipFalse() {
+        when(simulationDescriptorMock.isSkipFromBuild()).thenReturn(false);
+        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.RULE, simulationDescriptorMock, FILE_NAME);
+        verify(settingsViewMock, times(1)).getScenarioType();
+        verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.RULE.name()));
+        verify(settingsViewMock, times(1)).getFileName();
+        verify(fileNameMock, times(1)).setInnerText(eq(FILE_NAME));
+        verify(skipFromBuildMock, times(1)).setChecked(eq(false));
+        verify(settingsPresenter, times(1)).setRuleSettings(simulationDescriptorMock);
+    }
+
+    @Test
+    public void setScenarioTypeDMNSkipTrue() {
+        when(simulationDescriptorMock.isSkipFromBuild()).thenReturn(true);
+        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.DMN, simulationDescriptorMock, FILE_NAME);
         verify(settingsViewMock, times(1)).getScenarioType();
         verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.DMN.name()));
+        verify(settingsViewMock, times(1)).getFileName();
+        verify(fileNameMock, times(1)).setInnerText(eq(FILE_NAME));
+        verify(skipFromBuildMock, times(1)).setChecked(eq(true));
+        verify(settingsPresenter, times(1)).setDMNSettings(simulationDescriptorMock);
+    }
+
+    @Test
+    public void setScenarioTypeDMNSkipFalse() {
+        when(simulationDescriptorMock.isSkipFromBuild()).thenReturn(false);
+        settingsPresenter.setScenarioType(ScenarioSimulationModel.Type.DMN, simulationDescriptorMock, FILE_NAME);
+        verify(settingsViewMock, times(1)).getScenarioType();
+        verify(scenarioTypeMock, times(1)).setInnerText(eq(ScenarioSimulationModel.Type.DMN.name()));
+        verify(settingsViewMock, times(1)).getFileName();
+        verify(fileNameMock, times(1)).setInnerText(eq(FILE_NAME));
+        verify(skipFromBuildMock, times(1)).setChecked(eq(false));
         verify(settingsPresenter, times(1)).setDMNSettings(simulationDescriptorMock);
     }
 
@@ -155,6 +208,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Test
     public void saveRuleSettings() {
+        when(skipFromBuildMock.isChecked()).thenReturn(true);
         settingsPresenter.saveRuleSettings();
         verify(settingsViewMock, times(1)).getDmoSession();
         verify(simulationDescriptorMock, times(1)).setDmoSession(eq(DMO_SESSION));

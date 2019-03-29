@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.user.client.ui.Composite;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -31,8 +32,10 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class CheatSheetViewImpl
-        extends AbstractSubDockView<CheatSheetView.Presenter>
+        extends Composite
         implements CheatSheetView {
+
+    protected Presenter presenter;
 
     @DataField("ruleCheatSheet")
     protected DivElement ruleCheatSheet = Document.get().createDivElement();
@@ -114,6 +117,17 @@ public class CheatSheetViewImpl
 
     public CheatSheetViewImpl() {
     }
+
+    @Override
+    public void init(Presenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public Presenter getPresenter() {
+        return presenter;
+    }
+
 
     @Override
     public void setRuleCheatSheetContent() {
