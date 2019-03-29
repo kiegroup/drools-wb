@@ -28,6 +28,7 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertContains;
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertDoesNotContain;
+import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertResultIsEmpty;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class NoOperatorTest
@@ -95,5 +96,54 @@ public class NoOperatorTest
                        CheckType.REDUNDANT_CONDITIONS_TITLE,
                        Severity.NOTE,
                        1);
+    }
+
+    @Test
+    public void testIntervalsDirectlyInCells() throws Exception {
+        table52 = analyzerProvider.makeAnalyser()
+                .withNoOperatorConditionIntegerColumn("a",
+                                                      "Person",
+                                                      "age")
+                .withNoOperatorConditionIntegerColumn("a",
+                                                      "Person",
+                                                      "age")
+                .withPersonApprovedActionSetField()
+                .buildTable();
+
+        fireUpAnalyzer();
+
+        appendRow(DataType.DataTypes.STRING,
+                  DataType.DataTypes.STRING,
+                  DataType.DataTypes.BOOLEAN);
+
+        setCoordinate().row(0).column(2).toValue(">= 20");
+        setCoordinate().row(0).column(3).toValue("<= 30");
+        setCoordinate().row(0).column(4).toValue(Boolean.TRUE);
+
+        Set<Issue> analysisReport = analyzerProvider.getAnalysisReport();
+        assertResultIsEmpty(analysisReport);
+
+        appendRow(DataType.DataTypes.STRING,
+                  DataType.DataTypes.STRING,
+                  DataType.DataTypes.BOOLEAN);
+
+        setCoordinate().row(1).column(2).toValue("< 20");
+        setCoordinate().row(1).column(4).toValue(Boolean.TRUE);
+
+        analysisReport = analyzerProvider.getAnalysisReport();
+        assertResultIsEmpty(analysisReport);
+
+        appendRow(DataType.DataTypes.STRING,
+                  DataType.DataTypes.STRING,
+                  DataType.DataTypes.BOOLEAN);
+
+        setCoordinate().row(2).column(3).toValue("< 20");
+        setCoordinate().row(2).column(4).toValue(Boolean.FALSE);
+
+        analysisReport = analyzerProvider.getAnalysisReport();
+        assertContains(analysisReport,
+                       CheckType.CONFLICTING_ROWS,
+                       Severity.WARNING,
+                       2, 3);
     }
 }
