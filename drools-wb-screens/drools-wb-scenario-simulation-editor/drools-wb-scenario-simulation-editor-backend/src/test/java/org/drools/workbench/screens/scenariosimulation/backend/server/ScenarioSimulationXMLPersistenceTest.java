@@ -80,9 +80,13 @@ public class ScenarioSimulationXMLPersistenceTest {
         String migrated = instance.migrateIfNecessary(toMigrate);
         assertTrue(toMigrate.contains("<ScenarioSimulationModel version=\"1.2\">"));
         assertFalse(migrated.contains("<ScenarioSimulationModel version=\"1.2\">"));
-
-        for (FactMapping factMapping : instance.unmarshal(migrated, false).getSimulation().getSimulationDescriptor().getUnmodifiableFactMappings()) {
-            assertTrue(factMapping.getExpressionElements().size() >= 1);
+        try {
+            ScenarioSimulationModel unmarshalled = instance.unmarshal(migrated, false);
+            for (FactMapping factMapping : unmarshalled.getSimulation().getSimulationDescriptor().getUnmodifiableFactMappings()) {
+                assertTrue(factMapping.getExpressionElements().size() >= 1);
+            }
+        } catch (Exception e) {
+            fail(e.getMessage());
         }
     }
 
