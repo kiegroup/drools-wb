@@ -51,14 +51,14 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     }
 
     @Override
-    public void populateRightPanel(final TestToolsView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
+    public void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
         if(factModelTreeHolder.getFactModelTuple() != null) {
-            getSuccessCallback(rightPanelPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
+            getSuccessCallback(testToolsPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
         }
         else {
-            dmnTypeService.call(getSuccessCallback(rightPanelPresenter, scenarioGridModel),
-                                getErrorCallback(rightPanelPresenter))
+            dmnTypeService.call(getSuccessCallback(testToolsPresenter, scenarioGridModel),
+                                getErrorCallback(testToolsPresenter))
                     .retrieveType(currentPath, dmnFilePath);
         }
     }
@@ -74,16 +74,16 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
     }
 
-    protected RemoteCallback<FactModelTuple> getSuccessCallback(TestToolsView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
+    protected RemoteCallback<FactModelTuple> getSuccessCallback(TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         return factMappingTuple -> {
-            getSuccessCallbackMethod(factMappingTuple, rightPanelPresenter, scenarioGridModel);
+            getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, scenarioGridModel);
         };
     }
 
-    protected void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
+    protected void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a map of already assigned properties
         factModelTreeHolder.setFactModelTuple(factModelTuple);
-        storeData(factModelTuple, rightPanelPresenter, scenarioGridModel);
+        storeData(factModelTuple, testToolsPresenter, scenarioGridModel);
         showErrorsAndCleanupState(factModelTuple);
     }
 
@@ -125,9 +125,9 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         });
     }
 
-    private ErrorCallback<Object> getErrorCallback(TestToolsView.Presenter rightPanelPresenter) {
+    private ErrorCallback<Object> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
         return (error, exception) -> {
-            rightPanelPresenter.setDataObjectFieldsMap(new TreeMap<>());
+            testToolsPresenter.setDataObjectFieldsMap(new TreeMap<>());
             return false;
         };
     }

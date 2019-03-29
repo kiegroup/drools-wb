@@ -103,7 +103,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
             command.setCurrentContext(scenarioSimulationContextLocal);
             verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
             verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
-            verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
+            verify(scenarioSimulationEditorPresenterMock, times(1)).reloadTestTools(eq(true));
             assertNotEquals(status, command.restorableStatus);
         }
     }

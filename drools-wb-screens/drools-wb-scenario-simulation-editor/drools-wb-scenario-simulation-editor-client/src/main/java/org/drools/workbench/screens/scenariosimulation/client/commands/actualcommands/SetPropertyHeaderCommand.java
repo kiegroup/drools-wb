@@ -79,7 +79,7 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
-            context.getScenarioSimulationEditorPresenter().reloadRightPanel(false);
+            context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
     }
 

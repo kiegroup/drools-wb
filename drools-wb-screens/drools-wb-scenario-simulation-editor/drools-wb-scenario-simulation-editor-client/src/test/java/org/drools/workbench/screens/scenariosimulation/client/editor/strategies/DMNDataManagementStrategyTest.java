@@ -85,9 +85,9 @@ public class DMNDataManagementStrategyTest extends AbstractDataManagementStrateg
     }
 
     @Test
-    public void populateRightPanelWithoutFactModelTuple() {
+    public void populateTestToolsWithoutFactModelTuple() {
         factModelTreeHolderlocal.factModelTuple = null;
-        dmnDataManagementStrategySpy.populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
+        dmnDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
         verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
@@ -95,8 +95,8 @@ public class DMNDataManagementStrategyTest extends AbstractDataManagementStrateg
     }
 
     @Test
-    public void populateRightPanelWithFactModelTuple() {
-        dmnDataManagementStrategySpy.populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
+    public void populateTestToolsWithFactModelTuple() {
+        dmnDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, never()).retrieveType(any(), anyString());
         verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioGridModelMock));

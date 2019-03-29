@@ -120,7 +120,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private PlaceManager placeManagerMock;
     @Mock
-    private AbstractWorkbenchActivity rightPanelActivityMock;
+    private AbstractWorkbenchActivity testToolsActivityMock;
     @Mock
     private TestToolsView testToolsViewMock;
     @Mock
@@ -165,7 +165,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationProducerMock.getScenarioSimulationContext()).thenReturn(contextMock);
         when(placeRequestMock.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
         when(testToolsViewMock.getPresenter()).thenReturn(testToolsPresenterMock);
-        when(rightPanelActivityMock.getWidget()).thenReturn(testToolsViewMock);
+        when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
         when(perspectiveManagerMock.getCurrentPerspective()).thenReturn(mock(PerspectiveActivity.class));
@@ -210,11 +210,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected void populateRightPanel() {
+            protected void populateTestTools() {
             }
 
             @Override
-            protected void clearRightPanelStatus() {
+            protected void clearTestToolsStatus() {
 
             }
 
@@ -323,8 +323,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationDocksHandlerMock).addDocks();
         verify(scenarioSimulationDocksHandlerMock).setScesimPath(eq(pathMock.toString()));
         verify(presenterSpy).expandToolsDock();
-        verify(presenterSpy, times(1)).registerRightPanelCallback();
-        verify(presenterSpy, times(1)).populateRightPanel();
+        verify(presenterSpy, times(1)).registerTestToolsCallback();
+        verify(presenterSpy, times(1)).populateTestTools();
     }
 
     @Test
@@ -332,8 +332,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.hideDocks();
         verify(scenarioSimulationDocksHandlerMock).removeDocks();
         verify(scenarioGridMock, times(1)).clearSelections();
-        verify(presenterSpy).unRegisterRightPanelCallback();
-        verify(presenterSpy).clearRightPanelStatus();
+        verify(presenterSpy).unRegisterTestToolsCallback();
+        verify(presenterSpy).clearTestToolsStatus();
         verify(testRunnerReportingScreenMock).reset();
     }
 
@@ -513,11 +513,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void setRightPanel() {
-        presenter.setRightPanel(testToolsPresenterMock);
-        verify(contextMock, times(1)).setRightPanelPresenter(testToolsPresenterMock);
+    public void setTestTools() {
+        presenter.setTestTools(testToolsPresenterMock);
+        verify(contextMock, times(1)).setTestToolsPresenter(testToolsPresenterMock);
         verify(testToolsPresenterMock, times(1)).setEventBus(eventBusMock);
-        verify(dataManagementStrategyMock, times(1)).populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
+        verify(dataManagementStrategyMock, times(1)).populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
     }
 
     @Test
@@ -553,7 +553,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void getModelSuccessCallbackMethod() {
         presenterSpy.getModelSuccessCallbackMethod(content);
-        verify(presenterSpy, times(1)).populateRightPanel();
+        verify(presenterSpy, times(1)).populateTestTools();
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));

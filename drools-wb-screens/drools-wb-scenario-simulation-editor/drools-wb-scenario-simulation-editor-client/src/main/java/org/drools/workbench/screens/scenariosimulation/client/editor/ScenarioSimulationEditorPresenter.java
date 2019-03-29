@@ -116,7 +116,7 @@ public class ScenarioSimulationEditorPresenter
     private Caller<DMNTypeService> dmnTypeService;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
-    private Command populateRightPanelCommand;
+    private Command populateTestToolsCommand;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
 
@@ -151,7 +151,7 @@ public class ScenarioSimulationEditorPresenter
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
-        populateRightPanelCommand = getPopulateRightPanelCommand();
+        populateTestToolsCommand = getPopulateTestToolsCommand();
         scenarioGridPanel.select();
     }
 
@@ -203,8 +203,8 @@ public class ScenarioSimulationEditorPresenter
         scenarioSimulationDocksHandler.addDocks();
         scenarioSimulationDocksHandler.setScesimPath(path.toString());
         expandToolsDock();
-        registerRightPanelCallback();
-        populateRightPanel();
+        registerTestToolsCallback();
+        populateTestTools();
     }
 
     @Override
@@ -212,8 +212,8 @@ public class ScenarioSimulationEditorPresenter
         super.hideDocks();
         scenarioSimulationDocksHandler.removeDocks();
         view.getScenarioGridLayer().getScenarioGrid().clearSelections();
-        unRegisterRightPanelCallback();
-        clearRightPanelStatus();
+        unRegisterTestToolsCallback();
+        clearTestToolsStatus();
         testRunnerReportingScreen.reset();
     }
 
@@ -246,13 +246,13 @@ public class ScenarioSimulationEditorPresenter
     }
 
     /**
-     * To be called to force right panel reload
+     * To be called to force test tools panel reload
      * @param disable set this to <code>true</code> to <b>also</b> disable the panel
      */
-    public void reloadRightPanel(boolean disable) {
-        populateRightPanelCommand.execute();
+    public void reloadTestTools(boolean disable) {
+        populateTestToolsCommand.execute();
         if (disable) {
-            getRightPanelPresenter().ifPresent(TestToolsView.Presenter::onDisableEditorTab);
+            getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onDisableEditorTab);
         }
     }
 
@@ -334,12 +334,12 @@ public class ScenarioSimulationEditorPresenter
         dataManagementStrategy.setModel(model);
     }
 
-    protected void registerRightPanelCallback() {
-        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), populateRightPanelCommand);
+    protected void registerTestToolsCallback() {
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), populateTestToolsCommand);
     }
 
-    protected void unRegisterRightPanelCallback() {
-        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(populateRightPanelCommand);
+    protected void unRegisterTestToolsCallback() {
+        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(populateTestToolsCommand);
     }
 
     /**
@@ -392,21 +392,21 @@ public class ScenarioSimulationEditorPresenter
         DomGlobal.window.open(downloadURL);
     }
 
-    protected void populateRightPanel() {
+    protected void populateTestTools() {
         // Execute only when DatamanagementStrategy already set and  TestToolsPresenter is actually available
         if (dataManagementStrategy != null) {
-            getRightPanelPresenter().ifPresent(this::setRightPanel);
+            getTestToolsPresenter().ifPresent(this::setTestTools);
         }
     }
 
-    protected void setRightPanel(TestToolsView.Presenter presenter) {
-        context.setRightPanelPresenter(presenter);
+    protected void setTestTools(TestToolsView.Presenter presenter) {
+        context.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
-        dataManagementStrategy.populateRightPanel(presenter, scenarioGridPanel.getScenarioGrid().getModel());
+        dataManagementStrategy.populateTestTools(presenter, scenarioGridPanel.getScenarioGrid().getModel());
     }
 
-    protected void clearRightPanelStatus() {
-        getRightPanelPresenter().ifPresent(TestToolsView.Presenter::onClearStatus);
+    protected void clearTestToolsStatus() {
+        getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onClearStatus);
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
@@ -472,7 +472,7 @@ public class ScenarioSimulationEditorPresenter
             dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, context, eventBus);
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
-        populateRightPanel();
+        populateTestTools();
         model = content.getModel();
         if (dataManagementStrategy instanceof DMODataManagementStrategy) {
             importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),
@@ -509,18 +509,18 @@ public class ScenarioSimulationEditorPresenter
         return this::getModelSuccessCallbackMethod;
     }
 
-    private Optional<TestToolsView> getRightPanelView() {
+    private Optional<TestToolsView> getTestToolsView() {
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
-            final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
-            return Optional.of((TestToolsView) rightPanelActivity.getWidget());
+            final AbstractWorkbenchActivity testToolsActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
+            return Optional.of((TestToolsView) testToolsActivity.getWidget());
         } else {
             return Optional.empty();
         }
     }
 
-    private Optional<TestToolsView.Presenter> getRightPanelPresenter() {
-        return getRightPanelView().isPresent() ? Optional.of(getRightPanelView().get().getPresenter()) : Optional.empty();
+    private Optional<TestToolsView.Presenter> getTestToolsPresenter() {
+        return getTestToolsView().isPresent() ? Optional.of(getTestToolsView().get().getPresenter()) : Optional.empty();
     }
 
     private Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
@@ -541,8 +541,8 @@ public class ScenarioSimulationEditorPresenter
         }
     }
 
-    private Command getPopulateRightPanelCommand() {
-        return this::populateRightPanel;
+    private Command getPopulateTestToolsCommand() {
+        return this::populateTestTools;
     }
 
 }

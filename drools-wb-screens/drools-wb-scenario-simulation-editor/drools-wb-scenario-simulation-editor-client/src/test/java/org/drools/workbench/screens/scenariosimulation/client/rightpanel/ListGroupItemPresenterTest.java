@@ -74,7 +74,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
                 listGroupItemViewMap = listGroupItemViewMapMock;
                 fieldItemPresenter = fieldItemPresenterMock;
                 viewsProvider = viewsProviderMock;
-                rightPanelPresenter = testToolsPresenterMock;
+                testToolsPresenter = testToolsPresenterMock;
             }
         });
     }

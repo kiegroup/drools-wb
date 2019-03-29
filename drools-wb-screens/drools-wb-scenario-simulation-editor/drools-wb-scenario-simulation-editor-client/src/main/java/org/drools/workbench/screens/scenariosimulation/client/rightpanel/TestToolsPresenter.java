@@ -42,7 +42,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.
 @WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
 public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> implements TestToolsView.Presenter {
 
-    public static final String IDENTIFIER = "org.drools.scenariosimulation.RightPanel";
+    public static final String IDENTIFIER = "org.drools.scenariosimulation.TestTools";
 
     private ListGroupItemPresenter listGroupItemPresenter;
 
