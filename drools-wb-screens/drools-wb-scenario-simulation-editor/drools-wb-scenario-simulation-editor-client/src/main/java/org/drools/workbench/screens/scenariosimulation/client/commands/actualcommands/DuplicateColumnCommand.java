@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
