@@ -49,8 +49,11 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportService.Type;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.jboss.errai.bus.client.api.base.DefaultErrorCallback;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
@@ -115,6 +118,8 @@ public class ScenarioSimulationEditorPresenter
     private Caller<ScenarioSimulationService> service;
 
     private Caller<DMNTypeService> dmnTypeService;
+
+    private Caller<ImportExportService> importExportService;
 
     private ScenarioSimulationResourceType type;
 
@@ -383,6 +388,20 @@ public class ScenarioSimulationEditorPresenter
 
     protected void open(final String downloadURL) {
         DomGlobal.window.open(downloadURL);
+    }
+
+    // FIXME to test
+    protected void onExportToCsv() {
+        importExportService.call(result -> System.out.println("result:" + result),
+                                 new DefaultErrorCallback())
+                .exportSimulation(Type.CSV, context.getStatus().getSimulation());
+    }
+
+    // FIXME to test
+    protected void onImportFromCsv() {
+        importExportService.call(simulation -> eventBus.fireEvent(new ReloadSimulation(simulation)),
+                                 new DefaultErrorCallback())
+                .importSimulation(Type.CSV, "", context.getStatus().getSimulation());
     }
 
     protected void populateRightPanel() {

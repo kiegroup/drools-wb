@@ -130,10 +130,7 @@ public class ScenarioSimulationViewImpl
     public MenuItem getExportToCsvMenuItem() {
         if (exportToCsvMenuItem == null) {
             exportToCsvMenuItem = new ScenarioMenuItem("Export",
-                                                       () -> {
-                                                            // FIXME
-                                                           throw new UnsupportedOperationException();
-                                                       });
+                                                       () -> presenter.onExportToCsv());
         }
         return exportToCsvMenuItem;
     }
@@ -143,10 +140,7 @@ public class ScenarioSimulationViewImpl
     public MenuItem getImportFromCsvMenuItem() {
         if (importFromCsvMenuItem == null) {
             importFromCsvMenuItem = new ScenarioMenuItem("Import",
-                                                         () -> {
-                                                             // FIXME
-                                                             throw new UnsupportedOperationException();
-                                                         });
+                                                         () -> presenter.onImportFromCsv());
         }
         return importFromCsvMenuItem;
     }
