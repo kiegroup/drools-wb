@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
@@ -122,7 +122,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     /**
      * Store data in required target objects
      */
-    protected void storeData(final FactModelTuple factModelTuple, final RightPanelView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
+    protected void storeData(final FactModelTuple factModelTuple, final TestToolsView.Presenter rightPanelPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a map of already assigned properties
         final Map<String, List<String>> propertiesToHide = getPropertiesToHide(scenarioGridModel);
         final SortedMap<String, FactModelTree> visibleFacts = factModelTuple.getVisibleFacts();

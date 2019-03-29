@@ -30,7 +30,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class CheatSheetPresenterTest extends AbstractRightPanelTest {
+public class CheatSheetPresenterTest extends AbstractTestToolsTest {
 
     @Mock
     private CheatSheetView cheatSheetViewMock;

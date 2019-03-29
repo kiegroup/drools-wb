@@ -16,20 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import com.google.gwt.user.client.ui.IsWidget;
+import org.uberfire.client.mvp.HasPresenter;
 
-public interface CheatSheetView extends SubDockView<CheatSheetView.Presenter> {
+public interface SubDockView<E extends SubDockView.Presenter>
+        extends IsWidget,
+                HasPresenter<E> {
 
-    void setRuleCheatSheetContent();
 
-    void setDMNCheatSheetContent();
+    E getPresenter();
 
-    interface Presenter extends SubDockView.Presenter {
 
-        /**
-         * Method to initialize cheat sheet content based on <code>ScenarioSimulationModel.Type</code>
-         * @param type
-         */
-        void initCheatSheet(ScenarioSimulationModel.Type type);
+    interface Presenter {
+
     }
 }

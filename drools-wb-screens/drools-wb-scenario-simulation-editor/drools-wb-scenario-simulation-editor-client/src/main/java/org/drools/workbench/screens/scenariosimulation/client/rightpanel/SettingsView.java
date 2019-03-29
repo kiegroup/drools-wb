@@ -21,19 +21,15 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.uberfire.client.mvp.HasPresenter;
 import org.uberfire.mvp.Command;
 
 public interface SettingsView
-        extends IsWidget,
-                HasPresenter<SettingsView.Presenter> {
+        extends SubDockView<SettingsView.Presenter> {
 
-    Presenter getPresenter();
 
-    interface Presenter {
+    interface Presenter extends SubDockView.Presenter {
 
         void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor);
 

@@ -16,61 +16,33 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
-import org.uberfire.client.annotations.DefaultPosition;
-import org.uberfire.client.annotations.WorkbenchPartTitle;
-import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
-import org.uberfire.workbench.model.CompassPosition;
-import org.uberfire.workbench.model.Position;
 
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter.IDENTIFIER;
 
-@Dependent
+@ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
-public class CheatSheetPresenter implements CheatSheetView.Presenter {
-
-    public static final int DEFAULT_PREFERRED_WIDHT = 300;
+public class CheatSheetPresenter extends AbstractSubDockPresenter<CheatSheetView> implements CheatSheetView.Presenter {
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.CheatSheet";
 
-    private CheatSheetView view;
 
 
     public CheatSheetPresenter() {
         //Zero argument constructor for CDI
+        title = ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet();
     }
 
     @Inject
     public CheatSheetPresenter(CheatSheetView view) {
-        this.view = view;
-    }
-
-    @PostConstruct
-    public void setup() {
-        view.init(this);
-    }
-
-    @DefaultPosition
-    public Position getDefaultPosition() {
-        return CompassPosition.EAST;
-    }
-
-    @WorkbenchPartTitle
-    public String getTitle() {
-        return ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet();
-    }
-
-    @WorkbenchPartView
-    public Widget asWidget() {
-        return view.asWidget();
+        super(view);
+        title = ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet();
     }
 
     public void initCheatSheet(ScenarioSimulationModel.Type type) {

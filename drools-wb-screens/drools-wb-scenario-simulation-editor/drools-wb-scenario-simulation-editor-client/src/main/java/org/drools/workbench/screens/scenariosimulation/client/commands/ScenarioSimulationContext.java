@@ -23,7 +23,7 @@ import org.drools.workbench.screens.scenariosimulation.client.factories.Collecti
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -43,7 +43,7 @@ public class ScenarioSimulationContext {
     protected ScenarioGridPanel scenarioGridPanel;
     protected ScenarioGridLayer scenarioGridLayer;
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    protected RightPanelView.Presenter rightPanelPresenter;
+    protected TestToolsView.Presenter rightPanelPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
 
     protected Status status = new Status();
@@ -93,11 +93,11 @@ public class ScenarioSimulationContext {
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
     }
 
-    public RightPanelView.Presenter getRightPanelPresenter() {
+    public TestToolsView.Presenter getRightPanelPresenter() {
         return rightPanelPresenter;
     }
 
-    public void setRightPanelPresenter(RightPanelView.Presenter rightPanelPresenter) {
+    public void setRightPanelPresenter(TestToolsView.Presenter rightPanelPresenter) {
         this.rightPanelPresenter = rightPanelPresenter;
     }
 

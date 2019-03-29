@@ -24,8 +24,8 @@ import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.kie.workbench.common.workbench.client.resources.i18n.DefaultWorkbenchConstants;
@@ -57,7 +57,7 @@ public class ScenarioSimulationDocksHandler
         result.add(settingsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.settings()));
         toolsDock = new UberfireDock(UberfireDockPosition.EAST,
                                      "INFO_CIRCLE",
-                                     new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER),
+                                     new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER),
                                      perspectiveIdentifier);
         result.add(toolsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testTools()));
         cheatSheetDock = new UberfireDock(UberfireDockPosition.EAST,

@@ -34,12 +34,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class RightPanelViewImplTest {
+public class TestToolsViewImplTest {
 
-    private RightPanelViewImpl rightPanelView;
+    private TestToolsViewImpl testToolsView;
 
     @Mock
-    private RightPanelPresenter rightPanelPresenterMock;
+    private TestToolsPresenter testToolsPresenterMock;
 
     @Mock
     private InputElement inputSearchMock;
@@ -52,45 +52,45 @@ public class RightPanelViewImplTest {
 
     @Before
     public void setup() {
-        this.rightPanelView = spy(new RightPanelViewImpl() {
+        this.testToolsView = spy(new TestToolsViewImpl() {
             {
                 this.inputSearch = inputSearchMock;
                 this.clearSearchButton = clearSearchButtonMock;
                 this.nameField = nameFieldMock;
             }
         });
-        rightPanelView.init(rightPanelPresenterMock);
+        testToolsView.init(testToolsPresenterMock);
     }
 
     @Test
     public void onClearSearchButtonClick() {
-        reset(rightPanelPresenterMock);
-        rightPanelView.onClearSearchButtonClick(mock(ClickEvent.class));
-        verify(rightPanelPresenterMock, times(1)).onClearSearch();
+        reset(testToolsPresenterMock);
+        testToolsView.onClearSearchButtonClick(mock(ClickEvent.class));
+        verify(testToolsPresenterMock, times(1)).onClearSearch();
     }
 
     @Test
     public void onInputSearchKeyUp() {
-        rightPanelView.onInputSearchKeyUp(mock(KeyUpEvent.class));
-        verify(rightPanelPresenterMock, times(1)).onShowClearButton();
+        testToolsView.onInputSearchKeyUp(mock(KeyUpEvent.class));
+        verify(testToolsPresenterMock, times(1)).onShowClearButton();
     }
 
     @Test
     public void clearInputSearch() {
-        rightPanelView.clearInputSearch();
+        testToolsView.clearInputSearch();
         verify(inputSearchMock, times(1)).setValue(eq(""));
     }
 
     @Test
     public void clearNameField() {
-        rightPanelView.clearNameField();
+        testToolsView.clearNameField();
         verify(nameFieldMock, times(1)).setValue(eq(""));
     }
 
     @Test
     public void hideClearButton() {
         reset(clearSearchButtonMock);
-        rightPanelView.hideClearButton();
+        testToolsView.hideClearButton();
         verify(clearSearchButtonMock, times(1)).setDisabled(eq(true));
         verify(clearSearchButtonMock, times(1)).setAttribute(eq("style"), eq("display: none;"));
     }
@@ -98,7 +98,7 @@ public class RightPanelViewImplTest {
     @Test
     public void showClearButton() {
         reset(clearSearchButtonMock);
-        rightPanelView.showClearButton();
+        testToolsView.showClearButton();
         verify(clearSearchButtonMock, times(1)).setDisabled(eq(false));
         verify(clearSearchButtonMock, times(1)).removeAttribute(eq("style"));
     }

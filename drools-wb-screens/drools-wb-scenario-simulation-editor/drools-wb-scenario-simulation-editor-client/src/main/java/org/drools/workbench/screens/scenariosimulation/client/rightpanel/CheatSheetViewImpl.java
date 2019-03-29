@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -29,7 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-@Dependent
+@ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class CheatSheetViewImpl
         extends Composite

@@ -36,7 +36,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Inject
     protected FieldItemPresenter fieldItemPresenter;
 
-    protected RightPanelView.Presenter rightPanelPresenter;
+    protected TestToolsView.Presenter rightPanelPresenter;
 
     protected Map<String, ListGroupItemView> listGroupItemViewMap = new HashMap<>();
 
@@ -105,7 +105,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
-    public void init(RightPanelView.Presenter rightPanelPresenter) {
+    public void init(TestToolsView.Presenter rightPanelPresenter) {
         this.rightPanelPresenter = rightPanelPresenter;
         fieldItemPresenter.setListGroupItemPresenter(this);
     }

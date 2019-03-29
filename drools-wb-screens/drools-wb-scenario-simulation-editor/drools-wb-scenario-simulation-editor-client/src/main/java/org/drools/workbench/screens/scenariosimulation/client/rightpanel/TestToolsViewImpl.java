@@ -19,7 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
@@ -34,11 +34,11 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-@Dependent
+@ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
-public class RightPanelViewImpl
+public class TestToolsViewImpl
         extends Composite
-        implements RightPanelView {
+        implements TestToolsView {
 
     private Presenter presenter;
 
@@ -77,7 +77,7 @@ public class RightPanelViewImpl
 
     protected List<DivElement> managedDivElements;
 
-    public RightPanelViewImpl() {
+    public TestToolsViewImpl() {
         managedDivElements = Arrays.asList(dataObjectListContainer, simpleJavaTypeListContainer, instanceListContainer, simpleJavaTypeListContainer);
     }
 

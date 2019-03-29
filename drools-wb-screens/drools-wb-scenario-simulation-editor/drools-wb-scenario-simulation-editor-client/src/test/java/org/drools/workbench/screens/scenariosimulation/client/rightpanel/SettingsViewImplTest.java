@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
@@ -61,6 +62,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
         settingsView.init(settingsPresenterMock);
     }
 
+    @Test
     public void onSaveButtonClickEvent() {
         settingsView.onSaveButtonClickEvent(mock(ClickEvent.class));
         verify(settingsPresenterMock, times(1)).onSaveButton(SCENARIO_TYPE);

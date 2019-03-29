@@ -87,19 +87,19 @@ public class DMNDataManagementStrategyTest extends AbstractDataManagementStrateg
     @Test
     public void populateRightPanelWithoutFactModelTuple() {
         factModelTreeHolderlocal.factModelTuple = null;
-        dmnDataManagementStrategySpy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        dmnDataManagementStrategySpy.populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, times(1)).retrieveType(any(), anyString());
-        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(rightPanelPresenterMock), eq(scenarioGridModelMock));
+        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(testToolsPresenterMock, scenarioGridModelMock);
+        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
 
     }
 
     @Test
     public void populateRightPanelWithFactModelTuple() {
-        dmnDataManagementStrategySpy.populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        dmnDataManagementStrategySpy.populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnTypeServiceMock, never()).retrieveType(any(), anyString());
-        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(rightPanelPresenterMock, scenarioGridModelMock);
-        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(rightPanelPresenterMock), eq(scenarioGridModelMock));
+        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallback(testToolsPresenterMock, scenarioGridModelMock);
+        verify(dmnDataManagementStrategySpy, times(1)).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
 
     }
 
@@ -139,11 +139,11 @@ public class DMNDataManagementStrategyTest extends AbstractDataManagementStrateg
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
         factModelTreeHolderlocal.setFactModelTuple(null);
         doReturn(alreadyAssignedProperties).when(dmnDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
-        dmnDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, rightPanelPresenterMock, scenarioGridModelMock);
+        dmnDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, testToolsPresenterMock, scenarioGridModelMock);
         verify(dmnDataManagementStrategySpy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
         assertEquals(factModelTupleLocal, factModelTreeHolderlocal.getFactModelTuple());
-        verify(rightPanelPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
-        verify(rightPanelPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
-        verify(rightPanelPresenterMock, times(1)).setHiddenFieldsMap(eq(hiddenFactsLocal));
+        verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
+        verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
+        verify(testToolsPresenterMock, times(1)).setHiddenFieldsMap(eq(hiddenFactsLocal));
     }
 }

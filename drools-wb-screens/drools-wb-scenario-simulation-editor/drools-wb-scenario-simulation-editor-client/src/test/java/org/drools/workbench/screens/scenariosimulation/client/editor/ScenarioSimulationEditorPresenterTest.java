@@ -32,8 +32,8 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -122,7 +122,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private AbstractWorkbenchActivity rightPanelActivityMock;
     @Mock
-    private RightPanelView rightPanelViewMock;
+    private TestToolsView testToolsViewMock;
     @Mock
     private ObservablePath pathMock;
     @Mock
@@ -164,8 +164,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationContext()).thenReturn(contextMock);
         when(placeRequestMock.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
-        when(rightPanelViewMock.getPresenter()).thenReturn(rightPanelPresenterMock);
-        when(rightPanelActivityMock.getWidget()).thenReturn(rightPanelViewMock);
+        when(testToolsViewMock.getPresenter()).thenReturn(testToolsPresenterMock);
+        when(rightPanelActivityMock.getWidget()).thenReturn(testToolsViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
         when(perspectiveManagerMock.getCurrentPerspective()).thenReturn(mock(PerspectiveActivity.class));
@@ -514,10 +514,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setRightPanel() {
-        presenter.setRightPanel(rightPanelPresenterMock);
-        verify(contextMock, times(1)).setRightPanelPresenter(rightPanelPresenterMock);
-        verify(rightPanelPresenterMock, times(1)).setEventBus(eventBusMock);
-        verify(dataManagementStrategyMock, times(1)).populateRightPanel(rightPanelPresenterMock, scenarioGridModelMock);
+        presenter.setRightPanel(testToolsPresenterMock);
+        verify(contextMock, times(1)).setRightPanelPresenter(testToolsPresenterMock);
+        verify(testToolsPresenterMock, times(1)).setEventBus(eventBusMock);
+        verify(dataManagementStrategyMock, times(1)).populateRightPanel(testToolsPresenterMock, scenarioGridModelMock);
     }
 
     @Test

@@ -42,10 +42,10 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPo
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -231,7 +231,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     public void expandToolsDock() {
-        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
+        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         if (!PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
             scenarioSimulationDocksHandler.expandToolsDock();
         }
@@ -252,7 +252,7 @@ public class ScenarioSimulationEditorPresenter
     public void reloadRightPanel(boolean disable) {
         populateRightPanelCommand.execute();
         if (disable) {
-            getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onDisableEditorTab);
+            getRightPanelPresenter().ifPresent(TestToolsView.Presenter::onDisableEditorTab);
         }
     }
 
@@ -335,11 +335,11 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void registerRightPanelCallback() {
-        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER), populateRightPanelCommand);
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), populateRightPanelCommand);
     }
 
     protected void unRegisterRightPanelCallback() {
-        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER)).remove(populateRightPanelCommand);
+        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(populateRightPanelCommand);
     }
 
     /**
@@ -393,20 +393,20 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void populateRightPanel() {
-        // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available
+        // Execute only when DatamanagementStrategy already set and  TestToolsPresenter is actually available
         if (dataManagementStrategy != null) {
             getRightPanelPresenter().ifPresent(this::setRightPanel);
         }
     }
 
-    protected void setRightPanel(RightPanelView.Presenter presenter) {
+    protected void setRightPanel(TestToolsView.Presenter presenter) {
         context.setRightPanelPresenter(presenter);
         presenter.setEventBus(eventBus);
         dataManagementStrategy.populateRightPanel(presenter, scenarioGridPanel.getScenarioGrid().getModel());
     }
 
     protected void clearRightPanelStatus() {
-        getRightPanelPresenter().ifPresent(RightPanelView.Presenter::onClearStatus);
+        getRightPanelPresenter().ifPresent(TestToolsView.Presenter::onClearStatus);
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
@@ -509,17 +509,17 @@ public class ScenarioSimulationEditorPresenter
         return this::getModelSuccessCallbackMethod;
     }
 
-    private Optional<RightPanelView> getRightPanelView() {
-        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(RightPanelPresenter.IDENTIFIER);
+    private Optional<TestToolsView> getRightPanelView() {
+        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
             final AbstractWorkbenchActivity rightPanelActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
-            return Optional.of((RightPanelView) rightPanelActivity.getWidget());
+            return Optional.of((TestToolsView) rightPanelActivity.getWidget());
         } else {
             return Optional.empty();
         }
     }
 
-    private Optional<RightPanelView.Presenter> getRightPanelPresenter() {
+    private Optional<TestToolsView.Presenter> getRightPanelPresenter() {
         return getRightPanelView().isPresent() ? Optional.of(getRightPanelView().get().getPresenter()) : Optional.empty();
     }
 

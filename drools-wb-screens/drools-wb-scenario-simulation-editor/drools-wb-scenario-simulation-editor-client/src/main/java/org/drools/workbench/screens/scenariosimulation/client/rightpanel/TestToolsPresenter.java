@@ -24,36 +24,25 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
-import org.uberfire.client.annotations.DefaultPosition;
-import org.uberfire.client.annotations.WorkbenchPartTitle;
-import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
-import org.uberfire.workbench.model.CompassPosition;
-import org.uberfire.workbench.model.Position;
 
-import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.DEFAULT_PREFERRED_WIDHT;
-import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter.IDENTIFIER;
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter.DEFAULT_PREFERRED_WIDHT;
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter.IDENTIFIER;
 
-@Dependent
+@ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
-public class RightPanelPresenter implements RightPanelView.Presenter {
-
-    public static final int DEFAULT_PREFERRED_WIDHT = 300;
+public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> implements TestToolsView.Presenter {
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.RightPanel";
-
-    private RightPanelView view;
 
     private ListGroupItemPresenter listGroupItemPresenter;
 
@@ -74,36 +63,17 @@ public class RightPanelPresenter implements RightPanelView.Presenter {
     protected ListGroupItemView selectedListGroupItemView;
     protected FieldItemView selectedFieldItemView;
 
-    public RightPanelPresenter() {
+    public TestToolsPresenter() {
         //Zero argument constructor for CDI
+        title = ScenarioSimulationEditorConstants.INSTANCE.testTools();
     }
 
     @Inject
-    public RightPanelPresenter(RightPanelView view, ListGroupItemPresenter listGroupItemPresenter) {
-        this.view = view;
+    public TestToolsPresenter(TestToolsView view, ListGroupItemPresenter listGroupItemPresenter) {
+        super(view);
         this.listGroupItemPresenter = listGroupItemPresenter;
         this.listGroupItemPresenter.init(this);
-    }
-
-    @PostConstruct
-    public void setup() {
-        view.init(this);
-        view.disableEditorTab();
-    }
-
-    @DefaultPosition
-    public Position getDefaultPosition() {
-        return CompassPosition.EAST;
-    }
-
-    @WorkbenchPartTitle
-    public String getTitle() {
-        return ScenarioSimulationEditorConstants.INSTANCE.testTools();
-    }
-
-    @WorkbenchPartView
-    public Widget asWidget() {
-        return view.asWidget();
+        title = ScenarioSimulationEditorConstants.INSTANCE.testTools();
     }
 
     @Override
