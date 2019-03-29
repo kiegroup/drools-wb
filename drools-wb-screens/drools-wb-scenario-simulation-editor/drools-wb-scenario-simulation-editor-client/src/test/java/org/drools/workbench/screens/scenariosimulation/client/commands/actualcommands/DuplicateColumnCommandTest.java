@@ -40,13 +40,13 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     public void setup() {
         super.setup();
         command = spy(new DuplicateColumnCommand());
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         assertTrue(command.isUndoable());
     }
 
     @Test
     public void internalExecute() {
-        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         command.execute(scenarioSimulationContextLocal);
         int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
         verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition), eq(gridColumnMock), eq(1));
