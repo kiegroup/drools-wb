@@ -163,7 +163,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         SimpleTypeImpl topLevelCollection = getSimpleCollection();
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(topLevelCollection, errorHolder, "fieldName");
-        assertEquals(1, errorHolder.getTopLevelCollection().size());
+        assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
         assertEquals("fieldName", errorHolder.getTopLevelCollection().get(0));

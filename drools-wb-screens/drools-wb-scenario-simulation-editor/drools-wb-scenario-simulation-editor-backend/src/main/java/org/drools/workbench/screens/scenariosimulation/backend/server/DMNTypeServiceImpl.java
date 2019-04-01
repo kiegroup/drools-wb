@@ -39,6 +39,9 @@ import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
+import org.kie.dmn.core.impl.BaseDMNTypeImpl;
+import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.uberfire.backend.vfs.Path;
 
 @Service
@@ -48,7 +51,7 @@ public class DMNTypeServiceImpl
         implements DMNTypeService {
 
     @Override
-    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath){
+    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
         DMNModel dmnModel = getDMNModel(path, dmnPath);
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
@@ -56,6 +59,7 @@ public class DMNTypeServiceImpl
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
             checkTypeSupport(type, errorHolder, input.getName());
+            visitCompositeType(type, false, errorHolder, input.getName());
             try {
                 visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
             } catch (WrongDMNTypeException e) {
@@ -65,6 +69,7 @@ public class DMNTypeServiceImpl
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
             checkTypeSupport(type, errorHolder, decision.getName());
+            visitCompositeType(type, false, errorHolder, decision.getName());
             try {
                 visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             } catch (WrongDMNTypeException e) {
@@ -133,7 +138,14 @@ public class DMNTypeServiceImpl
         if (type.isCollection()) {
             throw new WrongDMNTypeException();
         }
-        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        boolean isComposite = type.isComposite();
+        if (isComposite) {
+            Type feelType = ((BaseDMNTypeImpl) type).getFeelType();
+            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
+                isComposite = false;
+            }
+        }
+        return isComposite ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -207,9 +219,6 @@ public class DMNTypeServiceImpl
      * @param fullPropertyPath
      */
     protected void checkTypeSupport(DMNType type, ErrorHolder errorHolder, String fullPropertyPath) {
-        if (type.isCollection()) {
-            errorHolder.getTopLevelCollection().add(fullPropertyPath);
-        }
         visitCompositeType(type, false, errorHolder, fullPropertyPath);
     }
 
