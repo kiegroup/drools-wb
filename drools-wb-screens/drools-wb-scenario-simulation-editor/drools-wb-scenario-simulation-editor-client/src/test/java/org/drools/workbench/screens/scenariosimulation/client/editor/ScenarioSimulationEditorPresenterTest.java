@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -37,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.junit.Before;
@@ -69,6 +71,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.any;
@@ -140,6 +143,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioMenuItem importFromCsvMenuItemMock;
     @Mock
     private DataManagementStrategy dataManagementStrategyMock;
+    @Mock
+    private AnchorElement anchorElementMock;
 
     @Before
     public void setup() {
@@ -152,6 +157,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
         when(scenarioSimulationViewMock.getExportToCsvMenuItem()).thenReturn(exportToCsvMenuItemMock);
         when(scenarioSimulationViewMock.getImportFromCsvMenuItem()).thenReturn(importFromCsvMenuItemMock);
+        when(scenarioSimulationViewMock.getExportAnchorElement(anyString(), anyString())).thenReturn(anchorElementMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
@@ -171,8 +177,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
-                                                               // FIXME
-                                                               new CallerMock<>(null)) {
+                                                               new CallerMock<>(importExportServiceMock)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -413,6 +418,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
         verify(presenterSpy, times(1)).setOriginalHash(anyInt());
+    }
+
+    @Test
+    public void onExportToCsv() {
+        presenter.onExportToCsv();
+        verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), any());
+    }
+
+    @Test
+    public void onImportFromCsv() {
+        presenter.onImportFromCsv();
+        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), any(), any());
     }
 
     private void onClosePlaceStatusOpen() {

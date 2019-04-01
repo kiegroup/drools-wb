@@ -438,7 +438,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         notificationEvent.fire(new NotificationEvent(message, NotificationEvent.NotificationType.ERROR));
     }
 
-    // FIXME to test
     protected void registerHandlers() {
         handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(AppendRowEvent.TYPE, this));

@@ -128,7 +128,6 @@ public class ScenarioSimulationViewImpl
         return downloadMenuItem;
     }
 
-    // FIXME to test
     @Override
     public MenuItem getExportToCsvMenuItem() {
         if (exportToCsvMenuItem == null) {
@@ -138,7 +137,6 @@ public class ScenarioSimulationViewImpl
         return exportToCsvMenuItem;
     }
 
-    // FIXME to test
     @Override
     public MenuItem getImportFromCsvMenuItem() {
         if (importFromCsvMenuItem == null) {

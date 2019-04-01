@@ -29,6 +29,8 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
@@ -99,6 +101,8 @@ public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
+
+    private static final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
 
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
@@ -394,25 +398,20 @@ public class ScenarioSimulationEditorPresenter
         DomGlobal.window.open(downloadURL);
     }
 
-    // FIXME to test
     protected void onExportToCsv() {
         importExportService.call(getExportCallBack(),
                                  new DefaultErrorCallback())
                 .exportSimulation(ImportExportType.CSV, context.getStatus().getSimulation());
     }
 
-    public RemoteCallback<Object> getExportCallBack() {
+    protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
             final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + ".csv");
-            clickElement(exportAnchorElement);
+            exportAnchorElement.dispatchEvent(CLICK_EVENT);
+            exportAnchorElement.removeFromParent();
         };
     }
 
-    public static native void clickElement(AnchorElement elem) /*-{
-        elem.click();
-    }-*/;
-
-    // FIXME to test
     protected void onImportFromCsv() {
         importExportService.call(simulation -> eventBus.fireEvent(new ReloadSimulationEvent((Simulation) simulation)),
                                  new DefaultErrorCallback())

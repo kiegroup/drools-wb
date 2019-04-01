@@ -53,6 +53,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -64,6 +65,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RedoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RunSingleScenarioEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetGridCellValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetHeaderCellValueEventHandler;
@@ -126,6 +128,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration reloadRightPanelHandlerRegistrationMock;
     @Mock
+    private HandlerRegistration reloadSimulationHandlerRegistrationMock;
+    @Mock
     private HandlerRegistration runSingleScenarioHandlerRegistrationMock;
     @Mock
     private HandlerRegistration scenarioGridReloadHandlerRegistrationMock;
@@ -167,6 +171,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class))).thenReturn(redoEventHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadRightPanelHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ReloadSimulationEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadSimulationHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class))).thenReturn(runSingleScenarioHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class))).thenReturn(setGridCellValueEventHandlerMock);
@@ -477,6 +482,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(redoEventHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ReloadRightPanelEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(reloadRightPanelHandlerRegistrationMock));
+        verify(eventBusMock, times(1)).addHandler(eq(ReloadSimulationEvent.TYPE), isA(ReloadSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(reloadSimulationHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(runSingleScenarioHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
