@@ -166,7 +166,6 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
-        assertEquals("fieldName", errorHolder.getTopLevelCollection().get(0));
     }
 
     @Test
