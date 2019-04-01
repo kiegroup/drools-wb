@@ -15,10 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
@@ -27,7 +23,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.Unsupported
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.jboss.errai.common.client.api.Caller;
@@ -87,12 +82,6 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     private void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
         StringBuilder builder = new StringBuilder();
         boolean showError = false;
-        if (factModelTuple.getTopLevelCollectionError().size() > 0) {
-            showError = true;
-            builder.append("Top-level collections are not supported! Violated by:<br/>");
-            factModelTuple.getTopLevelCollectionError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
-            builder.append("<br/>");
-        }
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
             showError = true;
             builder.append("Nested collections are not supported! Violated by:<br/>");
@@ -105,21 +94,10 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
             factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
         }
         if (showError) {
-            factModelTuple.getTopLevelCollectionError().clear();
             factModelTuple.getMultipleNestedCollectionError().clear();
             factModelTuple.getMultipleNestedObjectError().clear();
             eventBus.fireEvent(new UnsupportedDMNEvent(builder.toString()));
         }
-    }
-
-    protected void filterFactModelTreeMap(SortedMap<String, FactModelTree> toFilter, Map<String, List<String>> alreadyAssignedProperties) {
-        toFilter.forEach((factName, factModelTree) -> {
-            List<String> toRemove = new ArrayList<>();
-            if (alreadyAssignedProperties.containsKey(factName)) {
-                toRemove.addAll(alreadyAssignedProperties.get(factName));
-            }
-            toRemove.forEach(factModelTree::removeSimpleProperty);
-        });
     }
 
     private ErrorCallback<Object> getErrorCallback(RightPanelView.Presenter rightPanelPresenter) {

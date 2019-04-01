@@ -141,6 +141,7 @@ public class DMNTypeServiceImpl
         boolean isComposite = type.isComposite();
         if (isComposite) {
             Type feelType = ((BaseDMNTypeImpl) type).getFeelType();
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
             if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
                 isComposite = false;
             }
@@ -270,13 +271,8 @@ public class DMNTypeServiceImpl
 
     static class ErrorHolder {
 
-        List<String> topLevelCollection = new ArrayList<>();
         List<String> multipleNestedObject = new ArrayList<>();
         List<String> multipleNestedCollection = new ArrayList<>();
-
-        public List<String> getTopLevelCollection() {
-            return topLevelCollection;
-        }
 
         public List<String> getMultipleNestedObject() {
             return multipleNestedObject;

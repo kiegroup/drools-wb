@@ -58,13 +58,6 @@ public class PropertyPresenter implements PropertyView.Presenter {
     public void editProperties(String itemId) {
         propertyViewMap.get(itemId)
                 .forEach(this::startEditPropertyView);
-//        for (String key : propertyViewMap.keySet()) {
-//            if (key.startsWith(itemId + ".")) {
-//                for (PropertyView propertyEditorView : propertyViewMap.get(key)) {
-//                    startEditPropertyView(propertyEditorView);
-//                }
-//            }
-//        }
     }
 
     @Override
@@ -88,16 +81,6 @@ public class PropertyPresenter implements PropertyView.Presenter {
                 });
         return toReturn;
     }
-//
-//    @Override
-//    public Map<String, Map<String, String>> getNestedProperties(String itemId) {
-//        Map<String, Map<String, String>> toReturn = new HashMap<>();
-//        propertyViewMap.keySet().stream().filter(key -> key.startsWith(itemId + ".")).forEach(nestedItemId -> {
-//            Map<String, String> nestedSimplePropertiesMap = getSimpleProperties(nestedItemId);
-//            toReturn.put(nestedItemId, nestedSimplePropertiesMap);
-//        });
-//        return toReturn;
-//    }
 
     @Override
     public LIElement getPropertyFields(String itemId, String propertyName, String propertyValue) {
@@ -143,12 +126,6 @@ public class PropertyPresenter implements PropertyView.Presenter {
         propertyViewMap.get(itemId)
                 .forEach(this::deletePropertyView);
         propertyViewMap.remove(itemId);
-//        for (String key : propertyViewMap.keySet()) {
-//            if (key.startsWith(itemId + ".")) {
-//                propertyViewMap.get(key).forEach(this::deletePropertyView);
-//                propertyViewMap.remove(key);
-//            }
-//        }
     }
 
     protected Map<String, String> stopEdit(String itemId, boolean toUpdate) {
@@ -157,13 +134,6 @@ public class PropertyPresenter implements PropertyView.Presenter {
                 .forEach(propertyEditorView -> {
                     stopEditPropertyView(toReturn, propertyEditorView, toUpdate);
                 });
-//        for (String key : propertyViewMap.keySet()) {
-//            if (key.startsWith(itemId + ".")) {
-//                for (PropertyView propertyEditorView : propertyViewMap.get(key)) {
-//                    stopEditPropertyView(toReturn, propertyEditorView, toUpdate);
-//                }
-//            }
-//        }
         return toReturn;
     }
 

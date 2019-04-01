@@ -163,7 +163,6 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         SimpleTypeImpl topLevelCollection = getSimpleCollection();
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(topLevelCollection, errorHolder, "fieldName");
-        assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
     }
@@ -174,7 +173,6 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         CompositeTypeImpl singleCompositeWithComplexCollection = getSingleCompositeWithNestedCollection();
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(singleCompositeWithComplexCollection, errorHolder, "fieldName");
-        assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(1, errorHolder.getMultipleNestedCollection().size());
         assertEquals("fieldName.phoneNumbers.numbers", errorHolder.getMultipleNestedCollection().get(0));
@@ -190,7 +188,6 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         person.addField(EXPANDABLE_PROPERTY_PHONENUMBERS, phoneNumberCompositeCollection);
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(person, errorHolder, "fieldName");
-        assertEquals(0, errorHolder.getTopLevelCollection().size());
         assertEquals(1, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
         assertEquals("fieldName.phoneNumbers.complexNumbers", errorHolder.getMultipleNestedObject().get(0));
