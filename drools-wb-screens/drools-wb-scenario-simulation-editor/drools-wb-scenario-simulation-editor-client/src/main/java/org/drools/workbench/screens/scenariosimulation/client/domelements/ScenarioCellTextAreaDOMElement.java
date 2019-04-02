@@ -115,7 +115,6 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
     public void flush(final String value) {
         String actualValue = value != null && value.isEmpty() ? null : value;
         if (scenarioGridCell != null) {
-            scenarioGridCell.setEditingMode(false);
             String cellValue = scenarioGridCell.getValue().getValue();
             if (Objects.equals(actualValue, cellValue)) {
                 return;
@@ -128,5 +127,13 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
         final int rowIndex = context.getRowIndex();
         final int columnIndex = context.getColumnIndex();
         ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetGridCellValueEvent(rowIndex, columnIndex, value));
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        if (scenarioGridCell != null) {
+            scenarioGridCell.setEditingMode(false);
+        }
     }
 }

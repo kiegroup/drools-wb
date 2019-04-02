@@ -45,7 +45,6 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
     @Override
     public void flush(final String value) {
         if (scenarioHeaderMetaData != null) {
-            scenarioHeaderMetaData.setEditingMode(false);
             if (Objects.equals(value, scenarioHeaderMetaData.getTitle())) {
                 return;
             }
@@ -59,11 +58,19 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
         try {
             boolean isInstanceHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.INSTANCE);
             boolean isPropertyHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY);
-            ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new SetHeaderCellValueEvent(rowIndex, columnIndex, value, isInstanceHeader, isPropertyHeader));
-            ((ScenarioGrid)gridWidget).getEventBus().fireEvent(new ReloadTestToolsEvent(true));
+            ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetHeaderCellValueEvent(rowIndex, columnIndex, value, isInstanceHeader, isPropertyHeader));
+            ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new ReloadTestToolsEvent(true));
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)
                                                        .append(") of column ").append(columnIndex).toString(), e);
+        }
+    }
+
+    @Override
+    public void detach() {
+        super.detach();
+        if (scenarioHeaderMetaData != null) {
+            scenarioHeaderMetaData.setEditingMode(false);
         }
     }
 }

@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.domelements;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.AbstractFactoriesTest;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -49,6 +50,7 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     @Before
     public void setup() {
         super.setup();
+        when(scenarioGridLayerMock.getDomElementContainer()).thenReturn(new AbsolutePanel());
         when(scenarioGridCellMock.getValue()).thenReturn(gridCellValueMock);
         scenarioCellTextAreaDOMElement = spy(new ScenarioCellTextAreaDOMElement(textAreaMock, scenarioGridLayerMock, scenarioGridMock) {
             {
@@ -62,7 +64,6 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushSameValue() {
         when(gridCellValueMock.getValue()).thenReturn(VALUE);
         scenarioCellTextAreaDOMElement.flush(VALUE);
-        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, never()).internalFlush(anyString());
     }
 
@@ -70,7 +71,6 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushDifferentValue() {
         when(gridCellValueMock.getValue()).thenReturn("TEST");
         scenarioCellTextAreaDOMElement.flush(VALUE);
-        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(VALUE));
     }
 
@@ -78,7 +78,6 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushNullString() {
         when(gridCellValueMock.getValue()).thenReturn("");
         scenarioCellTextAreaDOMElement.flush(null);
-        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(null));
     }
 
@@ -86,7 +85,6 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushEmptyStringToNullConversion() {
         when(gridCellValueMock.getValue()).thenReturn("");
         scenarioCellTextAreaDOMElement.flush("");
-        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         // empty strings are converted to null during flush
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(null));
     }
@@ -95,5 +93,12 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void internalFlush() {
         scenarioCellTextAreaDOMElement.internalFlush(VALUE);
         verify(eventBusMock, times(1)).fireEvent(isA(SetGridCellValueEvent.class));
+    }
+
+    @Test
+    public void testDetachCancelEditMode() {
+        scenarioCellTextAreaDOMElement.detach();
+
+        verify(scenarioGridCellMock).setEditingMode(false);
     }
 }

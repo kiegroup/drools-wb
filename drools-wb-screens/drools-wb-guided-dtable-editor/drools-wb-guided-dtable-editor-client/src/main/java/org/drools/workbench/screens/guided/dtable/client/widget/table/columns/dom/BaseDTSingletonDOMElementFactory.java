@@ -39,22 +39,4 @@ public abstract class BaseDTSingletonDOMElementFactory<T, W extends Widget, E ex
               gridLayer,
               gridWidget);
     }
-
-    @Override
-    public void destroyResources() {
-        if (e != null) {
-            e.detach();
-            widget = null;
-            e = null;
-        }
-    }
-
-    @Override
-    public void flush() {
-        if (e != null) {
-            if (widget != null) {
-                e.flush(getValue());
-            }
-        }
-    }
 }
