@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -63,7 +64,7 @@ public class DuplicateColumnCommand extends AbstractScenarioSimulationCommand {
         String placeHolder = ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle.toString(),
                                                                                       propertyTitle,
-                                                                                      context.getStatus().getColumnId(),
+                                                                                      String.valueOf(new Date().getTime()),
                                                                                       columnGroup,
                                                                                       factMappingType,
                                                                                       context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
