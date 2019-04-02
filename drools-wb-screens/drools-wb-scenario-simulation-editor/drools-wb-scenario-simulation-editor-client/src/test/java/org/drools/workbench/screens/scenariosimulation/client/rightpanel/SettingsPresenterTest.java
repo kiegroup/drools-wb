@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
@@ -182,7 +183,9 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     public void setRuleSettings() {
         settingsPresenter.setRuleSettings(simulationDescriptorMock);
         verify(settingsViewMock, times(1)).getDmnSettings();
-        verify(dmnSettingsMock, times(1)).removeFromParent();
+        verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(settingsViewMock, times(1)).getRuleSettings();
+        verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(settingsViewMock, times(1)).getDmoSession();
         verify(dmoSessionMock, times(1)).setValue(eq(DMO_SESSION));
         verify(settingsViewMock, times(1)).getKieBase();
@@ -197,7 +200,9 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     public void setDMNSettings() {
         settingsPresenter.setDMNSettings(simulationDescriptorMock);
         verify(settingsViewMock, times(1)).getRuleSettings();
-        verify(ruleSettingsMock, times(1)).removeFromParent();
+        verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(settingsViewMock, times(1)).getDmnSettings();
+        verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(settingsViewMock, times(1)).getDmnFilePath();
         verify(dmnFilePathMock, times(1)).setInnerText(eq(DMN_FILE_PATH));
         verify(settingsViewMock, times(1)).getDmnName();

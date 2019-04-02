@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import org.mockito.Mock;
 
 import static org.mockito.Mockito.when;
@@ -53,6 +54,10 @@ abstract class AbstractSettingsTest {
     @Mock
     protected DivElement ruleSettingsMock;
 
+
+    @Mock
+    protected Style ruleSettingsStyleMock;
+
     @Mock
     protected InputElement kieSessionMock;
 
@@ -67,6 +72,9 @@ abstract class AbstractSettingsTest {
 
     @Mock
     protected DivElement dmnSettingsMock;
+
+    @Mock
+    protected Style dmnSettingsStyleMock;
 
     @Mock
     protected LabelElement dmnModelLabelMock;
@@ -103,5 +111,7 @@ abstract class AbstractSettingsTest {
         when(dmnFilePathMock.getInnerText()).thenReturn(DMN_FILE_PATH);
         when(dmnNamespaceMock.getInnerText()).thenReturn(DMN_NAMESPACE);
         when(dmnNameMock.getInnerText()).thenReturn(DMN_NAME);
+        when(ruleSettingsMock.getStyle()).thenReturn(ruleSettingsStyleMock);
+        when(dmnSettingsMock.getStyle()).thenReturn(dmnSettingsStyleMock);
     }
 }

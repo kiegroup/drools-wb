@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.Style;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
@@ -89,7 +90,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
-        view.getDmnSettings().removeFromParent();
+        view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
+        view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmoSession().setValue(simulationDescriptor.getDmoSession());
         view.getKieBase().setValue(simulationDescriptor.getKieBase());
         view.getKieSession().setValue(simulationDescriptor.getKieSession());
@@ -97,7 +99,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
-        view.getRuleSettings().removeFromParent();
+        view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
+        view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
         view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
         view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());

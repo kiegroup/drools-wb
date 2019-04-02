@@ -262,7 +262,7 @@ public class ScenarioSimulationEditorPresenter
     public void reloadTestTools(boolean disable) {
         populateTestToolsCommand.execute();
         if (disable) {
-            getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onDisableEditorTab);
+            getTestToolsPresenter(getCurrentTestToolsPlaceRequest()).ifPresent(TestToolsView.Presenter::onDisableEditorTab);
         }
     }
 
@@ -405,7 +405,7 @@ public class ScenarioSimulationEditorPresenter
     protected void populateTestTools() {
         // Execute only when DatamanagementStrategy already set and  TestToolsPresenter is actually available
         if (dataManagementStrategy != null) {
-            getTestToolsPresenter().ifPresent(this::setTestTools);
+            getTestToolsPresenter(getCurrentTestToolsPlaceRequest()).ifPresent(this::setTestTools);
         }
     }
 
@@ -416,7 +416,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void clearTestToolsStatus() {
-        getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onClearStatus);
+        getTestToolsPresenter(getCurrentTestToolsPlaceRequest()).ifPresent(TestToolsView.Presenter::onClearStatus);
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
@@ -511,6 +511,17 @@ public class ScenarioSimulationEditorPresenter
         return () -> this.save("Save");
     }
 
+    /**
+     * Returns a <code>PlaceRequest</code> for the <b>test tools status</b> relative to the current
+     * instance of <code>ScenarioSimulationEditorPresenter</code>
+     * @return
+     */
+    protected PlaceRequest getCurrentTestToolsPlaceRequest() {
+        PlaceRequest toReturn = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
+        toReturn.addParameter(SCESIM_PATH, path.toString());
+        return toReturn;
+    }
+
     private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
@@ -519,8 +530,7 @@ public class ScenarioSimulationEditorPresenter
         return this::getModelSuccessCallbackMethod;
     }
 
-    private Optional<TestToolsView> getTestToolsView() {
-        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
+    private Optional<TestToolsView> getTestToolsView(PlaceRequest placeRequest) {
         if (PlaceStatus.OPEN.equals(placeManager.getStatus(placeRequest))) {
             final AbstractWorkbenchActivity testToolsActivity = (AbstractWorkbenchActivity) placeManager.getActivity(placeRequest);
             return Optional.of((TestToolsView) testToolsActivity.getWidget());
@@ -529,8 +539,9 @@ public class ScenarioSimulationEditorPresenter
         }
     }
 
-    private Optional<TestToolsView.Presenter> getTestToolsPresenter() {
-        return getTestToolsView().isPresent() ? Optional.of(getTestToolsView().get().getPresenter()) : Optional.empty();
+    private Optional<TestToolsView.Presenter> getTestToolsPresenter(PlaceRequest placeRequest) {
+        final Optional<TestToolsView> testToolsView = getTestToolsView(placeRequest);
+        return testToolsView.map(TestToolsView::getPresenter);
     }
 
     private Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
