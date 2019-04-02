@@ -52,11 +52,17 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         super.initMenu();
     }
 
-    public void show(final int mx, final int my, int columnIndex, String group, boolean asProperty) {
+    public void show(final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
+        if(!showDuplicateInstance && duplicateColumnLIElement != null) {
+            removeMenuItem(duplicateColumnLIElement);
+            duplicateColumnLIElement = null;
+        }
         super.show(mx, my);
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(columnIndex, true, asProperty));
         mapEvent(deleteColumnLIElement, new DeleteColumnEvent(columnIndex, group));
-        mapEvent(duplicateColumnLIElement, new DuplicateColumnEvent(columnIndex));
+        if (duplicateColumnLIElement != null) {
+            mapEvent(duplicateColumnLIElement, new DuplicateColumnEvent(columnIndex));
+        }
     }
 }
