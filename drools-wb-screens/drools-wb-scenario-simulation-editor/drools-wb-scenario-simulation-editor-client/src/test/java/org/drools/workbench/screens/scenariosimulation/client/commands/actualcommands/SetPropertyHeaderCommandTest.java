@@ -39,7 +39,6 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -54,6 +53,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
+
+    final protected String FULL_CLASSNAME_CREATED = FULL_PACKAGE + "." + VALUE;
 
     @Mock
     private List<GridColumn<?>> gridColumnsMock;
@@ -132,7 +133,8 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
         verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(VALUE), eq(LIST_CLASS_NAME), anyBoolean());
-        verify((SetPropertyHeaderCommand) command, times(1)).navigateComplexObject(eq(factModelTreeMock), any(List.class), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
+        List<String> elements = Arrays.asList((FULL_CLASSNAME_CREATED).split("\\."));
+        verify((SetPropertyHeaderCommand) command, times(1)).navigateComplexObject(eq(factModelTreeMock), eq(elements), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
     }
 
     @Test
