@@ -101,7 +101,7 @@ public class DMNTypeServiceImpl
      * @throws WrongDMNTypeException
      */
     protected FactModelTree createTopLevelFactModelTree(String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        return type.isCollection() ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType);
+        return isToBeManagedAsCollection((BaseDMNTypeImpl) type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType);
     }
 
     /**
@@ -114,7 +114,7 @@ public class DMNTypeServiceImpl
      * @throws WrongDMNTypeException if <code>DMNType.isCollection()</code> != <code>true</code>
      */
     protected FactModelTree createFactModelTreeForCollection(Map<String, List<String>> genericTypeInfoMap, String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        if (!type.isCollection()) {
+        if (!type.isCollection() && !isToBeManagedAsCollection((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
         populateGeneric(genericTypeInfoMap, "value", type.getName());
@@ -135,18 +135,10 @@ public class DMNTypeServiceImpl
      * @throws WrongDMNTypeException if <code>DMNType.isCollection()</code> == <code>true</code>
      */
     protected FactModelTree createFactModelTreeForNoCollection(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        if (type.isCollection()) {
+        if (type.isCollection() && isToBeManagedAsCollection((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
-        boolean isComposite = type.isComposite();
-        if (isComposite) {
-            Type feelType = ((BaseDMNTypeImpl) type).getFeelType();
-            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
-                isComposite = false;
-            }
-        }
-        return isComposite ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return isToBeManagedAsComposite((BaseDMNTypeImpl) type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -189,14 +181,14 @@ public class DMNTypeServiceImpl
      * @throws WrongDMNTypeException if <code>DMNType.isComposite()</code> != <code>true</code>
      */
     protected FactModelTree createFactModelTreeForComposite(Map<String, List<String>> genericTypeInfoMap, String name, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        if (!type.isComposite()) {
+        if (!type.isComposite() && !isToBeManagedAsComposite((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
         Map<String, String> simpleFields = new HashMap<>();
         FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
-            if (entry.getValue().isCollection()) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
+            if (isToBeManagedAsCollection((BaseDMNTypeImpl) entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
                 FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
                 simpleFields.put(entry.getKey(), List.class.getCanonicalName());
                 genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo("value"));
@@ -221,6 +213,40 @@ public class DMNTypeServiceImpl
      */
     protected void checkTypeSupport(DMNType type, ErrorHolder errorHolder, String fullPropertyPath) {
         visitCompositeType(type, false, errorHolder, fullPropertyPath);
+    }
+
+    /**
+     * Return <code>true</code> if the given <code>BaseDMNTypeImpl</code> has to be managed as <b>collection</b>
+     * @param type
+     * @return <code>true</code> if <code>BaseDMNTypeImpl.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
+     */
+    private boolean isToBeManagedAsCollection(BaseDMNTypeImpl type) {
+        boolean toReturn = type.isCollection();
+        if (toReturn) {
+            Type feelType = type.getFeelType();
+            // BuiltInType.UNKNOWN is a special case: it is instantiated as collection but it should be considered as single for editing
+            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.UNKNOWN)) {
+                toReturn = false;
+            }
+        }
+        return toReturn;
+    }
+
+    /**
+     * Return <code>true</code> if the given <code>BaseDMNTypeImpl</code> has to be managed as <b>composite</b>
+     * @param type
+     * @return <code>true</code> if <code>BaseDMNTypeImpl.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
+     */
+    private boolean isToBeManagedAsComposite(BaseDMNTypeImpl type) {
+        boolean toReturn = type.isComposite();
+        if (toReturn) {
+            Type feelType = type.getFeelType();
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
+            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
+                toReturn = false;
+            }
+        }
+        return toReturn;
     }
 
     /**
