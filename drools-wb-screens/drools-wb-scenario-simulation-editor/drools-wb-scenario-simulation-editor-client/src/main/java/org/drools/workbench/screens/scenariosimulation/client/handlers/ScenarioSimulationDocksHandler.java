@@ -18,6 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,13 +33,14 @@ import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.kie.workbench.common.workbench.client.resources.i18n.DefaultWorkbenchConstants;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 @ApplicationScoped
 public class ScenarioSimulationDocksHandler
         extends AbstractWorkbenchDocksHandler {
 
-    public static final String SCESIM_PATH = "scesimpath";
+    public static final String SCESIMEDITOR_ID = "scesimeditorid";
 
     @Inject
     private AuthoringWorkbenchDocks authoringWorkbenchDocks;
@@ -92,9 +95,21 @@ public class ScenarioSimulationDocksHandler
         authoringWorkbenchDocks.expandAuthoringDock(reportDock);
     }
 
-    public void setScesimPath(String scesimPath) {
-        settingsDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
-        toolsDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
-        cheatSheetDock.getPlaceRequest().addParameter(SCESIM_PATH, scesimPath);
+    public void setScesimEditorId(String scesimEditorId) {
+        settingsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
+        toolsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
+        cheatSheetDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
+    }
+
+    public Optional<UberfireDock> getSettingsDock(PlaceRequest placeRequest) {
+        return Objects.equals(settingsDock.getPlaceRequest(), placeRequest) ? Optional.of(settingsDock) : Optional.empty();
+    }
+
+    public Optional<UberfireDock> getToolsDock(PlaceRequest placeRequest) {
+        return Objects.equals(toolsDock.getPlaceRequest(), placeRequest) ? Optional.of(toolsDock) : Optional.empty();
+    }
+
+    public Optional<UberfireDock> getCheatSheetDock(PlaceRequest placeRequest) {
+        return Objects.equals(cheatSheetDock.getPlaceRequest(), placeRequest) ? Optional.of(cheatSheetDock) : Optional.empty();
     }
 }

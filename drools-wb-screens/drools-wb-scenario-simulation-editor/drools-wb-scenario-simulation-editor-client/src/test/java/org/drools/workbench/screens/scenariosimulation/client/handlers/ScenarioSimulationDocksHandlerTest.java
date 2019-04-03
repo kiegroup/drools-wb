@@ -25,7 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 
-import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIM_PATH;
+import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -85,12 +85,12 @@ public class ScenarioSimulationDocksHandlerTest {
         final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.index];
         final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.index];
         String TEST_PATH = "TEST_PATH";
-        scenarioSimulationDocksHandler.setScesimPath(TEST_PATH);
-        assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
-        assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
-        assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
-        assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
-        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIM_PATH));
-        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIM_PATH, "null"));
+        scenarioSimulationDocksHandler.setScesimEditorId(TEST_PATH);
+        assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
+        assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
+        assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
+        assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
+        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
+        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
     }
 }
