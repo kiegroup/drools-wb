@@ -45,7 +45,8 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         String value = context.getStatus().getValue();
-        String aliasName = value.split("\\.")[0];
+        final List<String> valuesElements = Arrays.asList(value.split("\\."));
+        String aliasName = valuesElements.get(0);
         String canonicalClassName = getFullPackage(context) + aliasName;
         FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, aliasName, canonicalClassName);
         String className = factIdentifier.getClassName();
@@ -68,14 +69,14 @@ public class SetPropertyHeaderCommand extends AbstractSetHeaderCommand {
                                                 propertyClass, context.getStatus().isKeepData());
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
             final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
-            final List<String> elements = Arrays.asList(className.split("\\."));
-            final FactModelTree nestedFactModelTree = navigateComplexObject(dataObjectFieldsMap.get(elements.get(elements.size() - 1)),
-                                                                            elements,
+            final List<String> classNameElements = Arrays.asList(className.split("\\."));
+            final FactModelTree nestedFactModelTree = navigateComplexObject(dataObjectFieldsMap.get(classNameElements.get(classNameElements.size() - 1)),
+                                                                            classNameElements,
                                                                             dataObjectFieldsMap);
 
             selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
             final FactMapping factMappingByIndex = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-            factMappingByIndex.setGenericTypes(nestedFactModelTree.getGenericTypeInfo(elements.get(elements.size() - 1)));
+            factMappingByIndex.setGenericTypes(nestedFactModelTree.getGenericTypeInfo(valuesElements.get(valuesElements.size() - 1)));
         } else {
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         }
