@@ -121,6 +121,10 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationView view;
     private Command populateRightPanelCommand;
 
+    private TestRunnerReportingScreen testRunnerReportingScreen;
+
+    private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
+
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
     }
@@ -384,8 +388,11 @@ public class ScenarioSimulationEditorPresenter
         };
     }
 
+    // FIXME to test
     protected void onImportFromCsv() {
-        importExportService.call(simulation -> eventBus.fireEvent(new ReloadSimulationEvent((Simulation) simulation)),
+        importExportService.call(simulation -> {
+                                     eventBus.fireEvent(new ReloadSimulationEvent((Simulation) simulation));
+                                 },
                                  new DefaultErrorCallback())
                 .importSimulation(ImportExportType.CSV, "", context.getStatus().getSimulation());
     }
