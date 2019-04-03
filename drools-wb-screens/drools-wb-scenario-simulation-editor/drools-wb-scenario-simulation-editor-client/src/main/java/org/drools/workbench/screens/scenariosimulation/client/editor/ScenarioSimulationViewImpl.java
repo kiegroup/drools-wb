@@ -58,8 +58,6 @@ public class ScenarioSimulationViewImpl
 
     private ScenarioMenuItem exportToCsvMenuItem;
 
-    private ScenarioMenuItem importFromCsvMenuItem;
-
     /**
      * This method also set <code>ScenarioGridLayer</code> taken the instance from given <code>ScenarioGridPanel</code>
      * @param scenarioGridPanel
@@ -135,15 +133,6 @@ public class ScenarioSimulationViewImpl
                                                        () -> presenter.onExportToCsv());
         }
         return exportToCsvMenuItem;
-    }
-
-    @Override
-    public MenuItem getImportFromCsvMenuItem() {
-        if (importFromCsvMenuItem == null) {
-            importFromCsvMenuItem = new ScenarioMenuItem("Import",
-                                                         () -> presenter.onImportFromCsv());
-        }
-        return importFromCsvMenuItem;
     }
 
     @Override

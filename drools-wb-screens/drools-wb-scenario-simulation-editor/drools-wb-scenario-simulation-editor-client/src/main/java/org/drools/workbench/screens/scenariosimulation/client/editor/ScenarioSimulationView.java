@@ -48,8 +48,6 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     MenuItem getExportToCsvMenuItem();
 
-    MenuItem getImportFromCsvMenuItem();
-
     AnchorElement getExportAnchorElement(String filename, String text);
 
     void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);

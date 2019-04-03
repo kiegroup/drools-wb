@@ -38,7 +38,6 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ReloadSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
@@ -331,7 +330,6 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getExportToCsvMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(view.getImportFromCsvMenuItem());
         view.getUndoMenuItem().setEnabled(false);
         view.getRedoMenuItem().setEnabled(false);
         super.makeMenuBar();
@@ -386,15 +384,6 @@ public class ScenarioSimulationEditorPresenter
             exportAnchorElement.dispatchEvent(CLICK_EVENT);
             exportAnchorElement.removeFromParent();
         };
-    }
-
-    // FIXME to test
-    protected void onImportFromCsv() {
-        importExportService.call(simulation -> {
-                                     eventBus.fireEvent(new ReloadSimulationEvent((Simulation) simulation));
-                                 },
-                                 new DefaultErrorCallback())
-                .importSimulation(ImportExportType.CSV, "", context.getStatus().getSimulation());
     }
 
     protected void populateRightPanel() {

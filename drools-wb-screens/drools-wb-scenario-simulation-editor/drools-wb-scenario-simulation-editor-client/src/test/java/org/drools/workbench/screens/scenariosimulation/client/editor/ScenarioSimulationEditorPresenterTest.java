@@ -143,8 +143,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioMenuItem exportToCsvMenuItemMock;
     @Mock
-    private ScenarioMenuItem importFromCsvMenuItemMock;
-    @Mock
     private DataManagementStrategy dataManagementStrategyMock;
     @Mock
     private DefaultEditorDock docksMock;
@@ -163,7 +161,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
         when(scenarioSimulationViewMock.getExportToCsvMenuItem()).thenReturn(exportToCsvMenuItemMock);
-        when(scenarioSimulationViewMock.getImportFromCsvMenuItem()).thenReturn(importFromCsvMenuItemMock);
         when(scenarioSimulationViewMock.getExportAnchorElement(anyString(), anyString())).thenReturn(anchorElementMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
@@ -310,7 +307,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(exportToCsvMenuItemMock);
-        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(importFromCsvMenuItemMock);
         verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
@@ -440,12 +436,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onExportToCsv() {
         presenter.onExportToCsv();
         verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), any());
-    }
-
-    @Test
-    public void onImportFromCsv() {
-        presenter.onImportFromCsv();
-        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), any(), any());
     }
 
     private void onClosePlaceStatusOpen() {
