@@ -54,8 +54,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    final protected String FULL_CLASSNAME_CREATED = FULL_PACKAGE + "." + VALUE;
-
     @Mock
     private List<GridColumn<?>> gridColumnsMock;
     @Mock
@@ -133,7 +131,7 @@ public class SetPropertyHeaderCommandTest extends AbstractScenarioSimulationComm
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
         verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(VALUE), eq(LIST_CLASS_NAME), anyBoolean());
-        List<String> elements = Arrays.asList((FULL_CLASSNAME_CREATED).split("\\."));
+        List<String> elements = Arrays.asList((FULL_CLASS_NAME).split("\\."));
         verify((SetPropertyHeaderCommand) command, times(1)).navigateComplexObject(eq(factModelTreeMock), eq(elements), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
     }
 
