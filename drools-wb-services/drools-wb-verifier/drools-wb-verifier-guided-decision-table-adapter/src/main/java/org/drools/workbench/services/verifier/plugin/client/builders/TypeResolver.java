@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.services.verifier.plugin.client.builders;
 
-package org.drools.workbench.screens.scenariosimulation.backend.server.expression;
+import java.util.Optional;
 
-import java.util.List;
+public interface TypeResolver {
 
-public interface ExpressionEvaluator {
-
-    boolean evaluateUnaryExpression(Object rawExpression, Object resultValue, Class<?> resultClass);
-
-    Object evaluateLiteralExpression(String className, List<String> genericClasses, Object raw);
+    String getType(final Optional<String> operatorFromCell)
+            throws ValueResolveException;
 }
