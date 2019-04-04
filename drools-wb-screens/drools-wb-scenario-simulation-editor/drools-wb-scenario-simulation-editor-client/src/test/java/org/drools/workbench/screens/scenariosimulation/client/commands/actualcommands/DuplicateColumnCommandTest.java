@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,15 +50,17 @@ public class DuplicateColumnCommandTest extends AbstractScenarioSimulationComman
     public void internalExecute() {
         command.execute(scenarioSimulationContextLocal);
         int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
-        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition), eq(gridColumnMock), eq(1));
-        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition + 1), eq(gridColumnMock), eq(1));
+        FactIdentifier factIdentifier = new FactIdentifier(scenarioSimulationContextLocal.getStatus().getColumnId(), factIdentifierMock.getClassName());
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition), eq(gridColumnMock), eq(1), eq(factIdentifier));
+        verify((DuplicateColumnCommand) command, times(1)).duplicateSingleColumn(eq(scenarioSimulationContextLocal), eq(columnPosition + 1), eq(gridColumnMock), eq(1), eq(factIdentifier));
     }
 
     @Test
     public void duplicateSingleColumn() {
         int instancesCount = 1;
         int columnPosition = scenarioSimulationContextLocal.getModel().getInstanceLimits(scenarioSimulationContextLocal.getModel().getColumns().indexOf(gridColumnMock)).getMaxRowIndex() + 1;
-        ((DuplicateColumnCommand) command).duplicateSingleColumn(scenarioSimulationContextLocal, columnPosition, gridColumnMock, instancesCount);
+        FactIdentifier factIdentifier = new FactIdentifier(scenarioSimulationContextLocal.getStatus().getColumnId(), factIdentifierMock.getClassName());
+        ((DuplicateColumnCommand) command).duplicateSingleColumn(scenarioSimulationContextLocal, columnPosition, gridColumnMock, instancesCount, factIdentifier);
         verify(command, times(1)).getScenarioGridColumnLocal(eq(gridColumnMock.getInformationHeaderMetaData().getTitle() + DuplicateColumnCommand.COPY_LABEL + "_" + instancesCount),
                                                              anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType),
                                                              eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest),

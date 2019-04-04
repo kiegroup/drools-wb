@@ -228,10 +228,7 @@ public class ScenarioGridModel extends BaseGridData {
         try {
             FactMapping originalFactMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
             String alias = duplicatedColumn.getInformationHeaderMetaData().getTitle();
-            FactIdentifier originalFactIdentifier = originalColumn.getFactIdentifier();
-            FactIdentifier duplicatedFactIdentifier = new FactIdentifier(duplicatedColumn.getInformationHeaderMetaData().getColumnId(), originalFactIdentifier.getClassName());
-            simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedFactIdentifier);
-            duplicatedColumn.setFactIdentifier(duplicatedFactIdentifier);
+            simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedColumn.getFactIdentifier());
 
             super.insertColumn(newColumnIndex, duplicatedColumn);
 
