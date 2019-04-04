@@ -337,8 +337,6 @@ public abstract class AbstractScenarioSimulationTest {
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(VALUE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(COLUMN_GROUP);
         when(propertyHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
-        when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
-        when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
         when(propertyHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(propertyHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
