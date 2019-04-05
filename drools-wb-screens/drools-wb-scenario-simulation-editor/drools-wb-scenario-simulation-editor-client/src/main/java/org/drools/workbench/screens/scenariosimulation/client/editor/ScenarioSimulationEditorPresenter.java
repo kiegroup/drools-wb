@@ -27,6 +27,9 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
@@ -49,8 +52,11 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.jboss.errai.bus.client.api.base.DefaultErrorCallback;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
@@ -92,6 +98,8 @@ public class ScenarioSimulationEditorPresenter
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
 
+    private static final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
+
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
 
@@ -109,6 +117,7 @@ public class ScenarioSimulationEditorPresenter
     protected FileUploadPopupPresenter fileUploadPopupPresenter;
     private Caller<ScenarioSimulationService> service;
     private Caller<DMNTypeService> dmnTypeService;
+    private Caller<ImportExportService> importExportService;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateRightPanelCommand;
@@ -131,11 +140,14 @@ public class ScenarioSimulationEditorPresenter
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final Caller<DMNTypeService> dmnTypeService,
+                                             final Caller<ImportExportService> importExportService) {
+                                             final Caller<DMNTypeService> dmnTypeService,
                                              final FileUploadPopupPresenter fileUploadPopupPresenter) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.dmnTypeService = dmnTypeService;
+        this.importExportService = importExportService;
         this.view = (ScenarioSimulationView) baseView;
         this.service = service;
         this.type = type;
@@ -326,6 +338,7 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getExportToCsvMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getImportMenuItem());
         view.getUndoMenuItem().setEnabled(false);
         view.getRedoMenuItem().setEnabled(false);
@@ -371,6 +384,20 @@ public class ScenarioSimulationEditorPresenter
 
     protected void open(final String downloadURL) {
         DomGlobal.window.open(downloadURL);
+    }
+
+    protected void onExportToCsv() {
+        importExportService.call(getExportCallBack(),
+                                 new DefaultErrorCallback())
+                .exportSimulation(ImportExportType.CSV, context.getStatus().getSimulation());
+    }
+
+    protected RemoteCallback<Object> getExportCallBack() {
+        return rawResult -> {
+            final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + ".csv");
+            exportAnchorElement.dispatchEvent(CLICK_EVENT);
+            exportAnchorElement.removeFromParent();
+        };
     }
 
     protected void populateRightPanel() {
