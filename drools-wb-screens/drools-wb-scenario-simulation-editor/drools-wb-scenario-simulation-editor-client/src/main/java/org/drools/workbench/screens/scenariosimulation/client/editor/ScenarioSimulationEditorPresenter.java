@@ -38,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -105,6 +106,7 @@ public class ScenarioSimulationEditorPresenter
     private ImportsWidgetPresenter importsWidget;
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected ScenarioSimulationModel model;
+    protected FileUploadPopupPresenter fileUploadPopupPresenter;
     private Caller<ScenarioSimulationService> service;
     private Caller<DMNTypeService> dmnTypeService;
     private ScenarioSimulationResourceType type;
@@ -128,7 +130,8 @@ public class ScenarioSimulationEditorPresenter
                                              final PlaceManager placeManager,
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
-                                             final Caller<DMNTypeService> dmnTypeService) {
+                                             final Caller<DMNTypeService> dmnTypeService,
+                                             final FileUploadPopupPresenter fileUploadPopupPresenter) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -141,6 +144,7 @@ public class ScenarioSimulationEditorPresenter
         this.placeManager = placeManager;
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
+        this.fileUploadPopupPresenter = fileUploadPopupPresenter;
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
@@ -283,6 +287,10 @@ public class ScenarioSimulationEditorPresenter
         return dataManagementStrategy;
     }
 
+    public void importFile(String path) {
+        GWT.log("importFile " + path);
+    }
+
     protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
         return this::refreshModelContent;
     }
@@ -318,6 +326,7 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(view.getImportMenuItem());
         view.getUndoMenuItem().setEnabled(false);
         view.getRedoMenuItem().setEnabled(false);
         super.makeMenuBar();
@@ -354,6 +363,10 @@ public class ScenarioSimulationEditorPresenter
     protected void onDownload(final Supplier<Path> pathSupplier) {
         final String downloadURL = getFileDownloadURL(pathSupplier);
         open(downloadURL);
+    }
+
+    protected void onImport() {
+        fileUploadPopupPresenter.show(this);
     }
 
     protected void open(final String downloadURL) {
@@ -443,7 +456,7 @@ public class ScenarioSimulationEditorPresenter
         CustomBusyPopup.close();
     }
 
-    private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
+    protected String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
 

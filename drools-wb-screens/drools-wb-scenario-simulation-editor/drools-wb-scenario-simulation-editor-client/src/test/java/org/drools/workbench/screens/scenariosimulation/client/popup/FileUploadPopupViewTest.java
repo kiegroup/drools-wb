@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,40 +18,26 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.mockito.Mockito.spy;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class ConfirmPopupViewTest extends AbstractScenarioConfirmationPopupViewTest {
+public class FileUploadPopupViewTest extends AbstractScenarioPopupViewTest {
 
-
-    private final String MAIN_TEXT = "MAIN_TEXT";
 
     @Before
     public void setup() {
         super.commonSetup();
-        popupView = spy(new ConfirmPopupView() {
+        popupView = spy(new FileUploadPopupView() {
             {
                 this.mainTitle = mainTitleMock;
-                this.mainQuestion = mainQuestionMock;
-                this.text1 = text1Mock;
-                this.textQuestion = textQuestionMock;
                 this.cancelButton = cancelButtonMock;
-                this.okButton = okDeleteButtonMock;
+                this.okButton = okButtonMock;
                 this.modal = modalMock;
                 this.translationService = translationServiceMock;
             }
         });
-    }
-
-    @Test
-    public void show() {
-        ((ConfirmPopupView) popupView).show(MAIN_TITLE_TEXT,
-                                            MAIN_TEXT);
-        verifyShow(MAIN_TITLE_TEXT,
-                   null, MAIN_TEXT, null);
     }
 
 }

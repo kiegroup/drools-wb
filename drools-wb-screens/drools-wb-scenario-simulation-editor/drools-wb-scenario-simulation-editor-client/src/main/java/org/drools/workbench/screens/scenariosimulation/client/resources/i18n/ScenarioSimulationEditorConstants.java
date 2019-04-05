@@ -237,4 +237,9 @@ public interface ScenarioSimulationEditorConstants
     String removeCollectionWarningText();
 
     String collectionError();
+
+    String selectImportFile();
+
+    String importLabel();
+
 }

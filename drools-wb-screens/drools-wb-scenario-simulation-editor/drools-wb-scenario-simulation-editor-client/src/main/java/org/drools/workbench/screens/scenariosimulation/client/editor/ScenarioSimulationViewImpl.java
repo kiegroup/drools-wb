@@ -53,6 +53,8 @@ public class ScenarioSimulationViewImpl
 
     private ScenarioMenuItem downloadMenuItem;
 
+    private ScenarioMenuItem importMenuItem;
+
     /**
      * This method also set <code>ScenarioGridLayer</code> taken the instance from given <code>ScenarioGridPanel</code>
      * @param scenarioGridPanel
@@ -119,6 +121,15 @@ public class ScenarioSimulationViewImpl
                                                     () -> presenter.onDownload(pathSupplier));
         }
         return downloadMenuItem;
+    }
+
+    @Override
+    public MenuItem getImportMenuItem() {
+        if (importMenuItem == null) {
+            importMenuItem = new ScenarioMenuItem("importLabel",
+                                                  () -> presenter.onImport());
+        }
+        return importMenuItem;
     }
 
     @Override

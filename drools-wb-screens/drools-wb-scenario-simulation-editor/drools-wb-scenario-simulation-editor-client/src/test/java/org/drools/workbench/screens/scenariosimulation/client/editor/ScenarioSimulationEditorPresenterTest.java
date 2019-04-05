@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -29,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -143,6 +145,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private DefaultEditorDock docksMock;
     @Mock
     private PerspectiveManager perspectiveManagerMock;
+    @Mock
+    private FileUploadPopupPresenter fileUploadPopupPresenterMock;
 
     @Before
     public void setup() {
@@ -172,7 +176,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                placeManagerMock,
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
-                                                               new CallerMock<>(dmnTypeServiceMock)) {
+                                                               new CallerMock<>(dmnTypeServiceMock),
+                                                               fileUploadPopupPresenterMock) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -191,6 +196,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.model = scenarioSimulationModelMock;
                 this.docks = docksMock;
                 this.perspectiveManager = perspectiveManagerMock;
+                this.fileUploadPopupPresenter = fileUploadPopupPresenterMock;
             }
 
             @Override
@@ -209,6 +215,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             @Override
             protected void clearRightPanelStatus() {
+
+            }
+
+            @Override
+            protected void open(String downloadURL) {
 
             }
 
@@ -400,6 +411,23 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void isDirty() {
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenThrow(new RuntimeException());
         assertFalse(presenter.isDirty());
+    }
+
+
+    @Test
+    public void onDownload() {
+        String DOWNLOAD_URL = "DOWNLOAD_URL";
+        Supplier<Path> pathSupplierMock = mock(Supplier.class);
+        doReturn(DOWNLOAD_URL).when(presenterSpy).getFileDownloadURL(eq(pathSupplierMock));
+        presenterSpy.onDownload(pathSupplierMock);
+        verify(presenterSpy, times(1)).getFileDownloadURL(eq(pathSupplierMock));
+        verify(presenterSpy, times(1)).open(eq(DOWNLOAD_URL));
+    }
+
+    @Test
+    public void onImport() {
+        presenterSpy.onImport();
+        verify(fileUploadPopupPresenterMock, times(1)).show(eq(presenterSpy));
     }
 
     @Test
