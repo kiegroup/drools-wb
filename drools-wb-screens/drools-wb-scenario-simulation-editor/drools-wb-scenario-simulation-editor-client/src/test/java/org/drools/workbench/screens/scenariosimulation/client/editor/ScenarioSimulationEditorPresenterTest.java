@@ -319,7 +319,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void showDocks() {
         presenterSpy.showDocks();
         verify(scenarioSimulationDocksHandlerMock).addDocks();
-        verify(scenarioSimulationDocksHandlerMock).setScesimEditorId(eq(String.valueOf(presenterSpy.currentId)));
+        verify(scenarioSimulationDocksHandlerMock).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
         verify(presenterSpy).expandToolsDock();
         verify(presenterSpy, times(1)).registerTestToolsCallback();
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
@@ -551,7 +551,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
         when(placeRequestMock.getParameter(eq(SCESIMEDITOR_ID), eq(""))).thenReturn("UNKNOWN");
         assertFalse(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
-        doReturn(String.valueOf(presenter.currentId)).when(placeRequestMock).getParameter(eq(SCESIMEDITOR_ID), eq(""));
+        doReturn(String.valueOf(presenter.scenarioPresenterId)).when(placeRequestMock).getParameter(eq(SCESIMEDITOR_ID), eq(""));
         assertTrue(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
     }
 
