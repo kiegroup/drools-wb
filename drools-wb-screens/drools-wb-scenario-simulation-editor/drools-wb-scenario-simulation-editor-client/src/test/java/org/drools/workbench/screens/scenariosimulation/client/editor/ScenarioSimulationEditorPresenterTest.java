@@ -16,11 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -37,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.junit.Before;
@@ -357,7 +356,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(new ScenarioSimulationModelContent(modelLocal,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(scenarioMapMock);
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(scenarioWithIndexMock);
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
         assertFalse(modelLocal.getSimulation().equals(simulationMock));
@@ -383,12 +382,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void refreshModelContent() {
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
-        Set<Map.Entry<Integer, Scenario>> entries = new HashSet<>();
+        List<ScenarioWithIndex> entries = new ArrayList<>();
         int scenarioNumber = 1;
         int scenarioIndex = scenarioNumber - 1;
-        entries.add(new AbstractMap.SimpleEntry<>(scenarioNumber, new Scenario()));
-        when(scenarioMapMock.entrySet()).thenReturn(entries);
-        presenter.refreshModelContent(scenarioMapMock);
+        entries.add(new ScenarioWithIndex(scenarioNumber, new Scenario()));
+        presenter.refreshModelContent(entries);
         verify(simulationMock, times(1)).replaceScenario(eq(scenarioIndex), any());
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));

@@ -15,9 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.assertj.core.api.Assertions;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
@@ -26,6 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.Sce
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.guvnor.common.services.shared.test.TestResultMessage;
@@ -109,20 +109,20 @@ public class ScenarioRunnerServiceImplTest {
         scenarioRunnerService.runTest("test",
                                       mock(Path.class),
                                       simulation.getSimulationDescriptor(),
-                                      simulation.getScenarioMap());
+                                      simulation.getScenarioWithIndex());
 
         verify(defaultTestResultMessageEventMock).fire(any());
     }
 
     @Test
-    public void runTestWithScenarioMap() throws Exception {
+    public void runTestWithScenarios() throws Exception {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
         simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
-        Map<Integer, Scenario> scenarioMap = new HashMap<>();
+        List<ScenarioWithIndex> scenarios = new ArrayList<>();
 
-        scenarioRunnerService.runTest("test", mock(Path.class), simulationDescriptor, scenarioMap);
+        scenarioRunnerService.runTest("test", mock(Path.class), simulationDescriptor, scenarios);
 
         verify(defaultTestResultMessageEventMock).fire(any());
     }
@@ -131,7 +131,7 @@ public class ScenarioRunnerServiceImplTest {
     public void runAllTestsSpecifiedEvent() throws Exception {
         final EventSourceMock customTestResultEvent = mock(EventSourceMock.class);
 
-        scenarioRunnerService.setRunnerSupplier((kieContainer, simulationDescriptor, scenarioMap) -> runnerMock);
+        scenarioRunnerService.setRunnerSupplier((kieContainer, simulationDescriptor, scenarios) -> runnerMock);
 
         scenarioRunnerService.runAllTests("test", mock(Path.class), customTestResultEvent);
 
@@ -150,15 +150,15 @@ public class ScenarioRunnerServiceImplTest {
         String errorMessage = "Test Error";
 
         scenarioRunnerService.setRunnerSupplier(
-                (kieContainer, simulationDescriptor, scenarioMap) ->
-                        new RuleScenarioRunner(kieContainer, simulationDescriptor, scenarioMap, "") {
+                (kieContainer, simulationDescriptor, scenarios) ->
+                        new RuleScenarioRunner(kieContainer, simulationDescriptor, scenarios, "") {
 
                             @Override
                             protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
                                 throw new ScenarioException(errorMessage);
                             }
                         });
-        scenarioRunnerService.runTest("test", mock(Path.class), simulation.getSimulationDescriptor(), simulation.getScenarioMap());
+        scenarioRunnerService.runTest("test", mock(Path.class), simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex());
         verify(defaultTestResultMessageEventMock, times(1)).fire(testResultMessageArgumentCaptor.capture());
         TestResultMessage value = testResultMessageArgumentCaptor.getValue();
         List<org.guvnor.common.services.shared.test.Failure> failures = value.getFailures();

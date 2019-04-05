@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
+package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.kie.api.runtime.KieContainer;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-@FunctionalInterface
-public interface ScenarioRunnerProvider {
+/**
+ * Transport object that contains run result data and report
+ */
+@Portable
+public class SimulationRunResult {
 
-    AbstractScenarioRunner create(KieContainer kieContainer,
-                                  SimulationDescriptor simulationDescriptor,
-                                  List<ScenarioWithIndex> scenarios);
+    protected List<ScenarioWithIndex> scenarioWithIndex;
+
+
+
+
+
+
+
 }

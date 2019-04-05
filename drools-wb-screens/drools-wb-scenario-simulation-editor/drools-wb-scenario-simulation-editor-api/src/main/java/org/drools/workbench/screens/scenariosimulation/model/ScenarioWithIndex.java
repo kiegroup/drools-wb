@@ -13,18 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
+package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.List;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.kie.api.runtime.KieContainer;
+/**
+ * Tuple with Scenario and its index
+ */
+@Portable
+public class ScenarioWithIndex {
 
-@FunctionalInterface
-public interface ScenarioRunnerProvider {
+    protected Scenario scenario;
+    protected int index;
 
-    AbstractScenarioRunner create(KieContainer kieContainer,
-                                  SimulationDescriptor simulationDescriptor,
-                                  List<ScenarioWithIndex> scenarios);
+    public ScenarioWithIndex() {
+        // CDI
+    }
+
+    public ScenarioWithIndex(int index, Scenario scenario) {
+        this.scenario = scenario;
+        this.index = index;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

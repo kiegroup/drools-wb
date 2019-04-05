@@ -15,9 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.service;
 
-import java.util.Map;
+import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.guvnor.common.services.shared.test.TestService;
 import org.uberfire.backend.vfs.Path;
@@ -25,8 +25,8 @@ import org.uberfire.backend.vfs.Path;
 public interface ScenarioRunnerService
         extends TestService {
 
-    Map<Integer, Scenario> runTest(final String identifier,
-                                   final Path path,
-                                   final SimulationDescriptor simulationDescriptor,
-                                   final Map<Integer, Scenario> scenarioMap);
+    List<ScenarioWithIndex> runTest(final String identifier,
+                                    final Path path,
+                                    final SimulationDescriptor simulationDescriptor,
+                                    final List<ScenarioWithIndex> scenarios);
 }

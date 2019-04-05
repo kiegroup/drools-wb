@@ -16,11 +16,11 @@
 
 package org.drools.workbench.screens.scenariosimulation.service;
 
-import java.util.Map;
+import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.bus.server.annotations.Remote;
@@ -42,9 +42,9 @@ public interface ScenarioSimulationService
 
     ScenarioSimulationModelContent loadContent(final Path path);
 
-    Map<Integer, Scenario> runScenario(Path path,
-                                       SimulationDescriptor simulationDescriptor,
-                                       Map<Integer, Scenario> scenarioMap);
+    List<ScenarioWithIndex> runScenario(Path path,
+                                        SimulationDescriptor simulationDescriptor,
+                                        List<ScenarioWithIndex> scenarios);
 
     Path create(final Path context,
                 final String fileName,

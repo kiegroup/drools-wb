@@ -17,16 +17,17 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.expression.ExpressionEvaluator;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResultMetadata;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
@@ -42,19 +43,20 @@ public abstract class AbstractScenarioRunner extends Runner {
     protected final Description desc;
     protected final KieContainer kieContainer;
     protected final SimulationDescriptor simulationDescriptor;
-    protected Map<Integer, Scenario> scenarios;
+    protected List<ScenarioWithIndex> scenarios;
     protected String fileName;
+    protected SimulationRunMetadataBuilder simulationRunMetadataBuilder;
 
     public AbstractScenarioRunner(KieContainer kieContainer,
                                   Simulation simulation,
                                   String fileName,
                                   Function<ClassLoader, ExpressionEvaluator> expressionEvaluatorFactory) {
-        this(kieContainer, simulation.getSimulationDescriptor(), simulation.getScenarioMap(), fileName, expressionEvaluatorFactory);
+        this(kieContainer, simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex(), fileName, expressionEvaluatorFactory);
     }
 
     public AbstractScenarioRunner(KieContainer kieContainer,
                                   SimulationDescriptor simulationDescriptor,
-                                  Map<Integer, Scenario> scenarios,
+                                  List<ScenarioWithIndex> scenarios,
                                   String fileName,
                                   Function<ClassLoader, ExpressionEvaluator> expressionEvaluatorFactory) {
         this.kieContainer = kieContainer;
@@ -64,16 +66,18 @@ public abstract class AbstractScenarioRunner extends Runner {
         this.desc = getDescriptionForSimulation(getFileName(), simulationDescriptor, scenarios);
         this.classLoader = kieContainer.getClassLoader();
         this.expressionEvaluatorFactory = expressionEvaluatorFactory;
+        this.simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
     }
 
     @Override
     public void run(RunNotifier notifier) {
 
         notifier.fireTestStarted(getDescription());
-        for (Map.Entry<Integer, Scenario> integerScenarioEntry : scenarios.entrySet()) {
-            Scenario scenario = integerScenarioEntry.getValue();
-            Integer index = integerScenarioEntry.getKey();
-            singleRunScenario(index, scenario, notifier);
+        for (ScenarioWithIndex scenarioWithIndex : scenarios) {
+            Scenario scenario = scenarioWithIndex.getScenario();
+            Integer index = scenarioWithIndex.getIndex();
+            singleRunScenario(index, scenario, notifier)
+                    .ifPresent(simulationRunMetadataBuilder::addScenarioResultMetadata);
         }
         notifier.fireTestStarted(getDescription());
     }
@@ -83,7 +87,7 @@ public abstract class AbstractScenarioRunner extends Runner {
         return this.desc;
     }
 
-    protected List<ScenarioResult> singleRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
+    protected Optional<ScenarioResultMetadata> singleRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
         ScenarioRunnerData scenarioRunnerData = new ScenarioRunnerData();
 
         Description descriptionForScenario = getDescriptionForScenario(getFileName(), index, scenario);
@@ -104,7 +108,7 @@ public abstract class AbstractScenarioRunner extends Runner {
 
         runNotifier.fireTestFinished(descriptionForScenario);
 
-        return scenarioRunnerData.getResults();
+        return scenarioRunnerData.getMetadata();
     }
 
     protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
@@ -141,13 +145,24 @@ public abstract class AbstractScenarioRunner extends Runner {
         return simulationDescriptor;
     }
 
-    public static Description getDescriptionForSimulation(Optional<String> filename, Simulation simulation) {
-        return getDescriptionForSimulation(filename, simulation.getSimulationDescriptor(), simulation.getScenarioMap());
+    // FIXME
+    public void resetResult() {
+        this.simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
     }
 
-    public static Description getDescriptionForSimulation(Optional<String> filename, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarios) {
+    // FIXME
+    public SimulationRunMetadata getResultMetadata() {
+        return this.simulationRunMetadataBuilder.build();
+    }
+
+    public static Description getDescriptionForSimulation(Optional<String> filename, Simulation simulation) {
+        return getDescriptionForSimulation(filename, simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex());
+    }
+
+    public static Description getDescriptionForSimulation(Optional<String> filename, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> scenarios) {
         Description suiteDescription = Description.createSuiteDescription("Test Scenarios (Preview) tests");
-        scenarios.forEach((index, scenario) -> suiteDescription.addChild(getDescriptionForScenario(filename, index, scenario)));
+        scenarios.forEach(scenarioWithIndex -> suiteDescription.addChild(
+                getDescriptionForScenario(filename, scenarioWithIndex.getIndex(), scenarioWithIndex.getScenario())));
         return suiteDescription;
     }
 

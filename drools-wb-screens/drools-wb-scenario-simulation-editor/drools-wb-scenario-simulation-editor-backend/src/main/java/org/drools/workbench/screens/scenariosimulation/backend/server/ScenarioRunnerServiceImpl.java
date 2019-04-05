@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -26,7 +25,7 @@ import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
@@ -75,13 +74,13 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
     }
 
     @Override
-    public Map<Integer, Scenario> runTest(final String identifier,
-                                          final Path path,
-                                          final SimulationDescriptor simulationDescriptor,
-                                          final Map<Integer, Scenario> scenarioMap) {
+    public List<ScenarioWithIndex> runTest(final String identifier,
+                                           final Path path,
+                                           final SimulationDescriptor simulationDescriptor,
+                                           final List<ScenarioWithIndex> scenarios) {
         KieContainer kieContainer = getKieContainer(path);
         Runner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
-                .create(kieContainer, simulationDescriptor, scenarioMap);
+                .create(kieContainer, simulationDescriptor, scenarios);
 
         final List<Failure> failures = new ArrayList<>();
 
@@ -96,7 +95,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                         result.getRunTime(),
                         failures));
 
-        return scenarioMap;
+        return scenarios;
     }
 
     public ScenarioRunnerProvider getOrCreateRunnerSupplier(SimulationDescriptor simulationDescriptor) {

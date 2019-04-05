@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
 
@@ -50,6 +49,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -121,7 +121,7 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioSimulationModel scenarioSimulationModelMock;
     @Mock
-    protected Map<Integer, Scenario> scenarioMapMock;
+    protected List<ScenarioWithIndex> scenarioWithIndexMock;
     @Mock
     protected DataManagementStrategy dataManagementStrategyMock;
     @Mock
@@ -175,7 +175,8 @@ public abstract class AbstractScenarioSimulationTest {
     @Before
     public void setup() {
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
-        when(simulationMock.getScenarioMap()).thenReturn(scenarioMapMock);
+        when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexMock);
+        when(scenarioWithIndexMock.iterator()).thenReturn(new ArrayList<ScenarioWithIndex>().iterator());
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,

@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,9 +42,9 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPa
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
@@ -246,16 +245,10 @@ public class ScenarioSimulationEditorPresenter
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
-        Map<Integer, Scenario> scenarioMap = indexOfScenarioToRun.stream().collect(
-                Collectors.toMap(
-                        index -> index + 1,
-                        simulation::getScenarioByIndex
-                )
-        );
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulation.getSimulationDescriptor(),
-                             scenarioMap);
+                             simulation.getScenarioWithIndex());
     }
 
     public void onUndo() {
@@ -283,18 +276,18 @@ public class ScenarioSimulationEditorPresenter
         return dataManagementStrategy;
     }
 
-    protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
+    protected RemoteCallback<List<ScenarioWithIndex>> getRefreshModelCallback() {
         return this::refreshModelContent;
     }
 
-    protected void refreshModelContent(Map<Integer, Scenario> newData) {
+    protected void refreshModelContent(List<ScenarioWithIndex> newData) {
         if (this.model == null) {
             return;
         }
         Simulation simulation = this.model.getSimulation();
-        for (Map.Entry<Integer, Scenario> entry : newData.entrySet()) {
-            int index = entry.getKey() - 1;
-            simulation.replaceScenario(index, entry.getValue());
+        for (ScenarioWithIndex scenarioWithIndex : newData) {
+            int index = scenarioWithIndex.getIndex() - 1;
+            simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);

@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.mod
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioExpect;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioGiven;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResultMetadata;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioRunnerData;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
@@ -57,6 +58,8 @@ public abstract class AbstractRunnerHelper {
                                                         scenarioRunnerData,
                                                         expressionEvaluator,
                                                         simulationDescriptor);
+
+        scenarioRunnerData.setMetadata(extractResultMetadata(requestContext, scenarioRunnerData));
 
         verifyConditions(simulationDescriptor,
                          scenarioRunnerData,
@@ -202,6 +205,11 @@ public abstract class AbstractRunnerHelper {
         return new ScenarioResult(factIdentifier, expectedResult, resultValue.getResult()).setResult(resultValue.isSatisfied());
     }
 
+    protected ScenarioResultMetadata extractResultMetadata(RequestContext requestContext,
+                                                           ScenarioRunnerData scenarioRunnerData) {
+        return null;
+    }
+
     public abstract RequestContext executeScenario(KieContainer kieContainer,
                                                    ScenarioRunnerData scenarioRunnerData,
                                                    ExpressionEvaluator expressionEvaluator,
@@ -212,5 +220,7 @@ public abstract class AbstractRunnerHelper {
                                           ExpressionEvaluator expressionEvaluator,
                                           RequestContext requestContext);
 
-    public abstract Object createObject(String className, Map<List<String>, Object> params, ClassLoader classLoader);
+    public abstract Object createObject(String className,
+                                        Map<List<String>, Object> params,
+                                        ClassLoader classLoader);
 }
