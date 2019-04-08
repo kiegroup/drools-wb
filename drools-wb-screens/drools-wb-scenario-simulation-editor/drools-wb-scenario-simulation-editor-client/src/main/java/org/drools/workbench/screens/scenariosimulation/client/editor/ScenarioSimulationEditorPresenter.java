@@ -37,11 +37,11 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
-import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
@@ -114,7 +114,6 @@ public class ScenarioSimulationEditorPresenter
     private ImportsWidgetPresenter importsWidget;
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected ScenarioSimulationModel model;
-    protected FileUploadPopupPresenter fileUploadPopupPresenter;
     private Caller<ScenarioSimulationService> service;
     private Caller<DMNTypeService> dmnTypeService;
     private Caller<ImportExportService> importExportService;
@@ -140,8 +139,7 @@ public class ScenarioSimulationEditorPresenter
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final Caller<DMNTypeService> dmnTypeService,
-                                             final Caller<ImportExportService> importExportService,
-                                             final FileUploadPopupPresenter fileUploadPopupPresenter) {
+                                             final Caller<ImportExportService> importExportService) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -155,7 +153,6 @@ public class ScenarioSimulationEditorPresenter
         this.placeManager = placeManager;
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
-        this.fileUploadPopupPresenter = fileUploadPopupPresenter;
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
@@ -384,7 +381,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void showImportDialog() {
-        fileUploadPopupPresenter.show(this);
+        eventBus.fireEvent(new ImportEvent());
     }
 
     protected void onExportToCsv() {

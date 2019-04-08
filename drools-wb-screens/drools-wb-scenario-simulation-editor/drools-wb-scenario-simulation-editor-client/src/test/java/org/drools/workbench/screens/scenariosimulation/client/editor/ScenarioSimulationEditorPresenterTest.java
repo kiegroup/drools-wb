@@ -27,11 +27,11 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -151,8 +151,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private PerspectiveManager perspectiveManagerMock;
     @Mock
-    private FileUploadPopupPresenter fileUploadPopupPresenterMock;
-    @Mock
     private AnchorElement anchorElementMock;
 
     @Before
@@ -186,8 +184,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
-                                                               new CallerMock<>(importExportServiceMock),
-                                                               fileUploadPopupPresenterMock) {
+                                                               new CallerMock<>(importExportServiceMock)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -206,7 +203,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.model = scenarioSimulationModelMock;
                 this.docks = docksMock;
                 this.perspectiveManager = perspectiveManagerMock;
-                this.fileUploadPopupPresenter = fileUploadPopupPresenterMock;
             }
 
             @Override
@@ -432,6 +428,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.onDownload(pathSupplierMock);
         verify(presenterSpy, times(1)).getFileDownloadURL(eq(pathSupplierMock));
         verify(presenterSpy, times(1)).open(eq(DOWNLOAD_URL));
+    }
+
+    @Test
+    public void showImportDialog() {
+        presenter.showImportDialog();
+        verify(eventBusMock, times(1)).fireEvent(isA(ImportEvent.class));
     }
 
     @Test

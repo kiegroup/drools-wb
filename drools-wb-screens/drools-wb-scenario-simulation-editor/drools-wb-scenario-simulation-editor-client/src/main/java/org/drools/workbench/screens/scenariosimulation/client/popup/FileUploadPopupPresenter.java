@@ -19,9 +19,9 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+import org.uberfire.mvp.Command;
 
 @Dependent
 public class FileUploadPopupPresenter implements FileUploadPopup.Presenter {
@@ -29,18 +29,23 @@ public class FileUploadPopupPresenter implements FileUploadPopup.Presenter {
     @Inject
     protected ViewsProvider viewsProvider;
 
-    protected ScenarioSimulationEditorPresenter scenarioSimulationPresenter;
+    protected FileUploadPopup fileUploadPopup;
 
     @Override
-    public void show(ScenarioSimulationEditorPresenter scenarioSimulationPresenter) {
-        this.scenarioSimulationPresenter = scenarioSimulationPresenter;
-        final FileUploadPopup fileUploadPopup = viewsProvider.getFileUploadPopup();
-        fileUploadPopup.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(), () -> executeImport(fileUploadPopup));
+    public void show(final String mainTitleText,
+                     final String okButtonText,
+                     final Command okCommand) {
+        fileUploadPopup = viewsProvider.getFileUploadPopup();
+        fileUploadPopup.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(), okCommand);
     }
 
     @Override
-    public void executeImport(FileUploadPopup fileUploadPopup) {
-        scenarioSimulationPresenter.onImport(fileUploadPopup.getFileContents());
+    public void hide() {
+
     }
 
+    @Override
+    public String getFileContents() {
+        return fileUploadPopup.getFileContents();
+    }
 }

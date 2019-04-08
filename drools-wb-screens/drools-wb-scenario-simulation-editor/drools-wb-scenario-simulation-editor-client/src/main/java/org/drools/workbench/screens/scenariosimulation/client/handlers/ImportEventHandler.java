@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import org.jboss.errai.common.client.dom.HTMLElement;
+import com.google.gwt.event.shared.EventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 
-public interface FileUploadPopup extends AbstractScenarioPopup {
-
-    interface Presenter extends AbstractScenarioPopup.Presenter {
-
-        String getFileContents();
-    }
-
-    HTMLElement getElement();
-
-    String getFileContents();
-
-    /**
-     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-     * already showing.
-     */
-    void hide();
+/**
+ * <code>EventHandler</code> for {@link ImportEvent}
+ */
+public interface ImportEventHandler extends EventHandler {
+    void onEvent(ImportEvent event);
 }

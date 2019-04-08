@@ -26,8 +26,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.mvp.Command;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,24 +55,23 @@ public class FileUploadPopupPresenterTest {
         fileUploadPopupPresenter = spy(new FileUploadPopupPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
+                this.fileUploadPopup = fileUploadPopupViewMock;
             }
         });
     }
 
     @Test
     public void show() {
-        fileUploadPopupPresenter.show(scenarioSimulationPresenterMock);
-        verify(fileUploadPopupViewMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()), eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()), isA(Command.class));
+        Command okCommand = mock(Command.class);
+        fileUploadPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(), okCommand);
+        verify(fileUploadPopupViewMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()), eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()), eq(okCommand));
     }
 
-
     @Test
-    public void executeImport() {
+    public void getFileContents() {
         String FILE_CONTENTS = "FILE_CONTENTS";
-        fileUploadPopupPresenter.scenarioSimulationPresenter = scenarioSimulationPresenterMock;
         when(fileUploadPopupViewMock.getFileContents()).thenReturn(FILE_CONTENTS);
-        fileUploadPopupPresenter.executeImport(fileUploadPopupViewMock);
+        assertEquals(FILE_CONTENTS, fileUploadPopupPresenter.getFileContents());
         verify(fileUploadPopupViewMock, times(1)).getFileContents();
-        verify(scenarioSimulationPresenterMock, times(1)).onImport(eq(FILE_CONTENTS));
     }
 }

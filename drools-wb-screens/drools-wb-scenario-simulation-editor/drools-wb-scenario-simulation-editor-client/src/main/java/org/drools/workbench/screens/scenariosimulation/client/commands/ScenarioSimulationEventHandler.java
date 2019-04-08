@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableRightPanelCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ImportCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
@@ -53,6 +54,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
@@ -75,6 +77,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRow
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DisableRightPanelEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.EnableRightPanelEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ImportEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.PrependColumnEventHandler;
@@ -92,6 +95,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEvent
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -112,6 +116,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        DisableRightPanelEventHandler,
                                                        DuplicateRowEventHandler,
                                                        EnableRightPanelEventHandler,
+                                                       ImportEventHandler,
                                                        InsertColumnEventHandler,
                                                        InsertRowEventHandler,
                                                        PrependColumnEventHandler,
@@ -131,6 +136,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     protected DeletePopupPresenter deletePopupPresenter;
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
     protected ConfirmPopupPresenter confirmPopupPresenter;
+    protected FileUploadPopupPresenter fileUploadPopupPresenter;
 
     protected EventBus eventBus;
 
@@ -163,6 +169,10 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     public void setConfirmPopupPresenter(ConfirmPopupPresenter confirmPopupPresenter) {
         this.confirmPopupPresenter = confirmPopupPresenter;
+    }
+
+    public void setFileUploadPopupPresenter(FileUploadPopupPresenter fileUploadPopupPresenter) {
+        this.fileUploadPopupPresenter = fileUploadPopupPresenter;
     }
 
     public void setNotificationEvent(Event<NotificationEvent> notificationEvent) {
@@ -228,6 +238,17 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setPropertyName(event.getPropertyName());
         context.getStatus().setNotEqualsSearch(event.isNotEqualsSearch());
         commonExecution(context, new EnableRightPanelCommand());
+    }
+
+    @Override
+    public void onEvent(ImportEvent event) {
+        org.uberfire.mvp.Command okImportCommand = () -> {
+            ImportCommand importCommand = new ImportCommand();
+            importCommand.setFileContent(fileUploadPopupPresenter.getFileContents());
+            commonExecution(context, importCommand);
+        };
+        fileUploadPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(),
+                                      okImportCommand);
     }
 
     @Override
@@ -435,6 +456,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DisableRightPanelEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(EnableRightPanelEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ImportEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(PrependColumnEvent.TYPE, this));
