@@ -16,36 +16,31 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.uberfire.mvp.Command;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
-@ApplicationScoped
+@Dependent
 public class FileUploadPopupPresenter implements FileUploadPopup.Presenter {
 
     @Inject
-    protected FileUploadPopup fileUploadPopupView;
+    protected ViewsProvider viewsProvider;
+
+    protected ScenarioSimulationEditorPresenter scenarioSimulationPresenter;
 
     @Override
-    public void show(ScenarioSimulationEditorPresenter currentPresenter) {
-        fileUploadPopupView.show(getImportCommand(currentPresenter));
+    public void show(ScenarioSimulationEditorPresenter scenarioSimulationPresenter) {
+        this.scenarioSimulationPresenter = scenarioSimulationPresenter;
+        final FileUploadPopup fileUploadPopup = viewsProvider.getFileUploadPopup();
+        fileUploadPopup.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(), () -> executeImport(fileUploadPopup));
     }
 
     @Override
-    public void hide() {
-        fileUploadPopupView.hide();
+    public void executeImport(FileUploadPopup fileUploadPopup) {
+        scenarioSimulationPresenter.onImport(fileUploadPopup.getFileContents());
     }
 
-    protected Command getImportCommand(ScenarioSimulationEditorPresenter currentPresenter) {
-        return () -> importCommandMethod(currentPresenter);
-    }
-
-    protected void importCommandMethod(ScenarioSimulationEditorPresenter currentPresenter) {
-        final String fileName = fileUploadPopupView.getFileName();
-        if (fileName != null && !fileName.isEmpty()) {
-            currentPresenter.importFile(fileName);
-        }
-    }
 }

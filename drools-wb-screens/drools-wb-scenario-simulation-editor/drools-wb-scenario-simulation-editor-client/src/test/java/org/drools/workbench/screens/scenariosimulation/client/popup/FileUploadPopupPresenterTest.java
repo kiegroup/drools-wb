@@ -18,6 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,7 @@ import org.mockito.Mock;
 import org.uberfire.mvp.Command;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -37,32 +39,39 @@ public class FileUploadPopupPresenterTest {
     @Mock
     private FileUploadPopupView fileUploadPopupViewMock;
 
-    private FileUploadPopupPresenter fileUploadPopupPresenter;
+    @Mock
+    private ScenarioSimulationEditorPresenter scenarioSimulationPresenterMock;
 
     @Mock
-    private ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
+    private ViewsProvider viewsProviderMock;
+
+
+    private FileUploadPopupPresenter fileUploadPopupPresenter;
 
     @Before
     public void setup() {
+        when(viewsProviderMock.getFileUploadPopup()).thenReturn(fileUploadPopupViewMock);
         fileUploadPopupPresenter = spy(new FileUploadPopupPresenter() {
             {
-                this.fileUploadPopupView = fileUploadPopupViewMock;
+                this.viewsProvider = viewsProviderMock;
             }
         });
     }
 
     @Test
     public void show() {
-        Command importCommandMock = mock(Command.class);
-        when(fileUploadPopupPresenter.getImportCommand(eq(scenarioSimulationEditorPresenterMock))).thenReturn(importCommandMock);
-        fileUploadPopupPresenter.show(scenarioSimulationEditorPresenterMock);
-        verify(fileUploadPopupPresenter, times(1)).getImportCommand(eq(scenarioSimulationEditorPresenterMock));
-        verify(fileUploadPopupViewMock, times(1)).show(importCommandMock);
+        fileUploadPopupPresenter.show(scenarioSimulationPresenterMock);
+        verify(fileUploadPopupViewMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()), eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()), isA(Command.class));
     }
 
+
     @Test
-    public void hide() {
-        fileUploadPopupPresenter.hide();
-        verify(fileUploadPopupViewMock, times(1)).hide();
+    public void executeImport() {
+        String FILE_CONTENTS = "FILE_CONTENTS";
+        fileUploadPopupPresenter.scenarioSimulationPresenter = scenarioSimulationPresenterMock;
+        when(fileUploadPopupViewMock.getFileContents()).thenReturn(FILE_CONTENTS);
+        fileUploadPopupPresenter.executeImport(fileUploadPopupViewMock);
+        verify(fileUploadPopupViewMock, times(1)).getFileContents();
+        verify(scenarioSimulationPresenterMock, times(1)).onImport(eq(FILE_CONTENTS));
     }
 }

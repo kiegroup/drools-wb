@@ -140,8 +140,7 @@ public class ScenarioSimulationEditorPresenter
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final Caller<DMNTypeService> dmnTypeService,
-                                             final Caller<ImportExportService> importExportService) {
-                                             final Caller<DMNTypeService> dmnTypeService,
+                                             final Caller<ImportExportService> importExportService,
                                              final FileUploadPopupPresenter fileUploadPopupPresenter) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
@@ -299,8 +298,10 @@ public class ScenarioSimulationEditorPresenter
         return dataManagementStrategy;
     }
 
-    public void importFile(String path) {
-        GWT.log("importFile " + path);
+    public void onImport(String fileContents) {
+        importExportService.call(getImportCallBack(),
+                                 new DefaultErrorCallback())
+                .importSimulation(ImportExportType.CSV, fileContents, context.getStatus().getSimulation());
     }
 
     protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
@@ -378,12 +379,12 @@ public class ScenarioSimulationEditorPresenter
         open(downloadURL);
     }
 
-    protected void onImport() {
-        fileUploadPopupPresenter.show(this);
-    }
-
     protected void open(final String downloadURL) {
         DomGlobal.window.open(downloadURL);
+    }
+
+    protected void showImportDialog() {
+        fileUploadPopupPresenter.show(this);
     }
 
     protected void onExportToCsv() {
@@ -399,6 +400,16 @@ public class ScenarioSimulationEditorPresenter
             exportAnchorElement.removeFromParent();
         };
     }
+
+    protected RemoteCallback<Simulation> getImportCallBack() {
+       return simulation -> {
+           model.setSimulation(simulation);
+           view.setContent(model.getSimulation());
+           context.getStatus().setSimulation(model.getSimulation());
+           view.onResize();
+       };
+    }
+
 
     protected void populateRightPanel() {
         // Execute only when DatamanagementStrategy already set and  RightPanelPresenter is actually available

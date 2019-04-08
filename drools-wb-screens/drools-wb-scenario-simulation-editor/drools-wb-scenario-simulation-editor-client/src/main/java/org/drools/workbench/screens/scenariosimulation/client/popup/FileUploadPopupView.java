@@ -15,22 +15,22 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import javax.enterprise.context.ApplicationScoped;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.mvp.Command;
 
-@ApplicationScoped
 @Templated
 public class FileUploadPopupView extends AbstractScenarioPopupView implements FileUploadPopup {
+
+    private static final String FAKEPATH = "c:\\fakepath\\";
 
     @DataField("file")
     protected InputElement file = Document.get().createHiddenInputElement();
@@ -41,24 +41,49 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
     @DataField("chooseButton")
     protected SpanElement chooseButton = Document.get().createSpanElement();
 
-    @Override
-    public void show(Command importCommand) {
-        super.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(),
-                   ScenarioSimulationEditorConstants.INSTANCE.importLabel(), importCommand);
+    protected static String fileContents;
+
+    public static void fileLoaded(String fileContents) {
+        FileUploadPopupView.fileContents = fileContents;
     }
 
     @Override
-    public String getFileName() {
-        return fileText.getValue();
+    public void show(final String mainTitleText,
+                     final String okButtonText,
+                     final Command okCommand) {
+        fileContents = "";
+        fileText.setValue("");
+        super.show(mainTitleText,
+                   okButtonText, okCommand);
+    }
+
+    @Override
+    public String getFileContents() {
+        return fileContents;
     }
 
     @EventHandler("chooseButton")
     public void onChooseButtonClickEvent(ClickEvent clickEvent) {
-        ((InputElement) file.cast()).click();
+        file.click();
     }
 
     @EventHandler("file")
     public void onFileChangeEvent(ChangeEvent event) {
-        fileText.setValue(file.getValue());
+        GWT.log("onFileChangeEvent");
+        String fileName = file.getValue();
+        if (fileName.toLowerCase().startsWith(FAKEPATH)) {
+            fileName = fileName.substring(FAKEPATH.length());
+        }
+        fileText.setValue(fileName);
+        JavaScriptObject files = file.getPropertyJSO("files");
+        readTextFile(files);
     }
+
+    public static native void readTextFile(JavaScriptObject files)/*-{
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            @org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupView::fileLoaded(*)(reader.result);
+        }
+        return reader.readAsText(files[0]);
+    }-*/;
 }

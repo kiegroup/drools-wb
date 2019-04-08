@@ -186,9 +186,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
+                                                               new CallerMock<>(importExportServiceMock),
                                                                fileUploadPopupPresenterMock) {
-                                                               new CallerMock<>(dmnTypeServiceMock),
-                                                               new CallerMock<>(importExportServiceMock)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -425,7 +424,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertFalse(presenter.isDirty());
     }
 
-
     @Test
     public void onDownload() {
         String DOWNLOAD_URL = "DOWNLOAD_URL";
@@ -434,12 +432,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.onDownload(pathSupplierMock);
         verify(presenterSpy, times(1)).getFileDownloadURL(eq(pathSupplierMock));
         verify(presenterSpy, times(1)).open(eq(DOWNLOAD_URL));
-    }
-
-    @Test
-    public void onImport() {
-        presenterSpy.onImport();
-        verify(fileUploadPopupPresenterMock, times(1)).show(eq(presenterSpy));
     }
 
     @Test
@@ -465,6 +457,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onExportToCsv() {
         presenter.onExportToCsv();
         verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), any());
+    }
+
+    @Test
+    public void onImport() {
+        String FILE_CONTENTS = "FILE_CONTENTS";
+        presenterSpy.onImport(FILE_CONTENTS);
+        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENTS), any());
     }
 
     private void onClosePlaceStatusOpen() {

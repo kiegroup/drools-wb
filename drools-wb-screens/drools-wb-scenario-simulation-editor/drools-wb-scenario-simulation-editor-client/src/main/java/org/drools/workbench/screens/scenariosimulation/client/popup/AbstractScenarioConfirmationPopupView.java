@@ -15,16 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.ParagraphElement;
-import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.uberfire.client.views.pfly.resources.i18n.Constants;
-import org.uberfire.client.views.pfly.widgets.Modal;
 import org.uberfire.mvp.Command;
 
 public abstract class AbstractScenarioConfirmationPopupView extends AbstractScenarioPopupView implements AbstractScenarioConfirmationPopup {
@@ -40,18 +36,6 @@ public abstract class AbstractScenarioConfirmationPopupView extends AbstractScen
     @DataField("text-question")
     protected ParagraphElement textQuestion;
 
-    @Inject
-    @DataField("modal")
-    protected Modal modal;
-
-    @Inject
-    protected TranslationService translationService;
-
-    @PostConstruct
-    public void init() {
-        cancelButton.setText(translationService.getTranslation(Constants.ConfirmPopup_Cancel));
-    }
-
     @Override
     public void show(final String mainTitleText,
                      final String mainQuestionText,
@@ -63,7 +47,6 @@ public abstract class AbstractScenarioConfirmationPopupView extends AbstractScen
         conditionalShow(mainQuestion, mainQuestionText);
         conditionalShow(text1, text1Text);
         conditionalShow(textQuestion, textQuestionText);
-        modal.show();
     }
 
 }

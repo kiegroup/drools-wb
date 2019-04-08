@@ -17,36 +17,26 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.jboss.errai.common.client.dom.HTMLElement;
-import org.uberfire.mvp.Command;
 
-public interface FileUploadPopup {
+public interface FileUploadPopup extends AbstractScenarioPopup {
 
     interface Presenter {
 
         /**
          * Makes the <code>FileUploadPopup</code> visible with OK/Cancel buttons.
-         *
-         * @param currentPresenter
-         *
+         * @param scenarioSimulationPresenter
          */
-        void show(ScenarioSimulationEditorPresenter currentPresenter);
+        void show(ScenarioSimulationEditorPresenter scenarioSimulationPresenter);
 
         /**
-         * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-         * already showing.
+         * Execute time <b>import</b> on the current instance of <code>ScenarioSimulationEditorPresenter</code>
          */
-        void hide();
+        void executeImport(FileUploadPopup fileUploadPopup);
     }
-
-    /**
-     * Makes the <code>FileUploadPopup</code> visible with OK/Cancel buttons.
-     *
-     */
-    void show(Command importCommand);
 
     HTMLElement getElement();
 
-    String getFileName();
+    String getFileContents();
 
     /**
      * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
