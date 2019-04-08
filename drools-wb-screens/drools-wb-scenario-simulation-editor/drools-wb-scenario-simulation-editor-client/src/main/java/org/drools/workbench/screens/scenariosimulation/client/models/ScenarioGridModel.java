@@ -216,33 +216,6 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * This method <i>duplicates</i> a column and its values into its corresponding new column position
-     * @param originalColumn
-     * @param duplicatedColumn
-     * @param newColumnIndex
-     */
-    public void duplicateSingleColumn(ScenarioGridColumn originalColumn, ScenarioGridColumn duplicatedColumn, int newColumnIndex) {
-        checkSimulation();
-        int originalColumnIndex = getColumns().indexOf(originalColumn);
-
-        try {
-            FactMapping originalFactMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
-            String alias = duplicatedColumn.getInformationHeaderMetaData().getTitle();
-            simulation.getSimulationDescriptor().addFactMapping(newColumnIndex, originalFactMapping, alias, duplicatedColumn.getFactIdentifier());
-
-            super.insertColumn(newColumnIndex, duplicatedColumn);
-
-            duplicateColumnValues(originalColumnIndex, newColumnIndex);
-
-            eventBus.fireEvent(new ReloadRightPanelEvent(false));
-        } catch (Throwable t) {
-            eventBus.fireEvent(new ScenarioNotificationEvent("Error during column duplication: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
-            eventBus.fireEvent(new ScenarioGridReloadEvent());
-            return;
-        }
-    }
-
-    /**
      * This method <i>duplicates</i> the row values at the source column index from both the grid <b>and</b> the underlying model
      * and inserts at the target column index
      * @param originalColumnIndex
@@ -251,16 +224,10 @@ public class ScenarioGridModel extends BaseGridData {
     public void duplicateColumnValues(int originalColumnIndex, int newColumnIndex) {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
-
-         IntStream.range(0, getRowCount())
-                 .forEach(
-                         rowIndex -> {
-                             originalValues.add(getCell(rowIndex, originalColumnIndex).getValue());
-                            }
-                    );
-
         IntStream.range(0, getRowCount())
-                    .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
+                 .forEach(rowIndex -> originalValues.add(getCell(rowIndex, originalColumnIndex).getValue()));
+        IntStream.range(0, getRowCount())
+                 .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
     }
 
     /**

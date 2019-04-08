@@ -91,22 +91,6 @@ public class FactMapping {
         this.genericTypes = original.genericTypes;
     }
 
-    /**
-     * It <b>duplicates</b> the given <code>FactMapping</code> with a specified factAlias and <code>FactIdentifier</code>
-     * @param original The original <code>FactMapping</code>
-     * @param factAlias The label to assign
-     * @param factIdentifier The <code>FactIdentifier</code> to assign
-     */
-    private FactMapping(FactMapping original, String factAlias, FactIdentifier factIdentifier) {
-        original.expressionElements.forEach(expressionElement -> this.addExpressionElement(expressionElement.getStep(), original.className));
-        this.expressionIdentifier = original.expressionIdentifier;
-        this.factIdentifier = factIdentifier;
-        this.className = original.className;
-        this.factAlias = factAlias;
-        this.expressionAlias = original.expressionAlias;
-        this.genericTypes = original.genericTypes;
-    }
-
     public String getFullExpression() {
         return expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
     }
@@ -168,16 +152,6 @@ public class FactMapping {
      */
     public FactMapping cloneFactMapping() {
         return new FactMapping(this);
-    }
-
-    /**
-     * It creates a new <code>FactMapping</code> duplicating the instanced one and specifying a factAlias and a <code>FactIdentifier</code>
-     * @param factAlias The label to assign
-     * @param factIdentifier The <code>FactIdentifier</code> to assign
-     * @return
-     */
-    public FactMapping duplicateFactMapping(String factAlias, FactIdentifier factIdentifier) {
-        return new FactMapping(this, factAlias, factIdentifier);
     }
 
     public static String getPlaceHolder(FactMappingType factMappingType) {

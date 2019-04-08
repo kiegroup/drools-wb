@@ -16,11 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 
 /**
- * <code>EventHandler</code> for {@link DuplicateColumnEvent}
+ * <code>EventHandler</code> for {@link DuplicateInstanceEvent}
  */
-public interface DuplicateColumnEventHandler extends EventHandler {
-    void onEvent(DuplicateColumnEvent event);
+public interface DuplicateInstanceEventHandler extends EventHandler {
+    void onEvent(DuplicateInstanceEvent event);
 }

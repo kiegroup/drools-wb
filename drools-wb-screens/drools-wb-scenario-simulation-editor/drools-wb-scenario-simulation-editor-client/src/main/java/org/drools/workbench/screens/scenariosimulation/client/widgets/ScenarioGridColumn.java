@@ -106,14 +106,6 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     }
 
     /**
-     * Get the <b>factory</b> used for creation of the editing <code>DOMElement</code>
-     * @return
-     */
-    public BaseSingletonDOMElementFactory<String, ? extends Widget, ? extends BaseDOMElement<String, ? extends Widget>> getFactory() {
-        return factory;
-    }
-
-    /**
      * Set the <b>factory</b> used for creation of the editing <code>DOMElement</code>
      * @param factory
      */

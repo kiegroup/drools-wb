@@ -247,15 +247,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
-    public void duplicateSingleColumn() {
-        scenarioGridModel.duplicateSingleColumn(gridColumnMock, scenarioGridColumnMock, COLUMN_NUMBER);
-        verify(scenarioGridModel, atLeast(1)).checkSimulation();
-        verify(simulationDescriptorMock, times(1)).addFactMapping(eq(COLUMN_NUMBER), eq(factMappingMock), eq(GRID_COLUMN_TITLE_COPY), isA(FactIdentifier.class));
-        verify(scenarioGridModel, times(1)).duplicateColumnValues(isA(Integer.class), eq(COLUMN_NUMBER));
-        verify(eventBusMock, times(1)).fireEvent(isA(ReloadRightPanelEvent.class));
-    }
-
-    @Test
     public void duplicateColumnValues() {
         scenarioGridModel.duplicateColumnValues(COLUMN_INDEX, COLUMN_INDEX - 1);
         verify(scenarioGridModel, times(scenarioGridModel.getRowCount())).getCell(anyInt(), eq(COLUMN_INDEX));

@@ -16,26 +16,26 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateColumnEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateInstanceEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>duplicate</b> a column.
+ * <code>GwtEvent</code> to <b>duplicate</b> an instance.
  */
-public class DuplicateColumnEvent extends GwtEvent<DuplicateColumnEventHandler> {
+public class DuplicateInstanceEvent extends GwtEvent<DuplicateInstanceEventHandler> {
 
-    public static Type<DuplicateColumnEventHandler> TYPE = new Type<>();
+    public static Type<DuplicateInstanceEventHandler> TYPE = new Type<>();
 
     private int columnIndex;
 
     /**
      * @param columnIndex
      */
-    public DuplicateColumnEvent(int columnIndex) {
+    public DuplicateInstanceEvent(int columnIndex) {
         this.columnIndex = columnIndex;
     }
 
     @Override
-    public Type<DuplicateColumnEventHandler> getAssociatedType() {
+    public Type<DuplicateInstanceEventHandler> getAssociatedType() {
         return TYPE;
     }
 
@@ -44,7 +44,7 @@ public class DuplicateColumnEvent extends GwtEvent<DuplicateColumnEventHandler> 
     }
 
     @Override
-    protected void dispatch(DuplicateColumnEventHandler handler) {
+    protected void dispatch(DuplicateInstanceEventHandler handler) {
         handler.onEvent(this);
     }
 }

@@ -150,7 +150,7 @@ public interface ScenarioSimulationEditorConstants
 
     String deleteColumn();
 
-    String duplicateColumn();
+    String duplicateInstance();
 
     String insertRowBelow();
 
