@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
@@ -101,16 +102,19 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void clearSimpleJavaTypeList() {
+        view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getSimpleJavaTypeListContainer().removeAllChildren();
     }
 
     @Override
     public void clearInstanceList() {
+        view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getInstanceListContainer().removeAllChildren();
     }
 
     @Override
     public void clearSimpleJavaInstanceFieldList() {
+        view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getSimpleJavaInstanceListContainer().removeAllChildren();
     }
 
@@ -150,6 +154,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSimpleJavaTypeFieldsMap(SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap) {
         clearSimpleJavaTypeList();
         this.simpleJavaTypeFieldsMap = simpleJavaTypeFieldsMap;
+        if (!simpleJavaTypeFieldsMap.isEmpty()) {
+            view.getSimpleJavaTypeListContainer().getStyle().setDisplay(Style.Display.NONE);
+        }
         this.simpleJavaTypeFieldsMap.forEach(this::addSimpleJavaTypeListGroupItemView);
     }
 
@@ -162,6 +169,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
         clearInstanceList();
         this.instanceFieldsMap = instanceFieldsMap;
+        if (!instanceFieldsMap.isEmpty()) {
+            view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        }
         this.instanceFieldsMap.forEach(this::addInstanceListGroupItemView);
     }
 
@@ -180,6 +190,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> simpleJavaInstanceFieldsMap) {
         clearSimpleJavaInstanceFieldList();
         this.simpleJavaInstanceFieldsMap = simpleJavaInstanceFieldsMap;
+        if (!simpleJavaInstanceFieldsMap.isEmpty()) {
+            view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        }
         this.simpleJavaInstanceFieldsMap.forEach(this::addSimpleJavaInstanceListGroupItemView);
     }
 

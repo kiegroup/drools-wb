@@ -24,6 +24,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HRElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -57,11 +58,20 @@ public class TestToolsViewImpl
     @DataField("dataObjectListContainer")
     protected DivElement dataObjectListContainer = Document.get().createDivElement();
 
+    @DataField("simpleJavaTypeListContainer-separator")
+    protected HRElement simpleJavaTypeListContainerSeparator = Document.get().createHRElement();
+
     @DataField("simpleJavaTypeListContainer")
     protected DivElement simpleJavaTypeListContainer = Document.get().createDivElement();
 
+    @DataField("instanceListContainer-separator")
+    protected HRElement instanceListContainerSeparator = Document.get().createHRElement();
+
     @DataField("instanceListContainer")
     protected DivElement instanceListContainer = Document.get().createDivElement();
+
+    @DataField("simpleJavaInstanceListContainer-separator")
+    protected HRElement simpleJavaInstanceListContainerSeparator = Document.get().createHRElement();
 
     @DataField("simpleJavaInstanceListContainer")
     protected DivElement simpleJavaInstanceListContainer = Document.get().createDivElement();
@@ -72,8 +82,8 @@ public class TestToolsViewImpl
     @DataField("addButton")
     protected ButtonElement addButton = Document.get().createButtonElement();
 
-    @DataField("kieTestEditorTabContent")
-    protected DivElement kieTestEditorTabContent = Document.get().createDivElement();
+    @DataField("kieTestToolsContent")
+    protected DivElement kieTestToolsContent = Document.get().createDivElement();
 
     protected List<DivElement> managedDivElements;
 
@@ -150,13 +160,28 @@ public class TestToolsViewImpl
     }
 
     @Override
+    public HRElement getSimpleJavaTypeListContainerSeparator() {
+        return simpleJavaTypeListContainerSeparator;
+    }
+
+    @Override
     public DivElement getSimpleJavaTypeListContainer() {
         return simpleJavaTypeListContainer;
     }
 
     @Override
+    public HRElement getInstanceListContainerSeparator() {
+        return instanceListContainerSeparator;
+    }
+
+    @Override
     public DivElement getInstanceListContainer() {
         return instanceListContainer;
+    }
+
+    @Override
+    public HRElement getSimpleJavaInstanceListContainerSeparator() {
+        return simpleJavaInstanceListContainerSeparator;
     }
 
     @Override
@@ -187,9 +212,9 @@ public class TestToolsViewImpl
         conditionsButton.setDisabled(disabled);
         setContainersDisabledStatus(disabled);
         if (disabled) {
-            kieTestEditorTabContent.addClassName("disabled");
+            kieTestToolsContent.addClassName("disabled");
         } else {
-            kieTestEditorTabContent.removeClassName("disabled");
+            kieTestToolsContent.removeClassName("disabled");
         }
     }
 

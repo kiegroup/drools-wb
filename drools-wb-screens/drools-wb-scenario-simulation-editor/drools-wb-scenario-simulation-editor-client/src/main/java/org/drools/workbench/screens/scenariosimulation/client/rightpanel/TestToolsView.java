@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.SortedMap;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.HRElement;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
@@ -37,9 +38,15 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
     DivElement getDataObjectListContainer();
 
+    HRElement getSimpleJavaTypeListContainerSeparator();
+
     DivElement getSimpleJavaTypeListContainer();
 
+    HRElement getInstanceListContainerSeparator();
+
     DivElement getInstanceListContainer();
+
+    HRElement getSimpleJavaInstanceListContainerSeparator();
 
     DivElement getSimpleJavaInstanceListContainer();
 
