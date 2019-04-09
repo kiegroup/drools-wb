@@ -19,6 +19,7 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 /**
  * <code>Command</code> to <b>insert</b> a column.
@@ -28,6 +29,17 @@ public class InsertColumnCommand extends AbstractSelectedColumnCommand  {
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
-        insertNewColumn(context, selectedColumn, context.getStatus().isAsProperty() && selectedColumn.isInstanceAssigned(), context.getStatus().isAsProperty());
+        /* Here, it calculates the position where the column will be added, according to the selected column position,
+           if it should be added in the right or on the left of the selected position and if is a property (i.e. is a new
+           property column which have to be added on the same instance group of the selected one */
+        int columnPosition;
+        if (context.getStatus().isAsProperty()) {
+            columnPosition = context.getStatus().isRight() ? context.getStatus().getColumnIndex() + 1 : context.getStatus().getColumnIndex();
+        } else {
+            GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getStatus().getColumnIndex());
+            columnPosition = context.getStatus().isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
+        }
+
+        insertNewColumn(context, selectedColumn, columnPosition, context.getStatus().isAsProperty());
     }
 }

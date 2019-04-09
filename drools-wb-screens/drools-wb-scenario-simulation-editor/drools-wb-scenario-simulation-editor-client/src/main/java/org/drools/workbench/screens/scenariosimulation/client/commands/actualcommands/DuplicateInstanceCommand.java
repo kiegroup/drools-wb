@@ -15,8 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
@@ -40,32 +39,31 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
         int instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         String alias = selectedColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0] + COPY_LABEL + instancesCount;
 
-        /* Retrieving all the columns related to the selected instance and reverses it, in order it add the new columns on the
-           RIGHT size of the original one preserving the original order */
-        List<ScenarioGridColumn> originalInstanceColumns = context.getModel().getInstanceScenarioGridColumns(selectedColumn);
-        Collections.reverse(originalInstanceColumns);
-
         /* For every columns which belongs to the selected instance, it creates a new column and assign it the duplicated instance
-         * and the property, if assigned */
-        originalInstanceColumns.forEach(
+         * and the duplicated property, if are assigned */
+        int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
+        AtomicInteger nextColumnPosition = new AtomicInteger(columnPosition);
+        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(
                 originalColumn -> {
-                    ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, false, false);
+                    ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
                     if (originalColumn.isInstanceAssigned()) {
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
-                    }
-                    if (originalColumn.isPropertyAssigned()) {
-                        int originalColumnIndex = context.getModel().getColumns().indexOf(originalColumn);
-                        final FactMapping originalFactMapping = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
-                        /*  Rebuilt the value, which is composed by: factName.property . The property MUST be the original property name */
-                        String value = alias + "." + originalFactMapping.getExpressionElements().stream().skip(1).map(ExpressionElement::getStep).collect(Collectors.joining("."));
-                        setPropertyHeader(context,
-                                          createdColumn,
-                                          value,
-                                          originalFactMapping.getClassName(),
-                                          originalColumn.getPropertyHeaderMetaData().getTitle());
 
-                        /* It copies the properties values */
-                        context.getModel().duplicateColumnValues(originalColumnIndex, context.getModel().getColumns().indexOf(createdColumn));
+                        if (originalColumn.isPropertyAssigned()) {
+                            int originalColumnIndex = context.getModel().getColumns().indexOf(originalColumn);
+                            int createdColumnIndex = context.getModel().getColumns().indexOf(createdColumn);
+                            final FactMapping originalFactMapping = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+                            /*  Rebuilt the value, which is composed by: factName.property . The property MUST be the original property name */
+                            String value = alias + "." + originalFactMapping.getExpressionElements().stream().skip(1).map(ExpressionElement::getStep).collect(Collectors.joining("."));
+                            setPropertyHeader(context,
+                                              createdColumn,
+                                              value,
+                                              originalFactMapping.getClassName(),
+                                              originalColumn.getPropertyHeaderMetaData().getTitle());
+
+                            /* It copies the properties values */
+                            context.getModel().duplicateColumnValues(originalColumnIndex, createdColumnIndex);
+                        }
                     }
                 });
     }

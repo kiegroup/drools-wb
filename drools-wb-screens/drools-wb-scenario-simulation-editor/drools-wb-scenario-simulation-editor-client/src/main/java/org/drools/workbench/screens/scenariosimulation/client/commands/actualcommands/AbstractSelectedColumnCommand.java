@@ -60,11 +60,10 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param context It contains the <b>Context</b> inside which the commands will be executed
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
      * @param cloneInstance If true, it create a new column inside the same instance of the selected column
-     * @param isAsProperty Used to define in which position the new column should be added (in the same instance group or outside)
+     * @param columnPosition Used to define in which position the new column should be added
      * @return The created <code>ScenarioGridColumn</code>
      */
-    protected ScenarioGridColumn insertNewColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, boolean cloneInstance, boolean isAsProperty) {
-        final ScenarioSimulationContext.Status status = context.getStatus();
+    protected ScenarioGridColumn insertNewColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, int columnPosition, boolean cloneInstance) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
@@ -83,13 +82,6 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                                                                       placeHolder);
         if (cloneInstance) {
             scenarioGridColumnLocal.setFactIdentifier(selectedColumn.getFactIdentifier());
-        }
-        int columnPosition = -1;
-        if (isAsProperty) {
-            columnPosition = status.isRight() ? status.getColumnIndex() + 1 : status.getColumnIndex();
-        } else {
-            GridData.Range instanceRange = context.getModel().getInstanceLimits(status.getColumnIndex());
-            columnPosition = status.isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         }
         scenarioGridColumnLocal.setInstanceAssigned(cloneInstance);
         scenarioGridColumnLocal.setPropertyAssigned(false);
