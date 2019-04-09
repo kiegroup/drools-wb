@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -66,8 +67,8 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
                               BaseSingletonDOMElementFactory<String, ? extends Widget, ? extends BaseDOMElement<String, ? extends Widget>> factory,
                               String placeHolder) {
         super(headerMetaData, columnRenderer, width);
-        this.informationHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> ((ScenarioHeaderMetaData) hdm).isInstanceHeader()).findFirst().orElse(headerMetaData.get(0));
-        this.propertyHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> ((ScenarioHeaderMetaData) hdm).isPropertyHeader()).findFirst().orElse(null);
+        this.informationHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> Objects.equals(((ScenarioHeaderMetaData) hdm).getMetadataType(), ScenarioHeaderMetaData.MetadataType.INSTANCE)).findFirst().orElse(headerMetaData.get(0));
+        this.propertyHeaderMetaData = (ScenarioHeaderMetaData) headerMetaData.stream().filter(hdm -> Objects.equals(((ScenarioHeaderMetaData) hdm).getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY)).findFirst().orElse(null);
         this.setMovable(isMovable);
         this.factory = factory;
         this.placeHolder = placeHolder;
@@ -81,15 +82,20 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
     public void edit(GridCell<String> cell, GridBodyCellRenderContext context, Consumer<GridCellValue<String>> callback) {
         factory.attachDomElement(context,
                                  e -> {
-                                     final GridCell<String> stringGridCell = assertCell(cell);
-                                     if (e instanceof ScenarioCellTextAreaDOMElement) {
-                                         ((ScenarioCellTextAreaDOMElement) e).getWidget().setValue(stringGridCell.getValue().getValue());
-                                         ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell) cell);
-                                     } else if (e instanceof CollectionEditorDOMElement) {
-                                         CollectionEditorDOMElement collectionEditorDOMElement = (CollectionEditorDOMElement) e;
-                                         collectionEditorDOMElement.getWidget().setValue(stringGridCell.getValue().getValue());
-                                         ((ScenarioGridCell) cell).setListMap(collectionEditorDOMElement.getWidget().isListWidget());
-                                         collectionEditorDOMElement.setScenarioGridCell((ScenarioGridCell) cell);
+                                     try {
+                                         final GridCell<String> stringGridCell = assertCell(cell);
+                                         if (e instanceof ScenarioCellTextAreaDOMElement) {
+                                             ((ScenarioCellTextAreaDOMElement) e).getWidget().setValue(stringGridCell.getValue().getValue());
+                                             ((ScenarioCellTextAreaDOMElement) e).setScenarioGridCell((ScenarioGridCell) cell);
+                                         } else if (e instanceof CollectionEditorDOMElement) {
+                                             CollectionEditorDOMElement collectionEditorDOMElement = (CollectionEditorDOMElement) e;
+                                             collectionEditorDOMElement.getWidget().setValue(stringGridCell.getValue().getValue());
+                                             ((ScenarioGridCell) cell).setListMap(collectionEditorDOMElement.getWidget().isListWidget());
+                                             collectionEditorDOMElement.setScenarioGridCell((ScenarioGridCell) cell);
+                                         }
+                                     } catch (Exception ex) {
+                                         ((ScenarioGridCell) cell).setEditingMode(false);
+                                         throw ex;
                                      }
                                  },
                                  e -> {

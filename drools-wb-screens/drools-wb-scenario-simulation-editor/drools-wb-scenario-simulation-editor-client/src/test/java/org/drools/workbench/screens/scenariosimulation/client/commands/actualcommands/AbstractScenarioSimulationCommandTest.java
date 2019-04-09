@@ -19,21 +19,23 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.RightPanelPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
 
     @Mock
-    protected RightPanelPresenter rightPanelPresenterMock;
+    protected TestToolsPresenter testToolsPresenterMock;
 
     @Mock
     protected EventBus eventBusMock;
@@ -88,7 +90,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
         try {
             verify(command, times(1)).internalExecute(eq(scenarioSimulationContextLocal));
             assertNotEquals(status, command.restorableStatus);
-        } catch(Exception e) {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -101,7 +103,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
             command.setCurrentContext(scenarioSimulationContextLocal);
             verify(scenarioSimulationViewMock, times(1)).setContent(eq(simulationMock));
             verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
-            verify(scenarioSimulationEditorPresenterMock, times(1)).reloadRightPanel(eq(true));
+            verify(scenarioSimulationEditorPresenterMock, times(1)).reloadTestTools(eq(true));
             assertNotEquals(status, command.restorableStatus);
         }
     }
@@ -113,6 +115,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
             verify(scenarioGridPanelMock, times(1)).onResize();
             verify(scenarioGridPanelMock, times(1)).select();
             verify(scenarioGridPanelMock, times(1)).setFocus(eq(true));
+        }
+    }
+
+    @Test
+    public void commonExecutionNotUndoable() {
+        if (!command.isUndoable()) {
+            command.commonExecution(scenarioSimulationContextLocal);
+            verify(scenarioGridPanelMock, times(1)).onResize();
+            verify(scenarioGridPanelMock, times(1)).select();
+            verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
         }
     }
 }

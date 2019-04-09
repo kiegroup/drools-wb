@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
@@ -254,11 +254,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void updateColumnInstance(int columnIndex, final GridColumn<?> column) {
         checkSimulation();
-        deleteColumn(columnIndex);
-        String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
-        String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
-        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        commonAddColumn(columnIndex, column, ei);
+        replaceColumn(columnIndex, column);
     }
 
     /**
@@ -276,12 +272,8 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
         }
-        deleteColumn(columnIndex);
-        String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
-        String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
+        replaceColumn(columnIndex, column);
         String[] elements = value.split("\\.");
-        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
-        commonAddColumn(columnIndex, column, ei);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         IntStream.range(0, elements.length)
                 .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
@@ -289,6 +281,22 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
         }
+    }
+
+    /**
+     * This method replace a column at columnIndex position with a new column. It also save and restore width of the columns
+     * @param columnIndex
+     * @param column
+     */
+    protected void replaceColumn(int columnIndex, GridColumn<?> column) {
+        List<Double> widthsToRestore = getColumns().stream().map(GridColumn::getWidth).collect(Collectors.toList());
+        deleteColumn(columnIndex);
+        String group = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup();
+        String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
+        ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
+        commonAddColumn(columnIndex, column, ei);
+        IntStream.range(0, widthsToRestore.size())
+                .forEach(index -> getColumns().get(index).setWidth(widthsToRestore.get(index)));
     }
 
     /**
@@ -446,8 +454,8 @@ public class ScenarioGridModel extends BaseGridData {
         FactMapping factMappingToEdit = simulationDescriptor.getFactMappingByIndex(columnIndex);
         ScenarioHeaderMetaData.MetadataType metadataType = editedMetadata.getMetadataType();
         IntStream.range(0, getColumnCount()).forEach(index -> updateFactMapping(simulationDescriptor, factMappingToEdit, index, value, metadataType));
-        if (editedMetadata.isInstanceHeader()) {
-            eventBus.fireEvent(new ReloadRightPanelEvent(false));
+        if (editedMetadata.getMetadataType().equals(ScenarioHeaderMetaData.MetadataType.INSTANCE)) {
+            eventBus.fireEvent(new ReloadTestToolsEvent(false));
         }
     }
 

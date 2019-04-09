@@ -25,7 +25,7 @@ import java.util.stream.IntStream;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import junit.framework.TestCase;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
-import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -50,6 +50,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -116,15 +117,11 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         doReturn(gridCellValueMock).when(gridCellMock).getValue();
 
         when(informationHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.INSTANCE);
-        when(informationHeaderMetaDataMock.isInstanceHeader()).thenReturn(true);
-        when(informationHeaderMetaDataMock.isPropertyHeader()).thenReturn(false);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
         when(propertyHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
-        when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
-        when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
         when(propertyHeaderMetaDataMock.getTitle()).thenReturn(GRID_PROPERTY_TITLE);
         when(propertyHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(propertyHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
@@ -133,7 +130,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         when(scenarioIndexGridColumnMock.getInformationHeaderMetaData()).thenReturn(indexHeaderMetaDataMock);
 
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDataList);
-        
+
         when(gridCellMock.getValue()).thenReturn(gridCellValueMock);
         when(gridCellValueMock.getValue()).thenReturn(GRID_CELL_TEXT);
 
@@ -283,6 +280,15 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
+    public void replaceColumnTest() {
+        scenarioGridModel.replaceColumn(ROW_INDEX, gridColumnMock);
+        verify(gridColumnMock, times(COLUMN_NUMBER)).getWidth();
+        verify(gridColumnMock, times(COLUMN_NUMBER)).setWidth(anyDouble());
+        verify(scenarioGridModel, times(1)).deleteColumn(eq(ROW_INDEX));
+        verify(scenarioGridModel, times(1)).commonAddColumn(eq(ROW_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
+    }
+
+    @Test
     public void setCellGridOnly() {
         scenarioGridModel.setCellGridOnly(ROW_INDEX, COLUMN_INDEX, gridCellSupplier);
         verify(scenarioGridModel, times(1)).checkSimulation();
@@ -313,7 +319,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     public void updateHeader() {
         String newValue = "NEW_VALUE";
         scenarioGridModel.updateHeader(COLUMN_INDEX, 1, newValue); // This is instance header
-        verify(eventBusMock, times(1)).fireEvent(isA(ReloadRightPanelEvent.class));
+        verify(eventBusMock, times(1)).fireEvent(isA(ReloadTestToolsEvent.class));
         reset(eventBusMock);
         scenarioGridModel.updateHeader(COLUMN_INDEX, 2, newValue); // This is property header
         verify(eventBusMock, never()).fireEvent(any());

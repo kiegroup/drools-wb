@@ -149,6 +149,7 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected final int ROW_INDEX = 2;
     protected final int COLUMN_INDEX = 3;
+    protected final int COLUMN_NUMBER = COLUMN_INDEX + 1;
 
     protected final int FIRST_INDEX_LEFT = 2;
     protected final int FIRST_INDEX_RIGHT = 4;
@@ -163,6 +164,8 @@ public abstract class AbstractScenarioSimulationTest {
     protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
 
     protected final String VALUE_CLASS_NAME = String.class.getName();
+
+    protected final String LIST_CLASS_NAME = List.class.getName();
 
     protected final String FACT_IDENTIFIER_NAME = "FACT_IDENTIFIER_NAME";
 
@@ -329,7 +332,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
         when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
-        IntStream.range(0, COLUMN_INDEX + 1).forEach(columnIndex -> {
+        IntStream.range(0, COLUMN_NUMBER).forEach(columnIndex -> {
             gridColumns.add(gridColumnMock);
             factMappingValuesLocal.add(factMappingValueMock);
             when(simulationDescriptorMock.getFactMappingByIndex(columnIndex)).thenReturn(factMappingMock);
