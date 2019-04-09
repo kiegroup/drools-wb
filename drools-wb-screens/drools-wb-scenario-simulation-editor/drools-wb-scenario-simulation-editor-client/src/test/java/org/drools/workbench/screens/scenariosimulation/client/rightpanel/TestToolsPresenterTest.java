@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.HRElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
@@ -58,10 +60,28 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     private DivElement dataObjectListContainerMock;
 
     @Mock
+    private HRElement simpleJavaTypeListContainerSeparatorMock;
+
+    @Mock
+    private Style simpleJavaTypeListContainerSeparatorStyleMock;
+
+    @Mock
     private DivElement simpleJavaTypeListContainerMock;
 
     @Mock
+    private HRElement instanceListContainerSeparatorMock;
+
+    @Mock
+    private Style instanceListContainerSeparatorStyleMock;
+
+    @Mock
     private DivElement instanceListContainerMock;
+
+    @Mock
+    private HRElement simpleJavaInstanceListContainerSeparatorMock;
+
+    @Mock
+    private Style simpleJavaInstanceListContainerSeparatorStyleMock;
 
     @Mock
     private DivElement simpleJavaInstanceListContainerMock;
@@ -93,9 +113,16 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(selectedFieldItemViewMock.getFieldName()).thenReturn(firstPropertyKey);
         when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass);
 
+        when(simpleJavaTypeListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaTypeListContainerSeparatorStyleMock);
+        when(instanceListContainerSeparatorMock.getStyle()).thenReturn(instanceListContainerSeparatorStyleMock);
+        when(simpleJavaInstanceListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaInstanceListContainerSeparatorStyleMock);
+
         when(testToolsViewMock.getDataObjectListContainer()).thenReturn(dataObjectListContainerMock);
+        when(testToolsViewMock.getSimpleJavaTypeListContainerSeparator()).thenReturn(simpleJavaTypeListContainerSeparatorMock);
         when(testToolsViewMock.getSimpleJavaTypeListContainer()).thenReturn(simpleJavaTypeListContainerMock);
+        when(testToolsViewMock.getInstanceListContainerSeparator()).thenReturn(instanceListContainerSeparatorMock);
         when(testToolsViewMock.getInstanceListContainer()).thenReturn(instanceListContainerMock);
+        when(testToolsViewMock.getSimpleJavaInstanceListContainerSeparator()).thenReturn(simpleJavaInstanceListContainerSeparatorMock);
         when(testToolsViewMock.getSimpleJavaInstanceListContainer()).thenReturn(simpleJavaInstanceListContainerMock);
         when(listGroupItemPresenterMock.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(dataObjectListContainerMock);
         this.testToolsPresenter = spy(new TestToolsPresenter(testToolsViewMock, listGroupItemPresenterMock) {
@@ -149,10 +176,30 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
+    public void clearSimpleJavaTypeList() {
+        testToolsPresenter.clearSimpleJavaTypeList();
+        verify(testToolsViewMock, times(1)).getSimpleJavaTypeListContainerSeparator();
+        verify(simpleJavaTypeListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(testToolsViewMock, times(1)).getSimpleJavaTypeListContainer();
+        verify(simpleJavaTypeListContainerMock, times(1)).removeAllChildren();
+    }
+
+    @Test
     public void clearInstanceList() {
         testToolsPresenter.clearInstanceList();
+        verify(testToolsViewMock, times(1)).getInstanceListContainerSeparator();
+        verify(instanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(testToolsViewMock, times(1)).getInstanceListContainer();
         verify(instanceListContainerMock, times(1)).removeAllChildren();
+    }
+
+    @Test
+    public void clearSimpleJavaInstanceFieldList() {
+        testToolsPresenter.clearSimpleJavaInstanceFieldList();
+        verify(testToolsViewMock, times(1)).getSimpleJavaInstanceListContainerSeparator();
+        verify(simpleJavaInstanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(testToolsViewMock, times(1)).getSimpleJavaInstanceListContainer();
+        verify(simpleJavaInstanceListContainerMock, times(1)).removeAllChildren();
     }
 
     @Test
