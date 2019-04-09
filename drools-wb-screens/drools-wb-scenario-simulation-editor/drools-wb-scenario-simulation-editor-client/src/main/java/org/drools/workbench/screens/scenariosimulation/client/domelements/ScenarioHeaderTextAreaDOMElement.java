@@ -45,6 +45,7 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
     @Override
     public void flush(final String value) {
         if (scenarioHeaderMetaData != null) {
+            scenarioHeaderMetaData.setEditingMode(false);
             if (Objects.equals(value, scenarioHeaderMetaData.getTitle())) {
                 return;
             }

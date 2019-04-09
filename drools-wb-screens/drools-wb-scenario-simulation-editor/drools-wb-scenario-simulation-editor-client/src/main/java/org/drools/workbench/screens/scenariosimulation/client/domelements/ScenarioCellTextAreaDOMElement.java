@@ -115,6 +115,7 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
     public void flush(final String value) {
         String actualValue = value != null && value.isEmpty() ? null : value;
         if (scenarioGridCell != null) {
+            scenarioGridCell.setEditingMode(false);
             String cellValue = scenarioGridCell.getValue().getValue();
             if (Objects.equals(actualValue, cellValue)) {
                 return;

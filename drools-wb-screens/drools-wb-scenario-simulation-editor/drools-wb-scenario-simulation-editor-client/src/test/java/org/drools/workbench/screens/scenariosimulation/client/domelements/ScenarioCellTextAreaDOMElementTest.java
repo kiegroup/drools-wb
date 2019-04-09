@@ -64,6 +64,7 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushSameValue() {
         when(gridCellValueMock.getValue()).thenReturn(VALUE);
         scenarioCellTextAreaDOMElement.flush(VALUE);
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, never()).internalFlush(anyString());
     }
 
@@ -71,6 +72,7 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushDifferentValue() {
         when(gridCellValueMock.getValue()).thenReturn("TEST");
         scenarioCellTextAreaDOMElement.flush(VALUE);
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(VALUE));
     }
 
@@ -78,6 +80,7 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushNullString() {
         when(gridCellValueMock.getValue()).thenReturn("");
         scenarioCellTextAreaDOMElement.flush(null);
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(null));
     }
 
@@ -85,6 +88,7 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
     public void flushEmptyStringToNullConversion() {
         when(gridCellValueMock.getValue()).thenReturn("");
         scenarioCellTextAreaDOMElement.flush("");
+        verify(scenarioGridCellMock, times(1)).setEditingMode(eq(false));
         // empty strings are converted to null during flush
         verify(scenarioCellTextAreaDOMElement, times(1)).internalFlush(eq(null));
     }
