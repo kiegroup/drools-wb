@@ -221,7 +221,10 @@ public class RuleScenarioRunnerHelperTest {
         List<ScenarioResult> scenario3Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, newInput, expressionEvaluator);
         assertTrue(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
 
+
         assertEquals(1, scenario3Results.size());
+        assertEquals(person.getFirstName(), scenario3Results.get(0).getResultValue().get());
+        assertEquals("NAME", scenario3Results.get(0).getFactMappingValue().getRawValue());
     }
 
     @Test

@@ -96,9 +96,9 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                                                      DMNDecisionResult decisionResult,
                                                      ExpressionEvaluator expressionEvaluator) {
         Object resultRaw = decisionResult.getResult();
-
-        if (!SUCCEEDED.equals(decisionResult.getEvaluationStatus())) {
-            return createErrorResult();
+        final DMNDecisionResult.DecisionEvaluationStatus evaluationStatus = decisionResult.getEvaluationStatus();
+        if (!SUCCEEDED.equals(evaluationStatus)) {
+            return createErrorResult(SUCCEEDED, evaluationStatus);
         }
 
         for (ExpressionElement expressionElement : factMapping.getExpressionElementsWithoutClass()) {
@@ -111,10 +111,11 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
 
         Class<?> resultClass = resultRaw != null ? resultRaw.getClass() : null;
 
+        Object expectedResultRaw = expectedResult.getRawValue();
         try {
-            return expressionEvaluator.evaluateUnaryExpression(expectedResult.getRawValue(), resultRaw, resultClass) ?
+            return expressionEvaluator.evaluateUnaryExpression(expectedResultRaw, resultRaw, resultClass) ?
                     createResult(resultRaw) :
-                    createErrorResult();
+                    createErrorResult(resultRaw, expectedResultRaw);
         } catch (Exception e) {
             expectedResult.setError(true);
             throw new ScenarioException(e.getMessage(), e);

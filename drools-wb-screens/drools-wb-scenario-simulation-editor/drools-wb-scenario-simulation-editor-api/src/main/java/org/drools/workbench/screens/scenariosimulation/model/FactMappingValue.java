@@ -31,6 +31,8 @@ public class FactMappingValue {
     private Object rawValue;
     @XStreamOmitField
     private boolean error = false;
+    @XStreamOmitField
+    private Object errorValue;
 
     public FactMappingValue() {
     }
@@ -71,5 +73,13 @@ public class FactMappingValue {
 
     public void setError(boolean error) {
         this.error = error;
+    }
+
+    public Object getErrorValue() {
+        return errorValue;
+    }
+
+    public void setErrorValue(Object errorValue) {
+        this.errorValue = errorValue;
     }
 }
