@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
@@ -27,14 +25,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTest {
+public class InsertColumnCommandTest extends AbstractSelectedColumnCommandTest {
 
     @Before
     public void setup() {
@@ -50,46 +47,43 @@ public class InsertColumnCommandTest extends AbstractScenarioSimulationCommandTe
     }
 
     @Test
-    public void executeNotIsRightIsAsProperty() {
+    public void executeIfSelectedColumn_NotIsRightIsAsProperty() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContextLocal.getStatus().setRight(false);
         scenarioSimulationContextLocal.getStatus().setAsProperty(true);
-        command.execute(scenarioSimulationContextLocal);
-        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(3), eq(gridColumnMock));
+        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(3), eq(Boolean.TRUE));
     }
 
     @Test
-    public void executeIsRightIsAsProperty() {
+    public void executeIfSelectedColumn_IsRightIsAsProperty() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setRight(true);
+        scenarioSimulationContextLocal.getStatus().setRight(false);
         scenarioSimulationContextLocal.getStatus().setAsProperty(true);
-        command.execute(scenarioSimulationContextLocal);
-        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
+        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(3), eq(Boolean.TRUE));
     }
 
     @Test
-    public void executeNotIsRightNotIsAsProperty() {
+    public void executeIfSelectedColumn_NotIsRightNotIsAsProperty() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContextLocal.getStatus().setRight(false);
         scenarioSimulationContextLocal.getStatus().setAsProperty(false);
         command.execute(scenarioSimulationContextLocal);
-        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(2), eq(gridColumnMock));
+        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(2), eq(Boolean.FALSE));
     }
 
     @Test
-    public void executeIsRightNotIsAsProperty() {
+    public void executeIfSelectedColumn_NotIsAsProperty() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContextLocal.getStatus().setRight(true);
         scenarioSimulationContextLocal.getStatus().setAsProperty(false);
         command.execute(scenarioSimulationContextLocal);
-        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
-        verify(scenarioGridModelMock, times(1)).insertColumn(eq(4), eq(gridColumnMock));
+        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(4), eq(Boolean.FALSE));
     }
+
 }
