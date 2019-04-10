@@ -18,8 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,8 +41,10 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
         command = spy(new SetPropertyHeaderCommand() {
 
             @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
-                return gridColumnMock;
+            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
+                                                                    FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+                                                                    ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
+                return createdGridColumnMock;
             }
 
             @Override
@@ -58,6 +62,16 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     public void executeIfSelected() {
         ((SetPropertyHeaderCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
         verify((SetPropertyHeaderCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE), eq(VALUE_CLASS_NAME));
+    }
+
+    @Test
+    public void getPropertyHeaderTitle(){
+        super.getPropertyHeaderTitle();
+    }
+
+    @Test
+    public void getNavigateComplexObject(){
+        super.navigateComplexObject();
     }
 
 }

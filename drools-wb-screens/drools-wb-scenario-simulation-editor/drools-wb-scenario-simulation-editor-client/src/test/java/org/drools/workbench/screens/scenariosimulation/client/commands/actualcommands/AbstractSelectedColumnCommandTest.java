@@ -1,105 +1,196 @@
+/*
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
-import org.junit.Before;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractSelectedColumnCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    protected String GRID_COLUMN_ID_1 = GRID_COLUMN_ID + "_1";
-    protected String GRID_PROPERTY_TITLE_1 = GRID_PROPERTY_TITLE + "_1";
-    protected String FACT_ALIAS_1 = FACT_ALIAS + "_1";
-    protected String FULL_CLASS_NAME_1 = FULL_CLASS_NAME + "_1";
-    protected String FACT_IDENTIFIER_NAME_1 = FACT_IDENTIFIER_NAME + "_1";
-    protected String VALUE_1 = VALUE + "_1";
+    @Mock
+    protected List<GridColumn<?>> gridColumnsMock;
+    @Mock
+    protected FactModelTree factModelTreeMock;
 
     @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock1;
-    @Mock
-    protected FactMapping factMappingMock1;
-    @Mock
-    protected FactMappingValue factMappingValueMock1;
-    @Mock
-    protected FactIdentifier factIdentifierMock1;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock1;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock1;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock1;
+    protected ScenarioGridColumn createdGridColumnMock;
 
-    @Before
     public void setup() {
         super.setup();
 
-        /* Column 1 represents a single fact with a single property, columns 2 & 3 represents a single fact with
-           two properties */
-        when(scenarioGridColumnMock1.getHeaderMetaData()).thenReturn(headerMetaDatasMock1);
-        when(scenarioGridColumnMock1.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock1);
-        when(scenarioGridColumnMock1.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock1);
-        when(scenarioGridColumnMock1.getFactIdentifier()).thenReturn(factIdentifierMock1);
-        when(scenarioGridColumnMock1.isInstanceAssigned()).thenReturn(Boolean.TRUE);
-        when(scenarioGridColumnMock1.isPropertyAssigned()).thenReturn(Boolean.TRUE);
+         when(gridColumnsMock.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
 
-        GridData.Range range = new GridData.Range(COLUMN_NUMBER, COLUMN_NUMBER);
-        when(scenarioGridModelMock.getInstanceLimits(COLUMN_NUMBER)).thenReturn(range);
-        //when(scenarioGridModelMock.getSelectedColumn()).thenReturn((GridColumn) scenarioGridColumnMock1);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
 
-        when(headerMetaDatasMock1.get(COLUMN_NUMBER + 1)).thenReturn(informationHeaderMetaDataMock1);
+        when(factModelTreeMock.getExpandableProperties()).thenReturn(mock(SortedMap.class));
+        when(dataObjectFieldsMapMock.get(anyString())).thenReturn(factModelTreeMock);
 
-        when(informationHeaderMetaDataMock1.getTitle()).thenReturn(VALUE_1);
-        when(informationHeaderMetaDataMock1.getColumnGroup()).thenReturn(COLUMN_GROUP);
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
+    }
 
-        when(propertyHeaderMetaDataMock1.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
-        when(propertyHeaderMetaDataMock1.getTitle()).thenReturn(GRID_PROPERTY_TITLE_1);
-        when(propertyHeaderMetaDataMock1.getColumnGroup()).thenReturn(COLUMN_GROUP);
-        when(propertyHeaderMetaDataMock1.getColumnId()).thenReturn(GRID_COLUMN_ID_1);
+    @Test
+    public void executeIfSelected() {
+        command.execute(scenarioSimulationContextLocal);
+        verify((AbstractSelectedColumnCommand) command, times(1)).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+    }
 
-        when(factMappingMock1.getFactIdentifier()).thenReturn(factIdentifierMock1);
-        when(factMappingMock1.getFactAlias()).thenReturn(FACT_ALIAS_1);
-        when(factMappingMock1.getClassName()).thenReturn(VALUE_CLASS_NAME);
+    @Test
+    public void executeIfSelected_NoColumn() {
+        gridColumnMock = null;
+        command.execute(scenarioSimulationContextLocal);
+        verify((AbstractSelectedColumnCommand) command, never()).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+    }
 
-        List<ExpressionElement> expressionElements = new ArrayList<>();
-        expressionElements.add(new ExpressionElement(FACT_ALIAS_1));
-        expressionElements.add(new ExpressionElement("test"));
-        when(factMappingMock1.getExpressionElements()).thenReturn(expressionElements);
+    @Test
+    public void insertNewColumn_NotToClone() {
+        insertNewColumnCommon(COLUMN_INDEX, false);
+    }
 
-        when(factIdentifierMock1.getClassName()).thenReturn(FULL_CLASS_NAME_1);
-        when(factIdentifierMock1.getName()).thenReturn(FACT_IDENTIFIER_NAME_1);
+    @Test
+    public void insertNewColumn_ToClone() {
+        this.insertNewColumnCommon(COLUMN_INDEX, true);
+    }
 
-        gridColumns.add(scenarioGridColumnMock1);
-        factMappingValuesLocal.add(factMappingValueMock1);
-        factIdentifierSet.add(factIdentifierMock1);
-        factMappingLocal.add(factMappingMock1);
-        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMappingMock1);
+    protected void insertNewColumnCommon( int columnIndex, boolean cloneInstance) {
+        ScenarioGridColumn createdColumn = ((AbstractSelectedColumnCommand) command).insertNewColumn(scenarioSimulationContextLocal, gridColumnMock, columnIndex, cloneInstance);
+        String columnGroup = gridColumnMock.getInformationHeaderMetaData().getColumnGroup();
+        String originalInstanceTitle = gridColumnMock.getInformationHeaderMetaData().getTitle();
+        String instanceTitle = cloneInstance ? originalInstanceTitle : scenarioGridModelMock.getValidPlaceholders().getKey();
+        String propertyTitle = scenarioGridModelMock.getValidPlaceholders().getValue();
+        final FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
+        verify(command, times(1)).getScenarioGridColumnLocal(
+                                                             anyString(),
+                                                             anyString(),
+                                                             anyString(),
+                                                             eq(columnGroup),
+                                                             eq(factMappingType),
+                                                             eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest),
+                                                             eq(scenarioCellTextAreaSingletonDOMElementFactoryTest),
+                                                             eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        if (cloneInstance) {
+            verify(createdColumn, times(1)).setFactIdentifier(eq(gridColumnMock.getFactIdentifier()));
+        } else {
+            verify(createdColumn, never()).setFactIdentifier(any());
+        }
+        verify(createdColumn, times(1)).setInstanceAssigned(eq(cloneInstance));
+        verify(scenarioGridModelMock, times(1)).insertColumn(COLUMN_INDEX, createdColumn);
+    }
 
-        //TODO doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
+   /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
+   protected void navigateComplexObject() {
+        FactModelTree book = new FactModelTree("Book", "com.Book", new HashMap<>(), new HashMap<>());
+        book.addExpandableProperty("author", "Author");
+        FactModelTree author = new FactModelTree("Author", "com.Author", new HashMap<>(), new HashMap<>());
+        SortedMap<String, FactModelTree> sortedMap = spy(new TreeMap<>());
+        sortedMap.put("Book", book);
+        sortedMap.put("Author", author);
+        List<String> elements = Arrays.asList("Book", "author", "currentlyPrinted");
+        FactModelTree target = ((AbstractSelectedColumnCommand) command).navigateComplexObject(book, elements, sortedMap);
+        assertEquals(target, author);
+        verify(sortedMap, times(1)).get("Author");
+    }
 
+    /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
+    protected void getPropertyHeaderTitle() {
+        String retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, VALUE, factIdentifierMock);
+        assertEquals(VALUE, retrieved);
+        List<FactMapping> factMappingList = new ArrayList<>();
+        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList);
+        retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, VALUE, factIdentifierMock);
+        assertEquals(VALUE, retrieved);
+        factMappingList.add(factMappingMock);
+        retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, VALUE, factIdentifierMock);
+        assertEquals(VALUE, retrieved);
+        String EXPRESSION_ALIAS = "EXPRESSION_ALIAS";
+        when(factMappingMock.getFullExpression()).thenReturn(VALUE);
+        when(factMappingMock.getExpressionAlias()).thenReturn(EXPRESSION_ALIAS);
+        retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, VALUE, factIdentifierMock);
+        assertEquals(EXPRESSION_ALIAS, retrieved);
+    }
 
-        /*
+    protected void executeKeepDataFalseDMN() {
+        scenarioSimulationContextLocal.getStatus().setKeepData(false);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        ((AbstractSelectedColumnCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify(gridColumnMock, times(1)).setEditableHeaders(eq(false));
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+    }
 
-        /*
-        when(scenarioGridColumnMock1.getHeaderMetaData()).thenReturn(headerMetaDatasMock2);
-        when(scenarioGridColumnMock1.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock2);
-        when(scenarioGridColumnMock1.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock2);
-        when(scenarioGridColumnMock1.getFactIdentifier()).thenReturn(factIdentifierMock2);
-        /*
-        when(scenarioGridColumnMock1.getHeaderMetaData()).thenReturn(headerMetaDatasMock2);
-        when(scenarioGridColumnMock1.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock2);
-        when(scenarioGridColumnMock1.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
-        when(scenarioGridColumnMock1.getFactIdentifier()).thenReturn(factIdentifierMock2); */
+    protected void executeKeepDataFalseRule() {
+        scenarioSimulationContextLocal.getStatus().setKeepData(false);
+        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        ((AbstractSelectedColumnCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify(gridColumnMock, times(1)).setEditableHeaders(eq(true));
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(VALUE), eq(VALUE_CLASS_NAME), eq(false));
+    }
+
+    protected void executeKeepDataTrue() {
+        scenarioSimulationContextLocal.getStatus().setKeepData(true);
+        ((AbstractSelectedColumnCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(VALUE), eq(VALUE_CLASS_NAME), eq(true));
+    }
+
+    protected void executeWithPropertyAsCollection() {
+        scenarioSimulationContextLocal.getStatus().setValueClassName(LIST_CLASS_NAME);
+        ((AbstractSelectedColumnCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
+        verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
+        verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
+        verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(VALUE), eq(LIST_CLASS_NAME), anyBoolean());
+        List<String> elements = Arrays.asList((FULL_CLASS_NAME).split("\\."));
+        verify(((AbstractSelectedColumnCommand) command), times(1)).navigateComplexObject(eq(factModelTreeMock), eq(elements), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
     }
 
 }

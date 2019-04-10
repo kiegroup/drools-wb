@@ -29,6 +29,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class InsertColumnCommandTest extends AbstractSelectedColumnCommandTest {
@@ -40,50 +41,42 @@ public class InsertColumnCommandTest extends AbstractSelectedColumnCommandTest {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
-                return gridColumnMock;
+                return createdGridColumnMock;
             }
         });
         assertTrue(command.isUndoable());
+        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
+        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
     }
 
     @Test
     public void executeIfSelectedColumn_NotIsRightIsAsProperty() {
-        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setRight(false);
-        scenarioSimulationContextLocal.getStatus().setAsProperty(true);
-        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
-        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(3), eq(Boolean.TRUE));
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(Boolean.TRUE);
+        commonTest(false, true, 3);
     }
 
     @Test
     public void executeIfSelectedColumn_IsRightIsAsProperty() {
-        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setRight(false);
-        scenarioSimulationContextLocal.getStatus().setAsProperty(true);
-        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
-        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(3), eq(Boolean.TRUE));
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(Boolean.TRUE);
+        commonTest(true, true, 4);
     }
 
     @Test
     public void executeIfSelectedColumn_NotIsRightNotIsAsProperty() {
-        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setRight(false);
-        scenarioSimulationContextLocal.getStatus().setAsProperty(false);
-        command.execute(scenarioSimulationContextLocal);
-        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(2), eq(Boolean.FALSE));
+        commonTest(false, false, 2);
     }
 
     @Test
     public void executeIfSelectedColumn_NotIsAsProperty() {
-        scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
-        scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setRight(true);
-        scenarioSimulationContextLocal.getStatus().setAsProperty(false);
-        command.execute(scenarioSimulationContextLocal);
-        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(4), eq(Boolean.FALSE));
+        commonTest(true, false, 4);
+    }
+
+    protected void commonTest(boolean right, boolean asProperty, int expectedIndex) {
+        scenarioSimulationContextLocal.getStatus().setRight(right);
+        scenarioSimulationContextLocal.getStatus().setAsProperty(asProperty);
+        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        boolean cloneInstance = scenarioSimulationContextLocal.getStatus().isAsProperty() && gridColumnMock.isInstanceAssigned();
+        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(expectedIndex), eq(cloneInstance));
     }
 
 }
