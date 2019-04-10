@@ -42,7 +42,7 @@ public class InsertColumnCommandTest extends AbstractSelectedColumnCommandTest {
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
                                                                     FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
-                return createdGridColumnMock;
+                return gridColumnMock;
             }
         });
         assertTrue(command.isUndoable());

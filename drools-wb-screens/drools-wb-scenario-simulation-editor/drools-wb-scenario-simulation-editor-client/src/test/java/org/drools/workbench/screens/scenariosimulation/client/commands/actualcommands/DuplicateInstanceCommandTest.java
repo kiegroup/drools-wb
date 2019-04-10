@@ -83,14 +83,9 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
             }
 
             @Override
-            protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass, String propertyHeaderTitle) {
-                //Do nothing
-            }
-
-            @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
-                return createdGridColumnMock;
+                return gridColumnMock;
             }
         });
         assertTrue(command.isUndoable());

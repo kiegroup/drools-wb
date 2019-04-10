@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -44,17 +43,10 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
                                                                     FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
-                return createdGridColumnMock;
+                return gridColumnMock;
             }
 
-            @Override
-            protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass) {
-                //Do nothing
-            }
         });
-        scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
-        scenarioSimulationContextLocal.getStatus().setValue(VALUE);
-        scenarioSimulationContextLocal.getStatus().setValueClassName(VALUE_CLASS_NAME);
         assertTrue(command.isUndoable());
      }
 
