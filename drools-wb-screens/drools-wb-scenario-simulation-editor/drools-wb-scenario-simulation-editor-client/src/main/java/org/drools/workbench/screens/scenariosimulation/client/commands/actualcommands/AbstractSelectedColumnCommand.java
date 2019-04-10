@@ -152,6 +152,13 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         scenarioGridColumn.setFactIdentifier(factIdentifier);
     }
 
+    /**
+     * It assigns a property to the selected <code>ScenarioGridColumn</code>
+     * @param context It contains the <b>Context</b> inside which the commands will be executed
+     * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
+     * @param value It contains the path instance_name.property.name (eg. Author.isAlive)
+     * @param propertyClass it contains the full classname of the instance (eg. com.Author)
+     */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass) {
         this.setPropertyHeader(context, selectedColumn, value, propertyClass, null);
     }
@@ -162,6 +169,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
      * @param value It contains the path instance_name.property.name (eg. Author.isAlive)
      * @param propertyClass it contains the full classname of the instance (eg. com.Author)
+     * @param propertyHeaderTitle The title to assign to this property. Can be null, in this case it will be retrieved used <code>getPropertyHeaderTitle()</code> method
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass, String propertyHeaderTitle) {
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
@@ -205,7 +213,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     }
 
     /**
-     * Sets the title and readOnly setting of a property header and sets the place holder on a given <code>ScenarioGridColumn</code>.
+     * It sets the title and readOnly setting of a property header and sets the place holder on a given <code>ScenarioGridColumn</code>.
      * @param propertyHeaderMetaData
      * @param title
      * @param readOnly
