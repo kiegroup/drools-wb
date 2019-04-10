@@ -359,6 +359,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(factIdentifierMock.getName()).thenReturn(FACT_IDENTIFIER_NAME);
         when(simulationDescriptorMock.getFactIdentifiers()).thenReturn(factIdentifierSet);
         when(simulationDescriptorMock.getUnmodifiableFactMappings()).thenReturn(factMappingLocal);
+        scenarioGridModelMock.bindContent(simulationMock);
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());

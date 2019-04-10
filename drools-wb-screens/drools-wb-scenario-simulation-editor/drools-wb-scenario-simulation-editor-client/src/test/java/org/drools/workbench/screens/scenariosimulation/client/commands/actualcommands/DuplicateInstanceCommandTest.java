@@ -132,6 +132,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         factIdentifierSet.add(factIdentifierMock1);
         factMappingLocal.add(factMappingMock1);
         when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMappingMock1);
+        scenarioGridModelMock.bindContent(simulationMock);
     }
 
     @Test

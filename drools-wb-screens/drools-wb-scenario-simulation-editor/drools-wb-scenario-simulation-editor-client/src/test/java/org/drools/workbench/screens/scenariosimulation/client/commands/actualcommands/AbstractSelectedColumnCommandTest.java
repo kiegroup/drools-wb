@@ -95,15 +95,16 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
     }
 
     protected void insertNewColumnCommon( int columnIndex, boolean cloneInstance) {
+        int instanceNum = simulationDescriptorMock.getUnmodifiableFactMappings().size();
         ScenarioGridColumn createdColumn = ((AbstractSelectedColumnCommand) command).insertNewColumn(scenarioSimulationContextLocal, gridColumnMock, columnIndex, cloneInstance);
         String columnGroup = gridColumnMock.getInformationHeaderMetaData().getColumnGroup();
         String originalInstanceTitle = gridColumnMock.getInformationHeaderMetaData().getTitle();
-        String instanceTitle = cloneInstance ? originalInstanceTitle : scenarioGridModelMock.getValidPlaceholders().getKey();
-        String propertyTitle = scenarioGridModelMock.getValidPlaceholders().getValue();
+        String instanceTitle = cloneInstance ? originalInstanceTitle : "INSTANCE " + instanceNum ;
+        String propertyTitle = "PROPERTY " + instanceNum ;
         final FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
         verify(command, times(1)).getScenarioGridColumnLocal(
-                                                             anyString(),
-                                                             anyString(),
+                                                             eq(instanceTitle),
+                                                             eq(propertyTitle),
                                                              anyString(),
                                                              eq(columnGroup),
                                                              eq(factMappingType),

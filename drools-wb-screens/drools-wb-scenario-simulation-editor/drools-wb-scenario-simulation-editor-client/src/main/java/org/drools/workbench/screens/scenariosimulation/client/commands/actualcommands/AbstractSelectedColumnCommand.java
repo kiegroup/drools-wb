@@ -59,8 +59,8 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * It inserts a new <code>ScenarioGridColumn</code> in <code>ScenarioGridModel</code>
      * @param context It contains the <b>Context</b> inside which the commands will be executed
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
-     * @param cloneInstance If true, it create a new column inside the same instance of the selected column
      * @param columnPosition Used to define in which position the new column should be added
+     * @param cloneInstance If true, it create a new column inside the same instance of the selected column
      * @return The created <code>ScenarioGridColumn</code>
      */
     protected ScenarioGridColumn insertNewColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, int columnPosition, boolean cloneInstance) {
