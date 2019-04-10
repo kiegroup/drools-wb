@@ -25,7 +25,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
  * <code>Command</code> to <b>insert</b> a column.
  */
 @Dependent
-public class InsertColumnCommand extends AbstractSelectedColumnCommand  {
+public class InsertColumnCommand extends AbstractSelectedColumnCommand {
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
@@ -39,7 +39,8 @@ public class InsertColumnCommand extends AbstractSelectedColumnCommand  {
             GridData.Range instanceRange = context.getModel().getInstanceLimits(context.getStatus().getColumnIndex());
             columnPosition = context.getStatus().isRight() ? instanceRange.getMaxRowIndex() + 1 : instanceRange.getMinRowIndex();
         }
+        boolean cloneInstance = context.getStatus().isAsProperty() && selectedColumn.isInstanceAssigned();
 
-        insertNewColumn(context, selectedColumn, columnPosition, context.getStatus().isAsProperty());
+        insertNewColumn(context, selectedColumn, columnPosition, cloneInstance);
     }
 }
