@@ -380,10 +380,9 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumn.isInstanceAssigned()).thenReturn(Boolean.TRUE);
         when(gridColumn.isPropertyAssigned()).thenReturn(Boolean.TRUE);
 
-        GridData.Range range = new GridData.Range(factStartingRange, factEndingRange);
-        when(scenarioGridModelMock.getInstanceLimits(columnIndex)).thenReturn(range);
+        when(scenarioGridModelMock.getInstanceLimits(columnIndex)).thenReturn(new GridData.Range(factStartingRange, factEndingRange));
 
-        when(metaData.get(COLUMN_NUMBER + 1)).thenReturn(informationHeaderMetaDataMock);
+        when(metaData.get(columnIndex)).thenReturn(informationHeaderMetaDataMock);
 
         when(informationHeaderMetaData.getTitle()).thenReturn(value);
         when(informationHeaderMetaData.getColumnGroup()).thenReturn(COLUMN_GROUP);
@@ -409,7 +408,7 @@ public abstract class AbstractScenarioSimulationTest {
         factMappingValuesLocal.add(factMappingValue);
         factIdentifierSet.add(factIdentifier);
         factMappingLocal.add(factMapping);
-        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMapping);
+        when(simulationDescriptorMock.getFactMappingByIndex(columnIndex)).thenReturn(factMapping);
         scenarioGridModelMock.bindContent(simulationMock);
     }
 
