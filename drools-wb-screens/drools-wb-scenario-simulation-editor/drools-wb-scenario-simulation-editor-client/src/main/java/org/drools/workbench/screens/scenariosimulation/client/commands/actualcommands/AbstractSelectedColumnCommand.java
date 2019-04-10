@@ -101,6 +101,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
         setPropertyMetaData(propertyHeaderMetaData, getPropertyPlaceHolder(columnIndex), false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         context.getModel().updateColumnInstance(columnIndex, selectedColumn);
+        if (context.getScenarioSimulationEditorPresenter() != null) {
+            context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
+        }
     }
 
     /**
