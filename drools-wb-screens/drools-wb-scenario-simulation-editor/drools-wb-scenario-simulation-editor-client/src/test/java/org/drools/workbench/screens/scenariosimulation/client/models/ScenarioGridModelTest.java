@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -71,7 +70,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     private ScenarioGridModel scenarioGridModel;
 
     @Mock
-    private ScenarioGridColumn scenarioGridColumnMock;
+    private ScenarioGridColumn scenarioIndexGridColumnMock;
 
     @Mock
     private BaseGridRow gridRowMock;
@@ -81,9 +80,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Mock
     private ScenarioHeaderMetaData indexHeaderMetaDataMock;
-
-    @Mock
-    private ScenarioHeaderMetaData informationHeaderMetaDataDuplicatedMock;
 
     @Mock
     private ScenarioGridCell gridCellMock;
@@ -102,7 +98,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private final String GRID_COLUMN_TITLE = "GRID_COLUMN_TITLE";
     private final String GRID_CELL_TEXT = "GRID_CELL_TEXT";
-    private final String GRID_COLUMN_TITLE_COPY = GRID_COLUMN_TITLE + "_copy";
     private final String VALUE = "VALUE";
     private final String VALUE_CLASS_NAME = String.class.getName();
     private final int ROW_COUNT = 4;
@@ -118,12 +113,17 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         doReturn(gridCellValueMock).when(gridCellMock).getValue();
 
         when(informationHeaderMetaDataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.INSTANCE);
+        when(informationHeaderMetaDataMock.isInstanceHeader()).thenReturn(true);
+        when(informationHeaderMetaDataMock.isPropertyHeader()).thenReturn(false);
         when(informationHeaderMetaDataMock.getTitle()).thenReturn(GRID_COLUMN_TITLE);
         when(informationHeaderMetaDataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         when(informationHeaderMetaDataMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
+        when(propertyHeaderMetaDataMock.isInstanceHeader()).thenReturn(false);
+        when(propertyHeaderMetaDataMock.isPropertyHeader()).thenReturn(true);
+
         when(indexHeaderMetaDataMock.getTitle()).thenReturn(ExpressionIdentifier.INDEX.getName());
-        when(scenarioGridColumnMock.getInformationHeaderMetaData()).thenReturn(indexHeaderMetaDataMock);
+        when(scenarioIndexGridColumnMock.getInformationHeaderMetaData()).thenReturn(indexHeaderMetaDataMock);
 
         when(gridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDataList);
 
@@ -144,20 +144,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValueMock));
         when(factMappingValueMock.isError()).thenReturn(true);
-
-        when(scenarioGridColumnMock.getHeaderMetaData()).thenReturn(headerMetaDatasMock);
-        when(scenarioGridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataDuplicatedMock);
-        when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
-        when(scenarioGridColumnMock.getFactIdentifier()).thenReturn(new FactIdentifier(String.valueOf(new Date().getTime()), FULL_CLASS_NAME));
-        when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
-        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMappingMock);
-
-        when(informationHeaderMetaDataDuplicatedMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.INSTANCE);
-        when(informationHeaderMetaDataDuplicatedMock.isInstanceHeader()).thenReturn(true);
-        when(informationHeaderMetaDataDuplicatedMock.isPropertyHeader()).thenReturn(false);
-        when(informationHeaderMetaDataDuplicatedMock.getTitle()).thenReturn(GRID_COLUMN_TITLE_COPY);
-        when(informationHeaderMetaDataDuplicatedMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
-        when(informationHeaderMetaDataDuplicatedMock.getColumnId()).thenReturn(GRID_COLUMN_ID);
 
         gridCellSupplier = () -> gridCellMock;
         scenarioGridModel = spy(new ScenarioGridModel(false) {
@@ -456,7 +442,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         reset(scenarioGridModel);
         when(scenarioGridModel.getRowCount()).thenReturn(3);
         int indexColumnPosition = 0;
-        gridColumns.add(indexColumnPosition, scenarioGridColumnMock);
+        gridColumns.add(indexColumnPosition, scenarioIndexGridColumnMock);
         when(scenarioGridModel.getColumns()).thenReturn(gridColumns);
         scenarioGridModel.updateIndexColumn();
     }
