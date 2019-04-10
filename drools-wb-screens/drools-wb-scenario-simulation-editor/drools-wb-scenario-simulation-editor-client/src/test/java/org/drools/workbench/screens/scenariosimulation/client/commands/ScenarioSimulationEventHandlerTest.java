@@ -27,15 +27,15 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependRowCommand;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadRightPanelCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.RunSingleScenarioCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetGridCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderCellValueCommand;
@@ -45,16 +45,16 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendColum
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.DisableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.EnableRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ReloadRightPanelEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -65,7 +65,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.SetProperty
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RedoEventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadRightPanelEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadTestToolsEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RunSingleScenarioEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetGridCellValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetHeaderCellValueEventHandler;
@@ -110,13 +110,13 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration deleteRowHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration disableRightPanelEventHandlerMock;
+    private HandlerRegistration disableTestToolsEventHandlerMock;
     @Mock
     private HandlerRegistration duplicateColumnHandlerRegistrationMock;
     @Mock
     private HandlerRegistration duplicateHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration enableRightPanelEventHandlerMock;
+    private HandlerRegistration enableTestToolsEventHandlerMock;
     @Mock
     private HandlerRegistration insertColumnHandlerRegistrationMock;
     @Mock
@@ -128,7 +128,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration redoEventHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration reloadRightPanelHandlerRegistrationMock;
+    private HandlerRegistration reloadTestToolsHandlerRegistrationMock;
     @Mock
     private HandlerRegistration runSingleScenarioHandlerRegistrationMock;
     @Mock
@@ -162,16 +162,16 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(AppendRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(appendRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteRowHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(DisableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(disableRightPanelEventHandlerMock);
+        when(eventBusMock.addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(disableTestToolsEventHandlerMock);
         when(eventBusMock.addHandler(eq(DuplicateInstanceEvent.TYPE), isA((ScenarioSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(EnableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableRightPanelEventHandlerMock);
+        when(eventBusMock.addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableTestToolsEventHandlerMock);
         when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class))).thenReturn(redoEventHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadRightPanelHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ReloadTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadTestToolsHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class))).thenReturn(runSingleScenarioHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class))).thenReturn(setGridCellValueEventHandlerMock);
@@ -240,10 +240,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     }
 
     @Test
-    public void onDisableRightPanelEvent() {
-        DisableRightPanelEvent event = new DisableRightPanelEvent();
+    public void onDisableTestToolsEvent() {
+        DisableTestToolsEvent event = new DisableTestToolsEvent();
         scenarioSimulationEventHandler.onEvent(event);
-        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DisableRightPanelCommand.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DisableTestToolsCommand.class));
     }
 
     @Test
@@ -261,10 +261,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     }
 
     @Test
-    public void onEnableRightPanelEvent() {
-        EnableRightPanelEvent event = new EnableRightPanelEvent();
+    public void onEnableTestToolsEvent() {
+        EnableTestToolsEvent event = new EnableTestToolsEvent();
         scenarioSimulationEventHandler.onEvent(event);
-        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(EnableRightPanelCommand.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(EnableTestToolsCommand.class));
     }
 
     @Test
@@ -303,10 +303,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     }
 
     @Test
-    public void onReloadRightPanelEvent() {
-        ReloadRightPanelEvent event = new ReloadRightPanelEvent(true);
+    public void onReloadTestToolsEvent() {
+        ReloadTestToolsEvent event = new ReloadTestToolsEvent(true);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(ReloadRightPanelCommand.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(ReloadTestToolsCommand.class));
     }
 
     @Test
@@ -471,14 +471,14 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteRowHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DisableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
-        verify(handlerRegistrationListMock, times(1)).add(eq(disableRightPanelEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(disableTestToolsEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(DuplicateInstanceEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(EnableRightPanelEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
-        verify(handlerRegistrationListMock, times(1)).add(eq(enableRightPanelEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(enableTestToolsEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(insertColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
@@ -489,8 +489,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(prependRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(redoEventHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(ReloadRightPanelEvent.TYPE), isA(ReloadRightPanelEventHandler.class));
-        verify(handlerRegistrationListMock, times(1)).add(eq(reloadRightPanelHandlerRegistrationMock));
+        verify(eventBusMock, times(1)).addHandler(eq(ReloadTestToolsEvent.TYPE), isA(ReloadTestToolsEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(reloadTestToolsHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(runSingleScenarioHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
