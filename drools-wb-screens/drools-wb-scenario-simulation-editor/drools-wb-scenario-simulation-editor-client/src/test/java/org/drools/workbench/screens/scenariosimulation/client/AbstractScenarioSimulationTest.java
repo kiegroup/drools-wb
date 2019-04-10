@@ -45,6 +45,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
@@ -364,4 +365,52 @@ public abstract class AbstractScenarioSimulationTest {
         when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
     }
+
+    /**
+     * Common method to add a new column in the model
+     */
+    protected void addNewColumn(ScenarioGridColumn gridColumn, List<GridColumn.HeaderMetaData> metaData, ScenarioHeaderMetaData informationHeaderMetaData,
+                             ScenarioHeaderMetaData propertyHeaderMetaData, FactIdentifier factIdentifier, FactMapping factMapping, FactMappingValue factMappingValue,
+                             int factStartingRange, int factEndingRange, int columnIndex, String value, String propertyTitle, String columnId, String factAlias,
+                             String valueClassName, String propertyAlias, String fullClassName, String factIdentfierName) {
+        when(gridColumn.getHeaderMetaData()).thenReturn(metaData);
+        when(gridColumn.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaData);
+        when(gridColumn.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaData);
+        when(gridColumn.getFactIdentifier()).thenReturn(factIdentifier);
+        when(gridColumn.isInstanceAssigned()).thenReturn(Boolean.TRUE);
+        when(gridColumn.isPropertyAssigned()).thenReturn(Boolean.TRUE);
+
+        GridData.Range range = new GridData.Range(factStartingRange, factEndingRange);
+        when(scenarioGridModelMock.getInstanceLimits(columnIndex)).thenReturn(range);
+
+        when(metaData.get(COLUMN_NUMBER + 1)).thenReturn(informationHeaderMetaDataMock);
+
+        when(informationHeaderMetaData.getTitle()).thenReturn(value);
+        when(informationHeaderMetaData.getColumnGroup()).thenReturn(COLUMN_GROUP);
+
+        when(propertyHeaderMetaData.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
+        when(propertyHeaderMetaData.getTitle()).thenReturn(propertyTitle);
+        when(propertyHeaderMetaData.getColumnGroup()).thenReturn(COLUMN_GROUP);
+        when(propertyHeaderMetaData.getColumnId()).thenReturn(columnId);
+
+        when(factMapping.getFactIdentifier()).thenReturn(factIdentifier);
+        when(factMapping.getFactAlias()).thenReturn(factAlias);
+        when(factMapping.getClassName()).thenReturn(valueClassName);
+
+        List<ExpressionElement> expressionElements = new ArrayList<>();
+        expressionElements.add(new ExpressionElement(factAlias));
+        expressionElements.add(new ExpressionElement(propertyAlias));
+        when(factMapping.getExpressionElements()).thenReturn(expressionElements);
+
+        when(factIdentifier.getClassName()).thenReturn(fullClassName);
+        when(factIdentifier.getName()).thenReturn(factIdentfierName);
+
+        gridColumns.add(gridColumn);
+        factMappingValuesLocal.add(factMappingValue);
+        factIdentifierSet.add(factIdentifier);
+        factMappingLocal.add(factMapping);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMapping);
+        scenarioGridModelMock.bindContent(simulationMock);
+    }
+
 }

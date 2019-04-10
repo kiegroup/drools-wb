@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -25,7 +24,6 @@ import org.drools.workbench.screens.scenariosimulation.client.factories.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionElement;
 import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
@@ -35,7 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -89,45 +86,9 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
             }
         });
         assertTrue(command.isUndoable());
-
-        when(scenarioGridColumnMock1.getHeaderMetaData()).thenReturn(headerMetaDatasMock1);
-        when(scenarioGridColumnMock1.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock1);
-        when(scenarioGridColumnMock1.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock1);
-        when(scenarioGridColumnMock1.getFactIdentifier()).thenReturn(factIdentifierMock1);
-        when(scenarioGridColumnMock1.isInstanceAssigned()).thenReturn(Boolean.TRUE);
-        when(scenarioGridColumnMock1.isPropertyAssigned()).thenReturn(Boolean.TRUE);
-
-        GridData.Range range = new GridData.Range(COLUMN_NUMBER, COLUMN_NUMBER);
-        when(scenarioGridModelMock.getInstanceLimits(COLUMN_NUMBER)).thenReturn(range);
-
-        when(headerMetaDatasMock1.get(COLUMN_NUMBER + 1)).thenReturn(informationHeaderMetaDataMock1);
-
-        when(informationHeaderMetaDataMock1.getTitle()).thenReturn(VALUE_1);
-        when(informationHeaderMetaDataMock1.getColumnGroup()).thenReturn(COLUMN_GROUP);
-
-        when(propertyHeaderMetaDataMock1.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.PROPERTY);
-        when(propertyHeaderMetaDataMock1.getTitle()).thenReturn(GRID_PROPERTY_TITLE_1);
-        when(propertyHeaderMetaDataMock1.getColumnGroup()).thenReturn(COLUMN_GROUP);
-        when(propertyHeaderMetaDataMock1.getColumnId()).thenReturn(GRID_COLUMN_ID_1);
-
-        when(factMappingMock1.getFactIdentifier()).thenReturn(factIdentifierMock1);
-        when(factMappingMock1.getFactAlias()).thenReturn(FACT_ALIAS_1);
-        when(factMappingMock1.getClassName()).thenReturn(VALUE_CLASS_NAME);
-
-        List<ExpressionElement> expressionElements = new ArrayList<>();
-        expressionElements.add(new ExpressionElement(FACT_ALIAS_1));
-        expressionElements.add(new ExpressionElement("test"));
-        when(factMappingMock1.getExpressionElements()).thenReturn(expressionElements);
-
-        when(factIdentifierMock1.getClassName()).thenReturn(FULL_CLASS_NAME_1);
-        when(factIdentifierMock1.getName()).thenReturn(FACT_IDENTIFIER_NAME_1);
-
-        gridColumns.add(scenarioGridColumnMock1);
-        factMappingValuesLocal.add(factMappingValueMock1);
-        factIdentifierSet.add(factIdentifierMock1);
-        factMappingLocal.add(factMappingMock1);
-        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_NUMBER)).thenReturn(factMappingMock1);
-        scenarioGridModelMock.bindContent(simulationMock);
+        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
+                          factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1,GRID_COLUMN_ID, FACT_ALIAS_1, VALUE_CLASS_NAME,
+                          "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
     }
 
     @Test
