@@ -154,7 +154,7 @@ public class ScenarioRunnerServiceImplTest {
                         new RuleScenarioRunner(kieContainer, simulationDescriptor, scenarios, "") {
 
                             @Override
-                            protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
+                            protected void internalRunScenario(ScenarioWithIndex scenarioWithIndex, ScenarioRunnerData scenarioRunnerData) {
                                 throw new ScenarioException(errorMessage);
                             }
                         });

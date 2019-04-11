@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.model;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -37,15 +38,17 @@ public class SimulationRunMetadata {
 
     protected SortedMap<ScenarioWithIndex, List<String>> scenarioCounter = new TreeMap<>(Comparator.comparingInt(a -> a.index));
 
+    protected List<ScenarioWithIndex> scenarios;
+
     public SimulationRunMetadata() {
         // CDI
     }
 
-    public SimulationRunMetadata(int available, int executed, SortedMap<String, Integer> outputCounter, SortedMap<ScenarioWithIndex, List<String>> scenarioCounter) {
+    public SimulationRunMetadata(int available, int executed, Map<String, Integer> outputCounter, Map<ScenarioWithIndex, List<String>> scenarioCounter) {
         this.available = available;
         this.executed = executed;
-        this.outputCounter = outputCounter;
-        this.scenarioCounter = scenarioCounter;
+        this.outputCounter.putAll(outputCounter);
+        this.scenarioCounter.putAll(scenarioCounter);
         this.coveragePercentage = (double) executed / available;
     }
 

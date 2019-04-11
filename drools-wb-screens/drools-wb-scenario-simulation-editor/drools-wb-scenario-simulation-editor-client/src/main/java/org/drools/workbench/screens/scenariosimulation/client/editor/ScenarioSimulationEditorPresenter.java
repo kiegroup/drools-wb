@@ -52,6 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -308,16 +309,16 @@ public class ScenarioSimulationEditorPresenter
         return uberfireDocksInteractionEvent.getTargetDock() != null && uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest().getParameter(SCESIMEDITOR_ID, "").equals(String.valueOf(scenarioPresenterId));
     }
 
-    protected RemoteCallback<List<ScenarioWithIndex>> getRefreshModelCallback() {
+    protected RemoteCallback<SimulationRunResult> getRefreshModelCallback() {
         return this::refreshModelContent;
     }
 
-    protected void refreshModelContent(List<ScenarioWithIndex> newData) {
+    protected void refreshModelContent(SimulationRunResult newData) {
         if (this.model == null) {
             return;
         }
         Simulation simulation = this.model.getSimulation();
-        for (ScenarioWithIndex scenarioWithIndex : newData) {
+        for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
             int index = scenarioWithIndex.getIndex() - 1;
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }

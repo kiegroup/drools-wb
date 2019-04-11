@@ -20,11 +20,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
+
 public class ScenarioResultMetadata {
 
     protected final Set<String> available = new HashSet<>();
 
     protected final Set<String> executed = new HashSet<>();
+
+    protected final ScenarioWithIndex scenarioWithIndex;
+
+    public ScenarioResultMetadata(ScenarioWithIndex scenarioWithIndex) {
+        this.scenarioWithIndex = scenarioWithIndex;
+    }
 
     public void addAvailable(String element) {
         available.add(element);
@@ -40,5 +48,9 @@ public class ScenarioResultMetadata {
 
     public Set<String> getExecuted() {
         return Collections.unmodifiableSet(executed);
+    }
+
+    public ScenarioWithIndex getScenarioWithIndex() {
+        return scenarioWithIndex;
     }
 }

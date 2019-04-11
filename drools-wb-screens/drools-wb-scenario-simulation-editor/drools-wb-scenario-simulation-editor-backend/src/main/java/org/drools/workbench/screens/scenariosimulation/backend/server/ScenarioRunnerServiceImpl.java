@@ -27,12 +27,12 @@ import org.drools.workbench.screens.scenariosimulation.backend.server.runner.Abs
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.junit.runner.Result;
-import org.junit.runner.Runner;
 import org.kie.api.runtime.KieContainer;
 import org.uberfire.backend.vfs.Path;
 
@@ -74,12 +74,12 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
     }
 
     @Override
-    public List<ScenarioWithIndex> runTest(final String identifier,
-                                           final Path path,
-                                           final SimulationDescriptor simulationDescriptor,
-                                           final List<ScenarioWithIndex> scenarios) {
+    public SimulationRunResult runTest(final String identifier,
+                                       final Path path,
+                                       final SimulationDescriptor simulationDescriptor,
+                                       final List<ScenarioWithIndex> scenarios) {
         KieContainer kieContainer = getKieContainer(path);
-        Runner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
+        AbstractScenarioRunner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
                 .create(kieContainer, simulationDescriptor, scenarios);
 
         final List<Failure> failures = new ArrayList<>();
@@ -95,7 +95,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                         result.getRunTime(),
                         failures));
 
-        return scenarios;
+        return new SimulationRunResult(scenarios, scenarioRunner.getResultMetadata());
     }
 
     public ScenarioRunnerProvider getOrCreateRunnerSupplier(SimulationDescriptor simulationDescriptor) {

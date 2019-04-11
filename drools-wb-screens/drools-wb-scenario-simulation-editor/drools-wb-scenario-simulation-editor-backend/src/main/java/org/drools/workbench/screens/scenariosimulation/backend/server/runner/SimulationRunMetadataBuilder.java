@@ -16,21 +16,41 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server.runner;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResultMetadata;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 
 public class SimulationRunMetadataBuilder {
 
+    protected List<ScenarioResultMetadata> scenarioResultMetadata = new ArrayList<>();
+
+    private SimulationRunMetadataBuilder() {
+    }
+
     // FIXME to test
     public SimulationRunMetadataBuilder addScenarioResultMetadata(ScenarioResultMetadata scenarioResultMetadata) {
-        // FIXME
+        this.scenarioResultMetadata.add(scenarioResultMetadata);
         return this;
     }
 
     // FIXME to test
     public SimulationRunMetadata build() {
-        // FIXME
-        return new SimulationRunMetadata();
+        int available = 0;
+        Map<String, Integer> outputCounter = new HashMap<>();
+        Map<ScenarioWithIndex, List<String>> scenarioCounter = new HashMap<>();
+        for (ScenarioResultMetadata scenarioResultMetadatum : scenarioResultMetadata) {
+            // this value is the same for all the scenarios
+            available = scenarioResultMetadatum.getAvailable().size();
+            scenarioResultMetadatum.getExecuted()
+                    .forEach(name -> outputCounter.compute(name,
+                                                           (key, number) -> number == null? 1 : number + 1));
+        }
+        return new SimulationRunMetadata(available, outputCounter.keySet().size(), outputCounter, scenarioCounter);
     }
 
     public static SimulationRunMetadataBuilder create() {

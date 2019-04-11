@@ -27,10 +27,22 @@ public class SimulationRunResult {
 
     protected List<ScenarioWithIndex> scenarioWithIndex;
 
+    protected SimulationRunMetadata simulationRunMetadata;
 
+    public SimulationRunResult() {
+        // CDI
+    }
 
+    public SimulationRunResult(List<ScenarioWithIndex> scenarioWithIndex, SimulationRunMetadata simulationRunMetadata) {
+        this.scenarioWithIndex = scenarioWithIndex;
+        this.simulationRunMetadata = simulationRunMetadata;
+    }
 
+    public List<ScenarioWithIndex> getScenarioWithIndex() {
+        return scenarioWithIndex;
+    }
 
-
-
+    public SimulationRunMetadata getSimulationRunMetadata() {
+        return simulationRunMetadata;
+    }
 }

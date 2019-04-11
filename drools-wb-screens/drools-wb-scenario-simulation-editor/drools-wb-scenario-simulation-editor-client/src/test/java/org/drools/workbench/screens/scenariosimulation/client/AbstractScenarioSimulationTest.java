@@ -52,6 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.kie.workbench.common.command.client.CommandResult;
@@ -121,6 +122,8 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioSimulationModel scenarioSimulationModelMock;
     @Mock
+    protected SimulationRunResult simulationRunResultMock;
+    @Mock
     protected List<ScenarioWithIndex> scenarioWithIndexMock;
     @Mock
     protected DataManagementStrategy dataManagementStrategyMock;
@@ -177,6 +180,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexMock);
         when(scenarioWithIndexMock.iterator()).thenReturn(new ArrayList<ScenarioWithIndex>().iterator());
+        when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexMock);
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,

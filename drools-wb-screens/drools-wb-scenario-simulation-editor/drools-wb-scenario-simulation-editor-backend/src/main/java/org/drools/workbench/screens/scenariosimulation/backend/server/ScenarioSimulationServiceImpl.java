@@ -36,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.drools.workbench.screens.scenariosimulation.type.ScenarioSimulationResourceTypeDefinition;
@@ -149,9 +150,9 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public List<ScenarioWithIndex> runScenario(final Path path,
-                                               final SimulationDescriptor simulationDescriptor,
-                                               final List<ScenarioWithIndex> scenarios) {
+    public SimulationRunResult runScenario(final Path path,
+                                           final SimulationDescriptor simulationDescriptor,
+                                           final List<ScenarioWithIndex> scenarios) {
         return scenarioRunnerService.runTest(user.getIdentifier(),
                                              path,
                                              simulationDescriptor,

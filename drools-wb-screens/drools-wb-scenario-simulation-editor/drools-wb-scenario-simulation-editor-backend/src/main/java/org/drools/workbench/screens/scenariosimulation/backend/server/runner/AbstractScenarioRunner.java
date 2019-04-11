@@ -74,9 +74,7 @@ public abstract class AbstractScenarioRunner extends Runner {
 
         notifier.fireTestStarted(getDescription());
         for (ScenarioWithIndex scenarioWithIndex : scenarios) {
-            Scenario scenario = scenarioWithIndex.getScenario();
-            Integer index = scenarioWithIndex.getIndex();
-            singleRunScenario(index, scenario, notifier)
+            singleRunScenario(scenarioWithIndex, notifier)
                     .ifPresent(simulationRunMetadataBuilder::addScenarioResultMetadata);
         }
         notifier.fireTestStarted(getDescription());
@@ -87,21 +85,22 @@ public abstract class AbstractScenarioRunner extends Runner {
         return this.desc;
     }
 
-    protected Optional<ScenarioResultMetadata> singleRunScenario(int index, Scenario scenario, RunNotifier runNotifier) {
+    protected Optional<ScenarioResultMetadata> singleRunScenario(ScenarioWithIndex scenarioWithIndex, RunNotifier runNotifier) {
         ScenarioRunnerData scenarioRunnerData = new ScenarioRunnerData();
 
-        Description descriptionForScenario = getDescriptionForScenario(getFileName(), index, scenario);
+        int index = scenarioWithIndex.getIndex();
+        Description descriptionForScenario = getDescriptionForScenario(getFileName(), index, scenarioWithIndex.getScenario());
         runNotifier.fireTestStarted(descriptionForScenario);
 
         try {
-            internalRunScenario(scenario, scenarioRunnerData);
+            internalRunScenario(scenarioWithIndex, scenarioRunnerData);
         } catch (ScenarioException e) {
             IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, e);
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(descriptionForScenario, indexedScenarioException));
         } catch (Throwable e) {
             IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
-                    .append(scenario.getDescription()).append("'").toString(), e);
+                    .append(scenarioWithIndex.getScenario().getDescription()).append("'").toString(), e);
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(descriptionForScenario, indexedScenarioException));
         }
@@ -111,11 +110,11 @@ public abstract class AbstractScenarioRunner extends Runner {
         return scenarioRunnerData.getMetadata();
     }
 
-    protected void internalRunScenario(Scenario scenario, ScenarioRunnerData scenarioRunnerData) {
+    protected void internalRunScenario(ScenarioWithIndex scenarioWithIndex, ScenarioRunnerData scenarioRunnerData) {
         ExpressionEvaluator expressionEvaluator = createExpressionEvaluator();
         newRunnerHelper(getSimulationDescriptor()).run(getKieContainer(),
                                                        getSimulationDescriptor(),
-                                                       scenario,
+                                                       scenarioWithIndex,
                                                        expressionEvaluator,
                                                        getClassLoader(),
                                                        scenarioRunnerData);

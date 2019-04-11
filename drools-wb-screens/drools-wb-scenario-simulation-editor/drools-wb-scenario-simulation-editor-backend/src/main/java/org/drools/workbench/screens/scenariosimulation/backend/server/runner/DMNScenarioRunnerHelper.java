@@ -34,6 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
@@ -66,11 +67,11 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
     }
 
     @Override
-    protected ScenarioResultMetadata extractResultMetadata(RequestContext requestContext, ScenarioRunnerData scenarioRunnerData) {
+    protected ScenarioResultMetadata extractResultMetadata(RequestContext requestContext, ScenarioWithIndex scenarioWithIndex) {
         DMNModel dmnModel = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_MODEL);
         DMNResult dmnResult = requestContext.getOutput(DMNScenarioExecutableBuilder.DMN_RESULT);
 
-        ScenarioResultMetadata scenarioResultMetadata = new ScenarioResultMetadata();
+        ScenarioResultMetadata scenarioResultMetadata = new ScenarioResultMetadata(scenarioWithIndex);
 
         for (DecisionNode decision : dmnModel.getDecisions()) {
             scenarioResultMetadata.addAvailable(decision.getName());

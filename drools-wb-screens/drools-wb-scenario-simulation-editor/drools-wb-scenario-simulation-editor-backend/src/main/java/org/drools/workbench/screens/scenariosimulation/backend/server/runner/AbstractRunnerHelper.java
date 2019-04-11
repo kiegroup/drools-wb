@@ -39,6 +39,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.RequestContext;
@@ -47,7 +48,9 @@ import static java.util.stream.Collectors.toList;
 
 public abstract class AbstractRunnerHelper {
 
-    public void run(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, Scenario scenario, ExpressionEvaluator expressionEvaluator, ClassLoader classLoader, ScenarioRunnerData scenarioRunnerData) {
+    public void run(KieContainer kieContainer, SimulationDescriptor simulationDescriptor, ScenarioWithIndex scenarioWithIndex, ExpressionEvaluator expressionEvaluator, ClassLoader classLoader, ScenarioRunnerData scenarioRunnerData) {
+
+        Scenario scenario = scenarioWithIndex.getScenario();
 
         extractGivenValues(simulationDescriptor, scenario.getUnmodifiableFactMappingValues(), classLoader, expressionEvaluator)
                 .forEach(scenarioRunnerData::addGiven);
@@ -59,7 +62,7 @@ public abstract class AbstractRunnerHelper {
                                                         expressionEvaluator,
                                                         simulationDescriptor);
 
-        scenarioRunnerData.setMetadata(extractResultMetadata(requestContext, scenarioRunnerData));
+        scenarioRunnerData.setMetadata(extractResultMetadata(requestContext, scenarioWithIndex));
 
         verifyConditions(simulationDescriptor,
                          scenarioRunnerData,
@@ -206,7 +209,7 @@ public abstract class AbstractRunnerHelper {
     }
 
     protected ScenarioResultMetadata extractResultMetadata(RequestContext requestContext,
-                                                           ScenarioRunnerData scenarioRunnerData) {
+                                                           ScenarioWithIndex scenarioWithIndex) {
         return null;
     }
 
