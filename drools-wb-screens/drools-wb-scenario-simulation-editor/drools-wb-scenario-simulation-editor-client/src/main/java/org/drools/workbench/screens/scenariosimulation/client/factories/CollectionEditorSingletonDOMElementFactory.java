@@ -105,7 +105,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         String genericTypeName0 = genericTypes.get(0);
         Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
         boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
-        if (isRule) {
+        if (isRule && !isSimpleJavaType(genericTypeName0)) {
             genericTypeName0 = genericTypeName0.substring(genericTypeName0.lastIndexOf(".") + 1);
         }
         if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
@@ -113,7 +113,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0));
         } else {
             String genericTypeName1 = genericTypes.get(1);
-            if (isRule) {
+            if (isRule && !isSimpleJavaType(genericTypeName1)) {
                 genericTypeName1 = genericTypeName1.substring(genericTypeName1.lastIndexOf(".") + 1);
             }
             collectionEditorView.setListWidget(false);
