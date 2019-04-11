@@ -235,4 +235,10 @@ public interface ScenarioSimulationEditorConstants
     String collectionError();
 
     String settings();
+
+    String errorReason();
+
+    String keep();
+
+    String apply();
 }
