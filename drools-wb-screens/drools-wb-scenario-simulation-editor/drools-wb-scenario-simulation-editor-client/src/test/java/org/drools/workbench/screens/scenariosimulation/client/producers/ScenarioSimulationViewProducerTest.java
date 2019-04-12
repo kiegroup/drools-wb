@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnHoverHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
     private ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandlerMock;
 
     @Mock
-    private CommonOnHoverHandler commonOnHoverHandlerMock;
+    private CommonOnMoveHandler commonOnMoveHandlerMock;
 
     private ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 
@@ -55,7 +55,7 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
             {
                 this.scenarioSimulationView = scenarioSimulationViewMock;
                 this.scenarioGridPanelProducer = scenarioGridPanelProducerMock;
-                this.commonOnHoverHandler = commonOnHoverHandlerMock;
+                this.commonOnMoveHandler = commonOnMoveHandlerMock;
             }
         });
     }
@@ -67,8 +67,8 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         verify(scenarioGridPanelMock, times(1)).setEventBus(eq(eventBusMock));
         verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setScenarioGrid(eq(scenarioGridMock));
         verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setEventBus(eq(eventBusMock));
-        verify(commonOnHoverHandlerMock, times(1)).setScenarioGrid(eq(scenarioGridMock));
-        verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationGridPanelClickHandlerMock), eq(commonOnHoverHandlerMock));
+        verify(commonOnMoveHandlerMock, times(1)).setScenarioGrid(eq(scenarioGridMock));
+        verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationGridPanelClickHandlerMock), eq(commonOnMoveHandlerMock));
         verify(retrieved, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
     }
 }

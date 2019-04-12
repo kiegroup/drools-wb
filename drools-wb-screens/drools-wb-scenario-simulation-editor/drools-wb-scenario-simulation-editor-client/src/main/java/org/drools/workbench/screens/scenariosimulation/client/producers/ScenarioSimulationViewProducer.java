@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnHoverHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -39,7 +39,7 @@ public class ScenarioSimulationViewProducer {
     protected ScenarioGridPanelProducer scenarioGridPanelProducer;
 
     @Inject
-    protected CommonOnHoverHandler commonOnHoverHandler;
+    protected CommonOnMoveHandler commonOnMoveHandler;
 
     public ScenarioSimulationView getScenarioSimulationView(final EventBus eventBus) {
         final ScenarioGridPanel scenarioGridPanel = scenarioGridPanelProducer.getScenarioGridPanel();
@@ -48,8 +48,8 @@ public class ScenarioSimulationViewProducer {
         scenarioSimulationGridPanelClickHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
         scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioGridPanelProducer.getScenarioContextMenuRegistry());
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBus);
-        commonOnHoverHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
-        scenarioGridPanel.addHandlers(scenarioSimulationGridPanelClickHandler, commonOnHoverHandler);
+        commonOnMoveHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
+        scenarioGridPanel.addHandlers(scenarioSimulationGridPanelClickHandler, commonOnMoveHandler);
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);
         return scenarioSimulationView;
     }

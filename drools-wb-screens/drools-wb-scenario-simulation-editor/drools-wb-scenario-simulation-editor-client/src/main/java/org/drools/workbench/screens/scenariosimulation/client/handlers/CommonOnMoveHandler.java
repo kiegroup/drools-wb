@@ -38,12 +38,17 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  * This class is meant to provide common implementations for <b>on hover</b> behavior to be used by both mouse keyboard handler
  */
 @Dependent
-public class CommonOnHoverHandler extends AbstractScenarioSimulationGridPanelHandler {
+public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHandler {
 
     @Inject
     protected ErrorReportPopupPresenter errorReportPopupPresenter;
 
-    public void handleOnHover(final int mx, final int my) {
+    protected Integer currentlyShownHeaderRowIndex;
+    protected Integer currentlyShownHeaderColumnIndex;
+    protected Integer currentlyShownBodyRowIndex;
+    protected Integer currentlyShownBodyColumnIndex;
+
+    public void handleOnMove(final int mx, final int my) {
         manageCoordinates(mx, my);
     }
 
@@ -54,6 +59,11 @@ public class CommonOnHoverHandler extends AbstractScenarioSimulationGridPanelHan
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
+        if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
+            return false;
+        }
+        currentlyShownBodyRowIndex = uiRowIndex;
+        currentlyShownBodyColumnIndex = uiColumnIndex;
         final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
         final Optional<FactMappingValue> factMappingValueByIndex = scenarioByIndex.getFactMappingValueByIndex(uiColumnIndex);
         factMappingValueByIndex.ifPresent(factMappingValue -> {
