@@ -66,7 +66,7 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
         if (isHeader) {
             return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint);
         } else {
-            return manageGridCoordinates(uiRowIndex, uiColumnIndex);
+            return manageBodyCoordinates(uiRowIndex, uiColumnIndex);
         }
     }
 
@@ -125,7 +125,7 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
      * @param uiColumnIndex
      * @return
      */
-    protected abstract boolean manageGridCoordinates(Integer uiRowIndex, Integer uiColumnIndex);
+    protected abstract boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex);
 
 
     // Indirection add for test

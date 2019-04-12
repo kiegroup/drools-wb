@@ -53,7 +53,7 @@ public class CommonOnHoverHandler extends AbstractScenarioSimulationGridPanelHan
     }
 
     @Override
-    protected boolean manageGridCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
+    protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
         final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
         final Optional<FactMappingValue> factMappingValueByIndex = scenarioByIndex.getFactMappingValueByIndex(uiColumnIndex);
         factMappingValueByIndex.ifPresent(factMappingValue -> {

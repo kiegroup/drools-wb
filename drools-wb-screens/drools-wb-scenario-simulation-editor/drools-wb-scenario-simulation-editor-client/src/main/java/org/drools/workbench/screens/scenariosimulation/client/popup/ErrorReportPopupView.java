@@ -43,14 +43,16 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
     @DataField("applyButton")
     protected ButtonElement applyButton = Document.get().createButtonElement();
 
-
+    @DataField("errorContent")
+    protected Div errorContent;
 
     public ErrorReportPopupView() {
         //CDI proxy
     }
 
     @Inject
-    public ErrorReportPopupView(final Div popoverElement,
+    public ErrorReportPopupView(final Div errorContent,
+                                final Div popoverElement,
                                 final Div popoverContainerElement,
                                 final Div popoverContentElement,
                                 final JQueryProducer.JQuery<Popover> jQueryPopover) {
@@ -58,6 +60,7 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
               popoverContainerElement,
               popoverContentElement,
               jQueryPopover);
+        this.errorContent = errorContent;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
                      final int my) {
 
         this.applyCommand = applyCommand;
-        popoverContentElement.setTextContent(errorContentText);
+        errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.setInnerText(applyText);
         super.show(Optional.of(errorTitleText), mx, my);

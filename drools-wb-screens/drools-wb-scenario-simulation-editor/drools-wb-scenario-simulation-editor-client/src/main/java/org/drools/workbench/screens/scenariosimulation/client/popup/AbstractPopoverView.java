@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.google.gwt.user.client.ui.RootPanel;
-import org.jboss.errai.common.client.dom.CSSStyleDeclaration;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
@@ -79,9 +78,6 @@ public abstract class AbstractPopoverView implements PopoverView {
         popover = jQueryPopover.wrap(element);
         popover.popover(options);
         popover.show();
-        final CSSStyleDeclaration style = popover.getStyle();
-        style.setProperty(LEFT, mx + "px");
-        style.setProperty(TOP, my + "px");
     }
 
     @Override

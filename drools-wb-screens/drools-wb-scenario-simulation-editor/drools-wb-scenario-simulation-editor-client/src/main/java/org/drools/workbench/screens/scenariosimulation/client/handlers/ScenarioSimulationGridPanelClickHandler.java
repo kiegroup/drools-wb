@@ -123,7 +123,7 @@ public class ScenarioSimulationGridPanelClickHandler extends AbstractScenarioSim
      * @return
      */
     @Override
-    protected boolean manageGridCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
+    protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
         final GridCell<?> cell = scenarioGrid.getModel().getCell(uiRowIndex, uiColumnIndex);
         if (cell == null) {
             return false;
