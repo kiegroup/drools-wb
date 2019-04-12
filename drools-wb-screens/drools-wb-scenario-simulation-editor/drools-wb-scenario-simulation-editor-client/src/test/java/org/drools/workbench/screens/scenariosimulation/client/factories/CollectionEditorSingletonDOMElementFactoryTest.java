@@ -36,6 +36,7 @@ import static org.drools.workbench.screens.scenariosimulation.model.ScenarioSimu
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -130,11 +131,6 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     }
 
     @Test
-    public void manageMap_RuleNotSimpleType() {
-        manageMap(FULL_CLASS_NAME, true, expectedMapForNotSimpleType2);
-    }
-
-    @Test
     public void manageMap_NotRuleNotSimpleType() {
         manageMap(FULL_CLASS_NAME, false, expectedMapForNotSimpleType);
     }
@@ -142,8 +138,13 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     private void manageMap(String genericType1, boolean isRule, Map<String, String> expectedMap1) {
         String key =  FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
         Map<String, String> expectedMap0 = new HashMap<>();
-        expectedMap0.put("value", STRING_CLASS_NAME);
+
+        doReturn(expectedMap0).when(collectionEditorSingletonDOMElementFactoryMock).getSimplePropertiesMap(eq(STRING_CLASS_NAME));
+        doReturn(expectedMap1).when(collectionEditorSingletonDOMElementFactoryMock).getSimplePropertiesMap(eq(genericType1));
         collectionEditorSingletonDOMElementFactoryMock.manageMap(collectionEditorViewImpl, key, STRING_CLASS_NAME, genericType1, isRule);
+        verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
+        verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(genericType1);
+
         verify(collectionEditorViewImpl, times(1)).setListWidget(false);
         verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1));
     }
