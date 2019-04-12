@@ -74,11 +74,11 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         this.widget = createWidget();
         final ScenarioGridModel model = ((ScenarioGrid) gridWidget).getModel();
         final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
-        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream().filter(col -> col.getIndex() ==
-                selectedCellsOrigin.getColumnIndex())
+        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
+                .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
                 .findFirst();
         selectedColumn.ifPresent(col -> {
-            int actualIndex = model.getColumns().indexOf(col);
+            final int actualIndex = model.getColumns().indexOf(col);
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
@@ -92,15 +92,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     @Override
-    public void destroyResources() {
-        if (e != null) {
-            e.detach();
-            widget = null;
-            e = null;
-        }
-    }
-
-    @Override
     protected String getValue() {
         return widget != null ? widget.getValue() : null;
     }
@@ -110,14 +101,38 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         String className = factMapping.getFactAlias();
         String propertyName = factMapping.getExpressionAlias();
         List<String> genericTypes = factMapping.getGenericTypes();
-        String key = className + "#" + propertyName;
-        if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
-            collectionEditorView.setListWidget(true);
-            collectionEditorView.initListStructure(key, getPropertiesMap(genericTypes.get(0)));
-        } else {
-            collectionEditorView.setListWidget(false);
-            collectionEditorView.initMapStructure(key, getPropertiesMap(genericTypes.get(0)), getPropertiesMap(genericTypes.get(1)));
+        if (propertyClass == null || className == null || propertyName == null || genericTypes == null || genericTypes.isEmpty()) {
+            throw new IllegalStateException("Missing required properties inside FactMapping");
         }
+        String key = className + "#" + propertyName;
+        String genericTypeName0 = genericTypes.get(0);
+        Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
+        boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
+        if (isRule && !isSimpleJavaType(genericTypeName0)) {
+            genericTypeName0 = getRuleComplexType(genericTypeName0);
+        }
+        if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
+            manageList(collectionEditorView, key, genericTypeName0);
+        } else {
+            manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), isRule);
+        }
+    }
+
+    protected String getRuleComplexType(String genericTypeName0) {
+        return genericTypeName0.substring(genericTypeName0.lastIndexOf(".") + 1);
+    }
+
+    protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0) {
+        collectionEditorView.setListWidget(true);
+        collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0));
+    }
+
+    protected void manageMap(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, String genericTypeName1, boolean isRule) {
+        if (isRule && !isSimpleJavaType(genericTypeName1)) {
+            genericTypeName1 = getRuleComplexType(genericTypeName1);
+        }
+        collectionEditorView.setListWidget(false);
+        collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1));
     }
 
     protected CollectionEditorDOMElement internalCreateDomElement(CollectionViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget) {
@@ -131,18 +146,28 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
      * @param typeName
      * @return
      */
-    protected Map<String, String> getPropertiesMap(String typeName) {
+    protected Map<String, String> getSimplePropertiesMap(String typeName) {
         Map<String, String> toReturn;
         if (isSimpleJavaType(typeName)) {
             toReturn = new HashMap<>();
             toReturn.put("value", typeName);
         } else {
-            Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
-            if(simulation.isPresent() && RULE.equals(simulation.get().getSimulationDescriptor().getType())) {
-                typeName = typeName.substring(typeName.lastIndexOf(".") + 1);
-            }
             toReturn = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
         }
+        return toReturn;
+    }
+
+    protected Map<String, Map<String, String>> getExpandablePropertiesMap(String typeName) {
+        Map<String, Map<String, String>> toReturn = new HashMap<>();
+        Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
+        boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
+        final Map<String, String> expandableProperties = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getExpandableProperties();
+        expandableProperties.forEach((key, nestedTypeName) -> {
+            if (isRule) {
+                nestedTypeName = nestedTypeName.substring(nestedTypeName.lastIndexOf(".") + 1);
+            }
+            toReturn.put(key, getSimplePropertiesMap(nestedTypeName));
+        });
         return toReturn;
     }
 
