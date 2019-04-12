@@ -35,9 +35,6 @@ import org.uberfire.mvp.Command;
 @Templated
 public class ErrorReportPopupView extends AbstractPopoverView implements ErrorReportPopup {
 
-    public final static String TOP = "top";
-    public final static String LEFT = "left";
-
     protected Command applyCommand;
 
     @DataField("keepButton")
@@ -46,15 +43,19 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
     @DataField("applyButton")
     protected ButtonElement applyButton = Document.get().createButtonElement();
 
+
+
     public ErrorReportPopupView() {
         //CDI proxy
     }
 
     @Inject
     public ErrorReportPopupView(final Div popoverElement,
+                                final Div popoverContainerElement,
                                 final Div popoverContentElement,
                                 final JQueryProducer.JQuery<Popover> jQueryPopover) {
         super(popoverElement,
+              popoverContainerElement,
               popoverContentElement,
               jQueryPopover);
     }
@@ -67,11 +68,12 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
                      final Command applyCommand,
                      final int mx,
                      final int my) {
-//        this.applyCommand = applyCommand;
-//        popoverContentElement.setInnerText(errorContentText);
-//        keepButton.setInnerText(keepText);
-//        applyButton.setInnerText(applyText);
-        super.show(Optional.of(errorTitleText));
+
+        this.applyCommand = applyCommand;
+        popoverContentElement.setTextContent(errorContentText);
+        keepButton.setInnerText(keepText);
+        applyButton.setInnerText(applyText);
+        super.show(Optional.of(errorTitleText), mx, my);
     }
 
     @EventHandler("keepButton")
