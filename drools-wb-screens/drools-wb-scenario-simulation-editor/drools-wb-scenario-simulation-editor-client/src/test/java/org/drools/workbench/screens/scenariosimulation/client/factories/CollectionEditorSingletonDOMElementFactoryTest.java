@@ -48,7 +48,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     protected final String NUMBER_CLASS_NAME = Number.class.getCanonicalName();
     protected final Map<String, String> expectedMapForNotSimpleType = new HashMap<>();
     protected final Map<String, String> expectedMapForNotSimpleType1 = new HashMap<>();
-    protected final Map<String, String> expectedMapForNotSimpleType2= new HashMap<>();
+    protected final Map<String, String> expectedMapForNotSimpleType2 = new HashMap<>();
 
     protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactoryMock;
     protected CollectionViewImpl collectionEditorViewImpl;
@@ -67,7 +67,6 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
 
     @Mock
     protected FactModelTree factModelTreeMock2;
-
 
     @Before
     public void setup() {
@@ -119,7 +118,6 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put("value", NUMBER_CLASS_NAME);
         manageMap(NUMBER_CLASS_NAME, true, expectedMap1);
-
     }
 
     @Test
