@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -145,7 +146,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
     @Test
     public void executeWithPropertyAsCollection() {
         scenarioSimulationContextLocal.getStatus().setValueClassName(LIST_CLASS_NAME);
-        ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, VALUE, LIST_CLASS_NAME);
+        ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, VALUE, LIST_CLASS_NAME, Optional.empty());
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(VALUE);
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
@@ -155,7 +156,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
     }
 
     protected void commonSetPropertyHeader(ScenarioSimulationModel.Type type, boolean keepData, String value, String propertyClass) {
-        ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, value, propertyClass);
+        ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, value, propertyClass, Optional.empty());
         verify(gridColumnMock, times(1)).setEditableHeaders(eq(!type.equals(ScenarioSimulationModel.Type.DMN)));
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(value);

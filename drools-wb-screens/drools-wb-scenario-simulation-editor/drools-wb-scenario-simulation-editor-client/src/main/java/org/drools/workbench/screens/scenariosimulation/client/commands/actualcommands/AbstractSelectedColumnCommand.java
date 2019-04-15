@@ -161,27 +161,16 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
      * @param value It contains the path instance_name.property.name (eg. Author.isAlive)
      * @param propertyClass it contains the full classname of the instance (eg. com.Author)
-     */
-    protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass) {
-        this.setPropertyHeader(context, selectedColumn, value, propertyClass, null);
-    }
-
-    /**
-     * It assigns a property to the selected <code>ScenarioGridColumn</code>
-     * @param context It contains the <b>Context</b> inside which the commands will be executed
-     * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
-     * @param value It contains the path instance_name.property.name (eg. Author.isAlive)
-     * @param propertyClass it contains the full classname of the instance (eg. com.Author)
      * @param propertyHeaderTitle The title to assign to this property. Can be null, in this case it will be retrieved used <code>getPropertyHeaderTitle()</code> method
      */
-    protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass, String propertyHeaderTitle) {
+    protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String value, String propertyClass, Optional<String> propertyHeaderTitle) {
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final List<String> valuesElements = Arrays.asList(value.split("\\."));
         String aliasName = valuesElements.get(0);
         String canonicalClassName = getFullPackage(context) + aliasName;
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, aliasName, canonicalClassName);
         String className = factIdentifier.getClassName();
-        propertyHeaderTitle = propertyHeaderTitle != null ? propertyHeaderTitle : getPropertyHeaderTitle(context, value, factIdentifier);
+        String propertyTitle = propertyHeaderTitle.isPresent() ? propertyHeaderTitle.get() : getPropertyHeaderTitle(context, value, factIdentifier);
         final GridData.Range instanceLimits = context.getModel().getInstanceLimits(columnIndex);
         IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .forEach(index -> {
@@ -191,7 +180,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                     }
                 });
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getPropertyMetaDataGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyHeaderTitle, false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyTitle, false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertValue());
         selectedColumn.setPropertyAssigned(true);
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,

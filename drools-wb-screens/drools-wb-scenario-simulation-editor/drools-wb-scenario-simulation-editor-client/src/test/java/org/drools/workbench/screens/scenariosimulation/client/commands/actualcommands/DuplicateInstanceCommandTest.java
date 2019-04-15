@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -122,7 +123,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify(scenarioGridModelMock, times(1)).getInstancesCount(eq(scenarioGridColumnMock1.getFactIdentifier().getClassName()));
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock1), eq(COLUMN_NUMBER + 1), eq(Boolean.FALSE));
         verify((DuplicateInstanceCommand) command, never()).setInstanceHeader(any(), any(), any(), any());
-        verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any());
+        verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any(), any());
         verify(scenarioGridModelMock, never()).duplicateColumnValues(anyInt(), eq(0)); // The created column is mocked as gridColumnMock, with position 0
     }
 
@@ -133,7 +134,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify(scenarioGridModelMock, times(1)).getInstancesCount(eq(scenarioGridColumnMock1.getFactIdentifier().getClassName()));
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock1), eq(COLUMN_NUMBER + 1), eq(Boolean.FALSE));
         verify((DuplicateInstanceCommand) command, times(1)).setInstanceHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE_1 + DuplicateInstanceCommand.COPY_LABEL + "1"), eq(FULL_CLASS_NAME_1));
-        verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any());
+        verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any(), any());
         verify(scenarioGridModelMock, never()).duplicateColumnValues(anyInt(), eq(0)); // The created column is mocked as gridColumnMock, with position 0
     }
 
@@ -143,7 +144,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify(scenarioGridModelMock, times(1)).getInstancesCount(eq(scenarioGridColumnMock1.getFactIdentifier().getClassName()));
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock1), eq(COLUMN_NUMBER + 1), eq(Boolean.FALSE));
         verify((DuplicateInstanceCommand) command, times(1)).setInstanceHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE_1 + DuplicateInstanceCommand.COPY_LABEL + "1"), eq(FULL_CLASS_NAME_1));
-        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_1_copy_1.test"), eq(VALUE_CLASS_NAME), eq(GRID_PROPERTY_TITLE_1));
+        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_1_copy_1.test"), eq(VALUE_CLASS_NAME), eq(Optional.of(GRID_PROPERTY_TITLE_1)));
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER), eq(0)); // The created column is mocked as gridColumnMock, with position 0
     }
 
@@ -160,8 +161,8 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock2), eq(7), eq(Boolean.FALSE));
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock3), eq(8), eq(Boolean.FALSE));
         verify((DuplicateInstanceCommand) command, times(2)).setInstanceHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE + "_2" + DuplicateInstanceCommand.COPY_LABEL + "2"), eq(FULL_CLASS_NAME + "_2"));
-        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_2_copy_2.second"), eq(VALUE_CLASS_NAME), eq(GRID_PROPERTY_TITLE + "_2"));
-        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_2_copy_2.third"), eq(VALUE_CLASS_NAME), eq(GRID_PROPERTY_TITLE + "_3"));
+        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_2_copy_2.second"), eq(VALUE_CLASS_NAME), eq(Optional.of(GRID_PROPERTY_TITLE + "_2")));
+        verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq("value_2_copy_2.third"), eq(VALUE_CLASS_NAME), eq(Optional.of(GRID_PROPERTY_TITLE + "_3")));
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER + 1), eq(0)); // The created column is mocked as gridColumnMock, with position 0
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER + 2), eq(0)); // The created column is mocked as gridColumnMock, with position 0
     }
