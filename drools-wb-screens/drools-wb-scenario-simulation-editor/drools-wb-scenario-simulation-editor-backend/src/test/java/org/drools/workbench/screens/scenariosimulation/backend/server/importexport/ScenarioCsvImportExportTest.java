@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.model.SimulationDescripto
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.importexport.ScenarioCsvImportExport.HEADER_SIZE;
 import static org.junit.Assert.assertEquals;
 
@@ -80,6 +81,10 @@ public class ScenarioCsvImportExportTest {
         assertEquals("value1", simulation.getScenarioByIndex(0).getFactMappingValueByIndex(2).get().getRawValue());
         assertEquals("value2", simulation.getScenarioByIndex(0).getFactMappingValueByIndex(3).get().getRawValue());
         assertEquals("value3", simulation.getScenarioByIndex(0).getFactMappingValueByIndex(4).get().getRawValue());
+
+        assertThatThrownBy(() -> scenarioCsvImportExport.importData("", originalSimulation))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Malformed file, missing header");
     }
 
     @Test

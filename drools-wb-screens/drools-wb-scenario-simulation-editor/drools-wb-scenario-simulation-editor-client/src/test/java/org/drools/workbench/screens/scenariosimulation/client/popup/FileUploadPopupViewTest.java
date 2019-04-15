@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -71,6 +72,9 @@ public class FileUploadPopupViewTest extends AbstractScenarioPopupViewTest {
     public void onChooseButtonClickEvent() {
         ClickEvent clickEventMock = mock(ClickEvent.class);
         ((FileUploadPopupView) popupView).onChooseButtonClickEvent(clickEventMock);
+        verify(fileMock, never()).click();
+        when(fileTextMock.getValue()).thenReturn("VALUE");
+        ((FileUploadPopupView) popupView).onChooseButtonClickEvent(clickEventMock);
         verify(fileMock, times(1)).click();
     }
 
@@ -83,5 +87,4 @@ public class FileUploadPopupViewTest extends AbstractScenarioPopupViewTest {
         verify(fileMock, times(1)).getValue();
         verify(fileTextMock, times(1)).setValue(eq(VALUE));
     }
-
 }

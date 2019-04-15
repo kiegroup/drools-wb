@@ -21,7 +21,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -40,7 +39,7 @@ public class ScenarioCsvImportExport {
         StringBuilder stringBuilder = new StringBuilder();
         List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
 
-        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.EXCEL);
+        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
 
         generateHeader(factMappings, printer);
 
@@ -61,15 +60,17 @@ public class ScenarioCsvImportExport {
 
     public Simulation importData(String raw, Simulation originalSimulation) throws IOException {
 
-        CSVParser csvParser = CSVFormat.EXCEL.parse(new StringReader(raw));
+        CSVParser csvParser = CSVFormat.DEFAULT.parse(new StringReader(raw));
 
         Simulation toReturn = originalSimulation.cloneSimulation();
-        IntStream.range(0, toReturn.getUnmodifiableScenarios().size())
-                .forEach(toReturn::removeScenarioByIndex);
+        toReturn.clearScenarios();
 
         List<FactMapping> factMappings = toReturn.getSimulationDescriptor().getUnmodifiableFactMappings();
 
         List<CSVRecord> csvRecords = csvParser.getRecords();
+        if(csvRecords.size() < HEADER_SIZE) {
+            throw new IllegalArgumentException("Malformed file, missing header");
+        }
         csvRecords = csvRecords.subList(HEADER_SIZE, csvRecords.size());
 
         for (CSVRecord csvRecord : csvRecords) {

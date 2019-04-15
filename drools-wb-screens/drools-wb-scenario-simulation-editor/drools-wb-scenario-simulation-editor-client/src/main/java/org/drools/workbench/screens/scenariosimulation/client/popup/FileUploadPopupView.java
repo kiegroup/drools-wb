@@ -15,7 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
-import com.google.gwt.core.client.GWT;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
@@ -41,6 +43,8 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
     @DataField("chooseButton")
     protected SpanElement chooseButton = Document.get().createSpanElement();
 
+    protected List<String> acceptedExtension = new ArrayList<>();
+
     protected static String fileContents;
 
     public static void fileLoaded(String fileContents) {
@@ -53,6 +57,10 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
                      final Command okCommand) {
         fileContents = "";
         fileText.setValue("");
+        if (acceptedExtension.size() > 0) {
+            file.setAccept(String.join(",", acceptedExtension));
+        }
+        okButton.setEnabled(false);
         super.show(mainTitleText,
                    okButtonText, okCommand);
     }
@@ -62,6 +70,12 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
         return fileContents;
     }
 
+    @Override
+    public void setAcceptedExtension(List<String> acceptedExtension) {
+        this.acceptedExtension.clear();
+        this.acceptedExtension.addAll(acceptedExtension);
+    }
+
     @EventHandler("chooseButton")
     public void onChooseButtonClickEvent(ClickEvent clickEvent) {
         file.click();
@@ -69,7 +83,6 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
 
     @EventHandler("file")
     public void onFileChangeEvent(ChangeEvent event) {
-        GWT.log("onFileChangeEvent");
         String fileName = file.getValue();
         if (fileName.toLowerCase().startsWith(FAKEPATH)) {
             fileName = fileName.substring(FAKEPATH.length());
@@ -77,13 +90,16 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
         fileText.setValue(fileName);
         JavaScriptObject files = file.getPropertyJSO("files");
         readTextFile(files);
+        if (!"".equals(fileText.getValue())) {
+            okButton.setEnabled(true);
+        }
     }
 
     public static native void readTextFile(JavaScriptObject files)/*-{
         var reader = new FileReader();
         reader.onload = function (e) {
             @org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupView::fileLoaded(*)(reader.result);
-        }
+        };
         return reader.readAsText(files[0]);
     }-*/;
 }

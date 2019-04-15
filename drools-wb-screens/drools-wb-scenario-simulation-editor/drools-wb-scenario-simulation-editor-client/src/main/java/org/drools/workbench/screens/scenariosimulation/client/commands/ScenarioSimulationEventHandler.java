@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -102,6 +103,8 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.uberfire.workbench.events.NotificationEvent;
+
+import static org.drools.workbench.screens.scenariosimulation.service.ImportExportType.CSV;
 
 /**
  * This class is meant to be a centralized listener for events fired up by UI, responding to them issuing specific <code>Command</code>s.
@@ -247,7 +250,9 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
             importCommand.setFileContent(fileUploadPopupPresenter.getFileContents());
             commonExecution(context, importCommand);
         };
-        fileUploadPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(),
+        fileUploadPopupPresenter.show(Collections.singletonList(CSV.getExtension()),
+                                      ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(),
+                                      ScenarioSimulationEditorConstants.INSTANCE.importLabel(),
                                       okImportCommand);
     }
 

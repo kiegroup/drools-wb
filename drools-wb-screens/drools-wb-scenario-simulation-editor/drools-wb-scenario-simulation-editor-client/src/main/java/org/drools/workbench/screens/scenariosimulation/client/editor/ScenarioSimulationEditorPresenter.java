@@ -59,7 +59,6 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
-import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.bus.client.api.base.DefaultErrorCallback;
@@ -99,6 +98,7 @@ import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
+import static org.drools.workbench.screens.scenariosimulation.service.ImportExportType.CSV;
 
 @Dependent
 @WorkbenchEditor(identifier = IDENTIFIER, supportedTypes = {ScenarioSimulationResourceType.class})
@@ -106,8 +106,6 @@ public class ScenarioSimulationEditorPresenter
         extends KieEditor<ScenarioSimulationModel> {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
-
-    private static final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
 
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
@@ -136,7 +134,6 @@ public class ScenarioSimulationEditorPresenter
 
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
     protected long scenarioPresenterId;
-
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -319,7 +316,7 @@ public class ScenarioSimulationEditorPresenter
     public void onImport(String fileContents) {
         importExportService.call(getImportCallBack(),
                                  new DefaultErrorCallback())
-                .importSimulation(ImportExportType.CSV, fileContents, context.getStatus().getSimulation());
+                .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
     }
 
     /**
@@ -419,26 +416,26 @@ public class ScenarioSimulationEditorPresenter
     protected void onExportToCsv() {
         importExportService.call(getExportCallBack(),
                                  new DefaultErrorCallback())
-                .exportSimulation(ImportExportType.CSV, context.getStatus().getSimulation());
+                .exportSimulation(CSV, context.getStatus().getSimulation());
     }
 
     protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
-            final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + ".csv");
+            final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + CSV.getExtension());
+            final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
             exportAnchorElement.dispatchEvent(CLICK_EVENT);
             exportAnchorElement.removeFromParent();
         };
     }
 
     protected RemoteCallback<Simulation> getImportCallBack() {
-       return simulation -> {
-           model.setSimulation(simulation);
-           view.setContent(model.getSimulation());
-           context.getStatus().setSimulation(model.getSimulation());
-           view.onResize();
-       };
+        return simulation -> {
+            model.setSimulation(simulation);
+            view.setContent(model.getSimulation());
+            context.getStatus().setSimulation(model.getSimulation());
+            view.onResize();
+        };
     }
-
 
     protected void populateRightDocks(String identifier) {
         if (dataManagementStrategy != null) {

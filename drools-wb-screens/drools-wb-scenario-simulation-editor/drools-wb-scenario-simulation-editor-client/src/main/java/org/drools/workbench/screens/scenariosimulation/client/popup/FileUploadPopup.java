@@ -15,11 +15,27 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
+import java.util.List;
+
 import org.jboss.errai.common.client.dom.HTMLElement;
+import org.uberfire.mvp.Command;
 
 public interface FileUploadPopup extends AbstractScenarioPopup {
 
     interface Presenter extends AbstractScenarioPopup.Presenter {
+
+        /**
+         * Same as default show method but with list of accepted extensions
+         *
+         * @param acceptedExtension
+         * @param mainTitleText
+         * @param okButtonText
+         * @param okCommand
+         */
+        void show(final List<String> acceptedExtension,
+                  final String mainTitleText,
+                  final String okButtonText,
+                  final Command okCommand);
 
         String getFileContents();
     }
@@ -27,6 +43,8 @@ public interface FileUploadPopup extends AbstractScenarioPopup {
     HTMLElement getElement();
 
     String getFileContents();
+
+    void setAcceptedExtension(List<String> acceptedExtension);
 
     /**
      * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not

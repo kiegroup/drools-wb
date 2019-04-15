@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -35,8 +38,18 @@ public class FileUploadPopupPresenter implements FileUploadPopup.Presenter {
     public void show(final String mainTitleText,
                      final String okButtonText,
                      final Command okCommand) {
+        show(Collections.emptyList(), mainTitleText, okButtonText, okCommand);
+    }
+
+    @Override
+    public void show(final List<String> acceptedExtension,
+                     final String mainTitleText,
+                     final String okButtonText,
+                     final Command okCommand) {
         fileUploadPopup = viewsProvider.getFileUploadPopup();
+        fileUploadPopup.setAcceptedExtension(acceptedExtension);
         fileUploadPopup.show(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(), ScenarioSimulationEditorConstants.INSTANCE.importLabel(), okCommand);
+
     }
 
     @Override

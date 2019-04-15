@@ -29,7 +29,7 @@ public enum ImportExportType {
     }
 
     ImportExportType() {
-        this.extension = name().toLowerCase();
+        this.extension = "." + name().toLowerCase();
     }
 
     public String getExtension() {
