@@ -1758,7 +1758,7 @@
   </build>
 
   <profiles>
-    <!-- profile to disable GWT compilation of showcase (useful in full downstream builds) -->
+    <!-- profile to disable GWT compilation of webapp (useful in full downstream builds) -->
     <profile>
       <id>no-showcase</id>
       <build>

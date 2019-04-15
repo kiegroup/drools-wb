@@ -296,7 +296,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void makeMenuBar() {
-        presenter.makeMenuBar();
+        presenter.makeMenuBar(fileMenuBuilder);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
@@ -317,7 +317,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void showDocks() {
-        presenterSpy.showDocks();
+        presenterSpy.showDocks(placeManager.getStatus(placeRequest));
         verify(scenarioSimulationDocksHandlerMock).addDocks();
         verify(scenarioSimulationDocksHandlerMock).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
         verify(presenterSpy).expandToolsDock();
