@@ -64,8 +64,13 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     }
 
     @Test
-    public void getNavigateComplexObject(){
+    public void navigateComplexObject(){
         super.navigateComplexObject();
+    }
+
+    @Test
+    public void manageCollectionProperty() {
+        super.manageCollectionProperty();
     }
 
 }

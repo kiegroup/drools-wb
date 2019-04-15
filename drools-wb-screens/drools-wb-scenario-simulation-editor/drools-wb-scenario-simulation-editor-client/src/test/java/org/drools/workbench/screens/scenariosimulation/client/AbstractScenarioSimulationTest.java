@@ -169,6 +169,7 @@ public abstract class AbstractScenarioSimulationTest {
     protected final String VALUE_CLASS_NAME = String.class.getName();
 
     protected final String LIST_CLASS_NAME = List.class.getName();
+    protected final String MAP_CLASS_NAME = Map.class.getName();
 
     protected final String FACT_IDENTIFIER_NAME = "FACT_IDENTIFIER_NAME";
 
@@ -363,6 +364,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioGridModelMock.nextColumnCount()).thenReturn(factMappingValuesLocal.size());
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);
+        when(factMappingMock.getGenericTypes()).thenReturn(new ArrayList<>());
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
     }
 
