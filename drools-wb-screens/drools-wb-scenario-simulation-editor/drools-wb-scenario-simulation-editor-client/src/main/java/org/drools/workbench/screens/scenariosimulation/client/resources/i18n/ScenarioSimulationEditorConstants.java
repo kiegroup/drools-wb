@@ -235,4 +235,6 @@ public interface ScenarioSimulationEditorConstants
     String collectionError();
 
     String settings();
+
+    String coverageReport();
 }

@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
 

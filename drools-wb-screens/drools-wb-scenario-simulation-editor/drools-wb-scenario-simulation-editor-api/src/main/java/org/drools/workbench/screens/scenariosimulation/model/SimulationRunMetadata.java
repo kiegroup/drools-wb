@@ -61,7 +61,7 @@ public class SimulationRunMetadata {
     }
 
     public double getCoveragePercentage() {
-        return (double) executed / available;
+        return (double) executed / available * 100;
     }
 
     public SortedMap<String, Integer> getOutputCounter() {

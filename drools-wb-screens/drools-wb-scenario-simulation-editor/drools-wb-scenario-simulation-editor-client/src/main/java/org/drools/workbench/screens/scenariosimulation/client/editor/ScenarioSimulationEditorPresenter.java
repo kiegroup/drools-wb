@@ -42,6 +42,8 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPo
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
@@ -123,6 +125,8 @@ public class ScenarioSimulationEditorPresenter
     private TestRunnerReportingScreen testRunnerReportingScreen;
 
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
+
+    private SimulationRunResult lastRunResult;
 
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
     protected long scenarioPresenterId;
@@ -326,6 +330,10 @@ public class ScenarioSimulationEditorPresenter
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         dataManagementStrategy.setModel(model);
+
+        this.lastRunResult = newData;
+
+        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
     }
 
     protected void registerTestToolsCallback() {
@@ -386,6 +394,7 @@ public class ScenarioSimulationEditorPresenter
         DomGlobal.window.open(downloadURL);
     }
 
+    // FIXME to test
     protected void populateRightDocks(String identifier) {
         if (dataManagementStrategy != null) {
             final PlaceRequest currentRightDockPlaceRequest = getCurrentRightDockPlaceRequest(identifier);
@@ -405,6 +414,12 @@ public class ScenarioSimulationEditorPresenter
                             setCheatSheet(presenter);
                             presenter.setCurrentPath(path);
                         }
+                    });
+                    break;
+                case CoverageReportPresenter.IDENTIFIER:
+                    getCoverageReportPresenter(currentRightDockPlaceRequest).ifPresent(presenter -> {
+                        setCoverageReport(presenter);
+                        presenter.setCurrentPath(path);
                     });
                     break;
             }
@@ -430,6 +445,13 @@ public class ScenarioSimulationEditorPresenter
         ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
+    }
+
+    // FIXME to test
+    protected void setCoverageReport(CoverageReportView.Presenter presenter) {
+        if(lastRunResult != null) {
+            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata());
+        }
     }
 
     protected String getJsonModel(ScenarioSimulationModel model) {
@@ -471,6 +493,7 @@ public class ScenarioSimulationEditorPresenter
         return IDENTIFIER;
     }
 
+    // FIXME to test
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModelContent content) {
         //Path is set to null when the Editor is closed (which can happen before async calls complete).
         if (versionRecordManager.getCurrentPath() == null) {
@@ -513,6 +536,12 @@ public class ScenarioSimulationEditorPresenter
     protected Optional<SettingsView.Presenter> getSettingsPresenter(PlaceRequest placeRequest) {
         final Optional<SettingsView> settingsView = getSettingsView(placeRequest);
         return settingsView.map(SettingsView::getPresenter);
+    }
+
+    // FIXME to test
+    protected Optional<CoverageReportView.Presenter> getCoverageReportPresenter(PlaceRequest placeRequest) {
+        final Optional<CoverageReportView> settingsView = getCoverageReportView(placeRequest);
+        return settingsView.map(CoverageReportView::getPresenter);
     }
 
     protected Command getSaveCommand() {
@@ -563,6 +592,16 @@ public class ScenarioSimulationEditorPresenter
         if (activity != null) {
             final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((SettingsView) settingsActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<CoverageReportView> getCoverageReportView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((CoverageReportView) settingsActivity.getWidget());
         } else {
             return Optional.empty();
         }
