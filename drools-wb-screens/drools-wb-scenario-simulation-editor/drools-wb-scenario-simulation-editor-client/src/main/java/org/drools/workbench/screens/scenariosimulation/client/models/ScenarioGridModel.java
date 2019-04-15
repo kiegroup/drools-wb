@@ -561,10 +561,13 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
-                    String columnProperty = factMapping.getExpressionElements()
+                    String columnProperty = factMapping.getFactAlias() + "."; // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
+                    // while the first element of ExpressionElements is always the class name
+                    columnProperty += factMapping.getExpressionElementsWithoutClass()
                             .stream()
                             .map(expressionElement -> expressionElement.getStep())
                             .collect(Collectors.joining("."));
+
                     return Objects.equals(columnProperty, propertyName);
                 });
     }
