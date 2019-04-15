@@ -584,7 +584,6 @@ public class ScenarioSimulationEditorPresenter
         return toReturn;
     }
 
-    private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
     protected String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
