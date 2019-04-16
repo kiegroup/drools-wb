@@ -84,6 +84,7 @@ import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -268,7 +269,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         ImportEvent event = new ImportEvent();
         scenarioSimulationEventHandler.onEvent(event);
         verify(fileUploadPopupPresenterMock, times(1))
-                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()),
+                .show(any(),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()),
                       isA(org.uberfire.mvp.Command.class));
     }
