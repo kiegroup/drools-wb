@@ -38,9 +38,9 @@ public class ErrorReportPopupPresenter implements ErrorReportPopup.Presenter {
                      final String applyText,
                      final Command applyCommand,
                      final int mx,
-                     final int my) {
-//        errorReportPopupView = viewsProvider.getErrorReportPopupView();
-        errorReportPopupView.show(errorTitleText, errorContentText, keepText, applyText, applyCommand, mx, my);
+                     final int my,
+                     final PopoverView.Position position) {
+        errorReportPopupView.show(errorTitleText, errorContentText, keepText, applyText, applyCommand, mx, my, position);
     }
 
     @Override

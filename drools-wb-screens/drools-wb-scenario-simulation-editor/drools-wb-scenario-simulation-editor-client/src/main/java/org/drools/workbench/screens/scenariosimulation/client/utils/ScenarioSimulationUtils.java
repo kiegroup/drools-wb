@@ -262,7 +262,7 @@ public class ScenarioSimulationUtils {
     }
 
     /**
-     * Returns an arrya where the 0-element is middle x of given cell and 1-element is middle y
+     * Returns an array where the 0-element is middle x of given cell and 1-element is middle y
      * @param gridWidget
      * @param column
      * @param isHeader
@@ -287,6 +287,71 @@ public class ScenarioSimulationUtils {
                                                              uiRowIndex);
         final int cellXMiddle = (int) (context.getAbsoluteCellX() +
                 context.getCellWidth() / 2 +
+                gridLayer.getDomElementContainer().getAbsoluteLeft());
+        final int cellYMiddle = (int) (context.getAbsoluteCellY() +
+                context.getCellHeight() / 2 +
+                gridLayer.getDomElementContainer().getAbsoluteTop());
+        return new Point2D(cellXMiddle, cellYMiddle);
+    }
+
+    /**
+     * Returns an arrya where the 0-element is middle x of given cell and 1-element is middle y
+     * @param gridWidget
+     * @param column
+     * @param isHeader
+     * @param uiRowIndex
+     * @param gridLayer
+     * @return
+     */
+    public static Point2D getLeftYLeftXCell(final GridWidget gridWidget, final GridColumn<?> column, boolean isHeader, final int uiRowIndex, final GridLayer gridLayer) {
+        final BaseGridRendererHelper rendererHelper = gridWidget.getRendererHelper();
+        final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
+        final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
+        final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
+
+        final GridBodyCellEditContext context = isHeader ?
+                CellContextUtilities.makeHeaderCellRenderContext(gridWidget,
+                                                                 ri,
+                                                                 ci,
+                                                                 uiRowIndex)
+                : CellContextUtilities.makeCellRenderContext(gridWidget,
+                                                             ri,
+                                                             ci,
+                                                             uiRowIndex);
+        final int cellXMiddle = (int) (context.getAbsoluteCellX() +
+                gridLayer.getDomElementContainer().getAbsoluteLeft());
+        final int cellYMiddle = (int) (context.getAbsoluteCellY() +
+                context.getCellHeight() / 2 +
+                gridLayer.getDomElementContainer().getAbsoluteTop());
+        return new Point2D(cellXMiddle, cellYMiddle);
+    }
+
+    /**
+     * Returns an arrya where the 0-element is middle x of given cell and 1-element is middle y
+     * @param gridWidget
+     * @param column
+     * @param isHeader
+     * @param uiRowIndex
+     * @param gridLayer
+     * @return
+     */
+    public static Point2D getMiddleYRightXCell(final GridWidget gridWidget, final GridColumn<?> column, boolean isHeader, final int uiRowIndex, final GridLayer gridLayer) {
+        final BaseGridRendererHelper rendererHelper = gridWidget.getRendererHelper();
+        final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
+        final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
+        final BaseGridRendererHelper.ColumnInformation ci = rendererHelper.getColumnInformation(columnXCoordinate);
+
+        final GridBodyCellEditContext context = isHeader ?
+                CellContextUtilities.makeHeaderCellRenderContext(gridWidget,
+                                                                 ri,
+                                                                 ci,
+                                                                 uiRowIndex)
+                : CellContextUtilities.makeCellRenderContext(gridWidget,
+                                                             ri,
+                                                             ci,
+                                                             uiRowIndex);
+        final int cellXMiddle = (int) (context.getAbsoluteCellX() +
+                context.getCellWidth() +
                 gridLayer.getDomElementContainer().getAbsoluteLeft());
         final int cellYMiddle = (int) (context.getAbsoluteCellY() +
                 context.getCellHeight() / 2 +

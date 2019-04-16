@@ -37,7 +37,8 @@ public interface ErrorReportPopup extends PopoverView {
                   final String applyText,
                   final Command applyCommand,
                   final int mx,
-                  final int my);
+                  final int my,
+                  final Position position);
 
         /**
          * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
@@ -62,7 +63,8 @@ public interface ErrorReportPopup extends PopoverView {
               final String applyText,
               final Command applyCommand,
               final int mx,
-              final int my);
+              final int my,
+              final Position position);
     /**
      * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
      * already showing.

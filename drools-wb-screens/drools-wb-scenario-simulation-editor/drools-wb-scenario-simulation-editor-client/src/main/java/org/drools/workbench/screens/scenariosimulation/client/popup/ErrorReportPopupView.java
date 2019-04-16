@@ -70,13 +70,13 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
                      final String applyText,
                      final Command applyCommand,
                      final int mx,
-                     final int my) {
-
+                     final int my,
+                     final Position position) {
         this.applyCommand = applyCommand;
         errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.setInnerText(applyText);
-        super.show(Optional.of(errorTitleText), mx, my);
+        super.show(Optional.of(errorTitleText), mx, my, position);
     }
 
     @EventHandler("keepButton")

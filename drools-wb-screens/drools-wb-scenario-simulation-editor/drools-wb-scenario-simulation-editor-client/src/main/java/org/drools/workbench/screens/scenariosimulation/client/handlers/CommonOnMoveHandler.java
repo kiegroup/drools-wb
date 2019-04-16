@@ -24,6 +24,7 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.PopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
@@ -32,7 +33,8 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.mvp.Command;
 
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getMiddleXYCell;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getLeftYLeftXCell;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getMiddleYRightXCell;
 
 /**
  * This class is meant to provide common implementations for <b>on hover</b> behavior to be used by both mouse keyboard handler
@@ -69,7 +71,12 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         factMappingValueByIndex.ifPresent(factMappingValue -> {
             if (factMappingValue.isError()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
-                final Point2D middleXYCell = getMiddleXYCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                Point2D xYCell = getMiddleYRightXCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                PopoverView.Position position = PopoverView.Position.RIGHT;
+                if (xYCell.getX() + 200 > scenarioGrid.getLayer().getWidth()) {
+                    xYCell = getLeftYLeftXCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                    position = PopoverView.Position.LEFT;
+                }
                 final Object expectedValue = factMappingValue.getRawValue();
                 final Object errorValue = factMappingValue.getErrorValue();
                 String errorMessage = "The expected value is \" " + expectedValue + " \" but the actual one is \"" + errorValue + "\".";
@@ -83,8 +90,9 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                        GWT.log("APPLY CHANGE");
                                                    }
                                                },
-                                               (int) middleXYCell.getX(),
-                                               (int) middleXYCell.getY());
+                                               (int) xYCell.getX(),
+                                               (int) xYCell.getY(),
+                                               position);
             }
         });
         return false;

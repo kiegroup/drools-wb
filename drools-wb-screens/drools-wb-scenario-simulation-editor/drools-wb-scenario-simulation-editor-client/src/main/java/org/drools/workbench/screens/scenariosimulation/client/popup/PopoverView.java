@@ -20,7 +20,12 @@ import java.util.Optional;
 
 public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsElement {
 
-    void show(final Optional<String> editorTitle, final int mx, final int my);
+    enum Position {
+        LEFT,
+        RIGHT;
+    }
+
+    void show(final Optional<String> editorTitle, final int mx, final int my, final Position position);
 
     void hide();
 }

@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.HTMLElement;
@@ -30,9 +31,11 @@ import org.uberfire.client.views.pfly.widgets.PopoverOptions;
 
 public abstract class AbstractPopoverView implements PopoverView {
 
-
     public final static String TOP = "top";
     public final static String LEFT = "left";
+    public final static String POSITION = "position";
+    public final static String PX = "PX";
+    public final static String ABSOLUTE = "absolute";
 
     @DataField("popover")
     protected Div popoverElement;
@@ -65,19 +68,23 @@ public abstract class AbstractPopoverView implements PopoverView {
     }
 
     @Override
-    public void show(final Optional<String> editorTitle, final int mx, final int my) {
+    public void show(final Optional<String> editorTitle, final int mx, final int my, Position position) {
         wrappedWidget = ElementWrapperWidget.getWidget(getElement());
         RootPanel.get().add(wrappedWidget);
         final PopoverOptions options = new PopoverOptions();
         options.setContent((element) -> popoverContentElement);
         options.setAnimation(false);
         options.setHtml(true);
+        options.setPlacement(position.toString().toLowerCase());
 
         editorTitle.ifPresent(t -> popoverElement.setAttribute("title", t));
         final HTMLElement element = this.getElement();
         popover = jQueryPopover.wrap(element);
         popover.popover(options);
-        popover.show();
+        popoverElement.getStyle().setProperty(TOP, my + PX);
+        popoverElement.getStyle().setProperty(LEFT, mx + PX);
+        popoverElement.getStyle().setProperty(POSITION, ABSOLUTE);
+        Scheduler.get().scheduleDeferred( () -> popover.show());
     }
 
     @Override
@@ -88,4 +95,5 @@ public abstract class AbstractPopoverView implements PopoverView {
         }
         RootPanel.get().remove(wrappedWidget);
     }
+
 }

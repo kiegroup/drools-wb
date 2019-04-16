@@ -96,7 +96,7 @@ public class ErrorReportPopupViewTest {
 
     @Test
     public void show() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY);
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorpopupTitleMock, times(1)).setInnerText(eq(ERROR_TITLE_TEXT));
         verify(errorContentMock, times(1)).setInnerText(eq(ERROR_CONTENT_TEXT));
         verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
