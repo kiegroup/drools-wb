@@ -19,11 +19,9 @@ package org.drools.workbench.screens.scenariosimulation.client.factories;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.DomEvent;
 import org.gwtbootstrap3.client.ui.TextArea;
-import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.keyboard.KeyDownHandlerCommon;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
@@ -45,30 +43,11 @@ public abstract class AbstractTextBoxSingletonDOMElementFactory<T extends BaseDO
     }
 
     @Override
-    public T createDomElement(final GridLayer gridLayer,
-                              final GridWidget gridWidget,
-                              final GridBodyCellRenderContext context) {
-        this.widget = createWidget();
-        this.widget.addKeyDownHandler(new KeyDownHandlerCommon(gridPanel, gridLayer, gridWidget, this, context));
-        this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
-
-        widget.addBlurHandler(event -> {
-
-            destroyResources();
-            gridLayer.batch();
-            gridPanel.setFocus(true);
-        });
-        return e;
-    }
-
-    @Override
     protected String getValue() {
         if (widget != null) {
             return widget.getValue();
         }
         return null;
     }
-
-    protected abstract T internalCreateDomElement(TextArea widget, GridLayer gridLayer, GridWidget gridWidget);
 }
 

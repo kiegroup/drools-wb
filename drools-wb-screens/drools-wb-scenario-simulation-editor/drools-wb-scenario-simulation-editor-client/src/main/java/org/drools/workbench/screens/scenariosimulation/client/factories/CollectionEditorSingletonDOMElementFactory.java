@@ -81,7 +81,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             final int actualIndex = model.getColumns().indexOf(col);
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
-            this.e = internalCreateDomElement(widget, gridLayer, gridWidget);
+            this.e = createDomElementInternal();
             final CollectionEditorDOMElement collectionEditorDOMElement = this.e;
             widget.addCloseCompositeEventHandler(event -> {
                 commonCloseHandling(collectionEditorDOMElement);
@@ -176,6 +176,11 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         gridLayer.batch();
         gridPanel.setFocus(true);
         collectionEditorDOMElement.stopEditingMode();
+    }
+
+    @Override
+    protected CollectionEditorDOMElement createDomElementInternal() {
+        return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
     }
 }
 

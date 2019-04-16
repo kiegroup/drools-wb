@@ -66,9 +66,7 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
                                                  final GridWidget gridWidget,
                                                  final GridBodyCellRenderContext context) {
         this.widget = createWidget();
-        this.e = new DatePickerDOMElement(widget,
-                                          gridLayer,
-                                          gridWidget);
+        this.e = createDomElementInternal();
 
         widget.addChangeDateHandler((e) -> doValueUpdate());
         widget.addDomHandler(new KeyDownHandlerDatePicker(gridPanel,
@@ -112,5 +110,12 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
 
     DatePicker getWidget() {
         return widget;
+    }
+
+    @Override
+    protected DatePickerDOMElement createDomElementInternal() {
+        return new DatePickerDOMElement(widget,
+                                        gridLayer,
+                                        gridWidget);
     }
 }

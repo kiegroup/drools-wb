@@ -30,7 +30,7 @@ public class ScenarioCellTextAreaSingletonDOMElementFactory extends AbstractText
     }
 
     @Override
-    protected BaseDOMElement<String, TextArea> internalCreateDomElement(TextArea widget, GridLayer gridLayer, GridWidget gridWidget) {
+    protected BaseDOMElement<String, TextArea> createDomElementInternal() {
         return new ScenarioCellTextAreaDOMElement(widget, gridLayer, gridWidget);
     }
 }

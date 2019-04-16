@@ -34,7 +34,7 @@ public class ScenarioHeaderTextBoxSingletonDOMElementFactory extends AbstractTex
     }
 
     @Override
-    protected BaseDOMElement<String, TextArea> internalCreateDomElement(TextArea widget, GridLayer gridLayer, GridWidget gridWidget) {
+    protected BaseDOMElement<String, TextArea> createDomElementInternal() {
         return new ScenarioHeaderTextAreaDOMElement(widget, gridLayer, gridWidget);
     }
 }
