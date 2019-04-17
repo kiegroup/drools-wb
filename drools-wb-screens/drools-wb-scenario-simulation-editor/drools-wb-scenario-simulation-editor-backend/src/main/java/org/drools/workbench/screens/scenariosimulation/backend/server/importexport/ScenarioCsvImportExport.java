@@ -97,7 +97,7 @@ public class ScenarioCsvImportExport {
             // GIVEN/EXPECT/OTHER
             firstLineHeader.add(factMapping.getExpressionIdentifier().getType().name());
             // Instance
-            secondLineHeader.add(factMapping.getFactAlias());
+            secondLineHeader.add("#".equals(factMapping.getFactAlias()) ? "" : factMapping.getFactAlias());
             // Property
             thirdLineHeader.add(factMapping.getExpressionAlias());
         }
