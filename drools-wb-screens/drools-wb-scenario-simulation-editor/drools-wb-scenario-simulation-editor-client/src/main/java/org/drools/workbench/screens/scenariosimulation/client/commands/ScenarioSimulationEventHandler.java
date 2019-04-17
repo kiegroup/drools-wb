@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableTestToolsCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ImportCommand;
@@ -53,6 +54,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
@@ -76,6 +78,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRow
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DisableTestToolsEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateInstanceEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.EnableTestToolsEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ImportEventHandler;
@@ -117,6 +120,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        DeleteColumnEventHandler,
                                                        DeleteRowEventHandler,
                                                        DisableTestToolsEventHandler,
+                                                       DuplicateInstanceEventHandler,
                                                        DuplicateRowEventHandler,
                                                        EnableTestToolsEventHandler,
                                                        ImportEventHandler,
@@ -227,6 +231,15 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     @Override
     public void onEvent(DisableTestToolsEvent event) {
         commonExecution(context, new DisableTestToolsCommand());
+    }
+
+    @Override
+    public void onEvent(DuplicateInstanceEvent event) {
+        context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
+        context.getStatus().setColumnIndex(event.getColumnIndex());
+        context.getStatus().setRight(true);
+        context.getStatus().setAsProperty(false);
+        commonExecution(context, new DuplicateInstanceCommand());
     }
 
     @Override
@@ -459,6 +472,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DeleteColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DeleteRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DisableTestToolsEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(DuplicateInstanceEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(EnableTestToolsEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ImportEvent.TYPE, this));
