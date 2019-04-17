@@ -421,8 +421,8 @@ public class ScenarioSimulationEditorPresenter
 
     protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
-            GWT.log("--- EXPORT ---");
-            GWT.log("" + rawResult);
+            System.out.println("--- EXPORT ---");
+            System.out.println("" + rawResult);
             final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + CSV.getExtension());
             final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
             exportAnchorElement.dispatchEvent(CLICK_EVENT);
