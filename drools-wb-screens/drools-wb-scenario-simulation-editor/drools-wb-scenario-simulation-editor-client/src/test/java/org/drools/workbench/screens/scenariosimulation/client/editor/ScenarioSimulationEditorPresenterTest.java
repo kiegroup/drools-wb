@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -159,7 +158,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private Command saveCommandMock;
     @Mock
-    private AnchorElement anchorElementMock;
+    private TextFileExport textFileExportMock;
 
     @Before
     public void setup() {
@@ -171,7 +170,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
         when(scenarioSimulationViewMock.getExportToCsvMenuItem()).thenReturn(exportToCsvMenuItemMock);
-        when(scenarioSimulationViewMock.getExportAnchorElement(anyString(), anyString())).thenReturn(anchorElementMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
@@ -193,7 +191,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                new CallerMock<>(importExportServiceMock),
-                                                               mock(TextFileExport.class)) {
+                                                               textFileExportMock) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -605,6 +603,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onExportToCsv() {
         presenter.onExportToCsv();
         verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), any());
+        verify(textFileExportMock, times(1)).export(any(), anyString());
     }
 
     @Test
