@@ -16,10 +16,14 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Map;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.DivElement;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
@@ -36,6 +40,9 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     public static final String IDENTIFIER = "org.drools.scenariosimulation.CoverageReport";
 
     protected Command saveCommand;
+
+    @Inject
+    ViewsProvider viewsProvider;
 
     public CoverageReportPresenter() {
         //Zero argument constructor for CDI
@@ -54,5 +61,13 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         view.getReportAvailable().setInnerText(simulationRunMetadata.getAvailable() + "");
         view.getReportExecuted().setInnerText(simulationRunMetadata.getExecuted() + "");
         view.getReportCoverage().setInnerText(simulationRunMetadata.getCoveragePercentage() + " %");
+        DivElement decisionList = view.getDecisionList();
+        decisionList.removeAllChildren();
+        for (Map.Entry<String, Integer> entry : simulationRunMetadata.getOutputCounter().entrySet()) {
+            DecisionElementView decisionElementView = viewsProvider.getDecisionElementView();
+            decisionElementView.setDescriptionValue(entry.getKey());
+            decisionElementView.setDecisionValue(entry.getValue() + "");
+            decisionList.appendChild(decisionElementView.getDecisionElement());
+        }
     }
 }

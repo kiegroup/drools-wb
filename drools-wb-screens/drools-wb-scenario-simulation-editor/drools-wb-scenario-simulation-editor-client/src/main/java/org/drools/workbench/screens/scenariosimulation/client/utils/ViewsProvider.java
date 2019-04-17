@@ -25,6 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.P
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.DecisionElementView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -40,6 +41,9 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<FieldItemView> fieldItemViewInstance;
+
+    @Inject
+    private ManagedInstance<DecisionElementView> decisionElementViewInstance;
 
     @Inject
     private ManagedInstance<ListGroupItemView> listGroupItemViewInstance;
@@ -96,6 +100,10 @@ public class ViewsProvider {
 
     public KeyValueEditingBox getKeyValueEditingBox() {
         return mapEditingBoxInstance.get();
+    }
+
+    public DecisionElementView getDecisionElementView() {
+        return decisionElementViewInstance.get();
     }
 
 }

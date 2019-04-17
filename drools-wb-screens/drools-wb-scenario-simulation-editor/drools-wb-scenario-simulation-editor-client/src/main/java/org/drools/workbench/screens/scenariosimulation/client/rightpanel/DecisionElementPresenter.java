@@ -17,8 +17,22 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class DecisionElementPresenter implements DecisionElementView.Presenter {
+
+    @Inject
+    protected ViewsProvider viewsProvider;
+
+    @Override
+    public DecisionElementView getDecisionElementView(String decisionDescription, String decisionValue) {
+        DecisionElementView decisionElementView = viewsProvider.getDecisionElementView();
+        decisionElementView.setDescriptionValue(decisionDescription);
+        decisionElementView.setDecisionValue(decisionValue);
+        return decisionElementView;
+    }
 
 }

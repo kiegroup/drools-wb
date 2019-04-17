@@ -18,12 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
+// FIXME to test
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class CoverageReportViewImpl
@@ -41,6 +43,9 @@ public class CoverageReportViewImpl
 
     @DataField("reportCoverage")
     protected SpanElement reportCoverage = Document.get().createSpanElement();
+
+    @DataField("decisionList")
+    protected DivElement decisionList = Document.get().createDivElement();
 
     @Override
     public Presenter getPresenter() {
@@ -65,5 +70,10 @@ public class CoverageReportViewImpl
     @Override
     public SpanElement getReportCoverage() {
         return reportCoverage;
+    }
+
+    @Override
+    public DivElement getDecisionList() {
+        return decisionList;
     }
 }

@@ -16,9 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.DivElement;
+
 public interface DecisionElementView {
+
+    DivElement getDecisionElement();
 
     interface Presenter {
 
+        DecisionElementView getDecisionElementView(String description, String value);
     }
+
+    void setDescriptionValue(String decisionDescription);
+
+    void setDecisionValue(String decisionValue);
 }

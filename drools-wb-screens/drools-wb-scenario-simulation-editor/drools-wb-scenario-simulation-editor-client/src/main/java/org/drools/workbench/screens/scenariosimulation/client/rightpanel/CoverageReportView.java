@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 
@@ -27,6 +28,8 @@ public interface CoverageReportView
     SpanElement getReportExecuted();
 
     SpanElement getReportCoverage();
+
+    DivElement getDecisionList();
 
     interface Presenter extends SubDockView.Presenter {
 
