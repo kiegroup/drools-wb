@@ -16,11 +16,13 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 
 public interface DecisionElementView {
 
-    DivElement getDecisionElement();
+    Element getDecisionDescription();
+
+    Element getDecisionNumberOfTime();
 
     interface Presenter {
 

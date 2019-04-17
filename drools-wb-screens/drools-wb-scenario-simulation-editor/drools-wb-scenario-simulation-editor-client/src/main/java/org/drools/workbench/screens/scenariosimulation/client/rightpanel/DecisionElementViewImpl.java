@@ -16,9 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Element;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
@@ -28,14 +27,11 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 @Templated
 public class DecisionElementViewImpl implements DecisionElementView {
 
-    @DataField("decisionElement")
-    protected DivElement decisionElement = Document.get().createDivElement();
-
     @DataField("decisionDescription")
-    protected SpanElement decisionDescription = Document.get().createSpanElement();
+    protected Element decisionDescription = Document.get().createElement("dt");
 
     @DataField("decisionNumberOfTime")
-    protected SpanElement decisionNumberOfTime = Document.get().createSpanElement();
+    protected Element decisionNumberOfTime = Document.get().createElement("dd");
 
     @Override
     public void setDescriptionValue(String decisionDescription) {
@@ -48,7 +44,12 @@ public class DecisionElementViewImpl implements DecisionElementView {
     }
 
     @Override
-    public DivElement getDecisionElement() {
-        return decisionElement;
+    public Element getDecisionDescription() {
+        return decisionDescription;
+    }
+
+    @Override
+    public Element getDecisionNumberOfTime() {
+        return decisionNumberOfTime;
     }
 }

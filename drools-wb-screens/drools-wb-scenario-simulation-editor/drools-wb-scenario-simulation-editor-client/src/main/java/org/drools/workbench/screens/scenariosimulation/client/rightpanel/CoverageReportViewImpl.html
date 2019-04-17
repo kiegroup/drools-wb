@@ -34,27 +34,21 @@
                     <dt>
                         Available decisions:
                     </dt>
-                    <dd>
-                        <span data-field="reportAvailable"/>
-                    </dd>
+                    <dd data-field="reportAvailable"></dd>
                     <dt>
                         Tested decisions:
                     </dt>
-                    <dd>
-                        <span data-field="reportExecuted"/>
-                    </dd>
+                    <dd data-field="reportExecuted"></dd>
                     <dt>
                         Percentage of decisions tested:
                     </dt>
-                    <dd>
-                        <span data-field="reportCoverage"/>
-                    </dd>
+                    <dd data-field="reportCoverage"></dd>
                 </dl>
             </div>
 
             <div class="col-xs-12 col-md-4">
                 <!------- DONUT CHART -->
-                <!--<div id="kieCoverageChart1" class="example-donut-chart-utilization"></div>-->
+                <div id="kieCoverageChart1" data-field="donutChart" class="example-donut-chart-utilization"></div>
 
                 <!--<script>-->
                 <!--var c3ChartDefaults = $().c3ChartDefaults();-->
@@ -96,8 +90,10 @@
         <hr class="kie-dock__divider"/>
         Number of times a Decision has been evaluated
         <br/>
-        <div style="margin-bottom: 20px; margin-top: 20px; height: 100px">
-            <div style="height: 100%; overflow: auto" data-field="decisionList"></div>
+        <div style="margin-top: 20px; height: 100px">
+            <div style="height: 100%; overflow: auto">
+                <dl data-field="decisionList" class="dl-horizontal kie-coverage__dl-horizontal"></dl>
+            </div>
         </div>
         <hr class="kie-dock__divider"/>
         <br/>

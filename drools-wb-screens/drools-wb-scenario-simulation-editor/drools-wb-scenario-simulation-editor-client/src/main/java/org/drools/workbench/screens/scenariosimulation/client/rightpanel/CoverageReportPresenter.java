@@ -18,10 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
@@ -42,7 +43,10 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected Command saveCommand;
 
     @Inject
-    ViewsProvider viewsProvider;
+    protected ViewsProvider viewsProvider;
+
+    @Inject
+    protected CoverageReportDonutPresenter coverageReportDonutPresenter;
 
     public CoverageReportPresenter() {
         //Zero argument constructor for CDI
@@ -55,19 +59,28 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         title = ScenarioSimulationEditorConstants.INSTANCE.coverageReport();
     }
 
+    @PostConstruct
+    public void init() {
+        coverageReportDonutPresenter.init(view.getDonutChart());
+    }
+
     // FIXME to test
     @Override
     public void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata) {
         view.getReportAvailable().setInnerText(simulationRunMetadata.getAvailable() + "");
         view.getReportExecuted().setInnerText(simulationRunMetadata.getExecuted() + "");
         view.getReportCoverage().setInnerText(simulationRunMetadata.getCoveragePercentage() + " %");
-        DivElement decisionList = view.getDecisionList();
+        Element decisionList = view.getDecisionList();
         decisionList.removeAllChildren();
         for (Map.Entry<String, Integer> entry : simulationRunMetadata.getOutputCounter().entrySet()) {
             DecisionElementView decisionElementView = viewsProvider.getDecisionElementView();
             decisionElementView.setDescriptionValue(entry.getKey());
             decisionElementView.setDecisionValue(entry.getValue() + "");
-            decisionList.appendChild(decisionElementView.getDecisionElement());
+            decisionList.appendChild(decisionElementView.getDecisionDescription());
+            decisionList.appendChild(decisionElementView.getDecisionNumberOfTime());
         }
+        coverageReportDonutPresenter
+                .showCoverageReport(simulationRunMetadata.getExecuted(),
+                                    simulationRunMetadata.getAvailable() - simulationRunMetadata.getExecuted());
     }
 }
