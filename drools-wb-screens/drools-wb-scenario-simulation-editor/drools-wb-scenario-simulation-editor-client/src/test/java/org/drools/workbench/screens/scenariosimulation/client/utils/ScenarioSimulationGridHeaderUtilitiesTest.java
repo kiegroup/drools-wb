@@ -173,7 +173,7 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                                          columnGroup);
 
         assertThat(event.getFilterTerm()).isEqualTo(columnOneTitle);
-        assertThat(event.getPropertyName()).isNull();
+        assertThat(event.getPropertyNameElements()).isNull();
         assertThat(event.isNotEqualsSearch()).isFalse();
     }
 

@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
+import java.util.List;
 import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -205,9 +206,9 @@ public class ScenarioSimulationContext {
         protected boolean notEqualsSearch = false;
 
         /**
-         * The string to <b>eventually</b> use to select the property in the right panel
+         * The <code>List</code> to <b>eventually</b> use to select the property in the test tools  panel
          */
-        protected String propertyName;
+        protected List<String> propertyNameElements;
 
         /**
          * Disable the <b>TestTools</b>
@@ -331,12 +332,12 @@ public class ScenarioSimulationContext {
             this.notEqualsSearch = notEqualsSearch;
         }
 
-        public String getPropertyName() {
-            return propertyName;
+        public List<String> getPropertyNameElements() {
+            return propertyNameElements;
         }
 
-        public void setPropertyName(String propertyName) {
-            this.propertyName = propertyName;
+        public void setPropertyNameElements(List<String> propertyNameElements) {
+            this.propertyNameElements = propertyNameElements;
         }
 
         public boolean isDisable() {

@@ -289,15 +289,14 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void onEnableEditorTab(String factName, String propertyName, boolean notEqualsSearch) {
+    public void onEnableEditorTab(String factName, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, notEqualsSearch);
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
-        if (propertyName != null && !notEqualsSearch) {
-            List<String> propertyParts = propertyName.contains(".") ? Arrays.asList(propertyName.split("\\.")) : Collections.singletonList(propertyName);
-            listGroupItemPresenter.selectProperty(factName, propertyParts);
+        if (propertyNameElements != null && !notEqualsSearch) {
+            listGroupItemPresenter.selectProperty(factName, propertyNameElements);
         }
     }
 

@@ -45,7 +45,7 @@ public class EnableTestToolsCommandTest extends AbstractScenarioSimulationComman
     public void executeWithFactName() {
         scenarioSimulationContextLocal.setTestToolsPresenter(testToolsPresenterMock);
         scenarioSimulationContextLocal.getStatus().setFilterTerm(FACT_NAME);
-        scenarioSimulationContextLocal.getStatus().setPropertyName(null);
+        scenarioSimulationContextLocal.getStatus().setPropertyNameElements(null);
         scenarioSimulationContextLocal.getStatus().setNotEqualsSearch(true);
         command.execute(scenarioSimulationContextLocal);
         verify(testToolsPresenterMock, times(1)).onEnableEditorTab(eq(FACT_NAME), eq(null), eq(true));

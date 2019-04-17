@@ -238,7 +238,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     @Override
     public void onEvent(EnableTestToolsEvent event) {
         context.getStatus().setFilterTerm(event.getFilterTerm());
-        context.getStatus().setPropertyName(event.getPropertyName());
+        context.getStatus().setPropertyNameElements(event.getPropertyNameElements());
         context.getStatus().setNotEqualsSearch(event.isNotEqualsSearch());
         commonExecution(context, new EnableTestToolsCommand());
     }
