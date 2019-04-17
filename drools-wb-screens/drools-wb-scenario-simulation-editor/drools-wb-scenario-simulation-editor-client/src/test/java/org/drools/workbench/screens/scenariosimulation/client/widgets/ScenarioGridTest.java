@@ -71,6 +71,7 @@ import static org.mockito.Mockito.when;
 @RunWith(LienzoMockitoTestRunner.class)
 public class ScenarioGridTest {
 
+    private static final String TEST = "test";
     @Mock
     private ScenarioGridModel scenarioGridModelMock;
     @Mock
@@ -264,7 +265,7 @@ public class ScenarioGridTest {
         factMappingDescription.getExpressionElements().clear();
         assertTrue(scenarioGrid.isPropertyAssigned(false, factMappingDescription));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingDescription));
-        factMappingDescription.getExpressionElements().add(new ExpressionElement("test"));
+        factMappingDescription.getExpressionElements().add(new ExpressionElement(TEST));
         assertTrue(scenarioGrid.isPropertyAssigned(false, factMappingDescription));
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingDescription));
         factMappingGiven.getExpressionElements().clear();

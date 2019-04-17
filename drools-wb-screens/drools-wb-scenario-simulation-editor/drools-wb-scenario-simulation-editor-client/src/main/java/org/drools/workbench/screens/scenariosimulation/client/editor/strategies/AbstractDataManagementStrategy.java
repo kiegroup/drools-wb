@@ -168,10 +168,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
                     .stream()
                     .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))
                     .forEach(factMapping -> {
-                        String dataObjectName = factMapping.getFactIdentifier().getClassName();
-                        if (dataObjectName.contains(".")) {
-                            dataObjectName = dataObjectName.substring(dataObjectName.lastIndexOf(".") + 1);
-                        }
+                        String dataObjectName = factMapping.getFactIdentifier().getClassNameWithoutPackage();
                         final String instanceName = factMapping.getFactAlias();
                         if (!instanceName.equals(dataObjectName)) {
                             final FactModelTree factModelTree = sourceMap.get(dataObjectName);

@@ -43,7 +43,7 @@ public class SetGridCellValueCommandTest extends AbstractScenarioSimulationComma
     public void execute() {
         scenarioSimulationContextLocal.getStatus().setRowIndex(ROW_INDEX);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
-        scenarioSimulationContextLocal.getStatus().setCellValue(VALUE);
+        scenarioSimulationContextLocal.getStatus().setGridCellValue(VALUE);
         command.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).setCellValue(eq(ROW_INDEX), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
         verify(scenarioGridModelMock, times(1)).resetErrors(eq(ROW_INDEX));

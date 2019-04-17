@@ -276,11 +276,11 @@ public class ScenarioGridModel extends BaseGridData {
      * This method update the type mapped inside a give column and updates the underlying model
      * @param columnIndex
      * @param column
-     * @param value
+     * @param propertyNameElements
      * @param lastLevelClassName
      * @param keepData
      */
-    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, String value, String lastLevelClassName, boolean keepData) {
+    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, List<String> propertyNameElements, String lastLevelClassName, boolean keepData) {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
         if (keepData) {
@@ -288,10 +288,9 @@ public class ScenarioGridModel extends BaseGridData {
                     .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
         }
         replaceColumn(columnIndex, column);
-        String[] elements = value.split("\\.");
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        IntStream.range(0, elements.length)
-                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
+        IntStream.range(0, propertyNameElements.size())
+                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(propertyNameElements.get(stepIndex), lastLevelClassName));
         if (keepData) {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
@@ -472,8 +471,9 @@ public class ScenarioGridModel extends BaseGridData {
                 .size();
     }
 
-    public void updateHeader(int columnIndex, int headerRowIndex, String value) {
+    public void updateHeader(int columnIndex, int headerRowIndex, List<String> nameElements) {
         final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(headerRowIndex);
+        String value = String.join(".", nameElements);
         // do not update if old and new value are the same
         if (Objects.equals(editedMetadata.getTitle(), value)) {
             return;
@@ -568,51 +568,52 @@ public class ScenarioGridModel extends BaseGridData {
     /**
      * Returns <code>true</code> if property mapped to the selected column is already assigned to
      * another column of the same <b>instance</b>
-     * @param propertyName
+     * @param propertyNameElements
      * @return
      */
-    public boolean isAlreadyAssignedProperty(String propertyName) {
-        return selectedColumn == null || isAlreadyAssignedProperty(getColumns().indexOf(selectedColumn), propertyName);
+    public boolean isAlreadyAssignedProperty(List<String> propertyNameElements) {
+        return selectedColumn == null || isAlreadyAssignedProperty(getColumns().indexOf(selectedColumn), propertyNameElements);
     }
 
     /**
      * Returns <code>true</code> if property mapped to the column at given index is already assigned to
      * another column of the same <b>instance</b>
      * @param columnIndex
-     * @param propertyName
+     * @param propertyNameElements
      * @return
      */
-    public boolean isAlreadyAssignedProperty(int columnIndex, String propertyName) {
+    public boolean isAlreadyAssignedProperty(int columnIndex, List<String> propertyNameElements) {
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
-                    String columnProperty = factMapping.getExpressionElements()
+                    List<String> columnProperty = factMapping.getExpressionElements()
                             .stream()
                             .map(expressionElement -> expressionElement.getStep())
-                            .collect(Collectors.joining("."));
-                    return Objects.equals(columnProperty, propertyName);
+                            .collect(Collectors.toList());
+                    return Objects.equals(columnProperty, propertyNameElements);
                 });
     }
 
     /**
      * Returns <code>true</code> if property mapped to the selected column is the same as the provided one
-     * @param propertyName
+     * @param propertyNameElements
      * @return
      */
-    public boolean isSameSelectedColumnProperty(String propertyName) {
-        return selectedColumn == null || isSameSelectedColumnProperty(getColumns().indexOf(selectedColumn), propertyName);
+    public boolean isSameSelectedColumnProperty(List<String> propertyNameElements) {
+        return selectedColumn == null || isSameSelectedColumnProperty(getColumns().indexOf(selectedColumn), propertyNameElements);
     }
 
     /**
      * Returns <code>true</code> if property mapped to the column at given index is the same as the provided one
      * @param columnIndex
-     * @param propertyName
+     * @param propertyNameElements
      * @return
      */
-    public boolean isSameSelectedColumnProperty(int columnIndex, String propertyName) {
+    public boolean isSameSelectedColumnProperty(int columnIndex, List<String> propertyNameElements) {
+        String propertyName = String.join(".", propertyNameElements);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
         return factMappingByIndex.getExpressionAlias().equals(propertyName);
@@ -649,27 +650,21 @@ public class ScenarioGridModel extends BaseGridData {
     public boolean isSameInstanceHeader(int columnIndex, String headerName) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
-        String columnClassName = factIdentifierByIndex.getClassName();
-        if (columnClassName.contains(".")) {
-            columnClassName = columnClassName.substring(columnClassName.lastIndexOf(".") + 1);
-        }
+        String columnClassName = factIdentifierByIndex.getClassNameWithoutPackage();
         return Objects.equals(columnClassName, headerName);
     }
 
     /**
      * Returns <code>true</code> if given <b>headerName</b> is the same as the <b>element steps</b> mapped to any other column of the same group
      * @param columnIndex
-     * @param headerName
+     * @param propertyNameElements
      * @return
      */
-    public boolean isSamePropertyHeader(int columnIndex, String headerName) {
+    public boolean isSamePropertyHeader(int columnIndex, List<String> propertyNameElements) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        String columnPropertyName = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
-        if (columnPropertyName.contains(".")) {
-            columnPropertyName = columnPropertyName.substring(columnPropertyName.indexOf(".") + 1);
-        }
-        return Objects.equals(columnPropertyName, headerName);
+        List<String> columnPropertyName = factMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
+        return Objects.equals(columnPropertyName, propertyNameElements);
     }
 
     public void resetErrors() {
@@ -702,13 +697,13 @@ public class ScenarioGridModel extends BaseGridData {
         this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
-    public boolean validateInstanceHeaderUpdate(String value, int columnIndex, boolean isADataType) {
-        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, value);
-        return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(value, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(value, columnIndex));
+    public boolean validateInstanceHeaderUpdate(List<String> instanceNameElements, int columnIndex, boolean isADataType) {
+        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() -1));
+        return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(instanceNameElements, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(instanceNameElements, columnIndex));
     }
 
-    public boolean validatePropertyHeaderUpdate(String value, int columnIndex, boolean isPropertyType) {
-        return (isPropertyType && isSamePropertyHeader(columnIndex, value) && isUniquePropertyHeaderTitle(value, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, value) && isUniquePropertyHeaderTitle(value, columnIndex));
+    public boolean validatePropertyHeaderUpdate(List<String> propertyNameElements, int columnIndex, boolean isPropertyType) {
+        return (isPropertyType && isSamePropertyHeader(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyNameElements, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyNameElements, columnIndex));
     }
 
     /**
@@ -832,11 +827,12 @@ public class ScenarioGridModel extends BaseGridData {
 
     /**
      * Verify the given value is not already used as instance header name <b>between different groups</b>
-     * @param value
+     * @param instanceNameElements
      * @param columnIndex
      * @return
      */
-    protected boolean isUniqueInstanceHeaderTitle(String value, int columnIndex) {
+    protected boolean isUniqueInstanceHeaderTitle(List<String> instanceNameElements, int columnIndex) {
+        String value = String.join(".", instanceNameElements);
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
@@ -851,11 +847,12 @@ public class ScenarioGridModel extends BaseGridData {
 
     /**
      * Verify the given value is not already used as property header name <b>inside the same group</b>
-     * @param value
+     * @param propertyNameElements
      * @param columnIndex
      * @return
      */
-    protected boolean isUniquePropertyHeaderTitle(String value, int columnIndex) {
+    protected boolean isUniquePropertyHeaderTitle(List<String> propertyNameElements, int columnIndex) {
+        String value = String.join(".", propertyNameElements);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return IntStream.range(0, getColumnCount())

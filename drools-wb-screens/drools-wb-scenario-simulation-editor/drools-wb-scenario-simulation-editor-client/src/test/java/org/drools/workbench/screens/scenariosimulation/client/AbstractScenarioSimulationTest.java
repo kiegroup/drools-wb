@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -164,7 +165,15 @@ public abstract class AbstractScenarioSimulationTest {
 
     protected final String VALUE = "value";
 
-    protected final String FULL_CLASS_NAME = FULL_PACKAGE + ".testclass";
+    protected final List<String> VALUE_LIST = Collections.singletonList(VALUE);
+
+    protected final String CLASS_NAME = "TestClass";
+
+    protected final String PROPERTY_NAME = "testProperty";
+
+    protected final String FULL_CLASS_NAME = FULL_PACKAGE + "." + CLASS_NAME;
+
+    protected final String FULL_PROPERTY_NAME = CLASS_NAME + "." + PROPERTY_NAME;
 
     protected final String VALUE_CLASS_NAME = String.class.getName();
 
@@ -283,12 +292,12 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public boolean validateInstanceHeaderUpdate(String value, int columnIndex, boolean isADataType) {
+            public boolean validateInstanceHeaderUpdate(List<String> instanceNameElements, int columnIndex, boolean isADataType) {
                 return true;
             }
 
             @Override
-            public boolean validatePropertyHeaderUpdate(String value, int columnIndex, boolean isPropertyType) {
+            public boolean validatePropertyHeaderUpdate(List<String> propertyNameElements, int columnIndex, boolean isPropertyType) {
                 return true;
             }
         });
@@ -398,10 +407,13 @@ public abstract class AbstractScenarioSimulationTest {
         when(factMapping.getFactAlias()).thenReturn(factAlias);
         when(factMapping.getClassName()).thenReturn(valueClassName);
 
+        final ExpressionElement factAliasExpressionElement = new ExpressionElement(factAlias);
+        final ExpressionElement propertyAliasExpressionElement = new ExpressionElement(propertyAlias);
         List<ExpressionElement> expressionElements = new ArrayList<>();
-        expressionElements.add(new ExpressionElement(factAlias));
-        expressionElements.add(new ExpressionElement(propertyAlias));
+        expressionElements.add(factAliasExpressionElement);
+        expressionElements.add(propertyAliasExpressionElement);
         when(factMapping.getExpressionElements()).thenReturn(expressionElements);
+        when(factMapping.getExpressionElementsWithoutClass()).thenReturn(Collections.singletonList(propertyAliasExpressionElement));
 
         when(factIdentifier.getClassName()).thenReturn(fullClassName);
         when(factIdentifier.getName()).thenReturn(factIdentfierName);

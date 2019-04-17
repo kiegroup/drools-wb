@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.domelements;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
@@ -59,7 +61,8 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
         try {
             boolean isInstanceHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.INSTANCE);
             boolean isPropertyHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY);
-            ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetHeaderCellValueEvent(rowIndex, columnIndex, value, isInstanceHeader, isPropertyHeader));
+            List<String> nameElements = Arrays.asList(value.split("\\."));
+            ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetHeaderCellValueEvent(rowIndex, columnIndex, nameElements, isInstanceHeader, isPropertyHeader));
             ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new ReloadTestToolsEvent(true));
         } catch (Exception e) {
             throw new IllegalArgumentException(new StringBuilder().append("Impossible to update header (").append(rowIndex)

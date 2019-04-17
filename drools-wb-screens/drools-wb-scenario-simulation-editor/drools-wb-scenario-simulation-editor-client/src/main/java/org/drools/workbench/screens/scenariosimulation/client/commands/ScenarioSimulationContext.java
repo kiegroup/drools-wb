@@ -188,7 +188,7 @@ public class ScenarioSimulationContext {
         protected String valueClassName;
         protected boolean keepData;
 
-        protected String cellValue;
+        protected String gridCellValue;
 
         protected int rowIndex;
 
@@ -209,6 +209,11 @@ public class ScenarioSimulationContext {
          * The <code>List</code> to <b>eventually</b> use to select the property in the test tools  panel
          */
         protected List<String> propertyNameElements;
+
+        /**
+         * The <code>List</code> of elements of a header cell
+         */
+        protected List<String> headerCellElements;
 
         /**
          * Disable the <b>TestTools</b>
@@ -356,12 +361,20 @@ public class ScenarioSimulationContext {
             this.openDock = openDock;
         }
 
-        public String getCellValue() {
-            return cellValue;
+        public String getGridCellValue() {
+            return gridCellValue;
         }
 
-        public void setCellValue(String cellValue) {
-            this.cellValue = cellValue;
+        public void setGridCellValue(String gridCellValue) {
+            this.gridCellValue = gridCellValue;
+        }
+
+        public List<String> getHeaderCellElements() {
+            return headerCellElements;
+        }
+
+        public void setHeaderCellElements(List<String> headerCellElements) {
+            this.headerCellElements = headerCellElements;
         }
 
         public Simulation getSimulation() {
@@ -384,7 +397,7 @@ public class ScenarioSimulationContext {
             toReturn.value = this.value;
             toReturn.valueClassName = this.valueClassName;
             toReturn.keepData = this.keepData;
-            toReturn.cellValue = this.cellValue;
+            toReturn.gridCellValue = this.gridCellValue;
             toReturn.rowIndex = this.rowIndex;
             toReturn.simulation = this.simulation.cloneSimulation();
             return toReturn;
