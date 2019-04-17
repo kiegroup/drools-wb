@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -176,11 +175,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void hideProperties(Map<String, List<String>> propertiesToHide) {
+    public void hideProperties(Map<String, List<List<String>>> propertiesToHide) {
         listGroupItemPresenter.showAll();
         propertiesToHide.entrySet().stream().forEach(
-                stringListEntry -> stringListEntry.getValue().forEach(s -> {
-                    List<String> propertyParts = s.contains(".") ? Arrays.asList(s.split("\\.")) : Collections.singletonList(s);
+                stringListEntry -> stringListEntry.getValue().forEach(propertyParts -> {
                     listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts);
                 })
         );

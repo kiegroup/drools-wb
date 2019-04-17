@@ -117,7 +117,7 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void setInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
-        void hideProperties(Map<String, List<String>> propertiesToHide);
+        void hideProperties(Map<String, List<List<String>>> propertiesToHide);
 
         void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
