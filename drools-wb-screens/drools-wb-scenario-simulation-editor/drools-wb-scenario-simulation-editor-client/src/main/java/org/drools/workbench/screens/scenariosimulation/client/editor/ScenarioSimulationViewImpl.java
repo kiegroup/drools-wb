@@ -20,9 +20,6 @@ import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
 
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -136,15 +133,6 @@ public class ScenarioSimulationViewImpl
                                                        () -> presenter.onExportToCsv());
         }
         return exportToCsvMenuItem;
-    }
-
-    @Override
-    public AnchorElement getExportAnchorElement(String text, String filename) {
-        AnchorElement toReturn = Document.get().createAnchorElement();
-        toReturn.setHref("data:text/plain;charset=utf-8," + text);
-        toReturn.setAttribute("download", filename);
-        toReturn.getStyle().setDisplay(Style.Display.NONE);
-        return toReturn;
     }
 
     @Override

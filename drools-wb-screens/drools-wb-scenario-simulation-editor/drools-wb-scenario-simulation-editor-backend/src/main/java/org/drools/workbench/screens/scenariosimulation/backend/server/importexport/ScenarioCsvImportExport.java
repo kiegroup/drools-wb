@@ -27,6 +27,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
@@ -94,12 +95,21 @@ public class ScenarioCsvImportExport {
         List<String> thirdLineHeader = new ArrayList<>();
 
         for (FactMapping factMapping : factMappings) {
-            // GIVEN/EXPECT/OTHER
-            firstLineHeader.add(factMapping.getExpressionIdentifier().getType().name());
-            // Instance
-            secondLineHeader.add("#".equals(factMapping.getFactAlias()) ? "" : factMapping.getFactAlias());
-            // Property
-            thirdLineHeader.add(factMapping.getExpressionAlias());
+            if (FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
+                // OTHER
+                String factAlias = factMapping.getFactAlias();
+                firstLineHeader.add(factAlias);
+                secondLineHeader.add(factAlias);
+                thirdLineHeader.add(factAlias);
+            }
+            else {
+                // GIVEN/EXPECT
+                firstLineHeader.add(factMapping.getExpressionIdentifier().getType().name());
+                // Instance
+                secondLineHeader.add("#".equals(factMapping.getFactAlias()) ? "" : factMapping.getFactAlias());
+                // Property
+                thirdLineHeader.add(factMapping.getExpressionAlias());
+            }
         }
 
         printer.printRecord(firstLineHeader.toArray());

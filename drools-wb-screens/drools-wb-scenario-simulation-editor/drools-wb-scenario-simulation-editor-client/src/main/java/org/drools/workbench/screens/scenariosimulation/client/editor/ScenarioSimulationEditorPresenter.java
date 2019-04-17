@@ -29,9 +29,6 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
@@ -83,6 +80,8 @@ import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+import org.uberfire.ext.editor.commons.client.file.exports.TextContent;
+import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
 import org.uberfire.ext.editor.commons.service.support.SupportsRename;
@@ -127,6 +126,7 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
+    private TextFileExport textFileExport;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
 
@@ -149,7 +149,8 @@ public class ScenarioSimulationEditorPresenter
                                              final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final Caller<DMNTypeService> dmnTypeService,
-                                             final Caller<ImportExportService> importExportService) {
+                                             final Caller<ImportExportService> importExportService,
+                                             final TextFileExport textFileExport) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -163,6 +164,7 @@ public class ScenarioSimulationEditorPresenter
         this.placeManager = placeManager;
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
+        this.textFileExport = textFileExport;
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
@@ -421,12 +423,9 @@ public class ScenarioSimulationEditorPresenter
 
     protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
-            System.out.println("--- EXPORT ---");
-            System.out.println("" + rawResult);
-            final AnchorElement exportAnchorElement = view.getExportAnchorElement((String) rawResult, path.getFileName() + CSV.getExtension());
-            final NativeEvent CLICK_EVENT = Document.get().createClickEvent(0, 0, 0, 0, 0, false, false, false, false);
-            exportAnchorElement.dispatchEvent(CLICK_EVENT);
-            exportAnchorElement.removeFromParent();
+            TextContent textContent = TextContent.create((String) rawResult);
+            textFileExport.export(textContent,
+                                  path.getFileName() + CSV.getExtension());
         };
     }
 

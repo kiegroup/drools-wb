@@ -67,6 +67,7 @@ import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
@@ -191,7 +192,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
-                                                               new CallerMock<>(importExportServiceMock)) {
+                                                               new CallerMock<>(importExportServiceMock),
+                                                               mock(TextFileExport.class)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
