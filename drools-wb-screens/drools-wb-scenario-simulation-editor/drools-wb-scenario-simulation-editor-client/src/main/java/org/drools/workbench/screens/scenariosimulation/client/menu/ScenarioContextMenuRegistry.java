@@ -261,7 +261,7 @@ public class ScenarioContextMenuRegistry {  //TODO extends AbstractScenarioSimul
     }
 
     public void hideErrorReportPopupover() {
-        expectedContextMenu.hide();
+        errorReportPopupPresenter.hide();
     }
 
 }
