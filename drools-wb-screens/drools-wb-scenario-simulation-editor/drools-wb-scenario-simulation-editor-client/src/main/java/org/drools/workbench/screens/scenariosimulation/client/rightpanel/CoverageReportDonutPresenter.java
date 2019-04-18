@@ -22,7 +22,6 @@ import javax.inject.Inject;
 import elemental2.dom.HTMLDivElement;
 import org.dashbuilder.dataset.DataSetFactory;
 import org.dashbuilder.displayer.DisplayerSettingsFactory;
-import org.dashbuilder.displayer.Position;
 import org.dashbuilder.displayer.client.Displayer;
 import org.dashbuilder.displayer.client.DisplayerCoordinator;
 import org.dashbuilder.displayer.client.DisplayerLocator;
@@ -74,22 +73,22 @@ public class CoverageReportDonutPresenter {
     }
 
     protected Displayer makeDisplayer(final int executed,
-                                    final int notCovered) {
+                                      final int notCovered) {
         return displayerLocator.lookupDisplayer(DisplayerSettingsFactory.newPieChartSettings()
-                                                        .height(125)
-                                                        .width(100)
+                                                        .height(100)
+                                                        .width(80)
                                                         .titleVisible(true)
                                                         .subType_Donut()
-                                                        .margins(1, 20, 1, 1)
-                                                        .legendOn(Position.BOTTOM)
+                                                        .margins(1, 1, 1, 1)
+                                                        .legendOff()
                                                         .column("coverage").format("coverage", "#")
                                                         .dataset(DataSetFactory.newDataSetBuilder()
                                                                          .label("STATUS")
                                                                          .number("coverage")
-                                                                         // l18n
+                                                                         // FIXME l18n
                                                                          .row("Executed",
                                                                               executed)
-                                                                         // l18n
+                                                                         // FIXME l18n
                                                                          .row("Not covered",
                                                                               notCovered)
                                                                          .buildDataSet())
