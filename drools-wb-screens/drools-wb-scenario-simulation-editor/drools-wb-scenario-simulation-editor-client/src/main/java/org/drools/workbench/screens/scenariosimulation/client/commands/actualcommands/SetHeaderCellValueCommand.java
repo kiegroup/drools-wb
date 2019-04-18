@@ -85,4 +85,5 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
         }
         return toReturn;
     }
+
 }

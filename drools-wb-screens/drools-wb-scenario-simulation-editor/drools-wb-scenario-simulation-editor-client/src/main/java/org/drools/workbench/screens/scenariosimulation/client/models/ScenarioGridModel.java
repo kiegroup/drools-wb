@@ -289,6 +289,16 @@ public class ScenarioGridModel extends BaseGridData {
         }
         replaceColumn(columnIndex, column);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        String actualClassName = factMappingByIndex.getFactIdentifier().getClassName();
+        if (actualClassName.contains(".")) {
+            actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
+        }
+        String[] elements = value.split("\\.");
+        if (elements.length > 1) {
+            elements[0] = actualClassName;
+        }
+        // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
+        // while the first element of ExpressionElements is always the class name
         IntStream.range(0, propertyNameElements.size())
                 .forEach(stepIndex -> factMappingByIndex.addExpressionElement(propertyNameElements.get(stepIndex), lastLevelClassName));
         if (keepData) {
@@ -589,10 +599,13 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
-                    List<String> columnProperty = factMapping.getExpressionElements()
+                    List<String> columnProperty = factMapping.getFactAlias() + "."; // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
+                    // while the first element of ExpressionElements is always the class name
+                    columnProperty += factMapping.getExpressionElementsWithoutClass()
                             .stream()
                             .map(expressionElement -> expressionElement.getStep())
                             .collect(Collectors.toList());
+
                     return Objects.equals(columnProperty, propertyNameElements);
                 });
     }
