@@ -39,7 +39,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
 @Dependent
-public class ScenarioContextMenuRegistry {  //TODO extends AbstractScenarioSimulationGridPanelHandler
+public class ScenarioContextMenuRegistry {
 
     protected OtherContextMenu otherContextMenu;
     protected HeaderGivenContextMenu headerGivenContextMenu;

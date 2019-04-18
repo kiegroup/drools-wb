@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import java.util.Optional;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 /**
  * Scenario contains description and values to test in the defined scenario

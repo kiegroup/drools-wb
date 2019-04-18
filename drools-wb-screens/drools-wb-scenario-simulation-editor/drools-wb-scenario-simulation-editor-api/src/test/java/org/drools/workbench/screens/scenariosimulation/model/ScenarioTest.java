@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ScenarioTest {
@@ -93,18 +92,4 @@ public class ScenarioTest {
         assertEquals(factMappingValue1.getRawValue(), value2);
     }
 
-    @Test
-    public void sortTest() {
-        ExpressionIdentifier expressionIdentifier2 = ExpressionIdentifier.create("Test expression 2", FactMappingType.GIVEN);
-        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier);
-        simulationDescriptor.addFactMapping(factIdentifier, expressionIdentifier2);
-        scenario.addMappingValue(factIdentifier, expressionIdentifier2, "Test 2");
-        FactMappingValue factMappingValue1 = scenario.addMappingValue(factIdentifier, this.expressionIdentifier, "Test");
-
-        assertEquals(scenario.getUnmodifiableFactMappingValues().get(1), factMappingValue1);
-
-        scenario.sort();
-        assertNotEquals(scenario.getUnmodifiableFactMappingValues().get(1), factMappingValue1);
-        assertEquals(scenario.getUnmodifiableFactMappingValues().get(0), factMappingValue1);
-    }
 }
