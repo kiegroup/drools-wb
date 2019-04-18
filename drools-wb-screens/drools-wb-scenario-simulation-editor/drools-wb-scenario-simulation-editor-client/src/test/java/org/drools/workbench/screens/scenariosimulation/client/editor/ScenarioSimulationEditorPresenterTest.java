@@ -618,9 +618,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onImport() {
-        String FILE_CONTENTS = "FILE_CONTENTS";
-        presenterSpy.onImport(FILE_CONTENTS);
-        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENTS), any());
+        when(importExportServiceMock.importSimulation(any(), any(), any())).thenReturn(new Simulation());
+        String FILE_CONTENT = "FILE_CONTENT";
+        presenterSpy.onImport(FILE_CONTENT);
+        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENT), any());
     }
 
     private void onClosePlaceStatusOpen() {
