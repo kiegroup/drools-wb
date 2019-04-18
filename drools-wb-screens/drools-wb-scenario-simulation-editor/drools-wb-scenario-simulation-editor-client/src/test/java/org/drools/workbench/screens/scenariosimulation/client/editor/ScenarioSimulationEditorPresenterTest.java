@@ -32,6 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
@@ -40,9 +41,15 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
@@ -80,6 +87,8 @@ import static junit.framework.TestCase.assertTrue;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -191,7 +200,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                scenarioSimulationDocksHandlerMock,
                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                new CallerMock<>(importExportServiceMock),
-                                                               textFileExportMock) {
+                                                               textFileExportMock,
+                                                               mock(ConfirmPopupPresenter.class)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -622,5 +632,27 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(versionRecordManagerMock, times(1)).clear();
         verify(placeManagerMock, times(0)).closePlace(placeRequestMock);
         verify(scenarioGridPanelMock, times(1)).unregister();
+    }
+
+    @Test
+    public void cleanReadOnlyColumn() {
+        Simulation simulation = new Simulation();
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactMapping test1 = simulationDescriptor
+                .addFactMapping(FactIdentifier.create("test1", String.class.getCanonicalName()),
+                                ExpressionIdentifier.create("", FactMappingType.GIVEN));
+        FactMapping test2 = simulationDescriptor
+                .addFactMapping(FactIdentifier.create("test2", String.class.getCanonicalName()),
+                                ExpressionIdentifier.create("", FactMappingType.GIVEN));
+
+        test1.addExpressionElement("test", String.class.getCanonicalName());
+        Scenario scenario = simulation.addScenario();
+        scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), "value");
+        scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), "value");
+
+        presenter.cleanReadOnlyColumn(simulation);
+
+        assertNotNull(scenario.getFactMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier()).get().getRawValue());
+        assertNull(scenario.getFactMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier()).get().getRawValue());
     }
 }

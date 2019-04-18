@@ -242,4 +242,10 @@ public interface ScenarioSimulationEditorConstants
 
 
     String settings();
+
+    String uploadWarning();
+
+    String importFailedMessage();
+
+    String importErrorTitle();
 }

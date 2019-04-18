@@ -40,8 +40,10 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
@@ -50,16 +52,20 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.bus.client.api.base.DefaultErrorCallback;
 import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
@@ -127,6 +133,7 @@ public class ScenarioSimulationEditorPresenter
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
     private TextFileExport textFileExport;
+    private ConfirmPopupPresenter confirmPopupPresenter;
 
     private TestRunnerReportingScreen testRunnerReportingScreen;
 
@@ -150,7 +157,8 @@ public class ScenarioSimulationEditorPresenter
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final Caller<DMNTypeService> dmnTypeService,
                                              final Caller<ImportExportService> importExportService,
-                                             final TextFileExport textFileExport) {
+                                             final TextFileExport textFileExport,
+                                             final ConfirmPopupPresenter confirmPopupPresenter) {
         super(scenarioSimulationProducer.getScenarioSimulationView());
         this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -165,6 +173,7 @@ public class ScenarioSimulationEditorPresenter
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
         this.textFileExport = textFileExport;
+        this.confirmPopupPresenter = confirmPopupPresenter;
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
@@ -317,7 +326,7 @@ public class ScenarioSimulationEditorPresenter
 
     public void onImport(String fileContents) {
         importExportService.call(getImportCallBack(),
-                                 new DefaultErrorCallback())
+                                 getImportErrorCallback())
                 .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
     }
 
@@ -357,6 +366,14 @@ public class ScenarioSimulationEditorPresenter
 
     protected void unRegisterTestToolsCallback() {
         placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(populateTestToolsCommand);
+    }
+
+    protected ErrorCallback<Object> getImportErrorCallback() {
+        return (error, exception) -> {
+            confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.importErrorTitle(),
+                                       ScenarioSimulationEditorConstants.INSTANCE.importFailedMessage());
+            return false;
+        };
     }
 
     /**
@@ -431,11 +448,35 @@ public class ScenarioSimulationEditorPresenter
 
     protected RemoteCallback<Simulation> getImportCallBack() {
         return simulation -> {
+            cleanReadOnlyColumn(simulation);
             model.setSimulation(simulation);
             view.setContent(model.getSimulation());
             context.getStatus().setSimulation(model.getSimulation());
             view.onResize();
         };
+    }
+
+    /**
+     * Read only columns should not contains any values
+     * @param simulation
+     */
+    protected void cleanReadOnlyColumn(Simulation simulation) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        for (int i = 0; i < simulation.getUnmodifiableScenarios().size(); i += 1) {
+            Scenario scenario = simulation.getScenarioByIndex(i);
+            for (FactMapping factMapping : simulationDescriptor.getUnmodifiableFactMappings()) {
+                if (isColumnReadOnly(factMapping)) {
+                    scenario.getFactMappingValue(factMapping.getFactIdentifier(),
+                                                 factMapping.getExpressionIdentifier())
+                            .ifPresent(fmv -> fmv.setRawValue(null));
+                }
+            }
+        }
+    }
+
+    private boolean isColumnReadOnly(FactMapping factMapping) {
+        return !FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType()) &&
+                factMapping.getExpressionElements().isEmpty();
     }
 
     protected void populateRightDocks(String identifier) {
