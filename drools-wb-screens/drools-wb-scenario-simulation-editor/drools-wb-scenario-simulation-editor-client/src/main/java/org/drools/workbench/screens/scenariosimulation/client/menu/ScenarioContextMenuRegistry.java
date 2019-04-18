@@ -32,13 +32,14 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 
 @Dependent
-public class ScenarioContextMenuRegistry {
+public class ScenarioContextMenuRegistry {  //TODO extends AbstractScenarioSimulationGridPanelHandler
 
     protected OtherContextMenu otherContextMenu;
     protected HeaderGivenContextMenu headerGivenContextMenu;
@@ -47,6 +48,7 @@ public class ScenarioContextMenuRegistry {
     protected ExpectedContextMenu expectedContextMenu;
     protected GridContextMenu gridContextMenu;
     protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
+    protected ErrorReportPopupPresenter errorReportPopupPresenter;
 
     @Inject
     public ScenarioContextMenuRegistry(final OtherContextMenu otherContextMenu,
@@ -252,4 +254,14 @@ public class ScenarioContextMenuRegistry {
         scenarioGrid.setSelectedColumnAndHeader(uiHeaderRowIndex, uiColumnIndex);
         return true;
     }
+
+
+    public void setErrorReportPopupPresenter(ErrorReportPopupPresenter errorReportPopupPresenter) {
+        this.errorReportPopupPresenter = errorReportPopupPresenter;
+    }
+
+    public void hideErrorReportPopupover() {
+        expectedContextMenu.hide();
+    }
+
 }

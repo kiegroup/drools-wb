@@ -88,12 +88,19 @@ public abstract class AbstractPopoverView implements PopoverView {
     }
 
     @Override
+    public boolean isShown() {
+        return RootPanel.get().getWidgetIndex(wrappedWidget) != -1;
+    }
+
+    @Override
     public void hide() {
-        if (Objects.nonNull(popover)) {
-            popover.hide();
-            popover.destroy();
+        if (isShown()) {
+            if (Objects.nonNull(popover)) {
+                popover.hide();
+                popover.destroy();
+            }
+            RootPanel.get().remove(wrappedWidget);
         }
-        RootPanel.get().remove(wrappedWidget);
     }
 
 }

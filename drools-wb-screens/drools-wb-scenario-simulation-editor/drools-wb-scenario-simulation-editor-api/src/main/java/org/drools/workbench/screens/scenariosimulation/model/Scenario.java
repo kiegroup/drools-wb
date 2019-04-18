@@ -37,6 +37,10 @@ public class Scenario {
      */
     private final List<FactMappingValue> factMappingValues = new ArrayList<>();
 
+    /**
+     * Not used, to be removed.
+     */
+    @Deprecated
     private SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
 
     public Scenario() {
@@ -49,8 +53,7 @@ public class Scenario {
     /**
      * Returns an <b>unmodifiable</b> list wrapping the backed one
      * <p>
-     * NOTE: list order could not be aligned to factMapping order. Use {@link Scenario#sort()} before call this method
-     * to ensure the order.
+     * NOTE: list order could not be aligned to factMapping order.
      * Best way to have ordered factMappingValues is to iterate over {@link SimulationDescriptor#factMappings} and use
      * {@link #getFactMappingValue(FactIdentifier, ExpressionIdentifier)}
      * @return not modifiable list of FactMappingValues
@@ -91,21 +94,6 @@ public class Scenario {
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 
-    public Optional<FactMappingValue> getFactMappingValueByIndex(int index) {
-        FactMapping factMappingByIndex;
-        try {
-            factMappingByIndex = simulationDescriptor.getFactMappingByIndex(index);
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException(
-                    new StringBuilder().append("Impossible to retrieve FactMapping at index ").append(index).toString(), e);
-        }
-        return getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
-    }
-
-    public List<FactMappingValue> getFactMappingValuesByFactIdentifier(FactIdentifier factIdentifier) {
-        return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier)).collect(toList());
-    }
-
     public void setDescription(String name) {
         addOrUpdateMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, name);
     }
@@ -117,18 +105,6 @@ public class Scenario {
                         e.getRawValue() != null)
                 .map(e -> (String) e.getRawValue())
                 .findFirst().orElse("");
-    }
-
-    public Collection<String> getFactNames() {
-        return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
-    }
-
-    public void sort() {
-        factMappingValues.sort((a, b) -> {
-            Integer aIndex = simulationDescriptor.getIndexByIdentifier(a.getFactIdentifier(), a.getExpressionIdentifier());
-            Integer bIndex = simulationDescriptor.getIndexByIdentifier(b.getFactIdentifier(), b.getExpressionIdentifier());
-            return aIndex.compareTo(bIndex);
-        });
     }
 
     public void resetErrors() {

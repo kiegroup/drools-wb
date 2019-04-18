@@ -51,22 +51,23 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
             uiRowIndex = getUiRowIndexLocal(gridClickPoint.getY());
             isHeader = false;
         }
-        if (uiRowIndex == null) {
+        /*if (uiRowIndex == null) {
             return false;
         }
 
         final Integer uiColumnIndex = getUiColumnIndexLocal(gridClickPoint.getX());
         if (uiColumnIndex == null) {
             return false;
-        }
-        ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex);
-        if (scenarioGridColumn == null) {
+        } */
+        final Integer uiColumnIndex = getUiColumnIndexLocal(gridClickPoint.getX());
+        ScenarioGridColumn scenarioGridColumn = uiColumnIndex != null ? (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex) : null;
+        /*if (scenarioGridColumn == null) {
             return false;
-        }
+        } */
         if (isHeader) {
-            return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint);
+            return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint); //TODO Handle this
         } else {
-            return manageBodyCoordinates(uiRowIndex, uiColumnIndex);
+            return (uiRowIndex == null || uiColumnIndex == null) ? manageBodyCoordinates(-1, -1) : manageBodyCoordinates(uiRowIndex, uiColumnIndex);
         }
     }
 
@@ -117,6 +118,8 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
                                                        ScenarioGridColumn scenarioGridColumn,
                                                        String group,
                                                        Integer uiColumnIndex);
+
+
 
     /**
      * This method check if the click happened on an column of a <b>grid row</b>. If it is so, select the cell,

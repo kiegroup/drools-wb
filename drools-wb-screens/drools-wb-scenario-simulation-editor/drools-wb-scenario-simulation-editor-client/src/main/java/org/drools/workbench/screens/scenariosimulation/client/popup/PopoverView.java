@@ -22,10 +22,12 @@ public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsEleme
 
     enum Position {
         LEFT,
-        RIGHT;
+        RIGHT
     }
 
     void show(final Optional<String> editorTitle, final int mx, final int my, final Position position);
+
+    boolean isShown();
 
     void hide();
 }

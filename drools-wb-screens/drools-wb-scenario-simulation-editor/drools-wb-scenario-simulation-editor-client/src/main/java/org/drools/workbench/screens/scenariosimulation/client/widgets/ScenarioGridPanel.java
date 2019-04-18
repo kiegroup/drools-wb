@@ -88,6 +88,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
         final int y = event.getY();
         if (x < 0 || x > width || y < 0 || y > height) {
             clickHandler.hideMenus();
+            commonOnMoveHandler.hidePopover();
         }
     }
 

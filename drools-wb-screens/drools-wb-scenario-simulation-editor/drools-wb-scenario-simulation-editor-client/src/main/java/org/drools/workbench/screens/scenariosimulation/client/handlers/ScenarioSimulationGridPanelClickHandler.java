@@ -77,6 +77,7 @@ public class ScenarioSimulationGridPanelClickHandler extends AbstractScenarioSim
     public void onContextMenu(final ContextMenuEvent event) {
         scenarioContextMenuRegistry.hideMenus();
         if (scenarioContextMenuRegistry.manageRightClick(scenarioGrid, event)) {
+            scenarioContextMenuRegistry.hideErrorReportPopupover();
             event.preventDefault();
             event.stopPropagation();
         }
@@ -85,7 +86,6 @@ public class ScenarioSimulationGridPanelClickHandler extends AbstractScenarioSim
     public void hideMenus() {
         scenarioContextMenuRegistry.hideMenus();
     }
-
 
     /**
      * This method manage the click happened on an <i>GIVEN</i> or <i>EXPECT</i> header, starting editing it if not already did.

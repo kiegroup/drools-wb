@@ -36,6 +36,7 @@ public interface ErrorReportPopup extends PopoverView {
                   final String keepText,
                   final String applyText,
                   final Command applyCommand,
+                  final Command keepCommand,
                   final int mx,
                   final int my,
                   final Position position);
@@ -62,6 +63,7 @@ public interface ErrorReportPopup extends PopoverView {
               final String keepText,
               final String applyText,
               final Command applyCommand,
+              final Command keepCommand,
               final int mx,
               final int my,
               final Position position);

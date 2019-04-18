@@ -62,12 +62,13 @@ public class ErrorReportPopupPresenterTest {
 
     @Test
     public void show() {
-        errorReportPopupPresenter.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupPresenter.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(viewsProviderMock, times(1)).getErrorReportPopupView();
         verify(errorReportPopupViewMock, times(1)).show(eq(ERROR_TITLE_TEXT),
                                                         eq(ERROR_CONTENT_TEXT),
                                                         eq(KEEP_TEXT),
                                                         eq(APPLY_TEXT),
+                                                        eq(applyCommandMock),
                                                         eq(applyCommandMock),
                                                         eq(MX),
                                                         eq(MY),
