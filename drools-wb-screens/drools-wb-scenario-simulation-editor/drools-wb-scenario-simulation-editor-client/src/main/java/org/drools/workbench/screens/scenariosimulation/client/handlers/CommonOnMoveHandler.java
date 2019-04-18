@@ -118,6 +118,4 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         return false;
     }
 
-
-
 }

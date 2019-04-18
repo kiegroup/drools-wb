@@ -51,21 +51,10 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
             uiRowIndex = getUiRowIndexLocal(gridClickPoint.getY());
             isHeader = false;
         }
-        /*if (uiRowIndex == null) {
-            return false;
-        }
-
-        final Integer uiColumnIndex = getUiColumnIndexLocal(gridClickPoint.getX());
-        if (uiColumnIndex == null) {
-            return false;
-        } */
         final Integer uiColumnIndex = getUiColumnIndexLocal(gridClickPoint.getX());
         ScenarioGridColumn scenarioGridColumn = uiColumnIndex != null ? (ScenarioGridColumn) scenarioGrid.getModel().getColumns().get(uiColumnIndex) : null;
-        /*if (scenarioGridColumn == null) {
-            return false;
-        } */
         if (isHeader) {
-            return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint); //TODO Handle this
+            return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint);
         } else {
             return (uiRowIndex == null || uiColumnIndex == null) ? manageBodyCoordinates(-1, -1) : manageBodyCoordinates(uiRowIndex, uiColumnIndex);
         }
@@ -83,7 +72,7 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
             clickPoint) {
         //Get row index
         final Integer uiHeaderRowIndex = getUiHeaderRowIndexLocal(clickPoint);
-        if (uiHeaderRowIndex == null) {
+        if (uiHeaderRowIndex == null || uiColumnIndex == null || scenarioGridColumn == null) {
             return false;
         }
         ScenarioHeaderMetaData clickedScenarioHeaderMetadata = getColumnScenarioHeaderMetaDataLocal(clickPoint);
