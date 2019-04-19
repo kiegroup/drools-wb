@@ -84,12 +84,12 @@ public class Simulation {
     }
 
     public void removeFactMappingByIndex(int index) {
-        cleanScenarios(simulationDescriptor.getFactMappingByIndex(index));
+        clearScenarios(simulationDescriptor.getFactMappingByIndex(index));
         simulationDescriptor.removeFactMappingByIndex(index);
     }
 
     public void removeFactMapping(FactMapping toRemove) {
-        cleanScenarios(toRemove);
+        clearScenarios(toRemove);
         simulationDescriptor.removeFactMapping(toRemove);
     }
 
@@ -108,6 +108,10 @@ public class Simulation {
 
     public void clear() {
         simulationDescriptor.clear();
+        clearScenarios();
+    }
+
+    public void clearScenarios() {
         scenarios.clear();
     }
 
@@ -133,7 +137,7 @@ public class Simulation {
         return toReturn;
     }
 
-    private void cleanScenarios(FactMapping toRemove) {
+    private void clearScenarios(FactMapping toRemove) {
         scenarios.forEach(e -> e.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier()));
     }
 }
