@@ -243,4 +243,6 @@ public interface ScenarioSimulationEditorConstants
     String keep();
 
     String apply();
+
+    String errorPopoverMessage(String expectedValue, String errorValue);
 }

@@ -97,7 +97,8 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                 final Object errorValue = factMappingValue.getErrorValue();
                 String errorMessage = "The expected value is \" " + expectedValue + " \" but the actual one is \"" + errorValue + "\".";
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
-                                               errorMessage,
+                                               ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
+                                                       expectedValue.toString(), errorValue.toString()),
                                                ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                                ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                                () -> {
