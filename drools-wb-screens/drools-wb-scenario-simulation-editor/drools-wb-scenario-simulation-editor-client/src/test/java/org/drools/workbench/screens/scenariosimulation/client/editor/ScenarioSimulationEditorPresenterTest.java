@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Supplier;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -47,9 +46,9 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;

@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -60,7 +61,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
             testResultMessages.add(runTest(identifier,
                                            entry.getKey(),
                                            scenarioSimulationModel.getSimulation().getSimulationDescriptor(),
-                                           scenarioSimulationModel.getSimulation().getScenarioMap()).getTestResultMessage());
+                                           scenarioSimulationModel.getSimulation().getScenarioWithIndex()).getTestResultMessage());
         }
 
         return testResultMessages;
