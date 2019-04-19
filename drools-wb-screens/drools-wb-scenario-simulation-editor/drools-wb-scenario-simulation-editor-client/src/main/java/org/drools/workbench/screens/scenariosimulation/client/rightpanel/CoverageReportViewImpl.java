@@ -18,11 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Composite;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
+import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLUListElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
@@ -36,19 +36,22 @@ public class CoverageReportViewImpl
     protected Presenter presenter;
 
     @DataField
-    protected Element reportAvailable = Document.get().createElement("dd");
+    protected HTMLElement reportAvailable = (HTMLElement) DomGlobal.document.createElement("dd");
 
     @DataField
-    protected Element reportExecuted = Document.get().createElement("dd");
+    protected HTMLElement reportExecuted = (HTMLElement) DomGlobal.document.createElement("dd");
 
     @DataField
-    protected Element reportCoverage = Document.get().createElement("dd");
+    protected HTMLElement reportCoverage = (HTMLElement) DomGlobal.document.createElement("dd");
 
     @DataField
-    protected Element decisionList = Document.get().createElement("dl");
+    protected HTMLElement decisionList = (HTMLElement) DomGlobal.document.createElement("dl");
 
     @DataField
     protected HTMLDivElement donutChart = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLUListElement scenarioList = (HTMLUListElement) DomGlobal.document.createElement("ul");
 
     @Override
     public Presenter getPresenter() {
@@ -61,27 +64,32 @@ public class CoverageReportViewImpl
     }
 
     @Override
-    public Element getReportAvailable() {
+    public HTMLElement getReportAvailable() {
         return reportAvailable;
     }
 
     @Override
-    public Element getReportExecuted() {
+    public HTMLElement getReportExecuted() {
         return reportExecuted;
     }
 
     @Override
-    public Element getReportCoverage() {
+    public HTMLElement getReportCoverage() {
         return reportCoverage;
     }
 
     @Override
-    public Element getDecisionList() {
+    public HTMLElement getDecisionList() {
         return decisionList;
     }
 
     @Override
     public HTMLDivElement getDonutChart() {
         return donutChart;
+    }
+
+    @Override
+    public HTMLUListElement getScenarioList() {
+        return scenarioList;
     }
 }

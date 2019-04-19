@@ -15,12 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
@@ -34,9 +31,9 @@ public class SimulationRunMetadata {
     protected int executed;
     protected double coveragePercentage;
 
-    protected SortedMap<String, Integer> outputCounter = new TreeMap<>();
+    protected Map<String, Integer> outputCounter = new HashMap<>();
 
-    protected SortedMap<ScenarioWithIndex, List<String>> scenarioCounter = new TreeMap<>(Comparator.comparingInt(a -> a.index));
+    protected Map<ScenarioWithIndex, List<String>> scenarioCounter = new HashMap<>();
 
     protected List<ScenarioWithIndex> scenarios;
 
@@ -44,7 +41,10 @@ public class SimulationRunMetadata {
         // CDI
     }
 
-    public SimulationRunMetadata(int available, int executed, Map<String, Integer> outputCounter, Map<ScenarioWithIndex, List<String>> scenarioCounter) {
+    public SimulationRunMetadata(int available,
+                                 int executed,
+                                 Map<String, Integer> outputCounter,
+                                 Map<ScenarioWithIndex, List<String>> scenarioCounter) {
         this.available = available;
         this.executed = executed;
         this.outputCounter.putAll(outputCounter);
@@ -64,11 +64,11 @@ public class SimulationRunMetadata {
         return (double) executed / available * 100;
     }
 
-    public SortedMap<String, Integer> getOutputCounter() {
-        return Collections.unmodifiableSortedMap(outputCounter);
+    public Map<String, Integer> getOutputCounter() {
+        return outputCounter;
     }
 
-    public SortedMap<ScenarioWithIndex, List<String>> getScenarioCounter() {
-        return Collections.unmodifiableSortedMap(scenarioCounter);
+    public Map<ScenarioWithIndex, List<String>> getScenarioCounter() {
+        return scenarioCounter;
     }
 }

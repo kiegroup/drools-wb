@@ -16,23 +16,22 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
+import elemental2.dom.HTMLElement;
 
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+public interface CoverageDecisionElementView {
 
-@Dependent
-public class DecisionElementPresenter implements DecisionElementView.Presenter {
+    HTMLElement getDecisionDescription();
 
-    @Inject
-    protected ViewsProvider viewsProvider;
+    HTMLElement getDecisionNumberOfTime();
 
-    @Override
-    public DecisionElementView getDecisionElementView(String decisionDescription, String decisionValue) {
-        DecisionElementView decisionElementView = viewsProvider.getDecisionElementView();
-        decisionElementView.setDescriptionValue(decisionDescription);
-        decisionElementView.setDecisionValue(decisionValue);
-        return decisionElementView;
+    interface Presenter {
+
+        void initDecisionList(HTMLElement decisionList);
+
+        void addDecisionElementView(String decisionDescription, String decisionValue);
     }
 
+    void setDescriptionValue(String decisionDescription);
+
+    void setDecisionValue(String decisionValue);
 }

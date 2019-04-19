@@ -16,29 +16,35 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import elemental2.dom.HTMLDivElement;
+import java.util.List;
+
 import elemental2.dom.HTMLElement;
+import elemental2.dom.HTMLLIElement;
 import elemental2.dom.HTMLUListElement;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 
-public interface CoverageReportView
-        extends SubDockView<CoverageReportView.Presenter> {
+public interface CoverageScenarioListView {
 
-    HTMLElement getReportAvailable();
+    void setPresenter(Presenter presenter);
 
-    HTMLElement getReportExecuted();
+    HTMLLIElement getScenarioElement();
 
-    HTMLElement getReportCoverage();
+    HTMLUListElement getDecisionElement();
 
-    HTMLElement getDecisionList();
+    HTMLElement getFaAngleRight();
 
-    HTMLDivElement getDonutChart();
+    boolean isVisible();
 
-    HTMLUListElement getScenarioList();
+    void setVisible(boolean visible);
 
-    interface Presenter extends SubDockView.Presenter {
+    interface Presenter {
 
-        void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata);
+        void initScenarioList(HTMLUListElement scenarioList);
 
+        void clear();
+
+        void addScenarioGroup(ScenarioWithIndex key, List<String> value);
+
+        void onElementClick(CoverageScenarioListView coverageScenarioListView);
     }
 }

@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -287,6 +288,9 @@ public class ScenarioSimulationEditorPresenter
         List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableScenarios().size())
                 .boxed()
                 .collect(Collectors.toList());
+        GWT.log("--> to run " + indexes.stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(", ")));
         onRunScenario(indexes);
     }
 
@@ -294,10 +298,20 @@ public class ScenarioSimulationEditorPresenter
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
+        List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
+                .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
+                .collect(Collectors.toList());
+
+        GWT.log("--> to run filtered " + toRun.stream()
+                .map(ScenarioWithIndex::getIndex)
+                .map(Objects::toString)
+                .collect(Collectors.joining(", ")));
+
+
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulation.getSimulationDescriptor(),
-                             simulation.getScenarioWithIndex());
+                             toRun);
     }
 
     public void onUndo() {

@@ -48,7 +48,12 @@ public class SimulationRunMetadataBuilder {
             available = scenarioResultMetadatum.getAvailable().size();
             scenarioResultMetadatum.getExecuted()
                     .forEach(name -> outputCounter.compute(name,
-                                                           (key, number) -> number == null? 1 : number + 1));
+                                                           (key, number) -> number == null ? 1 : number + 1));
+        }
+
+        for (ScenarioResultMetadata scenarioResultMetadatum : scenarioResultMetadata) {
+            scenarioCounter.put(scenarioResultMetadatum.getScenarioWithIndex(),
+                                new ArrayList<>(scenarioResultMetadatum.getExecuted()));
         }
         return new SimulationRunMetadata(available, outputCounter.keySet().size(), outputCounter, scenarioCounter);
     }

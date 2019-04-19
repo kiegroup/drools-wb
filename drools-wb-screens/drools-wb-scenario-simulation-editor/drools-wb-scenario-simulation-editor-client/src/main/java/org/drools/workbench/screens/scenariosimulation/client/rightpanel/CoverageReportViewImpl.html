@@ -18,15 +18,6 @@
 <!-- COVERAGE REPORT -->
 <div id="kieDockPanelCoverageReport" class="uf-scroll-panel">
     <div class="tab-pane kie-tab-pane--scesim-panel">
-        <!--<div class="row">-->
-        <!--<div class="col-xs-12">-->
-        <!--<button class="btn btn-default" type="button"><span class="fa fa-code-fork"></span> View diagram</button>-->
-        <!--<button class="btn btn-default" type="button"><span class="fa fa-download"></span> Download report</button>-->
-        <!--&nbsp;-->
-        <!--<a href="#0">View audit log</a>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<br/>-->
 
         <div class="row">
             <div class="col-xs-12 col-md-8">
@@ -49,39 +40,6 @@
             <div class="col-xs-12 col-md-4">
                 <!------- DONUT CHART -->
                 <div id="kieCoverageChart1" data-field="donutChart" class="example-donut-chart-utilization"></div>
-
-                <!--<script>-->
-                <!--var c3ChartDefaults = $().c3ChartDefaults();-->
-
-                <!--// Donut configuration 1-->
-                <!--var donutConfig1 = c3ChartDefaults.getDefaultDonutConfig('A');-->
-
-                <!--donutConfig1.bindto = '#kieCoverageChart1';-->
-                <!--donutConfig1.data = {-->
-                <!--type: "donut",-->
-                <!--columns: [-->
-                <!--["Covered", 90],-->
-                <!--["Not covered", 10],-->
-                <!--],-->
-                <!--groups: [-->
-                <!--["used", "available"]-->
-                <!--],-->
-                <!--order: null-->
-                <!--};-->
-                <!--donutConfig1.size = {-->
-                <!--width: 120,-->
-                <!--height: 120-->
-                <!--};-->
-
-                <!--donutConfig1.tooltip = {-->
-                <!--contents: $().pfGetUtilizationDonutTooltipContentsFn('')-->
-                <!--};-->
-
-                <!--c3.generate(donutConfig1);-->
-                <!--$().pfSetDonutChartTitle("#kieCoverageChart1", "90", "%");-->
-
-
-                <!--</script>-->
                 <!------- END OF DONUT CHART -->
 
             </div>
@@ -98,19 +56,24 @@
         <hr class="kie-dock__divider"/>
         <br/>
 
-        <ul class="list-group">
-            <li class="list-group-item">
-                Decision evaluated for Scenario 1
-                <button class="btn btn-default pull-right" type="button">Decision table</button>
-            </li>
-            <li class="list-group-item">
-                Decision evaluated for Scenario 2
-                <button class="btn btn-default pull-right" type="button">Decision table</button>
-            </li>
-            <li class="list-group-item">
-                Decision evaluated for Scenario 3
-                <button class="btn btn-default pull-right" type="button">Decision table</button>
-            </li>
+        <ul class="list-group" data-field="scenarioList">
+            <!--<li class="list-group-item">-->
+                <!--Decision evaluated for Scenario 1-->
+                <!--<ul class="list-group">-->
+                    <!--<li class="list-group-item">-->
+                        <!--Decision evaluated for Scenario 1-->
+                    <!--</li>-->
+                <!--</ul>-->
+                <!--&lt;!&ndash;<button class="btn btn-default pull-right" type="button">Decision table</button>&ndash;&gt;-->
+            <!--</li>-->
+            <!--<li class="list-group-item">-->
+            <!--Decision evaluated for Scenario 2-->
+            <!--<button class="btn btn-default pull-right" type="button">Decision table</button>-->
+            <!--</li>-->
+            <!--<li class="list-group-item">-->
+            <!--Decision evaluated for Scenario 3-->
+            <!--<button class="btn btn-default pull-right" type="button">Decision table</button>-->
+            <!--</li>-->
         </ul>
     </div>
 </div>

@@ -16,40 +16,40 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
+import elemental2.dom.DomGlobal;
+import elemental2.dom.HTMLElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 /**
- * This class is used to represent a <b>simple</b> (i.e. not expandable) property, like for example java primitives
+ * This class is used to represent a single row in the coverage decision section
  */
 @Templated
-public class DecisionElementViewImpl implements DecisionElementView {
+public class CoverageDecisionElementViewImpl implements CoverageDecisionElementView {
 
     @DataField("decisionDescription")
-    protected Element decisionDescription = Document.get().createElement("dt");
+    protected HTMLElement decisionDescription = (HTMLElement) DomGlobal.document.createElement("dt");
 
     @DataField("decisionNumberOfTime")
-    protected Element decisionNumberOfTime = Document.get().createElement("dd");
+    protected HTMLElement decisionNumberOfTime = (HTMLElement) DomGlobal.document.createElement("dd");
 
     @Override
     public void setDescriptionValue(String decisionDescription) {
-        this.decisionDescription.setInnerText(decisionDescription);
+        this.decisionDescription.textContent = decisionDescription;
     }
 
     @Override
     public void setDecisionValue(String decisionValue) {
-        this.decisionNumberOfTime.setInnerText(decisionValue);
+        this.decisionNumberOfTime.textContent = decisionValue;
     }
 
     @Override
-    public Element getDecisionDescription() {
+    public HTMLElement getDecisionDescription() {
         return decisionDescription;
     }
 
     @Override
-    public Element getDecisionNumberOfTime() {
+    public HTMLElement getDecisionNumberOfTime() {
         return decisionNumberOfTime;
     }
 }

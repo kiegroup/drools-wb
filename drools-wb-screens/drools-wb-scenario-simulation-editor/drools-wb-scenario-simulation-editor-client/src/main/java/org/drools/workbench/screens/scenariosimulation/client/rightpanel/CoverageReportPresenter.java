@@ -16,15 +16,15 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.Element;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
@@ -43,10 +43,13 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected Command saveCommand;
 
     @Inject
-    protected ViewsProvider viewsProvider;
+    protected CoverageReportDonutPresenter coverageReportDonutPresenter;
 
     @Inject
-    protected CoverageReportDonutPresenter coverageReportDonutPresenter;
+    protected CoverageDecisionElementPresenter coverageDecisionElementPresenter;
+
+    @Inject
+    protected CoverageScenarioListPresenter coverageScenarioListPresenter;
 
     public CoverageReportPresenter() {
         //Zero argument constructor for CDI
@@ -62,25 +65,47 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     @PostConstruct
     public void init() {
         coverageReportDonutPresenter.init(view.getDonutChart());
+        coverageDecisionElementPresenter.initDecisionList(view.getDecisionList());
+        coverageScenarioListPresenter.initScenarioList(view.getScenarioList());
     }
 
     // FIXME to test
     @Override
     public void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata) {
-        view.getReportAvailable().setInnerText(simulationRunMetadata.getAvailable() + "");
-        view.getReportExecuted().setInnerText(simulationRunMetadata.getExecuted() + "");
-        view.getReportCoverage().setInnerText(simulationRunMetadata.getCoveragePercentage() + " %");
-        Element decisionList = view.getDecisionList();
-        decisionList.removeAllChildren();
-        for (Map.Entry<String, Integer> entry : simulationRunMetadata.getOutputCounter().entrySet()) {
-            DecisionElementView decisionElementView = viewsProvider.getDecisionElementView();
-            decisionElementView.setDescriptionValue(entry.getKey());
-            decisionElementView.setDecisionValue(entry.getValue() + "");
-            decisionList.appendChild(decisionElementView.getDecisionDescription());
-            decisionList.appendChild(decisionElementView.getDecisionNumberOfTime());
-        }
-        coverageReportDonutPresenter
-                .showCoverageReport(simulationRunMetadata.getExecuted(),
-                                    simulationRunMetadata.getAvailable() - simulationRunMetadata.getExecuted());
+        populateSummary(simulationRunMetadata.getAvailable(),
+                        simulationRunMetadata.getExecuted(),
+                        simulationRunMetadata.getCoveragePercentage());
+
+        populateDecisionList(simulationRunMetadata.getOutputCounter());
+
+        populateScenarioList(simulationRunMetadata.getScenarioCounter());
     }
+
+    protected void populateSummary(int available, int executed, double coveragePercentage) {
+        view.getReportAvailable().textContent = available + "";
+        view.getReportExecuted().textContent = executed + "";
+        view.getReportCoverage().textContent = coveragePercentage + " %";
+
+        // donut chart
+        coverageReportDonutPresenter
+                .showCoverageReport(executed,
+                                    available - executed);
+
+    }
+
+    protected void populateDecisionList(Map<String, Integer> outputCounter) {
+        coverageDecisionElementPresenter.clear();
+        for (Map.Entry<String, Integer> entry : outputCounter.entrySet()) {
+            coverageDecisionElementPresenter.addDecisionElementView(entry.getKey(), entry.getValue() + "");
+        }
+    }
+
+    protected void populateScenarioList(Map<ScenarioWithIndex, List<String>> scenarioCounter) {
+        coverageScenarioListPresenter.clear();
+        for (Map.Entry<ScenarioWithIndex, List<String>> entry : scenarioCounter.entrySet()) {
+            coverageScenarioListPresenter.addScenarioGroup(entry.getKey(), entry.getValue());
+        }
+    }
+
+
 }

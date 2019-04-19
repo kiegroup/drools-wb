@@ -519,6 +519,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertTrue(modelLocal.getSimulation().equals(simulationMock));
     }
 
+    // FIXME update test to verify that onRunScenario is called the number of elements of the list
+    // FIXME test also that if I ask to run index 0 it will run scenario 1
     @Test
     public void onRunTestById() throws Exception {
         when(scenarioSimulationServiceMock.runScenario(any(), any(), any()))
