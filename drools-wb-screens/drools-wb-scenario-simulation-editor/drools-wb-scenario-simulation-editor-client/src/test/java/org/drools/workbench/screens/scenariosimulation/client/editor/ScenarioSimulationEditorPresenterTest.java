@@ -42,7 +42,6 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
@@ -477,8 +476,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(new ScenarioSimulationModelContent(modelLocal,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(scenarioMapMock,
-                                                                                                          new TestResultMessage()));
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any()))
+                .thenReturn(new SimulationRunResult(scenarioWithIndexMock,
+                                                    mock(SimulationRunMetadata.class),
+                                                    new TestResultMessage()));
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
         assertFalse(modelLocal.getSimulation().equals(simulationMock));
@@ -493,8 +494,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTestById() throws Exception {
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(Collections.EMPTY_MAP,
-                                                                                                          new TestResultMessage()));
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any()))
+                .thenReturn(new SimulationRunResult(scenarioWithIndexMock,
+                                                    mock(SimulationRunMetadata.class),
+                                                    new TestResultMessage()));
         when(simulationMock.getScenarioByIndex(anyInt())).thenReturn(mock(Scenario.class));
         presenter.onRunScenario(Collections.singletonList(0));
         verify(scenarioSimulationServiceMock, times(1)).runScenario(any(), any(), any());
@@ -510,7 +513,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         int scenarioNumber = 1;
         int scenarioIndex = scenarioNumber - 1;
         entries.add(new ScenarioWithIndex(scenarioNumber, new Scenario()));
-        presenter.refreshModelContent(new SimulationRunResult(entries, new SimulationRunMetadata()));
+        presenter.refreshModelContent(new SimulationRunResult(entries, new SimulationRunMetadata(), new TestResultMessage()));
         verify(simulationMock, times(1)).replaceScenario(eq(scenarioIndex), any());
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));

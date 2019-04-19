@@ -28,7 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
@@ -90,13 +90,14 @@ public class ScenarioRunnerServiceImplTest {
         Simulation simulation = new Simulation();
         simulation.getSimulationDescriptor().setType(ScenarioSimulationModel.Type.RULE);
 
-        TestRunResult test = scenarioRunnerService.runTest("test",
-                                                           mock(Path.class),
-                                                           simulation.getSimulationDescriptor(),
-                                                           simulation.getScenarioWithIndex());
+        SimulationRunResult test = scenarioRunnerService.runTest("test",
+                                                                 mock(Path.class),
+                                                                 simulation.getSimulationDescriptor(),
+                                                                 simulation.getScenarioWithIndex());
 
         assertNotNull(test.getTestResultMessage());
-        assertNotNull(test.getMap());
+        assertNotNull(test.getScenarioWithIndex());
+        assertNotNull(test.getSimulationRunMetadata());
     }
 
     @Test
@@ -107,10 +108,14 @@ public class ScenarioRunnerServiceImplTest {
         simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
         List<ScenarioWithIndex> scenarios = new ArrayList<>();
 
-        TestRunResult test = scenarioRunnerService.runTest("test", mock(Path.class), simulationDescriptor, scenarios);
+        SimulationRunResult test = scenarioRunnerService.runTest("test",
+                                                                 mock(Path.class),
+                                                                 simulationDescriptor,
+                                                                 scenarios);
 
         assertNotNull(test.getTestResultMessage());
-        assertNotNull(test.getMap());
+        assertNotNull(test.getScenarioWithIndex());
+        assertNotNull(test.getSimulationRunMetadata());
     }
 
     @Test
@@ -132,8 +137,11 @@ public class ScenarioRunnerServiceImplTest {
                                 throw new ScenarioException(errorMessage);
                             }
                         });
-        TestRunResult testRunResult = scenarioRunnerService.runTest("test", mock(Path.class), simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex());
-        TestResultMessage value = testRunResult.getTestResultMessage();
+        SimulationRunResult test = scenarioRunnerService.runTest("test",
+                                                                 mock(Path.class),
+                                                                 simulation.getSimulationDescriptor(),
+                                                                 simulation.getScenarioWithIndex());
+        TestResultMessage value = test.getTestResultMessage();
         List<org.guvnor.common.services.shared.test.Failure> failures = value.getFailures();
         assertEquals(1, failures.size());
 

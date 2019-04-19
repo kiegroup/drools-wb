@@ -37,7 +37,6 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.drools.workbench.screens.scenariosimulation.type.ScenarioSimulationResourceTypeDefinition;

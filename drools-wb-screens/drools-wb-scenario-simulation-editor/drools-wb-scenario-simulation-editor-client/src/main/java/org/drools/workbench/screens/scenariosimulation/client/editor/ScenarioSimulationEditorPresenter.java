@@ -55,7 +55,6 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -130,7 +129,6 @@ public class ScenarioSimulationEditorPresenter
 
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
     protected long scenarioPresenterId;
-
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -325,14 +323,14 @@ public class ScenarioSimulationEditorPresenter
             return;
         }
         Simulation simulation = this.model.getSimulation();
-        for (ScenarioWithIndex scenarioWithIndex : testRunResult.getMap().getScenarioWithIndex()) {
+        for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
             int index = scenarioWithIndex.getIndex() - 1;
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
-        testRunnerReportingPanel.onTestRun(testRunResult.getTestResultMessage()); // TODO TEST
+        testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
 
         this.lastRunResult = newData;
@@ -453,7 +451,7 @@ public class ScenarioSimulationEditorPresenter
 
     // FIXME to test
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
-        if(lastRunResult != null) {
+        if (lastRunResult != null) {
             presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata());
         }
     }

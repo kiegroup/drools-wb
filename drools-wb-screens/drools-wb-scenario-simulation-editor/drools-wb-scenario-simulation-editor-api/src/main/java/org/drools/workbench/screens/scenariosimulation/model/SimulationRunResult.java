@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.List;
 
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
@@ -29,13 +30,18 @@ public class SimulationRunResult {
 
     protected SimulationRunMetadata simulationRunMetadata;
 
+    private TestResultMessage testResultMessage;
+
     public SimulationRunResult() {
         // CDI
     }
 
-    public SimulationRunResult(List<ScenarioWithIndex> scenarioWithIndex, SimulationRunMetadata simulationRunMetadata) {
+    public SimulationRunResult(List<ScenarioWithIndex> scenarioWithIndex,
+                               SimulationRunMetadata simulationRunMetadata,
+                               TestResultMessage testResultMessage) {
         this.scenarioWithIndex = scenarioWithIndex;
         this.simulationRunMetadata = simulationRunMetadata;
+        this.testResultMessage = testResultMessage;
     }
 
     public List<ScenarioWithIndex> getScenarioWithIndex() {
@@ -44,5 +50,9 @@ public class SimulationRunResult {
 
     public SimulationRunMetadata getSimulationRunMetadata() {
         return simulationRunMetadata;
+    }
+
+    public TestResultMessage getTestResultMessage() {
+        return testResultMessage;
     }
 }

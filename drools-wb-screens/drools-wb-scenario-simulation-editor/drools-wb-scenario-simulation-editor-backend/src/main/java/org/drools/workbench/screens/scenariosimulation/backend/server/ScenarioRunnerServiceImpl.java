@@ -24,12 +24,10 @@ import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
