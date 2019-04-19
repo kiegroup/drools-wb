@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-[data-i18n-prefix="ErrorReportPopupView."] {
 
-  #popover-container {
-    display: inline;
-  }
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
-  #popover-container .popover {
-    /* This parameter must be synchronized with POPOVER_WIDTH static variable CommonOnMoveHandler class */
-    width: 200px;
-  }
+import java.util.Optional;
 
-  #popover-content-buttons {
-    text-align: right;
-    padding: 5px 5px 5px 5px;
-  }
+public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsElement {
 
-  .kie-scesim-container {
-    width: 100%;
-    height: 200px;
-    overflow-y: scroll;
-    margin-top: 10px;
-    border: 1px solid #cccccc;
-    padding: 0px 5px 5px 5px;
-  }
+    enum Position {
+        LEFT,
+        RIGHT
+    }
+
+    void show(final Optional<String> editorTitle, final int mx, final int my, final Position position);
+
+    boolean isShown();
+
+    void hide();
 }
-

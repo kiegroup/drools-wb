@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import java.util.Objects;
 import java.util.Optional;

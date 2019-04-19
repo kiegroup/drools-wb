@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import org.uberfire.mvp.Command;
 
-public interface ErrorReportPopup extends PopoverView {
+public interface ErrorReportPopover extends PopoverView {
 
     interface Presenter {
 
         /**
-         * Makes the <code>ErrorReportPopup</code> visible with Keep/Apply buttons.
+         * Makes the <code>ErrorReportPopover</code> visible with Keep/Apply buttons.
          * @param errorTitleText
          * @param errorContentText
          * @param keepText
          * @param applyText
          * @param applyCommand
          * @param keepCommand
-         * @param mx x position of the popup
-         * @param my y position of the popup
+         * @param mx x position of the replace
+         * @param my y position of the popover
          * @param position position where the popover is put (LEFT or RIGHT)
          */
         void show(final String errorTitleText,
@@ -44,22 +44,22 @@ public interface ErrorReportPopup extends PopoverView {
                   final Position position);
 
         /**
-         * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
+         * Makes this popover container(and the main content along with it) invisible. Has no effect if the popover is not
          * already showing.
          */
         void hide();
     }
 
     /**
-     * Makes the <code>ErrorReportPopup</code> visible with Keep/Apply buttons.
+     * Makes the <code>ErrorReportPopover</code> visible with Keep/Apply buttons.
      * @param errorTitleText
      * @param errorContentText
      * @param keepText
      * @param applyText
      * @param applyCommand
      * @param keepCommand
-     * @param mx x position of the popup
-     * @param my y position of the popup
+     * @param mx x position of the popover
+     * @param my y position of the popover
      * @param position position where the popover is put (LEFT or RIGHT)
      */
     void show(final String errorTitleText,
@@ -72,7 +72,7 @@ public interface ErrorReportPopup extends PopoverView {
               final int my,
               final Position position);
     /**
-     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
+     * Makes this popover container(and the main content along with it) invisible. Has no effect if the popover is not
      * already showing.
      */
     void hide();

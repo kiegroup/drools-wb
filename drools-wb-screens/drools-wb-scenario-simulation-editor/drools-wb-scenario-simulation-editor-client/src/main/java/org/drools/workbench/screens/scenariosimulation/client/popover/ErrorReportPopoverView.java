@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ import org.uberfire.mvp.Command;
 
 @ApplicationScoped
 @Templated
-public class ErrorReportPopupView extends AbstractPopoverView implements ErrorReportPopup {
+public class ErrorReportPopoverView extends AbstractPopoverView implements ErrorReportPopover {
 
     protected Command applyCommand;
     protected Command keepCommand;
@@ -47,16 +47,16 @@ public class ErrorReportPopupView extends AbstractPopoverView implements ErrorRe
     @DataField("errorContent")
     protected Div errorContent;
 
-    public ErrorReportPopupView() {
+    public ErrorReportPopoverView() {
         //CDI proxy
     }
 
     @Inject
-    public ErrorReportPopupView(final Div errorContent,
-                                final Div popoverElement,
-                                final Div popoverContainerElement,
-                                final Div popoverContentElement,
-                                final JQueryProducer.JQuery<Popover> jQueryPopover) {
+    public ErrorReportPopoverView(final Div errorContent,
+                                  final Div popoverElement,
+                                  final Div popoverContainerElement,
+                                  final Div popoverContentElement,
+                                  final JQueryProducer.JQuery<Popover> jQueryPopover) {
         super(popoverElement,
               popoverContainerElement,
               popoverContentElement,

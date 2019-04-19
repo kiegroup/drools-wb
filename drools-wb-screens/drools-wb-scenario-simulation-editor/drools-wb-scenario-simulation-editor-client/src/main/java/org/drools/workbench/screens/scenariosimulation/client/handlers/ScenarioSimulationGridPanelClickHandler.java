@@ -57,7 +57,6 @@ public class ScenarioSimulationGridPanelClickHandler extends AbstractScenarioSim
      */
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
-        this.scenarioContextMenuRegistry.setEventBus(eventBus);
     }
 
     @Override

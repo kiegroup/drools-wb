@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.ButtonElement;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class ErrorReportPopupViewTest {
+public class ErrorReportPopoverViewTest {
 
     public final static String ERROR_TITLE_TEXT = "ERROR_TITLE_TEXT";
     public final static String ERROR_CONTENT_TEXT = "ERROR_CONTENT_TEXT";
@@ -46,7 +46,7 @@ public class ErrorReportPopupViewTest {
     public final static String TOP_PX = MY + " px" ;
     public final static String LEFT_PX = MX + " px";
 
-    private ErrorReportPopupView errorReportPopupView;
+    private ErrorReportPopoverView errorReportPopupView;
 
     @Mock
     private SpanElement errorpopupTitleMock;
@@ -71,7 +71,7 @@ public class ErrorReportPopupViewTest {
 
     @Before
     public void setup() {
-        errorReportPopupView = spy(new ErrorReportPopupView() {
+        errorReportPopupView = spy(new ErrorReportPopoverView() {
             {
                 this.keepButton = keepButtonMock;
                 this.applyButton = applyButtonMock;

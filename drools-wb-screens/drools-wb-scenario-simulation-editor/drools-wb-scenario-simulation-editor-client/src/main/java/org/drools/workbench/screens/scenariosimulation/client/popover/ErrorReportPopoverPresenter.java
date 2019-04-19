@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.popup;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,12 +23,10 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import org.uberfire.mvp.Command;
 
 @ApplicationScoped
-public class ErrorReportPopupPresenter implements ErrorReportPopup.Presenter {
+public class ErrorReportPopoverPresenter implements ErrorReportPopover.Presenter {
 
     @Inject
     protected ViewsProvider viewsProvider;
-
-    protected ErrorReportPopupView errorReportPopupView;
 
     @Override
     public void show(final String errorTitleText,
@@ -40,12 +38,13 @@ public class ErrorReportPopupPresenter implements ErrorReportPopup.Presenter {
                      final int mx,
                      final int my,
                      final PopoverView.Position position) {
-        errorReportPopupView = viewsProvider.getErrorReportPopupView();
+        ErrorReportPopoverView errorReportPopupView = viewsProvider.getErrorReportPopoverView();
         errorReportPopupView.show(errorTitleText, errorContentText, keepText, applyText, applyCommand, keepCommand, mx, my, position);
     }
 
     @Override
     public void hide() {
-        errorReportPopupView.hide();
+        ErrorReportPopoverView errorReportPopoverView = viewsProvider.getErrorReportPopoverView();
+        errorReportPopoverView.hide();
     }
 }

@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -28,7 +27,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationInvokeContextMenuForSelectedCell;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getXYCell;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getMiddleXYCell;
 
 public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationInvokeContextMenuForSelectedCell {
 
@@ -69,7 +68,7 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
                                                                          origin.getColumnIndex());
         final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
         if (column instanceof ScenarioGridColumn) {
-            final Point2D middleXYCell = getXYCell(gridWidget, column, ScenarioSimulationUtils.PositionX.MIDDLE, isHeader, uiRowIndex, gridLayer);
+            final Point2D middleXYCell = getMiddleXYCell(gridWidget, column, isHeader, uiRowIndex, gridLayer);
             return scenarioContextMenuRegistry.manageRightClick((ScenarioGrid) gridWidget,
                                                                 (int) middleXYCell.getX(),
                                                                 (int) middleXYCell.getY(),

@@ -32,7 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -49,7 +49,7 @@ public class ScenarioContextMenuRegistry {
     protected ExpectedContextMenu expectedContextMenu;
     protected GridContextMenu gridContextMenu;
     protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
-    protected ErrorReportPopupPresenter errorReportPopupPresenter;
+    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     @Inject
     public ScenarioContextMenuRegistry(final OtherContextMenu otherContextMenu,
@@ -259,7 +259,7 @@ public class ScenarioContextMenuRegistry {
     }
 
 
-    public void setErrorReportPopupPresenter(ErrorReportPopupPresenter errorReportPopupPresenter) {
+    public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
         this.errorReportPopupPresenter = errorReportPopupPresenter;
     }
 

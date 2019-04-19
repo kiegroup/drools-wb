@@ -24,7 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 
 /**
@@ -43,16 +43,17 @@ public class ScenarioSimulationViewProducer {
     protected CommonOnMoveHandler commonOnMoveHandler;
 
     @Inject
-    protected ErrorReportPopupPresenter errorReportPopupPresenter;
+    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     public ScenarioSimulationView getScenarioSimulationView(final EventBus eventBus) {
         final ScenarioGridPanel scenarioGridPanel = scenarioGridPanelProducer.getScenarioGridPanel();
         scenarioGridPanel.setEventBus(eventBus);
         final ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler = scenarioGridPanelProducer.getScenarioSimulationGridPanelClickHandler();
+        final ScenarioContextMenuRegistry scenarioContextMenuRegistry = scenarioGridPanelProducer.getScenarioContextMenuRegistry();
+        scenarioContextMenuRegistry.setEventBus(eventBus);
+        scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
         scenarioSimulationGridPanelClickHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBus);
-        final ScenarioContextMenuRegistry scenarioContextMenuRegistry = scenarioGridPanelProducer.getScenarioContextMenuRegistry();
-        scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
         scenarioContextMenuRegistry.setErrorReportPopupPresenter(errorReportPopupPresenter);
 
         commonOnMoveHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());

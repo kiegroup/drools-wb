@@ -37,12 +37,6 @@ public class ScenarioSimulationUtils {
 
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
 
-    public enum PositionX {
-        LEFT,
-        MIDDLE,
-        RIGHT
-    }
-
     public static String getPropertyMetaDataGroup(String columnGroup) {
         return columnGroup + "-" + subGroupCounter.getAndIncrement();
     }
@@ -268,7 +262,7 @@ public class ScenarioSimulationUtils {
     }
 
     /**
-     * Returns an array where the 0-element is middle x of given cell and 1-element is middle y
+     * Returns an arrya where the 0-element is middle x of given cell and 1-element is middle y
      * @param gridWidget
      * @param column
      * @param isHeader
@@ -276,7 +270,7 @@ public class ScenarioSimulationUtils {
      * @param gridLayer
      * @return
      */
-    public static Point2D getXYCell(final GridWidget gridWidget, final GridColumn<?> column, PositionX positionX, boolean isHeader, final int uiRowIndex, final GridLayer gridLayer) {
+    public static Point2D getMiddleXYCell(final GridWidget gridWidget, final GridColumn<?> column, boolean isHeader, final int uiRowIndex, final GridLayer gridLayer) {
         final BaseGridRendererHelper rendererHelper = gridWidget.getRendererHelper();
         final BaseGridRendererHelper.RenderingInformation ri = rendererHelper.getRenderingInformation();
         final double columnXCoordinate = rendererHelper.getColumnOffset(column) + column.getWidth() / 2;
@@ -291,23 +285,9 @@ public class ScenarioSimulationUtils {
                                                              ri,
                                                              ci,
                                                              uiRowIndex);
-        final int cellXMiddle;
-        switch (positionX) {
-            case LEFT:
-                cellXMiddle = (int) (context.getAbsoluteCellX() +
-                        gridLayer.getDomElementContainer().getAbsoluteLeft());
-                break;
-            case MIDDLE:
-                cellXMiddle = (int) (context.getAbsoluteCellX() + context.getCellWidth() / 2 +
-                    gridLayer.getDomElementContainer().getAbsoluteLeft());
-                break;
-            case RIGHT:
-                cellXMiddle = (int) (context.getAbsoluteCellX() + context.getCellWidth() +
-                        gridLayer.getDomElementContainer().getAbsoluteLeft());
-                break;
-            default:
-                cellXMiddle = 0;
-        }
+        final int cellXMiddle = (int) (context.getAbsoluteCellX() +
+                context.getCellWidth() / 2 +
+                gridLayer.getDomElementContainer().getAbsoluteLeft());
         final int cellYMiddle = (int) (context.getAbsoluteCellY() +
                 context.getCellHeight() / 2 +
                 gridLayer.getDomElementContainer().getAbsoluteTop());
@@ -335,3 +315,4 @@ public class ScenarioSimulationUtils {
         return FactMappingType.OTHER.equals(factMappingType);
     }
 }
+

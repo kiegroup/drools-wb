@@ -20,7 +20,7 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +46,7 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
     private CommonOnMoveHandler commonOnMoveHandlerMock;
 
     @Mock
-    private ErrorReportPopupPresenter errorReportPopupPresenterMock;
+    private ErrorReportPopoverPresenter errorReportPopupPresenterMock;
 
     private ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 

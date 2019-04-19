@@ -22,8 +22,8 @@ import javax.enterprise.context.Dependent;
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.popup.PopoverView;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popover.PopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -39,7 +39,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 @Dependent
 public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHandler {
 
-    protected ErrorReportPopupPresenter errorReportPopupPresenter;
+    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
     private static int POPOVER_WIDTH = 200;
@@ -58,7 +58,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         resetCurrentlyShowBody();
     }
 
-    public void setErrorReportPopupPresenter(ErrorReportPopupPresenter errorReportPopupPresenter) {
+    public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
         this.errorReportPopupPresenter = errorReportPopupPresenter;
     }
 
@@ -69,9 +69,11 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
+        /* If the mouse position is the same of the previous one, do nothig */
         if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
             return false;
         }
+        /* In this case, the mouse is out ot the GridLayer, then it resets the coordinates to default */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
             return resetCurrentlyShowBody();
         }
@@ -83,10 +85,12 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         factMappingValueOptional.ifPresent(factMappingValue -> {
             if (factMappingValue.isError()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
-                Point2D xYCell = ScenarioSimulationUtils.getXYCell(scenarioGrid, column, ScenarioSimulationUtils.PositionX.RIGHT, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                Point2D xYCell = ScenarioSimulationUtils.getMiddleXYCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
                 PopoverView.Position position = PopoverView.Position.RIGHT;
-                if (xYCell.getX() + POPOVER_WIDTH > scenarioGrid.getLayer().getWidth()) {
-                    xYCell = ScenarioSimulationUtils.getXYCell(scenarioGrid, column, ScenarioSimulationUtils.PositionX.LEFT, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                int xMiddleWidth = (int) column.getWidth() / 2;
+                int xPosition = (int) xYCell.getX() + xMiddleWidth;
+                if (xPosition  + POPOVER_WIDTH > scenarioGrid.getLayer().getWidth()) {
+                    xPosition = (int) xYCell.getX() - xMiddleWidth;
                     position = PopoverView.Position.LEFT;
                 }
                 final Object expectedValue = factMappingValue.getRawValue();
@@ -104,7 +108,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                         CommonOnMoveHandler.this.resetCurrentlyShowBody();
                                                },
                                                () -> CommonOnMoveHandler.this.resetCurrentlyShowBody(),
-                                               (int) xYCell.getX(),
+                                               xPosition,
                                                (int) xYCell.getY(),
                                                position);
             }

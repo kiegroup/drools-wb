@@ -25,7 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.P
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
-import org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupView;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -64,7 +64,7 @@ public class ViewsProvider {
     private ManagedInstance<KeyValueEditingBox> mapEditingBoxInstance;
 
     @Inject
-    private ManagedInstance<ErrorReportPopupView> errorReportPopupViewInstance;
+    private ManagedInstance<ErrorReportPopoverView> errorReportPopoverViewInstance;
 
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();
@@ -102,8 +102,8 @@ public class ViewsProvider {
         return mapEditingBoxInstance.get();
     }
 
-    public ErrorReportPopupView getErrorReportPopupView() {
-        return errorReportPopupViewInstance.get();
+    public ErrorReportPopoverView getErrorReportPopoverView() {
+        return errorReportPopoverViewInstance.get();
     }
 
 }
