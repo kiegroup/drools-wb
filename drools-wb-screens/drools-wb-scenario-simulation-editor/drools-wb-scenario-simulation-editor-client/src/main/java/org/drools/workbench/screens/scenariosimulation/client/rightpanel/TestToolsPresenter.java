@@ -154,8 +154,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSimpleJavaTypeFieldsMap(SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap) {
         clearSimpleJavaTypeList();
         this.simpleJavaTypeFieldsMap = simpleJavaTypeFieldsMap;
-        if (!simpleJavaTypeFieldsMap.isEmpty()) {
-            view.getSimpleJavaTypeListContainer().getStyle().setDisplay(Style.Display.NONE);
+        if (simpleJavaTypeFieldsMap.isEmpty()) {
+            view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
         }
         this.simpleJavaTypeFieldsMap.forEach(this::addSimpleJavaTypeListGroupItemView);
     }
@@ -169,8 +171,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
         clearInstanceList();
         this.instanceFieldsMap = instanceFieldsMap;
-        if (!instanceFieldsMap.isEmpty()) {
+        if (instanceFieldsMap.isEmpty()) {
             view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
         }
         this.instanceFieldsMap.forEach(this::addInstanceListGroupItemView);
     }
@@ -190,8 +194,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> simpleJavaInstanceFieldsMap) {
         clearSimpleJavaInstanceFieldList();
         this.simpleJavaInstanceFieldsMap = simpleJavaInstanceFieldsMap;
-        if (!simpleJavaInstanceFieldsMap.isEmpty()) {
+        if (simpleJavaInstanceFieldsMap.isEmpty()) {
             view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
         }
         this.simpleJavaInstanceFieldsMap.forEach(this::addSimpleJavaInstanceListGroupItemView);
     }

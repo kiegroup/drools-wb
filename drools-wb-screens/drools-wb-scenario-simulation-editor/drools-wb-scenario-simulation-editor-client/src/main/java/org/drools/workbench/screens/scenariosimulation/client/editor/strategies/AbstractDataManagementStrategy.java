@@ -57,7 +57,9 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         String fullName = clazz.getCanonicalName();
         simpleProperties.put("value", fullName);
         String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-        return new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
+        FactModelTree toReturn = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
+        toReturn.setSimple(true);
+        return toReturn;
     }
 
     /**
