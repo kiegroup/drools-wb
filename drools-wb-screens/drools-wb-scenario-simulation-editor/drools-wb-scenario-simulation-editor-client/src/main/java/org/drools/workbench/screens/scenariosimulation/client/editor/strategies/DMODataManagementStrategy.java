@@ -74,9 +74,13 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
             // Instantiate the aggregator callback
             Callback<FactModelTree> aggregatorCallback = aggregatorCallback(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, simpleJavaTypes);
-            // Iterate over all dataObjects to retrieve their modelfields
-            dataObjectsTypes.forEach(factType ->
-                                             oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
+            if (dataObjectsTypes.isEmpty()) { // Add to manage the situation when no complex objects are present
+                aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, null, simpleJavaTypes);
+            } else {
+                // Iterate over all dataObjects to retrieve their modelfields
+                dataObjectsTypes.forEach(factType ->
+                                                 oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
+            }
         }
     }
 
@@ -187,15 +191,19 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
     /**
      * Actual code of the <b>aggregatorCallback</b>; isolated for testing
+     *
      * @param testToolsPresenter
      * @param expectedElements
      * @param factTypeFieldsMap
      * @param scenarioGridModel
-     * @param result
+     * @param result pass <code>null</code> if there is not any <i>complex</i> data object but only simple ones
+     * @param simpleJavaTypes
      */
     protected void aggregatorCallbackMethod(final TestToolsView.Presenter testToolsPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final ScenarioGridModel scenarioGridModel, final FactModelTree result, final List<String> simpleJavaTypes) {
-        factTypeFieldsMap.put(result.getFactName(), result);
-        if (factTypeFieldsMap.size() == expectedElements) {
+        if (result != null) {
+            factTypeFieldsMap.put(result.getFactName(), result);
+        }
+        if (factTypeFieldsMap.size() == expectedElements) { // This is used to invoke this callback only once, when all the expected "compolex" objects has been managed
             factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
             SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>(simpleJavaTypes.stream()
                                                                                              .collect(Collectors.toMap(
