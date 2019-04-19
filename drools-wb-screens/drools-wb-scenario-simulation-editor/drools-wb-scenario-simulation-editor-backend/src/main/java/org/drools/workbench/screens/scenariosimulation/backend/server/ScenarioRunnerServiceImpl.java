@@ -20,14 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioRunnerProvider;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.guvnor.common.services.shared.test.Failure;
 import org.guvnor.common.services.shared.test.TestResultMessage;
@@ -44,33 +46,26 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
         implements ScenarioRunnerService {
 
     @Inject
-    private Event<TestResultMessage> defaultTestResultMessageEvent;
+    private ScenarioLoader scenarioLoader;
 
     private ScenarioRunnerProvider runnerSupplier = null;
 
     @Override
-    public void runAllTests(final String identifier,
-                            final Path path) {
+    public List<TestResultMessage> runAllTests(final String identifier,
+                                               final Path path) {
+        final List<TestResultMessage> testResultMessages = new ArrayList<>();
 
-        defaultTestResultMessageEvent.fire(
-                new TestResultMessage(
-                        identifier,
-                        1,
-                        1,
-                        new ArrayList<>()));
-    }
+        for (Map.Entry<Path, ScenarioSimulationModel> entry : scenarioLoader.loadScenarios(path).entrySet()) {
 
-    @Override
-    public void runAllTests(final String identifier,
-                            final Path path,
-                            final Event<TestResultMessage> customTestResultEvent) {
+            final ScenarioSimulationModel scenarioSimulationModel = entry.getValue();
 
-        customTestResultEvent.fire(
-                new TestResultMessage(
-                        identifier,
-                        1,
-                        1,
-                        new ArrayList<>()));
+            testResultMessages.add(runTest(identifier,
+                                           entry.getKey(),
+                                           scenarioSimulationModel.getSimulation().getSimulationDescriptor(),
+                                           scenarioSimulationModel.getSimulation().getScenarioMap()).getTestResultMessage());
+        }
+
+        return testResultMessages;
     }
 
     @Override
@@ -78,24 +73,23 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                                        final Path path,
                                        final SimulationDescriptor simulationDescriptor,
                                        final List<ScenarioWithIndex> scenarios) {
-        KieContainer kieContainer = getKieContainer(path);
-        AbstractScenarioRunner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
+        final KieContainer kieContainer = getKieContainer(path);
+        final AbstractScenarioRunner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor)
                 .create(kieContainer, simulationDescriptor, scenarios);
 
         final List<Failure> failures = new ArrayList<>();
 
         final List<Failure> failureDetails = new ArrayList<>();
 
-        Result result = runWithJunit(scenarioRunner, failures, failureDetails);
+        final Result result = runWithJunit(scenarioRunner, failures, failureDetails);
 
-        defaultTestResultMessageEvent.fire(
-                new TestResultMessage(
-                        identifier,
-                        result.getRunCount(),
-                        result.getRunTime(),
-                        failures));
-
-        return new SimulationRunResult(scenarios, scenarioRunner.getResultMetadata());
+        return new SimulationRunResult(scenarios,
+                                       scenarioRunner.getResultMetadata(),
+                                       new TestResultMessage(
+                                               identifier,
+                                               result.getRunCount(),
+                                               result.getRunTime(),
+                                               failures));
     }
 
     public ScenarioRunnerProvider getOrCreateRunnerSupplier(SimulationDescriptor simulationDescriptor) {
