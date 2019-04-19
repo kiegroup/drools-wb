@@ -225,9 +225,9 @@ public class ScenarioGridModel extends BaseGridData {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
         IntStream.range(0, getRowCount())
-                 .forEach(rowIndex -> originalValues.add(getCell(rowIndex, originalColumnIndex).getValue()));
+                .forEach(rowIndex -> originalValues.add(getCell(rowIndex, originalColumnIndex).getValue()));
         IntStream.range(0, getRowCount())
-                 .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
+                .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
     }
 
     /**
@@ -293,14 +293,15 @@ public class ScenarioGridModel extends BaseGridData {
         if (actualClassName.contains(".")) {
             actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
         }
-        String[] elements = value.split("\\.");
-        if (elements.length > 1) {
-            elements[0] = actualClassName;
+        List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
+        propertyNameElementsClone.addAll(propertyNameElements);
+        if (propertyNameElementsClone.size() > 1) {
+            propertyNameElementsClone.set(0, actualClassName);
         }
         // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
-        IntStream.range(0, propertyNameElements.size())
-                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(propertyNameElements.get(stepIndex), lastLevelClassName));
+        IntStream.range(0, propertyNameElementsClone.size())
+                .forEach(stepIndex -> factMappingByIndex.addExpressionElement(propertyNameElementsClone.get(stepIndex), lastLevelClassName));
         if (keepData) {
             IntStream.range(0, getRowCount())
                     .forEach(rowIndex -> setCellValue(rowIndex, columnIndex, originalValues.get(rowIndex)));
@@ -476,7 +477,7 @@ public class ScenarioGridModel extends BaseGridData {
     public int getInstancesCount(String className) {
         return simulation.getSimulationDescriptor().getUnmodifiableFactMappings()
                 .stream()
-                .filter(factMapping-> factMapping.getFactIdentifier().getClassName().equals(className))
+                .filter(factMapping -> factMapping.getFactIdentifier().getClassName().equals(className))
                 .collect(Collectors.groupingBy(FactMapping::getFactAlias))
                 .size();
     }
@@ -595,18 +596,19 @@ public class ScenarioGridModel extends BaseGridData {
     public boolean isAlreadyAssignedProperty(int columnIndex, List<String> propertyNameElements) {
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
+        List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
+        propertyNameElementsClone.add(factIdentifier.getClassNameWithoutPackage());
+        propertyNameElementsClone.addAll(propertyNameElements.subList(1, propertyNameElements.size()));
         return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
-                    List<String> columnProperty = factMapping.getFactAlias() + "."; // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
-                    // while the first element of ExpressionElements is always the class name
-                    columnProperty += factMapping.getExpressionElementsWithoutClass()
+                    List<String> factMappingPropertyNameElements = factMapping.getExpressionElements()
                             .stream()
-                            .map(expressionElement -> expressionElement.getStep())
+                            .map(ExpressionElement::getStep)
                             .collect(Collectors.toList());
-
-                    return Objects.equals(columnProperty, propertyNameElements);
+                    return Objects.equals(factMappingPropertyNameElements, propertyNameElementsClone);
                 });
     }
 
@@ -676,6 +678,10 @@ public class ScenarioGridModel extends BaseGridData {
     public boolean isSamePropertyHeader(int columnIndex, List<String> propertyNameElements) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        FactIdentifier factIdentifier = factMapping.getFactIdentifier();
+        List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
+        propertyNameElementsClone.add(factIdentifier.getClassNameWithoutPackage());
+        propertyNameElementsClone.addAll(propertyNameElements.subList(1, propertyNameElements.size()));
         List<String> columnPropertyName = factMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
         return Objects.equals(columnPropertyName, propertyNameElements);
     }
@@ -711,7 +717,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     public boolean validateInstanceHeaderUpdate(List<String> instanceNameElements, int columnIndex, boolean isADataType) {
-        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() -1));
+        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() - 1));
         return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(instanceNameElements, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(instanceNameElements, columnIndex));
     }
 

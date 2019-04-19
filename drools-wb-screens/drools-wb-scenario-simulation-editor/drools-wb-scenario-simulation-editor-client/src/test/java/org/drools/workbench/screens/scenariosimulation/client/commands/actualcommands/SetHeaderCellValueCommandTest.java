@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -111,10 +113,10 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
         FactModelTree authorFactModelTreeMock = getMockedFactModelTree(authorSimpleProperties, authorExpandableProperties);
         when(dataObjectFieldsMapMock.get("Author")).thenReturn(authorFactModelTreeMock);
         when(dataObjectFieldsMapMock.get("Book")).thenReturn(bookFactModelTreeMock);
-        assertFalse(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, "not-existing"));
-        assertTrue(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, "name"));
-        assertFalse(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, "author.not-existing"));
-        assertTrue(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, "author.books"));
+        assertFalse(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, Collections.singletonList("not-existing")));
+        assertTrue(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, Collections.singletonList("name")));
+        assertFalse(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, Arrays.asList("author", "not-existing")));
+        assertTrue(((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(scenarioSimulationContextLocal, bookFactModelTreeMock, Arrays.asList("author", "books")));
     }
 
     private FactModelTree getMockedFactModelTree(Map<String, String> simpleProperties, Map<String, String> expandableProperties) {
