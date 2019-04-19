@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -36,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationS
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyMetaDataGroup;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
 import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.getPropertyPlaceHolder;
 
 /**
@@ -168,7 +170,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         String canonicalClassName = getFullPackage(context) + aliasName;
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, aliasName, canonicalClassName);
         String className = factIdentifier.getClassName();
-        String propertyTitle = propertyHeaderTitle.orElseGet(() -> getPropertyHeaderTitle(context, String.join(".", propertyNameElements), factIdentifier));
+        String propertyTitle = propertyHeaderTitle.orElseGet(() -> getPropertyHeaderTitle(context, propertyNameElements, factIdentifier));
         final GridData.Range instanceLimits = context.getModel().getInstanceLimits(columnIndex);
         IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .forEach(index -> {
@@ -246,22 +248,22 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         return nestedFactModelTree;
     }
 
-    protected String getPropertyHeaderTitle(ScenarioSimulationContext context, String value, FactIdentifier factIdentifier) {
-        String propertyPathPart = value.contains(".") ? value.substring(value.indexOf(".") + 1) : "value";
-        String actualClassName = factIdentifier.getClassName();
-        if (actualClassName.contains(".")) {
-            actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
-        }
-        String fullExpressionToCheck = value.contains(".") ? actualClassName + "." + value.substring(value.indexOf(".") + 1) : value;
+    protected String getPropertyHeaderTitle(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
+        String propertyPathPart = propertyNameElements.size() > 1 ?
+                String.join(".", propertyNameElements.subList(1, propertyNameElements.size())) : "value";
+        List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factIdentifier);
         // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
-        return getMatchingExpressionAlias(context, fullExpressionToCheck, factIdentifier).orElse(propertyPathPart);
+        return getMatchingExpressionAlias(context, propertyNameElementsClone, factIdentifier).orElse(propertyPathPart);
     }
 
-    protected Optional<String> getMatchingExpressionAlias(ScenarioSimulationContext context, String fullExpressionToCheck, FactIdentifier factIdentifier) {
+    protected Optional<String> getMatchingExpressionAlias(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
         final List<FactMapping> factMappingsByFactName = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingsByFactName(factIdentifier.getName());
         return factMappingsByFactName.stream()
-                .filter(factMapping -> Objects.equals(factMapping.getFullExpression(), fullExpressionToCheck))
+                .filter(factMapping -> {
+                    List<String> expressionElements = factMapping.getExpressionElements().stream().map(expressionElement -> expressionElement.getStep()).collect(Collectors.toList());
+                    return Objects.equals(expressionElements, propertyNameElements);
+                })
                 .findFirst()
                 .map(FactMapping::getExpressionAlias);
     }

@@ -81,7 +81,7 @@ public class ScenarioHeaderTextAreaDOMElementTest extends AbstractFactoriesTest 
     @Test
     public void internalFlushInvalidHeader() {
         scenarioHeaderTextAreaDOMElement.internalFlush(VALUE);
-        verify(scenarioGridModelMock, never()).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE_LIST));
+        verify(scenarioGridModelMock, never()).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE_ELEMENTS));
     }
 
     @Test

@@ -55,7 +55,7 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     @Test
     public void executeIfSelected() {
         ((SetPropertyHeaderCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
-        verify((SetPropertyHeaderCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE_LIST), eq(VALUE_CLASS_NAME), eq(Optional.empty()));
+        verify((SetPropertyHeaderCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE_ELEMENTS), eq(VALUE_CLASS_NAME), eq(Optional.empty()));
     }
 
     @Test

@@ -56,6 +56,8 @@ import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 import org.uberfire.workbench.events.NotificationEvent;
 
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
+
 public class ScenarioGridModel extends BaseGridData {
 
     public static final int HEADER_ROW_COUNT = 3;
@@ -289,15 +291,7 @@ public class ScenarioGridModel extends BaseGridData {
         }
         replaceColumn(columnIndex, column);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        String actualClassName = factMappingByIndex.getFactIdentifier().getClassName();
-        if (actualClassName.contains(".")) {
-            actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
-        }
-        List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
-        propertyNameElementsClone.addAll(propertyNameElements);
-        if (propertyNameElementsClone.size() > 1) {
-            propertyNameElementsClone.set(0, actualClassName);
-        }
+        List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factMappingByIndex.getFactIdentifier());
         // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
         IntStream.range(0, propertyNameElementsClone.size())

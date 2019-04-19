@@ -258,7 +258,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void updateColumnTypeFalse() {
-        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, VALUE_LIST, VALUE_CLASS_NAME, false);
+        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, VALUE_ELEMENTS, VALUE_CLASS_NAME, false);
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
@@ -266,7 +266,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void updateColumnTypeTrue() {
-        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, VALUE_LIST, VALUE_CLASS_NAME, true);
+        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, VALUE_ELEMENTS, VALUE_CLASS_NAME, true);
         verify(scenarioGridModel, atLeast(2)).checkSimulation();
         verify(scenarioGridModel, atLeast(ROW_COUNT - 1)).getCell(anyInt(), eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
@@ -524,17 +524,17 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) {
-        doReturn(isSameInstanceHeader).when(scenarioGridModel).isSameInstanceHeader(columnIndex, VALUE_LIST.get(VALUE_LIST.size() -1));
-        doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(VALUE_LIST, columnIndex);
-        boolean retrieved = scenarioGridModel.validateInstanceHeaderUpdate(VALUE_LIST, columnIndex, isADataType);
+        doReturn(isSameInstanceHeader).when(scenarioGridModel).isSameInstanceHeader(columnIndex, VALUE_ELEMENTS.get(VALUE_ELEMENTS.size() -1));
+        doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(VALUE_ELEMENTS, columnIndex);
+        boolean retrieved = scenarioGridModel.validateInstanceHeaderUpdate(VALUE_ELEMENTS, columnIndex, isADataType);
         assertEquals(expectedValid, retrieved);
         reset(eventBusMock);
     }
 
     private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) {
-        doReturn(isSamePropertyHeader).when(scenarioGridModel).isSamePropertyHeader(columnIndex, VALUE_LIST);
-        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(VALUE_LIST, columnIndex);
-        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(VALUE_LIST, columnIndex, isPropertyType);
+        doReturn(isSamePropertyHeader).when(scenarioGridModel).isSamePropertyHeader(columnIndex, VALUE_ELEMENTS);
+        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(VALUE_ELEMENTS, columnIndex);
+        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(VALUE_ELEMENTS, columnIndex, isPropertyType);
         assertEquals(retrieved, expectedValid);
         reset(eventBusMock);
     }

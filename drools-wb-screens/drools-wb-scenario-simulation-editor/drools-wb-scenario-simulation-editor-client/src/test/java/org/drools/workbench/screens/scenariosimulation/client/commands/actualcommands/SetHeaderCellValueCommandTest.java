@@ -129,28 +129,28 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
     private void commonExecute(boolean isInstanceHeader, boolean isPropertyHeader, boolean isValid) {
         ((SetHeaderCellValueCommand) command).isInstanceHeader = isInstanceHeader;
         ((SetHeaderCellValueCommand) command).isPropertyHeader = isPropertyHeader;
-        scenarioSimulationContextLocal.getStatus().setHeaderCellElements(VALUE_LIST);
-        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
-        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
+        scenarioSimulationContextLocal.getStatus().setHeaderCellElements(VALUE_ELEMENTS);
+        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
+        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
         command.execute(scenarioSimulationContextLocal);
         if (isInstanceHeader) {
-            verify(((SetHeaderCellValueCommand) command), times(1)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
+            verify(((SetHeaderCellValueCommand) command), times(1)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
         } else if (isPropertyHeader) {
-            verify(((SetHeaderCellValueCommand) command), times(1)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
+            verify(((SetHeaderCellValueCommand) command), times(1)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
         } else {
-            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
-            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_LIST), eq(COLUMN_INDEX));
+            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
+            verify(((SetHeaderCellValueCommand) command), never()).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(VALUE_ELEMENTS), eq(COLUMN_INDEX));
         }
         if (isValid) {
-            verify(scenarioGridModelMock, times(1)).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE_LIST));
+            verify(scenarioGridModelMock, times(1)).updateHeader(eq(COLUMN_INDEX), eq(ROW_INDEX), eq(VALUE_ELEMENTS));
         }
     }
 
     private void commonValidateInstanceHeader(boolean isADataType) {
         doReturn(isADataType).when(dataObjectFieldsMapMock).containsKey(VALUE);
-        ((SetHeaderCellValueCommand) command).validateInstanceHeader(scenarioSimulationContextLocal, VALUE_LIST, COLUMN_INDEX);
+        ((SetHeaderCellValueCommand) command).validateInstanceHeader(scenarioSimulationContextLocal, VALUE_ELEMENTS, COLUMN_INDEX);
         verify(dataObjectFieldsMapMock, times(1)).containsKey(eq(VALUE));
-        verify(scenarioGridModelMock, times(1)).validateInstanceHeaderUpdate(eq(VALUE_LIST), eq(COLUMN_INDEX), eq(isADataType));
+        verify(scenarioGridModelMock, times(1)).validateInstanceHeaderUpdate(eq(VALUE_ELEMENTS), eq(COLUMN_INDEX), eq(isADataType));
         reset(dataObjectFieldsMapMock);
         reset(scenarioGridModelMock);
     }
@@ -167,9 +167,9 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
             when(dataObjectFieldsMapMock.get(anyString())).thenReturn(null);
         }
         boolean isPropertyType = factModelPresent && simplePropertyPresent;
-        ((SetHeaderCellValueCommand) command).validatePropertyHeader(scenarioSimulationContextLocal, VALUE_LIST, COLUMN_INDEX);
+        ((SetHeaderCellValueCommand) command).validatePropertyHeader(scenarioSimulationContextLocal, VALUE_ELEMENTS, COLUMN_INDEX);
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
-        verify(scenarioGridModelMock, times(1)).validatePropertyHeaderUpdate(eq(VALUE_LIST), eq(COLUMN_INDEX), eq(isPropertyType));
+        verify(scenarioGridModelMock, times(1)).validatePropertyHeaderUpdate(eq(VALUE_ELEMENTS), eq(COLUMN_INDEX), eq(isPropertyType));
         reset(simulationDescriptorMock);
         reset(scenarioGridModelMock);
     }

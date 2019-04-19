@@ -352,7 +352,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onSetHeaderCellValueEventInstanceHeader() {
-        SetHeaderCellValueEvent event = new SetHeaderCellValueEvent(ROW_INDEX, COLUMN_INDEX, VALUE_LIST, true, false);
+        SetHeaderCellValueEvent event = new SetHeaderCellValueEvent(ROW_INDEX, COLUMN_INDEX, VALUE_ELEMENTS, true, false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(SetHeaderCellValueCommand.class));
     }
@@ -397,19 +397,19 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onSetPropertyHeaderEvent() {
-        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(FULL_PACKAGE, VALUE_LIST, VALUE_CLASS_NAME);
+        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(FULL_PACKAGE, VALUE_ELEMENTS, VALUE_CLASS_NAME);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal), isA(SetPropertyHeaderCommand.class));
         //
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
-        when(scenarioGridModelMock.isAlreadyAssignedProperty(VALUE_LIST)).thenReturn(true);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(VALUE_ELEMENTS)).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal), isA(SetPropertyHeaderCommand.class));
         //
         reset(scenarioSimulationEventHandler);
-        when(scenarioGridModelMock.isAlreadyAssignedProperty(VALUE_LIST)).thenReturn(false);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
