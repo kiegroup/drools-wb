@@ -28,7 +28,6 @@ public class ErrorReportPopupPresenter implements ErrorReportPopup.Presenter {
     @Inject
     protected ViewsProvider viewsProvider;
 
-    @Inject
     protected ErrorReportPopupView errorReportPopupView;
 
     @Override
@@ -41,6 +40,7 @@ public class ErrorReportPopupPresenter implements ErrorReportPopup.Presenter {
                      final int mx,
                      final int my,
                      final PopoverView.Position position) {
+        errorReportPopupView = viewsProvider.getErrorReportPopupView();
         errorReportPopupView.show(errorTitleText, errorContentText, keepText, applyText, applyCommand, keepCommand, mx, my, position);
     }
 

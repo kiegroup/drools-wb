@@ -31,11 +31,12 @@ import org.uberfire.client.views.pfly.widgets.PopoverOptions;
 
 public abstract class AbstractPopoverView implements PopoverView {
 
-    public final static String TOP = "top";
-    public final static String LEFT = "left";
-    public final static String POSITION = "position";
-    public final static String PX = "PX";
-    public final static String ABSOLUTE = "absolute";
+    private final static String TOP = "top";
+    private final static String LEFT = "left";
+    private final static String POSITION = "position";
+    private final static String PX = "PX";
+    private final static String ABSOLUTE = "absolute";
+    private final static String TITLE = "title";
 
     @DataField("popover")
     protected Div popoverElement;
@@ -77,7 +78,7 @@ public abstract class AbstractPopoverView implements PopoverView {
         options.setHtml(true);
         options.setPlacement(position.toString().toLowerCase());
 
-        editorTitle.ifPresent(t -> popoverElement.setAttribute("title", t));
+        editorTitle.ifPresent(t -> popoverElement.setAttribute(TITLE, t));
         final HTMLElement element = this.getElement();
         popover = jQueryPopover.wrap(element);
         popover.popover(options);

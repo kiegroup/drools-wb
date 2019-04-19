@@ -18,11 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.popup;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import org.jboss.errai.common.client.dom.CSSStyleDeclaration;
-import org.jboss.errai.common.client.dom.HTMLElement;
+import org.jboss.errai.common.client.dom.Div;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,14 +28,11 @@ import org.mockito.Mock;
 import org.uberfire.client.views.pfly.widgets.Modal;
 import org.uberfire.mvp.Command;
 
-import static org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupView.LEFT;
-import static org.drools.workbench.screens.scenariosimulation.client.popup.ErrorReportPopupView.TOP;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class ErrorReportPopupViewTest {
@@ -57,10 +52,7 @@ public class ErrorReportPopupViewTest {
     private SpanElement errorpopupTitleMock;
 
     @Mock
-    private ButtonElement closeButtonMock;
-
-    @Mock
-    private DivElement errorContentMock;
+    private Div errorContentMock;
 
     @Mock
     private ButtonElement keepButtonMock;
@@ -69,34 +61,38 @@ public class ErrorReportPopupViewTest {
     private ButtonElement applyButtonMock;
 
     @Mock
-    private HTMLElement htmlElementMock;
-
-    @Mock
-    private CSSStyleDeclaration modalStyleMock;
-
-    @Mock
     private Modal modalMock;
 
     @Mock
     private Command applyCommandMock;
 
+    @Mock
+    private Command keepCommandMock;
+
     @Before
-    public void setUp() {
-        when(htmlElementMock.getStyle()).thenReturn(modalStyleMock);
-        when(modalMock.getElement()).thenReturn(htmlElementMock);
+    public void setup() {
         errorReportPopupView = spy(new ErrorReportPopupView() {
             {
                 this.keepButton = keepButtonMock;
                 this.applyButton = applyButtonMock;
-//                this.modal = modalMock;
                 this.applyCommand = applyCommandMock;
+                this.keepCommand = keepCommandMock;
+                this.errorContent = errorContentMock;
             }
         });
     }
 
     @Test
     public void show() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        verify(errorContentMock, times(1)).setTextContent(eq(ERROR_CONTENT_TEXT));
+        verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
+        verify(applyButtonMock, times(1)).setInnerText(eq(APPLY_TEXT));
+
+        /* Abstract */
+
+
+        /*
         verify(errorpopupTitleMock, times(1)).setInnerText(eq(ERROR_TITLE_TEXT));
         verify(errorContentMock, times(1)).setInnerText(eq(ERROR_CONTENT_TEXT));
         verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
@@ -105,18 +101,17 @@ public class ErrorReportPopupViewTest {
         verify(htmlElementMock, times(1)).getStyle();
         verify(modalStyleMock, times(1)).setProperty(eq(LEFT), eq(LEFT_PX));
         verify(modalStyleMock, times(1)).setProperty(eq(TOP), eq(TOP_PX));
-        verify(modalMock, times(1)).show();
+        verify(modalMock, times(1)).show(); */
     }
 
-    @Test
     public void hide() {
         errorReportPopupView.hide();
-        verify(modalMock, times(1)).hide();
     }
 
     @Test
     public void onKeepButtonClicked() {
         errorReportPopupView.onKeepButtonClicked(mock(ClickEvent.class));
+        verify(keepCommandMock, times(1)).execute();
         verify(errorReportPopupView, times(1)).hide();
     }
 

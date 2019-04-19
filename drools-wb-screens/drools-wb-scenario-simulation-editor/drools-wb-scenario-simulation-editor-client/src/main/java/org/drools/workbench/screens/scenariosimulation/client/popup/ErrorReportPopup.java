@@ -28,8 +28,10 @@ public interface ErrorReportPopup extends PopoverView {
          * @param keepText
          * @param applyText
          * @param applyCommand
+         * @param keepCommand
          * @param mx x position of the popup
          * @param my y position of the popup
+         * @param position position where the popover is put (LEFT or RIGHT)
          */
         void show(final String errorTitleText,
                   final String errorContentText,
@@ -55,8 +57,10 @@ public interface ErrorReportPopup extends PopoverView {
      * @param keepText
      * @param applyText
      * @param applyCommand
+     * @param keepCommand
      * @param mx x position of the popup
      * @param my y position of the popup
+     * @param position position where the popover is put (LEFT or RIGHT)
      */
     void show(final String errorTitleText,
               final String errorContentText,
