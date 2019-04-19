@@ -73,7 +73,6 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
     @Test
     public void setEventBus() {
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBusMock);
-        verify(scenarioContextMenuRegistryMock, times(1)).setEventBus(eq(eventBusMock));
     }
 
     @Test

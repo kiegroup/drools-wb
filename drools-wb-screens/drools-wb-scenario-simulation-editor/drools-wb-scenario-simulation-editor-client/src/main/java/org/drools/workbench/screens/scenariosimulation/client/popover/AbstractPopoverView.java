@@ -31,12 +31,12 @@ import org.uberfire.client.views.pfly.widgets.PopoverOptions;
 
 public abstract class AbstractPopoverView implements PopoverView {
 
-    private final static String TOP = "top";
-    private final static String LEFT = "left";
-    private final static String POSITION = "position";
-    private final static String PX = "PX";
-    private final static String ABSOLUTE = "absolute";
-    private final static String TITLE = "title";
+    public final static String TOP = "top";
+    public final static String LEFT = "left";
+    public final static String POSITION = "position";
+    public final static String PX = "px";
+    public final static String ABSOLUTE = "absolute";
+    public final static String TITLE = "title";
 
     @DataField("popover")
     protected Div popoverElement;
@@ -70,14 +70,12 @@ public abstract class AbstractPopoverView implements PopoverView {
 
     @Override
     public void show(final Optional<String> editorTitle, final int mx, final int my, Position position) {
-        wrappedWidget = ElementWrapperWidget.getWidget(getElement());
-        RootPanel.get().add(wrappedWidget);
+        addWidgetToRootPanel();
         final PopoverOptions options = new PopoverOptions();
         options.setContent((element) -> popoverContentElement);
         options.setAnimation(false);
         options.setHtml(true);
         options.setPlacement(position.toString().toLowerCase());
-
         editorTitle.ifPresent(t -> popoverElement.setAttribute(TITLE, t));
         final HTMLElement element = this.getElement();
         popover = jQueryPopover.wrap(element);
@@ -85,7 +83,7 @@ public abstract class AbstractPopoverView implements PopoverView {
         popoverElement.getStyle().setProperty(TOP, my + PX);
         popoverElement.getStyle().setProperty(LEFT, mx + PX);
         popoverElement.getStyle().setProperty(POSITION, ABSOLUTE);
-        Scheduler.get().scheduleDeferred( () -> popover.show());
+        scheduleTask();
     }
 
     @Override
@@ -100,8 +98,23 @@ public abstract class AbstractPopoverView implements PopoverView {
                 popover.hide();
                 popover.destroy();
             }
-            RootPanel.get().remove(wrappedWidget);
+            removeWidgetFromRootPanel();
         }
     }
 
+    //indirection for tests
+    protected void addWidgetToRootPanel() {
+        wrappedWidget = ElementWrapperWidget.getWidget(getElement());
+        RootPanel.get().add(wrappedWidget);
+    }
+
+    //indirection for tests
+    protected void removeWidgetFromRootPanel() {
+        RootPanel.get().remove(wrappedWidget);
+    }
+
+    //indirection for tests
+    protected void scheduleTask() {
+        Scheduler.get().scheduleDeferred(() -> popover.show());
+    }
 }
