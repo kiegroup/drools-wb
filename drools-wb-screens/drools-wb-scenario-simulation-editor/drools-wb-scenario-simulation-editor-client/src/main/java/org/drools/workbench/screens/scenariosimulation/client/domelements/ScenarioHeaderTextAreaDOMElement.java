@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.domelements;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,7 +62,7 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
         try {
             boolean isInstanceHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.INSTANCE);
             boolean isPropertyHeader = scenarioHeaderMetaData != null && Objects.equals(scenarioHeaderMetaData.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY);
-            List<String> nameElements = Arrays.asList(value.split("\\."));
+            List<String> nameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
             ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new SetHeaderCellValueEvent(rowIndex, columnIndex, nameElements, isInstanceHeader, isPropertyHeader));
             ((ScenarioGrid) gridWidget).getEventBus().fireEvent(new ReloadTestToolsEvent(true));
         } catch (Exception e) {

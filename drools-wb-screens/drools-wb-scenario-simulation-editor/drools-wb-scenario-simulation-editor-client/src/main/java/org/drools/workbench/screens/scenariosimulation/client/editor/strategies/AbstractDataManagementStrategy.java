@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -113,7 +114,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
                                             if  (propertyNameElements.isEmpty()) {
                                                 propertyNameElements.add("value");
                                             }
-                                            return propertyNameElements;
+                                            return Collections.unmodifiableList(propertyNameElements);
                                         })
                                         .collect(Collectors.toList()));
             });

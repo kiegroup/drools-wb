@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -333,7 +334,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
-                List<String> propertyNameElements = Arrays.asList(value.split("\\."));
+                List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
                 getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
             }
         }

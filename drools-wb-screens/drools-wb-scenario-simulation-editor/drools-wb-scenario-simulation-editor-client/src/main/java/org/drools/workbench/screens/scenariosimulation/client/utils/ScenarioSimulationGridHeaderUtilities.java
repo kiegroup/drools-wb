@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -152,9 +153,9 @@ public class ScenarioSimulationGridHeaderUtilities {
     }
 
     public static List<String> getPropertyNameElements(final Simulation simulation, final int columnIndex) {
-        return  simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
+        return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
                 .stream()
                 .map(ExpressionElement::getStep)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 }
