@@ -262,7 +262,7 @@ public class ScenarioSimulationUtils {
     }
 
     /**
-     * Returns an arrya where the 0-element is middle x of given cell and 1-element is middle y
+     * Returns an array where the 0-element is middle x of given cell and 1-element is middle y
      * @param gridWidget
      * @param column
      * @param isHeader
