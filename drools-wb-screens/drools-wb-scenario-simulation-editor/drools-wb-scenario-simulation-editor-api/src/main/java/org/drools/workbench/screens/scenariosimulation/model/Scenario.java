@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Scenario contains description and values to test in the defined scenario
@@ -92,6 +94,21 @@ public class Scenario {
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 
+    public Optional<FactMappingValue> getFactMappingValueByIndex(int index) {
+        FactMapping factMappingByIndex;
+        try {
+            factMappingByIndex = simulationDescriptor.getFactMappingByIndex(index);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalArgumentException(
+                    new StringBuilder().append("Impossible to retrieve FactMapping at index ").append(index).toString(), e);
+        }
+        return getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
+    }
+
+    public List<FactMappingValue> getFactMappingValuesByFactIdentifier(FactIdentifier factIdentifier) {
+        return factMappingValues.stream().filter(e -> e.getFactIdentifier().equals(factIdentifier)).collect(toList());
+    }
+
     public Optional<FactMappingValue> getFactMappingValue(FactMapping factMapping) {
         return getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
     }
@@ -107,6 +124,18 @@ public class Scenario {
                         e.getRawValue() != null)
                 .map(e -> (String) e.getRawValue())
                 .findFirst().orElse("");
+    }
+
+    public Collection<String> getFactNames() {
+        return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
+    }
+
+    public void sort() {
+        factMappingValues.sort((a, b) -> {
+            Integer aIndex = simulationDescriptor.getIndexByIdentifier(a.getFactIdentifier(), a.getExpressionIdentifier());
+            Integer bIndex = simulationDescriptor.getIndexByIdentifier(b.getFactIdentifier(), b.getExpressionIdentifier());
+            return aIndex.compareTo(bIndex);
+        });
     }
 
     public void resetErrors() {

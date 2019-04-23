@@ -26,6 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverView;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopup;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -64,6 +65,9 @@ public class ViewsProvider {
     private ManagedInstance<KeyValueEditingBox> mapEditingBoxInstance;
 
     @Inject
+    private ManagedInstance<FileUploadPopup> fileUploadPopupInstance;
+
+    @Inject
     private ManagedInstance<ErrorReportPopoverView> errorReportPopoverViewInstance;
 
     public MenuItemView getMenuItemView() {
@@ -100,6 +104,10 @@ public class ViewsProvider {
 
     public KeyValueEditingBox getKeyValueEditingBox() {
         return mapEditingBoxInstance.get();
+    }
+
+    public FileUploadPopup getFileUploadPopup() {
+        return fileUploadPopupInstance.get();
     }
 
     public ErrorReportPopoverView getErrorReportPopoverView() {

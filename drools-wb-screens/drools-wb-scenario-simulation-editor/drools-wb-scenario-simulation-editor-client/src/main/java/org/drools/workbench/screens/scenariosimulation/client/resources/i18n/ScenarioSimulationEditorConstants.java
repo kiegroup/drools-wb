@@ -236,7 +236,17 @@ public interface ScenarioSimulationEditorConstants
 
     String collectionError();
 
+    String selectImportFile();
+
+    String importLabel();
+
     String settings();
+
+    String uploadWarning();
+
+    String importFailedMessage();
+
+    String importErrorTitle();
 
     String errorReason();
 
