@@ -151,7 +151,15 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
 
     @Test
     public void manageBodyCoordinates_sameCell() {
-        commonOnMoveHandler.manageBodyCoordinates(-1, -1);
+        commonOnMoveHandler = spy(new CommonOnMoveHandler() {
+            {
+                currentlyShownBodyColumnIndex = 0;
+                currentlyShownBodyRowIndex = 0;
+                errorReportPopupPresenter = errorReportPopupPresenterMock;
+                scenarioGrid = scenarioGridMock;
+            }
+        });
+        commonOnMoveHandler.manageBodyCoordinates(0, 0);
         verify(commonOnMoveHandler, never()).resetCurrentlyShowBodyCoordinates();
         verify(simulationMock, never()).getScenarioByIndex(isA(Integer.class));
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
@@ -170,6 +178,17 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 scenarioGrid = scenarioGridMock;
             }
         });
+        commonOnMoveHandler.manageBodyCoordinates(-1, -1);
+        verify(commonOnMoveHandler, times(1)).resetCurrentlyShowBodyCoordinates();
+        verify(simulationMock, never()).getScenarioByIndex(isA(Integer.class));
+        verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
+        verify(scenarioMock, never()).getFactMappingValue(any());
+        verify(commonOnMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
+        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+    }
+
+    @Test
+    public void manageBodyCoordinates_notInGrid() {
         commonOnMoveHandler.manageBodyCoordinates(-1, -1);
         verify(commonOnMoveHandler, times(1)).resetCurrentlyShowBodyCoordinates();
         verify(simulationMock, never()).getScenarioByIndex(isA(Integer.class));

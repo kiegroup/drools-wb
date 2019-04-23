@@ -248,6 +248,7 @@ public class ScenarioGrid extends BaseGridWidget {
 
         signalTestToolsAboutSelectedHeaderCells();
         scenarioContextMenuRegistry.hideMenus();
+        scenarioContextMenuRegistry.hideErrorReportPopupover();
 
         return selectionChanged;
     }

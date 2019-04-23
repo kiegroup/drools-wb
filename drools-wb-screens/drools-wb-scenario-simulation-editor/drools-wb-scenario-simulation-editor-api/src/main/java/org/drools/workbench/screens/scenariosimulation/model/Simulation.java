@@ -116,10 +116,6 @@ public class Simulation {
         scenarios.clear();
     }
 
-    public void sort() {
-        scenarios.forEach(Scenario::sort);
-    }
-
     public void resetErrors() {
         scenarios.forEach(Scenario::resetErrors);
     }

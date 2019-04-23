@@ -73,8 +73,9 @@ public abstract class AbstractPopoverView implements PopoverView {
         addWidgetToRootPanel();
         final PopoverOptions options = new PopoverOptions();
         options.setContent((element) -> popoverContentElement);
-        options.setAnimation(false);
+        options.setAnimation(true);
         options.setHtml(true);
+        options.setDelay(500);
         options.setPlacement(position.toString().toLowerCase());
         editorTitle.ifPresent(t -> popoverElement.setAttribute(TITLE, t));
         final HTMLElement element = this.getElement();

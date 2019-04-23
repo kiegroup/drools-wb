@@ -310,7 +310,8 @@ public class ScenarioGridTest {
         verify(eventBusMock).fireEvent(any(EnableTestToolsEvent.class));
 
         // context menus could be shown
-        verify(scenarioContextMenuRegistryMock).hideMenus();
+        verify(scenarioContextMenuRegistryMock, times(1)).hideMenus();
+        verify(scenarioContextMenuRegistryMock, times(1)).hideErrorReportPopupover();
     }
 
     @Test
