@@ -83,7 +83,8 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
         final Result result = runWithJunit(scenarioRunner, failures, failureDetails);
 
         return new SimulationRunResult(scenarios,
-                                       scenarioRunner.getResultMetadata(),
+                                       scenarioRunner.getLastRunResultMetadata()
+                                               .orElseThrow(() -> new IllegalStateException("SimulationRunMetadata should be available after a run")),
                                        new TestResultMessage(
                                                identifier,
                                                result.getRunCount(),

@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -95,15 +97,19 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     protected void populateDecisionList(Map<String, Integer> outputCounter) {
         coverageDecisionElementPresenter.clear();
-        for (Map.Entry<String, Integer> entry : outputCounter.entrySet()) {
-            coverageDecisionElementPresenter.addDecisionElementView(entry.getKey(), entry.getValue() + "");
+        List<String> decisions = new ArrayList<>(outputCounter.keySet());
+        decisions.sort(Comparator.naturalOrder());
+        for (String decision : decisions) {
+            coverageDecisionElementPresenter.addDecisionElementView(decision, outputCounter.get(decision) + "");
         }
     }
 
     protected void populateScenarioList(Map<ScenarioWithIndex, List<String>> scenarioCounter) {
         coverageScenarioListPresenter.clear();
-        for (Map.Entry<ScenarioWithIndex, List<String>> entry : scenarioCounter.entrySet()) {
-            coverageScenarioListPresenter.addScenarioGroup(entry.getKey(), entry.getValue());
+        List<ScenarioWithIndex> scenarioIndexes = new ArrayList<>(scenarioCounter.keySet());
+        scenarioIndexes.sort(Comparator.comparingInt(ScenarioWithIndex::getIndex));
+        for (ScenarioWithIndex scenarioWithIndex : scenarioIndexes) {
+            coverageScenarioListPresenter.addScenarioGroup(scenarioWithIndex, scenarioCounter.get(scenarioWithIndex));
         }
     }
 

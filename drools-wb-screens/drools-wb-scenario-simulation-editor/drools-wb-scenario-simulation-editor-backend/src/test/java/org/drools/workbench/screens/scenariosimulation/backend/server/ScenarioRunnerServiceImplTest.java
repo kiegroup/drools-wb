@@ -17,8 +17,8 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.AbstractScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.RuleScenarioRunner;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioException;
@@ -43,6 +43,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -98,6 +99,16 @@ public class ScenarioRunnerServiceImplTest {
         assertNotNull(test.getTestResultMessage());
         assertNotNull(test.getScenarioWithIndex());
         assertNotNull(test.getSimulationRunMetadata());
+
+        when(runnerMock.getLastRunResultMetadata()).thenReturn(Optional.empty());
+        scenarioRunnerService.setRunnerSupplier((kieContainer, simulationDescriptor, scenarios) -> runnerMock);
+
+        assertThatThrownBy(() -> scenarioRunnerService.runTest("test",
+                                                               mock(Path.class),
+                                                               simulation.getSimulationDescriptor(),
+                                                               simulation.getScenarioWithIndex()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("SimulationRunMetadata should be available after a run");
     }
 
     @Test
@@ -157,7 +168,7 @@ public class ScenarioRunnerServiceImplTest {
     public void kieContainerTest() {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(null);
-        Assertions.assertThatThrownBy(() -> scenarioRunnerService.getKieContainer(mock(Path.class)))
+        assertThatThrownBy(() -> scenarioRunnerService.getKieContainer(mock(Path.class)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Retrieving KieContainer has failed. Fix all compilation errors within the " +
                                     "project and build the project again.");

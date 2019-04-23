@@ -66,11 +66,12 @@ public abstract class AbstractScenarioRunner extends Runner {
         this.desc = getDescriptionForSimulation(getFileName(), simulationDescriptor, scenarios);
         this.classLoader = kieContainer.getClassLoader();
         this.expressionEvaluatorFactory = expressionEvaluatorFactory;
-        this.simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
     }
 
+    // FIXME
     @Override
     public void run(RunNotifier notifier) {
+        simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
 
         notifier.fireTestStarted(getDescription());
         for (ScenarioWithIndex scenarioWithIndex : scenarios) {
@@ -144,14 +145,10 @@ public abstract class AbstractScenarioRunner extends Runner {
         return simulationDescriptor;
     }
 
-    // FIXME
-    public void resetResult() {
-        this.simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
-    }
-
-    // FIXME
-    public SimulationRunMetadata getResultMetadata() {
-        return this.simulationRunMetadataBuilder.build();
+    public Optional<SimulationRunMetadata> getLastRunResultMetadata() {
+        return this.simulationRunMetadataBuilder != null ?
+                Optional.of(this.simulationRunMetadataBuilder.build()) :
+                Optional.empty();
     }
 
     public static Description getDescriptionForSimulation(Optional<String> filename, Simulation simulation) {

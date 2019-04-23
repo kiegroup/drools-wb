@@ -128,8 +128,6 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected SimulationRunResult simulationRunResultMock;
     @Mock
-    protected List<ScenarioWithIndex> scenarioWithIndexMock;
-    @Mock
     protected DataManagementStrategy dataManagementStrategyMock;
     @Mock
     protected SortedMap<String, FactModelTree> dataObjectFieldsMapMock;
@@ -147,6 +145,8 @@ public abstract class AbstractScenarioSimulationTest {
     protected FactMappingValue factMappingValueMock;
 
     protected List<FactMappingValue> factMappingValuesLocal = new ArrayList<>();
+
+    protected List<ScenarioWithIndex> scenarioWithIndexLocal;
 
     protected ScenarioSimulationContext scenarioSimulationContextLocal;
     protected AppendRowCommand appendRowCommandMock;
@@ -196,10 +196,10 @@ public abstract class AbstractScenarioSimulationTest {
 
     @Before
     public void setup() {
+        scenarioWithIndexLocal = new ArrayList<>();
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
-        when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexMock);
-        when(scenarioWithIndexMock.iterator()).thenReturn(new ArrayList<ScenarioWithIndex>().iterator());
-        when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexMock);
+        when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
+        when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                         scenarioGridLayerMock,

@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -504,10 +505,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
         when(scenarioSimulationServiceMock.runScenario(any(), any(), any()))
-                .thenReturn(new SimulationRunResult(scenarioWithIndexMock,
+                .thenReturn(new SimulationRunResult(scenarioWithIndexLocal,
                                                     mock(SimulationRunMetadata.class),
                                                     new TestResultMessage()));
         when(statusMock.getSimulation()).thenReturn(simulationMock);
+        when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         when(contextMock.getStatus()).thenReturn(statusMock);
         assertFalse(modelLocal.getSimulation().equals(simulationMock));
         presenter.onStartup(observablePathMock, placeRequestMock);
@@ -524,7 +526,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onRunTestById() throws Exception {
         when(scenarioSimulationServiceMock.runScenario(any(), any(), any()))
-                .thenReturn(new SimulationRunResult(scenarioWithIndexMock,
+                .thenReturn(new SimulationRunResult(scenarioWithIndexLocal,
                                                     mock(SimulationRunMetadata.class),
                                                     new TestResultMessage()));
         when(simulationMock.getScenarioByIndex(anyInt())).thenReturn(mock(Scenario.class));
@@ -615,6 +617,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.getModelSuccessCallbackMethod(content);
         verify(presenterSpy, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
         verify(presenterSpy, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
+        verify(presenterSpy, never()).populateRightDocks(CoverageReportPresenter.IDENTIFIER);
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));

@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -288,9 +287,6 @@ public class ScenarioSimulationEditorPresenter
         List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableScenarios().size())
                 .boxed()
                 .collect(Collectors.toList());
-        GWT.log("--> to run " + indexes.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining(", ")));
         onRunScenario(indexes);
     }
 
@@ -301,12 +297,6 @@ public class ScenarioSimulationEditorPresenter
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
                 .collect(Collectors.toList());
-
-        GWT.log("--> to run filtered " + toRun.stream()
-                .map(ScenarioWithIndex::getIndex)
-                .map(Objects::toString)
-                .collect(Collectors.joining(", ")));
-
 
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
@@ -371,13 +361,14 @@ public class ScenarioSimulationEditorPresenter
         }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
+
+//        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
+
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
 
         this.lastRunResult = newData;
-
-        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
     }
 
     protected void registerTestToolsCallback() {

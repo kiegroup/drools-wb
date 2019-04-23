@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Comparator;
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
@@ -48,7 +49,6 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
 
         HTMLLIElement scenarioElement = coverageScenarioListView.getScenarioElement();
 
-
         // FIXME l18n
         coverageScenarioListView.getFaAngleRight().textContent = "  " + "Decision evaluated for Scenario " +
                 scenarioWithIndex.getIndex() + ": " +
@@ -67,6 +67,7 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
     }
 
     protected HTMLUListElement createDecisionList(List<String> decisions, HTMLUListElement decisionGroup) {
+        decisions.sort(Comparator.naturalOrder());
         for (String decision : decisions) {
             HTMLLIElement listElement = createDecisionLi();
             listElement.textContent = decision;
