@@ -39,10 +39,11 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 @Dependent
 public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHandler {
 
-    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
-
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
     private static int POPOVER_WIDTH = 200;
+    private static String UNDEFINED = "undefined";
+
+    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     protected Integer currentlyShownHeaderRowIndex = -1;
     protected Integer currentlyShownHeaderColumnIndex = -1;
@@ -55,7 +56,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     public void hidePopover() {
         errorReportPopupPresenter.hide();
-        resetCurrentlyShowBody();
+        resetCurrentlyShowBodyCoordinates();
     }
 
     public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
@@ -69,23 +70,23 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
-        /* If the mouse position is the same of the previous one, do nothig */
+        /* If the mouse position is the same of the previous one, do nothing */
         if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
             return false;
         }
         /* In this case, the mouse is out ot the GridLayer, then it resets the coordinates to default */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
-            return resetCurrentlyShowBody();
+            return resetCurrentlyShowBodyCoordinates();
         }
         currentlyShownBodyRowIndex = uiRowIndex;
         currentlyShownBodyColumnIndex = uiColumnIndex;
         final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
         final FactMapping factMapping = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
-        final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+        final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             if (factMappingValue.isError()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
-                Point2D xYCell = ScenarioSimulationUtils.getMiddleXYCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
+                Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
                 PopoverView.Position position = PopoverView.Position.RIGHT;
                 int xMiddleWidth = (int) column.getWidth() / 2;
                 int xPosition = (int) xYCell.getX() + xMiddleWidth;
@@ -93,9 +94,9 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                     xPosition = (int) xYCell.getX() - xMiddleWidth;
                     position = PopoverView.Position.LEFT;
                 }
+                int yPosition = (int) xYCell.getY();
                 final Object expectedValue = factMappingValue.getRawValue();
                 final Object errorValue = factMappingValue.getErrorValue();
-                String errorMessage = "The expected value is \" " + expectedValue + " \" but the actual one is \"" + errorValue + "\".";
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
                                                        expectedValue.toString(), errorValue.toString()),
@@ -105,22 +106,27 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                         scenarioGrid.getEventBus().fireEvent(
                                                                 new SetGridCellValueEvent(uiRowIndex,
                                                                                           uiColumnIndex,
-                                                                                          errorValue.toString().equals("undefined") ? "" : errorValue.toString()));
-                                                        CommonOnMoveHandler.this.resetCurrentlyShowBody();
+                                                                                          errorValue.toString().equalsIgnoreCase(UNDEFINED) ? "" : errorValue.toString()));
+                                                        CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
                                                },
-                                               () -> CommonOnMoveHandler.this.resetCurrentlyShowBody(),
+                                               () -> CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates(),
                                                xPosition,
-                                               (int) xYCell.getY(),
+                                               yPosition,
                                                position);
             }
         });
         return false;
     }
 
-    protected boolean resetCurrentlyShowBody() {
+    protected boolean resetCurrentlyShowBodyCoordinates() {
         currentlyShownBodyColumnIndex = -1;
         currentlyShownBodyRowIndex = -1;
         return false;
+    }
+
+    //Indirection for test
+    protected Point2D retrieveCellMiddleXYPosition(GridColumn<?> column, int uiRowIndex) {
+        return ScenarioSimulationUtils.getMiddleXYCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
     }
 
 }

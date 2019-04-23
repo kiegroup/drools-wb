@@ -45,6 +45,8 @@ public abstract class AbstractScenarioSimulationGridHandlerTest extends Abstract
     protected final double CLICK_POINT_X = 5;
     protected final double CLICK_POINT_Y = 5;
     protected final int OFFSET_X = 0;
+    protected final static Integer MX = 300;
+    protected final static Integer MY = 200;
 
     @Mock
     protected Point2D point2DMock;
@@ -100,4 +102,5 @@ public abstract class AbstractScenarioSimulationGridHandlerTest extends Abstract
                 .thenReturn(columnInformation);
         when(scenarioRenderingInformationMock.getFloatingBlockInformation()).thenReturn(floatingBlockInformationMock);
     }
+
 }

@@ -92,6 +92,10 @@ public class Scenario {
                 e.getExpressionIdentifier().equals(expressionIdentifier)).findFirst();
     }
 
+    public Optional<FactMappingValue> getFactMappingValue(FactMapping factMapping) {
+        return getFactMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+    }
+
     public void setDescription(String name) {
         addOrUpdateMappingValue(FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION, name);
     }
