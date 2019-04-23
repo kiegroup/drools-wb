@@ -39,6 +39,8 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
     }
 
     /**
+     * It calculates the cell related to the given canvas coordinates. These coordinates will be handled by
+     * <code>manageHeaderCoordinates</code> if found cell is an HEADER or <code>manageBodyCoordinates</code> otherwise.
      * @param canvasX
      * @param canvasY
      * @return

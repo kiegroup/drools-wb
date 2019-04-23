@@ -70,13 +70,14 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
-        /* If the mouse position is the same of the previous one, do nothing */
-        if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
-            return false;
-        }
         /* In this case, the mouse is out ot the GridLayer, then it resets the coordinates to default */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
             return resetCurrentlyShowBodyCoordinates();
+        }
+        /* If the mouse position is the same of the previous one, do nothing. It returns true because
+        * the click happened on an column of a grid row */
+        if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
+            return true;
         }
         currentlyShownBodyRowIndex = uiRowIndex;
         currentlyShownBodyColumnIndex = uiColumnIndex;
@@ -84,6 +85,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         final FactMapping factMapping = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
+            /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show its */
             if (factMappingValue.isError()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
                 Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
@@ -115,7 +117,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                position);
             }
         });
-        return false;
+        return true;
     }
 
     protected boolean resetCurrentlyShowBodyCoordinates() {
