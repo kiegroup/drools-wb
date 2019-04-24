@@ -216,6 +216,21 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * This method <i>duplicates</i> the row values at the source column index from both the grid <b>and</b> the underlying model
+     * and inserts at the target column index
+     * @param originalColumnIndex
+     * @param newColumnIndex
+     */
+    public void duplicateColumnValues(int originalColumnIndex, int newColumnIndex) {
+        checkSimulation();
+        List<GridCellValue<?>> originalValues = new ArrayList<>();
+        IntStream.range(0, getRowCount())
+                 .forEach(rowIndex -> originalValues.add(getCell(rowIndex, originalColumnIndex).getValue()));
+        IntStream.range(0, getRowCount())
+                 .forEach(rowIndex -> setCellValue(rowIndex, newColumnIndex, originalValues.get(rowIndex)));
+    }
+
+    /**
      * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model
      * @param index
      * @param column
@@ -274,8 +289,17 @@ public class ScenarioGridModel extends BaseGridData {
                     .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
         }
         replaceColumn(columnIndex, column);
-        String[] elements = value.split("\\.");
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        String actualClassName = factMappingByIndex.getFactIdentifier().getClassName();
+        if (actualClassName.contains(".")) {
+            actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
+        }
+        String[] elements = value.split("\\.");
+        if (elements.length > 1) {
+            elements[0] = actualClassName;
+        }
+        // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
+        // while the first element of ExpressionElements is always the class name
         IntStream.range(0, elements.length)
                 .forEach(stepIndex -> factMappingByIndex.addExpressionElement(elements[stepIndex], lastLevelClassName));
         if (keepData) {
@@ -445,6 +469,19 @@ public class ScenarioGridModel extends BaseGridData {
                 .count();
     }
 
+    /**
+     * Returns the count of instantiated facts given a classname.
+     * @param className
+     * @return
+     */
+    public int getInstancesCount(String className) {
+        return simulation.getSimulationDescriptor().getUnmodifiableFactMappings()
+                .stream()
+                .filter(factMapping-> factMapping.getFactIdentifier().getClassName().equals(className))
+                .collect(Collectors.groupingBy(FactMapping::getFactAlias))
+                .size();
+    }
+
     public void updateHeader(int columnIndex, int headerRowIndex, String value) {
         final ScenarioHeaderMetaData editedMetadata = (ScenarioHeaderMetaData) getColumns().get(columnIndex).getHeaderMetaData().get(headerRowIndex);
         // do not update if old and new value are the same
@@ -562,10 +599,13 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
-                    String columnProperty = factMapping.getExpressionElements()
+                    String columnProperty = factMapping.getFactAlias() + "."; // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
+                    // while the first element of ExpressionElements is always the class name
+                    columnProperty += factMapping.getExpressionElementsWithoutClass()
                             .stream()
                             .map(expressionElement -> expressionElement.getStep())
                             .collect(Collectors.joining("."));
+
                     return Objects.equals(columnProperty, propertyName);
                 });
     }

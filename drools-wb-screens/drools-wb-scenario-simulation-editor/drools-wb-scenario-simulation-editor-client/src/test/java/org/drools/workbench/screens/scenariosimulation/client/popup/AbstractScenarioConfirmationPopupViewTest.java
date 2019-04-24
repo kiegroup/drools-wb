@@ -80,7 +80,7 @@ public abstract class AbstractScenarioConfirmationPopupViewTest extends Abstract
                    MAIN_QUESTION_TEXT,
                    TEXT1_TEXT,
                    TEXT_QUESTION_TEXT);
-        assertEquals(okDeleteCommandMock, popupView.okDeleteCommand);
+        assertEquals(okDeleteCommandMock, popupView.okCommand);
     }
 
     @Test
@@ -97,13 +97,13 @@ public abstract class AbstractScenarioConfirmationPopupViewTest extends Abstract
 
     @Test
     public void onOkDeleteClick() {
-        popupView.okDeleteCommand = null;
-        popupView.onOkDeleteClick(mouseEventMock);
+        popupView.okCommand = null;
+        popupView.onOkClick(mouseEventMock);
         verify(okDeleteCommandMock, never()).execute();
         verify(popupView, times(1)).hide();
         reset(popupView);
-        popupView.okDeleteCommand = okDeleteCommandMock;
-        popupView.onOkDeleteClick(mouseEventMock);
+        popupView.okCommand = okDeleteCommandMock;
+        popupView.onOkClick(mouseEventMock);
         verify(okDeleteCommandMock, times(1)).execute();
         verify(popupView, times(1)).hide();
     }

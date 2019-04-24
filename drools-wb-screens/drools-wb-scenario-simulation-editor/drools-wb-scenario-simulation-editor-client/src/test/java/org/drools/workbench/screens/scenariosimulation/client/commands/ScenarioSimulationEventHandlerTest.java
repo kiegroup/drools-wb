@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DisableTestToolsCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
@@ -45,8 +46,10 @@ import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEv
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
@@ -71,6 +74,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEvent
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
@@ -82,6 +86,7 @@ import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -110,9 +115,13 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration disableTestToolsEventHandlerMock;
     @Mock
+    private HandlerRegistration duplicateColumnHandlerRegistrationMock;
+    @Mock
     private HandlerRegistration duplicateHandlerRegistrationMock;
     @Mock
     private HandlerRegistration enableTestToolsEventHandlerMock;
+    @Mock
+    private HandlerRegistration importHandlerRegistrationMock;
     @Mock
     private HandlerRegistration insertColumnHandlerRegistrationMock;
     @Mock
@@ -148,6 +157,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     private PreserveDeletePopupPresenter preserveDeletePopupPresenterMock;
     @Mock
     private ConfirmPopupPresenter confirmPopupPresenterMock;
+    @Mock
+    private  FileUploadPopupPresenter fileUploadPopupPresenterMock;
 
     private ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
@@ -159,8 +170,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(disableTestToolsEventHandlerMock);
+        when(eventBusMock.addHandler(eq(DuplicateInstanceEvent.TYPE), isA((ScenarioSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableTestToolsEventHandlerMock);
+        when(eventBusMock.addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(importHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependColumnHandlerRegistrationMock);
@@ -184,6 +197,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                 this.deletePopupPresenter = deletePopupPresenterMock;
                 this.preserveDeletePopupPresenter = preserveDeletePopupPresenterMock;
                 this.confirmPopupPresenter = confirmPopupPresenterMock;
+                this.fileUploadPopupPresenter = fileUploadPopupPresenterMock;
                 this.context = scenarioSimulationContextLocal;
                 this.scenarioCommandManager = scenarioCommandManagerMock;
                 this.scenarioCommandRegistry = scenarioCommandRegistryMock;
@@ -242,6 +256,13 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     }
 
     @Test
+    public void onDuplicateColumnEvent() {
+        DuplicateInstanceEvent event = new DuplicateInstanceEvent(COLUMN_INDEX);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DuplicateInstanceCommand.class));
+    }
+
+    @Test
     public void onDuplicateRowEvent() {
         DuplicateRowEvent event = new DuplicateRowEvent(ROW_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
@@ -253,6 +274,17 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         EnableTestToolsEvent event = new EnableTestToolsEvent();
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(EnableTestToolsCommand.class));
+    }
+
+    @Test
+    public void onImportEvent() {
+        ImportEvent event = new ImportEvent();
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(fileUploadPopupPresenterMock, times(1))
+                .show(any(),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()),
+                      isA(org.uberfire.mvp.Command.class));
     }
 
     @Test
@@ -461,10 +493,14 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(disableTestToolsEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(DuplicateInstanceEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(duplicateColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(enableTestToolsEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(importHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(insertColumnHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));

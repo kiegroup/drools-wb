@@ -146,6 +146,8 @@ public interface ScenarioSimulationEditorConstants
 
     String deleteColumn();
 
+    String duplicateInstance();
+
     String insertRowBelow();
 
     String scenario();
@@ -234,5 +236,16 @@ public interface ScenarioSimulationEditorConstants
 
     String collectionError();
 
+    String selectImportFile();
+
+    String importLabel();
+
+
     String settings();
+
+    String uploadWarning();
+
+    String importFailedMessage();
+
+    String importErrorTitle();
 }
