@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import java.util.Objects;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
@@ -41,5 +43,23 @@ public class ScenarioWithIndex {
 
     public int getIndex() {
         return index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ScenarioWithIndex that = (ScenarioWithIndex) o;
+        return index == that.index &&
+                Objects.equals(scenario, that.scenario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scenario, index);
     }
 }

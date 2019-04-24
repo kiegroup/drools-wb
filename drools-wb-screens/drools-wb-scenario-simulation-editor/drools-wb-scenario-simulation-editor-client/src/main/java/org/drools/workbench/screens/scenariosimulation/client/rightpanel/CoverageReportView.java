@@ -19,16 +19,23 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 
 public interface CoverageReportView
         extends SubDockView<CoverageReportView.Presenter> {
 
-    HTMLElement getReportAvailable();
+    void hide();
 
-    HTMLElement getReportExecuted();
+    void show();
 
-    HTMLElement getReportCoverage();
+    void setReportAvailable(String value);
+
+    void setReportExecuted(String value);
+
+    void setReportCoverage(String value);
+
+    void setEmptyStatusText(String value);
 
     HTMLElement getDecisionList();
 
@@ -38,7 +45,8 @@ public interface CoverageReportView
 
     interface Presenter extends SubDockView.Presenter {
 
-        void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata);
+        void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, ScenarioSimulationModel.Type type);
 
+        void clear(ScenarioSimulationModel.Type type);
     }
 }

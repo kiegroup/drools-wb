@@ -25,9 +25,9 @@ import org.dashbuilder.displayer.DisplayerSettingsFactory;
 import org.dashbuilder.displayer.client.Displayer;
 import org.dashbuilder.displayer.client.DisplayerCoordinator;
 import org.dashbuilder.displayer.client.DisplayerLocator;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 
-// FIXME to test
 @Dependent
 public class CoverageReportDonutPresenter {
 
@@ -85,11 +85,9 @@ public class CoverageReportDonutPresenter {
                                                         .dataset(DataSetFactory.newDataSetBuilder()
                                                                          .label("STATUS")
                                                                          .number("coverage")
-                                                                         // FIXME l18n
-                                                                         .row("Executed",
+                                                                         .row(ScenarioSimulationEditorConstants.INSTANCE.executed(),
                                                                               executed)
-                                                                         // FIXME l18n
-                                                                         .row("Not covered",
+                                                                         .row(ScenarioSimulationEditorConstants.INSTANCE.notCovered(),
                                                                               notCovered)
                                                                          .buildDataSet())
                                                         .buildSettings());

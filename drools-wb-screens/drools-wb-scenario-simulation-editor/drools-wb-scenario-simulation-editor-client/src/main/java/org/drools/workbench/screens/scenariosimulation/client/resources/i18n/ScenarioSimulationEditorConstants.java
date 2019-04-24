@@ -250,4 +250,14 @@ public interface ScenarioSimulationEditorConstants
     String importFailedMessage();
 
     String importErrorTitle();
+
+    String executed();
+
+    String notCovered();
+
+    String decisionsEvaluated();
+
+    String coverageNotSupportedForRule();
+
+    String runATestToSeeCoverageReport();
 }

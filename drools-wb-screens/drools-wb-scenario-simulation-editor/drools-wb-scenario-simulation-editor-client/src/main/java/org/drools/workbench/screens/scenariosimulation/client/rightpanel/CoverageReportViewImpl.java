@@ -26,7 +26,8 @@ import elemental2.dom.HTMLUListElement;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-// FIXME to test
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.HIDDEN;
+
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class CoverageReportViewImpl
@@ -53,6 +54,21 @@ public class CoverageReportViewImpl
     @DataField
     protected HTMLUListElement scenarioList = (HTMLUListElement) DomGlobal.document.createElement("ul");
 
+    @DataField
+    protected HTMLDivElement emptyStatus = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLDivElement emptyStatusText = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLDivElement summarySection = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLDivElement decisionListSection = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLDivElement scenarioListSection = (HTMLDivElement) DomGlobal.document.createElement("div");
+
     @Override
     public Presenter getPresenter() {
         return presenter;
@@ -64,18 +80,39 @@ public class CoverageReportViewImpl
     }
 
     @Override
-    public HTMLElement getReportAvailable() {
-        return reportAvailable;
+    public void hide() {
+        emptyStatus.classList.remove(HIDDEN);
+        summarySection.classList.add(HIDDEN);
+        decisionListSection.classList.add(HIDDEN);
+        scenarioListSection.classList.add(HIDDEN);
     }
 
     @Override
-    public HTMLElement getReportExecuted() {
-        return reportExecuted;
+    public void show() {
+        emptyStatus.classList.add(HIDDEN);
+        summarySection.classList.remove(HIDDEN);
+        decisionListSection.classList.remove(HIDDEN);
+        scenarioListSection.classList.remove(HIDDEN);
     }
 
     @Override
-    public HTMLElement getReportCoverage() {
-        return reportCoverage;
+    public void setReportAvailable(String value) {
+        this.reportAvailable.textContent = value;
+    }
+
+    @Override
+    public void setReportExecuted(String value) {
+        this.reportExecuted.textContent = value;
+    }
+
+    @Override
+    public void setReportCoverage(String value) {
+        this.reportCoverage.textContent = value;
+    }
+
+    @Override
+    public void setEmptyStatusText(String value) {
+        this.emptyStatusText.textContent = value;
     }
 
     @Override

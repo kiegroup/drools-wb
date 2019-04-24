@@ -32,13 +32,11 @@ public class SimulationRunMetadataBuilder {
     private SimulationRunMetadataBuilder() {
     }
 
-    // FIXME to test
     public SimulationRunMetadataBuilder addScenarioResultMetadata(ScenarioResultMetadata scenarioResultMetadata) {
         this.scenarioResultMetadata.add(scenarioResultMetadata);
         return this;
     }
 
-    // FIXME to test
     public SimulationRunMetadata build() {
         int available = 0;
         Map<String, Integer> outputCounter = new HashMap<>();

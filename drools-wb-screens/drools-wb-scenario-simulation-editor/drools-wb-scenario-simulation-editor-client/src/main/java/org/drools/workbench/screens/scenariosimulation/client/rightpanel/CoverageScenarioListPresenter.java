@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLLIElement;
 import elemental2.dom.HTMLUListElement;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 
@@ -49,10 +50,8 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
 
         HTMLLIElement scenarioElement = coverageScenarioListView.getScenarioElement();
 
-        // FIXME l18n
-        coverageScenarioListView.getFaAngleRight().textContent = "  " + "Decision evaluated for Scenario " +
-                scenarioWithIndex.getIndex() + ": " +
-                scenarioWithIndex.getScenario().getDescription();
+        coverageScenarioListView.getFaAngleRight().textContent = "  " + ScenarioSimulationEditorConstants.INSTANCE.decisionsEvaluated()
+                + " " + scenarioWithIndex.getIndex() + ": " + scenarioWithIndex.getScenario().getDescription();
 
         scenarioElement.appendChild(createDecisionList(decisions, coverageScenarioListView.getDecisionElement()));
 

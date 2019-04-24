@@ -19,7 +19,11 @@
 <div id="kieDockPanelCoverageReport" class="uf-scroll-panel">
     <div class="tab-pane kie-tab-pane--scesim-panel">
 
-        <div class="row">
+        <div class="row" data-field="emptyStatus">
+            <div class="col-xs-12 col-md-12" data-field="emptyStatusText"></div>
+        </div>
+
+        <div class="row" data-field="summarySection">
             <div class="col-xs-12 col-md-8">
                 <dl class="dl-horizontal kie-coverage__dl-horizontal clearfix">
                     <dt>
@@ -45,36 +49,29 @@
             </div>
         </div>
 
-        <hr class="kie-dock__divider"/>
-        Number of times a Decision has been evaluated
-        <br/>
-        <div style="margin-top: 20px; height: 100px">
-            <div style="height: 100%; overflow: auto">
-                <dl data-field="decisionList" class="dl-horizontal kie-coverage__dl-horizontal"></dl>
+        <div class="row" data-field="decisionListSection">
+            <div class="col-xs-12 col-md-12">
+                <hr class="kie-dock__divider"/>
+                Number of times a Decision has been evaluated
+                <br/>
+                <div style="margin-top: 20px; height: 100px">
+                    <div style="height: 100%; overflow: auto">
+                        <dl data-field="decisionList" class="dl-horizontal kie-coverage__dl-horizontal"></dl>
+                    </div>
+                </div>
             </div>
         </div>
-        <hr class="kie-dock__divider"/>
-        <br/>
 
-        <ul class="list-group" data-field="scenarioList">
-            <!--<li class="list-group-item">-->
-                <!--Decision evaluated for Scenario 1-->
-                <!--<ul class="list-group">-->
-                    <!--<li class="list-group-item">-->
-                        <!--Decision evaluated for Scenario 1-->
-                    <!--</li>-->
-                <!--</ul>-->
-                <!--&lt;!&ndash;<button class="btn btn-default pull-right" type="button">Decision table</button>&ndash;&gt;-->
-            <!--</li>-->
-            <!--<li class="list-group-item">-->
-            <!--Decision evaluated for Scenario 2-->
-            <!--<button class="btn btn-default pull-right" type="button">Decision table</button>-->
-            <!--</li>-->
-            <!--<li class="list-group-item">-->
-            <!--Decision evaluated for Scenario 3-->
-            <!--<button class="btn btn-default pull-right" type="button">Decision table</button>-->
-            <!--</li>-->
-        </ul>
+        <div class="row" data-field="scenarioListSection">
+            <div class="col-xs-12 col-md-12">
+                <hr class="kie-dock__divider"/>
+                <br/>
+
+                <ul class="list-group" data-field="scenarioList">
+                </ul>
+            </div>
+        </div>
     </div>
+
 </div>
-<!-- END OF DROOLS-3741 COVERAGE REPORT TAB -->
+<!-- END OF COVERAGE REPORT TAB -->

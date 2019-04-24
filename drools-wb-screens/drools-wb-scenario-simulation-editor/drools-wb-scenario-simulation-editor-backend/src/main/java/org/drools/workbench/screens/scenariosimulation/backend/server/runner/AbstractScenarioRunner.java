@@ -68,7 +68,6 @@ public abstract class AbstractScenarioRunner extends Runner {
         this.expressionEvaluatorFactory = expressionEvaluatorFactory;
     }
 
-    // FIXME
     @Override
     public void run(RunNotifier notifier) {
         simulationRunMetadataBuilder = SimulationRunMetadataBuilder.create();
@@ -100,8 +99,8 @@ public abstract class AbstractScenarioRunner extends Runner {
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(descriptionForScenario, indexedScenarioException));
         } catch (Throwable e) {
-            IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, new StringBuilder().append("Unexpected test error in scenario '")
-                    .append(scenarioWithIndex.getScenario().getDescription()).append("'").toString(), e);
+            IndexedScenarioException indexedScenarioException = new IndexedScenarioException(index, "Unexpected test error in scenario '" +
+                    scenarioWithIndex.getScenario().getDescription() + "'", e);
             indexedScenarioException.setFileName(fileName);
             runNotifier.fireTestFailure(new Failure(descriptionForScenario, indexedScenarioException));
         }

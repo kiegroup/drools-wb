@@ -106,6 +106,7 @@ import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
+import static org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel.Type;
 import static org.drools.workbench.screens.scenariosimulation.service.ImportExportType.CSV;
 
 @Dependent
@@ -128,6 +129,7 @@ public class ScenarioSimulationEditorPresenter
     protected ScenarioSimulationContext context;
     protected ScenarioSimulationModel model;
     protected TestRunnerReportingPanel testRunnerReportingPanel;
+    protected SimulationRunResult lastRunResult;
     private ImportsWidgetPresenter importsWidget;
     private AsyncPackageDataModelOracleFactory oracleFactory;
     private Caller<ScenarioSimulationService> service;
@@ -140,8 +142,6 @@ public class ScenarioSimulationEditorPresenter
     private ConfirmPopupPresenter confirmPopupPresenter;
 
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
-
-    private SimulationRunResult lastRunResult;
 
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
     protected long scenarioPresenterId;
@@ -361,9 +361,6 @@ public class ScenarioSimulationEditorPresenter
         }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
-
-//        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
-
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
@@ -490,7 +487,6 @@ public class ScenarioSimulationEditorPresenter
                 factMapping.getExpressionElements().isEmpty();
     }
 
-    // FIXME to test
     protected void populateRightDocks(String identifier) {
         if (dataManagementStrategy != null) {
             final PlaceRequest currentRightDockPlaceRequest = getCurrentRightDockPlaceRequest(identifier);
@@ -533,20 +529,22 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.initCheatSheet(type);
     }
 
     protected void setSettings(SettingsView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
     }
 
-    // FIXME to test
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
+        Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? Type.RULE : Type.DMN;
         if (lastRunResult != null) {
-            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata());
+            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
+        } else {
+            presenter.clear(type);
         }
     }
 
@@ -589,7 +587,6 @@ public class ScenarioSimulationEditorPresenter
         return IDENTIFIER;
     }
 
-    // FIXME to test
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModelContent content) {
         //Path is set to null when the Editor is closed (which can happen before async calls complete).
         if (versionRecordManager.getCurrentPath() == null) {
@@ -597,7 +594,7 @@ public class ScenarioSimulationEditorPresenter
         }
         packageName = content.getDataModel().getPackageName();
         resetEditorPages(content.getOverview());
-        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
+        if (Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
             dataManagementStrategy = new DMODataManagementStrategy(oracleFactory, context);
         } else {
             dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, context, eventBus);
@@ -605,6 +602,7 @@ public class ScenarioSimulationEditorPresenter
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
+        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
         model = content.getModel();
         if (dataManagementStrategy instanceof DMODataManagementStrategy) {
             importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),
@@ -634,10 +632,9 @@ public class ScenarioSimulationEditorPresenter
         return settingsView.map(SettingsView::getPresenter);
     }
 
-    // FIXME to test
     protected Optional<CoverageReportView.Presenter> getCoverageReportPresenter(PlaceRequest placeRequest) {
-        final Optional<CoverageReportView> settingsView = getCoverageReportView(placeRequest);
-        return settingsView.map(CoverageReportView::getPresenter);
+        final Optional<CoverageReportView> coverageReportViewMap = getCoverageReportView(placeRequest);
+        return coverageReportViewMap.map(CoverageReportView::getPresenter);
     }
 
     protected Command getSaveCommand() {

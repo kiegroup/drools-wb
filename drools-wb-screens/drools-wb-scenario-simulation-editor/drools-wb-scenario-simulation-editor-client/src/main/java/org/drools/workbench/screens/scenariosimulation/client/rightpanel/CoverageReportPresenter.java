@@ -26,10 +26,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunMetadata;
 import org.uberfire.client.annotations.WorkbenchScreen;
-import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.IDENTIFIER;
@@ -42,15 +42,10 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.CoverageReport";
 
-    protected Command saveCommand;
-
-    @Inject
     protected CoverageReportDonutPresenter coverageReportDonutPresenter;
 
-    @Inject
     protected CoverageDecisionElementPresenter coverageDecisionElementPresenter;
 
-    @Inject
     protected CoverageScenarioListPresenter coverageScenarioListPresenter;
 
     public CoverageReportPresenter() {
@@ -59,9 +54,15 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     }
 
     @Inject
-    public CoverageReportPresenter(CoverageReportView view) {
+    public CoverageReportPresenter(CoverageReportView view,
+                                   CoverageReportDonutPresenter coverageReportDonutPresenter,
+                                   CoverageDecisionElementPresenter coverageDecisionElementPresenter,
+                                   CoverageScenarioListPresenter coverageScenarioListPresenter) {
         super(view);
         title = ScenarioSimulationEditorConstants.INSTANCE.coverageReport();
+        this.coverageReportDonutPresenter = coverageReportDonutPresenter;
+        this.coverageDecisionElementPresenter = coverageDecisionElementPresenter;
+        this.coverageScenarioListPresenter = coverageScenarioListPresenter;
     }
 
     @PostConstruct
@@ -71,28 +72,40 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         coverageScenarioListPresenter.initScenarioList(view.getScenarioList());
     }
 
-    // FIXME to test
     @Override
-    public void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata) {
-        populateSummary(simulationRunMetadata.getAvailable(),
-                        simulationRunMetadata.getExecuted(),
-                        simulationRunMetadata.getCoveragePercentage());
+    public void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, ScenarioSimulationModel.Type type) {
+        if(ScenarioSimulationModel.Type.DMN.equals(type)) {
+            populateSummary(simulationRunMetadata.getAvailable(),
+                            simulationRunMetadata.getExecuted(),
+                            simulationRunMetadata.getCoveragePercentage());
 
-        populateDecisionList(simulationRunMetadata.getOutputCounter());
+            populateDecisionList(simulationRunMetadata.getOutputCounter());
 
-        populateScenarioList(simulationRunMetadata.getScenarioCounter());
+            populateScenarioList(simulationRunMetadata.getScenarioCounter());
+            view.show();
+        }
+    }
+
+    @Override
+    public void clear(ScenarioSimulationModel.Type type) {
+        if(ScenarioSimulationModel.Type.RULE.equals(type)) {
+            view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.coverageNotSupportedForRule());
+        }
+        else {
+            view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.runATestToSeeCoverageReport());
+        }
+        view.hide();
     }
 
     protected void populateSummary(int available, int executed, double coveragePercentage) {
-        view.getReportAvailable().textContent = available + "";
-        view.getReportExecuted().textContent = executed + "";
-        view.getReportCoverage().textContent = coveragePercentage + " %";
+        view.setReportAvailable(available + "");
+        view.setReportExecuted(executed + "");
+        view.setReportCoverage(coveragePercentage + " %");
 
         // donut chart
         coverageReportDonutPresenter
                 .showCoverageReport(executed,
                                     available - executed);
-
     }
 
     protected void populateDecisionList(Map<String, Integer> outputCounter) {
@@ -112,6 +125,4 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
             coverageScenarioListPresenter.addScenarioGroup(scenarioWithIndex, scenarioCounter.get(scenarioWithIndex));
         }
     }
-
-
 }
