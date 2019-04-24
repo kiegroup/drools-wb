@@ -248,4 +248,6 @@ public interface ScenarioSimulationEditorConstants
     String importFailedMessage();
 
     String importErrorTitle();
+
+    String running();
 }
