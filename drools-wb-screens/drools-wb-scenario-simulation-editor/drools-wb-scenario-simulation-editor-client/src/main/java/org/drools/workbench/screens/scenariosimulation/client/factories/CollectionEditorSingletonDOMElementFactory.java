@@ -50,7 +50,8 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     public CollectionEditorSingletonDOMElementFactory(final GridLienzoPanel gridPanel,
                                                       final GridLayer gridLayer,
                                                       final GridWidget gridWidget,
-                                                      ScenarioSimulationContext scenarioSimulationContext, ViewsProvider viewsProvider) {
+                                                      final ScenarioSimulationContext scenarioSimulationContext,
+                                                      final ViewsProvider viewsProvider) {
         super(gridPanel,
               gridLayer,
               gridWidget);
@@ -80,11 +81,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             this.e = createDomElementInternal(widget, gridLayer, gridWidget);
-            final CollectionEditorDOMElement collectionEditorDOMElement = this.e;
-            widget.addCloseCompositeEventHandler(event -> {
-                commonCloseHandling(collectionEditorDOMElement);
-            });
-            widget.addSaveEditorEventHandler(event -> flush());
         });
         return e;
     }
@@ -133,7 +129,10 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1));
     }
 
-    protected CollectionEditorDOMElement internalCreateDomElement(CollectionViewImpl collectionEditorView, GridLayer gridLayer, GridWidget gridWidget) {
+    @Override
+    public CollectionEditorDOMElement createDomElementInternal(final CollectionViewImpl collectionEditorView,
+                                                               final GridLayer gridLayer,
+                                                               final GridWidget gridWidget) {
         return new CollectionEditorDOMElement(collectionEditorView, gridLayer, gridWidget);
     }
 
@@ -177,10 +176,12 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     @Override
-    protected CollectionEditorDOMElement createDomElementInternal(final CollectionViewImpl widget,
-                                                                  final GridLayer gridLayer,
-                                                                  final GridWidget gridWidget) {
-        return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
+    public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
+
+        widget.addCloseCompositeEventHandler(event -> {
+            commonCloseHandling(widgetDomElement);
+        });
+        widget.addSaveEditorEventHandler(event -> flush());
     }
 }
 
