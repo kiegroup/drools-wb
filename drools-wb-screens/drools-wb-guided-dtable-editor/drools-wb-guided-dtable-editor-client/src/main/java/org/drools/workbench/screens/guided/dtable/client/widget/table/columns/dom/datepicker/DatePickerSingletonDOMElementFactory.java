@@ -110,7 +110,7 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
     }
 
     @Override
-    public void registerDomHandlers(final DatePicker widget, final DatePickerDOMElement widgetDomElement) {
+    public void registerHandlers(final DatePicker widget, final DatePickerDOMElement widgetDomElement) {
         widget.addChangeDateHandler((e) -> doValueUpdate());
         widget.addDomHandler(new KeyDownHandlerDatePicker(gridPanel,
                                                           gridLayer,
