@@ -73,9 +73,6 @@ public class ListBoxSingletonDOMElementFactoryTest {
     @Mock
     private GuidedDecisionTableView gridWidget;
 
-    @Mock
-    private GridBodyCellRenderContext cellRenderContext;
-
     private ListBoxSingletonDOMElementFactory<String, ListBox> factory;
 
     @Before
@@ -100,8 +97,7 @@ public class ListBoxSingletonDOMElementFactoryTest {
     @Test
     public void checkDOMElementCreationChecksListBoxIsMultipleSelect() {
         factory.createDomElement(gridLayer,
-                                 gridWidget,
-                                 cellRenderContext);
+                                 gridWidget);
 
         verify(listBox).addMouseDownHandler(any(MouseDownHandler.class));
         verify(listBox).addKeyDownHandler(any(KeyDownHandler.class));
@@ -112,8 +108,7 @@ public class ListBoxSingletonDOMElementFactoryTest {
     @Test
     public void checkDOMElementCreationMouseDownHandler() {
         factory.createDomElement(gridLayer,
-                                 gridWidget,
-                                 cellRenderContext);
+                                 gridWidget);
 
         final ArgumentCaptor<MouseDownHandler> mouseDownHandlerCaptor = ArgumentCaptor.forClass(MouseDownHandler.class);
 

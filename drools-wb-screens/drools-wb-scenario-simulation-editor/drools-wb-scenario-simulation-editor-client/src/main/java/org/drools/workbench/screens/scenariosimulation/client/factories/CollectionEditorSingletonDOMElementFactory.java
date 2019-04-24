@@ -33,7 +33,6 @@ import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
-import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
@@ -66,8 +65,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     public CollectionEditorDOMElement createDomElement(final GridLayer gridLayer,
-                                                       final GridWidget gridWidget,
-                                                       final GridBodyCellRenderContext context) {
+                                                       final GridWidget gridWidget) {
         if (this.widget != null) {
             this.widget.close();
         }
