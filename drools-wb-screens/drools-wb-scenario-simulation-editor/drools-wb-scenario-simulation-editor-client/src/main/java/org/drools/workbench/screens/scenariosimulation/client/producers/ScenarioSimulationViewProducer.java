@@ -52,10 +52,10 @@ public class ScenarioSimulationViewProducer {
         final ScenarioContextMenuRegistry scenarioContextMenuRegistry = scenarioGridPanelProducer.getScenarioContextMenuRegistry();
         scenarioContextMenuRegistry.setEventBus(eventBus);
         scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
-        scenarioSimulationGridPanelClickHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
+        scenarioSimulationGridPanelClickHandler.setScenarioGridPanel(scenarioGridPanel);
         scenarioSimulationGridPanelClickHandler.setEventBus(eventBus);
         scenarioContextMenuRegistry.setErrorReportPopupPresenter(errorReportPopupPresenter);
-        commonOnMoveHandler.setScenarioGrid(scenarioGridPanel.getScenarioGrid());
+        commonOnMoveHandler.setScenarioGridPanel(scenarioGridPanel);
         commonOnMoveHandler.setErrorReportPopupPresenter(errorReportPopupPresenter);
         scenarioGridPanel.addHandlers(scenarioSimulationGridPanelClickHandler, commonOnMoveHandler);
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);

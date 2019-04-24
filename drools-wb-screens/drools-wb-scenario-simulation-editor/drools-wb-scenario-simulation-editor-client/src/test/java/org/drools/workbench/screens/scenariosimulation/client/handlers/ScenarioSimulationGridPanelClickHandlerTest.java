@@ -65,8 +65,8 @@ public class ScenarioSimulationGridPanelClickHandlerTest extends AbstractScenari
     }
 
     @Test
-    public void setScenarioGrid() {
-        scenarioSimulationGridPanelClickHandler.setScenarioGrid(scenarioGridMock);
+    public void setScenarioGridPanel() {
+        scenarioSimulationGridPanelClickHandler.setScenarioGridPanel(scenarioGridPanelMock);
         assertEquals(scenarioGridMock, scenarioSimulationGridPanelClickHandler.scenarioGrid);
     }
 

@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popover.PopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -50,6 +52,8 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
     private final static Double CELL_WIDTH = 50d;
     private final static Integer LARGE_LAYER = 1000;
     private final static Integer TINY_LAYER = 100;
+    private final static Integer SCROLL_TOP = 15;
+    private final static Integer SCROLL_LEFT = 75;
     private final static String RAW_VALUE = "raw";
     private final static String ERROR_VALUE = "error";
 
@@ -61,6 +65,10 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
     private Scenario scenarioMock;
     @Mock
     private FactMappingValue factMappingValueMock;
+    @Mock
+    private AbsolutePanel scrollPanel;
+    @Mock
+    private Element element;
 
     @Before
     public void setup() {
@@ -69,6 +77,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
             {
                 errorReportPopupPresenter = errorReportPopupPresenterMock;
                 scenarioGrid = scenarioGridMock;
+                scenarioGridPanel = scenarioGridPanelMock;
             }
 
             @Override
@@ -88,6 +97,10 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         when(factMappingValueMock.getErrorValue()).thenReturn(ERROR_VALUE);
         when(scenarioGridLayerMock.getWidth()).thenReturn(LARGE_LAYER);
         when(gridColumnMock.getWidth()).thenReturn(CELL_WIDTH);
+        when(scenarioGridPanelMock.getScrollPanel()).thenReturn(scrollPanel);
+        when(scrollPanel.getElement()).thenReturn(element);
+        when(element.getScrollTop()).thenReturn(0);
+        when(element.getScrollLeft()).thenReturn(0);
     }
 
     @Test
@@ -135,6 +148,28 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq((int) (DX - (CELL_WIDTH / 2))),
                 eq(DY),
                 eq(PopoverView.Position.LEFT));
+    }
+
+    @Test
+    public void manageBodyCoordinates_WithScroll() {
+        when(element.getScrollTop()).thenReturn(SCROLL_TOP);
+        when(element.getScrollLeft()).thenReturn(SCROLL_LEFT);
+        commonOnMoveHandler.manageBodyCoordinates(ROW_INDEX, COLUMN_INDEX);
+        verify(commonOnMoveHandler, never()).resetCurrentlyShowBodyCoordinates();
+        verify(simulationMock, times(1)).getScenarioByIndex(eq(ROW_INDEX));
+        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
+        verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
+        verify(commonOnMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
+        verify(errorReportPopupPresenterMock, times(1)).show(
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(RAW_VALUE, ERROR_VALUE)),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
+                isA(Command.class),
+                isA(Command.class),
+                eq((int) ((CELL_WIDTH / 2) + DX) - SCROLL_LEFT),
+                eq(DY - SCROLL_TOP),
+                eq(PopoverView.Position.RIGHT));
     }
 
     @Test

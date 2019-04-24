@@ -19,6 +19,7 @@ import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
 import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.convertDOMToGridCoordinate;
@@ -27,14 +28,16 @@ import static org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities.
 
 public abstract class AbstractScenarioSimulationGridPanelHandler  {
 
+    protected ScenarioGridPanel scenarioGridPanel;
     protected ScenarioGrid scenarioGrid;
     protected BaseGridRendererHelper rendererHelper;
 
     public AbstractScenarioSimulationGridPanelHandler() {
     }
 
-    public void setScenarioGrid(ScenarioGrid scenarioGrid) {
-        this.scenarioGrid = scenarioGrid;
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
+        this.scenarioGrid = scenarioGridPanel.getScenarioGrid();
         this.rendererHelper = scenarioGrid.getRendererHelper();
     }
 

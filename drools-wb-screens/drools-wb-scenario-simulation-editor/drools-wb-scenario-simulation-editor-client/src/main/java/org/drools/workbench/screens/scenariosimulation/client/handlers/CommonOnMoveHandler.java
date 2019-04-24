@@ -27,6 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popover.PopoverVie
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -44,6 +45,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     private static String UNDEFINED = "undefined";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
+    protected ScenarioGridPanel scenarioGridPanel;
 
     protected Integer currentlyShownHeaderRowIndex = -1;
     protected Integer currentlyShownHeaderColumnIndex = -1;
@@ -85,20 +87,29 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         final FactMapping factMapping = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
-            /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show its */
+            /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
             if (factMappingValue.isError()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
                 Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
                 PopoverView.Position position = PopoverView.Position.RIGHT;
                 int xMiddleWidth = (int) column.getWidth() / 2;
                 int xPosition = (int) xYCell.getX() + xMiddleWidth;
+                /* It determines if the popover should be draw on the RIGHT or in the LEFT of the cell */
                 if (xPosition  + POPOVER_WIDTH > scenarioGrid.getLayer().getWidth()) {
                     xPosition = (int) xYCell.getX() - xMiddleWidth;
                     position = PopoverView.Position.LEFT;
                 }
+                /* Handling scrolling x-position */
+                int scrollX = scenarioGridPanel.getScrollPanel().getElement().getScrollLeft();
+                xPosition = xPosition - scrollX;
+                /* Handling scrolling y-position */
                 int yPosition = (int) xYCell.getY();
+                int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
+                yPosition = yPosition - scrollY;
+                /* Parameters for the error message */
                 final Object expectedValue = factMappingValue.getRawValue();
                 final Object errorValue = factMappingValue.getErrorValue();
+                /* Showing the popover */
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
                                                        expectedValue.toString(), errorValue.toString()),

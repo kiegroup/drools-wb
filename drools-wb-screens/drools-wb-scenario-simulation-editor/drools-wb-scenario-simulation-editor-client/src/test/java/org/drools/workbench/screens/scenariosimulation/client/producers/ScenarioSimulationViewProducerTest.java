@@ -75,10 +75,10 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         verify(scenarioGridPanelProducerMock, times(1)).getScenarioContextMenuRegistry();
         verify(scenarioContextMenuRegistryMock).setEventBus(eventBusMock);
         verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setScenarioContextMenuRegistry(eq(scenarioSimulationViewProducer.getScenarioContextMenuRegistry()));
-        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setScenarioGrid(eq(scenarioGridMock));
+        verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
         verify(scenarioSimulationGridPanelClickHandlerMock, times(1)).setEventBus(eq(eventBusMock));
         verify(scenarioContextMenuRegistryMock, times(1)).setErrorReportPopupPresenter(errorReportPopupPresenterMock);
-        verify(commonOnMoveHandlerMock, times(1)).setScenarioGrid(eq(scenarioGridMock));
+        verify(commonOnMoveHandlerMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
         verify(commonOnMoveHandlerMock, times(1)).setErrorReportPopupPresenter(eq(errorReportPopupPresenterMock));
         verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationGridPanelClickHandlerMock), eq(commonOnMoveHandlerMock));
         verify(retrieved, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
