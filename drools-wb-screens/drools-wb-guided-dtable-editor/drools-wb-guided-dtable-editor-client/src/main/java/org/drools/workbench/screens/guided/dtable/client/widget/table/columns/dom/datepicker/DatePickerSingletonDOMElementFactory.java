@@ -72,8 +72,7 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
         widget.addDomHandler(new KeyDownHandlerDatePicker(gridPanel,
                                                           gridLayer,
                                                           gridWidget,
-                                                          this,
-                                                          context),
+                                                          this),
                              KeyDownEvent.getType());
 
         return e;
