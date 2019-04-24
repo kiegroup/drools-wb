@@ -27,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.client.popover.PopoverVie
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -45,7 +44,6 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     private static String UNDEFINED = "undefined";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
-    protected ScenarioGridPanel scenarioGridPanel;
 
     protected Integer currentlyShownHeaderRowIndex = -1;
     protected Integer currentlyShownHeaderColumnIndex = -1;

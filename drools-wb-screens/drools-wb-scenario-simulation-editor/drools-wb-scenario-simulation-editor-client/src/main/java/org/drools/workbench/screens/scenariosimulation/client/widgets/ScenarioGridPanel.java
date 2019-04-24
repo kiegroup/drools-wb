@@ -26,6 +26,8 @@ import com.ait.lienzo.client.core.event.NodeMouseOutEvent;
 import com.ait.lienzo.client.core.event.NodeMouseOutHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
+import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
@@ -40,7 +42,8 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPane
  */
 @Dependent
 public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHandler,
-                                                                  NodeMouseMoveHandler {
+                                                                  NodeMouseMoveHandler,
+                                                                  ScrollHandler {
 
     private EventBus eventBus;
     private ScenarioSimulationGridPanelClickHandler clickHandler;
@@ -61,6 +64,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
                                                                         ClickEvent.getType()));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseOutHandler(this));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseMoveHandler(this));
+        handlerRegistrations.add(getScrollPanel().addDomHandler(this, ScrollEvent.getType()));
     }
 
     public ScenarioGridLayer getScenarioGridLayer() {
@@ -95,6 +99,12 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
     @Override
     public void onNodeMouseMove(NodeMouseMoveEvent event) {
         commonOnMoveHandler.handleOnMove(event.getX(), event.getY());
+    }
+
+    @Override
+    public void onScroll(ScrollEvent scrollEvent) {
+        clickHandler.hideMenus();
+        commonOnMoveHandler.hidePopover();
     }
 
     public void unregister() {
