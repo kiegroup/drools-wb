@@ -60,15 +60,6 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
         };
     }
 
-    @Override
-    public DatePickerDOMElement createDomElement(final GridLayer gridLayer,
-                                                 final GridWidget gridWidget) {
-        this.widget = createWidget();
-        this.e = createDomElementInternal(widget, gridLayer, gridWidget);
-
-        return e;
-    }
-
     private void doValueUpdate() {
         flush();
         destroyResources();
