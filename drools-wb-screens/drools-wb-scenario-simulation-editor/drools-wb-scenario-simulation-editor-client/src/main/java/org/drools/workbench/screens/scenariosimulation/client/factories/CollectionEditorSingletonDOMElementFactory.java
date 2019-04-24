@@ -79,7 +79,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             final int actualIndex = model.getColumns().indexOf(col);
             final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
-            this.e = createDomElementInternal();
+            this.e = createDomElementInternal(widget, gridLayer, gridWidget);
             final CollectionEditorDOMElement collectionEditorDOMElement = this.e;
             widget.addCloseCompositeEventHandler(event -> {
                 commonCloseHandling(collectionEditorDOMElement);
@@ -177,7 +177,9 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     @Override
-    protected CollectionEditorDOMElement createDomElementInternal() {
+    protected CollectionEditorDOMElement createDomElementInternal(final CollectionViewImpl widget,
+                                                                  final GridLayer gridLayer,
+                                                                  final GridWidget gridWidget) {
         return new CollectionEditorDOMElement(widget, gridLayer, gridWidget);
     }
 }

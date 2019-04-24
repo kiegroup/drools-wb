@@ -17,6 +17,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.d
 
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
@@ -42,7 +43,9 @@ public abstract class TextBoxSingletonDOMElementFactory<T, W extends TextBox> ex
     }
 
     @Override
-    protected TextBoxDOMElement<T, W> createDomElementInternal() {
+    protected TextBoxDOMElement<T, W> createDomElementInternal(final W widget,
+                                                               final GridLayer gridLayer,
+                                                               final GridWidget gridWidget) {
         return new TextBoxDOMElement<>(widget,
                                        gridLayer,
                                        gridWidget);

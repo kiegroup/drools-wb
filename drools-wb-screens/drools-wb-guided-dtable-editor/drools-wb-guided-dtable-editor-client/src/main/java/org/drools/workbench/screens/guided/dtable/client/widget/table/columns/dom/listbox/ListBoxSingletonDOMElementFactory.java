@@ -17,6 +17,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table.columns.d
 
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.gwtbootstrap3.client.ui.ListBox;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
@@ -42,7 +43,9 @@ public abstract class ListBoxSingletonDOMElementFactory<T, W extends ListBox> ex
     }
 
     @Override
-    protected ListBoxDOMElement<T, W> createDomElementInternal() {
+    protected ListBoxDOMElement<T, W> createDomElementInternal(final W widget,
+                                                               final GridLayer gridLayer,
+                                                               final GridWidget gridWidget) {
         return new ListBoxDOMElement<>(widget,
                                        gridLayer,
                                        gridWidget,

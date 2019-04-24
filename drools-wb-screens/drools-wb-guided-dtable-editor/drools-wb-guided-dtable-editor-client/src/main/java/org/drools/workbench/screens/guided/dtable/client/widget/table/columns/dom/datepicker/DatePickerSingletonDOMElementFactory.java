@@ -64,7 +64,7 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
     public DatePickerDOMElement createDomElement(final GridLayer gridLayer,
                                                  final GridWidget gridWidget) {
         this.widget = createWidget();
-        this.e = createDomElementInternal();
+        this.e = createDomElementInternal(widget, gridLayer, gridWidget);
 
         return e;
     }
@@ -103,7 +103,9 @@ public class DatePickerSingletonDOMElementFactory extends SingleValueSingletonDO
     }
 
     @Override
-    protected DatePickerDOMElement createDomElementInternal() {
+    protected DatePickerDOMElement createDomElementInternal(final DatePicker widget,
+                                                            final GridLayer gridLayer,
+                                                            final GridWidget gridWidget) {
         return new DatePickerDOMElement(widget,
                                         gridLayer,
                                         gridWidget);
