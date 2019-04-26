@@ -339,7 +339,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     public void onEvent(SetHeaderCellValueEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
         context.getStatus().setColumnIndex(event.getColumnIndex());
-        context.getStatus().setHeaderCellElements(event.getHeaderCellElements());
+        context.getStatus().setHeaderCellValue(event.getHeaderCellValue());
         commonExecution(context, new SetHeaderCellValueCommand(event.isInstanceHeader(), event.isPropertyHeader()));
     }
 

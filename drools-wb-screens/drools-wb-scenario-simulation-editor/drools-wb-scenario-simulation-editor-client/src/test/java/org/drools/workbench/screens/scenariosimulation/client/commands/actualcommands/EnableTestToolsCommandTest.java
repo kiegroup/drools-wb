@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class EnableTestToolsCommandTest extends AbstractScenarioSimulationCommandTest {
 
-    private static final String FACT_NAME = "FACT_NAME";
+
 
     @Before
     public void setup() {

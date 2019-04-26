@@ -211,9 +211,9 @@ public class ScenarioSimulationContext {
         protected List<String> propertyNameElements;
 
         /**
-         * The <code>List</code> of elements of a header cell
+         * The <b>content</b> of a header cell
          */
-        protected List<String> headerCellElements;
+        protected String headerCellValue;
 
         /**
          * Disable the <b>TestTools</b>
@@ -369,12 +369,12 @@ public class ScenarioSimulationContext {
             this.gridCellValue = gridCellValue;
         }
 
-        public List<String> getHeaderCellElements() {
-            return headerCellElements;
+        public String getHeaderCellValue() {
+            return headerCellValue;
         }
 
-        public void setHeaderCellElements(List<String> headerCellElements) {
-            this.headerCellElements = headerCellElements;
+        public void setHeaderCellValue(String headerCellValue) {
+            this.headerCellValue = headerCellValue;
         }
 
         public Simulation getSimulation() {

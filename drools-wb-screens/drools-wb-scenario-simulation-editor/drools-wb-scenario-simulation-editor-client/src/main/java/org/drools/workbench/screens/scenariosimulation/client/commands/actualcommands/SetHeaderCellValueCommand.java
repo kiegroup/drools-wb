@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.enterprise.context.Dependent;
@@ -45,23 +47,25 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
     @Override
     protected void internalExecute(ScenarioSimulationContext context) throws Exception {
         final ScenarioSimulationContext.Status status = context.getStatus();
-        List<String> nameElements = status.getHeaderCellElements();
+        String headerCellValue = status.getHeaderCellValue();
+        List<String> nameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean valid = false;
         if (isInstanceHeader) {
-            valid = validateInstanceHeader(context, nameElements, status.getColumnIndex());
+            valid = validateInstanceHeader(context, headerCellValue, status.getColumnIndex());
         }  else if (isPropertyHeader) {
             valid = validatePropertyHeader(context, nameElements, status.getColumnIndex());
         }
         if (valid) {
-            context.getModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), nameElements);
+            context.getModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
         } else {
-            throw new Exception("Name \"" + String.join(".", nameElements) + "\" cannot be used");
+            throw new Exception("Name \"" + String.join(".", headerCellValue) + "\" cannot be used");
         }
     }
 
-    protected boolean validateInstanceHeader(ScenarioSimulationContext context, List<String> instanceNameElements, int columnIndex) {
+    protected boolean validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) {
+        List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean isADataType = instanceNameElements.size() == 1 && context.getDataObjectFieldsMap().containsKey(instanceNameElements.get(0));
-        return context.getModel().validateInstanceHeaderUpdate(instanceNameElements, columnIndex, isADataType);
+        return context.getModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
     protected boolean validatePropertyHeader(ScenarioSimulationContext context, List<String> propertyNameElements, int columnIndex) {

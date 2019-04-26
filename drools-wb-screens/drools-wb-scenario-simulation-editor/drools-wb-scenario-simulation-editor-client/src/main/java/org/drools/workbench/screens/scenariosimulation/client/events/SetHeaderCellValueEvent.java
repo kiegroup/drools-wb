@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
-import java.util.List;
-
 import com.google.gwt.event.shared.GwtEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetHeaderCellValueEventHandler;
 
@@ -29,7 +27,7 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
 
     private int rowIndex;
     private int columnIndex;
-    private List<String> headerCellElements;
+    private String headerCellValue;
     private final boolean isInstanceHeader;
     private final boolean isPropertyHeader;
 
@@ -37,13 +35,13 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
      *
      * @param rowIndex
      * @param columnIndex
-     * @param headerCellElements
+     * @param headerCellValue
      * @param isPropertyHeader set to <code>true</code> if the edited cell is inside the header
      */
-    public SetHeaderCellValueEvent(int rowIndex, int columnIndex, List<String> headerCellElements, boolean isInstanceHeader, boolean isPropertyHeader) {
+    public SetHeaderCellValueEvent(int rowIndex, int columnIndex, String headerCellValue, boolean isInstanceHeader, boolean isPropertyHeader) {
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
-        this.headerCellElements = headerCellElements;
+        this.headerCellValue = headerCellValue;
         this.isInstanceHeader = isInstanceHeader;
         this.isPropertyHeader = isPropertyHeader;
     }
@@ -61,8 +59,8 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
         return columnIndex;
     }
 
-    public List<String> getHeaderCellElements() {
-        return headerCellElements;
+    public String getHeaderCellValue() {
+        return headerCellValue;
     }
 
     public boolean isInstanceHeader() {
