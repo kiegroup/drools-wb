@@ -532,8 +532,8 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) {
         doReturn(isSamePropertyHeader).when(scenarioGridModel).isSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
-        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(MULTIPART_VALUE_ELEMENTS, columnIndex);
-        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE_ELEMENTS, columnIndex, isPropertyType);
+        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);
         assertEquals(retrieved, expectedValid);
         reset(eventBusMock);
     }

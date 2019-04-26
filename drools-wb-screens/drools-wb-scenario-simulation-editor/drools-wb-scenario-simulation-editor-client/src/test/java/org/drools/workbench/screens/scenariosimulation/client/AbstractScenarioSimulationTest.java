@@ -274,7 +274,7 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public boolean validatePropertyHeaderUpdate(List<String> propertyNameElements, int columnIndex, boolean isPropertyType) {
+            public boolean validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
                 return true;
             }
         });

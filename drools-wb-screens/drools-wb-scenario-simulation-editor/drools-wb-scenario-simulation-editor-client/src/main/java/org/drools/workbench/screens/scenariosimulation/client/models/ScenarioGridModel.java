@@ -717,8 +717,9 @@ public class ScenarioGridModel extends BaseGridData {
         return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex));
     }
 
-    public boolean validatePropertyHeaderUpdate(List<String> propertyNameElements, int columnIndex, boolean isPropertyType) {
-        return (isPropertyType && isSamePropertyHeader(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyNameElements, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyNameElements, columnIndex));
+    public boolean validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
+        List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(propertyHeaderCellValue.split("\\.")));
+        return (isPropertyType && isSamePropertyHeader(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex));
     }
 
     /**
@@ -861,12 +862,11 @@ public class ScenarioGridModel extends BaseGridData {
 
     /**
      * Verify the given value is not already used as property header name <b>inside the same group</b>
-     * @param propertyNameElements
+     * @param propertyHeaderCellValue
      * @param columnIndex
      * @return
      */
-    protected boolean isUniquePropertyHeaderTitle(List<String> propertyNameElements, int columnIndex) {
-        String value = String.join(".", propertyNameElements);
+    protected boolean isUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return IntStream.range(0, getColumnCount())
@@ -875,7 +875,7 @@ public class ScenarioGridModel extends BaseGridData {
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getPropertyHeaderMetaData)
-                .noneMatch(elem -> Objects.equals(elem.getTitle(), value));
+                .noneMatch(elem -> Objects.equals(elem.getTitle(), propertyHeaderCellValue));
     }
 
     protected boolean isNewInstanceName(String value) {

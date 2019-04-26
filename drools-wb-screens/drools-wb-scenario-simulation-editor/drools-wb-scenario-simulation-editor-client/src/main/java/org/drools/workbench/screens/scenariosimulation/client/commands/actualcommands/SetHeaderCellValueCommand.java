@@ -48,12 +48,11 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
     protected void internalExecute(ScenarioSimulationContext context) throws Exception {
         final ScenarioSimulationContext.Status status = context.getStatus();
         String headerCellValue = status.getHeaderCellValue();
-        List<String> nameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean valid = false;
         if (isInstanceHeader) {
             valid = validateInstanceHeader(context, headerCellValue, status.getColumnIndex());
         }  else if (isPropertyHeader) {
-            valid = validatePropertyHeader(context, nameElements, status.getColumnIndex());
+            valid = validatePropertyHeader(context, headerCellValue, status.getColumnIndex());
         }
         if (valid) {
             context.getModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
@@ -68,12 +67,13 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
         return context.getModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
-    protected boolean validatePropertyHeader(ScenarioSimulationContext context, List<String> propertyNameElements, int columnIndex) {
+    protected boolean validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) {
+        List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         final FactMapping factMappingByIndex = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();
         final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
         boolean isPropertyType = factModelTree != null && recursivelyFindIsPropertyType(context, factModelTree, propertyNameElements);
-        return context.getModel().validatePropertyHeaderUpdate(propertyNameElements, columnIndex, isPropertyType);
+        return context.getModel().validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
     }
 
     protected boolean recursivelyFindIsPropertyType(ScenarioSimulationContext context, FactModelTree factModelTree, List<String> propertyNameElements) {
