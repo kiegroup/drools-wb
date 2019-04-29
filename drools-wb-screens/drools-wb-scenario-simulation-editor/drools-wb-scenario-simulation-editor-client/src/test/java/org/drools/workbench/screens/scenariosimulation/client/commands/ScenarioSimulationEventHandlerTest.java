@@ -94,7 +94,12 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
+<<<<<<< HEAD
 import static org.mockito.Matchers.anyListOf;
+=======
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+>>>>>>> Do not focus panel from AbstractScenarioSimulationCommand
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -166,7 +171,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private ConfirmPopupPresenter confirmPopupPresenterMock;
     @Mock
-    private  FileUploadPopupPresenter fileUploadPopupPresenterMock;
+    private FileUploadPopupPresenter fileUploadPopupPresenterMock;
 
     private ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
@@ -232,6 +237,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         AppendColumnEvent event = new AppendColumnEvent(COLUMN_GROUP);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(AppendColumnCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -239,6 +245,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         AppendRowEvent event = new AppendRowEvent();
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(AppendRowCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -247,6 +254,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DeleteColumnCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -254,6 +262,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         DeleteRowEvent event = new DeleteRowEvent(ROW_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DeleteRowCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -268,6 +277,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         DuplicateInstanceEvent event = new DuplicateInstanceEvent(COLUMN_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DuplicateInstanceCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -275,6 +285,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         DuplicateRowEvent event = new DuplicateRowEvent(ROW_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(DuplicateRowCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -300,6 +311,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         InsertColumnEvent event = new InsertColumnEvent(COLUMN_INDEX, true, false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(InsertColumnCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -307,6 +319,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         InsertRowEvent event = new InsertRowEvent(ROW_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(InsertRowCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -314,6 +327,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         PrependColumnEvent event = new PrependColumnEvent(COLUMN_GROUP);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(PrependColumnCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -321,6 +335,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         PrependRowEvent event = new PrependRowEvent();
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(PrependRowCommand.class));
+        verify(scenarioGridPanelMock).setFocus(true);
     }
 
     @Test
@@ -356,6 +371,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         SetGridCellValueEvent event = new SetGridCellValueEvent(ROW_INDEX, COLUMN_INDEX, MULTIPART_VALUE);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(SetGridCellValueCommand.class));
+
+        // GridPanel is focused in BlurHandler of:
+        // org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory
+        verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
     }
 
     @Test
@@ -363,6 +382,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         SetHeaderCellValueEvent event = new SetHeaderCellValueEvent(ROW_INDEX, COLUMN_INDEX, MULTIPART_VALUE, true, false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(SetHeaderCellValueCommand.class));
+
+        // GridPanel is focused in BlurHandler of:
+        // org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory
+        verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
     }
 
     @Test
@@ -370,6 +393,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         SetHeaderCellValueEvent event = new SetHeaderCellValueEvent(ROW_INDEX, COLUMN_INDEX, MULTIPART_VALUE, false, true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(SetHeaderCellValueCommand.class));
+
+        // GridPanel is focused in BlurHandler of:
+        // org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory
+        verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
     }
 
     @Test
@@ -401,6 +428,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal), isA(SetInstanceHeaderCommand.class));
+
+        // GridPanel is focused in BlurHandler of:
+        // org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory
+        verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
     }
 
     @Test
@@ -456,6 +487,10 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal), isA(SetPropertyHeaderCommand.class));
+
+        // GridPanel is focused in BlurHandler of:
+        // org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory
+        verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
     }
 
     @Test
