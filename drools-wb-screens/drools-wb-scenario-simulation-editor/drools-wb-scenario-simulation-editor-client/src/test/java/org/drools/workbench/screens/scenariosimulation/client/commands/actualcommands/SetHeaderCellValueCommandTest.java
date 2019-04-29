@@ -37,6 +37,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -60,48 +61,48 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
     }
 
     @Test
-    public void executeInstanceHeaderValid() {
+    public void executeInstanceHeaderValid() throws Exception {
         commonExecute(true, false, true);
     }
 
     @Test
-    public void executeInstanceHeaderInvalid() {
+    public void executeInstanceHeaderInvalid() throws Exception {
         commonExecute(true, false, false);
     }
 
     @Test
-    public void executePropertyHeaderValid() {
+    public void executePropertyHeaderValid() throws Exception {
         commonExecute(false, true, true);
     }
 
     @Test
-    public void executePropertyHeaderInvalid() {
+    public void executePropertyHeaderInvalid() throws Exception {
         commonExecute(false, true, false);
     }
 
     @Test
-    public void executeOtherHeader() {
+    public void executeOtherHeader() throws Exception {
         commonExecute(false, false, false);
     }
 
     @Test
-    public void validateInstanceHeader() {
+    public void validateInstanceHeader() throws Exception {
         commonValidateInstanceHeader(false);
         commonValidateInstanceHeader(true);
     }
 
     @Test
-    public void validatePropertyHeaderNoFactModelMapped() {
+    public void validatePropertyHeaderNoFactModelMapped() throws Exception {
         commonValidatePropertyHeader(false, false);
     }
 
     @Test
-    public void validatePropertyHeaderFactModelMappedNoProperty() {
-        commonValidatePropertyHeader(true, true);
+    public void validatePropertyHeaderFactModelMappedNoProperty() throws Exception {
+        commonValidatePropertyHeader(true, false);
     }
 
     @Test
-    public void validatePropertyHeaderFactModelMappedProperty() {
+    public void validatePropertyHeaderFactModelMappedProperty() throws Exception {
         commonValidatePropertyHeader(true, true);
     }
 
@@ -131,12 +132,12 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
         return toReturn;
     }
 
-    private void commonExecute(boolean isInstanceHeader, boolean isPropertyHeader, boolean isValid) {
+    private void commonExecute(boolean isInstanceHeader, boolean isPropertyHeader, boolean isValid) throws Exception {
         ((SetHeaderCellValueCommand) command).isInstanceHeader = isInstanceHeader;
         ((SetHeaderCellValueCommand) command).isPropertyHeader = isPropertyHeader;
         scenarioSimulationContextLocal.getStatus().setHeaderCellValue(MULTIPART_VALUE);
-        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(MULTIPART_VALUE), eq(COLUMN_INDEX));
-        doReturn(isValid).when(((SetHeaderCellValueCommand) command)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(MULTIPART_VALUE), eq(COLUMN_INDEX));
+        doNothing().when(((SetHeaderCellValueCommand) command)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(MULTIPART_VALUE), eq(COLUMN_INDEX));
+        doNothing().when(((SetHeaderCellValueCommand) command)).validatePropertyHeader(eq(scenarioSimulationContextLocal), eq(MULTIPART_VALUE), eq(COLUMN_INDEX));
         command.execute(scenarioSimulationContextLocal);
         if (isInstanceHeader) {
             verify(((SetHeaderCellValueCommand) command), times(1)).validateInstanceHeader(eq(scenarioSimulationContextLocal), eq(MULTIPART_VALUE), eq(COLUMN_INDEX));
@@ -151,8 +152,9 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
         }
     }
 
-    private void commonValidateInstanceHeader(boolean isADataType) {
+    private void commonValidateInstanceHeader(boolean isADataType) throws Exception {
         doReturn(isADataType).when(dataObjectFieldsMapMock).containsKey(LOWER_CASE_VALUE);
+        doNothing().when(scenarioGridModelMock).validateInstanceHeaderUpdate(eq(LOWER_CASE_VALUE), eq(COLUMN_INDEX), eq(isADataType));
         ((SetHeaderCellValueCommand) command).validateInstanceHeader(scenarioSimulationContextLocal, LOWER_CASE_VALUE, COLUMN_INDEX);
         verify(dataObjectFieldsMapMock, times(1)).containsKey(eq(LOWER_CASE_VALUE));
         verify(scenarioGridModelMock, times(1)).validateInstanceHeaderUpdate(eq(LOWER_CASE_VALUE), eq(COLUMN_INDEX), eq(isADataType));
@@ -160,7 +162,7 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
         reset(scenarioGridModelMock);
     }
 
-    private void commonValidatePropertyHeader(boolean factModelPresent, boolean simplePropertyPresent) {
+    private void commonValidatePropertyHeader(boolean factModelPresent, boolean simplePropertyPresent) throws Exception {
         FactModelTree factModelTreeMock = mock(FactModelTree.class);
         doReturn(simplePropertyPresent).when((SetHeaderCellValueCommand) command).recursivelyFindIsPropertyType(eq(scenarioSimulationContextLocal), eq(factModelTreeMock), eq(MULTIPART_VALUE_ELEMENTS));
         if (factModelPresent) {
@@ -175,6 +177,7 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioSimulationCom
             when(dataObjectFieldsMapMock.get(anyString())).thenReturn(null);
         }
         boolean isPropertyType = factModelPresent && simplePropertyPresent;
+        doNothing().when(scenarioGridModelMock).validatePropertyHeaderUpdate(eq(MULTIPART_VALUE), eq(COLUMN_INDEX), eq(isPropertyType));
         ((SetHeaderCellValueCommand) command).validatePropertyHeader(scenarioSimulationContextLocal, MULTIPART_VALUE, COLUMN_INDEX);
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioGridModelMock, times(1)).validatePropertyHeaderUpdate(eq(MULTIPART_VALUE), eq(COLUMN_INDEX), eq(isPropertyType));

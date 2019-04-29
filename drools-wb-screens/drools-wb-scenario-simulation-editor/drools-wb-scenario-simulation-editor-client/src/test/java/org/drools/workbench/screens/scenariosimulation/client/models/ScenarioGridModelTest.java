@@ -22,7 +22,6 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import junit.framework.TestCase;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -59,16 +58,18 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -443,17 +444,17 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void isSameInstanceHeaderDifferent() {
-        commonIsSameInstanceHeader(CLASS_NAME, "TOAST", false);
+        commonCheckSameInstanceHeader(CLASS_NAME, "TOAST", false);
     }
 
     @Test
     public void isSameInstanceHeaderEqualWithoutPackage() {
-        commonIsSameInstanceHeader(CLASS_NAME, CLASS_NAME, true);
+        commonCheckSameInstanceHeader(CLASS_NAME, CLASS_NAME, true);
     }
 
     @Test
     public void isSameInstanceHeaderEqualWithPackage() {
-        commonIsSameInstanceHeader(FULL_CLASS_NAME, CLASS_NAME, false);
+        commonCheckSameInstanceHeader(FULL_CLASS_NAME, CLASS_NAME, false);
     }
 
     @Test
@@ -483,7 +484,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
-    public void validateInstanceHeaderUpdate() {
+    public void validateInstanceHeaderUpdate() throws Exception {
         commonValidateInstanceHeaderUpdate(1, false, false, false, false);
         commonValidateInstanceHeaderUpdate(1, false, false, true, true);
         commonValidateInstanceHeaderUpdate(1, false, true, false, false);
@@ -491,11 +492,11 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidateInstanceHeaderUpdate(1, true, false, false, false);
         commonValidateInstanceHeaderUpdate(1, true, false, true, false);
         commonValidateInstanceHeaderUpdate(1, true, true, false, false);
-        commonValidateInstanceHeaderUpdate(1, true, true, true, true);
+        commonValidateInstanceHeaderUpdate(1, true, true, true, false);
     }
 
     @Test
-    public void validatePropertyHeaderUpdate() {
+    public void validatePropertyHeaderUpdate() throws Exception {
         commonValidatePropertyUpdate(1, false, false, false, false);
         commonValidatePropertyUpdate(1, false, false, true, true);
         commonValidatePropertyUpdate(1, false, true, false, false);
@@ -503,38 +504,65 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidatePropertyUpdate(1, true, false, false, false);
         commonValidatePropertyUpdate(1, true, false, true, false);
         commonValidatePropertyUpdate(1, true, true, false, false);
-        commonValidatePropertyUpdate(1, true, true, true, true);
+        commonValidatePropertyUpdate(1, true, true, true, false);
     }
 
-    private void commonIsSameInstanceHeader(String columnClassName, String value, boolean expected) {
+    private void commonCheckSameInstanceHeader(String columnClassName, String value, boolean expected)  {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
         int colIndex = 3;
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(simulationDescriptorMock.getFactMappingByIndex(colIndex)).thenReturn(factMappingMock);
-        boolean retrieved = scenarioGridModel.isSameInstanceHeader(colIndex, value);
-        if (expected) {
-            TestCase.assertTrue(retrieved);
-        } else {
-            assertFalse(retrieved);
+        try {
+            scenarioGridModel.checkSameInstanceHeader(colIndex, value);
+            verify(simulationMock, times(1)).getSimulationDescriptor();
+            verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(colIndex));
+        } catch (Exception e) {
+            if (expected) {
+                fail("No exception expected, retrieved " + e.getMessage());
+            }
         }
-        verify(simulationMock, times(1)).getSimulationDescriptor();
-        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(colIndex));
     }
 
-    private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) {
-        doReturn(isSameInstanceHeader).when(scenarioGridModel).isSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() -1));
-        doReturn(isUnique).when(scenarioGridModel).isUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
-        boolean retrieved = scenarioGridModel.validateInstanceHeaderUpdate(MULTIPART_VALUE, columnIndex, isADataType);
-        assertEquals(expectedValid, retrieved);
+    private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) throws Exception {
+        if (isSameInstanceHeader) {
+            doThrow(new Exception("isSameInstanceHeader")).when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
+        } else {
+            doNothing().when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
+        }
+        if (isUnique) {
+            doNothing().when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
+        } else {
+            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
+        }
+        try {
+            scenarioGridModel.validateInstanceHeaderUpdate(MULTIPART_VALUE, columnIndex, isADataType);
+        } catch (Exception e) {
+            if (expectedValid) {
+                fail("No exception expected, retrieved:  " + e.getMessage());
+            }
+        }
         reset(eventBusMock);
     }
 
-    private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) {
-        doReturn(isSamePropertyHeader).when(scenarioGridModel).isSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
-        doReturn(isUnique).when(scenarioGridModel).isUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
-        boolean retrieved = scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);
-        assertEquals(retrieved, expectedValid);
+    private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) throws Exception {
+        if (isSamePropertyHeader) {
+            doThrow(new Exception("isSamePropertyHeader")).when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
+        } else {
+            doNothing().when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
+        }
+        if (isUnique) {
+            doNothing().when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+        } else {
+            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+        }
+        try {
+            scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);
+        } catch (Exception e) {
+            if (expectedValid) {
+                fail("No exception expected, retrieved:  " + e.getMessage());
+            }
+        }
         reset(eventBusMock);
     }
 }

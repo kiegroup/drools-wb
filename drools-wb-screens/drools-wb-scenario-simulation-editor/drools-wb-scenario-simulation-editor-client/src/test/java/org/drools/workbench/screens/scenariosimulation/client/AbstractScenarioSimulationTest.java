@@ -163,8 +163,6 @@ public abstract class AbstractScenarioSimulationTest {
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactoryTest;
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
 
-
-
     protected final Set<FactIdentifier> factIdentifierSet = new HashSet<>();
     protected final List<FactMapping> factMappingLocal = new ArrayList<>();
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
@@ -269,13 +267,13 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public boolean validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) {
-                return true;
+            public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) throws Exception {
+                //
             }
 
             @Override
-            public boolean validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
-                return true;
+            public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) throws Exception {
+                //
             }
         });
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);

@@ -578,24 +578,32 @@ public class ScenarioGridModel extends BaseGridData {
      * @return
      */
     public boolean isAlreadyAssignedProperty(List<String> propertyNameElements) {
-        return selectedColumn == null || isAlreadyAssignedProperty(getColumns().indexOf(selectedColumn), propertyNameElements);
+        boolean toReturn = selectedColumn == null;
+        if (!toReturn) {
+            try {
+                checkAlreadyAssignedProperty(getColumns().indexOf(selectedColumn), propertyNameElements);
+            } catch (Exception e) {
+                toReturn = true;
+            }
+        }
+        return toReturn;
     }
 
     /**
-     * Returns <code>true</code> if property mapped to the column at given index is already assigned to
+     * Check if property mapped to the column at given index is already assigned to
      * another column of the same <b>instance</b>
      * @param columnIndex
      * @param propertyNameElements
-     * @return
+     * @throws Exception if the given <code>propertyNameElements</code> are already mapped to a column of the same <b>instance</b>
      */
-    public boolean isAlreadyAssignedProperty(int columnIndex, List<String> propertyNameElements) {
+    public void checkAlreadyAssignedProperty(int columnIndex, List<String> propertyNameElements) throws Exception {
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
         propertyNameElementsClone.add(factIdentifier.getClassNameWithoutPackage());
         propertyNameElementsClone.addAll(propertyNameElements.subList(1, propertyNameElements.size()));
-        return IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
+        if (IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                 .filter(index -> index != columnIndex)
                 .mapToObj(simulationDescriptor::getFactMappingByIndex)
                 .anyMatch(factMapping -> {
@@ -604,7 +612,9 @@ public class ScenarioGridModel extends BaseGridData {
                             .map(ExpressionElement::getStep)
                             .collect(Collectors.toList());
                     return Objects.equals(factMappingPropertyNameElements, propertyNameElementsClone);
-                });
+                })) {
+            throw new Exception(String.join(".", propertyNameElements) + " has already been used in the current instance.");
+        }
     }
 
     /**
@@ -651,34 +661,34 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Returns <code>true</code> if given <b>headerName</b> is the same as the <b>Fact</b> mapped to the
+     * Check if given <b>headerName</b> is the same as the <b>Fact</b> mapped to the
      * column at given index
      * @param columnIndex
      * @param headerName
-     * @return
+     * @throws Exception if the given <b>headerName</b> is not the name of the class mapped to the given column
      */
-    public boolean isSameInstanceHeader(int columnIndex, String headerName) {
+    public void checkSameInstanceHeader(int columnIndex, String headerName) throws Exception {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         String columnClassName = factIdentifierByIndex.getClassNameWithoutPackage();
-        return Objects.equals(columnClassName, headerName);
+        if (!Objects.equals(columnClassName, headerName)) {
+            throw new Exception(headerName + " is not the class of the current column.");
+        }
     }
 
     /**
-     * Returns <code>true</code> if given <b>headerName</b> is the same as the <b>element steps</b> mapped to any other column of the same group
+     * Check if given <b>headerName</b> is the same as the <b>element steps</b> mapped to the given column
      * @param columnIndex
      * @param propertyNameElements
-     * @return
+     * @throws Exception if the given <b>propertyNameElements</b> (corrected for the class name) represents the <b>element steps</b> of the given column
      */
-    public boolean isSamePropertyHeader(int columnIndex, List<String> propertyNameElements) {
+    public void checkSamePropertyHeader(int columnIndex, List<String> propertyNameElements) throws Exception {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        FactIdentifier factIdentifier = factMapping.getFactIdentifier();
-        List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
-        propertyNameElementsClone.add(factIdentifier.getClassNameWithoutPackage());
-        propertyNameElementsClone.addAll(propertyNameElements.subList(1, propertyNameElements.size()));
         List<String> columnPropertyName = factMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
-        return Objects.equals(columnPropertyName, propertyNameElements);
+        if (!Objects.equals(columnPropertyName, propertyNameElements)) {
+            throw new Exception(String.join(".", propertyNameElements) + " is not the same property of the current column.");
+        }
     }
 
     public void resetErrors() {
@@ -711,15 +721,39 @@ public class ScenarioGridModel extends BaseGridData {
         this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
-    public boolean validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) {
+    /**
+     * Check validity of given <b>instanceHeaderCellValue</b>
+     * @param instanceHeaderCellValue
+     * @param columnIndex
+     * @param isADataType
+     * @throws Exception with message specific to failed check
+     */
+    public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) throws Exception {
         List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(instanceHeaderCellValue.split("\\.")));
-        boolean isSameInstanceHeader = isSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() - 1));
-        return (isADataType && isSameInstanceHeader && isUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex)) || (!isADataType && isUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex));
+        if (isADataType) {
+            checkSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() - 1));
+            checkValidAndUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex);
+        } else {
+            checkValidAndUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex);
+        }
     }
 
-    public boolean validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
+    /**
+     * Check validity of given <b>propertyHeaderCellValue</b>
+     * @param propertyHeaderCellValue
+     * @param columnIndex
+     * @param isPropertyType
+     * @throws Exception with message specific to failed check
+     */
+    public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) throws Exception {
         List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(propertyHeaderCellValue.split("\\.")));
-        return (isPropertyType && isSamePropertyHeader(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex)) || (!isPropertyType && !isAlreadyAssignedProperty(columnIndex, propertyNameElements) && isUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex));
+        if (isPropertyType) {
+            checkSamePropertyHeader(columnIndex, propertyNameElements);
+            checkUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
+        } else {
+            checkAlreadyAssignedProperty(columnIndex, propertyNameElements);
+            checkValidAndUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
+        }
     }
 
     /**
@@ -845,37 +879,60 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify the given value is not already used as instance header name <b>between different groups</b>
      * @param instanceHeaderCellValue
      * @param columnIndex
-     * @return
+     * @throws Exception if the given <b>instanceHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
+     * inside the <b>group (GIVEN/EXPECT)</b> of the given column
      */
-    protected boolean isUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) {
+    protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) throws Exception {
+        if (instanceHeaderCellValue.contains(".")) {
+            throw new Exception("Instance alias can not contains dot!");
+        }
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
-        return IntStream.range(0, getColumnCount())
+        if (IntStream.range(0, getColumnCount())
                 .filter(index -> index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex())
                 .filter(index -> !Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getInformationHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getInformationHeaderMetaData)
-                .noneMatch(elem -> Objects.equals(elem.getTitle(), instanceHeaderCellValue));
+                .anyMatch(elem -> Objects.equals(elem.getTitle(), instanceHeaderCellValue))) {
+            throw new Exception(instanceHeaderCellValue + " has already been used inside the current group");
+        }
     }
 
     /**
-     * Verify the given value is not already used as property header name <b>inside the same group</b>
+     * Verify if the given value is not already used as property header name <b>inside the same instance</b>
      * @param propertyHeaderCellValue
      * @param columnIndex
-     * @return
+     * @throws Exception if the given <b>propertyHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
+     * inside the <b>instance</b> of the given column
      */
-    protected boolean isUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
+    protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
+        if (propertyHeaderCellValue.contains(".")) {
+            throw new Exception("Property alias can not contains dot!");
+        }
+        checkUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
+    }
+
+    /**
+     * Verify if the given value is not already used as property header name <b>inside the same instance</b>
+     * @param propertyHeaderCellValue
+     * @param columnIndex
+     * @throws Exception if the given <b>propertyHeaderCellValue</b> has already been used
+     * inside the <b>instance</b> of the given column
+     */
+    protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
-        return IntStream.range(0, getColumnCount())
+        if (IntStream.range(0, getColumnCount())
                 .filter(index -> index != columnIndex)
                 .filter(index -> Objects.equals(factIdentifier, simulationDescriptor.getFactMappingByIndex(index).getFactIdentifier()))
                 .mapToObj(index -> (ScenarioGridColumn) getColumns().get(index))
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getPropertyHeaderMetaData)
-                .noneMatch(elem -> Objects.equals(elem.getTitle(), propertyHeaderCellValue));
+                .anyMatch(elem -> Objects.equals(elem.getTitle(), propertyHeaderCellValue))) {
+            throw new Exception(propertyHeaderCellValue + " has already been used inside the current instance");
+        }
     }
 
     protected boolean isNewInstanceName(String value) {
