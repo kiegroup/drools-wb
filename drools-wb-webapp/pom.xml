@@ -1443,6 +1443,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-library-spaces-screen</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-promise</artifactId>
+    </dependency>
 
   </dependencies>
 
