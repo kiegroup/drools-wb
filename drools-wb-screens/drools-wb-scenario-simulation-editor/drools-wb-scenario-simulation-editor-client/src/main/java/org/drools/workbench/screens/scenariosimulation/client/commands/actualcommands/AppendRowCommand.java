@@ -19,12 +19,12 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
- *  <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
+ * <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
  */
 public class AppendRowCommand extends AbstractScenarioSimulationCommand {
 
     public AppendRowCommand() {
-        super(true);
+        super(true, true);
     }
 
     @Override

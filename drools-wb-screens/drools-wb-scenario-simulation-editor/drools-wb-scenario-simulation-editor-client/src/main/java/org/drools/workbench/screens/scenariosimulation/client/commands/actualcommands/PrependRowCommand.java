@@ -19,12 +19,12 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
- *  <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
+ * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a row
  */
 public class PrependRowCommand extends AbstractScenarioSimulationCommand {
 
     public PrependRowCommand() {
-        super(true);
+        super(true, true);
     }
 
     @Override

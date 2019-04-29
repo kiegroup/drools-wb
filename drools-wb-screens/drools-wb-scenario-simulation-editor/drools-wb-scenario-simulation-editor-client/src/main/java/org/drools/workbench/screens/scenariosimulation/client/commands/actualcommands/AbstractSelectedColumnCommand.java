@@ -46,7 +46,7 @@ import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimulationCommand {
 
     public AbstractSelectedColumnCommand() {
-        super(true);
+        super(true, true);
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);

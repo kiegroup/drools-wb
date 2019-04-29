@@ -32,7 +32,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
     public DeleteColumnCommand() {
-        super(true);
+        super(true, true);
     }
 
     @Override

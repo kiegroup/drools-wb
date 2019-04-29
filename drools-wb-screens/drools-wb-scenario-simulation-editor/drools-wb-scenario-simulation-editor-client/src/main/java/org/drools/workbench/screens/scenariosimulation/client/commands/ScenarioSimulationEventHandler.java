@@ -208,13 +208,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
         commonExecution(context, new AppendColumnCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
         commonExecution(context, new AppendRowCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -222,14 +220,12 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setColumnGroup(event.getColumnGroup());
         commonExecution(context, new DeleteColumnCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
     public void onEvent(DeleteRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
         commonExecution(context, new DeleteRowCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -244,14 +240,12 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setRight(true);
         context.getStatus().setAsProperty(false);
         commonExecution(context, new DuplicateInstanceCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
     public void onEvent(DuplicateRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
         commonExecution(context, new DuplicateRowCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -282,14 +276,12 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setRight(event.isRight());
         context.getStatus().setAsProperty(event.isAsProperty());
         commonExecution(context, new InsertColumnCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
     public void onEvent(InsertRowEvent event) {
         context.getStatus().setRowIndex(event.getRowIndex());
         commonExecution(context, new InsertRowCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -297,13 +289,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
         commonExecution(context, new PrependColumnCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
     public void onEvent(PrependRowEvent event) {
         commonExecution(context, new PrependRowCommand());
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -375,7 +365,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else {
             commonExecution(context, new SetInstanceHeaderCommand());
         }
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override
@@ -427,8 +416,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                       okPreserveCommand);
         }
-
-        context.getScenarioGridPanel().setFocus(true);
     }
 
     @Override

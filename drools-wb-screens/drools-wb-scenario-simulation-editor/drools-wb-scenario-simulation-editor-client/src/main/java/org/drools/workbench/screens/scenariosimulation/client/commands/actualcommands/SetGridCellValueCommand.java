@@ -28,7 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGri
 public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
 
     public SetGridCellValueCommand() {
-        super(true);
+        super(true, false);
     }
 
     @Override

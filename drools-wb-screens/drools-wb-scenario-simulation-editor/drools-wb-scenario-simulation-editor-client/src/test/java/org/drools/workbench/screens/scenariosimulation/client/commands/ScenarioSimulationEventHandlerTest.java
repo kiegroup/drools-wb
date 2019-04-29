@@ -94,12 +94,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
-<<<<<<< HEAD
-import static org.mockito.Matchers.anyListOf;
-=======
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
->>>>>>> Do not focus panel from AbstractScenarioSimulationCommand
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;

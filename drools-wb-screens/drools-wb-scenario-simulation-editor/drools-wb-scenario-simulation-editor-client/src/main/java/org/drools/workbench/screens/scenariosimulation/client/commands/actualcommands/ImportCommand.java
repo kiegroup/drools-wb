@@ -25,7 +25,7 @@ public class ImportCommand extends AbstractScenarioSimulationCommand {
     protected String fileContent;
 
     public ImportCommand() {
-        super(true);
+        super(true, false);
     }
 
     public void setFileContent(String fileContent) {

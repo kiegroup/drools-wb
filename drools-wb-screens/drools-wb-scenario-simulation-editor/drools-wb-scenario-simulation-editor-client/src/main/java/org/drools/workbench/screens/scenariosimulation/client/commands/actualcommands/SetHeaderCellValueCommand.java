@@ -39,7 +39,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
     }
 
     public SetHeaderCellValueCommand(boolean isInstanceHeader, boolean isPropertyHeader) {
-        super(true);
+        super(true, false);
         this.isInstanceHeader = isInstanceHeader;
         this.isPropertyHeader = isPropertyHeader;
     }

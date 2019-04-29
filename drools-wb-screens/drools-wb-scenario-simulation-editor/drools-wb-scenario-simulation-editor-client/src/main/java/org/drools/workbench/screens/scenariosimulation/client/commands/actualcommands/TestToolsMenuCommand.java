@@ -24,7 +24,7 @@ import org.uberfire.client.mvp.PlaceStatus;
 public class TestToolsMenuCommand extends AbstractScenarioSimulationCommand {
 
     public TestToolsMenuCommand() {
-        super(false);
+        super(false, false);
     }
 
     @Override
@@ -35,5 +35,4 @@ public class TestToolsMenuCommand extends AbstractScenarioSimulationCommand {
             context.getPlaceManager().goTo(context.getTestToolsRequest());
         }
     }
-
 }

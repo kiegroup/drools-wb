@@ -25,7 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 public abstract class AbstractInsertColumnCommand extends AbstractScenarioSimulationCommand {
 
     public AbstractInsertColumnCommand() {
-        super(true);
+        super(true, true);
     }
 
     public void commonInsertColumnCommand(ScenarioSimulationContext context, ScenarioSimulationContext.Status status, int index) {
