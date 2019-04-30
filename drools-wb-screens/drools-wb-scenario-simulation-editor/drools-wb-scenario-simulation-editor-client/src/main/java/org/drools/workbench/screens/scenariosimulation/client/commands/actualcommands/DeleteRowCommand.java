@@ -37,9 +37,4 @@ public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
             context.getModel().insertRow(0, new ScenarioGridRow());
         }
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }

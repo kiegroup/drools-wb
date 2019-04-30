@@ -34,9 +34,4 @@ public class DuplicateRowCommand extends AbstractScenarioSimulationCommand {
     protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().duplicateRow(context.getStatus().getRowIndex(), new ScenarioGridRow());
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }

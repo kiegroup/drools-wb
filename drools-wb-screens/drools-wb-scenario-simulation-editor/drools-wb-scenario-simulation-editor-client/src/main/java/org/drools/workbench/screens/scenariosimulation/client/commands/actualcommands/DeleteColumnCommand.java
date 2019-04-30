@@ -59,9 +59,4 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
             new DisableTestToolsCommand().execute(context);
         }
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }

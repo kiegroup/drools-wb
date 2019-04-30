@@ -43,9 +43,4 @@ public abstract class AbstractInsertColumnCommand extends AbstractScenarioSimula
                                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         context.getModel().insertColumn(index, scenarioGridColumnLocal);
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }

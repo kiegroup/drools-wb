@@ -267,9 +267,4 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                 .findFirst()
                 .map(FactMapping::getExpressionAlias);
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }

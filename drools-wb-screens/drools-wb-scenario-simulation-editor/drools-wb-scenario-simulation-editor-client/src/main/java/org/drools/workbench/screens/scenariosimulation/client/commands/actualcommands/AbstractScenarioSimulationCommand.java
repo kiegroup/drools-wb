@@ -102,7 +102,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
         try {
             internalExecute(context);
-            return commonExecution(context, returnFocusToGridAfterCommandExecution());
+            return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }
@@ -119,7 +119,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
                 context.setStatus(restorableStatus);
                 restorableStatus = originalStatus;
-                return commonExecution(context, returnFocusToGridAfterCommandExecution());
+                return commonExecution(context);
             } else {
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
             }
@@ -129,10 +129,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     }
 
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
-
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return false;
-    }
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
@@ -183,13 +179,9 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());
     }
 
-    protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context,
-                                                                         final boolean focusGridAfterExecution) {
+    protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
         context.getScenarioGridPanel().onResize();
         context.getScenarioGridPanel().select();
-        if (focusGridAfterExecution) {
-            context.getScenarioGridPanel().setFocus(true);
-        }
         return CommandResultBuilder.SUCCESS;
     }
 }

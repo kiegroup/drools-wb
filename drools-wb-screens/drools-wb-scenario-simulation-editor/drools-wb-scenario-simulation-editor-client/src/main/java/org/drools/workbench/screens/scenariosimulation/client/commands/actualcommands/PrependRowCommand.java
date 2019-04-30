@@ -31,9 +31,4 @@ public class PrependRowCommand extends AbstractScenarioSimulationCommand {
     protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().insertRow(0, new ScenarioGridRow());
     }
-
-    @Override
-    protected boolean returnFocusToGridAfterCommandExecution() {
-        return true;
-    }
 }
