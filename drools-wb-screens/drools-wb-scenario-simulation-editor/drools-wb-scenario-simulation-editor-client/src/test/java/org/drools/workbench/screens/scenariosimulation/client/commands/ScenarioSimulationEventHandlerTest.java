@@ -443,7 +443,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
                                                                isA(SetInstanceHeaderCommand.class),
-                                                               eq(false));
+                                                               eq(true));
     }
 
     @Test
@@ -470,7 +470,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
                                                                isA(SetPropertyHeaderCommand.class),
-                                                               eq(false));
+                                                               eq(true));
         //
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);

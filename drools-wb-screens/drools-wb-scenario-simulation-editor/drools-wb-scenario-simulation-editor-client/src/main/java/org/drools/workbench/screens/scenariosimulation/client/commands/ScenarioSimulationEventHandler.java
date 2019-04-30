@@ -390,7 +390,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
             org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context,
                                                                                new SetInstanceHeaderCommand(),
-                                                                               false);
+                                                                               true);
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -401,7 +401,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else {
             commonExecution(context,
                             new SetInstanceHeaderCommand(),
-                            false);
+                            true);
         }
     }
 
@@ -421,7 +421,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         if (context.getModel().isSelectedColumnEmpty()) {
             commonExecution(context,
                             new SetPropertyHeaderCommand(),
-                            false);
+                            true);
         } else if (context.getModel().isSameSelectedColumnProperty(event.getPropertyNameElements())) {
             return;
         } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
@@ -429,13 +429,13 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                 context.getStatus().setKeepData(false);
                 commonExecution(context,
                                 new SetPropertyHeaderCommand(),
-                                false);
+                                true);
             };
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(true);
                 commonExecution(context,
                                 new SetPropertyHeaderCommand(),
-                                false);
+                                true);
             };
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
@@ -452,7 +452,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                 context.getStatus().setKeepData(false);
                 commonExecution(context,
                                 new SetPropertyHeaderCommand(),
-                                false);
+                                true);
             };
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
