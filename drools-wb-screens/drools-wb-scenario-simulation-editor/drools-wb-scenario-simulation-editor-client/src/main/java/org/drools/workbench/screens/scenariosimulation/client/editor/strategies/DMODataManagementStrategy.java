@@ -71,12 +71,11 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
             int expectedElements = dataObjectsTypes.size();
             // Instantiate a dataObjects container map
             final SortedMap<String, FactModelTree> dataObjectsFieldsMap = new TreeMap<>();
-
-            // Instantiate the aggregator callback
-            Callback<FactModelTree> aggregatorCallback = aggregatorCallback(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, simpleJavaTypes);
             if (dataObjectsTypes.isEmpty()) { // Add to manage the situation when no complex objects are present
                 aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, null, simpleJavaTypes);
             } else {
+                // Instantiate the aggregator callback
+                Callback<FactModelTree> aggregatorCallback = aggregatorCallback(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, simpleJavaTypes);
                 // Iterate over all dataObjects to retrieve their modelfields
                 dataObjectsTypes.forEach(factType ->
                                                  oracle.getFieldCompletions(factType, fieldCompletionsCallback(factType, aggregatorCallback)));
@@ -96,7 +95,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
     public boolean isADataType(String value) {
         return oracle != null && Arrays.asList(oracle.getFactTypes()).contains(value);
     }
-
 
     public AsyncPackageDataModelOracle getOracle() {
         return oracle;
@@ -191,7 +189,6 @@ public class DMODataManagementStrategy extends AbstractDataManagementStrategy {
 
     /**
      * Actual code of the <b>aggregatorCallback</b>; isolated for testing
-     *
      * @param testToolsPresenter
      * @param expectedElements
      * @param factTypeFieldsMap
