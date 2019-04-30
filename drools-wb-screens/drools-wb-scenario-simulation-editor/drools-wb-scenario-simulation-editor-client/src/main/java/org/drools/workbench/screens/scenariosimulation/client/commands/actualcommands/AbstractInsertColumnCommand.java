@@ -25,7 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 public abstract class AbstractInsertColumnCommand extends AbstractScenarioSimulationCommand {
 
     public AbstractInsertColumnCommand() {
-        super(true, true);
+        super(true);
     }
 
     public void commonInsertColumnCommand(ScenarioSimulationContext context, ScenarioSimulationContext.Status status, int index) {
@@ -42,5 +42,10 @@ public abstract class AbstractInsertColumnCommand extends AbstractScenarioSimula
                                                                                       context.getScenarioCellTextAreaSingletonDOMElementFactory(),
                                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         context.getModel().insertColumn(index, scenarioGridColumnLocal);
+    }
+
+    @Override
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return true;
     }
 }

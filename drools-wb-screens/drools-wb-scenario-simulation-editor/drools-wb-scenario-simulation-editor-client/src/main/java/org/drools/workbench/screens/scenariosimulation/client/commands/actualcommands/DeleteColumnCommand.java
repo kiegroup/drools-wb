@@ -32,7 +32,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
 
     public DeleteColumnCommand() {
-        super(true, true);
+        super(true);
     }
 
     @Override
@@ -58,5 +58,10 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
         if (context.getTestToolsPresenter() != null && toDisable) {
             new DisableTestToolsCommand().execute(context);
         }
+    }
+
+    @Override
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return true;
     }
 }

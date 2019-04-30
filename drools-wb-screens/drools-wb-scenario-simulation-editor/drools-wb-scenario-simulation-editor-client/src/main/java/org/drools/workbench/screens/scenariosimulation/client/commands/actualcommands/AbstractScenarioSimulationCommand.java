@@ -55,13 +55,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     private final boolean undoable;
 
     /**
-     * Flag that indicates if the focus will be returned to the grid after command execution.
-     * <code>true</code> means focus will be returned to the grid
-     * <code>false</code> means focus will stay on the current element
-     */
-    private final boolean focusGridAfterExecution;
-
-    /**
      * The <code>ScenarioSimulationContext.Status</code> to restore when calling <b>undo/redo</b>.
      * Needed only for <b>undoable</b> commands.
      */
@@ -71,11 +64,9 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
      * Calling this constructor will set the command as <b>undoable</b>
      * @param undoable
      */
-    protected AbstractScenarioSimulationCommand(final boolean undoable,
-                                                final boolean focusGridAfterExecution) {
+    protected AbstractScenarioSimulationCommand(final boolean undoable) {
         this.id = COUNTER_ID.getAndIncrement();
         this.undoable = undoable;
-        this.focusGridAfterExecution = focusGridAfterExecution;
     }
 
     public long getId() {
@@ -84,10 +75,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
 
     public boolean isUndoable() {
         return undoable;
-    }
-
-    public boolean isFocusGridAfterExecution() {
-        return focusGridAfterExecution;
     }
 
     @Override
@@ -115,7 +102,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
         try {
             internalExecute(context);
-            return commonExecution(context);
+            return commonExecution(context, returnFocusToGridAfterCommandExecution());
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }
@@ -132,7 +119,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
                 context.setStatus(restorableStatus);
                 restorableStatus = originalStatus;
-                return commonExecution(context);
+                return commonExecution(context, returnFocusToGridAfterCommandExecution());
             } else {
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
             }
@@ -142,6 +129,10 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     }
 
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
+
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return false;
+    }
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
@@ -192,7 +183,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());
     }
 
-    protected CommandResult<ScenarioSimulationViolation> commonExecution(ScenarioSimulationContext context) {
+    protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context,
+                                                                         final boolean focusGridAfterExecution) {
         context.getScenarioGridPanel().onResize();
         context.getScenarioGridPanel().select();
         if (focusGridAfterExecution) {

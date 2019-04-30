@@ -27,7 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
 
     public DeleteRowCommand() {
-        super(true, true);
+        super(true);
     }
 
     @Override
@@ -36,5 +36,10 @@ public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
         if (context.getModel().getRows().isEmpty()) {
             context.getModel().insertRow(0, new ScenarioGridRow());
         }
+    }
+
+    @Override
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return true;
     }
 }

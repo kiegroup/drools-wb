@@ -24,11 +24,16 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 public class AppendRowCommand extends AbstractScenarioSimulationCommand {
 
     public AppendRowCommand() {
-        super(true, true);
+        super(true);
     }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         context.getModel().appendRow(new ScenarioGridRow());
+    }
+
+    @Override
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return true;
     }
 }

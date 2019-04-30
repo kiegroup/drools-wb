@@ -46,7 +46,7 @@ import static org.drools.workbench.screens.scenariosimulation.model.FactMapping.
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimulationCommand {
 
     public AbstractSelectedColumnCommand() {
-        super(true, true);
+        super(true);
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);
@@ -266,5 +266,10 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                 })
                 .findFirst()
                 .map(FactMapping::getExpressionAlias);
+    }
+
+    @Override
+    protected boolean returnFocusToGridAfterCommandExecution() {
+        return true;
     }
 }

@@ -112,12 +112,12 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void commonExecution() {
         if (command.isUndoable()) {
-            command.commonExecution(scenarioSimulationContextLocal);
+            command.commonExecution(scenarioSimulationContextLocal, command.returnFocusToGridAfterCommandExecution());
             verify(scenarioGridPanelMock, times(1)).onResize();
             verify(scenarioGridPanelMock, times(1)).select();
         }
 
-        if (command.isFocusGridAfterExecution()) {
+        if (command.returnFocusToGridAfterCommandExecution()) {
             verify(scenarioGridPanelMock).setFocus(true);
         } else {
             verify(scenarioGridPanelMock, never()).setFocus(anyBoolean());
