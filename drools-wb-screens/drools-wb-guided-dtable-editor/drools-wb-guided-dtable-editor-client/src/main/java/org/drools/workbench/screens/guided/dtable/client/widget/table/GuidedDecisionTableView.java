@@ -40,6 +40,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.model.sync
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.DependentEnumsUtilities;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
 import org.guvnor.common.services.shared.metadata.model.Overview;
+import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.workitems.IBindingProvider;
 import org.kie.workbench.common.widgets.metadata.client.KieDocument;
@@ -114,7 +115,7 @@ public interface GuidedDecisionTableView extends GridWidget,
 
         void onClose();
 
-        void initialiseAnalysis();
+        void initialiseAnalysis(final AnalysisReportScreen analysisReportScreen);
 
         void terminateAnalysis();
 

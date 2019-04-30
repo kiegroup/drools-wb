@@ -97,6 +97,7 @@ import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
 import org.kie.workbench.common.services.verifier.reporting.client.controller.AnalyzerController;
+import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.kie.workbench.common.services.verifier.reporting.client.panel.IssueSelectedEvent;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
@@ -344,7 +345,6 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
         initialiseLockManager();
         initialiseUtilities();
         initialiseModels();
-        initialiseValidationAndVerification();
         initialiseEventHandlers();
         initialiseAuditLog();
     }
@@ -506,8 +506,9 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     //Setup the Validation & Verification analyzer
-    void initialiseValidationAndVerification() {
-        this.analyzerController = decisionTableAnalyzerProvider.newAnalyzer(placeRequest,
+    void initialiseValidationAndVerification(AnalysisReportScreen analysisReportScreen) {
+        this.analyzerController = decisionTableAnalyzerProvider.newAnalyzer(analysisReportScreen,
+                                                                            placeRequest,
                                                                             oracle,
                                                                             model,
                                                                             eventBus);
@@ -596,10 +597,11 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     @Override
-    public void initialiseAnalysis() {
-        if (analyzerController != null) {
-            analyzerController.initialiseAnalysis();
+    public void initialiseAnalysis(final AnalysisReportScreen analysisReportScreen) {
+        if (analyzerController == null) {
+            initialiseValidationAndVerification(analysisReportScreen);
         }
+        analyzerController.initialiseAnalysis();
     }
 
     @Override
@@ -1438,13 +1440,13 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     @Override
-    public boolean hasEditableColumns() {
-        return getAccess().hasEditableColumns();
+    public void setReadOnly(final boolean isReadOnly) {
+        this.access.setReadOnly(isReadOnly);
     }
 
     @Override
-    public void setReadOnly(final boolean isReadOnly) {
-        this.access.setReadOnly(isReadOnly);
+    public boolean hasEditableColumns() {
+        return getAccess().hasEditableColumns();
     }
 
     @Override
@@ -1495,16 +1497,16 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
             return isReadOnly;
         }
 
+        public void setReadOnly(final boolean isReadOnly) {
+            this.isReadOnly = isReadOnly;
+        }
+
         public boolean hasEditableColumns() {
             return hasEditableColumns;
         }
 
         public void setHasEditableColumns(final boolean hasEditableColumns) {
             this.hasEditableColumns = hasEditableColumns;
-        }
-
-        public void setReadOnly(final boolean isReadOnly) {
-            this.isReadOnly = isReadOnly;
         }
 
         public boolean isEditable() {

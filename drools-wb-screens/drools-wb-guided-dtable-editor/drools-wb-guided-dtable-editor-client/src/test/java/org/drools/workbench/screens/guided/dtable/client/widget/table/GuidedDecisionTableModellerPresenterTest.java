@@ -441,7 +441,7 @@ public class GuidedDecisionTableModellerPresenterTest {
         presenter.onDecisionTableSelected(event);
 
         verify(dtPresenter1,
-               times(1)).initialiseAnalysis();
+               times(1)).initialiseAnalysis(any());
         verify(view,
                times(1)).select(dtPresenter1.getView());
         verify(gridLayer,
@@ -464,7 +464,7 @@ public class GuidedDecisionTableModellerPresenterTest {
         presenter.onDecisionTableSelected(event);
 
         verify(dtPresenter1,
-               times(1)).initialiseAnalysis();
+               times(1)).initialiseAnalysis(any());
         verify(view,
                times(1)).select(dtPresenter1.getView());
         verify(gridLayer,
@@ -488,7 +488,7 @@ public class GuidedDecisionTableModellerPresenterTest {
         presenter.onDecisionTableSelected(event);
 
         verify(dtPresenter1,
-               times(1)).initialiseAnalysis();
+               times(1)).initialiseAnalysis(any());
         verify(view,
                times(1)).select(dtPresenter1.getView());
     }
@@ -505,7 +505,7 @@ public class GuidedDecisionTableModellerPresenterTest {
 
         presenter.onDecisionTableSelected(event);
 
-        verify(dtPresenter, never()).initialiseAnalysis();
+        verify(dtPresenter, never()).initialiseAnalysis(any());
         verify(view, never()).select(any(GuidedDecisionTableView.class));
     }
 

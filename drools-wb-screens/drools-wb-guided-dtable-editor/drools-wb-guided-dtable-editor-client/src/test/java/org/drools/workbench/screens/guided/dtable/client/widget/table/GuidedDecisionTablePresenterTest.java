@@ -263,7 +263,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         verify(dtPresenter,
                times(1)).initialiseModels();
         verify(dtPresenter,
-               times(1)).initialiseValidationAndVerification();
+               times(1)).initialiseValidationAndVerification(any());
         verify(dtPresenter,
                times(1)).initialiseEventHandlers();
         verify(dtPresenter,
@@ -318,7 +318,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         verify(dtPresenter,
                times(2)).initialiseModels();
         verify(dtPresenter,
-               times(2)).initialiseValidationAndVerification();
+               times(2)).initialiseValidationAndVerification(any());
         verify(dtPresenter,
                times(2)).initialiseAuditLog();
 

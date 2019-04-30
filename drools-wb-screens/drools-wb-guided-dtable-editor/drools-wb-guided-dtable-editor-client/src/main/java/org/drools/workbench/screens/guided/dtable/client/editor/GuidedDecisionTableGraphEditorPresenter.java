@@ -64,6 +64,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.kie.soup.project.datamodel.imports.Imports;
 import org.kie.workbench.common.services.shared.project.KieModuleService;
+import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -115,8 +116,10 @@ import static org.uberfire.ext.widgets.common.client.common.ConcurrentChangePopu
  * Guided Decision Table Graph Editor Presenter
  */
 @Dependent
-@WorkbenchEditor(identifier = "GuidedDecisionTableGraphEditor", supportedTypes = {GuidedDTableGraphResourceType.class}, lockingStrategy = EDITOR_PROVIDED)
+@WorkbenchEditor(identifier = GuidedDecisionTableGraphEditorPresenter.IDENTIFIER, supportedTypes = {GuidedDTableGraphResourceType.class}, lockingStrategy = EDITOR_PROVIDED)
 public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionTableEditorPresenter {
+
+    public static final String IDENTIFIER = "GuidedDecisionTableGraphEditor";
 
     private final Caller<GuidedDecisionTableGraphEditorService> graphService;
     private final Caller<KieModuleService> moduleService;
@@ -143,6 +146,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final Event<NotificationEvent> notification,
                                                    final Event<SaveInProgressEvent> saveInProgressEvent,
                                                    final Event<DecisionTableSelectedEvent> decisionTableSelectedEvent,
+                                                   final GuidedDecisionTableDocksHandler guidedDecisionTableDocksHandler,
+                                                   final AnalysisReportScreen analysisReportScreen,
                                                    final ValidationPopup validationPopup,
                                                    final GuidedDTableGraphResourceType dtGraphResourceType,
                                                    final EditMenuBuilder editMenuBuilder,
@@ -164,6 +169,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
               perspectiveManager,
               notification,
               decisionTableSelectedEvent,
+              guidedDecisionTableDocksHandler,
+              analysisReportScreen,
               validationPopup,
               dtGraphResourceType,
               editMenuBuilder,
@@ -232,6 +239,11 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     @OnFocus
     public void onFocus() {
         super.onFocus();
+    }
+
+    @Override
+    protected String getEditorIdentifier() {
+        return GuidedDecisionTableGraphEditorPresenter.IDENTIFIER;
     }
 
     @Override

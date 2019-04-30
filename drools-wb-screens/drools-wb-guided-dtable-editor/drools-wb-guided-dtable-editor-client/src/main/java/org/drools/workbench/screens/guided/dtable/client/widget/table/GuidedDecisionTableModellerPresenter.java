@@ -49,6 +49,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.popovers.C
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.NewGuidedDecisionTableColumnWizard;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
+import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -83,6 +84,7 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
     private Set<GuidedDecisionTableView.Presenter> availableDecisionTables = new HashSet<>();
 
     private Set<HandlerRegistration> handlerRegistrations = new HashSet<>();
+    private AnalysisReportScreen analysisReportScreen;
 
     @Inject
     public GuidedDecisionTableModellerPresenter(final GuidedDecisionTableModellerView view,
@@ -361,7 +363,7 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
         //Bootstrap Decision Table analysis
         for (GuidedDecisionTableView.Presenter p : getAvailableDecisionTables()) {
             if (p.equals(dtPresenter)) {
-                p.initialiseAnalysis();
+                p.initialiseAnalysis(analysisReportScreen);
             }
         }
 
@@ -404,5 +406,10 @@ public class GuidedDecisionTableModellerPresenter implements GuidedDecisionTable
             dtPresenter.link(getAvailableDecisionTables());
         }
         getView().getGridLayerView().refreshGridWidgetConnectors();
+    }
+
+    @Override
+    public void addVerificationPanel(AnalysisReportScreen analysisReportScreen) {
+        this.analysisReportScreen = analysisReportScreen;
     }
 }

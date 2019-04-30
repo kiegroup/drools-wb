@@ -36,6 +36,7 @@ import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.imports.Imports;
+import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -88,6 +89,8 @@ public class BaseGuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisi
                                                       perspectiveManager,
                                                       notification,
                                                       decisionTableSelectedEvent,
+                                                      mock(GuidedDecisionTableDocksHandler.class),
+                                                      mock(AnalysisReportScreen.class),
                                                       validationPopup,
                                                       resourceType,
                                                       editMenuBuilder,
@@ -210,7 +213,7 @@ public class BaseGuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisi
         presenter.onFocus();
 
         verify(activeDtable,
-               times(1)).initialiseAnalysis();
+               times(1)).initialiseAnalysis(any());
 
         verify(decisionTableSelectedEvent,
                times(1)).fire(dtSelectedEventCaptor.capture());

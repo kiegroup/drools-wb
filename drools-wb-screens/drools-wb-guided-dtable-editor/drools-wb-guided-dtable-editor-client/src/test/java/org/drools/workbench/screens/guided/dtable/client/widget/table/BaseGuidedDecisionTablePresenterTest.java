@@ -287,7 +287,8 @@ public abstract class BaseGuidedDecisionTablePresenterTest {
     }
 
     private void setupProviders() {
-        when(decisionTableAnalyzerProvider.newAnalyzer(eq(dtPlaceRequest),
+        when(decisionTableAnalyzerProvider.newAnalyzer(any(),
+                                                       eq(dtPlaceRequest),
                                                        eq(oracle),
                                                        any(GuidedDecisionTable52.class),
                                                        any(EventBus.class))).thenReturn(analyzerController);
