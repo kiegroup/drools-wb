@@ -729,9 +729,8 @@ public class ScenarioGridModel extends BaseGridData {
      * @throws Exception with message specific to failed check
      */
     public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) throws Exception {
-        List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(instanceHeaderCellValue.split("\\.")));
         if (isADataType) {
-            checkSameInstanceHeader(columnIndex, instanceNameElements.get(instanceNameElements.size() - 1));
+            checkSameInstanceHeader(columnIndex, instanceHeaderCellValue);
             checkValidAndUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex);
         } else {
             checkValidAndUniqueInstanceHeaderTitle(instanceHeaderCellValue, columnIndex);
@@ -884,7 +883,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) throws Exception {
         if (instanceHeaderCellValue.contains(".")) {
-            throw new Exception("Instance alias can not contains dot!");
+            throw new Exception("An instance alias cannot contain periods!");
         }
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
@@ -909,7 +908,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
         if (propertyHeaderCellValue.contains(".")) {
-            throw new Exception("Property alias can not contains dot!");
+            throw new Exception("A property alias cannot contain periods!");
         }
         checkUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
     }
