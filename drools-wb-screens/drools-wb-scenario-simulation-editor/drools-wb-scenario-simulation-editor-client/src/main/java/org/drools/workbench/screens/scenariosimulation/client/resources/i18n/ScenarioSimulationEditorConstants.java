@@ -260,4 +260,12 @@ public interface ScenarioSimulationEditorConstants
     String coverageNotSupportedForRule();
 
     String runATestToSeeCoverageReport();
+
+    String simpleTypes();
+
+    String complexTypes();
+
+    String complexCustomInstances();
+
+    String simpleCustomInstances();
 }
