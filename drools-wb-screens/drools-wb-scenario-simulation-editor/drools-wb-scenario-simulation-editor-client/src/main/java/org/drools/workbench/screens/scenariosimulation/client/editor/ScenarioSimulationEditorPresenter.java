@@ -299,7 +299,7 @@ public class ScenarioSimulationEditorPresenter
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
                 .collect(Collectors.toList());
-
+        view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulation.getSimulationDescriptor(),
@@ -353,6 +353,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void refreshModelContent(SimulationRunResult newData) {
+        view.hideBusyIndicator();
         if (this.model == null) {
             return;
         }

@@ -261,6 +261,8 @@ public interface ScenarioSimulationEditorConstants
 
     String runATestToSeeCoverageReport();
 
+    String running();
+
     String simpleTypes();
 
     String complexTypes();
