@@ -102,20 +102,53 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void clearSimpleJavaTypeList() {
-        view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getSimpleJavaTypeListContainer().removeAllChildren();
     }
 
     @Override
     public void clearInstanceList() {
-        view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getInstanceListContainer().removeAllChildren();
     }
 
     @Override
     public void clearSimpleJavaInstanceFieldList() {
-        view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getSimpleJavaInstanceListContainer().removeAllChildren();
+    }
+
+    @Override
+    public void updateDataObjectListSeparator() {
+        if (view.getDataObjectListContainer().getChildCount() == 0) {
+            view.getDataObjectListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getDataObjectListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        }
+    }
+
+    @Override
+    public void updateSimpleJavaTypeListSeparator() {
+        if (view.getSimpleJavaTypeListContainer().getChildCount() == 0) {
+            view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getSimpleJavaTypeListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        }
+    }
+
+    @Override
+    public void updateInstanceListSeparator() {
+        if (view.getInstanceListContainer().getChildCount() == 0) {
+            view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        }
+    }
+
+    @Override
+    public void updateSimpleJavaInstanceFieldListSeparator() {
+        if (view.getSimpleJavaInstanceListContainer().getChildCount() == 0) {
+            view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        }
     }
 
     @Override
@@ -148,16 +181,31 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         clearDataObjectList();
         this.dataObjectFieldsMap = dataObjectFieldsMap;
         this.dataObjectFieldsMap.forEach(this::addDataObjectListGroupItemView);
+        updateDataObjectListSeparator();
     }
 
     @Override
     public void setSimpleJavaTypeFieldsMap(SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap) {
         clearSimpleJavaTypeList();
         this.simpleJavaTypeFieldsMap = simpleJavaTypeFieldsMap;
-        if (!simpleJavaTypeFieldsMap.isEmpty()) {
-            view.getSimpleJavaTypeListContainer().getStyle().setDisplay(Style.Display.NONE);
-        }
         this.simpleJavaTypeFieldsMap.forEach(this::addSimpleJavaTypeListGroupItemView);
+        updateSimpleJavaTypeListSeparator();
+    }
+
+    @Override
+    public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
+        clearInstanceList();
+        this.instanceFieldsMap = instanceFieldsMap;
+        this.instanceFieldsMap.forEach(this::addInstanceListGroupItemView);
+        updateInstanceListSeparator();
+    }
+
+    @Override
+    public void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> simpleJavaInstanceFieldsMap) {
+        clearSimpleJavaInstanceFieldList();
+        this.simpleJavaInstanceFieldsMap = simpleJavaInstanceFieldsMap;
+        this.simpleJavaInstanceFieldsMap.forEach(this::addSimpleJavaInstanceListGroupItemView);
+        updateSimpleJavaInstanceFieldListSeparator();
     }
 
     @Override
@@ -166,34 +214,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void setInstanceFieldsMap(SortedMap<String, FactModelTree> instanceFieldsMap) {
-        clearInstanceList();
-        this.instanceFieldsMap = instanceFieldsMap;
-        if (!instanceFieldsMap.isEmpty()) {
-            view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
-        }
-        this.instanceFieldsMap.forEach(this::addInstanceListGroupItemView);
-    }
-
-    @Override
-    public void hideProperties(Map<String, List<String>> propertiesToHide) {
+    public void hideProperties(Map<String, List<List<String>>> propertiesToHide) {
         listGroupItemPresenter.showAll();
         propertiesToHide.entrySet().stream().forEach(
-                stringListEntry -> stringListEntry.getValue().forEach(s -> {
-                    List<String> propertyParts = s.contains(".") ? Arrays.asList(s.split("\\.")) : Collections.singletonList(s);
+                stringListEntry -> stringListEntry.getValue().forEach(propertyParts -> {
                     listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts);
                 })
         );
-    }
-
-    @Override
-    public void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> simpleJavaInstanceFieldsMap) {
-        clearSimpleJavaInstanceFieldList();
-        this.simpleJavaInstanceFieldsMap = simpleJavaInstanceFieldsMap;
-        if (!simpleJavaInstanceFieldsMap.isEmpty()) {
-            view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
-        }
-        this.simpleJavaInstanceFieldsMap.forEach(this::addSimpleJavaInstanceListGroupItemView);
     }
 
     @Override
@@ -229,6 +256,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        updateSeparators();
     }
 
     @Override
@@ -254,6 +282,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .stream()
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+        updateSeparators();
     }
 
     @Override
@@ -289,15 +318,14 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void onEnableEditorTab(String factName, String propertyName, boolean notEqualsSearch) {
+    public void onEnableEditorTab(String factName, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, notEqualsSearch);
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
-        if (propertyName != null && !notEqualsSearch) {
-            List<String> propertyParts = propertyName.contains(".") ? Arrays.asList(propertyName.split("\\.")) : Collections.singletonList(propertyName);
-            listGroupItemPresenter.selectProperty(factName, propertyParts);
+        if (propertyNameElements != null && !notEqualsSearch) {
+            listGroupItemPresenter.selectProperty(factName, propertyNameElements);
         }
     }
 
@@ -336,7 +364,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
-                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, value, selectedFieldItemView.getClassName())));
+                List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
+                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
             }
         }
     }
@@ -363,6 +392,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         clearSimpleJavaTypeList();
         clearInstanceList();
         clearSimpleJavaInstanceFieldList();
+    }
+
+    protected void updateSeparators() {
+        updateDataObjectListSeparator();
+        updateSimpleJavaTypeListSeparator();
+        updateInstanceListSeparator();
+        updateSimpleJavaInstanceFieldListSeparator();
     }
 
     protected boolean filterTerm(String key, String search, boolean notEqualsSearch) {

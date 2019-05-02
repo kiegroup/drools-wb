@@ -39,7 +39,7 @@ import org.guvnor.common.services.project.client.security.ProjectController;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
-import org.guvnor.common.services.shared.test.TestRunnerService;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
@@ -58,7 +58,7 @@ import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.kie.workbench.common.workbench.client.test.TestReportingDocksHandler;
-import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingPanel;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -69,6 +69,8 @@ import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.mvp.PerspectiveActivity;
 import org.uberfire.client.mvp.PerspectiveManager;
+import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.promise.Promises;
 import org.uberfire.client.workbench.events.PlaceGainFocusEvent;
 import org.uberfire.client.workbench.events.PlaceHiddenEvent;
 import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
@@ -81,6 +83,7 @@ import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
@@ -98,6 +101,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -111,11 +115,13 @@ public class ScenarioEditorPresenterTest {
     @Mock
     CommonConstants commonConstants;
     @Mock
-    TestRunnerReportingScreen testRunnerReportingScreen;
+    TestRunnerReportingPanel testRunnerReportingPanel;
     @Mock
     TestReportingDocksHandler testReportingDocksHandler;
     @Mock
     DefaultEditorDock docks;
+    @Mock
+    private PlaceManager placeManager;
     @Mock
     private EventSourceMock showTestPanelEvent;
     @Mock
@@ -139,8 +145,6 @@ public class ScenarioEditorPresenterTest {
     @Mock
     private ScenarioTestEditorService service;
     @Mock
-    private TestRunnerService testService;
-    @Mock
     private BasicFileMenuBuilder menuBuilder;
     @Spy
     @InjectMocks
@@ -153,6 +157,9 @@ public class ScenarioEditorPresenterTest {
     private SettingsPage settingsPage;
     @Mock
     private AuditPage auditPage;
+
+    protected Promises promises;
+
     @Mock
     private PerspectiveManager perspectiveManager;
     private CallerMock<ScenarioTestEditorService> fakeService;
@@ -163,7 +170,7 @@ public class ScenarioEditorPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-
+        promises = new SyncPromises();
         final AsyncPackageDataModelOracleFactory modelOracleFactory = mock(AsyncPackageDataModelOracleFactory.class);
 
         fakeService = new CallerMock<>(service);
@@ -171,12 +178,11 @@ public class ScenarioEditorPresenterTest {
                                                  user,
                                                  importsWidget,
                                                  fakeService,
-                                                 new CallerMock<>(testService),
                                                  new TestScenarioResourceType(new Decision()),
                                                  modelOracleFactory,
                                                  settingsPage,
                                                  auditPage,
-                                                 testRunnerReportingScreen,
+                                                 testRunnerReportingPanel,
                                                  testReportingDocksHandler,
                                                  showTestPanelEvent,
                                                  hideTestPanelEvent) {
@@ -192,6 +198,8 @@ public class ScenarioEditorPresenterTest {
                 versionRecordManager = ScenarioEditorPresenterTest.this.versionRecordManager;
                 alertsButtonMenuItemBuilder = ScenarioEditorPresenterTest.this.alertsButtonMenuItemBuilder;
                 perspectiveManager = ScenarioEditorPresenterTest.this.perspectiveManager;
+                placeManager = ScenarioEditorPresenterTest.this.placeManager;
+                promises = ScenarioEditorPresenterTest.this.promises;
             }
 
             @Override
@@ -219,7 +227,8 @@ public class ScenarioEditorPresenterTest {
         when(service.loadContent(any(Path.class))).thenReturn(testScenarioModelContent);
 
         final TestScenarioResult result = new TestScenarioResult(scenarioRunResult,
-                                                                 Collections.EMPTY_SET);
+                                                                 Collections.EMPTY_SET,
+                                                                 mock(TestResultMessage.class));
         when(service.runScenario(eq("userName"),
                                  any(Path.class),
                                  eq(scenario))).thenReturn(result);
@@ -267,10 +276,11 @@ public class ScenarioEditorPresenterTest {
 
         editor.onStartup(mock(ObservablePath.class),
                          place);
+        verify(testRunnerReportingPanel).reset();
 
         editor.onHideDocks(new PlaceHiddenEvent(place));
         verify(hideTestPanelEvent).fire(any());
-        verify(testRunnerReportingScreen).reset();
+        verify(testRunnerReportingPanel, times(2)).reset();
     }
 
     @Test
@@ -387,40 +397,9 @@ public class ScenarioEditorPresenterTest {
     }
 
     @Test
-    public void testRunAllScenarios() throws Exception {
-        final ObservablePath path = mock(ObservablePath.class);
-
-        when(versionRecordManager.getCurrentPath()).thenReturn(path);
-
-        editor.onRunAllScenarios();
-
-        InOrder inOrder = inOrder(view);
-        inOrder.verify(view).showBusyIndicator(TestScenarioConstants.INSTANCE.BuildingAndRunningScenarios());
-        inOrder.verify(view).hideBusyIndicator();
-    }
-
-    @Test
-    public void testRunAllScenariosFail() throws Exception {
-        final TestRunFailedErrorCallback callback = mock(TestRunFailedErrorCallback.class);
-
-        doReturn(true)
-                .when(callback)
-                .error(any(Message.class),
-                       any(RuntimeException.class));
-        doReturn(callback).when(editor).getTestRunFailedCallback();
-        doThrow(new RuntimeException("some problem")).when(testService).runAllTests(anyString(),
-                                                                                    any(Path.class));
-        editor.onRunAllScenarios();
-
-        verify(callback).error(any(Message.class),
-                               any(RuntimeException.class));
-        verify(view).showBusyIndicator(TestScenarioConstants.INSTANCE.BuildingAndRunningScenarios());
-    }
-
-    @Test
     public void testMakeMenuBar() {
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
-        doReturn(true).when(projectController).canUpdateProject(any());
+        doReturn(promises.resolve(true)).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();
 
@@ -437,7 +416,7 @@ public class ScenarioEditorPresenterTest {
     @Test
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
-        doReturn(false).when(projectController).canUpdateProject(any());
+        doReturn(promises.resolve(false)).when(projectController).canUpdateProject(any());
 
         editor.makeMenuBar();
 

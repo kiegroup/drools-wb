@@ -19,6 +19,8 @@ package org.drools.workbench.screens.testscenario.model;
 import java.util.Set;
 
 import org.drools.workbench.models.testscenarios.shared.Scenario;
+import org.guvnor.common.services.shared.test.TestResultMessage;
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 @Portable
@@ -26,14 +28,17 @@ public class TestScenarioResult {
 
     private Scenario scenario;
     private Set<String> log;
+    private TestResultMessage testResultMessage;
 
     public TestScenarioResult() {
     }
 
-    public TestScenarioResult(Scenario scenario,
-                              Set<String> log) {
+    public TestScenarioResult(@MapsTo("scenario")Scenario scenario,
+                              @MapsTo("log")   Set<String> log,
+                              @MapsTo("testResultMessage")  TestResultMessage testResultMessage) {
         this.scenario = scenario;
         this.log = log;
+        this.testResultMessage = testResultMessage;
     }
 
     public Scenario getScenario() {
@@ -42,5 +47,9 @@ public class TestScenarioResult {
 
     public Set<String> getLog() {
         return log;
+    }
+
+    public TestResultMessage getTestResultMessage() {
+        return testResultMessage;
     }
 }

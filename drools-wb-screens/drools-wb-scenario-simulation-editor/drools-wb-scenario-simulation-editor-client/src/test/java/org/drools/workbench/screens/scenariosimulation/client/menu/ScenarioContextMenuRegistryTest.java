@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Header
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationGridHandlerTest;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,8 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_HEIGHT;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -99,7 +102,8 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
         verify(expectedContextMenuMock).show(clickPointX,
                                              clickPointy,
                                              0,
-                                             COLUMN_GROUP, false);
+                                             COLUMN_GROUP, false,
+                                             simulationDescriptorMock.getType().equals(ScenarioSimulationModel.Type.RULE));
         verifyZeroInteractions(headerExpectedContextMenuMock);
     }
 
@@ -150,7 +154,13 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
                 .as("Click to expect/given body cell")
                 .isTrue();
 
-        verify(gridContextMenuMock).show(clickPointX, clickPointY, 0, 0, COLUMN_GROUP, true);
+        verify(gridContextMenuMock).show(clickPointX,
+                                         clickPointY,
+                                         0,
+                                         0,
+                                         COLUMN_GROUP,
+                                         true,
+                                         simulationDescriptorMock.getType().equals(ScenarioSimulationModel.Type.RULE));
     }
 
     @Test

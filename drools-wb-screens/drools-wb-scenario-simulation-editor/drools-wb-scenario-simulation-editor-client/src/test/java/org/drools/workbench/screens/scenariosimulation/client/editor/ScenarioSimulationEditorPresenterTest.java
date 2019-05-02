@@ -22,14 +22,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
@@ -38,10 +41,19 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
 import org.guvnor.common.services.shared.metadata.model.Overview;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +64,7 @@ import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
-import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingPanel;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
@@ -61,21 +73,28 @@ import org.uberfire.client.mvp.PerspectiveActivity;
 import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.promise.Promises;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
+import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -134,15 +153,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationContext.Status statusMock;
     @Mock
-    private TestRunnerReportingScreen testRunnerReportingScreenMock;
+    private TestRunnerReportingPanel testRunnerReportingPanel;
     @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
+    private Promises promises;
     @Mock
     private ScenarioMenuItem runScenarioMenuItemMock;
     @Mock
     private ScenarioMenuItem undoMenuItemMock;
     @Mock
     private ScenarioMenuItem redoMenuItemMock;
+    @Mock
+    private ScenarioMenuItem exportToCsvMenuItemMock;
     @Mock
     private DataManagementStrategy dataManagementStrategyMock;
     @Mock
@@ -151,9 +173,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private PerspectiveManager perspectiveManagerMock;
     @Mock
     private Command saveCommandMock;
+    @Mock
+    private TextFileExport textFileExportMock;
 
     @Before
     public void setup() {
+        promises = new SyncPromises();
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
@@ -161,6 +186,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
+        when(scenarioSimulationViewMock.getExportToCsvMenuItem()).thenReturn(exportToCsvMenuItemMock);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
@@ -178,9 +204,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                importsWidgetPresenterMock,
                                                                oracleFactoryMock,
                                                                placeManagerMock,
-                                                               testRunnerReportingScreenMock,
+                                                               testRunnerReportingPanel,
                                                                scenarioSimulationDocksHandlerMock,
-                                                               new CallerMock<>(dmnTypeServiceMock)) {
+                                                               new CallerMock<>(dmnTypeServiceMock),
+                                                               new CallerMock<>(importExportServiceMock),
+                                                               textFileExportMock,
+                                                               mock(ConfirmPopupPresenter.class)) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -199,6 +228,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.model = scenarioSimulationModelMock;
                 this.docks = docksMock;
                 this.perspectiveManager = perspectiveManagerMock;
+                this.promises = ScenarioSimulationEditorPresenterTest.this.promises;
             }
 
             @Override
@@ -213,6 +243,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             @Override
             protected void clearTestToolsStatus() {
+
+            }
+
+            @Override
+            protected void open(String downloadURL) {
 
             }
 
@@ -238,6 +273,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                eq(content.getDataModel()))).thenReturn(oracle);
         presenter.onStartup(mock(ObservablePath.class),
                             mock(PlaceRequest.class));
+        verify(testRunnerReportingPanel).reset();
         verify(importsWidgetPresenterMock).setContent(oracle,
                                                       modelLocal.getImports(),
                                                       false);
@@ -300,6 +336,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
+        verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(exportToCsvMenuItemMock);
         verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
@@ -332,7 +369,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridMock, times(1)).clearSelections();
         verify(presenterSpy).unRegisterTestToolsCallback();
         verify(presenterSpy).clearTestToolsStatus();
-        verify(testRunnerReportingScreenMock).reset();
+        verify(testRunnerReportingPanel).reset();
     }
 
     @Test
@@ -472,23 +509,27 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(new ScenarioSimulationModelContent(modelLocal,
                                                     new Overview(),
                                                     new PackageDataModelOracleBaselinePayload())).when(scenarioSimulationServiceMock).loadContent(any());
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(scenarioMapMock);
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(scenarioMapMock,
+                                                                                                          new TestResultMessage()));
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
-        assertFalse(modelLocal.getSimulation().equals(simulationMock));
+        assertNotEquals(simulationMock, modelLocal.getSimulation());
         presenter.onStartup(observablePathMock, placeRequestMock);
         presenter.onRunScenario();
         verify(scenarioSimulationServiceMock, times(1)).runScenario(any(), any(), any());
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
-        assertTrue(modelLocal.getSimulation().equals(simulationMock));
+        assertEquals(simulationMock, modelLocal.getSimulation());
     }
 
     @Test
     public void onRunTestById() throws Exception {
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(Collections.emptyMap(),
+                                                                                                          new TestResultMessage()));
         when(simulationMock.getScenarioByIndex(anyInt())).thenReturn(mock(Scenario.class));
         presenter.onRunScenario(Collections.singletonList(0));
+        verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
         verify(scenarioSimulationServiceMock, times(1)).runScenario(any(), any(), any());
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
@@ -503,7 +544,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         int scenarioIndex = scenarioNumber - 1;
         entries.add(new AbstractMap.SimpleEntry<>(scenarioNumber, new Scenario()));
         when(scenarioMapMock.entrySet()).thenReturn(entries);
-        presenter.refreshModelContent(scenarioMapMock);
+        presenter.refreshModelContent(new TestRunResult(scenarioMapMock,
+                                                        new TestResultMessage()));
+        verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(simulationMock, times(1)).replaceScenario(eq(scenarioIndex), any());
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
@@ -515,6 +558,22 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void isDirty() {
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenThrow(new RuntimeException());
         assertFalse(presenter.isDirty());
+    }
+
+    @Test
+    public void onDownload() {
+        String DOWNLOAD_URL = "DOWNLOAD_URL";
+        Supplier<Path> pathSupplierMock = mock(Supplier.class);
+        doReturn(DOWNLOAD_URL).when(presenterSpy).getFileDownloadURL(eq(pathSupplierMock));
+        presenterSpy.onDownload(pathSupplierMock);
+        verify(presenterSpy, times(1)).getFileDownloadURL(eq(pathSupplierMock));
+        verify(presenterSpy, times(1)).open(eq(DOWNLOAD_URL));
+    }
+
+    @Test
+    public void showImportDialog() {
+        presenter.showImportDialog();
+        verify(eventBusMock, times(1)).fireEvent(isA(ImportEvent.class));
     }
 
     @Test
@@ -566,6 +625,21 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).setOriginalHash(anyInt());
     }
 
+    @Test
+    public void onExportToCsv() {
+        presenter.onExportToCsv();
+        verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), any());
+        verify(textFileExportMock, times(1)).export(any(), anyString());
+    }
+
+    @Test
+    public void onImport() {
+        when(importExportServiceMock.importSimulation(any(), any(), any())).thenReturn(new Simulation());
+        String FILE_CONTENT = "FILE_CONTENT";
+        presenterSpy.onImport(FILE_CONTENT);
+        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENT), any());
+    }
+
     private void onClosePlaceStatusOpen() {
         verify(versionRecordManagerMock, times(1)).clear();
         verify(scenarioGridPanelMock, times(1)).unregister();
@@ -575,5 +649,27 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(versionRecordManagerMock, times(1)).clear();
         verify(placeManagerMock, times(0)).closePlace(placeRequestMock);
         verify(scenarioGridPanelMock, times(1)).unregister();
+    }
+
+    @Test
+    public void cleanReadOnlyColumn() {
+        Simulation simulation = new Simulation();
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactMapping test1 = simulationDescriptor
+                .addFactMapping(FactIdentifier.create("test1", String.class.getCanonicalName()),
+                                ExpressionIdentifier.create("", FactMappingType.GIVEN));
+        FactMapping test2 = simulationDescriptor
+                .addFactMapping(FactIdentifier.create("test2", String.class.getCanonicalName()),
+                                ExpressionIdentifier.create("", FactMappingType.GIVEN));
+
+        test1.addExpressionElement("test", String.class.getCanonicalName());
+        Scenario scenario = simulation.addScenario();
+        scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), LOWER_CASE_VALUE);
+        scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), LOWER_CASE_VALUE);
+
+        presenter.cleanReadOnlyColumn(simulation);
+
+        assertNotNull(scenario.getFactMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier()).get().getRawValue());
+        assertNull(scenario.getFactMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier()).get().getRawValue());
     }
 }
