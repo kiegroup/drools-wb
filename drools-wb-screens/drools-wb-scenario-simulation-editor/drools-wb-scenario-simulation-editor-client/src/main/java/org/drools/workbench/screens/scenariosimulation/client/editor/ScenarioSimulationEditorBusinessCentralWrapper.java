@@ -74,8 +74,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.handlers.Sc
 
 @Dependent
 @WorkbenchScreen(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorBusinessCentralWrapper
-        extends KieEditor<ScenarioSimulationModel> {
+public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<ScenarioSimulationModel> {
 
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
