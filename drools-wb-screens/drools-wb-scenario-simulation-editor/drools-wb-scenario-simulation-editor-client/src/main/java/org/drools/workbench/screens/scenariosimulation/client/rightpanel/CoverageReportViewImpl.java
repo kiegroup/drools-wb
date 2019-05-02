@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -23,6 +24,7 @@ import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
@@ -37,10 +39,19 @@ public class CoverageReportViewImpl
     protected Presenter presenter;
 
     @DataField
+    protected HTMLElement reportAvailableLabel = (HTMLElement) DomGlobal.document.createElement("dt");
+
+    @DataField
     protected HTMLElement reportAvailable = (HTMLElement) DomGlobal.document.createElement("dd");
 
     @DataField
+    protected HTMLElement reportExecutedLabel = (HTMLElement) DomGlobal.document.createElement("dt");
+
+    @DataField
     protected HTMLElement reportExecuted = (HTMLElement) DomGlobal.document.createElement("dd");
+
+    @DataField
+    protected HTMLElement reportCoverageLabel = (HTMLElement) DomGlobal.document.createElement("dt");
 
     @DataField
     protected HTMLElement reportCoverage = (HTMLElement) DomGlobal.document.createElement("dd");
@@ -68,6 +79,17 @@ public class CoverageReportViewImpl
 
     @DataField
     protected HTMLDivElement scenarioListSection = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLElement numberOfTimesDecisionEvaluated = (HTMLElement) DomGlobal.document.createElement("span");
+
+    @PostConstruct
+    protected void postConstruct() {
+        reportAvailableLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportAvailableLabel();
+        reportExecutedLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportExecutedLabel();
+        reportCoverageLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportCoverageLabel();
+        numberOfTimesDecisionEvaluated.textContent = ScenarioSimulationEditorConstants.INSTANCE.numberOfTimesDecisionEvaluated();
+    }
 
     @Override
     public Presenter getPresenter() {

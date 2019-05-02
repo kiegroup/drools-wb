@@ -270,4 +270,12 @@ public interface ScenarioSimulationEditorConstants
     String complexCustomInstances();
 
     String simpleCustomInstances();
+
+    String reportAvailableLabel();
+
+    String reportExecutedLabel();
+
+    String reportCoverageLabel();
+
+    String numberOfTimesDecisionEvaluated();
 }

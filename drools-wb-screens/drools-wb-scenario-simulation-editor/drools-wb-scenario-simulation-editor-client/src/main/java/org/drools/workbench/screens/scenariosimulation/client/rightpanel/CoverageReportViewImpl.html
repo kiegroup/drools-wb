@@ -26,17 +26,11 @@
         <div class="row" data-field="summarySection">
             <div class="col-xs-12 col-md-8">
                 <dl class="dl-horizontal kie-coverage__dl-horizontal clearfix">
-                    <dt>
-                        Available decisions:
-                    </dt>
+                    <dt data-field="reportAvailableLabel"></dt>
                     <dd data-field="reportAvailable"></dd>
-                    <dt>
-                        Tested decisions:
-                    </dt>
+                    <dt data-field="reportExecutedLabel"></dt>
                     <dd data-field="reportExecuted"></dd>
-                    <dt>
-                        Percentage of decisions tested:
-                    </dt>
+                    <dt data-field="reportCoverageLabel"></dt>
                     <dd data-field="reportCoverage"></dd>
                 </dl>
             </div>
@@ -52,7 +46,7 @@
         <div class="row" data-field="decisionListSection">
             <div class="col-xs-12 col-md-12">
                 <hr class="kie-dock__divider"/>
-                Number of times a Decision has been evaluated
+                <span data-field="numberOfTimesDecisionEvaluated"></span>
                 <br/>
                 <div style="margin-top: 20px; height: 100px">
                     <div style="height: 100%; overflow: auto">
