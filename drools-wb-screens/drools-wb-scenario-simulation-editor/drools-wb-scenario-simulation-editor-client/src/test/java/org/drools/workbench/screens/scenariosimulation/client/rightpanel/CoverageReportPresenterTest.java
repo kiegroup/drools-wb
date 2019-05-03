@@ -104,7 +104,7 @@ public class CoverageReportPresenterTest {
         presenterSpy.populateSummary(availableLocal, executedLocal, coverageLocal);
         verify(coverageReportViewMock, times(1)).setReportAvailable(eq(availableLocal + ""));
         verify(coverageReportViewMock, times(1)).setReportExecuted(eq(executedLocal + ""));
-        verify(coverageReportViewMock, times(1)).setReportCoverage(eq(coverageLocal + " %"));
+        verify(coverageReportViewMock, times(1)).setReportCoverage(eq(coverageLocal + "%"));
         int delta = availableLocal - executedLocal;
         verify(coverageReportDonutPresenterMock, times(1)).showCoverageReport(eq(executedLocal),
                                                                               eq(delta));
