@@ -482,4 +482,11 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         assertTrue(testToolsPresenter.filterTerm(key, search, false));
         assertFalse(testToolsPresenter.filterTerm(key, search, true));
     }
+
+    @Test
+    public void resetTest() {
+        testToolsPresenter.reset();
+        verify(testToolsPresenter, times(1)).clearLists();
+        verify(testToolsPresenter, times(1)).updateSeparators();
+    }
 }

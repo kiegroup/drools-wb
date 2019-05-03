@@ -89,6 +89,15 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         saveCommand.execute();
     }
 
+    @Override
+    public void reset() {
+        view.getScenarioType().setInnerText("");
+        view.getFileName().setInnerText("");
+        view.getSkipFromBuild().setChecked(false);
+        view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
+        view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
+    }
+
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
         view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);

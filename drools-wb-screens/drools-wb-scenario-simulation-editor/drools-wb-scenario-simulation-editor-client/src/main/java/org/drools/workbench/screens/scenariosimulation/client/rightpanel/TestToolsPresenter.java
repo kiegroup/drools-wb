@@ -371,6 +371,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         }
     }
 
+    @Override
+    public void reset() {
+        clearLists();
+        updateSeparators();
+    }
+
     protected Optional<String> getFullPackage(String className) {
         return getFactModelTreeFromMaps(className).map(FactModelTree::getFullPackage);
     }
