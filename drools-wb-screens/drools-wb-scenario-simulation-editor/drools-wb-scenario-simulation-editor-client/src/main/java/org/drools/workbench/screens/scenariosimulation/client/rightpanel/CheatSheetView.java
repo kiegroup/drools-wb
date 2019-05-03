@@ -24,8 +24,6 @@ public interface CheatSheetView extends SubDockView<CheatSheetView.Presenter> {
 
     void setDMNCheatSheetContent();
 
-    void reset();
-
     interface Presenter extends SubDockView.Presenter {
 
         /**

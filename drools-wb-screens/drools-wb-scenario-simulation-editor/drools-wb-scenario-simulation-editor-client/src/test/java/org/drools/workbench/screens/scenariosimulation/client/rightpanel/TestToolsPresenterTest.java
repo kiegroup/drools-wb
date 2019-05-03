@@ -487,7 +487,6 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     @Test
     public void resetTest() {
         testToolsPresenter.reset();
-        verify(testToolsPresenter, times(1)).clearLists();
-        verify(testToolsPresenter, times(1)).updateSeparators();
+        verify(testToolsViewMock, times(1)).reset();
     }
 }

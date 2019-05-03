@@ -372,8 +372,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void reset() {
-        clearLists();
-        updateSeparators();
+        view.reset();
     }
 
     protected Optional<String> getFullPackage(String className) {

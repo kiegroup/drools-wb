@@ -247,10 +247,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test
     public void resetTest() {
         settingsPresenter.reset();
-        verify(scenarioTypeMock, times(1)).setInnerText(eq(""));
-        verify(fileNameMock, times(1)).setInnerText(eq(""));
-        verify(skipFromBuildMock, times(1)).setChecked(eq(false));
-        verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
-        verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(settingsViewMock, times(1)).reset();
     }
 }

@@ -27,6 +27,7 @@ public interface SubDockView<T extends SubDockView.Presenter>
 
     T getPresenter();
 
+    void reset();
 
     interface Presenter {
 
