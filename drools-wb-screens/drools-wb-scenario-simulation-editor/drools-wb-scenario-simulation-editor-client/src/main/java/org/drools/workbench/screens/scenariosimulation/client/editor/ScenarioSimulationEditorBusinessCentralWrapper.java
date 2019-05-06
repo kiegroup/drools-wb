@@ -24,8 +24,8 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
@@ -256,14 +256,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         resetEditorPages(content.getOverview());
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
-            dataManagementStrategy = new DMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getContext());
+            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getContext());
         } else {
-            dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
         ScenarioSimulationModel model = content.getModel();
-        if (dataManagementStrategy instanceof DMODataManagementStrategy) {
-            importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),
+        if (dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy) {
+            importsWidget.setContent(((BusinessCentralDMODataManagementStrategy) dataManagementStrategy).getOracle(),
                                      model.getImports(),
                                      isReadOnly);
             addImportsTab(importsWidget);

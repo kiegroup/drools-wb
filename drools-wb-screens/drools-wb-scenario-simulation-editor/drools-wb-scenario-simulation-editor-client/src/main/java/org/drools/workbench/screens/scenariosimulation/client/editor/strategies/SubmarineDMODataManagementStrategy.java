@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.datamodel.SubmarineAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
+import org.drools.workbench.screens.scenariosimulation.client.submarinefakes.SubmarineAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.kie.soup.project.datamodel.oracle.ModelField;

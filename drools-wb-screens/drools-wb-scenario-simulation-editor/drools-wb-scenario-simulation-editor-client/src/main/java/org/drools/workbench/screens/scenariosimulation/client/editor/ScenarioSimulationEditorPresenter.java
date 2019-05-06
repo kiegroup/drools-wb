@@ -32,7 +32,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
@@ -359,12 +359,12 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
         presenter.initCheatSheet(type);
     }
 
     protected void setSettings(SettingsView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
     }

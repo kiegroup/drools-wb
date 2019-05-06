@@ -45,7 +45,7 @@ public class ScenarioSimulationXMLPersistenceTest {
         final String xml = instance.marshal(simulationModel);
 
         assertFalse(xml.contains("org.drools.workbench.screens.scenariosimulation.model"));
-        assertFalse(xml.contains("org.kie.soup.project.datamodel.imports"));
+        assertFalse(xml.contains("org.kie.soup.project.submarinefakes.imports"));
     }
 
     @Test

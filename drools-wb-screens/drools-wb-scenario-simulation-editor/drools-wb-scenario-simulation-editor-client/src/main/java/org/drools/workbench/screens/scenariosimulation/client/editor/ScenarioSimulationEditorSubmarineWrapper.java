@@ -24,14 +24,13 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SubmarineDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -61,7 +60,6 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected Caller<ScenarioSimulationSubmarineService> service;
-    private Caller<DMNTypeService> dmnTypeService;
     private FileMenuBuilder fileMenuBuilder;
 
     public ScenarioSimulationEditorSubmarineWrapper() {
@@ -73,13 +71,11 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
                                                     final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
                                                     final FileMenuBuilder fileMenuBuilder,
                                                     final PlaceManager placeManager,
-                                                    final MultiPageEditorContainerView multiPageEditorContainerView,
-                                                    final Caller<DMNTypeService> dmnTypeService) {
+                                                    final MultiPageEditorContainerView multiPageEditorContainerView) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
         this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
-        this.dmnTypeService = dmnTypeService;
     }
 
     @Override
@@ -164,18 +160,10 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
             dataManagementStrategy = new SubmarineDMODataManagementStrategy(scenarioSimulationEditorPresenter.getContext());
         } else {
-            dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new SubmarineDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(null, content);
         ScenarioSimulationModel model = content.getModel();
-//        if (dataManagementStrategy instanceof SubmarineDMODataManagementStrategy) {
-//            importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),
-//                                     model.getImports(),
-//                                     isReadOnly);
-//            addImportsTab(importsWidget);
-//        }
-//        baseView.hideBusyIndicator();
-//        setOriginalHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 }

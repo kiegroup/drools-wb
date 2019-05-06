@@ -24,23 +24,22 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
-import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 
-public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
+public abstract class AbstractDMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
-    private final Caller<DMNTypeService> dmnTypeService;
-    private final EventBus eventBus;
+    protected final EventBus eventBus;
     protected Path currentPath;
 
-    public DMNDataManagementStrategy(Caller<DMNTypeService> dmnTypeService,
-                                     ScenarioSimulationContext scenarioSimulationContext,
-                                     EventBus eventBus) {
-        this.dmnTypeService = dmnTypeService;
+    protected abstract void retrieveFactModelTuple(final TestToolsView.Presenter testToolsPresenter,
+                                                   final ScenarioGridModel scenarioGridModel,
+                                                   String dmnFilePath);
+
+    public AbstractDMNDataManagementStrategy(ScenarioSimulationContext scenarioSimulationContext,
+                                             EventBus eventBus) {
         this.scenarioSimulationContext = scenarioSimulationContext;
         this.eventBus = eventBus;
     }
@@ -51,9 +50,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         if (factModelTreeHolder.getFactModelTuple() != null) {
             getSuccessCallback(testToolsPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
         } else {
-            dmnTypeService.call(getSuccessCallback(testToolsPresenter, scenarioGridModel),
-                                getErrorCallback(testToolsPresenter))
-                    .retrieveFactModelTuple(currentPath, dmnFilePath);
+            retrieveFactModelTuple(testToolsPresenter, scenarioGridModel, dmnFilePath);
         }
     }
 
@@ -79,7 +76,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         showErrorsAndCleanupState(factModelTuple);
     }
 
-    private void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
+    protected void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
         StringBuilder builder = new StringBuilder();
         boolean showError = false;
         if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
@@ -100,7 +97,7 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
         }
     }
 
-    private ErrorCallback<Object> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
+    protected ErrorCallback<Object> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
         return (error, exception) -> {
             testToolsPresenter.setDataObjectFieldsMap(new TreeMap<>());
             return false;

@@ -30,7 +30,7 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.callbacks.Callback;
 
-public class DMODataManagementStrategy extends AbstractDMODataManagementStrategy {
+public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataManagementStrategy {
 
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
@@ -38,7 +38,7 @@ public class DMODataManagementStrategy extends AbstractDMODataManagementStrategy
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
 
-    public DMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory, final ScenarioSimulationContext scenarioSimulationContext) {
+    public BusinessCentralDMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory, final ScenarioSimulationContext scenarioSimulationContext) {
         this.oracleFactory = oracleFactory;
         this.scenarioSimulationContext = scenarioSimulationContext;
     }
