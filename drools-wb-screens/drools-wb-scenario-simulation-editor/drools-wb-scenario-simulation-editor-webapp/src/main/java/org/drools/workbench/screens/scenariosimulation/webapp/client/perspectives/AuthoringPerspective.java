@@ -17,7 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.perspectiv
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.kie.workbench.common.dmn.showcase.client.editor.DMNDiagramsNavigatorScreen;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.uberfire.client.annotations.Perspective;
 import org.uberfire.client.annotations.WorkbenchPerspective;
 import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
@@ -36,7 +36,7 @@ public class AuthoringPerspective {
     public PerspectiveDefinition buildPerspective() {
         final PerspectiveDefinition perspective = new PerspectiveDefinitionImpl(MultiListWorkbenchPanelPresenter.class.getName());
         perspective.setName("Authoring");
-        perspective.getRoot().addPart(new PartDefinitionImpl(new DefaultPlaceRequest(DMNDiagramsNavigatorScreen.SCREEN_ID)));
+        perspective.getRoot().addPart(new PartDefinitionImpl(new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER)));
         return perspective;
     }
 
