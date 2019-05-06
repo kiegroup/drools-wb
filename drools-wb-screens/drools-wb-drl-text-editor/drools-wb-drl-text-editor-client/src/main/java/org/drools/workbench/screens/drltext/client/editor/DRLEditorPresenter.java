@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.drltext.client.editor;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.PostConstruct;
@@ -59,9 +60,11 @@ import org.uberfire.workbench.model.menu.Menus;
  * This is the default rule editor widget (just text editor based).
  */
 @Dependent
-@WorkbenchEditor(identifier = "DRLEditor", supportedTypes = {DRLResourceType.class, DSLRResourceType.class})
+@WorkbenchEditor(identifier = DRLEditorPresenter.EDITOR_ID, supportedTypes = {DRLResourceType.class, DSLRResourceType.class})
 public class DRLEditorPresenter
         extends KieEditor<String> {
+
+    public static final String EDITOR_ID = "DRLEditor";
 
     @Inject
     protected Caller<DRLTextEditorService> drlTextEditorService;
@@ -193,9 +196,16 @@ public class DRLEditorPresenter
                                                                                        commitMessage);
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         versionRecordManager.clear();
+        super.onClose();
     }
 
     @OnMayClose
@@ -227,7 +237,7 @@ public class DRLEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

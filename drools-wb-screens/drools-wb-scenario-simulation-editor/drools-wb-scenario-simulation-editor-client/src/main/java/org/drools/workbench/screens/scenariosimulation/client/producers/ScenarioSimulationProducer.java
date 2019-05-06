@@ -15,15 +15,32 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.commands.CommandExecutor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioInvokeContextMenuForSelectedCell;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationKeyboardEditHandler;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveDown;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveLeft;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveRight;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveUp;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationSelectTopLeftCell;
 import org.uberfire.workbench.events.NotificationEvent;
 
 /**
@@ -32,23 +49,67 @@ import org.uberfire.workbench.events.NotificationEvent;
 @Dependent
 public class ScenarioSimulationProducer {
 
+    @Inject
+    protected ScenarioSimulationViewProducer scenarioSimulationViewProducer;
 
     @Inject
-    ScenarioSimulationViewProducer scenarioSimulationViewProducer;
+    protected EventBusProducer eventBusProducer;
 
     @Inject
-    EventBusProducer eventBusProducer;
+    protected DeletePopupPresenter deletePopupPresenter;
+    @Inject
+    protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
+    @Inject
+    protected ConfirmPopupPresenter confirmPopupPresenter;
+    @Inject
+    protected FileUploadPopupPresenter fileUploadPopupPresenter;
 
     @Inject
-    DeletePopupPresenter deletePopupPresenter;
-    @Inject
-    PreserveDeletePopupPresenter preserveDeletePopupPresenter;
+    protected ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
     @Inject
-    CommandExecutor commandExecutor;
+    protected ScenarioCommandRegistry scenarioCommandRegistry;
 
     @Inject
-    Event<NotificationEvent> notificationEvent;
+    protected ScenarioCommandManager scenarioCommandManager;
+
+    @Inject
+    protected Event<NotificationEvent> notificationEvent;
+
+    @PostConstruct
+    public void init() {
+        final ScenarioGridPanel scenarioGridPanel = getScenarioSimulationView().getScenarioGridPanel();
+        final ScenarioGridLayer scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
+        final ScenarioSimulationKeyboardEditHandler scenarioSimulationKeyboardEditHandler = new ScenarioSimulationKeyboardEditHandler(scenarioGridLayer);
+
+        final ScenarioContextMenuRegistry scenarioContextMenuRegistry =
+                scenarioSimulationViewProducer.getScenarioContextMenuRegistry();
+        scenarioContextMenuRegistry.setEventBus(getEventBus());
+
+        final ScenarioInvokeContextMenuForSelectedCell invokeContextMenuKeyboardOperation =
+                new ScenarioInvokeContextMenuForSelectedCell(scenarioGridLayer, scenarioContextMenuRegistry);
+
+
+        final BaseGridWidgetKeyboardHandler handler = new BaseGridWidgetKeyboardHandler(scenarioGridLayer);
+        handler.addOperation(scenarioSimulationKeyboardEditHandler,
+                             new KeyboardOperationSelectTopLeftCell(scenarioGridLayer),
+                             new KeyboardOperationMoveLeft(scenarioGridLayer),
+                             new KeyboardOperationMoveRight(scenarioGridLayer),
+                             new KeyboardOperationMoveUp(scenarioGridLayer),
+                             new KeyboardOperationMoveDown(scenarioGridLayer),
+                             invokeContextMenuKeyboardOperation);
+        scenarioGridPanel.addKeyDownHandler(handler);
+
+        scenarioSimulationEventHandler.setEventBus(getEventBus());
+        scenarioSimulationEventHandler.setDeletePopupPresenter(deletePopupPresenter);
+        scenarioSimulationEventHandler.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
+        scenarioSimulationEventHandler.setConfirmPopupPresenter(confirmPopupPresenter);
+        scenarioSimulationEventHandler.setFileUploadPopupPresenter(fileUploadPopupPresenter);
+        scenarioSimulationEventHandler.setNotificationEvent(notificationEvent);
+        scenarioSimulationEventHandler.setContext(getScenarioSimulationContext());
+        scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
+        scenarioSimulationEventHandler.setScenarioCommandRegistry(scenarioCommandRegistry);
+    }
 
     public EventBus getEventBus() {
         return eventBusProducer.getEventBus();
@@ -58,12 +119,7 @@ public class ScenarioSimulationProducer {
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
     }
 
-    public CommandExecutor getCommandExecutor() {
-        commandExecutor.setEventBus(getEventBus());
-        commandExecutor.setScenarioGridPanel(getScenarioSimulationView().getScenarioGridPanel());
-        commandExecutor.setDeletePopupPresenter(deletePopupPresenter);
-        commandExecutor.setPreserveDeletePopupPresenter(preserveDeletePopupPresenter);
-        commandExecutor.setNotificationEvent(notificationEvent);
-        return commandExecutor;
+    public ScenarioSimulationContext getScenarioSimulationContext() {
+        return scenarioSimulationViewProducer.getScenarioSimulationContext();
     }
 }

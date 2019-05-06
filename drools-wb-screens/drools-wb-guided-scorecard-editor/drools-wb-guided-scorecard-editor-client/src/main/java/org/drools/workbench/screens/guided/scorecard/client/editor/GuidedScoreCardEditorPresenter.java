@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.guided.scorecard.client.editor;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -57,9 +58,11 @@ import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
-@WorkbenchEditor(identifier = "GuidedScoreCardEditor", supportedTypes = {GuidedScoreCardResourceType.class})
+@WorkbenchEditor(identifier = GuidedScoreCardEditorPresenter.EDITOR_ID, supportedTypes = {GuidedScoreCardResourceType.class})
 public class GuidedScoreCardEditorPresenter
         extends KieEditor<ScoreCardModel> {
+
+    public static final String EDITOR_ID = "GuidedScoreCardEditor";
 
     @Inject
     protected Caller<GuidedScoreCardEditorService> scoreCardEditorService;
@@ -194,10 +197,17 @@ public class GuidedScoreCardEditorPresenter
         return super.getWidget();
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
         this.oracleFactory.destroy(oracle);
+        super.onClose();
     }
 
     @OnMayClose
@@ -216,7 +226,7 @@ public class GuidedScoreCardEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

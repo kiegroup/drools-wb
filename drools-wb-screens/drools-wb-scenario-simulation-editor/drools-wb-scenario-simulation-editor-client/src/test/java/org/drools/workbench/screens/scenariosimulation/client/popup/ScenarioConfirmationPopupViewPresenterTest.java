@@ -16,17 +16,26 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popup;
 
+import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_QUESTION_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_TITLE_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OKDELETE_BUTTON_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT1_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT_QUESTION_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT_WARNING_TEXT;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//@RunWith(LienzoMockitoTestRunner.class)
-public abstract class ScenarioConfirmationPopupViewPresenterTest extends AbstractDeletePopupViewTest {
+
+@RunWith(LienzoMockitoTestRunner.class)
+public class ScenarioConfirmationPopupViewPresenterTest extends AbstractDeletePopupViewTest {
 
     @Mock
     private ScenarioConfirmationPopupView scenarioConfirmationPopupViewMock;
@@ -37,7 +46,7 @@ public abstract class ScenarioConfirmationPopupViewPresenterTest extends Abstrac
     public void setup() {
         scenarioConfirmationPopupPresenter = spy(new ScenarioConfirmationPopupPresenter() {
             {
-                this.scenarioConfirmationPopupView = ScenarioConfirmationPopupViewPresenterTest.this.scenarioConfirmationPopupViewMock;
+                this.scenarioConfirmationPopupView = scenarioConfirmationPopupViewMock;
             }
         });
     }
@@ -48,9 +57,10 @@ public abstract class ScenarioConfirmationPopupViewPresenterTest extends Abstrac
                                                 MAIN_QUESTION_TEXT,
                                                 TEXT1_TEXT,
                                                 TEXT_QUESTION_TEXT,
+                                                TEXT_WARNING_TEXT,
                                                 OKDELETE_BUTTON_TEXT,
                                                 okDeleteCommandMock);
-        verify(scenarioConfirmationPopupViewMock, times(1)).show(eq(MAIN_TITLE_TEXT), eq(MAIN_QUESTION_TEXT), eq(TEXT1_TEXT), eq(TEXT_QUESTION_TEXT), eq(OKDELETE_BUTTON_TEXT), eq(okDeleteCommandMock));
+        verify(scenarioConfirmationPopupViewMock, times(1)).show(eq(MAIN_TITLE_TEXT), eq(MAIN_QUESTION_TEXT), eq(TEXT1_TEXT), eq(TEXT_QUESTION_TEXT), eq(TEXT_WARNING_TEXT), eq(OKDELETE_BUTTON_TEXT), eq(okDeleteCommandMock));
     }
 
     @Test

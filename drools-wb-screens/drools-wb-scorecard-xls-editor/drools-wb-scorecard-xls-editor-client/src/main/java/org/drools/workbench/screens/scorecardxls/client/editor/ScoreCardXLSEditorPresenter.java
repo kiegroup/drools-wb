@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scorecardxls.client.editor;
 
+import java.util.function.Consumer;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -42,10 +44,12 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
-@WorkbenchEditor(identifier = "ScoreCardXLSEditor", supportedTypes = {ScoreCardXLSResourceType.class})
+@WorkbenchEditor(identifier = ScoreCardXLSEditorPresenter.EDITOR_ID, supportedTypes = {ScoreCardXLSResourceType.class})
 public class ScoreCardXLSEditorPresenter
         extends KieEditor<ScoreCardXLSContent>
         implements ScoreCardXLSEditorView.Presenter {
+
+    public static final String EDITOR_ID = "ScoreCardXLSEditor";
 
     @Inject
     protected Caller<ScoreCardXLSService> scoreCardXLSService;
@@ -102,9 +106,16 @@ public class ScoreCardXLSEditorPresenter
                                                              versionRecordManager.getCurrentPath());
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
     }
 
     @WorkbenchPartTitleDecoration
@@ -123,7 +134,7 @@ public class ScoreCardXLSEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

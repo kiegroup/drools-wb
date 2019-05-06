@@ -25,41 +25,19 @@ import org.kie.soup.project.datamodel.imports.Imports;
 public class ScenarioSimulationModel
         implements HasImports {
 
+    public enum Type {
+        RULE,
+        DMN
+    }
+
     @XStreamAsAttribute()
-    private String version = "1.1";
+    private String version = "1.4";
 
     private Simulation simulation;
 
     private Imports imports = new Imports();
 
     public ScenarioSimulationModel() {
-        simulation = new Simulation();
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-
-        simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
-        simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-
-        Scenario scenario = simulation.addScenario();
-        int row = simulation.getUnmodifiableScenarios().indexOf(scenario);
-        scenario.setDescription(null);
-
-        // Add GIVEN Fact
-        int id = 1;
-        ExpressionIdentifier givenExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.GIVEN);
-        final FactMapping givenFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, givenExpression);
-        givenFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
-        scenario.addMappingValue(FactIdentifier.EMPTY, givenExpression, null);
-
-        // Add EXPECT Fact
-        id = 2;
-        ExpressionIdentifier expectedExpression = ExpressionIdentifier.create(row + "|" + id, FactMappingType.EXPECT);
-        final FactMapping expectedFactMapping = simulationDescriptor.addFactMapping(FactMapping.getInstancePlaceHolder(id), FactIdentifier.EMPTY, expectedExpression);
-        expectedFactMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(id));
-        scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
-    }
-
-    public ScenarioSimulationModel(Simulation simulation) {
-        this.simulation = simulation;
     }
 
     public Simulation getSimulation() {
@@ -83,4 +61,5 @@ public class ScenarioSimulationModel
     public String getVersion() {
         return version;
     }
+
 }

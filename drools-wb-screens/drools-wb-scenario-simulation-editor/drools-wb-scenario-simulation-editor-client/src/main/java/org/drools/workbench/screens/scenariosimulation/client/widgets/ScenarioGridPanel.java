@@ -50,9 +50,9 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
         this.clickHandler = clickHandler;
         unregister();
         handlerRegistrations.add(getDomElementContainer().addDomHandler(clickHandler,
-                                                            ContextMenuEvent.getType()));
+                                                                        ContextMenuEvent.getType()));
         handlerRegistrations.add(getDomElementContainer().addDomHandler(clickHandler,
-                                                            ClickEvent.getType()));
+                                                                        ClickEvent.getType()));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseOutHandler(this));
     }
 
@@ -66,7 +66,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
 
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
-        getScenarioGrid().getModel().setEventBus(eventBus);
+        getScenarioGrid().setEventBus(eventBus);
     }
 
     public void select() {
@@ -80,8 +80,8 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
         final int x = event.getX();
         final int y = event.getY();
         if (x < 0 || x > width || y < 0 || y > height) {
-           clickHandler.hideMenus();
-       }
+            clickHandler.hideMenus();
+        }
     }
 
     public void unregister() {

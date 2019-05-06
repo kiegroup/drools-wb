@@ -25,7 +25,7 @@ import org.uberfire.mvp.Command;
 public class DeletePopupPresenter implements DeletePopup.Presenter {
 
     @Inject
-    DeletePopupView deletePopupView;
+    protected DeletePopupView deletePopupView;
 
     @Override
     public void show(final String mainTitleText,

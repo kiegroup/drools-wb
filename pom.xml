@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.kie</groupId>
     <artifactId>kie-parent</artifactId>
-    <version>7.15.0-SNAPSHOT</version>
+    <version>7.21.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.drools</groupId>
@@ -38,7 +38,7 @@
     <checkstyle.failOnViolation>true</checkstyle.failOnViolation>
     <checkstyle.logViolationsToConsole>true</checkstyle.logViolationsToConsole>
     <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
-    <findbugs.failOnViolation>true</findbugs.failOnViolation>
+    <spotbugs.failOnViolation>true</spotbugs.failOnViolation>
   </properties>
 
   <repositories>

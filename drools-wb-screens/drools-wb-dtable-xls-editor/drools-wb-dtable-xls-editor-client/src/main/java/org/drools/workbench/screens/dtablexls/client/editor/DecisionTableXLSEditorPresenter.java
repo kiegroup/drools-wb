@@ -16,12 +16,15 @@
 
 package org.drools.workbench.screens.dtablexls.client.editor;
 
+import java.util.function.Consumer;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.promise.Promise;
 import org.drools.workbench.models.guided.dtable.shared.conversion.ConversionMessage;
 import org.drools.workbench.models.guided.dtable.shared.conversion.ConversionResult;
 import org.drools.workbench.screens.dtablexls.client.resources.i18n.DecisionTableXLSEditorConstants;
@@ -31,6 +34,7 @@ import org.drools.workbench.screens.dtablexls.client.widgets.ConversionMessageWi
 import org.drools.workbench.screens.dtablexls.client.widgets.PopupListWidget;
 import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSContent;
 import org.drools.workbench.screens.dtablexls.service.DecisionTableXLSService;
+import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.jboss.errai.common.client.api.Caller;
@@ -58,10 +62,12 @@ import org.uberfire.workbench.model.menu.impl.BaseMenuCustom;
 import static org.uberfire.ext.widgets.common.client.common.ConcurrentChangePopup.newConcurrentUpdate;
 
 @Dependent
-@WorkbenchEditor(identifier = "DecisionTableXLSEditor", supportedTypes = {DecisionTableXLSResourceType.class, DecisionTableXLSXResourceType.class})
+@WorkbenchEditor(identifier = DecisionTableXLSEditorPresenter.EDITOR_ID, supportedTypes = {DecisionTableXLSResourceType.class, DecisionTableXLSXResourceType.class})
 public class DecisionTableXLSEditorPresenter
         extends KieEditor<DecisionTableXLSContent>
         implements DecisionTableXLSEditorView.Presenter {
+
+    public static final String EDITOR_ID = "DecisionTableXLSEditor";
 
     private Caller<DecisionTableXLSService> decisionTableXLSService;
 
@@ -200,24 +206,33 @@ public class DecisionTableXLSEditorPresenter
     }
 
     @Override
-    protected void makeMenuBar() {
-        if (canUpdateProject()) {
-            fileMenuBuilder
-                    .addCopy(versionRecordManager.getCurrentPath(),
-                             assetUpdateValidator)
-                    .addRename(versionRecordManager.getPathToLatest(),
-                               assetUpdateValidator)
-                    .addDelete(versionRecordManager.getPathToLatest(),
-                               assetUpdateValidator);
+    protected Promise<Void> makeMenuBar() {
+        if (workbenchContext.getActiveWorkspaceProject().isPresent()) {
+            final WorkspaceProject activeProject = workbenchContext.getActiveWorkspaceProject().get();
+            return projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
+                if (canUpdateProject) {
+                    fileMenuBuilder
+                            .addCopy(versionRecordManager.getCurrentPath(),
+                                     assetUpdateValidator)
+                            .addRename(versionRecordManager.getPathToLatest(),
+                                       assetUpdateValidator)
+                            .addDelete(versionRecordManager.getPathToLatest(),
+                                       assetUpdateValidator);
+                }
+
+                addDownloadMenuItem(fileMenuBuilder);
+
+                fileMenuBuilder
+                        .addValidate(getValidateCommand())
+                        .addNewTopLevelMenu(getConvertMenu())
+                        .addNewTopLevelMenu(versionRecordManager.buildMenu())
+                        .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+
+                return promises.resolve();
+            });
         }
 
-        addDownloadMenuItem(fileMenuBuilder);
-
-        fileMenuBuilder
-                .addValidate(getValidateCommand())
-                .addNewTopLevelMenu(getConvertMenu())
-                .addNewTopLevelMenu(versionRecordManager.buildMenu())
-                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+        return promises.resolve();
     }
 
     protected MenuItem getConvertMenu() {
@@ -260,9 +275,16 @@ public class DecisionTableXLSEditorPresenter
         }.build();
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
     }
 
     @WorkbenchPartTitleDecoration
@@ -281,8 +303,8 @@ public class DecisionTableXLSEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 
     private void convert() {

@@ -15,13 +15,21 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.metadata;
 
-import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextAreaDOMElement;
+import org.drools.workbench.screens.scenariosimulation.client.domelements.ScenarioHeaderTextAreaDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellEditAction;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
 
 public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
+
+    public enum MetadataType {
+
+        GROUP, // ex GIVEN, EXPECTED
+        INSTANCE,
+        PROPERTY,
+        UNDEFINED
+    }
 
     /*
     `HeaderMetaData` now has a `CellSelectionStrategy` method (default is to select single cells)
@@ -35,6 +43,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
     // true if this header contains the column' informations (group, title, id) and it is a property header
     final boolean propertyHeader;
     private boolean isEditingMode = false;
+    private final MetadataType metadataType;
 
     /**
      * Constructor for ScenarioHeaderMetaData
@@ -57,6 +66,13 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
         this.readOnly = readOnly;
         this.instanceHeader = instanceHeader;
         this.propertyHeader = propertyHeader;
+        if (isInstanceHeader()) {
+            metadataType = MetadataType.INSTANCE;
+        } else if (isPropertyHeader()) {
+            metadataType = MetadataType.PROPERTY;
+        } else {
+            metadataType = MetadataType.UNDEFINED;
+        }
     }
 
     /**
@@ -122,12 +138,19 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
         return GridCellEditAction.DOUBLE_CLICK;
     }
 
+    public MetadataType getMetadataType() {
+        return metadataType;
+    }
+
     @Override
     public String toString() {
         return "ScenarioHeaderMetaData{" +
-                "title=" + getTitle() +
-                ", columnGroup=" + getColumnGroup() +
-                ", columnId=" + getColumnId() +
+                "columnId='" + columnId + '\'' +
+                ", readOnly=" + readOnly +
+                ", instanceHeader=" + instanceHeader +
+                ", propertyHeader=" + propertyHeader +
+                ", isEditingMode=" + isEditingMode +
+                ", metadataType=" + metadataType +
                 '}';
     }
 }

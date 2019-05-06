@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.promise.Promise;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.EditMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.InsertMenuBuilder;
@@ -52,6 +54,7 @@ import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEdito
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableGraphEditorService;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableGraphSaveAndRenameService;
+import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
@@ -67,6 +70,7 @@ import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
+import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.WorkbenchEditor;
@@ -76,6 +80,7 @@ import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.mvp.LockManager;
 import org.uberfire.client.mvp.LockTarget;
+import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.SaveInProgressEvent;
 import org.uberfire.client.mvp.UpdatedLockStatusEvent;
@@ -130,6 +135,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     @Inject
     public GuidedDecisionTableGraphEditorPresenter(final View view,
                                                    final Caller<GuidedDecisionTableEditorService> service,
+                                                   final AuthoringWorkbenchDocks docks,
+                                                   final PerspectiveManager perspectiveManager,
                                                    final Caller<GuidedDecisionTableGraphEditorService> graphService,
                                                    final Caller<KieModuleService> moduleService,
                                                    final Caller<GuidedDecisionTableGraphSaveAndRenameService> graphSaveAndRenameService,
@@ -153,6 +160,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final DownloadMenuItem downloadMenuItem) {
         super(view,
               service,
+              docks,
+              perspectiveManager,
               notification,
               decisionTableSelectedEvent,
               validationPopup,
@@ -322,8 +331,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
 
     @Override
     @WorkbenchMenu
-    public Menus getMenus() {
-        return super.getMenus();
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 
     @Override
@@ -386,29 +395,38 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     }
 
     @Override
-    public void makeMenuBar() {
-        if (canUpdateProject()) {
-            fileMenuBuilder
-                    .addSave(getSaveMenuItem())
-                    .addCopy(versionRecordManager::getCurrentPath,
-                             assetUpdateValidator)
-                    .addRename(getSaveAndRenameCommand())
-                    .addDelete(versionRecordManager::getPathToLatest,
-                               assetUpdateValidator);
+    public Promise<Void> makeMenuBar() {
+        if (workbenchContext.getActiveWorkspaceProject().isPresent()) {
+            final WorkspaceProject activeProject = workbenchContext.getActiveWorkspaceProject().get();
+            return projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
+                if (canUpdateProject) {
+                    fileMenuBuilder
+                            .addSave(getSaveMenuItem())
+                            .addCopy(versionRecordManager::getCurrentPath,
+                                     assetUpdateValidator)
+                            .addRename(getSaveAndRenameCommand())
+                            .addDelete(versionRecordManager::getPathToLatest,
+                                       assetUpdateValidator);
+                }
+
+                final FileMenuBuilder fileMenuBuilder = this.fileMenuBuilder
+                        .addValidate(() -> onValidate(getActiveDocument()))
+                        .addNewTopLevelMenu(getEditMenuItem())
+                        .addNewTopLevelMenu(getViewMenuItem())
+                        .addNewTopLevelMenu(getInsertMenuItem())
+                        .addNewTopLevelMenu(getRadarMenuItem())
+                        .addNewTopLevelMenu(getRegisteredDocumentsMenuItem())
+                        .addNewTopLevelMenu(getVersionManagerMenuItem())
+                        .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+                addDownloadMenuItem(fileMenuBuilder);
+
+                this.menus = fileMenuBuilder.build();
+
+                return promises.resolve();
+            });
         }
 
-        final FileMenuBuilder fileMenuBuilder = this.fileMenuBuilder
-                .addValidate(() -> onValidate(getActiveDocument()))
-                .addNewTopLevelMenu(getEditMenuItem())
-                .addNewTopLevelMenu(getViewMenuItem())
-                .addNewTopLevelMenu(getInsertMenuItem())
-                .addNewTopLevelMenu(getRadarMenuItem())
-                .addNewTopLevelMenu(getRegisteredDocumentsMenuItem())
-                .addNewTopLevelMenu(getVersionManagerMenuItem())
-                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
-        addDownloadMenuItem(fileMenuBuilder);
-
-        this.menus = fileMenuBuilder.build();
+        return promises.resolve();
     }
 
     protected Command getSaveAndRenameCommand() {

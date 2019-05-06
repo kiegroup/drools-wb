@@ -19,15 +19,14 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
 import java.util.Collections;
 import java.util.function.Function;
 
-import org.drools.core.command.RequestContextImpl;
-import org.drools.core.command.impl.RegistryContext;
+import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.SingleFactValueResult;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.ObjectFilter;
+import org.kie.internal.command.RegistryContext;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -51,14 +50,15 @@ public class ValidateFactCommandTest {
     @Mock
     private FactMappingValue factMappingValue;
 
+    @Mock
+    private RegistryContext registryContext;
+
     @Test
     public void executeTest() {
-        Function<Object, SingleFactValueResult> alwaysMatchFunction = SingleFactValueResult::createResult;
+        when(registryContext.lookup(KieSession.class)).thenReturn(kieSession);
+        Function<Object, ResultWrapper> alwaysMatchFunction = ResultWrapper::createResult;
 
         ValidateFactCommand validateFactCommand = new ValidateFactCommand(asList(new FactCheckerHandle(String.class, alwaysMatchFunction, scenarioResult)));
-
-        RegistryContext registryContext = new RequestContextImpl();
-        registryContext.register(KieSession.class, kieSession);
 
         when(kieSession.getObjects(any(ObjectFilter.class))).thenReturn(Collections.singleton(null));
         validateFactCommand.execute(registryContext);

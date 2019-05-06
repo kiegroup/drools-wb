@@ -23,18 +23,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_QUESTION_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_TITLE_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OKDELETE_BUTTON_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT1_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT_DANGER_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT_QUESTION_TEXT;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class DeletePopupViewTest extends ScenarioConfirmationPopupViewTest {
+public class DeletePopupViewTest extends AbstractScenarioConfirmationPopupViewTest {
 
     @Mock
     private ParagraphElement textDangerMock;
-
-    private final String TEXT_DANGER_TEXT = "TEXT_DANGER_TEXT";
 
     @Before
     public void setup() {
@@ -47,7 +51,7 @@ public class DeletePopupViewTest extends ScenarioConfirmationPopupViewTest {
                 this.textQuestion = textQuestionMock;
                 this.textDanger = textDangerMock;
                 this.cancelButton = cancelButtonMock;
-                this.okDeleteButton = okDeleteButtonMock;
+                this.okButton = okDeleteButtonMock;
                 this.modal = modalMock;
                 this.translationService = translationServiceMock;
             }
@@ -63,7 +67,10 @@ public class DeletePopupViewTest extends ScenarioConfirmationPopupViewTest {
                                            TEXT_DANGER_TEXT,
                                            OKDELETE_BUTTON_TEXT,
                                            okDeleteCommandMock);
-        verifyShow();
+        verifyShow(MAIN_TITLE_TEXT,
+                   MAIN_QUESTION_TEXT,
+                   TEXT1_TEXT,
+                   TEXT_QUESTION_TEXT);
         verify(textDangerMock, times(1)).setInnerText(eq(TEXT_DANGER_TEXT));
     }
 

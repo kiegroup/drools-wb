@@ -20,7 +20,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioException;
 
@@ -44,15 +43,8 @@ public class ScenarioBeanUtil {
 
     @SuppressWarnings("unchecked")
     public static <T> T fillBean(String className, Map<List<String>, Object> params, ClassLoader classLoader) {
+
         Class<T> clazz = loadClass(className, classLoader);
-
-        // if a direct mapping exists (no steps to reach the field) the value itself is the object
-        Optional<Object> directMapping = params.entrySet().stream()
-                .filter(e -> e.getKey().isEmpty()).map(Map.Entry::getValue).findFirst();
-        if (directMapping.isPresent()) {
-            return (T) directMapping.get();
-        }
-
         T beanToFill = newInstance(clazz);
 
         for (Map.Entry<List<String>, Object> param : params.entrySet()) {
@@ -87,11 +79,7 @@ public class ScenarioBeanUtil {
     }
 
     public static ScenarioBeanWrapper<?> navigateToObject(Object rootObject, List<String> steps, boolean createIfNull) {
-        if (steps.size() < 1) {
-            throw new ScenarioException(new StringBuilder().append("Invalid path to a property, no steps provided").toString());
-        }
-
-        Class<?> currentClass = rootObject.getClass();
+        Class<?> currentClass = rootObject != null ? rootObject.getClass() : null;
         Object currentObject = rootObject;
 
         for (String step : steps) {
@@ -140,15 +128,16 @@ public class ScenarioBeanUtil {
     }
 
     public static Object convertValue(String className, Object cleanValue, ClassLoader classLoader) {
+        if (!isPrimitive(className) && cleanValue == null) {
+            return null;
+        }
+
         Class<?> clazz = loadClass(className, classLoader);
 
         // if it is not a String, it has to be an instance of the desired type
         if (!(cleanValue instanceof String)) {
             if (clazz.isInstance(cleanValue)) {
                 return cleanValue;
-            }
-            if (!isPrimitive(className) && cleanValue == null) {
-                return null;
             }
             throw new IllegalArgumentException(new StringBuilder().append("Object ").append(cleanValue)
                                                        .append(" is not a String or an instance of ").append(className).toString());
@@ -161,19 +150,19 @@ public class ScenarioBeanUtil {
         } else if (clazz.isAssignableFrom(Boolean.class) || clazz.isAssignableFrom(boolean.class)) {
             return parseBoolean(value);
         } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(int.class)) {
-            return Integer.parseInt(value);
+            return Integer.parseInt(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(long.class)) {
-            return Long.parseLong(value);
+            return Long.parseLong(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(double.class)) {
-            return Double.parseDouble(value);
+            return Double.parseDouble(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Float.class) || clazz.isAssignableFrom(float.class)) {
-            return Float.parseFloat(value);
+            return Float.parseFloat(cleanStringForNumberParsing(value));
         } else if (clazz.isAssignableFrom(Character.class) || clazz.isAssignableFrom(char.class)) {
             return parseChar(value);
         } else if (clazz.isAssignableFrom(Byte.class) || clazz.isAssignableFrom(byte.class)) {
             return parseByte(value);
         } else if (clazz.isAssignableFrom(Short.class) || clazz.isAssignableFrom(short.class)) {
-            return Short.parseShort(value);
+            return Short.parseShort(cleanStringForNumberParsing(value));
         }
 
         throw new IllegalArgumentException(new StringBuilder().append("Class ").append(className)
@@ -218,5 +207,9 @@ public class ScenarioBeanUtil {
             throw new IllegalArgumentException("Impossible to transform " + value + "as byte");
         }
         return value.getBytes()[0];
+    }
+
+    private static String cleanStringForNumberParsing(String rawValue) {
+        return rawValue.replaceAll("(-)\\s*([0-9])", "$1$2");
     }
 }

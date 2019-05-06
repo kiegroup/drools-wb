@@ -19,10 +19,10 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.fluent;
 import java.util.Collection;
 import java.util.List;
 
-import org.drools.core.command.impl.RegistryContext;
 import org.kie.api.command.ExecutableCommand;
 import org.kie.api.runtime.Context;
 import org.kie.api.runtime.KieSession;
+import org.kie.internal.command.RegistryContext;
 
 public class ValidateFactCommand implements ExecutableCommand<Void> {
 
@@ -34,12 +34,11 @@ public class ValidateFactCommand implements ExecutableCommand<Void> {
 
     @Override
     public Void execute(Context context) {
-        KieSession ksession = ((RegistryContext)context).lookup(KieSession.class);
+        KieSession ksession = ((RegistryContext) context).lookup(KieSession.class);
         Collection<?> objects = ksession.getObjects(new ConditionFilter(factToCheck));
-        if(objects.size() > 0) {
+        if (objects.size() > 0) {
             factToCheck.forEach(fact -> fact.getScenarioResult().setResult(true));
-        }
-        else {
+        } else {
             factToCheck.forEach(fact -> fact.getScenarioResult().getFactMappingValue().setError(true));
         }
         return null;

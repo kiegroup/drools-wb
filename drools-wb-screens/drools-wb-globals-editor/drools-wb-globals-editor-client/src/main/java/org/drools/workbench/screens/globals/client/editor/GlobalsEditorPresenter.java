@@ -17,15 +17,18 @@
 package org.drools.workbench.screens.globals.client.editor;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.promise.Promise;
 import org.drools.workbench.screens.globals.client.type.GlobalResourceType;
 import org.drools.workbench.screens.globals.model.GlobalsEditorContent;
 import org.drools.workbench.screens.globals.model.GlobalsModel;
 import org.drools.workbench.screens.globals.service.GlobalsEditorService;
+import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
 import org.jboss.errai.common.client.api.Caller;
@@ -53,9 +56,11 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
-@WorkbenchEditor(identifier = "org.kie.guvnor.globals", supportedTypes = {GlobalResourceType.class}, priority = 101)
+@WorkbenchEditor(identifier = GlobalsEditorPresenter.EDITOR_ID, supportedTypes = {GlobalResourceType.class}, priority = 101)
 public class GlobalsEditorPresenter
         extends KieEditor<GlobalsModel> {
+
+    public static final String EDITOR_ID = "org.kie.guvnor.globals";
 
     @Inject
     protected Caller<GlobalsEditorService> globalsEditorService;
@@ -91,22 +96,31 @@ public class GlobalsEditorPresenter
     }
 
     @Override
-    protected void makeMenuBar() {
-        if (canUpdateProject()) {
-            fileMenuBuilder
-                    .addSave(versionRecordManager.newSaveMenuItem(this::saveAction))
-                    .addCopy(versionRecordManager.getCurrentPath(),
-                             assetUpdateValidator)
-                    .addRename(getSaveAndRename())
-                    .addDelete(this::onDelete);
+    protected Promise<Void> makeMenuBar() {
+        if (workbenchContext.getActiveWorkspaceProject().isPresent()) {
+            final WorkspaceProject activeProject = workbenchContext.getActiveWorkspaceProject().get();
+            return projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
+                if (canUpdateProject) {
+                    fileMenuBuilder
+                            .addSave(versionRecordManager.newSaveMenuItem(this::saveAction))
+                            .addCopy(versionRecordManager.getCurrentPath(),
+                                     assetUpdateValidator)
+                            .addRename(getSaveAndRename())
+                            .addDelete(this::onDelete);
+                }
+
+                addDownloadMenuItem(fileMenuBuilder);
+
+                fileMenuBuilder
+                        .addValidate(getValidateCommand())
+                        .addNewTopLevelMenu(versionRecordManager.buildMenu())
+                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+
+                return promises.resolve();
+            });
         }
 
-        addDownloadMenuItem(fileMenuBuilder);
-
-        fileMenuBuilder
-                .addValidate(getValidateCommand())
-                .addNewTopLevelMenu(versionRecordManager.buildMenu())
-                .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
+        return promises.resolve();
     }
 
     protected void loadContent() {
@@ -241,8 +255,15 @@ public class GlobalsEditorPresenter
     }
 
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
+    }
+
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
     }
 
     @OnMayClose
@@ -261,7 +282,7 @@ public class GlobalsEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

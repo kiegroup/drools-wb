@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.dsltext.client.editor;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -52,9 +53,11 @@ import org.uberfire.workbench.model.menu.Menus;
  * DSL Editor Presenter.
  */
 @Dependent
-@WorkbenchEditor(identifier = "DSLEditor", supportedTypes = {DSLResourceType.class})
+@WorkbenchEditor(identifier = DSLEditorPresenter.EDITOR_ID, supportedTypes = {DSLResourceType.class})
 public class DSLEditorPresenter
         extends KieEditor<String> {
+
+    public static final String EDITOR_ID = "DSLEditor";
 
     @Inject
     protected Caller<DSLTextEditorService> dslTextEditorService;
@@ -140,9 +143,16 @@ public class DSLEditorPresenter
                                                                                        commitMessage);
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
     }
 
     @OnMayClose
@@ -166,7 +176,7 @@ public class DSLEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

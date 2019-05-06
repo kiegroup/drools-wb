@@ -46,15 +46,95 @@ public interface ScenarioSimulationEditorConstants
 
     String invalidDefinitionDisabled();
 
-    String showRightPanel();
-
-    String hideRightPanel();
-
     String testTools();
 
     String testEditor();
 
     String scenarioCheatSheet();
+
+    String ruleCheatSheet1();
+
+    String ruleCheatSheet2();
+
+    String ruleCheatSheet3();
+
+    String ruleCheatSheet4();
+
+    String ruleCheatSheet5();
+
+    String ruleCheatSheet6();
+
+    String ruleCheatSheet7();
+
+    String ruleCheatSheet8();
+
+    String ruleCheatSheet9();
+
+    String ruleCheatSheet10();
+
+    String ruleCheatSheet11();
+
+    String ruleCheatSheet12();
+
+    String ruleCheatSheet13();
+
+    String ruleCheatSheet14();
+
+    String ruleCheatSheet15();
+
+    String ruleCheatSheet16();
+
+    String ruleCheatSheet17();
+
+    String ruleCheatSheet18();
+
+    String ruleCheatSheet19();
+
+    String or();
+
+    String ruleCheatSheet20();
+
+    String ruleCheatSheet21();
+
+    String ruleCheatSheet22();
+
+    String dmnCheatSheet1();
+
+    String dmnCheatSheet2();
+
+    String dmnCheatSheet3();
+
+    String dmnCheatSheet4();
+
+    String dmnCheatSheet5();
+
+    String dmnCheatSheet6();
+
+    String dmnCheatSheet7();
+
+    String and();
+
+    String dmnCheatSheet8();
+
+    String dmnCheatSheet9();
+
+    String dmnCheatSheet10();
+
+    String dmnCheatSheet11();
+
+    String dmnCheatSheet12();
+
+    String dmnCheatSheet13();
+
+    String dmnCheatSheet14();
+
+    String dmnCheatSheet15();
+
+    String dmnCheatSheet16();
+
+    String dmnCheatSheet17();
+
+    String forExample();
 
     String runScenarioSimulation();
 
@@ -65,6 +145,8 @@ public interface ScenarioSimulationEditorConstants
     String insertColumnRight();
 
     String deleteColumn();
+
+    String duplicateInstance();
 
     String insertRowBelow();
 
@@ -77,6 +159,8 @@ public interface ScenarioSimulationEditorConstants
     String deleteRow();
 
     String duplicateRow();
+
+    String runSingleScenario();
 
     String prependRow();
 
@@ -129,4 +213,49 @@ public interface ScenarioSimulationEditorConstants
     String changeTypeTextQuestion();
 
     String changeTypeTextDanger();
+
+    String undo();
+
+    String redo();
+
+    String sourceType();
+
+    String chooseDMN();
+
+    String chooseValidDMNAsset();
+
+    String removeCollectionMainTitle();
+
+    String removeCollectionMainQuestion();
+
+    String removeCollectionText1();
+
+    String removeCollectionQuestion();
+
+    String removeCollectionWarningText();
+
+    String collectionError();
+
+    String selectImportFile();
+
+    String importLabel();
+
+
+    String settings();
+
+    String uploadWarning();
+
+    String importFailedMessage();
+
+    String importErrorTitle();
+
+    String running();
+
+    String simpleTypes();
+
+    String complexTypes();
+
+    String complexCustomInstances();
+
+    String simpleCustomInstances();
 }

@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.enums.client.editor;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -51,9 +52,11 @@ import org.uberfire.workbench.model.menu.Menus;
  * Enum Editor Presenter
  */
 @Dependent
-@WorkbenchEditor(identifier = "EnumEditor", supportedTypes = {EnumResourceType.class})
+@WorkbenchEditor(identifier = EnumEditorPresenter.EDITOR_ID, supportedTypes = {EnumResourceType.class})
 public class EnumEditorPresenter
         extends KieEditor<String> {
+
+    public static final String EDITOR_ID = "EnumEditor";
 
     private EnumEditorView view;
 
@@ -149,8 +152,15 @@ public class EnumEditorPresenter
     }
 
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
+    }
+
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
     }
 
     @OnMayClose
@@ -174,7 +184,7 @@ public class EnumEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

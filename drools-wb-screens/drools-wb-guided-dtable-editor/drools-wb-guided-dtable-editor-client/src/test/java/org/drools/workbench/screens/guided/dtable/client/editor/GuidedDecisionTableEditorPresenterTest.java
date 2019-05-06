@@ -34,10 +34,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.imports.Imports;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.ext.editor.commons.client.menu.BasicFileMenuBuilder;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.mvp.Command;
@@ -66,10 +68,15 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
     @Mock
     private SaveAndRenameCommandBuilder<GuidedDecisionTable52, Metadata> saveAndRenameCommandBuilder;
 
+    @Mock
+    protected AuthoringWorkbenchDocks docks;
+
     @Override
     protected GuidedDecisionTableEditorPresenter getPresenter() {
         return new GuidedDecisionTableEditorPresenter(view,
                                                       dtServiceCaller,
+                                                      docks,
+                                                      mock(PerspectiveManager.class),
                                                       notification,
                                                       decisionTableSelectedEvent,
                                                       validationPopup,
@@ -88,6 +95,7 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
             {
                 workbenchContext = GuidedDecisionTableEditorPresenterTest.this.workbenchContext;
                 projectController = GuidedDecisionTableEditorPresenterTest.this.projectController;
+                promises = GuidedDecisionTableEditorPresenterTest.this.promises;
             }
 
             @Override
@@ -128,7 +136,7 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
     public void testMakeMenuBarWithoutUpdateProjectPermission() {
         reset(fileMenuBuilder);
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContext).getActiveWorkspaceProject();
-        doReturn(false).when(projectController).canUpdateProject(any());
+        doReturn(promises.resolve(false)).when(projectController).canUpdateProject(any());
 
         presenter.makeMenuBar();
 

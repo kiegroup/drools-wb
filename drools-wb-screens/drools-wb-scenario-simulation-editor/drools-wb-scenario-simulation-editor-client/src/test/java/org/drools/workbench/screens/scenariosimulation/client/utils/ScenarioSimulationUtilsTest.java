@@ -16,39 +16,54 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP_FIRST;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_ID;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INSTANCE_TITLE_FIRST;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_PROPERTY_TITLE_FIRST;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.PLACEHOLDER;
+import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
 
     @Test
     public void getScenarioGridColumn1() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, mockScenarioGridPanel, mockScenarioGridLayer);
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
         assertNotNull(retrieved);
     }
 
     @Test
     public void getScenarioGridColumn2() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, mockScenarioGridPanel, mockScenarioGridLayer, PLACEHOLDER);
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock, scenarioCellTextAreaSingletonDOMElementFactoryMock, PLACEHOLDER);
         assertNotNull(retrieved);
     }
 
     @Test
     public void getScenarioGridColumn3() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, mockScenarioGridPanel, mockScenarioGridLayer);
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
         assertNotNull(retrieved);
     }
 
     @Test
     public void getScenarioGridColumn4() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, mockScenarioGridPanel, mockScenarioGridLayer, PLACEHOLDER);
+        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, scenarioCellTextAreaSingletonDOMElementFactoryMock, PLACEHOLDER);
         assertNotNull(retrieved);
     }
 
@@ -68,8 +83,35 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
     public void getColumnWidth() {
         assertEquals(70, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Index.name()), 0);
         assertEquals(300, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Description.name()), 0);
-        assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Given.name()), 0);
-        assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Expected.name()), 0);
-        assertEquals(200, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Other.name()), 0);
+        assertEquals(114, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Given.name()), 0);
+        assertEquals(114, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Expected.name()), 0);
+        assertEquals(114, ScenarioSimulationUtils.getColumnWidth(ExpressionIdentifier.NAME.Other.name()), 0);
+    }
+
+    @Test
+    public void isSimpleJavaType() {
+        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(ScenarioSimulationUtils.isSimpleJavaType(clazz.getName())));
+        assertFalse(ScenarioSimulationUtils.isSimpleJavaType("com.TestBean"));
+    }
+
+    @Test
+    public void getPropertyNameElementsWithoutAlias() {
+        FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
+        String packageName = "com.package";
+        String className = "ClassName";
+        String propertyName = "propertyName";
+        String aliasName = "AliasName";
+        when(factIdentifierMock.getClassName()).thenReturn(className);
+        List<String> retrieved = ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias(Collections.singletonList(propertyName), factIdentifierMock);
+        assertEquals(Collections.singletonList(propertyName), retrieved);
+        when(factIdentifierMock.getClassName()).thenReturn(packageName + "." + className);
+        retrieved = ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias(Collections.singletonList(propertyName), factIdentifierMock);
+        assertEquals(Collections.singletonList(propertyName), retrieved);
+        when(factIdentifierMock.getClassName()).thenReturn(className);
+        retrieved = ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias(Arrays.asList(className, propertyName), factIdentifierMock);
+        assertEquals(Arrays.asList(className, propertyName), retrieved);
+        when(factIdentifierMock.getClassName()).thenReturn(packageName + "." + className);
+        retrieved = ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias(Arrays.asList(aliasName, propertyName), factIdentifierMock);
+        assertEquals(Arrays.asList(className, propertyName), retrieved);
     }
 }

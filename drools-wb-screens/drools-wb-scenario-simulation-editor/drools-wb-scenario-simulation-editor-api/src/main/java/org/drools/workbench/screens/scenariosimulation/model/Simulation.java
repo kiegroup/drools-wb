@@ -18,8 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.model;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+
+import static org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils.toScenarioMap;
 
 /**
  * Envelop class that wrap the definition of the simulation and the values of the scenarios
@@ -42,6 +45,10 @@ public class Simulation {
      */
     public List<Scenario> getUnmodifiableScenarios() {
         return Collections.unmodifiableList(scenarios);
+    }
+
+    public Map<Integer, Scenario> getScenarioMap() {
+        return toScenarioMap(this);
     }
 
     public void removeScenarioByIndex(int index) {
@@ -73,13 +80,17 @@ public class Simulation {
         return scenario;
     }
 
+    public void replaceScenario(int index, Scenario newScenario) {
+        scenarios.set(index, newScenario);
+    }
+
     public void removeFactMappingByIndex(int index) {
-        cleanScenarios(simulationDescriptor.getFactMappingByIndex(index));
+        clearScenarios(simulationDescriptor.getFactMappingByIndex(index));
         simulationDescriptor.removeFactMappingByIndex(index);
     }
 
     public void removeFactMapping(FactMapping toRemove) {
-        cleanScenarios(toRemove);
+        clearScenarios(toRemove);
         simulationDescriptor.removeFactMapping(toRemove);
     }
 
@@ -98,6 +109,10 @@ public class Simulation {
 
     public void clear() {
         simulationDescriptor.clear();
+        clearScenarios();
+    }
+
+    public void clearScenarios() {
         scenarios.clear();
     }
 
@@ -109,7 +124,21 @@ public class Simulation {
         scenarios.forEach(Scenario::resetErrors);
     }
 
-    private void cleanScenarios(FactMapping toRemove) {
+    public Simulation cloneSimulation() {
+        Simulation toReturn = new Simulation();
+        toReturn.getSimulationDescriptor().setType(simulationDescriptor.getType());
+        toReturn.getSimulationDescriptor().setDmnFilePath(simulationDescriptor.getDmnFilePath());
+        toReturn.getSimulationDescriptor().setDmoSession(simulationDescriptor.getDmoSession());
+        final List<FactMapping> originalFactMappings = this.simulationDescriptor.getUnmodifiableFactMappings();
+        for (int i = 0; i < originalFactMappings.size(); i++) {
+            final FactMapping originalFactMapping = originalFactMappings.get(i);
+            toReturn.simulationDescriptor.addFactMapping(i, originalFactMapping);
+        }
+        this.scenarios.forEach(scenario -> toReturn.scenarios.add(scenario.cloneScenario()));
+        return toReturn;
+    }
+
+    private void clearScenarios(FactMapping toRemove) {
         scenarios.forEach(e -> e.removeFactMappingValueByIdentifiers(toRemove.getFactIdentifier(), toRemove.getExpressionIdentifier()));
     }
 }

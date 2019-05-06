@@ -63,5 +63,4 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
         final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getScenarioGridPanel();
         assertEquals(scenarioGridPanelMock, retrieved);
     }
-
 }

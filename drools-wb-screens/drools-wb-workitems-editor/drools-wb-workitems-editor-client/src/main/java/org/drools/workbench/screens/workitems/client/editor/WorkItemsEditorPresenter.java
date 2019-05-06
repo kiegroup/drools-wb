@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.workitems.client.editor;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
@@ -56,9 +57,11 @@ import org.uberfire.workbench.model.menu.Menus;
  * Editor for Work Item definitions
  */
 @Dependent
-@WorkbenchEditor(identifier = "WorkItemsEditor", supportedTypes = {WorkItemsResourceType.class})
+@WorkbenchEditor(identifier = WorkItemsEditorPresenter.EDITOR_ID, supportedTypes = {WorkItemsResourceType.class})
 public class WorkItemsEditorPresenter
         extends KieEditor<String> {
+
+    public static final String EDITOR_ID = "WorkItemsEditor";
 
     @Inject
     protected Caller<WorkItemsEditorService> workItemsService;
@@ -157,9 +160,16 @@ public class WorkItemsEditorPresenter
                                                                                    commitMessage);
     }
 
+    @Override
+    protected String getEditorIdentifier() {
+        return EDITOR_ID;
+    }
+
     @OnClose
+    @Override
     public void onClose() {
         this.versionRecordManager.clear();
+        super.onClose();
     }
 
     @OnMayClose
@@ -183,7 +193,7 @@ public class WorkItemsEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 }

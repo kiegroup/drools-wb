@@ -40,16 +40,18 @@ public enum BaseExpressionOperator {
                 return false;
             }
             String rawValue = (String) raw;
-            List<Boolean> results = Arrays.stream(rawValue.split(symbols.get(0)))
+            String[] expressionParts = rawValue.split(symbols.get(0));
+            List<Boolean> results = Arrays.stream(expressionParts.length == 0 ? new String[]{""} : expressionParts)
                     .map(elem -> findOperator(elem.trim()).eval(elem.trim(), resultValue, resultClass, classLoader))
                     .collect(Collectors.toList());
-            return results.stream().allMatch(a -> a);
+            return results.size() != 0 && results.stream().allMatch(a -> a);
         }
     },
     LIST_OF_VALUES(1, "[") {
         @Override
         public boolean eval(Object rawValue, Object resultValue, Class<?> resultClass, ClassLoader classLoader) {
-            List<Boolean> results = getValues(rawValue).stream().map(e -> EQUALS.eval(e, resultValue, resultClass, classLoader)).collect(Collectors.toList());
+            List<Boolean> results = getValues(rawValue).stream()
+                    .map(e -> findOperator(e).eval(e, resultValue, resultClass, classLoader)).collect(Collectors.toList());
             return results.stream().anyMatch(a -> a);
         }
 
@@ -68,11 +70,11 @@ public enum BaseExpressionOperator {
     },
     EQUALS(2, "=") {
         @Override
-        protected Object getValueForGiven(String className, String value, ClassLoader classLoader) {
+        protected Object evaluateLiteralExpression(String className, String value, ClassLoader classLoader) {
             String returnValue = removeOperator(value);
 
-            // empty string is equivalent to null only if there is no operator symbol
-            returnValue = "".equals(returnValue) && !match(value).isPresent() ? null : returnValue;
+            // "null" string is converted to null
+            returnValue = "null".equals(returnValue) ? null : returnValue;
 
             return convertValue(className, returnValue, classLoader);
         }
@@ -82,7 +84,7 @@ public enum BaseExpressionOperator {
         public boolean eval(Object rawValue, Object resultValue, Class<?> resultClass, ClassLoader classLoader) {
             Object parsedResults = rawValue;
             if (parsedResults instanceof String) {
-                parsedResults = getValueForGiven(resultClass.getCanonicalName(), (String) rawValue, classLoader);
+                parsedResults = evaluateLiteralExpression(resultClass != null ? resultClass.getCanonicalName() : null, (String) rawValue, classLoader);
             }
             if (parsedResults == null) {
                 return resultValue == null;
@@ -166,11 +168,14 @@ public enum BaseExpressionOperator {
 
     protected abstract boolean eval(Object rawValue, Object resultValue, Class<?> resultClass, ClassLoader classLoader);
 
-    protected Object getValueForGiven(String className, String value, ClassLoader classLoader) {
+    protected Object evaluateLiteralExpression(String className, String value, ClassLoader classLoader) {
         throw new IllegalStateException("This operator cannot be used into a Given clause");
     }
 
     protected Optional<String> match(String value) {
+        if (value == null) {
+            return Optional.empty();
+        }
         value = value.trim();
         return symbols.stream().filter(value::startsWith).findFirst();
     }
@@ -183,7 +188,7 @@ public enum BaseExpressionOperator {
             int index = value.indexOf(symbolToRemove);
             value = value.substring(index + symbolToRemove.length()).trim();
         }
-        return value.trim();
+        return value == null ? null : value.trim();
     }
 
     private static boolean areComparable(Object a, Object b) {

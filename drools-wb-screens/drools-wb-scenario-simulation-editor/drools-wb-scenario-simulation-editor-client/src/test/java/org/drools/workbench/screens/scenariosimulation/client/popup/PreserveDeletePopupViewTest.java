@@ -25,6 +25,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.client.views.pfly.widgets.Button;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_QUESTION_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAIN_TITLE_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OKDELETE_BUTTON_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OKPRESERVE_BUTTON_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OPTION1_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.OPTION2_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT1_TEXT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEXT_QUESTION_TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -34,7 +42,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class PreserveDeletePopupViewTest extends ScenarioConfirmationPopupViewTest {
+public class PreserveDeletePopupViewTest extends AbstractScenarioConfirmationPopupViewTest {
 
     @Mock
     private LIElement option1Mock;
@@ -58,7 +66,7 @@ public class PreserveDeletePopupViewTest extends ScenarioConfirmationPopupViewTe
                 this.option2 = option2Mock;
                 this.cancelButton = cancelButtonMock;
                 this.okPreserveButton = okPreserveButtonMock;
-                this.okDeleteButton = okDeleteButtonMock;
+                this.okButton = okDeleteButtonMock;
                 this.modal = modalMock;
                 this.translationService = translationServiceMock;
             }
@@ -69,16 +77,19 @@ public class PreserveDeletePopupViewTest extends ScenarioConfirmationPopupViewTe
     @Test
     public void show() {
         ((PreserveDeletePopupView)popupView).show(MAIN_TITLE_TEXT,
-                                     MAIN_QUESTION_TEXT,
-                                     TEXT1_TEXT,
-                                     TEXT_QUESTION_TEXT,
-                                     OPTION1_TEXT,
-                                     OPTION2_TEXT,
-                                     OKPRESERVE_BUTTON_TEXT,
-                                     OKDELETE_BUTTON_TEXT,
-                                     okPreserveCommandMock,
-                                     okDeleteCommandMock);
-        verifyShow();
+                                                          MAIN_QUESTION_TEXT,
+                                                          TEXT1_TEXT,
+                                                          TEXT_QUESTION_TEXT,
+                                                          OPTION1_TEXT,
+                                                          OPTION2_TEXT,
+                                                          OKPRESERVE_BUTTON_TEXT,
+                                                          OKDELETE_BUTTON_TEXT,
+                                                          okPreserveCommandMock,
+                                                          okDeleteCommandMock);
+        verifyShow(MAIN_TITLE_TEXT,
+                   MAIN_QUESTION_TEXT,
+                   TEXT1_TEXT,
+                   TEXT_QUESTION_TEXT);
         assertEquals(okPreserveCommandMock, ((PreserveDeletePopupView)popupView).okPreserveCommand);
         verify(option1Mock, times(1)).setInnerText(eq(OPTION1_TEXT));
         verify(option2Mock, times(1)).setInnerText(eq(OPTION2_TEXT));

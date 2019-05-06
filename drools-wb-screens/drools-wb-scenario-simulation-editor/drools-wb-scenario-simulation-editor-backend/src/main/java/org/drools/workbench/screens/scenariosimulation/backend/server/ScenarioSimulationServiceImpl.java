@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -31,8 +32,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioJunitActivator;
+import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
+import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.drools.workbench.screens.scenariosimulation.type.ScenarioSimulationResourceTypeDefinition;
@@ -113,11 +118,15 @@ public class ScenarioSimulationServiceImpl
     @Inject
     private KieModuleService kieModuleService;
 
+    @Inject
+    protected ScenarioSimulationBuilder scenarioSimulationBuilder;
+
     private SafeSessionInfo safeSessionInfo;
 
     private Properties props = new Properties();
 
     private static final String KIE_VERSION = "kie.version";
+    private static final String junitActivatorPackageName = "testscenario";
 
     {
         String propertyFileName = "kie.properties";
@@ -142,11 +151,13 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public ScenarioSimulationModel runScenario(final Path path,
-                                               final ScenarioSimulationModel model) {
+    public TestRunResult runScenario(final Path path,
+                                     final SimulationDescriptor simulationDescriptor,
+                                     final Map<Integer, Scenario> scenarioMap) {
         return scenarioRunnerService.runTest(user.getIdentifier(),
                                              path,
-                                             model);
+                                             simulationDescriptor,
+                                             scenarioMap);
     }
 
     @Override
@@ -154,7 +165,13 @@ public class ScenarioSimulationServiceImpl
                        final String fileName,
                        final ScenarioSimulationModel content,
                        final String comment) {
+        return create(context, fileName, content, comment, ScenarioSimulationModel.Type.RULE, "default");
+    }
+
+    @Override
+    public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, ScenarioSimulationModel.Type type, String value) {
         try {
+            content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);
 
@@ -304,55 +321,92 @@ public class ScenarioSimulationServiceImpl
         return saveAndRenameService.saveAndRename(path, newFileName, metadata, content, comment);
     }
 
-    void createActivatorIfNotExist(Path context) {
+    protected void createActivatorIfNotExist(Path context) {
         KieModule kieModule = kieModuleService.resolveModule(context);
-        String groupId = kieModule.getPom().getGav().getGroupId();
-        Optional<Package> packageFound = kieModuleService.resolvePackages(kieModule).stream()
-                .filter(elem -> groupId.equals(elem.getPackageName()))
-                .findFirst();
-        if (!packageFound.isPresent()) {
-            throw new IllegalArgumentException("Impossible to retrieve package information from path: " + context.toURI());
-        }
-        Package targetPackage = packageFound.get();
-        final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(targetPackage);
+
+        Package junitActivatorPackage = getOrCreateJunitActivatorPackage(kieModule);
+        final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(junitActivatorPackage);
 
         if (!ioService.exists(activatorPath)) {
             ioService.write(activatorPath,
-                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(groupId),
+                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(junitActivatorPackageName),
                             commentedOptionFactory.makeCommentedOption(""));
+
+            removeOldActivatorIfExists(kieModule);
         }
 
         ensureDependencies(kieModule);
     }
 
-    void ensureDependencies(KieModule module) {
+    protected Package getOrCreateJunitActivatorPackage(KieModule kieModule) {
+        Package rootPackage = kieModuleService.resolveDefaultPackage(kieModule);
+        Path junitActivatorPackagePath = Paths.convert(getJunitActivatorPackagePath(rootPackage));
+        Package junitActivatorPackage = kieModuleService.resolvePackage(junitActivatorPackagePath);
+        if (junitActivatorPackage == null) {
+            junitActivatorPackage = kieModuleService.newPackage(rootPackage, junitActivatorPackageName);
+        }
+        return junitActivatorPackage;
+    }
+
+    protected void removeOldActivatorIfExists(KieModule kieModule) {
+
+        String targetPackageName = kieModule.getPom().getGav().getGroupId();
+
+        Optional<Package> packageFound = kieModuleService.resolvePackages(kieModule).stream()
+                .filter(elem -> targetPackageName.equals(elem.getPackageName()))
+                .findFirst();
+        packageFound.ifPresent(pkg -> {
+            org.uberfire.java.nio.file.Path oldActivatorPath = getActivatorPath(pkg);
+            ioService.deleteIfExists(oldActivatorPath);
+        });
+    }
+
+    protected void ensureDependencies(KieModule module) {
         POM projectPom = module.getPom();
         Dependencies dependencies = projectPom.getDependencies();
 
         String kieVersion = props.getProperty(KIE_VERSION);
 
-        getDependecies(kieVersion).forEach(gav -> {
-            editPomIfNecessary(module.getPomXMLPath(), projectPom, dependencies, gav);
-        });
+        boolean toSave = false;
+        Path modulePomXMLPath = module.getPomXMLPath();
+        for (GAV gav : getDependencies(kieVersion)) {
+            toSave |= editPomIfNecessary(dependencies, gav);
+        }
+
+        if (toSave) {
+            pomService.save(modulePomXMLPath, projectPom, null, "");
+        }
     }
 
-    void editPomIfNecessary(Path pomPath, POM projectPom, Dependencies dependencies, GAV gav) {
+    protected boolean editPomIfNecessary(Dependencies dependencies, GAV gav) {
         Dependency scenarioDependency = new Dependency(gav);
         scenarioDependency.setScope("test");
         if (!dependencies.containsDependency(gav)) {
             dependencies.add(scenarioDependency);
-            pomService.save(pomPath, projectPom, null, "");
+            return true;
         }
+        return false;
     }
 
-    org.uberfire.java.nio.file.Path getActivatorPath(Package rootModulePackage) {
-        org.uberfire.java.nio.file.Path packagePath = Paths.convert(rootModulePackage.getPackageTestSrcPath());
-        return packagePath.resolve(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
+    protected org.uberfire.java.nio.file.Path getActivatorPath(Package rootModulePackage) {
+        return internalGetPath(rootModulePackage, ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java");
     }
 
-    List<GAV> getDependecies(String kieVersion) {
+    protected org.uberfire.java.nio.file.Path getJunitActivatorPackagePath(Package rootModulePackage) {
+        return internalGetPath(rootModulePackage, junitActivatorPackageName);
+    }
+
+    protected List<GAV> getDependencies(String kieVersion) {
         return Arrays.asList(new GAV("org.drools", "drools-wb-scenario-simulation-editor-api", kieVersion),
                              new GAV("org.drools", "drools-wb-scenario-simulation-editor-backend", kieVersion),
-                             new GAV("org.drools", "drools-compiler", kieVersion));
+                             new GAV("org.drools", "drools-compiler", kieVersion),
+                             new GAV("org.kie", "kie-dmn-feel", kieVersion),
+                             new GAV("org.kie", "kie-dmn-api", kieVersion),
+                             new GAV("org.kie", "kie-dmn-core", kieVersion));
+    }
+
+    private org.uberfire.java.nio.file.Path internalGetPath(Package pkg, String path) {
+        org.uberfire.java.nio.file.Path packagePath = Paths.convert(pkg.getPackageTestSrcPath());
+        return packagePath.resolve(path);
     }
 }

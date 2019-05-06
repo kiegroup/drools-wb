@@ -27,9 +27,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.FA_ANGLE_DOWN;
-import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.HIDDEN;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LIST_GROUP_ITEM;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.LIST_VIEW_PF_EXPAND_ACTIVE;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.FA_ANGLE_DOWN;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.HIDDEN;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -40,7 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
+public class ListGroupItemViewImplTest extends AbstractTestToolsTest {
 
     @Mock
     private ListGroupItemPresenter listGroupItemPresenterMock;
@@ -67,10 +69,6 @@ public class ListGroupItemViewImplTest extends AbstractRightPanelTest {
     private LIElement factFieldMock;
 
     private ListGroupItemViewImpl listGroupItemView;
-
-    private static final String LIST_GROUP_ITEM = "list-group-item";
-
-
 
     @Before
     public void setup() {

@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.model;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -57,11 +58,16 @@ public class FactMapping {
      */
     private String expressionAlias;
 
+    /**
+     * Generic type(s) of the given properties, where applicable (ex collections)
+     */
+    private List<String> genericTypes;
+
     public FactMapping() {
     }
 
     public FactMapping(FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
-        this(expressionIdentifier.getName(), factIdentifier, expressionIdentifier);
+        this(factIdentifier.getName(), factIdentifier, expressionIdentifier);
     }
 
     public FactMapping(String factAlias, FactIdentifier factIdentifier, ExpressionIdentifier expressionIdentifier) {
@@ -71,8 +77,29 @@ public class FactMapping {
         this.factIdentifier = factIdentifier;
     }
 
+    /**
+     * It <b>clones</b> the given <code>FactMapping</code>
+     * @param original The original <code>FactMapping</code>
+     */
+    private FactMapping(FactMapping original) {
+        original.expressionElements.forEach(expressionElement -> this.addExpressionElement(expressionElement.getStep(), original.className));
+        this.expressionIdentifier = original.expressionIdentifier;
+        this.factIdentifier = original.factIdentifier;
+        this.className = original.className;
+        this.factAlias = original.factAlias;
+        this.expressionAlias = original.expressionAlias;
+        this.genericTypes = original.genericTypes;
+    }
+
     public String getFullExpression() {
         return expressionElements.stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
+    }
+
+    public List<ExpressionElement> getExpressionElementsWithoutClass() {
+        if (expressionElements.size() == 0) {
+            throw new IllegalStateException("ExpressionElements malformed");
+        }
+        return expressionElements.subList(1, expressionElements.size());
     }
 
     public List<ExpressionElement> getExpressionElements() {
@@ -112,6 +139,21 @@ public class FactMapping {
         this.expressionAlias = expressionAlias;
     }
 
+    public List<String> getGenericTypes() {
+        return genericTypes;
+    }
+
+    public void setGenericTypes(List<String> genericTypes) {
+        this.genericTypes = genericTypes;
+    }
+
+    /**
+     * It creates a new <code>FactMapping</code> cloning the instanced one.
+     */
+    public FactMapping cloneFactMapping() {
+        return new FactMapping(this);
+    }
+
     public static String getPlaceHolder(FactMappingType factMappingType) {
         return factMappingType.name();
     }
@@ -126,5 +168,30 @@ public class FactMapping {
 
     public static String getPropertyPlaceHolder(int index) {
         return "PROPERTY " + index;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FactMapping that = (FactMapping) o;
+        return getExpressionElements().equals(that.getExpressionElements()) &&
+                Objects.equals(getExpressionIdentifier(), that.getExpressionIdentifier()) &&
+                Objects.equals(getFactIdentifier(), that.getFactIdentifier()) &&
+                Objects.equals(getClassName(), that.getClassName()) &&
+                Objects.equals(getFactAlias(), that.getFactAlias()) &&
+                Objects.equals(getExpressionAlias(), that.getExpressionAlias()) &&
+                Objects.equals(getGenericTypes(), that.getGenericTypes());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getExpressionElements(),
+                getExpressionIdentifier(), getFactIdentifier(), getClassName(), getFactAlias(), getExpressionAlias(), getGenericTypes());
     }
 }

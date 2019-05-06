@@ -15,10 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.List;
+
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.models.FactModelTree;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.HasPresenter;
 
 public interface ListGroupItemView extends IsWidget,
@@ -29,20 +31,6 @@ public interface ListGroupItemView extends IsWidget,
     boolean isToExpand();
 
     void setFactName(String factName);
-
-    /**
-     * Use this when click on grid' <i>property</i> header.
-     * Call this method to show the first-level data model <b>disabled</b> (i.e. <b>not double-clickable</b>)
-     * and its properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
-     */
-    void enable();
-
-    /**
-     * Use this when click on grid' <i>instance</i> header.
-     * Call this method to show the first-level data model <b>enabled</b> (i.e. <b>double-clickable</b> to map to an <i>instance</i> header/column)
-     * and its properties <b>disabled</b> (i.e. <b>not double-clickable</b>)
-     */
-    void disable();
 
     /**
      * @param parentPath the <b>parent</b>' path
@@ -119,7 +107,7 @@ public interface ListGroupItemView extends IsWidget,
 
         void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
 
-        void init(RightPanelView.Presenter rightPanelPresenter);
+        void init(TestToolsView.Presenter testToolsPresenter);
 
         /**
          * Method to set the "selected" information - use this to set the <i>instance</i> level header
@@ -135,13 +123,20 @@ public interface ListGroupItemView extends IsWidget,
 
         void unselectAll();
 
+        void showAll();
+
         /**
          * Expand the node and select the given property
          * @param factName
-         * @param propertyName
+         * @param propertyParts
          */
-        void selectProperty(String factName, String propertyName);
+        void selectProperty(String factName, List<String> propertyParts);
 
-
+        /**
+         * Hide the node of the given property
+         * @param factName
+         * @param propertyParts
+         */
+        void hideProperty(String factName, List<String> propertyParts);
     }
 }
