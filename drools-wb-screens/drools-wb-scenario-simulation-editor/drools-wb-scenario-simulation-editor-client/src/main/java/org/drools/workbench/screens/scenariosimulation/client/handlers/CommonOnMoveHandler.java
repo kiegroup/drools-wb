@@ -41,7 +41,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
     private static int POPOVER_WIDTH = 200;
-    private static String UNDEFINED = "undefined";
+    private static String NULL = "null";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
@@ -110,15 +110,15 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                 /* Showing the popover */
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
-                                                       expectedValue != null ? expectedValue.toString() : UNDEFINED,
-                                                       errorValue != null ? errorValue.toString() : UNDEFINED),
+                                                       expectedValue != null ? expectedValue.toString() : NULL,
+                                                       errorValue != null ? errorValue.toString() : NULL),
                                                ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                                ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                                () -> {
                                                         scenarioGrid.getEventBus().fireEvent(
                                                                 new SetGridCellValueEvent(uiRowIndex,
                                                                                           uiColumnIndex,
-                                                                                          (errorValue == null || errorValue.toString().equalsIgnoreCase(UNDEFINED)) ? "" : errorValue.toString()));
+                                                                                          errorValue != null ? errorValue.toString() : NULL));
                                                         CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
                                                },
                                                () -> CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates(),

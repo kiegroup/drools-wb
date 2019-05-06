@@ -212,5 +212,5 @@ public class TestProperties {
     public static final Integer SCROLL_LEFT = 75;
     public static final String RAW_VALUE = "raw";
     public static final String ERROR_VALUE = "error";
-    public static final String UNDEFINIED = "undefined";
+    public static final String NULL = "null";
 }
