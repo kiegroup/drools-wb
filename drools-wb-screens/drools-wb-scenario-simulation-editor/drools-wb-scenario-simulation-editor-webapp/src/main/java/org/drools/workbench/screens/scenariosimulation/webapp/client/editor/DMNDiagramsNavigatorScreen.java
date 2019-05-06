@@ -48,7 +48,7 @@ public class DMNDiagramsNavigatorScreen {
 
     private DiagramsNavigator diagramsNavigator;
     private ShapeSetsMenuItemsBuilder newDiagramMenuItemsBuilder;
-    private ScenarioSimulationEditorSubmarineWrapper stateHolder;
+    private ScenarioSimulationEditorSubmarineScreen stateHolder;
 
     @Inject
     @DiagramEditor
@@ -64,7 +64,7 @@ public class DMNDiagramsNavigatorScreen {
     @Inject
     public DMNDiagramsNavigatorScreen(final DiagramsNavigator diagramsNavigator,
                                       final ShapeSetsMenuItemsBuilder newDiagramMenuItemsBuilder,
-                                      final ScenarioSimulationEditorSubmarineWrapper stateHolder) {
+                                      final ScenarioSimulationEditorSubmarineScreen stateHolder) {
         this.diagramsNavigator = diagramsNavigator;
         this.newDiagramMenuItemsBuilder = newDiagramMenuItemsBuilder;
         this.stateHolder = stateHolder;

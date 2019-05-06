@@ -19,36 +19,36 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.kie.workbench.common.dmn.showcase.client.services.SubmarineClientDiagramServiceImpl;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorSubmarineWrapper;
 import org.kie.workbench.common.stunner.core.client.service.ClientRuntimeError;
 import org.kie.workbench.common.stunner.core.client.service.ServiceCallback;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 @ApplicationScoped
-@WorkbenchScreen(identifier = ScesimEditor.EDITOR_ID)
-public class ScenarioSimulationEditorSubmarineWrapper {
+@WorkbenchScreen(identifier = ScenarioSimulationEditorPresenter.IDENTIFIER)
+public class ScenarioSimulationEditorSubmarineScreen {
 
     @Inject
-    private DMNDiagramEditor dmnDiagramEditor;
+    private ScenarioSimulationEditorSubmarineWrapper dmnDiagramEditor;
 
     private PlaceManager placeManager;
-    private SubmarineClientDiagramServiceImpl clientDiagramService;
 
-    public ScenarioSimulationEditorSubmarineWrapper() {
+    public ScenarioSimulationEditorSubmarineScreen() {
         //CDI proxy
     }
 
     @Inject
-    public ScenarioSimulationEditorSubmarineWrapper(final PlaceManager placeManager,
-                                                    final SubmarineClientDiagramServiceImpl clientDiagramService) {
+    public ScenarioSimulationEditorSubmarineScreen(final PlaceManager placeManager) {
         this.placeManager = placeManager;
-        this.clientDiagramService = clientDiagramService;
     }
 
     public void newFile() {
-        placeManager.registerOnOpenCallback(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR,
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
+                                            },
                                             () -> {
                                                 dmnDiagramEditor.setContent("");
                                                 placeManager.unregisterOnOpenCallbacks(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
