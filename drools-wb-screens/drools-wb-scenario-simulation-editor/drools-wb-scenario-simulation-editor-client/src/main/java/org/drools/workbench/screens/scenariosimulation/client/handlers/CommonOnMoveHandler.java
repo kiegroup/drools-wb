@@ -110,14 +110,15 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                 /* Showing the popover */
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
-                                                       expectedValue.toString(), errorValue.toString()),
+                                                       expectedValue != null ? expectedValue.toString() : UNDEFINED,
+                                                       errorValue != null ? errorValue.toString() : UNDEFINED),
                                                ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                                ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                                () -> {
                                                         scenarioGrid.getEventBus().fireEvent(
                                                                 new SetGridCellValueEvent(uiRowIndex,
                                                                                           uiColumnIndex,
-                                                                                          errorValue.toString().equalsIgnoreCase(UNDEFINED) ? "" : errorValue.toString()));
+                                                                                          (errorValue == null || errorValue.toString().equalsIgnoreCase(UNDEFINED)) ? "" : errorValue.toString()));
                                                         CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
                                                },
                                                () -> CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates(),
