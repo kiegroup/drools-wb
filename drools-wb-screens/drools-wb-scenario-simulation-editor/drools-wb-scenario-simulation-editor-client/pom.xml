@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.21.0-SNAPSHOT</version>
+    <version>7.22.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -192,6 +192,11 @@
     <dependency>
       <groupId>com.google.elemental2</groupId>
       <artifactId>elemental2-dom</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-promise</artifactId>
     </dependency>
 
     <!-- Test scope dependencies -->

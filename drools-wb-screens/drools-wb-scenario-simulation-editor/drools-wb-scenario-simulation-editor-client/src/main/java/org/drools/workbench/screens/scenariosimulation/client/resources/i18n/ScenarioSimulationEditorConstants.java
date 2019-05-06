@@ -248,6 +248,16 @@ public interface ScenarioSimulationEditorConstants
 
     String importErrorTitle();
 
+    String running();
+
+    String simpleTypes();
+
+    String complexTypes();
+
+    String complexCustomInstances();
+
+    String simpleCustomInstances();
+
     String errorReason();
 
     String keep();

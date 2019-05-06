@@ -73,6 +73,7 @@ import org.uberfire.client.mvp.PerspectiveActivity;
 import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.promise.Promises;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
@@ -82,13 +83,16 @@ import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
+import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyInt;
@@ -152,6 +156,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private TestRunnerReportingPanel testRunnerReportingPanel;
     @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
+    private Promises promises;
     @Mock
     private ScenarioMenuItem runScenarioMenuItemMock;
     @Mock
@@ -173,6 +178,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Before
     public void setup() {
+        promises = new SyncPromises();
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
@@ -222,6 +228,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.model = scenarioSimulationModelMock;
                 this.docks = docksMock;
                 this.perspectiveManager = perspectiveManagerMock;
+                this.promises = ScenarioSimulationEditorPresenterTest.this.promises;
             }
 
             @Override
@@ -506,22 +513,23 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                                                           new TestResultMessage()));
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
-        assertFalse(modelLocal.getSimulation().equals(simulationMock));
+        assertNotEquals(simulationMock, modelLocal.getSimulation());
         presenter.onStartup(observablePathMock, placeRequestMock);
         presenter.onRunScenario();
         verify(scenarioSimulationServiceMock, times(1)).runScenario(any(), any(), any());
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
         verify(scenarioSimulationDocksHandlerMock).expandTestResultsDock();
-        assertTrue(modelLocal.getSimulation().equals(simulationMock));
+        assertEquals(simulationMock, modelLocal.getSimulation());
     }
 
     @Test
     public void onRunTestById() throws Exception {
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(Collections.EMPTY_MAP,
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(new TestRunResult(Collections.emptyMap(),
                                                                                                           new TestResultMessage()));
         when(simulationMock.getScenarioByIndex(anyInt())).thenReturn(mock(Scenario.class));
         presenter.onRunScenario(Collections.singletonList(0));
+        verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
         verify(scenarioSimulationServiceMock, times(1)).runScenario(any(), any(), any());
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationViewMock, times(1)).refreshContent(any());
@@ -538,6 +546,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioMapMock.entrySet()).thenReturn(entries);
         presenter.refreshModelContent(new TestRunResult(scenarioMapMock,
                                                         new TestResultMessage()));
+        verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(simulationMock, times(1)).replaceScenario(eq(scenarioIndex), any());
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioSimulationViewMock, times(1)).refreshContent(eq(simulationMock));
@@ -655,8 +664,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         test1.addExpressionElement("test", String.class.getCanonicalName());
         Scenario scenario = simulation.addScenario();
-        scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), "value");
-        scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), "value");
+        scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), LOWER_CASE_VALUE);
+        scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), LOWER_CASE_VALUE);
 
         presenter.cleanReadOnlyColumn(simulation);
 

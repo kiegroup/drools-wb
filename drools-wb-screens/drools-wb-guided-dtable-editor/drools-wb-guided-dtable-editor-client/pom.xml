@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-guided-dtable-editor</artifactId>
-    <version>7.21.0-SNAPSHOT</version>
+    <version>7.22.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-guided-dtable-editor-client</artifactId>
@@ -288,6 +288,11 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client-views-patternfly</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.elemental2</groupId>
+      <artifactId>elemental2-promise</artifactId>
     </dependency>
 
     <dependency>

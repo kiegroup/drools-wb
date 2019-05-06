@@ -34,6 +34,19 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.mvp.Command;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CELL_WIDTH;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DX;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DY;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ERROR_VALUE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LARGE_LAYER;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MX;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MY;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.RAW_VALUE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SCROLL_LEFT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SCROLL_TOP;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TINY_LAYER;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -46,16 +59,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandlerTest {
-
-    private final static Integer DX = 325;
-    private final static Integer DY = 250;
-    private final static Double CELL_WIDTH = 50d;
-    private final static Integer LARGE_LAYER = 1000;
-    private final static Integer TINY_LAYER = 100;
-    private final static Integer SCROLL_TOP = 15;
-    private final static Integer SCROLL_LEFT = 75;
-    private final static String RAW_VALUE = "raw";
-    private final static String ERROR_VALUE = "error";
 
     private CommonOnMoveHandler commonOnMoveHandler;
 

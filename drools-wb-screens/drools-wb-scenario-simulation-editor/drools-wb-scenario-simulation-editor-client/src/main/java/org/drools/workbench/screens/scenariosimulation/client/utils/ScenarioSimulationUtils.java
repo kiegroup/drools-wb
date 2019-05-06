@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
@@ -23,6 +25,7 @@ import org.drools.workbench.screens.scenariosimulation.client.factories.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
+import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CellContextUtilities;
@@ -46,6 +49,26 @@ public class ScenarioSimulationUtils {
                 .stream()
                 .map(Class::getCanonicalName)
                 .anyMatch(className::equals);
+    }
+
+    /**
+     * Method to retrieve a <b>new</b> <code>List</code> of <b>property name elements</b> where the first one is the
+     * the <b>actual</b> class name (i.e. an eventual <i>alias</i> get replaced)
+     * @param propertyNameElements
+     * @param factIdentifier
+     * @return
+     */
+    public static List<String> getPropertyNameElementsWithoutAlias(List<String> propertyNameElements, FactIdentifier factIdentifier) {
+        String actualClassName = factIdentifier.getClassName();
+        if (actualClassName.contains(".")) {
+            actualClassName = actualClassName.substring(actualClassName.lastIndexOf(".") + 1);
+        }
+        List<String> toReturn = new ArrayList<>(); // We have to keep the original List unmodified
+        toReturn.addAll(propertyNameElements);
+        if (toReturn.size() > 1) {
+            toReturn.set(0, actualClassName);
+        }
+        return toReturn;
     }
 
     /**

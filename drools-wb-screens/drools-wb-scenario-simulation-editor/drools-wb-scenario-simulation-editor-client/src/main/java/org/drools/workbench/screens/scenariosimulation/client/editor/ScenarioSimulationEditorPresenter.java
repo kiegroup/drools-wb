@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -32,6 +33,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.DomGlobal;
+import elemental2.promise.Promise;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
@@ -222,8 +224,8 @@ public class ScenarioSimulationEditorPresenter
     }
 
     @WorkbenchMenu
-    public Menus getMenus() {
-        return menus;
+    public void getMenus(final Consumer<Menus> menusConsumer) {
+        super.getMenus(menusConsumer);
     }
 
     @Override
@@ -296,6 +298,7 @@ public class ScenarioSimulationEditorPresenter
                         simulation::getScenarioByIndex
                 )
         );
+        view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
         service.call(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view))
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulation.getSimulationDescriptor(),
@@ -349,6 +352,7 @@ public class ScenarioSimulationEditorPresenter
     }
 
     protected void refreshModelContent(TestRunResult testRunResult) {
+        view.hideBusyIndicator();
         if (this.model == null) {
             return;
         }
@@ -384,7 +388,7 @@ public class ScenarioSimulationEditorPresenter
      * If you want to customize the menu override this method.
      */
     @Override
-    protected void makeMenuBar() {
+    protected Promise<Void> makeMenuBar() {
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
@@ -392,7 +396,7 @@ public class ScenarioSimulationEditorPresenter
         fileMenuBuilder.addNewTopLevelMenu(view.getImportMenuItem());
         view.getUndoMenuItem().setEnabled(false);
         view.getRedoMenuItem().setEnabled(false);
-        super.makeMenuBar();
+        return super.makeMenuBar();
     }
 
     @Override
