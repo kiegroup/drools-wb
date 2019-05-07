@@ -264,5 +264,7 @@ public interface ScenarioSimulationEditorConstants
 
     String apply();
 
-    String errorPopoverMessage(String expectedValue, String errorValue);
+    String errorPopoverMessageFailedWithError(String expectedValue, String errorValue);
+
+    String errorPopoverMessageFailedWithException(String errorMsg);
 }

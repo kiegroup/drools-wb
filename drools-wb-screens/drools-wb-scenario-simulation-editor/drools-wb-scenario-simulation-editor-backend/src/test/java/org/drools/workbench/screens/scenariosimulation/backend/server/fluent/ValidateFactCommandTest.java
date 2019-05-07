@@ -22,6 +22,7 @@ import java.util.function.Function;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ResultWrapper;
 import org.drools.workbench.screens.scenariosimulation.backend.server.runner.model.ScenarioResult;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieSession;
@@ -66,11 +67,10 @@ public class ValidateFactCommandTest {
 
         reset(scenarioResult);
 
-        boolean expectedResult = true;
         when(kieSession.getObjects(any(ObjectFilter.class))).thenReturn(Collections.emptyList());
         when(scenarioResult.getFactMappingValue()).thenReturn(factMappingValue);
-        when(factMappingValue.isError()).thenReturn(expectedResult);
+        when(factMappingValue.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_EXCEPTION);
         validateFactCommand.execute(registryContext);
-        verify(scenarioResult, times(0)).setResult(expectedResult);
+        verify(scenarioResult, times(0)).setResult(anyBoolean());
     }
 }

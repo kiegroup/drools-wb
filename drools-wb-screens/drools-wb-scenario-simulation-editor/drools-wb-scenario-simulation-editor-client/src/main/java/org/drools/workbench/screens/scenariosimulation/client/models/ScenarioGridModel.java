@@ -47,6 +47,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
@@ -960,7 +961,7 @@ public class ScenarioGridModel extends BaseGridData {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier());
             if (factMappingValue.isPresent()) {
-                cell.setErrorMode(factMappingValue.get().isError());
+                cell.setErrorMode(FactMappingValueStatus.SUCCESS != factMappingValue.get().getStatus());
             } else {
                 cell.setErrorMode(false);
             }

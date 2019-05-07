@@ -147,7 +147,7 @@ public class RuleScenarioRunnerHelper extends AbstractRunnerHelper {
                         createResult(resultValue) :
                         createErrorResult(resultValue, expectedResultValue);
             } catch (Exception e) {
-                expectedResult.setError(true);
+                expectedResult.setExceptionMessage(e.getMessage());
                 throw new ScenarioException(e.getMessage(), e);
             }
         };

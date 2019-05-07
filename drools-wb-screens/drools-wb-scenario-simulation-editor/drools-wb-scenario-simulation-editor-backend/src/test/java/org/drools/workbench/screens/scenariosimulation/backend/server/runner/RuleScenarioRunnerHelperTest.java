@@ -37,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.junit.Assert;
@@ -191,7 +192,7 @@ public class RuleScenarioRunnerHelperTest {
         List<ScenarioResult> scenario1Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, input1, expressionEvaluator);
 
         assertEquals(1, scenario1Results.size());
-        assertFalse(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
+        assertEquals(scenario1Outputs.get(0).getExpectedResult().get(0).getStatus(), FactMappingValueStatus.SUCCESS);
 
         List<ScenarioGiven> scenario2Inputs = runnerHelper.extractGivenValues(simulation.getSimulationDescriptor(),
                                                                               scenario2.getUnmodifiableFactMappingValues(),
@@ -207,7 +208,8 @@ public class RuleScenarioRunnerHelperTest {
         List<ScenarioResult> scenario2Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario2Outputs, input2, expressionEvaluator);
 
         assertEquals(1, scenario2Results.size());
-        assertFalse(scenario2Outputs.get(0).getExpectedResult().get(0).isError());
+        assertEquals(scenario1Outputs.get(0).getExpectedResult().get(0).getStatus(), FactMappingValueStatus.SUCCESS);
+
 
         List<ScenarioExpect> newFact = Collections.singletonList(new ScenarioExpect(personFactIdentifier, Collections.emptyList(), true));
         List<ScenarioResult> scenario2NoResults = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), newFact, input2, expressionEvaluator);
@@ -219,9 +221,7 @@ public class RuleScenarioRunnerHelperTest {
         ScenarioGiven newInput = new ScenarioGiven(personFactIdentifier, person);
 
         List<ScenarioResult> scenario3Results = runnerHelper.getScenarioResultsFromGivenFacts(simulation.getSimulationDescriptor(), scenario1Outputs, newInput, expressionEvaluator);
-        assertTrue(scenario1Outputs.get(0).getExpectedResult().get(0).isError());
-
-
+        assertEquals(scenario1Outputs.get(0).getExpectedResult().get(0).getStatus(), FactMappingValueStatus.FAILED_WITH_ERROR);
         assertEquals(1, scenario3Results.size());
         assertEquals(person.getFirstName(), scenario3Results.get(0).getResultValue().get());
         assertEquals("NAME", scenario3Results.get(0).getFactMappingValue().getRawValue());
@@ -309,7 +309,7 @@ public class RuleScenarioRunnerHelperTest {
         } catch (ScenarioException ignored) {
 
         }
-        Assert.assertTrue(factMappingValue.isError());
+        Assert.assertEquals(factMappingValue.getStatus(), FactMappingValueStatus.FAILED_WITH_EXCEPTION);
     }
 
     @Test

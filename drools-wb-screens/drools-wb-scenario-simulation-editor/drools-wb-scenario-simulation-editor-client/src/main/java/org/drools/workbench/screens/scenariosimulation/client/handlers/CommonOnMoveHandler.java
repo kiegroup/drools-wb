@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
@@ -86,7 +87,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
-            if (factMappingValue.isError()) {
+            if (FactMappingValueStatus.SUCCESS != factMappingValue.getStatus()) {
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
                 Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
                 PopoverView.Position position = PopoverView.Position.RIGHT;
@@ -107,11 +108,17 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                 /* Parameters for the error message */
                 final Object expectedValue = factMappingValue.getRawValue();
                 final Object errorValue = factMappingValue.getErrorValue();
+                String errorPopoverMessage;
+                if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
+                    errorPopoverMessage = ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
+                            expectedValue != null ? expectedValue.toString() : NULL,
+                            errorValue  != null ? errorValue.toString() : NULL);
+                } else {
+                    errorPopoverMessage = ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(factMappingValue.getExceptionMessage());
+                }
                 /* Showing the popover */
                 errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
-                                               ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessage(
-                                                       expectedValue != null ? expectedValue.toString() : NULL,
-                                                       errorValue != null ? errorValue.toString() : NULL),
+                                               errorPopoverMessage,
                                                ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                                ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                                () -> {

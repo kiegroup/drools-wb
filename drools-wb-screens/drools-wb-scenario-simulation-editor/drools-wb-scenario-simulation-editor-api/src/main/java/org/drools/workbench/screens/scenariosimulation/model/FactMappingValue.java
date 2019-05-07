@@ -30,9 +30,11 @@ public class FactMappingValue {
     private ExpressionIdentifier expressionIdentifier;
     private Object rawValue;
     @XStreamOmitField
-    private boolean error = false;
+    private FactMappingValueStatus status = FactMappingValueStatus.SUCCESS;
     @XStreamOmitField
     private Object errorValue;
+    @XStreamOmitField
+    private String exceptionMessage;
 
     public FactMappingValue() {
     }
@@ -67,12 +69,8 @@ public class FactMappingValue {
         return cloned;
     }
 
-    public boolean isError() {
-        return error;
-    }
-
-    public void setError(boolean error) {
-        this.error = error;
+    public FactMappingValueStatus getStatus() {
+        return status;
     }
 
     public Object getErrorValue() {
@@ -81,5 +79,19 @@ public class FactMappingValue {
 
     public void setErrorValue(Object errorValue) {
         this.errorValue = errorValue;
+        this.status = FactMappingValueStatus.FAILED_WITH_ERROR;
+    }
+
+    public String getExceptionMessage() {
+        return exceptionMessage;
+    }
+
+    public void setExceptionMessage(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
+        this.status = FactMappingValueStatus.FAILED_WITH_EXCEPTION;
+    }
+
+    public void resetStatus() {
+        this.status = FactMappingValueStatus.SUCCESS;
     }
 }

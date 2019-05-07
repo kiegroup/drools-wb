@@ -117,7 +117,7 @@ public class DMNScenarioRunnerHelper extends AbstractRunnerHelper {
                     createResult(resultRaw) :
                     createErrorResult(resultRaw, expectedResultRaw);
         } catch (Exception e) {
-            expectedResult.setError(true);
+            expectedResult.setExceptionMessage(e.getMessage());
             throw new ScenarioException(e.getMessage(), e);
         }
     }

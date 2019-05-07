@@ -213,4 +213,5 @@ public class TestProperties {
     public static final String RAW_VALUE = "raw";
     public static final String ERROR_VALUE = "error";
     public static final String NULL = "null";
+    public static final String EXCEPTION = "GenericException";
 }

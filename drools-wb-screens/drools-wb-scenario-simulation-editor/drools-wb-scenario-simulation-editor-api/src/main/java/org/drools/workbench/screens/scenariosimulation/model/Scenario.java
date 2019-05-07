@@ -115,9 +115,8 @@ public class Scenario {
         return factMappingValues.stream().map(e -> e.getFactIdentifier().getName()).collect(toSet());
     }
 
-
     public void resetErrors() {
-        factMappingValues.forEach(elem -> elem.setError(false));
+        factMappingValues.forEach(elem -> elem.resetStatus());
     }
 
     Scenario cloneScenario() {

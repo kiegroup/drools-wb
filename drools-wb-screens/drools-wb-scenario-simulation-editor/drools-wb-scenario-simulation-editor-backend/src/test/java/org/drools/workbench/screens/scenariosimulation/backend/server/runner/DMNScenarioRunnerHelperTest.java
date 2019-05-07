@@ -34,6 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
 import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.junit.Before;
@@ -170,7 +171,7 @@ public class DMNScenarioRunnerHelperTest {
                                       newScenarioRunnerData,
                                       mock(ExpressionEvaluator.class),
                                       requestContext);
-        assertTrue(newScenarioRunnerData.getResults().get(0).getFactMappingValue().isError());
+        assertEquals(newScenarioRunnerData.getResults().get(0).getFactMappingValue().getStatus(), FactMappingValueStatus.FAILED_WITH_ERROR);
     }
 
     @SuppressWarnings("unchecked")
