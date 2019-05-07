@@ -114,6 +114,12 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-workbench-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.kie.workbench.screens</groupId>
+          <artifactId>kie-wb-common-data-modeller-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

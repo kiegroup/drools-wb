@@ -48,5 +48,7 @@
   <inherits name="org.kie.workbench.common.screens.library.LibraryClient" />
   <inherits name="org.kie.workbench.common.screens.explorer.KieWorkbenchProjectExplorerAPI"/>
 
+  <!-- NEEDED ? -->
+  <inherits name="org.kie.server.controller.api.KieServerControllerAPI" />
 
 </module>
