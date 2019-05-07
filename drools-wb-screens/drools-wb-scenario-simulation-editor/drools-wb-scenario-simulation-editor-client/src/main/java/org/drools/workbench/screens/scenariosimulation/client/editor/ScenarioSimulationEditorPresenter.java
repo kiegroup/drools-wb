@@ -58,6 +58,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.Coverag
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -240,6 +241,7 @@ public class ScenarioSimulationEditorPresenter
         scenarioSimulationDocksHandler.setScesimEditorId(String.valueOf(scenarioPresenterId));
         expandToolsDock();
         registerTestToolsCallback();
+        resetDocks();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
@@ -250,7 +252,6 @@ public class ScenarioSimulationEditorPresenter
         view.getScenarioGridLayer().getScenarioGrid().clearSelections();
         unRegisterTestToolsCallback();
         clearTestToolsStatus();
-        testRunnerReportingPanel.reset();
     }
 
     public void onUberfireDocksInteractionEvent(@Observes final UberfireDocksInteractionEvent uberfireDocksInteractionEvent) {
@@ -335,6 +336,22 @@ public class ScenarioSimulationEditorPresenter
         importExportService.call(getImportCallBack(),
                                  getImportErrorCallback())
                 .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
+    }
+
+    /**
+     * It resets the status of all Docks widgets present in ScenarioSimulation. Considering the docks are
+     * marked as ApplicationScoped, this method should be call everytime ScenarioSimulationEditor is opened (or closed)
+     */
+    protected void resetDocks() {
+        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getCheatSheetPresenter(getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getTestToolsPresenter(getCurrentRightDockPlaceRequest(TestToolsPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getCoverageReportPresenter(getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        testRunnerReportingPanel.reset();
     }
 
     /**
@@ -547,7 +564,7 @@ public class ScenarioSimulationEditorPresenter
         if (lastRunResult != null) {
             presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
         } else {
-            presenter.clear(type);
+            presenter.showEmptyStateMessage(type);
         }
     }
 
@@ -706,4 +723,5 @@ public class ScenarioSimulationEditorPresenter
     private Command getPopulateTestToolsCommand() {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
+
 }

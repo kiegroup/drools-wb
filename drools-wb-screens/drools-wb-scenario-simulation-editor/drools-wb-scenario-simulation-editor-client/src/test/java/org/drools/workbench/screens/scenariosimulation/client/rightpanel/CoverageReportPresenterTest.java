@@ -125,9 +125,15 @@ public class CoverageReportPresenterTest {
     }
 
     @Test
-    public void clear() {
-        presenterSpy.clear(null);
+    public void showEmptyStateMessage() {
+        presenterSpy.showEmptyStateMessage(null);
         verify(coverageReportViewMock, times(1)).setEmptyStatusText(anyString());
         verify(coverageReportViewMock, times(1)).hide();
+    }
+
+    @Test
+    public void resetTest() {
+        presenterSpy.reset();
+        verify(coverageReportViewMock, times(1)).reset();
     }
 }

@@ -47,6 +47,6 @@ public interface CoverageReportView
 
         void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, ScenarioSimulationModel.Type type);
 
-        void clear(ScenarioSimulationModel.Type type);
+        void showEmptyStateMessage(ScenarioSimulationModel.Type type);
     }
 }

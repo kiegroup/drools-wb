@@ -102,6 +102,12 @@ public class CoverageReportViewImpl
     }
 
     @Override
+    public void reset() {
+        emptyStatusText.textContent = "";
+        hide();
+    }
+
+    @Override
     public void hide() {
         emptyStatus.classList.remove(HIDDEN);
         summarySection.classList.add(HIDDEN);

@@ -87,7 +87,12 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     }
 
     @Override
-    public void clear(ScenarioSimulationModel.Type type) {
+    public void reset() {
+        view.reset();
+    }
+
+    @Override
+    public void showEmptyStateMessage(ScenarioSimulationModel.Type type) {
         if(ScenarioSimulationModel.Type.RULE.equals(type)) {
             view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.coverageNotSupportedForRule());
         }
