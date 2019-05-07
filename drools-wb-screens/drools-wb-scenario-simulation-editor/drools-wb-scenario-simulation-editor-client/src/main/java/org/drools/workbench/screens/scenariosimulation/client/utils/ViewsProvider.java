@@ -27,6 +27,8 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopup;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageDecisionElementView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageScenarioListView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
@@ -42,6 +44,9 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<FieldItemView> fieldItemViewInstance;
+
+    @Inject
+    private ManagedInstance<CoverageDecisionElementView> decisionElementViewInstance;
 
     @Inject
     private ManagedInstance<ListGroupItemView> listGroupItemViewInstance;
@@ -66,6 +71,9 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<FileUploadPopup> fileUploadPopupInstance;
+
+    @Inject
+    private ManagedInstance<CoverageScenarioListView> coverageScenarioListView;
 
     @Inject
     private ManagedInstance<ErrorReportPopoverView> errorReportPopoverViewInstance;
@@ -110,6 +118,13 @@ public class ViewsProvider {
         return fileUploadPopupInstance.get();
     }
 
+    public CoverageDecisionElementView getDecisionElementView() {
+        return decisionElementViewInstance.get();
+    }
+
+    public CoverageScenarioListView getCoverageScenarioListView() {
+        return coverageScenarioListView.get();
+    }
     public ErrorReportPopoverView getErrorReportPopoverView() {
         return errorReportPopoverViewInstance.get();
     }
