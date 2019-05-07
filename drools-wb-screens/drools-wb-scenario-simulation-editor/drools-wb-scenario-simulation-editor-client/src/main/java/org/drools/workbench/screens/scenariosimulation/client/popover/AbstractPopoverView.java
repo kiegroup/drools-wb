@@ -70,6 +70,9 @@ public abstract class AbstractPopoverView implements PopoverView {
 
     @Override
     public void show(final Optional<String> editorTitle, final int mx, final int my, Position position) {
+        if (isShown()) {
+            this.hide();
+        }
         addWidgetToRootPanel();
         final PopoverOptions options = new PopoverOptions();
         options.setContent((element) -> popoverContentElement);

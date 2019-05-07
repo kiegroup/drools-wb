@@ -73,7 +73,8 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
         /* In this case, the mouse is out ot the GridLayer, then it resets the coordinates to default */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
-            return resetCurrentlyShowBodyCoordinates();
+            resetCurrentlyShowBodyCoordinates();
+            return false;
         }
         /* If the mouse position is the same of the previous one, do nothing. It returns true because
         * the click happened on an column of a grid row */
@@ -125,10 +126,10 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                         scenarioGrid.getEventBus().fireEvent(
                                                                 new SetGridCellValueEvent(uiRowIndex,
                                                                                           uiColumnIndex,
-                                                                                          errorValue != null ? errorValue.toString() : NULL));
+                                                                                          errorValue != null ? errorValue.toString() : null));
                                                         CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
                                                },
-                                               () -> CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates(),
+                                               CommonOnMoveHandler.this::resetCurrentlyShowBodyCoordinates,
                                                xPosition,
                                                yPosition,
                                                position);
@@ -137,10 +138,9 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         return true;
     }
 
-    protected boolean resetCurrentlyShowBodyCoordinates() {
+    protected void resetCurrentlyShowBodyCoordinates() {
         currentlyShownBodyColumnIndex = -1;
         currentlyShownBodyRowIndex = -1;
-        return false;
     }
 
     //Indirection for test
