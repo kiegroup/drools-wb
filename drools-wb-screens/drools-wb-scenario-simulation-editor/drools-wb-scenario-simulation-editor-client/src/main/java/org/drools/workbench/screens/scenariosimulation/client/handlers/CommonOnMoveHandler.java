@@ -126,7 +126,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                         scenarioGrid.getEventBus().fireEvent(
                                                                 new SetGridCellValueEvent(uiRowIndex,
                                                                                           uiColumnIndex,
-                                                                                          errorValue != null ? errorValue.toString() : null));
+                                                                                          errorValue != null ? errorValue.toString() : NULL));
                                                         CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
                                                },
                                                CommonOnMoveHandler.this::resetCurrentlyShowBodyCoordinates,

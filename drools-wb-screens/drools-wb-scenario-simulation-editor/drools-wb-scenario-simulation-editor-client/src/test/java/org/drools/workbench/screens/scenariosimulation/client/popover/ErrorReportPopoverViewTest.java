@@ -143,6 +143,24 @@ public class ErrorReportPopoverViewTest {
     }
 
     @Test
+    public void show_alreadyVisible() {
+        doReturn(Boolean.TRUE).when(errorReportPopupView).isShown();
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        verify(errorReportPopupView, times(1)).hide();
+        verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
+        verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
+        verify(jQueryPopoverMock, times(1)).wrap(elementMock);
+        verify(popoverMock, times(1)).popover(isA(PopoverOptions.class));
+        verify(styleMock, times(1)).setProperty(eq(TOP),eq(TOP_PX));
+        verify(styleMock, times(1)).setProperty(eq(LEFT), eq(LEFT_PX));
+        verify(styleMock, times(1)).setProperty(eq(POSITION),eq(ABSOLUTE));
+        verify(errorReportPopupView, times(1)).scheduleTask();
+        verify(errorContentMock, times(1)).setTextContent(eq(ERROR_CONTENT_TEXT));
+        verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
+        verify(applyButtonMock, times(1)).setInnerText(eq(APPLY_TEXT));
+    }
+
+    @Test
     public void hide_visible() {
         doReturn(Boolean.TRUE).when(errorReportPopupView).isShown();
         errorReportPopupView.hide();
