@@ -365,6 +365,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationDocksHandlerMock).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
         verify(presenterSpy).expandToolsDock();
         verify(presenterSpy, times(1)).registerTestToolsCallback();
+        verify(presenterSpy, times(1)).resetDocks();
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
 
@@ -375,7 +376,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridMock, times(1)).clearSelections();
         verify(presenterSpy).unRegisterTestToolsCallback();
         verify(presenterSpy).clearTestToolsStatus();
-        verify(testRunnerReportingPanel).reset();
     }
 
     @Test
@@ -727,5 +727,21 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.setCoverageReport(coverageReportPresenterMock);
         verify(coverageReportPresenterMock, times(1)).setSimulationRunMetadata(any(), any());
         verify(coverageReportPresenterMock, never()).clear(any());
+    }
+
+    @Test
+    public void resetDocks() {
+        PlaceRequest placeRequestMock = mock(PlaceRequest.class);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        presenterSpy.resetDocks();
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
+        verify(cheatSheetPresenterMock, times(1)).reset();
+        verify(presenterSpy, times(1)).getTestToolsPresenter(eq(placeRequestMock));
+        verify(testToolsPresenterMock, times(1)).reset();
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
+        verify(settingsPresenterMock, times(1)).reset();
     }
 }
