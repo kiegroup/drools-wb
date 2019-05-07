@@ -19,21 +19,19 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorSubmarineWrapper;
-import org.kie.workbench.common.stunner.core.client.service.ClientRuntimeError;
-import org.kie.workbench.common.stunner.core.client.service.ServiceCallback;
-import org.uberfire.backend.vfs.Path;
-import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 @ApplicationScoped
-@WorkbenchScreen(identifier = ScenarioSimulationEditorPresenter.IDENTIFIER)
-public class ScenarioSimulationEditorSubmarineScreen {
+//@WorkbenchScreen(identifier = ScenarioSimulationEditorPresenter.IDENTIFIER)
+public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
 
     @Inject
-    private ScenarioSimulationEditorSubmarineWrapper dmnDiagramEditor;
+    private ScenarioSimulationEditorSubmarineWrapper scenarioSimulationEditorSubmarineWrapper;
 
     private PlaceManager placeManager;
 
@@ -46,46 +44,53 @@ public class ScenarioSimulationEditorSubmarineScreen {
         this.placeManager = placeManager;
     }
 
+    @Override
+    public Widget asWidget() {
+        return scenarioSimulationEditorSubmarineWrapper.asWidget().asWidget();
+    }
+
     public void newFile() {
         placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
                                             },
                                             () -> {
-                                                dmnDiagramEditor.setContent("");
-                                                placeManager.unregisterOnOpenCallbacks(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
+                                                scenarioSimulationEditorSubmarineWrapper.setContent("");
+                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION);
                                             });
 
-        placeManager.goTo(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
+        placeManager.goTo(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION);
     }
 
-    public void openFile(final Path path) {
-        placeManager.registerOnOpenCallback(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR,
-                                            () -> {
-                                                clientDiagramService.loadAsXml(path,
-                                                                               new ServiceCallback<String>() {
-                                                                                   @Override
-                                                                                   public void onSuccess(final String xml) {
-                                                                                       dmnDiagramEditor.setContent(xml);
-                                                                                       placeManager.unregisterOnOpenCallbacks(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
-                                                                                   }
+//    public void openFile(final Path path) {
+//        placeManager.registerOnOpenCallback(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR,
+//                                            () -> {
+//                                                clientDiagramService.loadAsXml(path,
+//                                                                               new ServiceCallback<String>() {
+//                                                                                   @Override
+//                                                                                   public void onSuccess(final String xml) {
+//                                                                                       scenarioSimulationEditorSubmarineWrapper.setContent(xml);
+//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
+//                                                                                   }
+//
+//                                                                                   @Override
+//                                                                                   public void onError(final ClientRuntimeError error) {
+//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
+//                                                                                   }
+//                                                                               });
+//                                            });
+//
+//        placeManager.goTo(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    public void saveFile(final ServiceCallback<String> callback) {
+//        final Path path = scenarioSimulationEditorSubmarineWrapper.getCanvasHandler().getDiagram().getMetadata().getPath();
+//        scenarioSimulationEditorSubmarineWrapper.getContent().then(xml -> {
+//            clientDiagramService.saveAsXml(path,
+//                                           (String) xml,
+//                                           callback);
+//            return null;
+//        });
+//    }
 
-                                                                                   @Override
-                                                                                   public void onError(final ClientRuntimeError error) {
-                                                                                       placeManager.unregisterOnOpenCallbacks(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
-                                                                                   }
-                                                                               });
-                                            });
 
-        placeManager.goTo(DMNDiagramsNavigatorScreen.DIAGRAM_EDITOR);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void saveFile(final ServiceCallback<String> callback) {
-        final Path path = dmnDiagramEditor.getCanvasHandler().getDiagram().getMetadata().getPath();
-        dmnDiagramEditor.getContent().then(xml -> {
-            clientDiagramService.saveAsXml(path,
-                                           (String) xml,
-                                           callback);
-            return null;
-        });
-    }
 }

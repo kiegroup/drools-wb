@@ -39,6 +39,7 @@ import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainer
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.annotations.WorkbenchMenu;
+import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
@@ -99,16 +100,22 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     }
 
     @OnStartup
-    public void onStartup(final ObservablePath path,
-                          final PlaceRequest place) {
+    public void onStartup(final PlaceRequest place) {
         super.init(place);
-        scenarioSimulationEditorPresenter.init(this, path);
+        scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
     }
 
     @OnMayClose
     public boolean mayClose() {
         return !scenarioSimulationEditorPresenter.isDirty();
     }
+
+
+    @WorkbenchPartTitle
+    public String getTitleText() {
+        return super.getTitle().toString();
+    }
+
 
     @WorkbenchPartTitleDecoration
     public IsWidget getTitle() {

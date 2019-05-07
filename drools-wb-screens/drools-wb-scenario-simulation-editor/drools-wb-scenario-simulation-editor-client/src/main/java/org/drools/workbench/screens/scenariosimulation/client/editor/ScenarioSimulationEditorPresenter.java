@@ -34,6 +34,7 @@ import elemental2.dom.DomGlobal;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
@@ -91,7 +92,7 @@ public class ScenarioSimulationEditorPresenter {
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
 
-    private TestRunnerReportingScreen testRunnerReportingScreen;
+    protected TestRunnerReportingScreen testRunnerReportingScreen;
 
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
@@ -238,6 +239,13 @@ public class ScenarioSimulationEditorPresenter {
         return dataManagementStrategy;
     }
 
+    public void onImport(String fileContents) {
+        GWT.log(this.toString() + "onImport(" + fileContents +")");
+//        importExportService.call(getImportCallBack(),
+//                                 getImportErrorCallback())
+//                .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
+    }
+
     public EventBus getEventBus() {
         return eventBus;
     }
@@ -321,6 +329,17 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void open(final String downloadURL) {
         DomGlobal.window.open(downloadURL);
+    }
+
+    protected void showImportDialog() {
+        eventBus.fireEvent(new ImportEvent());
+    }
+
+    protected void onExportToCsv() {
+        GWT.log(this.toString() + "onExportToCsv");
+//        importExportService.call(getExportCallBack(),
+//                                 new DefaultErrorCallback())
+//                .exportSimulation(CSV, context.getStatus().getSimulation());
     }
 
     public void populateRightDocks(String identifier) {
