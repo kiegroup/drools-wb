@@ -81,15 +81,15 @@
   <inherits name="org.kie.workbench.common.screens.projecteditor.KieWorkbenchCommonProjectEditorClient"/>
   <inherits name="org.kie.workbench.common.screens.projectimportsscreen.KieWorkbenchCommonProjectImportsScreenClient"/>
 
-  <!-- Stunner -->
-  <inherits name="org.kie.workbench.common.stunner.client.StunnerWidgets"/>
+<!--  &lt;!&ndash; Stunner &ndash;&gt;-->
+<!--  <inherits name="org.kie.workbench.common.stunner.client.StunnerWidgets"/>-->
 
-  <!-- Form modeler -->
-  <inherits name="org.kie.workbench.common.stunner.forms.StunnerFormsClient"/>
-  <inherits name="org.kie.workbench.common.forms.dynamic.DynamicFormsClient"/>
+<!--  &lt;!&ndash; Form modeler &ndash;&gt;-->
+<!--  <inherits name="org.kie.workbench.common.stunner.forms.StunnerFormsClient"/>-->
+<!--  <inherits name="org.kie.workbench.common.forms.dynamic.DynamicFormsClient"/>-->
 
-  <!-- DMN Editor -->
-  <inherits name="org.kie.workbench.common.dmn.project.DMNProjectClient"/>
+<!--  &lt;!&ndash; DMN Editor &ndash;&gt;-->
+<!--  <inherits name="org.kie.workbench.common.dmn.project.DMNProjectClient"/>-->
 
   <!-- Social Home page -->
   <inherits name="org.ext.uberfire.social.activities.SocialActivitiesAPI"/>

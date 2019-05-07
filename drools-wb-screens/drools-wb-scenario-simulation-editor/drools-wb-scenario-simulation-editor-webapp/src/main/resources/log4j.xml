@@ -27,7 +27,7 @@
   <logger name="org.drools">
     <level value="INFO"/>
   </logger>
-  <logger name="org.kie.workbench.common.dmn">
+  <logger name="org.drools.workbench.screens.scenariosimulation">
     <level value="INFO"/>
   </logger>
 
