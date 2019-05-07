@@ -719,14 +719,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setCoverageReport() {
         presenter.setCoverageReport(coverageReportPresenterMock);
         verify(coverageReportPresenterMock, never()).setSimulationRunMetadata(any(), any());
-        verify(coverageReportPresenterMock, times(1)).clear(any());
+        verify(coverageReportPresenterMock, times(1)).showEmptyStateMessage(any());
 
         reset(coverageReportPresenterMock);
         presenter.lastRunResult = mock(SimulationRunResult.class);
 
         presenter.setCoverageReport(coverageReportPresenterMock);
         verify(coverageReportPresenterMock, times(1)).setSimulationRunMetadata(any(), any());
-        verify(coverageReportPresenterMock, never()).clear(any());
+        verify(coverageReportPresenterMock, never()).showEmptyStateMessage(any());
     }
 
     @Test
@@ -735,6 +735,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
         doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
         doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(coverageReportPresenterMock)).when(presenterSpy).getCoverageReportPresenter(eq(placeRequestMock));
         when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
         presenterSpy.resetDocks();
         verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
@@ -743,5 +744,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(testToolsPresenterMock, times(1)).reset();
         verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
         verify(settingsPresenterMock, times(1)).reset();
+        verify(presenterSpy, times(1)).getCoverageReportPresenter(eq(placeRequestMock));
+        verify(coverageReportPresenterMock, times(1)).reset();
     }
 }

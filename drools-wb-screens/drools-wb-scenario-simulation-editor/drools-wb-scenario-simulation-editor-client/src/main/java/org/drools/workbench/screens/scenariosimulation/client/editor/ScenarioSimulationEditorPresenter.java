@@ -51,6 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.Coverag
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -343,11 +344,13 @@ public class ScenarioSimulationEditorPresenter
      */
     protected void resetDocks() {
         getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(
-                presenter -> presenter.reset());
+                SubDockView.Presenter::reset);
         getCheatSheetPresenter(getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER)).ifPresent(
-                presenter -> presenter.reset());
+                SubDockView.Presenter::reset);
         getTestToolsPresenter(getCurrentRightDockPlaceRequest(TestToolsPresenter.IDENTIFIER)).ifPresent(
-                presenter -> presenter.reset());
+                SubDockView.Presenter::reset);
+        getCoverageReportPresenter(getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
         testRunnerReportingPanel.reset();
     }
 
@@ -561,7 +564,7 @@ public class ScenarioSimulationEditorPresenter
         if (lastRunResult != null) {
             presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
         } else {
-            presenter.clear(type);
+            presenter.showEmptyStateMessage(type);
         }
     }
 
