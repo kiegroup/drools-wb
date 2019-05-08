@@ -203,9 +203,8 @@ public class ScenarioSimulationServiceImpl
         try {
             final String content = ioService.readAllString(Paths.convert(path));
 
-            ScenarioSimulationModel scenarioSimulationModel = ScenarioSimulationXMLPersistence.getInstance().unmarshal(content);
+            ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
             Simulation simulation = scenarioSimulationModel.getSimulation();
-            // FIXME to test
             if(Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
                 dmnTypeService.initializeNameAndNamespace(simulation,
                                                           path,
@@ -439,6 +438,10 @@ public class ScenarioSimulationServiceImpl
                              new GAV("org.kie", "kie-dmn-feel", kieVersion),
                              new GAV("org.kie", "kie-dmn-api", kieVersion),
                              new GAV("org.kie", "kie-dmn-core", kieVersion));
+    }
+
+    protected ScenarioSimulationModel unmarshalInternal(String content) {
+        return ScenarioSimulationXMLPersistence.getInstance().unmarshal(content);
     }
 
     private org.uberfire.java.nio.file.Path internalGetPath(Package pkg, String path) {

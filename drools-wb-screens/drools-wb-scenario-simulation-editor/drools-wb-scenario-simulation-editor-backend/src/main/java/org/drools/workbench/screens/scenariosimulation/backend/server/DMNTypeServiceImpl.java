@@ -83,7 +83,6 @@ public class DMNTypeServiceImpl
         return factModelTuple;
     }
 
-    // FIXME to test
     @Override
     public Simulation initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
         DMNModel dmnModel = getDMNModel(path, dmnPath);

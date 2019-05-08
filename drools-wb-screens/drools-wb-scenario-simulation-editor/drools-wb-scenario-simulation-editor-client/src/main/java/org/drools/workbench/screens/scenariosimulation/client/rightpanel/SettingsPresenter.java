@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -50,6 +51,11 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public SettingsPresenter(SettingsView view) {
         super(view);
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
+    }
+
+    @PostConstruct
+    public void setup() {
+        view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipFromBuild());
     }
 
     @Override

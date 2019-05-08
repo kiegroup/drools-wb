@@ -24,6 +24,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
+import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.metadata.MetadataServerSideService;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
@@ -56,6 +57,8 @@ import org.uberfire.java.nio.base.options.CommentedOption;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.java.nio.file.OpenOption;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -135,8 +138,20 @@ public class ScenarioSimulationServiceImplTest {
     @Mock
     private ScenarioSimulationBuilder scenarioSimulationBuilderMock;
 
+    @Mock
+    private DMNTypeService dmnTypeServiceMock;
+
     @InjectMocks
-    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
+    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class)) {
+        @Override
+        protected ScenarioSimulationModel unmarshalInternal(String content) {
+            Simulation simulation = new Simulation();
+            simulation.getSimulationDescriptor().setType(Type.DMN);
+            ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
+            toReturn.setSimulation(simulation);
+            return toReturn;
+        }
+    };
 
     private Path path = PathFactory.newPath("contextPath", "file:///contextPath");
 
@@ -251,7 +266,7 @@ public class ScenarioSimulationServiceImplTest {
                                                "test.scesim",
                                                model,
                                                "Commit comment",
-                                               ScenarioSimulationModel.Type.RULE,
+                                               Type.RULE,
                                                "default");
 
         assertNotNull(returnPath);
@@ -270,7 +285,7 @@ public class ScenarioSimulationServiceImplTest {
                                                "test.scesim",
                                                model,
                                                "Commit comment",
-                                               ScenarioSimulationModel.Type.DMN,
+                                               Type.DMN,
                                                "test");
 
         assertNotNull(returnPath);
@@ -403,5 +418,13 @@ public class ScenarioSimulationServiceImplTest {
     @Test
     public void getActivatorPathTest() {
         assertTrue(service.getActivatorPath(packageMock).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
+    }
+
+    @Test
+    public void load() {
+        ScenarioSimulationModel model = service.load(path);
+
+        assertEquals(Type.DMN, model.getSimulation().getSimulationDescriptor().getType());
+        verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
     }
 }

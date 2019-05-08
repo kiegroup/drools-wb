@@ -278,4 +278,6 @@ public interface ScenarioSimulationEditorConstants
     String reportCoverageLabel();
 
     String numberOfTimesDecisionEvaluated();
+
+    String skipFromBuild();
 }

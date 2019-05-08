@@ -90,6 +90,9 @@ public class SettingsViewImpl
     @DataField("saveButton")
     protected ButtonElement saveButton = Document.get().createButtonElement();
 
+    @DataField("skipFromBuildLabel")
+    protected SpanElement skipFromBuildLabel = Document.get().createSpanElement();
+
     public SettingsViewImpl() {
     }
 
@@ -190,6 +193,11 @@ public class SettingsViewImpl
     @Override
     public InputElement getSkipFromBuild() {
         return skipFromBuild;
+    }
+
+    @Override
+    public SpanElement getSkipFromBuildLabel() {
+        return skipFromBuildLabel;
     }
 
     @Override
