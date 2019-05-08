@@ -78,7 +78,6 @@ public class ScenarioCsvImportExportTest {
         Simulation simulation = scenarioCsvImportExport.importData(rawCSV, originalSimulation);
 
         assertEquals(1, simulation.getUnmodifiableScenarios().size());
-        simulation.getSimulationDescriptor().getFactMappingByIndex(2);
 
         assertEquals("value1", simulation.getScenarioByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(2)).get().getRawValue());
         assertEquals("value2", simulation.getScenarioByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(3)).get().getRawValue());

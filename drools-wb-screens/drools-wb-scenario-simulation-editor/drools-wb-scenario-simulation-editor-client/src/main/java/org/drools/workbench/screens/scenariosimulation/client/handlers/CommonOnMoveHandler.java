@@ -20,6 +20,10 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.types.Point2D;
+import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingValue;
+import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
+import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
@@ -27,10 +31,6 @@ import org.drools.workbench.screens.scenariosimulation.client.popover.PopoverVie
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingValue;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingValueStatus;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
