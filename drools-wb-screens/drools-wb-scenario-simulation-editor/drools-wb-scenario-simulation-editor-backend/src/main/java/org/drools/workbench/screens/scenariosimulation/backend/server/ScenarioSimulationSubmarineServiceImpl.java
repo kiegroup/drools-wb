@@ -26,7 +26,6 @@ import javax.enterprise.context.ApplicationScoped;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.jboss.errai.bus.server.annotations.Service;
-import org.uberfire.java.nio.file.FileSystem;
 
 /**
  * Submarine specific service
@@ -47,8 +46,7 @@ public class ScenarioSimulationSubmarineServiceImpl implements ScenarioSimulatio
     }
 
     @Override
-    public List<String> getAssets(final FileSystem fileSystem,
-                                  final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
+    public List<String> getAssets(final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
         // For the moment being the package name is ignored in this submarine version
         File assetsDirectory = getAssetsDirectory(containerDirectoryFullPath);
         final String[] filteredFiles = assetsDirectory.list((dir, name) -> name.endsWith("." + assetType));

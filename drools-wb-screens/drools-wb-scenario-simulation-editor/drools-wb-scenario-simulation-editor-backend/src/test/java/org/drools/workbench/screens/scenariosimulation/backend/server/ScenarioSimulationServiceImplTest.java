@@ -161,8 +161,6 @@ public class ScenarioSimulationServiceImplTest {
             .mapToObj(i -> "File_" + i + ".dmn")
             .collect(Collectors.toList());
 
-    private FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
-
     @Before
     public void setup() throws Exception {
         Set<Package> testPackages = new HashSet<>();
@@ -426,7 +424,7 @@ public class ScenarioSimulationServiceImplTest {
 
     private void getAssetsCommon(String suffix, int expectedSize) {
         try {
-            List<String> retrieved = service.getAssets(fileSystem, ".", suffix, "com.test");
+            List<String> retrieved = service.getAssets(".", suffix, "com.test");
             assertNotNull(retrieved);
             assertEquals(expectedSize, retrieved.size());
         } catch (Exception e) {
@@ -435,6 +433,7 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     private List<org.uberfire.java.nio.file.Path> getDirectoryStreamPaths() {
+        FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
         return Stream.of(drlFiles, dmnFiles)
                 .flatMap(Collection::stream)
                 .map(fileName -> GeneralPathImpl.newFromFile(fileSystem, new File(fileName)))

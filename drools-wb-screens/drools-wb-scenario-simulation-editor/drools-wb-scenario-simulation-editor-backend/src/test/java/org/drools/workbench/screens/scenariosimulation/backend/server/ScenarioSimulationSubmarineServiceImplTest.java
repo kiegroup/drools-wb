@@ -62,10 +62,10 @@ public class ScenarioSimulationSubmarineServiceImplTest {
     @Test
     public void getAssetsFromExistingDirectory() {
         try {
-            List<String> retrieved = instance.getAssets(null, ASSETS_DIRECTORY, "dmn", "com.test");
+            List<String> retrieved = instance.getAssets(ASSETS_DIRECTORY, "dmn", "com.test");
             assertNotNull(retrieved);
             assertFalse(retrieved.isEmpty());
-            retrieved = instance.getAssets(null, ASSETS_DIRECTORY, "not_existing", "com.test");
+            retrieved = instance.getAssets(ASSETS_DIRECTORY, "not_existing", "com.test");
             assertNotNull(retrieved);
             assertTrue(retrieved.isEmpty());
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public class ScenarioSimulationSubmarineServiceImplTest {
 
     @Test(expected = Exception.class)
     public void getAssetsFromNotExistingDirectory() throws Exception {
-        instance.getAssets(null, "NOT_EXISTING_DIR", "dmn", "com.test");
+        instance.getAssets("NOT_EXISTING_DIR", "dmn", "com.test");
     }
 
     @Test

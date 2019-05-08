@@ -75,6 +75,7 @@ import org.uberfire.java.nio.base.GeneralPathImpl;
 import org.uberfire.java.nio.file.DirectoryStream;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.java.nio.file.FileSystem;
+import org.uberfire.java.nio.fs.file.SimpleFileSystemProvider;
 import org.uberfire.rpc.SessionInfo;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
@@ -131,6 +132,9 @@ public class ScenarioSimulationServiceImpl
     private SafeSessionInfo safeSessionInfo;
 
     private Properties props = new Properties();
+
+    private FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
+
 
     private static final String KIE_VERSION = "kie.version";
     private static final String junitActivatorPackageName = "testscenario";
@@ -329,8 +333,7 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public List<String> getAssets(final FileSystem fileSystem,
-                                  final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
+    public List<String> getAssets(final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
         DirectoryStream<org.uberfire.java.nio.file.Path> directoryStream = ioService.newDirectoryStream(GeneralPathImpl.newFromFile(fileSystem, new File(containerDirectoryFullPath)));
         Iterable<org.uberfire.java.nio.file.Path> iterable = directoryStream::iterator;
         Stream<org.uberfire.java.nio.file.Path> actualStream = StreamSupport.stream(iterable.spliterator(), false);

@@ -19,7 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.service;
 import java.util.List;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.uberfire.java.nio.file.FileSystem;
 
 /**
  * Assets specific service
@@ -28,16 +27,14 @@ import org.uberfire.java.nio.file.FileSystem;
 public interface AssetsService {
 
     /**
-     * This method <b>tries</b> to avoid importing specific <b>backend</b> implementations where they should not be needed nor available
+     * This method uses only <code>String</code> to avoid importing specific <b>backend</b> implementations where they should not be needed nor available
      * (e.g. avoid using uberfire vfs stuff inside submarine environment)
-     * @param fileSystem
      * @param containerDirectoryFullPath
      * @param assetType
      * @param packageName
      * @return
      * @throws Exception
      */
-    List<String> getAssets(final FileSystem fileSystem,
-                           final String containerDirectoryFullPath,
+    List<String> getAssets(final String containerDirectoryFullPath,
                            String assetType, String packageName) throws Exception;
 }

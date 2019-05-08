@@ -200,4 +200,10 @@ public class TestProperties {
     public static final String COLUMN_TWO_TITLE = "column two";
 
     public static final String TEST = "test";
+
+    public static final String DEFAULT_VALUE = "DEFAULT_VALUE";
+
+    public static final String KIEASSETSDROPDOWNVIEW_SELECT = "KIEASSETSDROPDOWNVIEW_SELECT";
+
+
 }
