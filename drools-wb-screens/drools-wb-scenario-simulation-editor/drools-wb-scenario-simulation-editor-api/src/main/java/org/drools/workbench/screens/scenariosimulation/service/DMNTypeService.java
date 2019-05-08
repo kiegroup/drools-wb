@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.service;
 
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.jboss.errai.bus.server.annotations.Remote;
 import org.uberfire.backend.vfs.Path;
@@ -30,4 +31,6 @@ public interface DMNTypeService {
      * @throws Exception
      */
     FactModelTuple retrieveFactModelTuple(Path path, String dmnPath);
+
+    Simulation initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath);
 }

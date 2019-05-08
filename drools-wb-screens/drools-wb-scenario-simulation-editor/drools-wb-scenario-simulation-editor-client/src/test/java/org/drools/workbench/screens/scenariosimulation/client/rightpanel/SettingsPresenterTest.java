@@ -30,7 +30,6 @@ import org.uberfire.mvp.Command;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_FILE_PATH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAMESPACE;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMO_SESSION;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_BASE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_SESSION;
@@ -68,7 +67,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getKieSession()).thenReturn(kieSessionMock);
         when(settingsViewMock.getKieBase()).thenReturn(kieBaseMock);
         when(settingsViewMock.getRuleFlowGroup()).thenReturn(ruleFlowGroupMock);
-        when(settingsViewMock.getDmoSession()).thenReturn(dmoSessionMock);
         when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
         when(settingsViewMock.getDmnFileLabel()).thenReturn(dmnModelLabelMock);
         when(settingsViewMock.getDmnFilePath()).thenReturn(dmnFilePathMock);
@@ -79,11 +77,9 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getSkipFromBuild()).thenReturn(skipFromBuildMock);
         when(settingsViewMock.getSaveButton()).thenReturn(saveButtonMock);
 
-        when(simulationDescriptorMock.getFileName()).thenReturn(FILE_NAME);
-        when(simulationDescriptorMock.getKieSession()).thenReturn(KIE_SESSION);
         when(simulationDescriptorMock.getKieBase()).thenReturn(KIE_BASE);
         when(simulationDescriptorMock.getRuleFlowGroup()).thenReturn(RULE_FLOW_GROUP);
-        when(simulationDescriptorMock.getDmoSession()).thenReturn(DMO_SESSION);
+        when(simulationDescriptorMock.getDmoSession()).thenReturn(KIE_SESSION);
         when(simulationDescriptorMock.getDmnFilePath()).thenReturn(DMN_FILE_PATH);
         when(simulationDescriptorMock.getDmnNamespace()).thenReturn(DMN_NAMESPACE);
         when(simulationDescriptorMock.getDmnName()).thenReturn(DMN_NAME);
@@ -112,7 +108,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(skipFromBuildMock.isChecked()).thenReturn(true);
         settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.RULE.name());
         verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(true));
-        verify(simulationDescriptorMock, times(1)).setFileName(eq(FILE_NAME));
         verify(settingsPresenter, times(1)).saveRuleSettings();
         verify(saveCommandMock, times(1)).execute();
         reset(saveCommandMock);
@@ -128,7 +123,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(skipFromBuildMock.isChecked()).thenReturn(false);
         settingsPresenter.onSaveButton(ScenarioSimulationModel.Type.RULE.name());
         verify(settingsPresenter, times(1)).saveRuleSettings();
-        verify(simulationDescriptorMock, times(1)).setFileName(eq(FILE_NAME));
         verify(simulationDescriptorMock, times(1)).setSkipFromBuild(eq(false));
         verify(saveCommandMock, times(1)).execute();
         reset(saveCommandMock);
@@ -194,8 +188,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(settingsViewMock, times(1)).getRuleSettings();
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
-        verify(settingsViewMock, times(1)).getDmoSession();
-        verify(dmoSessionMock, times(1)).setValue(eq(DMO_SESSION));
         verify(settingsViewMock, times(1)).getKieBase();
         verify(kieBaseMock, times(1)).setValue(eq(KIE_BASE));
         verify(settingsViewMock, times(1)).getKieSession();
@@ -223,12 +215,10 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     public void saveRuleSettings() {
         when(skipFromBuildMock.isChecked()).thenReturn(true);
         settingsPresenter.saveRuleSettings();
-        verify(settingsViewMock, times(1)).getDmoSession();
-        verify(simulationDescriptorMock, times(1)).setDmoSession(eq(DMO_SESSION));
+        verify(simulationDescriptorMock, times(1)).setDmoSession(eq(KIE_SESSION));
         verify(settingsViewMock, times(1)).getKieBase();
         verify(simulationDescriptorMock, times(1)).setKieBase(eq(KIE_BASE));
         verify(settingsViewMock, times(1)).getKieSession();
-        verify(simulationDescriptorMock, times(1)).setKieSession(eq(KIE_SESSION));
         verify(settingsViewMock, times(1)).getRuleFlowGroup();
         verify(simulationDescriptorMock, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
     }

@@ -32,12 +32,14 @@ import javax.inject.Named;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
 import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.drools.workbench.screens.scenariosimulation.type.ScenarioSimulationResourceTypeDefinition;
@@ -71,6 +73,8 @@ import org.uberfire.io.IOService;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.rpc.SessionInfo;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
+
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 
 @Service
 @ApplicationScoped
@@ -121,6 +125,9 @@ public class ScenarioSimulationServiceImpl
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
 
+    @Inject
+    protected DMNTypeService dmnTypeService;
+
     private SafeSessionInfo safeSessionInfo;
 
     private Properties props = new Properties();
@@ -165,11 +172,11 @@ public class ScenarioSimulationServiceImpl
                        final String fileName,
                        final ScenarioSimulationModel content,
                        final String comment) {
-        return create(context, fileName, content, comment, ScenarioSimulationModel.Type.RULE, "default");
+        return create(context, fileName, content, comment, Type.RULE, "default");
     }
 
     @Override
-    public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, ScenarioSimulationModel.Type type, String value) {
+    public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, Type type, String value) {
         try {
             content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
@@ -196,7 +203,15 @@ public class ScenarioSimulationServiceImpl
         try {
             final String content = ioService.readAllString(Paths.convert(path));
 
-            return ScenarioSimulationXMLPersistence.getInstance().unmarshal(content);
+            ScenarioSimulationModel scenarioSimulationModel = ScenarioSimulationXMLPersistence.getInstance().unmarshal(content);
+            Simulation simulation = scenarioSimulationModel.getSimulation();
+            // FIXME to test
+            if(Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
+                dmnTypeService.initializeNameAndNamespace(simulation,
+                                                          path,
+                                                          simulation.getSimulationDescriptor().getDmnFilePath());
+            }
+            return scenarioSimulationModel;
         } catch (Exception e) {
             throw ExceptionUtilities.handleException(e);
         }

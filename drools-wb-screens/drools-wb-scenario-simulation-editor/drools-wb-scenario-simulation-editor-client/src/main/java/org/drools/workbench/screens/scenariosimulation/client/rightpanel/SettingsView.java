@@ -53,13 +53,11 @@ public interface SettingsView
 
     InputElement getRuleFlowGroup();
 
-    InputElement getDmoSession();
-
     DivElement getDmnSettings();
 
     LabelElement getDmnFileLabel();
 
-    SpanElement getDmnFilePath();
+    InputElement getDmnFilePath();
 
     LabelElement getDmnNamespaceLabel();
 

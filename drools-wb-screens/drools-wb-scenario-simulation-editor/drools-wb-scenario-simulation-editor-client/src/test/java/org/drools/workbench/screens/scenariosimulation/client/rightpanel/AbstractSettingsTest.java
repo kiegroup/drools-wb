@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_FILE_PATH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAMESPACE;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMO_SESSION;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_BASE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_SESSION;
@@ -67,9 +66,6 @@ abstract class AbstractSettingsTest {
     protected InputElement ruleFlowGroupMock;
 
     @Mock
-    protected InputElement dmoSessionMock;
-
-    @Mock
     protected DivElement dmnSettingsMock;
 
     @Mock
@@ -79,7 +75,7 @@ abstract class AbstractSettingsTest {
     protected LabelElement dmnModelLabelMock;
 
     @Mock
-    protected SpanElement dmnFilePathMock;
+    protected InputElement dmnFilePathMock;
 
     @Mock
     protected LabelElement dmnNamespaceLabelMock;
@@ -106,7 +102,6 @@ abstract class AbstractSettingsTest {
         when(kieSessionMock.getValue()).thenReturn(KIE_SESSION);
         when(kieBaseMock.getValue()).thenReturn(KIE_BASE);
         when(ruleFlowGroupMock.getValue()).thenReturn(RULE_FLOW_GROUP);
-        when(dmoSessionMock.getValue()).thenReturn(DMO_SESSION);
         when(dmnFilePathMock.getInnerText()).thenReturn(DMN_FILE_PATH);
         when(dmnNamespaceMock.getInnerText()).thenReturn(DMN_NAMESPACE);
         when(dmnNameMock.getInnerText()).thenReturn(DMN_NAME);

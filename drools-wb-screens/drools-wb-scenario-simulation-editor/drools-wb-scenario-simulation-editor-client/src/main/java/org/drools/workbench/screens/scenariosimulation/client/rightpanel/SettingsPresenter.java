@@ -41,7 +41,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     protected Command saveCommand;
 
-
     public SettingsPresenter() {
         //Zero argument constructor for CDI
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
@@ -77,7 +76,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void onSaveButton(String scenarioType) {
         simulationDescriptor.setSkipFromBuild(view.getSkipFromBuild().isChecked());
-        simulationDescriptor.setFileName(view.getFileName().getInnerText());
         switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
             case RULE:
                 saveRuleSettings();
@@ -97,24 +95,26 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
         view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);
-        view.getDmoSession().setValue(simulationDescriptor.getDmoSession());
+        // FIXME to implement
         view.getKieBase().setValue(simulationDescriptor.getKieBase());
-        view.getKieSession().setValue(simulationDescriptor.getKieSession());
+        // FIXME to implement
+        view.getKieSession().setValue(simulationDescriptor.getDmoSession());
+        // FIXME to implement
         view.getRuleFlowGroup().setValue(simulationDescriptor.getRuleFlowGroup());
     }
 
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
         view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
+        // FIXME to implement (no more read only)
         view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
         view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
         view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
     }
 
     protected void saveRuleSettings() {
-        simulationDescriptor.setDmoSession(view.getDmoSession().getValue());
+        simulationDescriptor.setDmoSession(view.getKieSession().getValue());
         simulationDescriptor.setKieBase(view.getKieBase().getValue());
-        simulationDescriptor.setKieSession(view.getKieSession().getValue());
         simulationDescriptor.setRuleFlowGroup(view.getRuleFlowGroup().getValue());
     }
 
