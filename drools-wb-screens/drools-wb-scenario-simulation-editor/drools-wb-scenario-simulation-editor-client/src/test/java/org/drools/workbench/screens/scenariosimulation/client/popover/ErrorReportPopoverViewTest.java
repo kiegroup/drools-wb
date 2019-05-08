@@ -97,9 +97,6 @@ public class ErrorReportPopoverViewTest {
     private Command applyCommandMock;
 
     @Mock
-    private Command keepCommandMock;
-
-    @Mock
     protected JQueryProducer.JQuery<Popover> jQueryPopoverMock;
 
     @Mock private ElementWrapperWidget<Object> wrappedWidgetMock;
@@ -111,7 +108,6 @@ public class ErrorReportPopoverViewTest {
                 this.keepButton = keepButtonMock;
                 this.applyButton = applyButtonMock;
                 this.applyCommand = applyCommandMock;
-                this.keepCommand = keepCommandMock;
                 this.errorContent = errorContentMock;
                 this.wrappedWidget = wrappedWidgetMock;
                 this.popover = popoverMock;
@@ -133,7 +129,7 @@ public class ErrorReportPopoverViewTest {
 
     @Test
     public void show() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
         verify(jQueryPopoverMock, times(1)).wrap(elementMock);
@@ -150,7 +146,7 @@ public class ErrorReportPopoverViewTest {
 
     @Test
     public void show_withoutApplyButton() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
         verify(jQueryPopoverMock, times(1)).wrap(elementMock);
@@ -167,7 +163,7 @@ public class ErrorReportPopoverViewTest {
     @Test
     public void show_alreadyVisible() {
         doReturn(Boolean.TRUE).when(errorReportPopupView).isShown();
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).hide();
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
@@ -203,7 +199,6 @@ public class ErrorReportPopoverViewTest {
     @Test
     public void onKeepButtonClicked() {
         errorReportPopupView.onKeepButtonClicked(mock(ClickEvent.class));
-        verify(keepCommandMock, times(1)).execute();
         verify(errorReportPopupView, times(1)).hide();
     }
 

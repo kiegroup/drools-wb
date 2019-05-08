@@ -129,7 +129,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
-                isA(Command.class),
                 eq((int) (CELL_WIDTH / 2) + DX),
                 eq(DY),
                 eq(PopoverView.Position.RIGHT));
@@ -148,7 +147,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
-                isA(Command.class),
                 isA(Command.class),
                 eq((int) (DX - (CELL_WIDTH / 2))),
                 eq(DY),
@@ -170,7 +168,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
-                isA(Command.class),
                 eq((int) (CELL_WIDTH / 2) + DX),
                 eq(DY),
                 eq(PopoverView.Position.RIGHT));
@@ -189,7 +186,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(EXCEPTION)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.close()),
-                isA(Command.class),
                 eq((int) (CELL_WIDTH / 2) + DX),
                 eq(DY),
                 eq(PopoverView.Position.RIGHT));
@@ -210,7 +206,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
-                isA(Command.class),
                 eq((int) ((CELL_WIDTH / 2) + DX) - SCROLL_LEFT),
                 eq(DY - SCROLL_TOP),
                 eq(PopoverView.Position.RIGHT));
@@ -224,7 +219,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(commonOnMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
     }
 
     @Test
@@ -243,7 +238,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(commonOnMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
     }
 
     @Test
@@ -278,7 +273,6 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
-                isA(Command.class),
                 eq((int) (CELL_WIDTH / 2) + DX),
                 eq(DY),
                 eq(PopoverView.Position.RIGHT));
@@ -299,7 +293,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(commonOnMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
         assertFalse(inGrid);
     }
 
@@ -310,7 +304,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(commonOnMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
         assertFalse(inGrid);
     }
 

@@ -70,16 +70,15 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
-        /* In this case, the mouse is out ot the GridLayer, then return false */
+        /* In this case, the mouse is out ot the GridLayer, then return false, without perform any action */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
             return false;
         }
-        /* If the mouse position is the same of the previous one, do nothing. It returns true because
-        * the click happened on an column of a grid row */
+        /* If the mouse position is the same of the previous one and the popover is already open, it does nothing.
+        * It returns true because the click happened on an column of a grid row */
         if (uiRowIndex.equals(currentlyShownBodyRowIndex) &&
                 uiColumnIndex.equals(currentlyShownBodyColumnIndex) &&
-                errorReportPopupPresenter.isShown()
-        ) {
+                errorReportPopupPresenter.isShown()) {
             return true;
         }
         final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
@@ -88,7 +87,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
             if (FactMappingValueStatus.SUCCESS != factMappingValue.getStatus()) {
-                /* It updates the coordinates of the cell with error */
+                /* It updates the coordinates of the current shown cell */
                 currentlyShownBodyRowIndex = uiRowIndex;
                 currentlyShownBodyColumnIndex = uiColumnIndex;
                 /* It calculates the coordinates */
@@ -126,7 +125,6 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                                                          uiColumnIndex,
                                                                                          errorValue != null ? errorValue.toString() : NULL));
                                                    },
-                                                   () -> {},
                                                    xPosition,
                                                    yPosition,
                                                    position);
@@ -135,7 +133,6 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                                                    ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(
                                                            factMappingValue.getExceptionMessage()),
                                                    ScenarioSimulationEditorConstants.INSTANCE.close(),
-                                                   () -> {},
                                                    xPosition,
                                                    yPosition,
                                                    position);

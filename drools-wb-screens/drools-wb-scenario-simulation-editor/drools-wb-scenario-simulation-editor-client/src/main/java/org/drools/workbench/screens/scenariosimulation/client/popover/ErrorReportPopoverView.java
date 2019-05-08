@@ -37,7 +37,6 @@ import org.uberfire.mvp.Command;
 public class ErrorReportPopoverView extends AbstractPopoverView implements ErrorReportPopover {
 
     protected Command applyCommand;
-    protected Command keepCommand;
 
     @DataField("keepButton")
     protected ButtonElement keepButton = Document.get().createButtonElement();
@@ -71,12 +70,10 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
                      final String keepText,
                      final String applyText,
                      final Command applyCommand,
-                     final Command keepCommand,
                      final int mx,
                      final int my,
                      final Position position) {
         this.applyCommand = applyCommand;
-        this.keepCommand = keepCommand;
         errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.setInnerText(applyText);
@@ -88,11 +85,9 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
     public void show(final String errorTitleText,
                          final String errorContentText,
                          final String keepText,
-                         final Command keepCommand,
                          final int mx,
                          final int my,
                          final Position position) {
-        this.keepCommand = keepCommand;
         errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.getStyle().setDisplay(Style.Display.NONE);
@@ -102,7 +97,6 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
 
     @EventHandler("keepButton")
     public void onKeepButtonClicked(ClickEvent clickEvent) {
-        keepCommand.execute();
         hide();
     }
 

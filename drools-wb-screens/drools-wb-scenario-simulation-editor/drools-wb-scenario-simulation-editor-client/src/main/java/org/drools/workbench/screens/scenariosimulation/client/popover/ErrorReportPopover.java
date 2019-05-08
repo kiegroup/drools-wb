@@ -28,7 +28,6 @@ public interface ErrorReportPopover extends PopoverView {
          * @param keepText
          * @param applyText
          * @param applyCommand
-         * @param keepCommand
          * @param mx x position of the replace
          * @param my y position of the popover
          * @param position position where the popover is put (LEFT or RIGHT)
@@ -38,7 +37,6 @@ public interface ErrorReportPopover extends PopoverView {
                   final String keepText,
                   final String applyText,
                   final Command applyCommand,
-                  final Command keepCommand,
                   final int mx,
                   final int my,
                   final Position position);
@@ -48,7 +46,6 @@ public interface ErrorReportPopover extends PopoverView {
          * @param errorTitleText
          * @param errorContentText
          * @param keepText
-         * @param keepCommand
          * @param mx x position of the replace
          * @param my y position of the popover
          * @param position position where the popover is put (LEFT or RIGHT)
@@ -56,7 +53,6 @@ public interface ErrorReportPopover extends PopoverView {
         void show(final String errorTitleText,
                   final String errorContentText,
                   final String keepText,
-                  final Command keepCommand,
                   final int mx,
                   final int my,
                   final Position position);
@@ -81,7 +77,6 @@ public interface ErrorReportPopover extends PopoverView {
      * @param keepText
      * @param applyText
      * @param applyCommand
-     * @param keepCommand
      * @param mx x position of the popover
      * @param my y position of the popover
      * @param position position where the popover is put (LEFT or RIGHT)
@@ -91,7 +86,6 @@ public interface ErrorReportPopover extends PopoverView {
               final String keepText,
               final String applyText,
               final Command applyCommand,
-              final Command keepCommand,
               final int mx,
               final int my,
               final Position position);
@@ -101,7 +95,6 @@ public interface ErrorReportPopover extends PopoverView {
      * @param errorTitleText
      * @param errorContentText
      * @param keepText
-     * @param keepCommand
      * @param mx x position of the popover
      * @param my y position of the popover
      * @param position position where the popover is put (LEFT or RIGHT)
@@ -109,7 +102,6 @@ public interface ErrorReportPopover extends PopoverView {
     void show(final String errorTitleText,
               final String errorContentText,
               final String keepText,
-              final Command keepCommand,
               final int mx,
               final int my,
               final Position position);

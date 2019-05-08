@@ -50,9 +50,6 @@ public class ErrorReportPopoverPresenterTest {
     @Mock
     private Command applyCommandMock;
 
-    @Mock
-    private Command keepCommandMock;
-
     @Before
     public void setUp() {
         when(viewsProviderMock.getErrorReportPopoverView()).thenReturn(errorReportPopoverViewMock);
@@ -65,14 +62,13 @@ public class ErrorReportPopoverPresenterTest {
 
     @Test
     public void show() {
-        errorReportPopupPresenter.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupPresenter.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(viewsProviderMock, times(1)).getErrorReportPopoverView();
         verify(errorReportPopoverViewMock, times(1)).show(eq(ERROR_TITLE_TEXT),
                                                           eq(ERROR_CONTENT_TEXT),
                                                           eq(KEEP_TEXT),
                                                           eq(APPLY_TEXT),
                                                           eq(applyCommandMock),
-                                                          eq(keepCommandMock),
                                                           eq(MX),
                                                           eq(MY),
                                                           eq(PopoverView.Position.RIGHT));

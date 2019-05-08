@@ -42,4 +42,24 @@ public class FactMappingValueTest {
         Assert.assertTrue(null == value.getExceptionMessage());
         Assert.assertTrue(null == value.getErrorValue());
     }
+
+    @Test
+    public void setErrorValue() {
+        String errorValue = "value";
+        FactMappingValue value = new FactMappingValue();
+        value.setErrorValue(errorValue);
+        Assert.assertTrue(FactMappingValueStatus.FAILED_WITH_ERROR == value.getStatus());
+        Assert.assertTrue(null == value.getExceptionMessage());
+        Assert.assertTrue(errorValue.equals(value.getErrorValue()));
+    }
+
+    @Test
+    public void setExceptionMessage() {
+        String exceptionValue = "Exception";
+        FactMappingValue value = new FactMappingValue();
+        value.setExceptionMessage(exceptionValue);
+        Assert.assertTrue(FactMappingValueStatus.FAILED_WITH_EXCEPTION == value.getStatus());
+        Assert.assertTrue(exceptionValue == value.getExceptionMessage());
+        Assert.assertTrue(null == value.getErrorValue());
+    }
 }
