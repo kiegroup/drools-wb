@@ -44,10 +44,34 @@ public interface ErrorReportPopover extends PopoverView {
                   final Position position);
 
         /**
+         * Makes the <code>ErrorReportPopover</code> visible with Keep button only.
+         * @param errorTitleText
+         * @param errorContentText
+         * @param keepText
+         * @param keepCommand
+         * @param mx x position of the replace
+         * @param my y position of the popover
+         * @param position position where the popover is put (LEFT or RIGHT)
+         */
+        void show(final String errorTitleText,
+                  final String errorContentText,
+                  final String keepText,
+                  final Command keepCommand,
+                  final int mx,
+                  final int my,
+                  final Position position);
+
+        /**
          * Makes this popover container(and the main content along with it) invisible. Has no effect if the popover is not
          * already showing.
          */
         void hide();
+
+        /**
+         * Returns the status of the popver (open or closed)
+         * @return true if shown, false otherwise
+         */
+        boolean isShown();
     }
 
     /**
@@ -71,9 +95,33 @@ public interface ErrorReportPopover extends PopoverView {
               final int mx,
               final int my,
               final Position position);
+
+    /**
+     * Makes the <code>ErrorReportPopover</code> visible with Keep/Apply buttons.
+     * @param errorTitleText
+     * @param errorContentText
+     * @param keepText
+     * @param keepCommand
+     * @param mx x position of the popover
+     * @param my y position of the popover
+     * @param position position where the popover is put (LEFT or RIGHT)
+     */
+    void show(final String errorTitleText,
+              final String errorContentText,
+              final String keepText,
+              final Command keepCommand,
+              final int mx,
+              final int my,
+              final Position position);
     /**
      * Makes this popover container(and the main content along with it) invisible. Has no effect if the popover is not
      * already showing.
      */
     void hide();
+
+    /**
+     * Returns the status of the popver (open or closed)
+     * @return true if shown, false otherwise
+     */
+    boolean isShown();
 }

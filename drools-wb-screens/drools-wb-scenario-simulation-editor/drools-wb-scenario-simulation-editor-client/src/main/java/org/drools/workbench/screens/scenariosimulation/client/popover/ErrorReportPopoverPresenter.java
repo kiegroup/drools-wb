@@ -43,8 +43,26 @@ public class ErrorReportPopoverPresenter implements ErrorReportPopover.Presenter
     }
 
     @Override
+    public void show(final String errorTitleText,
+                     final String errorContentText,
+                     final String keepText,
+                     final Command keepCommand,
+                     final int mx,
+                     final int my,
+                     final PopoverView.Position position) {
+        ErrorReportPopoverView errorReportPopupView = viewsProvider.getErrorReportPopoverView();
+        errorReportPopupView.show(errorTitleText, errorContentText, keepText, keepCommand, mx, my, position);
+    }
+
+    @Override
     public void hide() {
         ErrorReportPopoverView errorReportPopoverView = viewsProvider.getErrorReportPopoverView();
         errorReportPopoverView.hide();
+    }
+
+    @Override
+    public boolean isShown() {
+        ErrorReportPopoverView errorReportPopoverView = viewsProvider.getErrorReportPopoverView();
+        return errorReportPopoverView.isShown();
     }
 }

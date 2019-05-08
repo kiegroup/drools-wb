@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.common.client.dom.CSSStyleDeclaration;
 import org.jboss.errai.common.client.dom.Div;
@@ -90,6 +91,9 @@ public class ErrorReportPopoverViewTest {
     private ButtonElement applyButtonMock;
 
     @Mock
+    private Style applyButtonStyleMock;
+
+    @Mock
     private Command applyCommandMock;
 
     @Mock
@@ -124,6 +128,7 @@ public class ErrorReportPopoverViewTest {
         });
         when(jQueryPopoverMock.wrap(any())).thenReturn(popoverMock);
         when(popoverElementMock.getStyle()).thenReturn(styleMock);
+        when(applyButtonMock.getStyle()).thenReturn(applyButtonStyleMock);
     }
 
     @Test
@@ -140,6 +145,23 @@ public class ErrorReportPopoverViewTest {
         verify(errorContentMock, times(1)).setTextContent(eq(ERROR_CONTENT_TEXT));
         verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
         verify(applyButtonMock, times(1)).setInnerText(eq(APPLY_TEXT));
+        verify(applyButtonMock.getStyle(), times(1)).setDisplay(eq(Style.Display.INLINE));
+    }
+
+    @Test
+    public void show_withoutApplyButton() {
+        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, keepCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
+        verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
+        verify(jQueryPopoverMock, times(1)).wrap(elementMock);
+        verify(popoverMock, times(1)).popover(isA(PopoverOptions.class));
+        verify(styleMock, times(1)).setProperty(eq(TOP),eq(TOP_PX));
+        verify(styleMock, times(1)).setProperty(eq(LEFT), eq(LEFT_PX));
+        verify(styleMock, times(1)).setProperty(eq(POSITION),eq(ABSOLUTE));
+        verify(errorReportPopupView, times(1)).scheduleTask();
+        verify(errorContentMock, times(1)).setTextContent(eq(ERROR_CONTENT_TEXT));
+        verify(keepButtonMock, times(1)).setInnerText(eq(KEEP_TEXT));
+        verify(applyButtonMock.getStyle(), times(1)).setDisplay(eq(Style.Display.NONE));
     }
 
     @Test

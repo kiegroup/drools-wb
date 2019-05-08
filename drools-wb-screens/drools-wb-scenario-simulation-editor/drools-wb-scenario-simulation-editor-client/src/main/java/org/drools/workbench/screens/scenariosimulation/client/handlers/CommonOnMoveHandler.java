@@ -57,7 +57,6 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     public void hidePopover() {
         errorReportPopupPresenter.hide();
-        resetCurrentlyShowBodyCoordinates();
     }
 
     public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
@@ -71,24 +70,28 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
-        /* In this case, the mouse is out ot the GridLayer, then it resets the coordinates to default */
+        /* In this case, the mouse is out ot the GridLayer, then return false */
         if (uiColumnIndex == -1 || uiRowIndex == -1) {
-            resetCurrentlyShowBodyCoordinates();
             return false;
         }
         /* If the mouse position is the same of the previous one, do nothing. It returns true because
         * the click happened on an column of a grid row */
-        if (uiRowIndex.equals(currentlyShownBodyRowIndex) && uiColumnIndex.equals(currentlyShownBodyColumnIndex)) {
+        if (uiRowIndex.equals(currentlyShownBodyRowIndex) &&
+                uiColumnIndex.equals(currentlyShownBodyColumnIndex) &&
+                errorReportPopupPresenter.isShown()
+        ) {
             return true;
         }
-        currentlyShownBodyRowIndex = uiRowIndex;
-        currentlyShownBodyColumnIndex = uiColumnIndex;
         final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
         final FactMapping factMapping = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
             if (FactMappingValueStatus.SUCCESS != factMappingValue.getStatus()) {
+                /* It updates the coordinates of the cell with error */
+                currentlyShownBodyRowIndex = uiRowIndex;
+                currentlyShownBodyColumnIndex = uiColumnIndex;
+                /* It calculates the coordinates */
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
                 Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
                 PopoverView.Position position = PopoverView.Position.RIGHT;
@@ -109,38 +112,37 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                 /* Parameters for the error message */
                 final Object expectedValue = factMappingValue.getRawValue();
                 final Object errorValue = factMappingValue.getErrorValue();
-                String errorPopoverMessage;
+                /* It shows the popover, the view depends on failed type (ERROR or EXCEPTION) */
                 if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
-                    errorPopoverMessage = ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
-                            expectedValue != null ? expectedValue.toString() : NULL,
-                            errorValue  != null ? errorValue.toString() : NULL);
+                    errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
+                                                   ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
+                                                           expectedValue != null ? expectedValue.toString() : NULL,
+                                                           errorValue  != null ? errorValue.toString() : NULL),
+                                                   ScenarioSimulationEditorConstants.INSTANCE.keep(),
+                                                   ScenarioSimulationEditorConstants.INSTANCE.apply(),
+                                                   () -> {
+                                                       scenarioGrid.getEventBus().fireEvent(
+                                                               new SetGridCellValueEvent(uiRowIndex,
+                                                                                         uiColumnIndex,
+                                                                                         errorValue != null ? errorValue.toString() : NULL));
+                                                   },
+                                                   () -> {},
+                                                   xPosition,
+                                                   yPosition,
+                                                   position);
                 } else {
-                    errorPopoverMessage = ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(factMappingValue.getExceptionMessage());
+                    errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
+                                                   ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(
+                                                           factMappingValue.getExceptionMessage()),
+                                                   ScenarioSimulationEditorConstants.INSTANCE.close(),
+                                                   () -> {},
+                                                   xPosition,
+                                                   yPosition,
+                                                   position);
                 }
-                /* Showing the popover */
-                errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
-                                               errorPopoverMessage,
-                                               ScenarioSimulationEditorConstants.INSTANCE.keep(),
-                                               ScenarioSimulationEditorConstants.INSTANCE.apply(),
-                                               () -> {
-                                                        scenarioGrid.getEventBus().fireEvent(
-                                                                new SetGridCellValueEvent(uiRowIndex,
-                                                                                          uiColumnIndex,
-                                                                                          errorValue != null ? errorValue.toString() : NULL));
-                                                        CommonOnMoveHandler.this.resetCurrentlyShowBodyCoordinates();
-                                               },
-                                               CommonOnMoveHandler.this::resetCurrentlyShowBodyCoordinates,
-                                               xPosition,
-                                               yPosition,
-                                               position);
             }
         });
         return true;
-    }
-
-    protected void resetCurrentlyShowBodyCoordinates() {
-        currentlyShownBodyColumnIndex = -1;
-        currentlyShownBodyRowIndex = -1;
     }
 
     //Indirection for test

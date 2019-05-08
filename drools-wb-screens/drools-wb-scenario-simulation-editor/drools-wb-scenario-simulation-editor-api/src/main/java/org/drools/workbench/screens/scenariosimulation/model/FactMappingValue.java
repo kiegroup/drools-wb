@@ -93,5 +93,7 @@ public class FactMappingValue {
 
     public void resetStatus() {
         this.status = FactMappingValueStatus.SUCCESS;
+        this.exceptionMessage = null;
+        this.errorValue = null;
     }
 }

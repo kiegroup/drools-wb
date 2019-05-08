@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.model;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,5 +32,14 @@ public class FactMappingValueTest {
         assertThatThrownBy(() -> new FactMappingValue(FactIdentifier.DESCRIPTION, null, null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("ExpressionIdentifier has to be not null");
+    }
+
+    @Test
+    public void resetStatus() {
+        FactMappingValue value = new FactMappingValue();
+        value.resetStatus();
+        Assert.assertTrue(FactMappingValueStatus.SUCCESS == value.getStatus());
+        Assert.assertTrue(null == value.getExceptionMessage());
+        Assert.assertTrue(null == value.getErrorValue());
     }
 }
