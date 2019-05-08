@@ -20,13 +20,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
+import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
+import org.drools.scenariosimulation.api.model.FactIdentifier;
+import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.ExpressionIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactIdentifier;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CellContextUtilities;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
@@ -338,4 +338,3 @@ public class ScenarioSimulationUtils {
         return FactMappingType.OTHER.equals(factMappingType);
     }
 }
-
