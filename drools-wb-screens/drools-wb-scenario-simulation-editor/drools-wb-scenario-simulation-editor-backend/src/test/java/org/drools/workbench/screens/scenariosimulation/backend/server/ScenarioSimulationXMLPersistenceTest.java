@@ -15,17 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
 import org.assertj.core.api.Assertions;
-import org.drools.workbench.screens.scenariosimulation.backend.server.util.ResourceHelper;
 import org.drools.workbench.screens.scenariosimulation.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.junit.Test;
 import org.kie.soup.project.datamodel.imports.Import;
 
+import static org.drools.workbench.screens.scenariosimulation.backend.server.TestUtils.getFileContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -160,15 +156,5 @@ public class ScenarioSimulationXMLPersistenceTest {
         assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
     }
 
-    private String getFileContent(String fileName) throws IOException {
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-        String filePath = ResourceHelper.getResourcesByExtension(extension)
-                .filter(path -> path.endsWith(fileName))
-                .findFirst()
-                .orElse(null);
-        assertNotNull(filePath);
-        File sourceFile = new File(filePath);
-        assertTrue(sourceFile.exists());
-        return new String(Files.readAllBytes(sourceFile.toPath()));
-    }
+
 }

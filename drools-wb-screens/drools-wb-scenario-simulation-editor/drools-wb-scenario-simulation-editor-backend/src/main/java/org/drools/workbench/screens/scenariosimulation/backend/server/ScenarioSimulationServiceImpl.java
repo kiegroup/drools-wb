@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,6 +25,8 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -68,7 +71,10 @@ import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
+import org.uberfire.java.nio.base.GeneralPathImpl;
+import org.uberfire.java.nio.file.DirectoryStream;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
+import org.uberfire.java.nio.file.FileSystem;
 import org.uberfire.rpc.SessionInfo;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
@@ -117,6 +123,7 @@ public class ScenarioSimulationServiceImpl
 
     @Inject
     private KieModuleService kieModuleService;
+
 
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
@@ -319,6 +326,16 @@ public class ScenarioSimulationServiceImpl
                               final ScenarioSimulationModel content,
                               final String comment) {
         return saveAndRenameService.saveAndRename(path, newFileName, metadata, content, comment);
+    }
+
+    @Override
+    public List<String> getAssets(final FileSystem fileSystem,
+                                  final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
+        DirectoryStream<org.uberfire.java.nio.file.Path> directoryStream = ioService.newDirectoryStream(GeneralPathImpl.newFromFile(fileSystem, new File(containerDirectoryFullPath)));
+        Iterable<org.uberfire.java.nio.file.Path> iterable = directoryStream::iterator;
+        Stream<org.uberfire.java.nio.file.Path> actualStream = StreamSupport.stream(iterable.spliterator(), false);
+        String suffix = assetType.startsWith(".") ? assetType : "." + assetType;
+        return actualStream.filter(path -> path.getFileName().toString().endsWith(suffix)).map(path -> path.getFileName().toString()).collect(Collectors.toList());
     }
 
     protected void createActivatorIfNotExist(Path context) {

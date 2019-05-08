@@ -15,8 +15,14 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.inject.Named;
 
@@ -51,14 +57,20 @@ import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
+import org.uberfire.java.nio.base.GeneralPathImpl;
 import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.DirectoryStream;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
+import org.uberfire.java.nio.file.FileSystem;
 import org.uberfire.java.nio.file.OpenOption;
+import org.uberfire.java.nio.fs.file.SimpleFileSystemProvider;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -134,10 +146,22 @@ public class ScenarioSimulationServiceImplTest {
     @Mock
     private ScenarioSimulationBuilder scenarioSimulationBuilderMock;
 
+    @Mock
+    private DirectoryStream directoryStreamMock;
+
     @InjectMocks
     private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
 
     private Path path = PathFactory.newPath("contextPath", "file:///contextPath");
+
+    private List<String> drlFiles = IntStream.range(0, 3)
+            .mapToObj(i -> "File_" + i + ".drl")
+            .collect(Collectors.toList());
+    private List<String> dmnFiles = IntStream.range(0, 3)
+            .mapToObj(i -> "File_" + i + ".dmn")
+            .collect(Collectors.toList());
+
+    private FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
 
     @Before
     public void setup() throws Exception {
@@ -149,6 +173,7 @@ public class ScenarioSimulationServiceImplTest {
         when(kieModuleServiceMock.newPackage(any(), anyString())).thenReturn(testPackage);
         when(kieModuleServiceMock.resolveDefaultPackage(any())).thenReturn(testPackage);
         when(ioServiceMock.exists(activatorPathMock)).thenReturn(false);
+        when(ioServiceMock.newDirectoryStream(any())).thenReturn(directoryStreamMock);
 
         when(kieModuleServiceMock.resolveModule(any())).thenReturn(kieModuleMock);
         when(kieModuleMock.getPom()).thenReturn(projectPomMock);
@@ -159,6 +184,7 @@ public class ScenarioSimulationServiceImplTest {
         when(packageMock.getPackageTestSrcPath()).thenReturn(path);
         when(scenarioSimulationBuilderMock.createSimulation(any(), any(), any())).thenReturn(new Simulation());
         service.scenarioSimulationBuilder = scenarioSimulationBuilderMock;
+        when(directoryStreamMock.iterator()).thenReturn(getDirectoryStreamPaths().iterator());
     }
 
     @Test
@@ -304,6 +330,21 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
+    public void getDRLAssets() {
+        getAssetsCommon("drl", drlFiles.size());
+    }
+
+    @Test
+    public void getDMNAssets() {
+        getAssetsCommon("dmn", dmnFiles.size());
+    }
+
+    @Test
+    public void getNotExistingAssets() {
+        getAssetsCommon("not_existing", 0);
+    }
+
+    @Test
     public void createActivatorIfNotExistTest() {
         service.createActivatorIfNotExist(path);
 
@@ -381,5 +422,22 @@ public class ScenarioSimulationServiceImplTest {
     @Test
     public void getActivatorPathTest() {
         assertTrue(service.getActivatorPath(packageMock).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
+    }
+
+    private void getAssetsCommon(String suffix, int expectedSize) {
+        try {
+            List<String> retrieved = service.getAssets(fileSystem, ".", suffix, "com.test");
+            assertNotNull(retrieved);
+            assertEquals(expectedSize, retrieved.size());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    private List<org.uberfire.java.nio.file.Path> getDirectoryStreamPaths() {
+        return Stream.of(drlFiles, dmnFiles)
+                .flatMap(Collection::stream)
+                .map(fileName -> GeneralPathImpl.newFromFile(fileSystem, new File(fileName)))
+                .collect(Collectors.toList());
     }
 }

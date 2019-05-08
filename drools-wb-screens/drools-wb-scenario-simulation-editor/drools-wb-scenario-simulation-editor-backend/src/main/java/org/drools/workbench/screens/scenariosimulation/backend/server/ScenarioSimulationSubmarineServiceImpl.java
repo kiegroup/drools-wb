@@ -15,11 +15,18 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.io.File;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.jboss.errai.bus.server.annotations.Service;
+import org.uberfire.java.nio.file.FileSystem;
 
 /**
  * Submarine specific service
@@ -27,6 +34,7 @@ import org.jboss.errai.bus.server.annotations.Service;
 @Service
 @ApplicationScoped
 public class ScenarioSimulationSubmarineServiceImpl implements ScenarioSimulationSubmarineService {
+
 
     @Override
     public String marshal(ScenarioSimulationModel sc) {
@@ -36,5 +44,26 @@ public class ScenarioSimulationSubmarineServiceImpl implements ScenarioSimulatio
     @Override
     public ScenarioSimulationModel unmarshal(String rawXml) {
         return ScenarioSimulationXMLPersistence.getInstance().unmarshal(rawXml);
+    }
+
+    @Override
+    public List<String> getAssets(final FileSystem fileSystem,
+                                  final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
+        // For the moment being the package name is ignored in this submarine version
+        File assetsDirectory = getAssetsDirectory(containerDirectoryFullPath);
+        final String[] filteredFiles = assetsDirectory.list((dir, name) -> name.endsWith("." + assetType));
+        return filteredFiles != null ? Arrays.asList(filteredFiles) : Collections.emptyList();
+    }
+
+    protected File getAssetsDirectory(String containerDirectoryFullPath) throws Exception {
+        final URL assets = getClass().getClassLoader().getResource(containerDirectoryFullPath);
+        if (assets == null) {
+            throw new Exception(containerDirectoryFullPath + " directory not readable");
+        }
+        File toReturn = new File(assets.getFile());
+        if (!toReturn.exists() || !toReturn.canRead() || !toReturn.isDirectory()) {
+            throw new Exception(toReturn.getAbsolutePath() + " is not a readable directory");
+        }
+        return toReturn;
     }
 }

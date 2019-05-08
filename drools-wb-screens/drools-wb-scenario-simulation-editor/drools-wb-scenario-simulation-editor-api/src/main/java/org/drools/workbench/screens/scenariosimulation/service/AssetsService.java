@@ -16,17 +16,28 @@
 
 package org.drools.workbench.screens.scenariosimulation.service;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import java.util.List;
+
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.uberfire.java.nio.file.FileSystem;
 
 /**
- * Submarine specific service
+ * Assets specific service
  */
 @Remote
-public interface ScenarioSimulationSubmarineService extends AssetsService {
+public interface AssetsService {
 
-    String marshal(final ScenarioSimulationModel sc);
-
-    ScenarioSimulationModel unmarshal(final String rawXml);
-
+    /**
+     * This method <b>tries</b> to avoid importing specific <b>backend</b> implementations where they should not be needed nor available
+     * (e.g. avoid using uberfire vfs stuff inside submarine environment)
+     * @param fileSystem
+     * @param containerDirectoryFullPath
+     * @param assetType
+     * @param packageName
+     * @return
+     * @throws Exception
+     */
+    List<String> getAssets(final FileSystem fileSystem,
+                           final String containerDirectoryFullPath,
+                           String assetType, String packageName) throws Exception;
 }
