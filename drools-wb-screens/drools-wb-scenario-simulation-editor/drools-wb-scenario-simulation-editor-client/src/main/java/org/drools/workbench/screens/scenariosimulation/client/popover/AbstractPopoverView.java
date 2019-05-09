@@ -69,7 +69,7 @@ public abstract class AbstractPopoverView implements PopoverView {
     }
 
     @Override
-    public void show(final Optional<String> editorTitle, final int mx, final int my, Position position) {
+    public void show(final Optional<String> editorTitle, final int mx, final int my, final Position position) {
         if (isShown()) {
             this.hide();
         }

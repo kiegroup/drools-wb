@@ -91,7 +91,7 @@ public interface ErrorReportPopover extends PopoverView {
               final Position position);
 
     /**
-     * Makes the <code>ErrorReportPopover</code> visible with Keep/Apply buttons.
+     * Makes the <code>ErrorReportPopover</code> visible with keep button only.
      * @param errorTitleText
      * @param errorContentText
      * @param keepText

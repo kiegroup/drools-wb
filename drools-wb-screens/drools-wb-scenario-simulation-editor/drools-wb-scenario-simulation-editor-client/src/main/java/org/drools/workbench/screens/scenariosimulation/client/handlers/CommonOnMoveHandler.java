@@ -46,8 +46,6 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
-    protected Integer currentlyShownHeaderRowIndex = -1;
-    protected Integer currentlyShownHeaderColumnIndex = -1;
     protected Integer currentlyShownBodyRowIndex = -1;
     protected Integer currentlyShownBodyColumnIndex = -1;
 
@@ -71,7 +69,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
         /* In this case, the mouse is out ot the GridLayer, then return false, without perform any action */
-        if (uiColumnIndex == -1 || uiRowIndex == -1) {
+        if (uiColumnIndex == null || uiRowIndex == null) {
             return false;
         }
         /* If the mouse position is the same of the previous one and the popover is already open, it does nothing.
@@ -86,13 +84,13 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
-            if (FactMappingValueStatus.SUCCESS != factMappingValue.getStatus()) {
+            if (factMappingValue.getStatus() != null && FactMappingValueStatus.SUCCESS != factMappingValue.getStatus()) {
                 /* It updates the coordinates of the current shown cell */
                 currentlyShownBodyRowIndex = uiRowIndex;
                 currentlyShownBodyColumnIndex = uiColumnIndex;
                 /* It calculates the coordinates */
                 final GridColumn<?> column = scenarioGrid.getModel().getColumns().get(uiColumnIndex);
-                Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
+                final Point2D xYCell = retrieveCellMiddleXYPosition(column, uiRowIndex);
                 PopoverView.Position position = PopoverView.Position.RIGHT;
                 int xMiddleWidth = (int) column.getWidth() / 2;
                 int xPosition = (int) xYCell.getX() + xMiddleWidth;

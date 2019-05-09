@@ -72,9 +72,9 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
     @Mock
     private FactMappingValue factMappingValueMock;
     @Mock
-    private AbsolutePanel scrollPanel;
+    private AbsolutePanel scrollPanelMock;
     @Mock
-    private Element element;
+    private Element elementMock;
 
     @Before
     public void setup() {
@@ -103,10 +103,10 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
         when(factMappingValueMock.getErrorValue()).thenReturn(ERROR_VALUE);
         when(scenarioGridLayerMock.getWidth()).thenReturn(LARGE_LAYER);
         when(gridColumnMock.getWidth()).thenReturn(CELL_WIDTH);
-        when(scenarioGridPanelMock.getScrollPanel()).thenReturn(scrollPanel);
-        when(scrollPanel.getElement()).thenReturn(element);
-        when(element.getScrollTop()).thenReturn(0);
-        when(element.getScrollLeft()).thenReturn(0);
+        when(scenarioGridPanelMock.getScrollPanel()).thenReturn(scrollPanelMock);
+        when(scrollPanelMock.getElement()).thenReturn(elementMock);
+        when(elementMock.getScrollTop()).thenReturn(0);
+        when(elementMock.getScrollLeft()).thenReturn(0);
         when(errorReportPopupPresenterMock.isShown()).thenReturn(Boolean.FALSE);
     }
 
@@ -193,8 +193,8 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
 
     @Test
     public void manageBodyCoordinates_WithScroll() {
-        when(element.getScrollTop()).thenReturn(SCROLL_TOP);
-        when(element.getScrollLeft()).thenReturn(SCROLL_LEFT);
+        when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
+        when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
         commonOnMoveHandler.manageBodyCoordinates(ROW_INDEX, COLUMN_INDEX);
         verify(simulationMock, times(1)).getScenarioByIndex(eq(ROW_INDEX));
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));

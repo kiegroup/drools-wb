@@ -83,11 +83,11 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
 
     @Override
     public void show(final String errorTitleText,
-                         final String errorContentText,
-                         final String keepText,
-                         final int mx,
-                         final int my,
-                         final Position position) {
+                     final String errorContentText,
+                     final String keepText,
+                     final int mx,
+                     final int my,
+                     final Position position) {
         errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.getStyle().setDisplay(Style.Display.NONE);

@@ -49,7 +49,7 @@ public class ScenarioContextMenuRegistry {
     protected ExpectedContextMenu expectedContextMenu;
     protected GridContextMenu gridContextMenu;
     protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
-    protected ErrorReportPopoverPresenter errorReportPopupPresenter;
+    protected ErrorReportPopoverPresenter errorReportPopoverPresenter;
 
     @Inject
     public ScenarioContextMenuRegistry(final OtherContextMenu otherContextMenu,
@@ -259,12 +259,12 @@ public class ScenarioContextMenuRegistry {
     }
 
 
-    public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
-        this.errorReportPopupPresenter = errorReportPopupPresenter;
+    public void setErrorReportPopoverPresenter(ErrorReportPopoverPresenter errorReportPopoverPresenter) {
+        this.errorReportPopoverPresenter = errorReportPopoverPresenter;
     }
 
-    public void hideErrorReportPopupover() {
-        errorReportPopupPresenter.hide();
+    public void hideErrorReportPopover() {
+        errorReportPopoverPresenter.hide();
     }
 
 }

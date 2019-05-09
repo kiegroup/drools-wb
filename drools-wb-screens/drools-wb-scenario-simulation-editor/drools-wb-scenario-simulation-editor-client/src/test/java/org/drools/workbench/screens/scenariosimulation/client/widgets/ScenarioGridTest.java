@@ -313,7 +313,7 @@ public class ScenarioGridTest {
 
         // context menus could be shown
         verify(scenarioContextMenuRegistryMock, times(1)).hideMenus();
-        verify(scenarioContextMenuRegistryMock, times(1)).hideErrorReportPopupover();
+        verify(scenarioContextMenuRegistryMock, times(1)).hideErrorReportPopover();
     }
 
     @Test
