@@ -27,8 +27,8 @@ import org.drools.workbench.services.verifier.plugin.client.AnalyzerUpdateTestBa
 import org.drools.workbench.services.verifier.plugin.client.UpdateException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.junit.Assert.assertTrue;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.loadResource;
 
 @RunWith(GwtMockitoTestRunner.class)

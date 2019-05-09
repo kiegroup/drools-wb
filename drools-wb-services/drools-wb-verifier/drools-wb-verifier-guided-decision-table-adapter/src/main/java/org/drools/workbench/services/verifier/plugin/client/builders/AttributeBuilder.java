@@ -45,14 +45,14 @@ public class AttributeBuilder {
                                      value);
             if (date != null) {
                 return Optional.of(new DateExpiresRuleAttribute(columnIndex,
-                                                                (Date) value));
+                                                                date));
             }
         } else if (attribute.equals(DateEffectiveRuleAttribute.NAME)) {
             final Date date = toDate(configuration,
                                      value);
             if (date != null) {
                 return Optional.of(new DateEffectiveRuleAttribute(columnIndex,
-                                                                  (Date) value));
+                                                                  date));
             }
         }
 

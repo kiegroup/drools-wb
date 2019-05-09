@@ -18,6 +18,7 @@ package org.drools.workbench.services.verifier.plugin.client.cache.util;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.verifier.core.main.Analyzer;
@@ -30,18 +31,22 @@ import org.drools.workbench.services.verifier.plugin.client.testutil.AnalyzerPro
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anySet;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class DTableUpdateManagerAttributesTest {
 
+    @Captor
+    private ArgumentCaptor<Set> setArgumentCaptor;
     private DTableUpdateManager updateManager;
     private GuidedDecisionTable52 table52;
     private AnalyzerProvider analyzerProvider;
-
     @Mock
     private Analyzer analyzer;
 
@@ -81,7 +86,10 @@ public class DTableUpdateManagerAttributesTest {
         updateManager.update(table52,
                              coordinates);
 
-        verify(analyzer).update(anySet());
+        verify(analyzer).update(setArgumentCaptor.capture());
+        Set value = setArgumentCaptor.getValue();
+        assertEquals(1, value.size());
+        assertEquals(0, value.iterator().next());
     }
 
     @Test
@@ -100,6 +108,9 @@ public class DTableUpdateManagerAttributesTest {
         updateManager.update(table52,
                              coordinates);
 
-        verify(analyzer).update(anySet());
+        verify(analyzer).update(setArgumentCaptor.capture());
+        Set value = setArgumentCaptor.getValue();
+        assertEquals(1, value.size());
+        assertEquals(0, value.iterator().next());
     }
 }
