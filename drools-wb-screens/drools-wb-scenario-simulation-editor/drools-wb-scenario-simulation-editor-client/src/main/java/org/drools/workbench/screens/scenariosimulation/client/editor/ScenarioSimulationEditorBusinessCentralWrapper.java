@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,14 +25,15 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -154,11 +156,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarioMap) {
+    public void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun) {
         service.call(refreshModelCallback, hasBusyIndicatorDefaultErrorCallback)
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulationDescriptor,
-                             scenarioMap);
+                             toRun);
     }
 
     @Override

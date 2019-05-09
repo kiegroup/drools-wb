@@ -31,6 +31,10 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
+import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -48,9 +52,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -204,15 +205,12 @@ public class ScenarioSimulationEditorPresenter {
         view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
         model.setSimulation(context.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
-        Map<Integer, Scenario> scenarioMap = indexOfScenarioToRun.stream().collect(
-                Collectors.toMap(
-                        index -> index + 1,
-                        simulation::getScenarioByIndex
-                )
-        );
+        List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
+                .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
+                .collect(Collectors.toList());
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getSimulationDescriptor(),
-                                                      scenarioMap);
+                                                      toRun);
     }
 
     public void onUndo() {

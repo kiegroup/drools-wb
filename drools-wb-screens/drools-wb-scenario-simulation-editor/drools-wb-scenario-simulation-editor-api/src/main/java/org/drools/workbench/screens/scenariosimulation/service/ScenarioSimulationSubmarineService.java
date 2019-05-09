@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.service;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.jboss.errai.bus.server.annotations.Remote;
 
 /**

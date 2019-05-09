@@ -20,16 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.junit.Test;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.TestUtils.getFileContent;
+import static org.drools.scenariosimulation.backend.TestUtils.getFileContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 
 public class ScenarioSimulationSubmarineServiceImplTest {
 

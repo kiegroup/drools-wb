@@ -23,7 +23,8 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.jboss.errai.bus.server.annotations.Service;
 

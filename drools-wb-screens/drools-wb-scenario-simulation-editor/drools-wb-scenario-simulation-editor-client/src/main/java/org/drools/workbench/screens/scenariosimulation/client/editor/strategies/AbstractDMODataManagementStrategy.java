@@ -23,11 +23,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.drools.workbench.screens.scenariosimulation.utils.ScenarioSimulationSharedUtils;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 
 public abstract class AbstractDMODataManagementStrategy extends AbstractDataManagementStrategy {

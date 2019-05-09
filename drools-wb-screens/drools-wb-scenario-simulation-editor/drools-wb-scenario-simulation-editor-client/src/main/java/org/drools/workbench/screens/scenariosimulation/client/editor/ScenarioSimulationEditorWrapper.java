@@ -15,16 +15,18 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.List;
 import java.util.Map;
 
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 
 public interface ScenarioSimulationEditorWrapper {
 
-    void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarioMap);
+    void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun);
 
     void wrappedSave(final String commitMessage);
 

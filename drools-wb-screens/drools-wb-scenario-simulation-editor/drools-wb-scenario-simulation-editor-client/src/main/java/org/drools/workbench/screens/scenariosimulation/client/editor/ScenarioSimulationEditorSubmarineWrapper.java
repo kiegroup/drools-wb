@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -24,13 +25,14 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SubmarineDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -133,7 +135,7 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     }
 
     @Override
-    public void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Map<Integer, Scenario> scenarioMap) {
+    public void onRunScenario(RemoteCallback<Map<Integer, Scenario>> refreshModelCallback, HasBusyIndicatorDefaultErrorCallback hasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun) {
         throw new UnsupportedOperationException("Not available in Submarine");
     }
 
