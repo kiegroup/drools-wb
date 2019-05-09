@@ -24,20 +24,18 @@ import org.drools.verifier.core.main.Analyzer;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.services.verifier.plugin.client.AnalyzerUpdateTestBase;
-import org.drools.workbench.services.verifier.plugin.client.UpdateException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.assertTrue;
 
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.loadResource;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class EffectiveDatesFromFileTest extends AnalyzerUpdateTestBase {
 
     @Test
     public void testUpdateNotNullColumn() throws
-            Exception,
-            UpdateException {
+            Exception {
 
         // Table contains two redundant rows, but the rows are active at different times.
         final String xml = loadResource("EffectiveDates.gdst");

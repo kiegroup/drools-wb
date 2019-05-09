@@ -47,31 +47,26 @@ public abstract class CellUpdateManagerBase {
 
     public CellUpdateManagerBase(final Index index,
                                  final GuidedDecisionTable52 model,
-                                 final Coordinate coordinate) throws
-            UpdateException {
+                                 final Coordinate coordinate) {
         this.model = model;
         this.coordinate = coordinate;
 
         Logger.add("Updating: " + coordinate.toString());
 
-        try {
-            column = index.getColumns()
-                    .where(Column.index()
-                                   .is(coordinate.getCol()))
-                    .select()
-                    .first();
+        column = index.getColumns()
+                .where(Column.index()
+                               .is(coordinate.getCol()))
+                .select()
+                .first();
 
-            rule = index.getRules()
-                    .where(Rule.index()
-                                   .is(coordinate.getRow()))
-                    .select()
-                    .first();
-            ruleAttributes = new HashMap<>(rule.getRuleAttributes());
-            actions = rule.getActions();
-            conditions = rule.getConditions();
-        } catch (final Exception e) {
-            throw new UpdateException("Failed to update: " + coordinate.toString());
-        }
+        rule = index.getRules()
+                .where(Rule.index()
+                               .is(coordinate.getRow()))
+                .select()
+                .first();
+        ruleAttributes = new HashMap<>(rule.getRuleAttributes());
+        actions = rule.getActions();
+        conditions = rule.getConditions();
     }
 
     /**

@@ -26,7 +26,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTabl
 import org.drools.workbench.services.verifier.plugin.client.Coordinate;
 import org.drools.workbench.services.verifier.plugin.client.DTableUpdateManager;
 import org.drools.workbench.services.verifier.plugin.client.DataBuilderProvider;
-import org.drools.workbench.services.verifier.plugin.client.UpdateException;
 import org.drools.workbench.services.verifier.plugin.client.testutil.AnalyzerProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anySet;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -72,8 +70,7 @@ public class DTableUpdateManagerAttributesTest {
 
     @Test
     public void testSetDateEffectiveToNull() throws
-            Exception,
-            UpdateException {
+            Exception {
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         Coordinate coordinate = new Coordinate(0,
                                                2);
@@ -94,8 +91,7 @@ public class DTableUpdateManagerAttributesTest {
 
     @Test
     public void testSetDateExpiresToNull() throws
-            Exception,
-            UpdateException {
+            Exception {
         ArrayList<Coordinate> coordinates = new ArrayList<>();
         Coordinate coordinate = new Coordinate(0,
                                                3);

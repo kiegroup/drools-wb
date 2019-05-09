@@ -88,13 +88,9 @@ public abstract class AnalyzerUpdateTestBase {
                 .get(columnIndex);
         dtCellValue52
                 .setDateValue(value);
-        try {
-            updateManager.update(table52,
-                                 getUpdates(rowIndex,
-                                            columnIndex));
-        } catch (UpdateException e) {
-            e.printStackTrace();
-        }
+        updateManager.update(table52,
+                             getUpdates(rowIndex,
+                                        columnIndex));
     }
 
     protected void setValue(final int rowIndex,
@@ -105,13 +101,9 @@ public abstract class AnalyzerUpdateTestBase {
                 .get(columnIndex);
         dtCellValue52
                 .setNumericValue(value);
-        try {
-            updateManager.update(table52,
-                                 getUpdates(rowIndex,
-                                            columnIndex));
-        } catch (UpdateException e) {
-            e.printStackTrace();
-        }
+        updateManager.update(table52,
+                             getUpdates(rowIndex,
+                                        columnIndex));
     }
 
     protected void setValue(final int rowIndex,
@@ -121,13 +113,9 @@ public abstract class AnalyzerUpdateTestBase {
                 .get(rowIndex)
                 .get(columnIndex)
                 .setStringValue(value);
-        try {
-            updateManager.update(table52,
-                                 getUpdates(rowIndex,
-                                            columnIndex));
-        } catch (UpdateException e) {
-            e.printStackTrace();
-        }
+        updateManager.update(table52,
+                             getUpdates(rowIndex,
+                                        columnIndex));
     }
 
     protected void setValue(final int rowIndex,
@@ -137,13 +125,9 @@ public abstract class AnalyzerUpdateTestBase {
                 .get(rowIndex)
                 .get(columnIndex)
                 .setBooleanValue(value);
-        try {
-            updateManager.update(table52,
-                                 getUpdates(rowIndex,
-                                            columnIndex));
-        } catch (UpdateException e) {
-            e.printStackTrace();
-        }
+        updateManager.update(table52,
+                             getUpdates(rowIndex,
+                                        columnIndex));
     }
 
     protected void appendActionColumn(final int columnNumber,
