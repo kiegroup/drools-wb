@@ -61,7 +61,7 @@ public abstract class AbstractScenarioSimulationGridPanelHandler  {
         if (isHeader) {
             return manageHeaderCoordinates(uiColumnIndex, scenarioGridColumn, gridClickPoint);
         } else {
-            return manageBodyCoordinates(uiRowIndex, uiColumnIndex);
+            return (uiRowIndex == null || uiColumnIndex == null) ? manageBodyCoordinates(-1, -1) : manageBodyCoordinates(uiRowIndex, uiColumnIndex);
         }
     }
 

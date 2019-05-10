@@ -69,7 +69,7 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     @Override
     protected boolean manageBodyCoordinates(Integer uiRowIndex, Integer uiColumnIndex) {
         /* In this case, the mouse is out ot the GridLayer, then return false, without perform any action */
-        if (uiColumnIndex == null || uiRowIndex == null) {
+        if (uiColumnIndex == -1 || uiRowIndex == -1) {
             return false;
         }
         /* If the mouse position is the same of the previous one and the popover is already open, it does nothing.
