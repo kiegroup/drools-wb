@@ -249,7 +249,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(true);
         context.getStatus().setAsProperty(false);
-        context.getStatus().
         commonExecution(context,
                         new DuplicateInstanceCommand(),
                         true);
