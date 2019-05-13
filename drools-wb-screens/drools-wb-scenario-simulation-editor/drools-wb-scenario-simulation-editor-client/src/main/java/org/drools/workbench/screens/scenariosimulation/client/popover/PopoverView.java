@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.services.verifier.plugin.client;
+package org.drools.workbench.screens.scenariosimulation.client.popover;
 
-public class UpdateException
-        extends Throwable {
+import java.util.Optional;
 
-    public UpdateException(final String s) {
-        super(s);
+public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsElement {
+
+    enum Position {
+        LEFT,
+        RIGHT
     }
 
-    public UpdateException() {
-    }
+    void show(final Optional<String> editorTitle, final int mx, final int my, final Position position);
+
+    boolean isShown();
+
+    void hide();
 }
