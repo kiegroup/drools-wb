@@ -25,6 +25,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -59,7 +60,7 @@ public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenar
 
     @Test
     public void getItems() {
-        Consumer<List<String>> assetListConsumerMock = mock(Consumer.class);
+        Consumer<List<KieAssetsDropdownItem>> assetListConsumerMock = mock(Consumer.class);
         scenarioSimulationAssetsDropdownProvider.getItems(assetListConsumerMock);
         verify(scenarioSimulationAssetsDropdownProvider, times(1)).updateAssets(isA(RemoteCallback.class));
     }

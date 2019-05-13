@@ -35,7 +35,6 @@ import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
-import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
@@ -100,8 +99,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationContext.Status statusMock;
     @Mock
-    private TestRunnerReportingScreen testRunnerReportingScreenMock;
-    @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
     private Promises promises;
     @Mock
@@ -148,7 +145,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         this.presenter = new ScenarioSimulationEditorPresenter(scenarioSimulationProducerMock,
                                                                mock(ScenarioSimulationResourceType.class),
                                                                placeManagerMock,
-                                                               testRunnerReportingScreenMock,
                                                                scenarioSimulationDocksHandlerMock) {
             {
                 this.path = pathMock;
@@ -158,7 +154,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.context = contextMock;
                 this.dataManagementStrategy = dataManagementStrategyMock;
                 this.model = scenarioSimulationModelMock;
-                this.testRunnerReportingScreen = testRunnerReportingScreenMock;
             }
 
             @Override

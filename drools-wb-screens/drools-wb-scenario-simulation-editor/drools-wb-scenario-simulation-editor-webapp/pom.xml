@@ -545,7 +545,7 @@
             <compileSourcesArtifact>org.uberfire:uberfire-structure-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-structure-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-m2repo-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-m2repo-editor-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.uberfire:uberfire-m2repo-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.uberfire:uberfire-workingset-api</compileSourcesArtifact>
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-workingset-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>
@@ -560,40 +560,40 @@
             <compileSourcesArtifact>org.kie.workbench.profile:kie-wb-common-profile-api</compileSourcesArtifact>
 <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-library-client</compileSourcesArtifact>-->
 <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-library-api</compileSourcesArtifact>-->
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-api</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-contributors-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie:kie-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.server:kie-server-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.server:kie-server-controller-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-editor-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-imports-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-imports-editor-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.server:kie-server-controller-api</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-editor-api</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-editor-client</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-imports-editor-api</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-imports-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-explorer-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-explorer-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-explorer-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-client</compileSourcesArtifact>
 
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-server-ui-api</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-server-ui-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-server-ui-client</compileSourcesArtifact>-->
 
-            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-data-modeller-core</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-data-modeller-core</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-data-modeller-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-data-modeller-client</compileSourcesArtifact>-->
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-api</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-home-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-decorated-grid-widget</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-decorated-grid-widget</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-metadata-widget</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-config-resource-widget</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-client</compileSourcesArtifact>-->
 <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-api</compileSourcesArtifact>-->
 <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-client</compileSourcesArtifact>-->
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-api</compileSourcesArtifact>-->
+<!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-default-editor-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-workbench-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench:kie-wb-common-command-api</compileSourcesArtifact>
             <!-- Models for drools-wb -->
@@ -665,7 +665,7 @@
 
             <!-- UberFire extensions -->
             <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-client</compileSourcesArtifact>-->
 
             <!-- UberFire Extensions -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>
@@ -706,7 +706,7 @@
             <compileSourcesArtifact>org.uberfire:uberfire-security-management-client</compileSourcesArtifact>
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-security-management</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>
+<!--            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>

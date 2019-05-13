@@ -56,7 +56,6 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
-import org.kie.workbench.common.workbench.client.test.TestRunnerReportingScreen;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
@@ -93,8 +92,6 @@ public class ScenarioSimulationEditorPresenter {
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
 
-    protected TestRunnerReportingScreen testRunnerReportingScreen;
-
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
@@ -110,10 +107,8 @@ public class ScenarioSimulationEditorPresenter {
     public ScenarioSimulationEditorPresenter(final ScenarioSimulationProducer scenarioSimulationProducer,
                                              final ScenarioSimulationResourceType type,
                                              final PlaceManager placeManager,
-                                             final TestRunnerReportingScreen testRunnerReportingScreen,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler) {
         this.view = scenarioSimulationProducer.getScenarioSimulationView();
-        this.testRunnerReportingScreen = testRunnerReportingScreen;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.type = type;
         this.placeManager = placeManager;

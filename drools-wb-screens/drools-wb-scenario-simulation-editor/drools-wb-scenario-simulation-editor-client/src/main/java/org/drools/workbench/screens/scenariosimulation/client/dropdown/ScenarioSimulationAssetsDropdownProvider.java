@@ -15,8 +15,10 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -24,9 +26,11 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 
 @Dependent
-public class ScenarioSimulationAssetsDropdownProvider {
+public class ScenarioSimulationAssetsDropdownProvider implements KieAssetsDropdownItemsProvider {
 
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
 
@@ -36,12 +40,15 @@ public class ScenarioSimulationAssetsDropdownProvider {
         this.scenarioSimulationService = scenarioSimulationService;
     }
 
-    public void getItems(Consumer<List<String>> assetListConsumer) {
-        updateAssets(response -> remoteCallbackMethod(assetListConsumer, response));
-    }
-
-    protected void remoteCallbackMethod(Consumer<List<String>> assetListConsumer, List<String> response) {
-        assetListConsumer.accept(response);
+    @Override
+    public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+        updateAssets(response -> {
+            final List<KieAssetsDropdownItem> kieAssetsDropdownItems = response.stream().map(item -> new KieAssetsDropdownItem(item,
+                                                                                                                "",
+                                                                                                                item,
+                                                                                                                new HashMap<>())).collect(Collectors.toList());
+            assetListConsumer.accept(kieAssetsDropdownItems);
+        });
     }
 
     protected void updateAssets(RemoteCallback<List<String>> callback) {
@@ -51,5 +58,4 @@ public class ScenarioSimulationAssetsDropdownProvider {
             e.printStackTrace();
         }
     }
-
 }

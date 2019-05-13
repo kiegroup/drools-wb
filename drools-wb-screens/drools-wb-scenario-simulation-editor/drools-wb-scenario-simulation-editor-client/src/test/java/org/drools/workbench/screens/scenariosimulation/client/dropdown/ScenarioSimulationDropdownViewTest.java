@@ -16,32 +16,26 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import elemental2.dom.DOMTokenList;
-import elemental2.dom.HTMLInputElement;
 import elemental2.dom.HTMLOptionElement;
 import elemental2.dom.HTMLSelectElement;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.client.views.pfly.selectpicker.JQuerySelectPicker;
-import org.uberfire.client.views.pfly.selectpicker.JQuerySelectPickerEvent;
-import org.uberfire.client.views.pfly.selectpicker.JQuerySelectPickerTarget;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DEFAULT_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIEASSETSDROPDOWNVIEW_SELECT;
-import static org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdownView.HIDDEN_CSS_CLASS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.kie.workbench.common.widgets.client.resources.i18n.KieWorkbenchWidgetsConstants.KieAssetsDropdownView_Select;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -55,12 +49,6 @@ public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulati
 
     @Mock
     private DOMTokenList nativeSelectClassListMock;
-
-    @Mock
-    private HTMLInputElement fallbackInputMock;
-
-    @Mock
-    private DOMTokenList fallbackInputClassListMock;
 
     @Mock
     private HTMLOptionElement htmlOptionElementMock;
@@ -84,19 +72,17 @@ public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulati
     private HTMLOptionElement entryOptionMock;
 
     @Mock
-    private HTMLOptionElement selectOptionMock;
+    protected KieAssetsDropdownItem kieAssetsDropdownItemMock;
 
     private ScenarioSimulationDropdownView scenarioSimulationDropdownView;
 
     @Before
     public void setup() {
         super.setup();
-        fallbackInputMock.classList = fallbackInputClassListMock;
         nativeSelectMock.classList = nativeSelectClassListMock;
         when(htmlOptionElementMock.cloneNode(eq(false))).thenReturn(htmlOptionElementClonedMock);
         when(translationServiceMock.format(eq(KieAssetsDropdownView_Select))).thenReturn(KIEASSETSDROPDOWNVIEW_SELECT);
         scenarioSimulationDropdownView = spy(new ScenarioSimulationDropdownView(nativeSelectMock,
-                                                                                fallbackInputMock,
                                                                                 htmlOptionElementMock,
                                                                                 translationServiceMock) {
             {
@@ -113,93 +99,40 @@ public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulati
                 return onDropdownChangeHandlerMock;
             }
 
-            @Override
-            protected HTMLOptionElement entryOption(String entry) {
-                return entryOptionMock;
-            }
-
         });
+        doReturn(DEFAULT_VALUE).when(dropdownMock).val();
     }
 
     @Test
     public void init() {
         scenarioSimulationDropdownView.init();
         assertFalse(nativeSelectMock.hidden);
-        assertTrue(fallbackInputMock.hidden);
-        verify(scenarioSimulationDropdownView, times(1)).dropdown();
-        verify(scenarioSimulationDropdownView, times(1)).getOnDropdownChangeHandler();
         verify(dropdownMock, times(1)).on(eq("hidden.bs.select"), eq(onDropdownChangeHandlerMock));
     }
 
     @Test
     public void addValue() {
-        scenarioSimulationDropdownView.addValue(DEFAULT_VALUE);
-        verify(scenarioSimulationDropdownView, times(1)).entryOption(eq(DEFAULT_VALUE));
-        verify(nativeSelectMock, times(1)).appendChild(eq(entryOptionMock));
-    }
-
-    @Test
-    public void clear() {
-        doReturn(selectOptionMock).when(scenarioSimulationDropdownView).selectOption();
-        scenarioSimulationDropdownView.clear();
-        verify(scenarioSimulationDropdownView, times(1)).removeChildren(eq(nativeSelectMock));
-        verify(scenarioSimulationDropdownView, times(1)).selectOption();
-        verify(nativeSelectMock, times(1)).appendChild(eq(selectOptionMock));
-        verify(scenarioSimulationDropdownView, times(1)).refreshSelectPicker();
+        scenarioSimulationDropdownView.addValue(kieAssetsDropdownItemMock);
+        verify(nativeSelectMock, times(1)).appendChild(isA(HTMLOptionElement.class));
     }
 
     @Test
     public void initialize() {
         scenarioSimulationDropdownView.initialize();
-        assertEquals("", fallbackInputMock.value);
-        verify(scenarioSimulationDropdownView, times(1)).dropdown();
         verify(dropdownMock, times(1)).selectpicker(eq("val"), eq(""));
     }
 
     @Test
     public void refreshSelectPicker() {
         scenarioSimulationDropdownView.refreshSelectPicker();
-        verify(scenarioSimulationDropdownView, times(1)).dropdown();
         verify(dropdownMock, times(1)).selectpicker(eq("refresh"));
     }
 
     @Test
     public void getValue() {
-        fallbackInputMock.value = DEFAULT_VALUE;
-        assertEquals(DEFAULT_VALUE, scenarioSimulationDropdownView.getValue());
+        final String retrieved = scenarioSimulationDropdownView.getValue();
+        assertEquals(DEFAULT_VALUE, retrieved);
+        verify(dropdownMock, times(1)).val();
     }
 
-    @Test
-    public void enableDropdownMode() {
-        scenarioSimulationDropdownView.enableDropdownMode();
-        verify(fallbackInputClassListMock, times(1)).add(eq(HIDDEN_CSS_CLASS));
-        verify(nativeSelectClassListMock, times(1)).remove(eq(HIDDEN_CSS_CLASS));
-        verify(scenarioSimulationDropdownView, times(1)).dropdown();
-        verify(dropdownMock, times(1)).selectpicker(eq("show"));
-    }
-
-    @Test
-    public void onFallbackInputChange() {
-        scenarioSimulationDropdownView.onFallbackInputChange(mock(KeyUpEvent.class));
-        verify(presenterMock, times(1)).onValueChanged();
-    }
-
-    @Test
-    public void selectOption() {
-        final HTMLOptionElement retrieved = scenarioSimulationDropdownView.selectOption();
-        assertNotNull(retrieved);
-        assertEquals(KIEASSETSDROPDOWNVIEW_SELECT, retrieved.text);
-        assertEquals("", retrieved.value);
-    }
-
-    @Test
-    public void onDropdownChangeHandlerMethod() {
-        JQuerySelectPickerTarget targetMock = mock(JQuerySelectPickerTarget.class);
-        targetMock.value = DEFAULT_VALUE;
-        JQuerySelectPickerEvent eventMock = mock(JQuerySelectPickerEvent.class);
-        eventMock.target = targetMock;
-        scenarioSimulationDropdownView.onDropdownChangeHandlerMethod(eventMock);
-        assertEquals(targetMock.value, fallbackInputMock.value);
-        verify(presenterMock, times(1)).onValueChanged();
-    }
 }

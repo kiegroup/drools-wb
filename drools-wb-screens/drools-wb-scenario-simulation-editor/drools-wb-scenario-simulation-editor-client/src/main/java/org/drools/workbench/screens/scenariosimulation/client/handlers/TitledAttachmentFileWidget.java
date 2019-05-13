@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Optional;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -31,6 +33,7 @@ import org.gwtbootstrap3.client.ui.constants.Styles;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.jboss.errai.common.client.api.Caller;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 public class TitledAttachmentFileWidget extends Composite {
 
@@ -58,7 +61,8 @@ public class TitledAttachmentFileWidget extends Composite {
         initWidget(fields);
         scenarioSimulationDropdown.init();
         scenarioSimulationDropdown.registerOnChangeHandler(() -> {
-            selectedPath = scenarioSimulationDropdown.getValue();
+            final Optional<KieAssetsDropdownItem> value = scenarioSimulationDropdown.getValue();
+            selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
             validate();
         });
     }
