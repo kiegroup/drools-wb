@@ -70,7 +70,7 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
      * By default the <b>Add</b> button is disabled (no user interaction allowed).
      * It is enabled only by selection of a property/data object
      */
-    void enableAddButton();
+    void enableAddButton(boolean enabled);
 
     interface Presenter extends SubDockView.Presenter {
 

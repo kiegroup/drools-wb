@@ -226,8 +226,8 @@ public class TestToolsViewImpl
     }
 
     @Override
-    public void enableAddButton() {
-        addButton.setDisabled(false);
+    public void enableAddButton(boolean enabled) {
+        addButton.setDisabled(!enabled);
     }
 
     protected void setDisabledStatus(boolean disabled) {

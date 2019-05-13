@@ -60,6 +60,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);
                             propertyNameElements.addAll(originalFactMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(Collectors.toList()));
+                            //TODO settare qui il fullPackage in caso di DataObject
                             setPropertyHeader(context,
                                               createdColumn,
                                               propertyNameElements,
