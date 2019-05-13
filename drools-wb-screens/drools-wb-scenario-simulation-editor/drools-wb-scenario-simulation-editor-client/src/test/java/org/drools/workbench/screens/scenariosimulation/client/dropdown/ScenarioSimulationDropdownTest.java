@@ -16,8 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import elemental2.dom.HTMLElement;
 import org.junit.Before;
@@ -61,6 +65,9 @@ public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationDr
 
     private ScenarioSimulationDropdown scenarioSimulationDropdown;
 
+    private List<KieAssetsDropdownItem> assetList = IntStream.range(0, 3)
+            .mapToObj(i -> new KieAssetsDropdownItem("File_" + i + ".txt", "", DEFAULT_VALUE, new HashMap<>()))
+            .collect(Collectors.toList());
 
     @Before
     public void setup() {
@@ -70,6 +77,7 @@ public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationDr
         scenarioSimulationDropdown = spy(new ScenarioSimulationDropdown(viewMock, dataProviderMock) {
             {
                 onValueChangeHandler = onValueChangeHandlerMock;
+                this.kieAssets.addAll(assetList);
             }
         });
     }
@@ -137,5 +145,4 @@ public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationDr
         scenarioSimulationDropdown.initializeDropdown();
         verify(dataProviderMock, times(1)).getItems(isA(Consumer.class));
     }
-
 }
