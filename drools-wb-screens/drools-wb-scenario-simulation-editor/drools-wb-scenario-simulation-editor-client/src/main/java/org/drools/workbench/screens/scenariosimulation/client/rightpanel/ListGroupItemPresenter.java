@@ -95,10 +95,9 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         }
     }
 
-    public boolean hasVisibleProperties(String factName) {
-        return fieldItemPresenter.fieldItemMap.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(factName.concat(".")) && entry.getValue().isShown())
-                .count() > 0;
+    @Override
+    public boolean isFactNameAssigned() {
+        return factName != null;
     }
 
     @Override

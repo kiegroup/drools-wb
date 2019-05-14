@@ -138,5 +138,7 @@ public interface ListGroupItemView extends IsWidget,
          * @param propertyParts
          */
         void hideProperty(String factName, List<String> propertyParts);
+
+        boolean isFactNameAssigned();
     }
 }

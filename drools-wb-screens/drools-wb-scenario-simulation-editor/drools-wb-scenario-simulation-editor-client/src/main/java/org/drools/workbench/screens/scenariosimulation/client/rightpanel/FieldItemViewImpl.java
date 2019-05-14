@@ -114,11 +114,6 @@ public class FieldItemViewImpl implements FieldItemView {
     }
 
     @Override
-    public boolean isShown() {
-        return !Style.Display.NONE.getCssName().equals(fieldElement.getStyle().getDisplay());
-    }
-
-    @Override
     public void show() {
         fieldElement.getStyle().setDisplay(Style.Display.BLOCK);
     }

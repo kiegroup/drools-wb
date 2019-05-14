@@ -66,8 +66,6 @@ public interface FieldItemView {
 
     void hide();
 
-    boolean isShown();
-
     void show();
 
 }

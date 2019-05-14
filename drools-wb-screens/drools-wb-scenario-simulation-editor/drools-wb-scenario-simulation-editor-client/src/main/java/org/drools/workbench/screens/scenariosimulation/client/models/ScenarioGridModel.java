@@ -662,12 +662,12 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Returns <code>true</code> if no column is selected <b>OR</b> if type of the property mapped to the selected column is the same as the provided one
+     * Returns <code>true</code> if no column is selected <b>OR</b> if type of the <b>INSTANCE</b> mapped to the selected column is the same as the provided one
      * @param className
      * @return
      */
     public boolean isSameSelectedInstanceType(String className) {
-        return selectedColumn == null || isSameSelectedColumnType(getColumns().indexOf(selectedColumn), className);
+        return selectedColumn == null || isSameSelectedInstanceType(getColumns().indexOf(selectedColumn), className);
     }
 
      /**

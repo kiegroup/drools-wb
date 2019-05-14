@@ -337,27 +337,23 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         view.disableEditorTab();
         selectedFieldItemView = null;
         selectedListGroupItemView = null;
-        view.enableAddButton(false);
+        view.enableAddButton();
     }
 
     @Override
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        /*
-        if (listGroupItemPresenter.hasVisibleProperties(selectedListGroupItemView.getFactName())) {
-            view.enableAddButton(true);
-        } else {
-            view.enableAddButton(false);
+        if (!listGroupItemPresenter.isFactNameAssigned()) {
+            view.enableAddButton();
         }
-         */
     }
 
     @Override
     public void setSelectedElement(FieldItemView selected) {
         selectedFieldItemView = selected;
         selectedListGroupItemView = null;
-        view.enableAddButton(true);
+        view.enableAddButton();
     }
 
     @Override
