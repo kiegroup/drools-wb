@@ -195,7 +195,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(String.join(".", propertyNameElements.subList(1, propertyNameElements.size())));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(false);
         verify(scenarioGridModelMock, times(1)).updateColumnProperty(anyInt(), isA(ScenarioGridColumn.class), eq(propertyNameElements), eq(propertyClass), eq(keepData));
-        //verify(scenarioSimulationContextLocal.getScenarioSimulationEditorPresenter(), times(1)).reloadTestTools(false);
+        verify(scenarioSimulationContextLocal.getScenarioSimulationEditorPresenter(), times(1)).reloadTestTools(false);
     }
 
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */

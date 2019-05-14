@@ -382,7 +382,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         if (context.getModel().getSelectedColumn() == null) {
             return;
         }
-        if (context.getModel().isSameSelectedColumnType(event.getClassName())) {
+        if (context.getModel().isSameSelectedInstanceType(event.getClassName())) {
             return;
         }
         context.getStatus().setFullPackage(event.getFullPackage());

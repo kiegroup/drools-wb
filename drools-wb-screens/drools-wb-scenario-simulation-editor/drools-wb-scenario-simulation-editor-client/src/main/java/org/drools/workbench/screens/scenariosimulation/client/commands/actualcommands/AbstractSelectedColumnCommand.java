@@ -193,7 +193,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
             selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
-            context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
+            context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
     }
 

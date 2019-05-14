@@ -344,11 +344,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
+        /*
         if (listGroupItemPresenter.hasVisibleProperties(selectedListGroupItemView.getFactName())) {
             view.enableAddButton(true);
         } else {
             view.enableAddButton(false);
         }
+         */
     }
 
     @Override
