@@ -49,7 +49,6 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     @Override
     public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
-        // FIXME to test
         Simulation toReturn = dmnTypeService.initializeNameAndNamespace(new Simulation(), context, dmnFilePath);
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
         simulationDescriptor.setType(ScenarioSimulationModel.Type.DMN);

@@ -35,6 +35,7 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
+import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
 import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -172,7 +173,7 @@ public class ScenarioSimulationServiceImpl
                        final String fileName,
                        final ScenarioSimulationModel content,
                        final String comment) {
-        return create(context, fileName, content, comment, Type.RULE, "default");
+        return create(context, fileName, content, comment, Type.RULE, null);
     }
 
     @Override
@@ -205,10 +206,16 @@ public class ScenarioSimulationServiceImpl
 
             ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
             Simulation simulation = scenarioSimulationModel.getSimulation();
-            if(Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
-                dmnTypeService.initializeNameAndNamespace(simulation,
-                                                          path,
-                                                          simulation.getSimulationDescriptor().getDmnFilePath());
+            // FIXME to test
+            if(simulation != null && Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
+                try {
+                    dmnTypeService.initializeNameAndNamespace(simulation,
+                                                              path,
+                                                              simulation.getSimulationDescriptor().getDmnFilePath());
+                } catch (ImpossibleToFindDMNException e) {
+                    // this error is not thrown so user can fix the file path manually
+                    logger.error(e.getMessage(), e);
+                }
             }
             return scenarioSimulationModel;
         } catch (Exception e) {

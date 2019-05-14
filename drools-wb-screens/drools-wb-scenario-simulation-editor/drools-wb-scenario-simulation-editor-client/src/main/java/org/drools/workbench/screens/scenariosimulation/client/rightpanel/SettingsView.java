@@ -49,8 +49,6 @@ public interface SettingsView
 
     InputElement getKieSession();
 
-    InputElement getKieBase();
-
     InputElement getRuleFlowGroup();
 
     DivElement getDmnSettings();

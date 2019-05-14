@@ -19,8 +19,8 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.backend.server.exceptions.WrongDMNTypeException;
-import org.drools.workbench.screens.scenariosimulation.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.junit.Before;

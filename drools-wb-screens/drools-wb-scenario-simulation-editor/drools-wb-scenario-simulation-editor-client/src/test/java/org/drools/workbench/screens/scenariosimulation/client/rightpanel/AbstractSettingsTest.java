@@ -28,15 +28,12 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAMESPACE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILE_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_BASE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_SESSION;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.RULE_FLOW_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SCENARIO_TYPE;
 import static org.mockito.Mockito.when;
 
 abstract class AbstractSettingsTest {
-
-
 
     @Mock
     protected LabelElement nameLabelMock;
@@ -58,9 +55,6 @@ abstract class AbstractSettingsTest {
 
     @Mock
     protected InputElement kieSessionMock;
-
-    @Mock
-    protected InputElement kieBaseMock;
 
     @Mock
     protected InputElement ruleFlowGroupMock;
@@ -100,9 +94,8 @@ abstract class AbstractSettingsTest {
         when(fileNameMock.getInnerText()).thenReturn(FILE_NAME);
         when(scenarioTypeMock.getInnerText()).thenReturn(SCENARIO_TYPE);
         when(kieSessionMock.getValue()).thenReturn(KIE_SESSION);
-        when(kieBaseMock.getValue()).thenReturn(KIE_BASE);
         when(ruleFlowGroupMock.getValue()).thenReturn(RULE_FLOW_GROUP);
-        when(dmnFilePathMock.getInnerText()).thenReturn(DMN_FILE_PATH);
+        when(dmnFilePathMock.getValue()).thenReturn(DMN_FILE_PATH);
         when(dmnNamespaceMock.getInnerText()).thenReturn(DMN_NAMESPACE);
         when(dmnNameMock.getInnerText()).thenReturn(DMN_NAME);
         when(ruleSettingsMock.getStyle()).thenReturn(ruleSettingsStyleMock);

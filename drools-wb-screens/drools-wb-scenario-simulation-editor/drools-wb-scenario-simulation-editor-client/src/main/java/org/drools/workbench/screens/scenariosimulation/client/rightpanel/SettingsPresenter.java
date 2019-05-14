@@ -16,6 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -54,7 +57,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     @PostConstruct
-    public void setup() {
+    public void init() {
         view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipFromBuild());
     }
 
@@ -101,32 +104,31 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
         view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);
-        // FIXME to implement
-        view.getKieBase().setValue(simulationDescriptor.getKieBase());
-        // FIXME to implement
-        view.getKieSession().setValue(simulationDescriptor.getDmoSession());
-        // FIXME to implement
-        view.getRuleFlowGroup().setValue(simulationDescriptor.getRuleFlowGroup());
+        view.getKieSession().setValue(Optional.ofNullable(simulationDescriptor.getDmoSession()).orElse(""));
+        view.getRuleFlowGroup().setValue(Optional.ofNullable(simulationDescriptor.getRuleFlowGroup()).orElse(""));
     }
 
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
         view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         // FIXME to implement (no more read only)
-        view.getDmnFilePath().setInnerText(simulationDescriptor.getDmnFilePath());
-        view.getDmnName().setInnerText(simulationDescriptor.getDmnName());
-        view.getDmnNamespace().setInnerText(simulationDescriptor.getDmnNamespace());
+        // FIXME replace with widget with DMN file browsing
+        view.getDmnFilePath().setValue(Optional.ofNullable(simulationDescriptor.getDmnFilePath()).orElse(""));
+        view.getDmnName().setInnerText(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
+        view.getDmnNamespace().setInnerText(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
     }
 
     protected void saveRuleSettings() {
-        simulationDescriptor.setDmoSession(view.getKieSession().getValue());
-        simulationDescriptor.setKieBase(view.getKieBase().getValue());
-        simulationDescriptor.setRuleFlowGroup(view.getRuleFlowGroup().getValue());
+        simulationDescriptor.setDmoSession(getCleanValue(() -> view.getKieSession().getValue()));
+        simulationDescriptor.setRuleFlowGroup(getCleanValue(() -> view.getRuleFlowGroup().getValue()));
     }
 
     protected void saveDMNSettings() {
-        simulationDescriptor.setDmnFilePath(view.getDmnFilePath().getInnerText());
-        simulationDescriptor.setDmnName(view.getDmnName().getInnerText());
-        simulationDescriptor.setDmnNamespace(view.getDmnNamespace().getInnerText());
+        simulationDescriptor.setDmnFilePath(getCleanValue(() -> view.getDmnFilePath().getValue()));
+    }
+
+    private String getCleanValue(Supplier<String> supplier) {
+        String rawValue = supplier.get();
+        return "".equals(rawValue) ? null : rawValue;
     }
 }
