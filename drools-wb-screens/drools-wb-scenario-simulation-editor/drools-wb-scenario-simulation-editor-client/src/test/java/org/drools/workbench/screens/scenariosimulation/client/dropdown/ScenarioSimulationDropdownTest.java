@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationDropdownTest {
 
     @Mock
-    private ScenarioSimulationDropdown.View viewMock;
+    private ScenarioSimulationDropdownView viewMock;
 
     @Mock
     private ScenarioSimulationAssetsDropdownProvider dataProviderMock;

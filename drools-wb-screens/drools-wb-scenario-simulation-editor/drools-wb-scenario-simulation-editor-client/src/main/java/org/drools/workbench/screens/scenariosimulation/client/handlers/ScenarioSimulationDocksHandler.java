@@ -24,15 +24,14 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
+import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderPlace;
-import org.kie.workbench.common.widgets.client.docks.EditorDock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
 import org.uberfire.mvp.PlaceRequest;
@@ -47,7 +46,7 @@ public class ScenarioSimulationDocksHandler
     public final static String TEST_RUNNER_REPORTING_PANEL = "testRunnerReportingPanel";
 
     @Inject
-    private EditorDock authoringWorkbenchDocks;
+    private AuthoringEditorDock authoringWorkbenchDocks;
 
     private UberfireDock settingsDock;
     private UberfireDock toolsDock;
@@ -60,9 +59,9 @@ public class ScenarioSimulationDocksHandler
 
         List<UberfireDock> result = new ArrayList<>();
         settingsDock = new UberfireDock(UberfireDockPosition.EAST,
-                                     "SLIDERS",
-                                     new DefaultPlaceRequest(SettingsPresenter.IDENTIFIER),
-                                     perspectiveIdentifier);
+                                        "SLIDERS",
+                                        new DefaultPlaceRequest(SettingsPresenter.IDENTIFIER),
+                                        perspectiveIdentifier);
         result.add(settingsDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.settings()));
         toolsDock = new UberfireDock(UberfireDockPosition.EAST,
                                      "INFO_CIRCLE",
@@ -81,9 +80,9 @@ public class ScenarioSimulationDocksHandler
         result.add(reportDock.withSize(450).withLabel("TEST REPORT"/*DefaultWorkbenchConstants.INSTANCE.TestReport()*/));
 
         coverageDock = new UberfireDock(UberfireDockPosition.EAST,
-                                      "BAR_CHART",
-                                      new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),
-                                      perspectiveIdentifier);
+                                        "BAR_CHART",
+                                        new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),
+                                        perspectiveIdentifier);
         result.add(coverageDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.coverageReport()));
 
         return result;
@@ -100,13 +99,11 @@ public class ScenarioSimulationDocksHandler
     }
 
     public void expandToolsDock() {
-        GWT.log("authoringWorkbenchDocks.expandAuthoringDock(toolsDock);");
-//        authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
+        authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
 
     public void expandTestResultsDock() {
-        GWT.log("authoringWorkbenchDocks.expandAuthoringDock(reportDock);");
-//        authoringWorkbenchDocks.expandAuthoringDock(reportDock);
+        authoringWorkbenchDocks.expandAuthoringDock(reportDock);
     }
 
     public void setScesimEditorId(String scesimEditorId) {

@@ -676,6 +676,7 @@ public class ScenarioGridModel extends BaseGridData {
         if (!Objects.equals(columnClassName, headerName)) {
             throw new Exception(headerName + " is not the class of the current column.");
         }
+
     }
 
     /**

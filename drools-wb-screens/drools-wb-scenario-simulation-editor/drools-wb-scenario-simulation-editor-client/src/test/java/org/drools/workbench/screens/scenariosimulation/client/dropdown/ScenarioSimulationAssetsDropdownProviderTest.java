@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
+import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
@@ -47,13 +48,16 @@ public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenar
     @Mock
     private ScenarioSimulationService scenarioSimulationServiceMock;
 
+    @Mock
+    private  WorkspaceProjectContext workspaceProjectContextMock;
+
     private ScenarioSimulationAssetsDropdownProvider scenarioSimulationAssetsDropdownProvider;
 
     @Before
     public void setUp() throws Exception {
         super.setup();
         when(scenarioSimulationServiceCallerMock.call(any())).thenReturn(scenarioSimulationServiceMock);
-        scenarioSimulationAssetsDropdownProvider = spy(new ScenarioSimulationAssetsDropdownProvider(scenarioSimulationServiceCallerMock) {
+        scenarioSimulationAssetsDropdownProvider = spy(new ScenarioSimulationAssetsDropdownProvider(scenarioSimulationServiceCallerMock, workspaceProjectContextMock) {
 
         });
     }

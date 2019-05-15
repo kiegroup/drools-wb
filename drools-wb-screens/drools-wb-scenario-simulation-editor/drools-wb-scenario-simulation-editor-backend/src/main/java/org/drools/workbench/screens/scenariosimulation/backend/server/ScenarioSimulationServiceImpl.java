@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -334,7 +333,7 @@ public class ScenarioSimulationServiceImpl
 
     @Override
     public List<String> getAssets(final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
-        DirectoryStream<org.uberfire.java.nio.file.Path> directoryStream = ioService.newDirectoryStream(GeneralPathImpl.newFromFile(fileSystem, new File(containerDirectoryFullPath)));
+        DirectoryStream<org.uberfire.java.nio.file.Path> directoryStream = ioService.newDirectoryStream( GeneralPathImpl.createRoot(fileSystem, containerDirectoryFullPath, false));
         Iterable<org.uberfire.java.nio.file.Path> iterable = directoryStream::iterator;
         Stream<org.uberfire.java.nio.file.Path> actualStream = StreamSupport.stream(iterable.spliterator(), false);
         String suffix = assetType.startsWith(".") ? assetType : "." + assetType;

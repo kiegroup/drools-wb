@@ -19,8 +19,8 @@
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
     <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
     <version.thorntail>2.4.0.Final</version.thorntail>
-    <gwt.helper.includes>Client</gwt.helper.includes>
-    <gwt.helper.rootDirectories>${project.parent.basedir}/drools-wb-scenario-simulation-editor-client</gwt.helper.rootDirectories>
+    <gwt.helper.includes>Client,Submarine</gwt.helper.includes>
+    <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
   </properties>
 
 
@@ -507,6 +507,10 @@
       <artifactId>drools-wb-scenario-simulation-editor-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-wb-scenario-simulation-editor-submarine</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-message-console-client</artifactId>
     </dependency>
@@ -538,6 +542,11 @@
       <dependency>
         <groupId>org.kie.workbench</groupId>
         <artifactId>kie-wb-common-submarine-client</artifactId>
+        <version>${version.org.kie}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-wb-scenario-simulation-editor-submarine</artifactId>
         <version>${version.org.kie}</version>
       </dependency>
       <dependency>

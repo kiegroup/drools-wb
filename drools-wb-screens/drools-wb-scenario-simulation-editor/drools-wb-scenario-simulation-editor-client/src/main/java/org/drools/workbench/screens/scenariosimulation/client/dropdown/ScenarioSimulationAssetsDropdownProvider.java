@@ -24,6 +24,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
+import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
@@ -33,11 +34,13 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 public class ScenarioSimulationAssetsDropdownProvider implements KieAssetsDropdownItemsProvider {
 
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
+    protected WorkspaceProjectContext workspaceProjectContext;
 
     @Inject
-    public ScenarioSimulationAssetsDropdownProvider(Caller<ScenarioSimulationService> scenarioSimulationService) {
+    public ScenarioSimulationAssetsDropdownProvider(Caller<ScenarioSimulationService> scenarioSimulationService, final WorkspaceProjectContext workspaceProjectContext) {
         super();
         this.scenarioSimulationService = scenarioSimulationService;
+        this.workspaceProjectContext = workspaceProjectContext;
     }
 
     @Override
@@ -53,7 +56,9 @@ public class ScenarioSimulationAssetsDropdownProvider implements KieAssetsDropdo
 
     protected void updateAssets(RemoteCallback<List<String>> callback) {
         try {
-            scenarioSimulationService.call(callback).getAssets(".", "dmn", "");
+
+            String rootPath = workspaceProjectContext.getActiveWorkspaceProject().isPresent() ? workspaceProjectContext.getActiveWorkspaceProject().get().getRootPath().toURI() : ".";
+            scenarioSimulationService.call(callback).getAssets(rootPath, "dmn", "");
         } catch (Exception e) {
             e.printStackTrace();
         }

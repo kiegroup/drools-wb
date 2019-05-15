@@ -31,10 +31,13 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
+import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -46,12 +49,15 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPo
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -69,6 +75,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 
 @Dependent
@@ -88,6 +95,7 @@ public class ScenarioSimulationEditorPresenter {
     protected DataManagementStrategy dataManagementStrategy;
     protected ScenarioSimulationContext context;
     protected ScenarioSimulationModel model;
+    protected SimulationRunResult lastRunResult;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
@@ -335,6 +343,30 @@ public class ScenarioSimulationEditorPresenter {
 //                .exportSimulation(CSV, context.getStatus().getSimulation());
     }
 
+    /**
+     * Read only columns should not contains any values
+     * @param simulation
+     */
+    protected void cleanReadOnlyColumn(Simulation simulation) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        for (int i = 0; i < simulation.getUnmodifiableScenarios().size(); i += 1) {
+            Scenario scenario = simulation.getScenarioByIndex(i);
+            for (FactMapping factMapping : simulationDescriptor.getUnmodifiableFactMappings()) {
+                if (isColumnReadOnly(factMapping)) {
+                    scenario.getFactMappingValue(factMapping.getFactIdentifier(),
+                                                 factMapping.getExpressionIdentifier())
+                            .ifPresent(fmv -> fmv.setRawValue(null));
+                }
+            }
+        }
+    }
+
+    private boolean isColumnReadOnly(FactMapping factMapping) {
+        return !FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType()) &&
+                factMapping.getExpressionElements().isEmpty();
+    }
+
+
     public void populateRightDocks(String identifier) {
         if (dataManagementStrategy != null) {
             final PlaceRequest currentRightDockPlaceRequest = getCurrentRightDockPlaceRequest(identifier);
@@ -356,8 +388,28 @@ public class ScenarioSimulationEditorPresenter {
                         }
                     });
                     break;
+                case CoverageReportPresenter.IDENTIFIER:
+                    getCoverageReportPresenter(currentRightDockPlaceRequest).ifPresent(presenter -> {
+                        setCoverageReport(presenter);
+                        presenter.setCurrentPath(path);
+                    });
+                    break;
             }
         }
+    }
+
+    public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
+        this.dataManagementStrategy = dataManagementStrategy;
+        this.model = model;
+        populateRightDocks(TestToolsPresenter.IDENTIFIER);
+        populateRightDocks(SettingsPresenter.IDENTIFIER);
+        view.setContent(model.getSimulation());
+        context.getStatus().setSimulation(model.getSimulation());
+        CustomBusyPopup.close();
+    }
+
+    public ScenarioSimulationResourceType getType() {
+        return type;
     }
 
     protected void setTestTools(TestToolsView.Presenter presenter) {
@@ -371,28 +423,27 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.initCheatSheet(type);
     }
 
     protected void setSettings(SettingsView.Presenter presenter) {
-        ScenarioSimulationModel.Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? ScenarioSimulationModel.Type.RULE : ScenarioSimulationModel.Type.DMN;
+        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
     }
 
-    protected String getJsonModel(ScenarioSimulationModel model) {
-        return MarshallingWrapper.toJSON(model);
+    protected void setCoverageReport(CoverageReportView.Presenter presenter) {
+        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        if (lastRunResult != null) {
+            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
+        } else {
+            presenter.showEmptyStateMessage(type);
+        }
     }
 
-    protected void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
-        this.dataManagementStrategy = dataManagementStrategy;
-        this.model = model;
-        populateRightDocks(TestToolsPresenter.IDENTIFIER);
-        populateRightDocks(SettingsPresenter.IDENTIFIER);
-        view.setContent(model.getSimulation());
-        context.getStatus().setSimulation(model.getSimulation());
-        CustomBusyPopup.close();
+    protected String getJsonModel(ScenarioSimulationModel model) {
+        return MarshallingWrapper.toJSON(model);
     }
 
     protected Optional<CheatSheetView.Presenter> getCheatSheetPresenter(PlaceRequest placeRequest) {
@@ -410,6 +461,12 @@ public class ScenarioSimulationEditorPresenter {
         return settingsView.map(SettingsView::getPresenter);
     }
 
+    protected Optional<CoverageReportView.Presenter> getCoverageReportPresenter(PlaceRequest placeRequest) {
+        final Optional<CoverageReportView> coverageReportViewMap = getCoverageReportView(placeRequest);
+        return coverageReportViewMap.map(CoverageReportView::getPresenter);
+    }
+
+
     protected Command getSaveCommand() {
         return () -> scenarioSimulationEditorWrapper.wrappedSave("Save");
     }
@@ -425,7 +482,7 @@ public class ScenarioSimulationEditorPresenter {
         return toReturn;
     }
 
-    private String getFileDownloadURL(final Supplier<Path> pathSupplier) {
+    protected String getFileDownloadURL(final Supplier<Path> pathSupplier) {
         return GWT.getModuleBaseURL() + "defaulteditor/download?path=" + pathSupplier.get().toURI();
     }
 
@@ -454,6 +511,16 @@ public class ScenarioSimulationEditorPresenter {
         if (activity != null) {
             final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((SettingsView) settingsActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<CoverageReportView> getCoverageReportView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((CoverageReportView) settingsActivity.getWidget());
         } else {
             return Optional.empty();
         }
