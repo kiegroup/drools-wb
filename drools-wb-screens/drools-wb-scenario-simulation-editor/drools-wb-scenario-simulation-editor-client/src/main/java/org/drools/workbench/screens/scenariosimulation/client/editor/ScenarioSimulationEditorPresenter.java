@@ -40,6 +40,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DMODataManagementStrategy;
@@ -560,11 +561,8 @@ public class ScenarioSimulationEditorPresenter
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
         Type type = dataManagementStrategy instanceof DMODataManagementStrategy ? Type.RULE : Type.DMN;
-        if (lastRunResult != null) {
-            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
-        } else {
-            presenter.showEmptyStateMessage(type);
-        }
+        SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
+        presenter.populateCoverageReport(type, simulationRunMetadata);
     }
 
     protected String getJsonModel(ScenarioSimulationModel model) {
@@ -619,9 +617,9 @@ public class ScenarioSimulationEditorPresenter
             dataManagementStrategy = new DMNDataManagementStrategy(dmnTypeService, context, eventBus);
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
+        // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
-        populateRightDocks(CoverageReportPresenter.IDENTIFIER);
         model = content.getModel();
         if (dataManagementStrategy instanceof DMODataManagementStrategy) {
             importsWidget.setContent(((DMODataManagementStrategy) dataManagementStrategy).getOracle(),

@@ -23,6 +23,7 @@ import javax.inject.Named;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
+import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
@@ -63,6 +64,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
@@ -426,5 +428,13 @@ public class ScenarioSimulationServiceImplTest {
 
         assertEquals(Type.DMN, model.getSimulation().getSimulationDescriptor().getType());
         verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
+
+        when(dmnTypeServiceMock.initializeNameAndNamespace(any(), any(), anyString())).thenThrow(new ImpossibleToFindDMNException(""));
+
+        try {
+            service.load(path);
+        } catch (Exception e) {
+            fail();
+        }
     }
 }

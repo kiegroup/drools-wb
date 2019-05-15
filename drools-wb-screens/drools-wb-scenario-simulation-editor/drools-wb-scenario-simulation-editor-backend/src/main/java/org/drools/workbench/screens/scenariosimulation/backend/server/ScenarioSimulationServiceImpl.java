@@ -206,7 +206,6 @@ public class ScenarioSimulationServiceImpl
 
             ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
             Simulation simulation = scenarioSimulationModel.getSimulation();
-            // FIXME to test
             if(simulation != null && Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
                 try {
                     dmnTypeService.initializeNameAndNamespace(simulation,

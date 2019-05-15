@@ -111,8 +111,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
         view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
-        // FIXME to implement (no more read only)
-        // FIXME replace with widget with DMN file browsing
         view.getDmnFilePath().setValue(Optional.ofNullable(simulationDescriptor.getDmnFilePath()).orElse(""));
         view.getDmnName().setInnerText(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setInnerText(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));

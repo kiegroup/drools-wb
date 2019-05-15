@@ -221,10 +221,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         settingsPresenter.saveDMNSettings();
         verify(settingsViewMock, times(1)).getDmnFilePath();
         verify(simulationDescriptorMock, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
-        verify(settingsViewMock, times(1)).getDmnName();
-        verify(simulationDescriptorMock, times(1)).setDmnName(eq(DMN_NAME));
-        verify(settingsViewMock, times(1)).getDmnNamespace();
-        verify(simulationDescriptorMock, times(1)).setDmnNamespace(eq(DMN_NAMESPACE));
     }
 
     @Test

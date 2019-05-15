@@ -105,7 +105,6 @@ public class DMNDataManagementStrategy extends AbstractDataManagementStrategy {
     private ErrorCallback<Message> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
         return (error, exception) -> {
             testToolsPresenter.setDataObjectFieldsMap(new TreeMap<>());
-            // FIXME to test
             ErrorPopup.showMessage(exception.getMessage());
             return false;
         };
