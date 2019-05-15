@@ -258,6 +258,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         verify(scenarioGridModel, times(1)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteColumn(eq(gridColumnMock));
         verify(simulationMock, times(1)).removeFactMappingByIndex(eq(COLUMN_INDEX));
+        verify(eventBusMock, times(1)).fireEvent(isA(ReloadTestToolsEvent.class));
     }
 
     @Test
@@ -460,6 +461,16 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
+    public void isSameInstanceHeader_Different() {
+        isSameInstanceType(CLASS_NAME, "TOAST", false);
+    }
+
+    @Test
+    public void isSameInstanceHeader_Equal() {
+        isSameInstanceType(CLASS_NAME, CLASS_NAME, true);
+    }
+
+    @Test
     public void refreshErrorsTest() {
         int expectedCalls = scenarioGridModel.getRowCount() * scenarioGridModel.getColumnCount();
         scenarioGridModel.refreshErrors();
@@ -509,16 +520,25 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidatePropertyUpdate(1, true, true, true, false);
     }
 
+    public void isSameInstanceType(String columnClassName, String value, boolean expectedResult) {
+        FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
+        when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
+        when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_INDEX)).thenReturn(factMappingMock);
+        boolean result = scenarioGridModel.isSameInstanceType(COLUMN_INDEX, value);
+        verify(simulationMock, times(1)).getSimulationDescriptor();
+        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
+        assertEquals(result, expectedResult);
+    }
+
     private void commonCheckSameInstanceHeader(String columnClassName, String value, boolean expected)  {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
-        int colIndex = 3;
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
-        when(simulationDescriptorMock.getFactMappingByIndex(colIndex)).thenReturn(factMappingMock);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_INDEX)).thenReturn(factMappingMock);
         try {
-            scenarioGridModel.checkSameInstanceHeader(colIndex, value);
-            verify(simulationMock, times(1)).getSimulationDescriptor();
-            verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(colIndex));
+            scenarioGridModel.checkSameInstanceHeader(COLUMN_INDEX, value);
+            verify(scenarioGridModel, times(1)).isSameInstanceType(eq(COLUMN_INDEX), eq(value));
         } catch (Exception e) {
             if (expected) {
                 fail("No exception expected, retrieved " + e.getMessage());

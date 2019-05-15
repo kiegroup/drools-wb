@@ -257,6 +257,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
+        checkInstanceIsAssigned(search);
     }
 
     @Override
@@ -283,6 +284,19 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
+        if (!notEqualsSearch) {
+            checkInstanceIsAssigned(search);
+        }
+    }
+
+    protected void checkInstanceIsAssigned(String search) {
+        if (search != null && !search.isEmpty()) {
+            boolean assigned = dataObjectFieldsMap.keySet().contains(search) ||
+                    simpleJavaTypeFieldsMap.keySet().contains(search) ||
+                    instanceFieldsMap.keySet().contains(search) ||
+                    simpleJavaInstanceFieldsMap.keySet().contains(search);
+            setInstanceAssigned(search, assigned);
+        }
     }
 
     @Override
@@ -337,15 +351,16 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         view.disableEditorTab();
         selectedFieldItemView = null;
         selectedListGroupItemView = null;
-        view.enableAddButton();
     }
 
     @Override
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (!listGroupItemPresenter.isFactNameAssigned()) {
+        if (!selectedListGroupItemView.isInstanceAssigned()) {
             view.enableAddButton();
+        } else {
+            view.disableAddButton();
         }
     }
 
@@ -417,4 +432,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
             return terms.contains(key);
         }
     }
+
+    protected void setInstanceAssigned(String key, boolean assigned) {
+        listGroupItemPresenter.setInstanceAssigned(key, assigned);
+    }
+
 }

@@ -96,8 +96,13 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
-    public boolean isFactNameAssigned() {
-        return factName != null;
+    public boolean isInstanceAssigned(String factName) {
+        return listGroupItemViewMap.get(factName).isInstanceAssigned();
+    }
+
+    @Override
+    public void setInstanceAssigned(String factName, boolean assigned) {
+        listGroupItemViewMap.get(factName).setInstanceAssigned(assigned);
     }
 
     @Override

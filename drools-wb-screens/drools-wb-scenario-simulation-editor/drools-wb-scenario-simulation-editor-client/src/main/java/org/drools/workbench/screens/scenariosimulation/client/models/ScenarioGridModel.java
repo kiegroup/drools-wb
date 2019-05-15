@@ -265,6 +265,7 @@ public class ScenarioGridModel extends BaseGridData {
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
         simulation.removeFactMappingByIndex(columnIndex);
+        eventBus.fireEvent(new ReloadTestToolsEvent(true));
     }
 
     /**
@@ -666,8 +667,8 @@ public class ScenarioGridModel extends BaseGridData {
      * @param className
      * @return
      */
-    public boolean isSameSelectedInstanceType(String className) {
-        return selectedColumn == null || isSameSelectedInstanceType(getColumns().indexOf(selectedColumn), className);
+    public boolean isSameInstanceType(String className) {
+        return selectedColumn == null || isSameInstanceType(getColumns().indexOf(selectedColumn), className);
     }
 
      /**
@@ -678,7 +679,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @throws Exception if the given <b>headerName</b> is not the name of the class mapped to the given column
      */
     public void checkSameInstanceHeader(int columnIndex, String headerName) throws Exception {
-        if (!isSameSelectedInstanceType(columnIndex, headerName)) {
+        if (!isSameInstanceType(columnIndex, headerName)) {
             throw new Exception(headerName + " is not the class of the current column.");
         }
     }
@@ -689,7 +690,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param headerName
      * @return
      */
-    public boolean isSameSelectedInstanceType(int columnIndex, String headerName) {
+    public boolean isSameInstanceType(int columnIndex, String headerName) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return Objects.equals(factIdentifierByIndex.getClassNameWithoutPackage(), headerName);

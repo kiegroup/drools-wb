@@ -71,6 +71,10 @@ public interface ListGroupItemView extends IsWidget,
 
     boolean isShown();
 
+    void setInstanceAssigned(boolean assigned);
+
+    boolean isInstanceAssigned();
+
     interface Presenter {
 
         /**
@@ -139,6 +143,8 @@ public interface ListGroupItemView extends IsWidget,
          */
         void hideProperty(String factName, List<String> propertyParts);
 
-        boolean isFactNameAssigned();
+        boolean isInstanceAssigned(String factName);
+
+        void setInstanceAssigned(String factName, boolean assigned);
     }
 }
