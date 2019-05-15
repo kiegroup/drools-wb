@@ -24,7 +24,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTabl
 import org.drools.workbench.services.verifier.plugin.client.Coordinate;
 import org.drools.workbench.services.verifier.plugin.client.DTableUpdateManager;
 import org.drools.workbench.services.verifier.plugin.client.DataBuilderProvider;
-import org.drools.workbench.services.verifier.plugin.client.UpdateException;
 import org.drools.workbench.services.verifier.plugin.client.testutil.AnalyzerProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,8 +67,7 @@ public class DTableUpdateManagerRetractTest {
 
     @Test
     public void testDoNotUpdateActionWhenValueDidNotChange() throws
-            Exception,
-            UpdateException {
+            Exception {
         ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
         coordinates.add(new Coordinate(0,
                                        3));
@@ -83,8 +81,7 @@ public class DTableUpdateManagerRetractTest {
 
     @Test
     public void testFillNullAction() throws
-            Exception,
-            UpdateException {
+            Exception {
         ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
         Coordinate coordinate = new Coordinate(1,
                                                3);

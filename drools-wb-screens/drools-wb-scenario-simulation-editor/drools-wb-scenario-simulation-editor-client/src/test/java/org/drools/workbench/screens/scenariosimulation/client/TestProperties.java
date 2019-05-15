@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 
@@ -200,4 +200,18 @@ public class TestProperties {
     public static final String COLUMN_TWO_TITLE = "column two";
 
     public static final String TEST = "test";
+
+    public static Integer MX = 300;
+    public static Integer MY = 200;
+    public static final Integer DX = 325;
+    public static final Integer DY = 250;
+    public static final Double CELL_WIDTH = 50d;
+    public static final Integer LARGE_LAYER = 1000;
+    public static final Integer TINY_LAYER = 100;
+    public static final Integer SCROLL_TOP = 15;
+    public static final Integer SCROLL_LEFT = 75;
+    public static final String RAW_VALUE = "raw";
+    public static final String ERROR_VALUE = "error";
+    public static final String NULL = "null";
+    public static final String EXCEPTION = "GenericException";
 }

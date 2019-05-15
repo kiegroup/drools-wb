@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -31,13 +30,14 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.drools.workbench.screens.scenariosimulation.backend.server.runner.ScenarioJunitActivator;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
+import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
-import org.drools.workbench.screens.scenariosimulation.model.Scenario;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.model.TestRunResult;
+import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioRunnerService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.drools.workbench.screens.scenariosimulation.type.ScenarioSimulationResourceTypeDefinition;
@@ -151,13 +151,13 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public TestRunResult runScenario(final Path path,
-                                     final SimulationDescriptor simulationDescriptor,
-                                     final Map<Integer, Scenario> scenarioMap) {
+    public SimulationRunResult runScenario(final Path path,
+                                           final SimulationDescriptor simulationDescriptor,
+                                           final List<ScenarioWithIndex> scenarios) {
         return scenarioRunnerService.runTest(user.getIdentifier(),
                                              path,
                                              simulationDescriptor,
-                                             scenarioMap);
+                                             scenarios);
     }
 
     @Override
@@ -369,6 +369,11 @@ public class ScenarioSimulationServiceImpl
 
         boolean toSave = false;
         Path modulePomXMLPath = module.getPomXMLPath();
+
+        for (GAV oldDependency : getOldDependencies()) {
+            toSave |= removeFromPomIfNecessary(dependencies, oldDependency);
+        }
+
         for (GAV gav : getDependencies(kieVersion)) {
             toSave |= editPomIfNecessary(dependencies, gav);
         }
@@ -376,6 +381,17 @@ public class ScenarioSimulationServiceImpl
         if (toSave) {
             pomService.save(modulePomXMLPath, projectPom, null, "");
         }
+    }
+
+    protected boolean removeFromPomIfNecessary(Dependencies dependencies, GAV oldDependency) {
+        for (Dependency dependency : dependencies) {
+            if (dependency.getGroupId().equals(oldDependency.getGroupId()) &&
+                    dependency.getArtifactId().equals(oldDependency.getArtifactId())) {
+                dependencies.remove(dependency);
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean editPomIfNecessary(Dependencies dependencies, GAV gav) {
@@ -396,9 +412,14 @@ public class ScenarioSimulationServiceImpl
         return internalGetPath(rootModulePackage, junitActivatorPackageName);
     }
 
+    protected List<GAV> getOldDependencies() {
+        return Arrays.asList(new GAV("org.drools", "drools-wb-scenario-simulation-editor-api", null),
+                             new GAV("org.drools", "drools-wb-scenario-simulation-editor-backend", null));
+    }
+
     protected List<GAV> getDependencies(String kieVersion) {
-        return Arrays.asList(new GAV("org.drools", "drools-wb-scenario-simulation-editor-api", kieVersion),
-                             new GAV("org.drools", "drools-wb-scenario-simulation-editor-backend", kieVersion),
+        return Arrays.asList(new GAV("org.drools", "drools-scenario-simulation-api", kieVersion),
+                             new GAV("org.drools", "drools-scenario-simulation-backend", kieVersion),
                              new GAV("org.drools", "drools-compiler", kieVersion),
                              new GAV("org.kie", "kie-dmn-feel", kieVersion),
                              new GAV("org.kie", "kie-dmn-api", kieVersion),

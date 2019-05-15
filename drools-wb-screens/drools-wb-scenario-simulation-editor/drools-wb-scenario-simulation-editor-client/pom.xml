@@ -22,6 +22,11 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-scenario-simulation-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-project-datamodel-api</artifactId>
     </dependency>
@@ -165,6 +170,19 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons</artifactId>
       <!--<scope>provided</scope>-->
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-dataset-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.dashbuilder</groupId>
+      <artifactId>dashbuilder-displayer-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.dashbuilder</groupId>
+      <artifactId>dashbuilder-displayer-client</artifactId>
     </dependency>
 
     <!--Wires Grids dependencies-->
