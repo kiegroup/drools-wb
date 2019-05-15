@@ -53,10 +53,6 @@ public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
                                                                                                 context.getScenarioCellTextAreaSingletonDOMElementFactory(),
                                                                                                 ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
-        GridColumn<?> selectedColumn = context.getModel().getSelectedColumn();
-        boolean toDisable = selectedColumn == null || context.getModel().getColumns().indexOf(selectedColumn) == status.getColumnIndex();
-        if (context.getTestToolsPresenter() != null && toDisable) {
-            new DisableTestToolsCommand().execute(context);
-        }
+        new ReloadTestToolsCommand().execute(context);
     }
 }
