@@ -284,18 +284,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
+        /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column. Therefore, it isn't
+           necessary to search through the maps to check it.
+         */
         if (!notEqualsSearch) {
             checkInstanceIsAssigned(search);
-        }
-    }
-
-    protected void checkInstanceIsAssigned(String search) {
-        if (search != null && !search.isEmpty()) {
-            boolean assigned = dataObjectFieldsMap.keySet().contains(search) ||
-                    simpleJavaTypeFieldsMap.keySet().contains(search) ||
-                    instanceFieldsMap.keySet().contains(search) ||
-                    simpleJavaInstanceFieldsMap.keySet().contains(search);
-            setInstanceAssigned(search, assigned);
         }
     }
 
@@ -357,10 +350,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (!selectedListGroupItemView.isInstanceAssigned()) {
-            view.enableAddButton();
-        } else {
+        if (selectedListGroupItemView.isInstanceAssigned()) {
             view.disableAddButton();
+        } else {
+            view.enableAddButton();
         }
     }
 
@@ -391,6 +384,21 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     @Override
     public void reset() {
         view.reset();
+    }
+
+    /**
+     * It navigates through the maps, to check if the given key (search) is present or not in the keySet of these maps.
+     * If present, then a INSTANCE is already assigned to the selected column.
+     * @param search
+     */
+    protected void checkInstanceIsAssigned(String search) {
+        if (search != null && !search.isEmpty()) {
+            boolean assigned = dataObjectFieldsMap.keySet().contains(search) ||
+                    simpleJavaTypeFieldsMap.keySet().contains(search) ||
+                    instanceFieldsMap.keySet().contains(search) ||
+                    simpleJavaInstanceFieldsMap.keySet().contains(search);
+            listGroupItemPresenter.setInstanceAssigned(search, assigned);
+        }
     }
 
     protected Optional<String> getFullPackage(String className) {
@@ -431,10 +439,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         } else {
             return terms.contains(key);
         }
-    }
-
-    protected void setInstanceAssigned(String key, boolean assigned) {
-        listGroupItemPresenter.setInstanceAssigned(key, assigned);
     }
 
 }
