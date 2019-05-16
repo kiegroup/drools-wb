@@ -257,7 +257,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
-        updateInstanceIsAssignedStatus(search);
     }
 
     @Override
@@ -284,12 +283,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
-        /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column. Therefore, it isn't
-           necessary to search through the maps to check it.
-         */
-        if (!notEqualsSearch) {
-            updateInstanceIsAssignedStatus(search);
-        }
     }
 
     @Override
@@ -328,6 +321,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void onEnableEditorTab(String factName, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, notEqualsSearch);
+        /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column.
+         * Therefore, it isn't necessary to search through the maps to check it.
+         */
+        if (!notEqualsSearch) {
+            updateInstanceIsAssignedStatus(factName);
+        }
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
@@ -387,18 +386,18 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     /**
-     * It navigates through the maps, to check if the given key (search) is present or not in the keySet of these maps.
+     * It navigates through the maps, to check if the given key is present or not in the keySet of these maps.
      * If present, then a INSTANCE is already assigned to the selected column. Then, it assigns the search result to
      * its related view.
-     * @param search
+     * @param key
      */
-    protected void updateInstanceIsAssignedStatus(String search) {
-        if (search != null && !search.isEmpty()) {
-            boolean assigned = dataObjectFieldsMap.keySet().contains(search) ||
-                    simpleJavaTypeFieldsMap.keySet().contains(search) ||
-                    instanceFieldsMap.keySet().contains(search) ||
-                    simpleJavaInstanceFieldsMap.keySet().contains(search);
-            listGroupItemPresenter.setInstanceAssigned(search, assigned);
+    protected void updateInstanceIsAssignedStatus(String key) {
+        if (key != null && !key.isEmpty()) {
+            boolean assigned = dataObjectFieldsMap.keySet().contains(key) ||
+                    simpleJavaTypeFieldsMap.keySet().contains(key) ||
+                    instanceFieldsMap.keySet().contains(key) ||
+                    simpleJavaInstanceFieldsMap.keySet().contains(key);
+            listGroupItemPresenter.setInstanceAssigned(key, assigned);
         }
     }
 
