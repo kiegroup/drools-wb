@@ -693,13 +693,35 @@ public class ScenarioGridModel extends BaseGridData {
         }
     }
 
+    /**
+     * It resets the <code>FactMappingValue</code> status for all the CELLS
+     */
     public void resetErrors() {
         IntStream.range(0, getRowCount()).forEach(this::resetErrors);
     }
 
+    /**
+     * It resets the <code>FactMappingValue</code> status for a specific ROW
+     * @param rowIndex
+     */
     public void resetErrors(int rowIndex) {
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         scenarioByIndex.resetErrors();
+        refreshErrors();
+    }
+
+    /**
+     * It resets the <code>FactMappingValue</code> status for a specific CELL
+     * @param rowIndex
+     * @param columnIndex
+     */
+    public void resetError(int rowIndex, int columnIndex) {
+        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMapping);
+        if (factMappingValue.isPresent()) {
+            factMappingValue.get().resetStatus();
+        }
         refreshErrors();
     }
 
