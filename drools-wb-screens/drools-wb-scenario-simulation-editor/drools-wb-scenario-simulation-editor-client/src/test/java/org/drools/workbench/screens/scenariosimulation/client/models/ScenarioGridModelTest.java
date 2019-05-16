@@ -520,7 +520,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidatePropertyUpdate(1, true, true, true, false);
     }
 
-    public void isSameInstanceType(String columnClassName, String value, boolean expectedResult) {
+    private void isSameInstanceType(String columnClassName, String value, boolean expectedResult) {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);

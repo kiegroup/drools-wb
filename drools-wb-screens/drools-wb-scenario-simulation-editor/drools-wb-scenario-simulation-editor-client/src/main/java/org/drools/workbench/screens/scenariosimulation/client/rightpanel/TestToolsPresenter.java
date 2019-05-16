@@ -388,7 +388,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     /**
      * It navigates through the maps, to check if the given key (search) is present or not in the keySet of these maps.
-     * If present, then a INSTANCE is already assigned to the selected column.
+     * If present, then a INSTANCE is already assigned to the selected column. Then, it assigns the search result to
+     * its related view.
      * @param search
      */
     protected void checkInstanceIsAssigned(String search) {

@@ -379,9 +379,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        if (context.getModel().getSelectedColumn() == null) {
-            return;
-        }
         if (context.getModel().isSameInstanceType(event.getClassName())) {
             return;
         }
