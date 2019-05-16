@@ -257,7 +257,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
         updateSeparators();
-        checkInstanceIsAssigned(search);
+        updateInstanceIsAssignedStatus(search);
     }
 
     @Override
@@ -288,7 +288,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
            necessary to search through the maps to check it.
          */
         if (!notEqualsSearch) {
-            checkInstanceIsAssigned(search);
+            updateInstanceIsAssignedStatus(search);
         }
     }
 
@@ -392,7 +392,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
      * its related view.
      * @param search
      */
-    protected void checkInstanceIsAssigned(String search) {
+    protected void updateInstanceIsAssignedStatus(String search) {
         if (search != null && !search.isEmpty()) {
             boolean assigned = dataObjectFieldsMap.keySet().contains(search) ||
                     simpleJavaTypeFieldsMap.keySet().contains(search) ||

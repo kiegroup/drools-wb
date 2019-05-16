@@ -515,7 +515,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     @Test
     public void checkInstanceIsAssigned_NotPresent() {
         String instance = "CHECK_INSTANCE";
-        testToolsPresenter.checkInstanceIsAssigned(instance);
+        testToolsPresenter.updateInstanceIsAssignedStatus(instance);
         verify(listGroupItemPresenterMock, times(1)).setInstanceAssigned(eq(instance), eq(false));
     }
 
@@ -524,14 +524,14 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         String instance = "CHECK_INSTANCE";
         FactModelTree factModel = new FactModelTree(instance, FACT_PACKAGE, getMockSimpleProperties(), new HashMap<>());
         dataObjectFactTreeMap.put(instance, factModel);
-        testToolsPresenter.checkInstanceIsAssigned(instance);
+        testToolsPresenter.updateInstanceIsAssignedStatus(instance);
         verify(listGroupItemPresenterMock, times(1)).setInstanceAssigned(eq(instance), eq(true));
     }
 
     @Test
     public void checkInstanceIsAssigned_EmptyString() {
         String instance = "";
-        testToolsPresenter.checkInstanceIsAssigned(instance);
+        testToolsPresenter.updateInstanceIsAssignedStatus(instance);
         verify(listGroupItemPresenterMock, never()).setInstanceAssigned(anyString(), anyBoolean());
     }
 }
