@@ -694,7 +694,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * It resets the <code>FactMappingValue</code> status for all the CELLS
+     * It resets the <code>FactMappingValue</code> status for all CELLS
      */
     public void resetErrors() {
         IntStream.range(0, getRowCount()).forEach(this::resetErrors);

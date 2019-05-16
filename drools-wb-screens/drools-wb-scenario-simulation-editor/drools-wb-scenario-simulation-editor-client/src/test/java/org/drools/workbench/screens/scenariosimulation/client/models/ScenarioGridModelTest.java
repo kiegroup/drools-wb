@@ -566,8 +566,8 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             if (expectedValid) {
                 fail("No exception expected, retrieved:  " + e.getMessage());
             }
-            reset(eventBusMock);
         }
+        reset(eventBusMock);
     }
 
     @Test
