@@ -324,6 +324,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
+        /* If <code>notEqualsSearch</code> is FALSE, then the column has a instance (fact) assigned. In this case,
+           it disables the search */
+        if (!notEqualsSearch) {
+            view.disableSearch();
+        }
         if (propertyNameElements != null && !notEqualsSearch) {
             listGroupItemPresenter.selectProperty(factName, propertyNameElements);
         }

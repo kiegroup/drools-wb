@@ -33,8 +33,7 @@ public class SetPropertyHeaderCommand extends AbstractSelectedColumnCommand {
         setPropertyHeader(context,
                           selectedColumn,
                           context.getStatus().getPropertyNameElements(),
-                          context.getStatus().getValueClassName(),
-                          Optional.empty());
+                          context.getStatus().getValueClassName());
     }
 
 }
