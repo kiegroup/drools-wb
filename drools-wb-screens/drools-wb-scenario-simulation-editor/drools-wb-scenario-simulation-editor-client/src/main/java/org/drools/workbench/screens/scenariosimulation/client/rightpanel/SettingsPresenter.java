@@ -58,7 +58,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     @PostConstruct
     public void init() {
-        view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipFromBuild());
+        view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipSimulation());
     }
 
     @Override

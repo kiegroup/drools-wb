@@ -290,5 +290,5 @@ public interface ScenarioSimulationEditorConstants
 
     String errorPopoverMessageFailedWithException(String errorMsg);
 
-    String skipFromBuild();
+    String skipSimulation();
 }
