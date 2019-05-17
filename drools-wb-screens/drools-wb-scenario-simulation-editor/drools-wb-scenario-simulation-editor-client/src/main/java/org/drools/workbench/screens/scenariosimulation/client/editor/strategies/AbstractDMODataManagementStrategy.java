@@ -89,7 +89,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * the generic types of a class with more then one, but only the last one. So, for <code>Map</code>, the <b>key</b>
      * will always be a <code>java.lang.String</code>
      */
-    protected FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
+    public FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
         Map<String, String> simpleProperties = new HashMap<>();
         Map<String, List<String>> genericTypesMap = new HashMap<>();
         String factPackageName = packageName;
@@ -116,10 +116,10 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * @param factName
      * @param propertyName
      * @param isList
-     * @implNote due to current DMO implementation, it is not possible to retrive <b>all</b> generic types of a given class, but only the last one; for the moment being, the generic type
+     * @implNote due to current DMO implementation, it is not possible to retrieve <b>all</b> generic types of a given class, but only the last one; for the moment being, the generic type
      * for <code>Map</code> will be <b>java.lang.String</b>
      */
-    protected void populateGenericTypeMap(Map<String, List<String>> toPopulate, String factName, String propertyName, boolean isList) {
+    public void populateGenericTypeMap(Map<String, List<String>> toPopulate, String factName, String propertyName, boolean isList) {
         List<String> genericTypes = new ArrayList<>();
         if (!isList) {
             genericTypes.add(String.class.getName());
@@ -139,7 +139,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * @param result pass <code>null</code> if there is not any <i>complex</i> data object but only simple ones
      * @param simpleJavaTypes
      */
-    protected void aggregatorCallbackMethod(final TestToolsView.Presenter testToolsPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final ScenarioGridModel scenarioGridModel, final FactModelTree result, final List<String> simpleJavaTypes) {
+    public void aggregatorCallbackMethod(final TestToolsView.Presenter testToolsPresenter, final int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, final ScenarioGridModel scenarioGridModel, final FactModelTree result, final List<String> simpleJavaTypes) {
         if (result != null) {
             factTypeFieldsMap.put(result.getFactName(), result);
         }
@@ -165,7 +165,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * @param toPopulate
      * @param factTypeFieldsMap
      */
-    protected void populateFactModelTree(FactModelTree toPopulate, final SortedMap<String, FactModelTree> factTypeFieldsMap) {
+    public void populateFactModelTree(FactModelTree toPopulate, final SortedMap<String, FactModelTree> factTypeFieldsMap) {
         List<String> toRemove = new ArrayList<>();
         toPopulate.getSimpleProperties().forEach((key, value) -> {
             if (factTypeFieldsMap.containsKey(value)) {

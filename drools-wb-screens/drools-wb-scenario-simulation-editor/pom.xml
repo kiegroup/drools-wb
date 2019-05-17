@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-screens</artifactId>
-    <version>7.22.0-SNAPSHOT</version>
+    <version>7.23.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor</artifactId>
@@ -35,7 +35,8 @@
     <module>drools-wb-scenario-simulation-editor-api</module>
     <module>drools-wb-scenario-simulation-editor-client</module>
     <module>drools-wb-scenario-simulation-editor-backend</module>
-    <module>drools-wb-scenario-simulation-editor-submarine</module>
+    <module>drools-wb-scenario-simulation-editor-businesscentral-client</module>
+    <module>drools-wb-scenario-simulation-editor-submarine-client</module>
     <module>drools-wb-scenario-simulation-editor-webapp</module>
   </modules>
 

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.22.0-SNAPSHOT</version>
+    <version>7.23.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -508,7 +508,7 @@
     </dependency>
     <dependency>
       <groupId>org.drools</groupId>
-      <artifactId>drools-wb-scenario-simulation-editor-submarine</artifactId>
+      <artifactId>drools-wb-scenario-simulation-editor-submarine-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -542,11 +542,12 @@
       <dependency>
         <groupId>org.kie.workbench</groupId>
         <artifactId>kie-wb-common-submarine-client</artifactId>
-        <version>${version.org.kie}</version>
+        <!-- momentary fix -->
+        <version>7.22.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.drools</groupId>
-        <artifactId>drools-wb-scenario-simulation-editor-submarine</artifactId>
+        <artifactId>drools-wb-scenario-simulation-editor-submarine-client</artifactId>
         <version>${version.org.kie}</version>
       </dependency>
       <dependency>

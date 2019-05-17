@@ -167,7 +167,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected String getJsonModel(ScenarioSimulationModel model) {
+            public String getJsonModel(ScenarioSimulationModel model) {
                 return "";
             }
         };

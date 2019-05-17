@@ -39,7 +39,7 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
@@ -423,18 +423,18 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.initCheatSheet(type);
     }
 
     protected void setSettings(SettingsView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
     }
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof BusinessCentralDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         if (lastRunResult != null) {
             presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
         } else {
@@ -442,7 +442,7 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
-    protected String getJsonModel(ScenarioSimulationModel model) {
+    public String getJsonModel(ScenarioSimulationModel model) {
         return MarshallingWrapper.toJSON(model);
     }
 

@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.drools.workbench.screens.scenariosimulation.submarine.editor.ScenarioSimulationEditorSubmarineWrapper;
+import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.ScenarioSimulationEditorSubmarineWrapper;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 

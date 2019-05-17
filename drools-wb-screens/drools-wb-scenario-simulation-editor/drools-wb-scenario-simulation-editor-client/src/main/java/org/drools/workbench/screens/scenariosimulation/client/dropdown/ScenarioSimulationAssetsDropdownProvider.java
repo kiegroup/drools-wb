@@ -15,52 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-
-import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
-import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
-import org.jboss.errai.common.client.api.Caller;
-import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 
-@Dependent
-public class ScenarioSimulationAssetsDropdownProvider implements KieAssetsDropdownItemsProvider {
+/**
+ * Using this to specialize injected instance
+ */
+public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
 
-    protected Caller<ScenarioSimulationService> scenarioSimulationService;
-    protected WorkspaceProjectContext workspaceProjectContext;
-
-    @Inject
-    public ScenarioSimulationAssetsDropdownProvider(Caller<ScenarioSimulationService> scenarioSimulationService, final WorkspaceProjectContext workspaceProjectContext) {
-        super();
-        this.scenarioSimulationService = scenarioSimulationService;
-        this.workspaceProjectContext = workspaceProjectContext;
-    }
-
-    @Override
-    public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        updateAssets(response -> {
-            final List<KieAssetsDropdownItem> kieAssetsDropdownItems = response.stream().map(item -> new KieAssetsDropdownItem(item,
-                                                                                                                "",
-                                                                                                                item,
-                                                                                                                new HashMap<>())).collect(Collectors.toList());
-            assetListConsumer.accept(kieAssetsDropdownItems);
-        });
-    }
-
-    protected void updateAssets(RemoteCallback<List<String>> callback) {
-        try {
-
-            String rootPath = workspaceProjectContext.getActiveWorkspaceProject().isPresent() ? workspaceProjectContext.getActiveWorkspaceProject().get().getRootPath().toURI() : ".";
-            scenarioSimulationService.call(callback).getAssets(rootPath, "dmn", "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.22.0-SNAPSHOT</version>
+    <version>7.23.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -26,10 +26,10 @@
       <artifactId>drools-scenario-simulation-api</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.kie.soup</groupId>
-      <artifactId>kie-soup-project-datamodel-api</artifactId>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>org.kie.soup</groupId>-->
+    <!--      <artifactId>kie-soup-project-datamodel-api</artifactId>-->
+    <!--    </dependency>-->
 
     <dependency>
       <groupId>org.kie.soup</groupId>
@@ -43,6 +43,16 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.kie.soup</groupId>
+          <artifactId>kie-soup-project-datamodel-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-project-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -112,11 +122,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kie.workbench.services</groupId>
-      <artifactId>kie-wb-common-datamodel-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-metadata-widget</artifactId>
     </dependency>
@@ -161,6 +166,12 @@
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-dataset-api</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-api</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-displayer-api</artifactId>

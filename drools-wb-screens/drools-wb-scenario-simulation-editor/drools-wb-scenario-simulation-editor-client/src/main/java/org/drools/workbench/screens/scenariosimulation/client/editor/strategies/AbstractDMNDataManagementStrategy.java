@@ -65,11 +65,11 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
         return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
     }
 
-    protected RemoteCallback<FactModelTuple> getSuccessCallback(TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
+    public RemoteCallback<FactModelTuple> getSuccessCallback(TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         return factMappingTuple -> getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, scenarioGridModel);
     }
 
-    protected void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
+    public void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a map of already assigned properties
         factModelTreeHolder.setFactModelTuple(factModelTuple);
         storeData(factModelTuple, testToolsPresenter, scenarioGridModel);
