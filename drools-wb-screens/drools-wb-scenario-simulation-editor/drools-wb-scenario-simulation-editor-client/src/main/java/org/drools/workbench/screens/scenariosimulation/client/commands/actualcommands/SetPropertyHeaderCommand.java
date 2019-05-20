@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.Optional;
-
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;

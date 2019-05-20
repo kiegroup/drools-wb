@@ -55,6 +55,9 @@ public class TestToolsViewImplTest {
     private ButtonElement clearSearchButtonMock;
 
     @Mock
+    ButtonElement searchButtonMock;
+
+    @Mock
     private LabelElement dataObjectListContainerSeparatorMock;
 
     @Mock
@@ -96,6 +99,7 @@ public class TestToolsViewImplTest {
             {
                 this.inputSearch = inputSearchMock;
                 this.clearSearchButton = clearSearchButtonMock;
+                this.searchButton = searchButtonMock;
                 this.nameField = nameFieldMock;
                 this.dataObjectListContainer = dataObjectListContainerMock;
                 this.dataObjectListContainerSeparator = dataObjectListContainerSeparatorMock;
@@ -166,5 +170,14 @@ public class TestToolsViewImplTest {
         verify(instanceListContainerMock, times(1)).removeAllChildren();
         verify(simpleJavaInstanceListContainerSeparatorMock.getStyle(), times(1)).setDisplay(eq(Style.Display.NONE));
         verify(simpleJavaInstanceListContainerMock, times(1)).removeAllChildren();
+    }
+
+    @Test
+    public void disableSearch() {
+        testToolsView.disableSearch();
+        verify(clearSearchButtonMock, times(1)).setDisabled(true);
+        verify(searchButtonMock, times(1)).setDisabled(true);
+        verify(inputSearchMock, times(1)).setDisabled(true);
+        verify(inputSearchMock, times(1)).setValue("");
     }
 }

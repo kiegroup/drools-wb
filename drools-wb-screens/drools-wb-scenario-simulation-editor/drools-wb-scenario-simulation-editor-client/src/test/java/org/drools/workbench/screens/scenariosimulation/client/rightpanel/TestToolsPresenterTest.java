@@ -412,6 +412,17 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(false));
         verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
         verify(listGroupItemPresenterMock, never()).enable();
+        verify(testToolsViewMock, times(1)).disableSearch();
+        verify(testToolsViewMock, times(1)).enableEditorTab();
+    }
+
+    @Test
+    public void onEnableEditorTabWithIstanceNotAssigned() {
+        testToolsPresenter.onEnableEditorTab(FACT_NAME, null, true);
+        verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(true));
+        verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
+        verify(listGroupItemPresenterMock, never()).enable();
+        verify(testToolsViewMock, never()).disableSearch();
         verify(testToolsViewMock, times(1)).enableEditorTab();
     }
 
