@@ -69,6 +69,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -429,7 +430,7 @@ public class ScenarioSimulationServiceImplTest {
         assertEquals(Type.DMN, model.getSimulation().getSimulationDescriptor().getType());
         verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
 
-        when(dmnTypeServiceMock.initializeNameAndNamespace(any(), any(), anyString())).thenThrow(new ImpossibleToFindDMNException(""));
+        doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), anyString());
 
         try {
             service.load(path);

@@ -45,7 +45,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
@@ -63,8 +62,6 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
                 this.dmnTypeService = dmnTypeServiceMock;
             }
         });
-
-        when(dmnTypeServiceMock.initializeNameAndNamespace(any(), any(), anyString())).thenReturn(new Simulation());
     }
 
     @Test

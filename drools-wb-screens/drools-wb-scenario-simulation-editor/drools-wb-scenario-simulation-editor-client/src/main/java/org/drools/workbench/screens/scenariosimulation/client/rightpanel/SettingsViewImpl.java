@@ -54,8 +54,8 @@ public class SettingsViewImpl
     @DataField("ruleSettings")
     protected DivElement ruleSettings = Document.get().createDivElement();
 
-    @DataField("kieSession")
-    protected InputElement kieSession = Document.get().createTextInputElement();
+    @DataField("dmoSession")
+    protected InputElement dmoSession = Document.get().createTextInputElement();
 
     @DataField("ruleFlowGroup")
     protected InputElement ruleFlowGroup = Document.get().createTextInputElement();
@@ -138,8 +138,8 @@ public class SettingsViewImpl
     }
 
     @Override
-    public InputElement getKieSession() {
-        return kieSession;
+    public InputElement getDmoSession() {
+        return dmoSession;
     }
 
     @Override

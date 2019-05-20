@@ -32,5 +32,11 @@ public interface DMNTypeService {
      */
     FactModelTuple retrieveFactModelTuple(Path path, String dmnPath);
 
-    Simulation initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath);
+    /**
+     * Extract name and namespace from DMN model (dmnPath) and update simulation
+     * @param simulation to update
+     * @param path to project
+     * @param dmnPath to dmn file
+     */
+    void initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath);
 }

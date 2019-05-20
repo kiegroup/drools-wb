@@ -30,8 +30,8 @@ import org.uberfire.mvp.Command;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_FILE_PATH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAMESPACE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMO_SESSION;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILE_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KIE_SESSION;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.RULE_FLOW_GROUP;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
@@ -63,7 +63,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getTypeLabel()).thenReturn(typeLabelMock);
         when(settingsViewMock.getScenarioType()).thenReturn(scenarioTypeMock);
         when(settingsViewMock.getRuleSettings()).thenReturn(ruleSettingsMock);
-        when(settingsViewMock.getKieSession()).thenReturn(kieSessionMock);
+        when(settingsViewMock.getDmoSession()).thenReturn(dmoSessionMock);
         when(settingsViewMock.getRuleFlowGroup()).thenReturn(ruleFlowGroupMock);
         when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
         when(settingsViewMock.getDmnFileLabel()).thenReturn(dmnModelLabelMock);
@@ -76,7 +76,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getSaveButton()).thenReturn(saveButtonMock);
 
         when(simulationDescriptorMock.getRuleFlowGroup()).thenReturn(RULE_FLOW_GROUP);
-        when(simulationDescriptorMock.getDmoSession()).thenReturn(KIE_SESSION);
+        when(simulationDescriptorMock.getDmoSession()).thenReturn(DMO_SESSION);
         when(simulationDescriptorMock.getDmnFilePath()).thenReturn(DMN_FILE_PATH);
         when(simulationDescriptorMock.getDmnNamespace()).thenReturn(DMN_NAMESPACE);
         when(simulationDescriptorMock.getDmnName()).thenReturn(DMN_NAME);
@@ -185,8 +185,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(settingsViewMock, times(1)).getRuleSettings();
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
-        verify(settingsViewMock, times(1)).getKieSession();
-        verify(kieSessionMock, times(1)).setValue(eq(KIE_SESSION));
+        verify(settingsViewMock, times(1)).getDmoSession();
+        verify(dmoSessionMock, times(1)).setValue(eq(DMO_SESSION));
         verify(settingsViewMock, times(1)).getRuleFlowGroup();
         verify(ruleFlowGroupMock, times(1)).setValue(eq(RULE_FLOW_GROUP));
     }
@@ -210,8 +210,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     public void saveRuleSettings() {
         when(skipFromBuildMock.isChecked()).thenReturn(true);
         settingsPresenter.saveRuleSettings();
-        verify(simulationDescriptorMock, times(1)).setDmoSession(eq(KIE_SESSION));
-        verify(settingsViewMock, times(1)).getKieSession();
+        verify(simulationDescriptorMock, times(1)).setDmoSession(eq(DMO_SESSION));
+        verify(settingsViewMock, times(1)).getDmoSession();
         verify(settingsViewMock, times(1)).getRuleFlowGroup();
         verify(simulationDescriptorMock, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
     }

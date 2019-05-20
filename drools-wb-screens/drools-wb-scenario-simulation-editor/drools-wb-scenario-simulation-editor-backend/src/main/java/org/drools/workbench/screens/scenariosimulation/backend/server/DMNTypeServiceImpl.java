@@ -84,11 +84,10 @@ public class DMNTypeServiceImpl
     }
 
     @Override
-    public Simulation initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
+    public void initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
         DMNModel dmnModel = getDMNModel(path, dmnPath);
         simulation.getSimulationDescriptor().setDmnName(dmnModel.getName());
         simulation.getSimulationDescriptor().setDmnNamespace(dmnModel.getNamespace());
-        return simulation;
     }
 
     public DMNModel getDMNModel(Path path, String dmnPath) {

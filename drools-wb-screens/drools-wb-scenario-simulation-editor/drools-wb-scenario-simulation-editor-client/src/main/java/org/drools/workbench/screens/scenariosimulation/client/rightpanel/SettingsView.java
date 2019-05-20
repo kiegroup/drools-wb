@@ -47,7 +47,7 @@ public interface SettingsView
 
     DivElement getRuleSettings();
 
-    InputElement getKieSession();
+    InputElement getDmoSession();
 
     InputElement getRuleFlowGroup();
 
