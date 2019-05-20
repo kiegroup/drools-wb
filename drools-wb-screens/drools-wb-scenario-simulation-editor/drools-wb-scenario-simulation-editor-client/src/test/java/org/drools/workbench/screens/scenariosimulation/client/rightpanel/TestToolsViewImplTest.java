@@ -115,18 +115,18 @@ public class TestToolsViewImplTest {
         when(simpleJavaTypeListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaTypeListStyleMock);
         when(instanceListContainerSeparatorMock.getStyle()).thenReturn(instanceListStyleMock);
         when(simpleJavaInstanceListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaInstanceListStyleMock);
-        testToolsView.init(testToolsPresenterMock);
     }
 
     @Test
     public void onClearSearchButtonClick() {
-        reset(testToolsPresenterMock);
+        testToolsView.init(testToolsPresenterMock);
         testToolsView.onClearSearchButtonClick(mock(ClickEvent.class));
         verify(testToolsPresenterMock, times(1)).onClearSearch();
     }
 
     @Test
     public void onInputSearchKeyUp() {
+        testToolsView.init(testToolsPresenterMock);
         testToolsView.onInputSearchKeyUp(mock(KeyUpEvent.class));
         verify(testToolsPresenterMock, times(1)).onShowClearButton();
     }
