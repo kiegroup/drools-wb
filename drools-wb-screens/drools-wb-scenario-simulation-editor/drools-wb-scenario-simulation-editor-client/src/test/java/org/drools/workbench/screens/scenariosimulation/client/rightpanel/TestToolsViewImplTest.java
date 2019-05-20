@@ -55,7 +55,7 @@ public class TestToolsViewImplTest {
     private ButtonElement clearSearchButtonMock;
 
     @Mock
-    ButtonElement searchButtonMock;
+    private ButtonElement searchButtonMock;
 
     @Mock
     private LabelElement dataObjectListContainerSeparatorMock;
@@ -175,9 +175,9 @@ public class TestToolsViewImplTest {
     @Test
     public void disableSearch() {
         testToolsView.disableSearch();
-        verify(clearSearchButtonMock, times(1)).setDisabled(true);
-        verify(searchButtonMock, times(1)).setDisabled(true);
-        verify(inputSearchMock, times(1)).setDisabled(true);
-        verify(inputSearchMock, times(1)).setValue("");
+        verify(clearSearchButtonMock, times(1)).setDisabled(eq(true));
+        verify(searchButtonMock, times(1)).setDisabled(eq(true));
+        verify(inputSearchMock, times(1)).setDisabled(eq(true));
+        verify(inputSearchMock, times(1)).setValue(eq(""));
     }
 }
