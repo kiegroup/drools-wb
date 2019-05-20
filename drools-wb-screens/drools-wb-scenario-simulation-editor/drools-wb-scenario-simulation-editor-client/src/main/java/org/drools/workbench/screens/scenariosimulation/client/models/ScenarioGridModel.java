@@ -719,9 +719,7 @@ public class ScenarioGridModel extends BaseGridData {
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMapping);
-        if (factMappingValue.isPresent()) {
-            factMappingValue.get().resetStatus();
-        }
+        factMappingValue.ifPresent(fmv -> fmv.resetStatus());
         refreshErrors();
     }
 
