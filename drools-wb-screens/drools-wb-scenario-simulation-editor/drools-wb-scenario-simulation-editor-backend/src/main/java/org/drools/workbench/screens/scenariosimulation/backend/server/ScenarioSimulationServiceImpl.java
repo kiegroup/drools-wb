@@ -327,15 +327,15 @@ public class ScenarioSimulationServiceImpl
         Package junitActivatorPackage = getOrCreateJunitActivatorPackage(kieModule);
         final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(junitActivatorPackage);
 
-        if (!ioService.exists(activatorPath)) {
+        boolean removeExistingActivator = ensureDependencies(kieModule);
+
+        if (removeExistingActivator || !ioService.exists(activatorPath)) {
+            removeOldActivatorIfExists(activatorPath, kieModule);
+
             ioService.write(activatorPath,
                             ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(junitActivatorPackageName),
                             commentedOptionFactory.makeCommentedOption(""));
-
-            removeOldActivatorIfExists(kieModule);
         }
-
-        ensureDependencies(kieModule);
     }
 
     protected Package getOrCreateJunitActivatorPackage(KieModule kieModule) {
@@ -348,7 +348,9 @@ public class ScenarioSimulationServiceImpl
         return junitActivatorPackage;
     }
 
-    protected void removeOldActivatorIfExists(KieModule kieModule) {
+    protected void removeOldActivatorIfExists(org.uberfire.java.nio.file.Path activatorPath, KieModule kieModule) {
+
+        ioService.deleteIfExists(activatorPath);
 
         String targetPackageName = kieModule.getPom().getGav().getGroupId();
 
@@ -361,7 +363,7 @@ public class ScenarioSimulationServiceImpl
         });
     }
 
-    protected void ensureDependencies(KieModule module) {
+    protected boolean ensureDependencies(KieModule module) {
         POM projectPom = module.getPom();
         Dependencies dependencies = projectPom.getDependencies();
 
@@ -374,6 +376,8 @@ public class ScenarioSimulationServiceImpl
             toSave |= removeFromPomIfNecessary(dependencies, oldDependency);
         }
 
+        boolean activatorToRecreate = toSave;
+
         for (GAV gav : getDependencies(kieVersion)) {
             toSave |= editPomIfNecessary(dependencies, gav);
         }
@@ -381,6 +385,8 @@ public class ScenarioSimulationServiceImpl
         if (toSave) {
             pomService.save(modulePomXMLPath, projectPom, null, "");
         }
+
+        return activatorToRecreate;
     }
 
     protected boolean removeFromPomIfNecessary(Dependencies dependencies, GAV oldDependency) {

@@ -63,6 +63,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -338,13 +339,14 @@ public class ScenarioSimulationServiceImplTest {
 
     @Test
     public void removeOldActivatorIfExistsTest() {
-        service.removeOldActivatorIfExists(kieModuleMock);
-        verify(ioServiceMock, times(1)).deleteIfExists(any());
+        org.uberfire.java.nio.file.Path existingActivatorPathMock = mock(org.uberfire.java.nio.file.Path.class);
+        service.removeOldActivatorIfExists(existingActivatorPathMock, kieModuleMock);
+        verify(ioServiceMock, times(2)).deleteIfExists(any());
 
         reset(ioServiceMock);
         when(kieModuleServiceMock.resolvePackages(any(KieModule.class))).thenReturn(new HashSet<>());
-        service.removeOldActivatorIfExists(kieModuleMock);
-        verify(ioServiceMock, never()).deleteIfExists(any());
+        service.removeOldActivatorIfExists(existingActivatorPathMock, kieModuleMock);
+        verify(ioServiceMock, times(1)).deleteIfExists(eq(existingActivatorPathMock));
     }
 
     @Test
