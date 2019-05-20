@@ -124,20 +124,20 @@
 
     <!-- Uberfire Preferences -->
     <!-- Required by stunner-core-api -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-preferences-api</artifactId>
-    </dependency>
-    <!-- Required to provide default implementation of server-side CDI injection points -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-preferences-backend</artifactId>
-    </dependency>
-    <!-- Required to provide default implementation of client-side CDI injection points -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-preferences-client</artifactId>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-preferences-api</artifactId>-->
+    <!--    </dependency>-->
+    <!--    &lt;!&ndash; Required to provide default implementation of server-side CDI injection points &ndash;&gt;-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-preferences-backend</artifactId>-->
+    <!--    </dependency>-->
+    <!--    &lt;!&ndash; Required to provide default implementation of client-side CDI injection points &ndash;&gt;-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-preferences-client</artifactId>-->
+    <!--    </dependency>-->
 
     <!-- UberFire JS exporter -->
     <!-- Needed by uberfire-runtime-plugins-client -->
@@ -147,22 +147,22 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- UberFire Commons Editor -->
-    <!-- Basics for uberfire's generic editor support -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-commons-editor-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-commons-editor-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!--    &lt;!&ndash; UberFire Commons Editor &ndash;&gt;-->
+    <!--    &lt;!&ndash; Basics for uberfire's generic editor support &ndash;&gt;-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-commons-editor-api</artifactId>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-commons-editor-client</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
 
     <!-- Core UberFire dependencies -->
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-all</artifactId>
+      <artifactId>uberfire-client-all</artifactId>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
@@ -178,22 +178,22 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-backend-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-backend-server</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.uberfire</groupId>-->
+<!--      <artifactId>uberfire-backend-server</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-services-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-services-backend</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.uberfire</groupId>-->
+<!--      <artifactId>uberfire-services-backend</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client</artifactId>
-      <scope>provided</scope>
+<!--      <scope>provided</scope>-->
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -204,16 +204,16 @@
       <artifactId>uberfire-client-backend</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-workbench-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-workbench-client-backend</artifactId>
-      <scope>provided</scope>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-workbench-client</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-workbench-client-backend</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-api</artifactId>
@@ -264,10 +264,10 @@
 
     <!-- Uberfire SSH -->
     <!-- Required by uberfire-backend-server to secure FileSystem -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-ssh-backend</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.uberfire</groupId>-->
+<!--      <artifactId>uberfire-ssh-backend</artifactId>-->
+<!--    </dependency>-->
 
     <!-- Uberfire Experimentals -->
     <!-- Required by uberfire-workbench-client -->
@@ -317,18 +317,24 @@
     <dependency>
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-common-ui</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-security-management-client</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- UberFire Project -->
     <!-- Required by kie-wb-common-ui -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-project-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-project-client</artifactId>
-    </dependency>
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-project-api</artifactId>-->
+    <!--    </dependency>-->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-project-client</artifactId>-->
+    <!--    </dependency>-->
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-services-api</artifactId>
@@ -337,10 +343,10 @@
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-refactoring-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.kie.workbench.services</groupId>
-      <artifactId>kie-wb-common-refactoring-backend</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.kie.workbench.services</groupId>-->
+<!--      <artifactId>kie-wb-common-refactoring-backend</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-datamodel-api</artifactId>
@@ -351,22 +357,27 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-structure-api</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-structure-backend</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.uberfire</groupId>
-          <artifactId>uberfire-servlet-security</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.uberfire</groupId>-->
+<!--      <artifactId>uberfire-structure-backend</artifactId>-->
+<!--      <exclusions>-->
+<!--        <exclusion>-->
+<!--          <groupId>org.uberfire</groupId>-->
+<!--          <artifactId>uberfire-servlet-security</artifactId>-->
+<!--        </exclusion>-->
+<!--      </exclusions>-->
+<!--    </dependency>-->
 
     <!-- Required by uberfire-project-client -->
+    <!--    <dependency>-->
+    <!--      <groupId>org.uberfire</groupId>-->
+    <!--      <artifactId>uberfire-preferences-ui-client</artifactId>-->
+    <!--      <scope>provided</scope>-->
+    <!--    </dependency>-->
+
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-preferences-ui-client</artifactId>
-      <scope>provided</scope>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
     </dependency>
 
     <!-- GWT and extensions -->
@@ -459,10 +470,22 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-wires-core-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-all</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-wires-core-trees</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-all</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.dashbuilder</groupId>
@@ -475,6 +498,12 @@
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-navigation-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-layout-editor-backend</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.dashbuilder</groupId>
@@ -599,175 +628,188 @@
 
           <compileSourcesArtifacts>
 
-            <!-- FROM ORIGINAL WEBAPP -->
-            <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-commons</compileSourcesArtifact>
-
-            <!-- Guvnor -->
-            <compileSourcesArtifact>org.uberfire:uberfire-structure-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-structure-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-m2repo-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-workingset-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-project-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-message-console-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-message-console-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-ssh-api</compileSourcesArtifact>
-
-            <!-- Common dependencies -->
-            <compileSourcesArtifact>org.kie.workbench.profile:kie-wb-common-profile-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie:kie-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.server:kie-server-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-explorer-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-client</compileSourcesArtifact>
-
-            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-metadata-widget</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-config-resource-widget</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-workbench-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-command-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.drools:drools-workbench-models-commons</compileSourcesArtifact>
-
-            <!-- drools-wb -->
-            <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-api</compileSourcesArtifact>
-
-            <!-- UberFire extensions -->
-            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>
-
-            <!-- UberFire Extensions -->
-            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-commons</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-table</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-service-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-core-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>
-
-            <!-- Wires -->
-            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-trees</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
-
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
 
             <!-- UberFire -->
-            <compileSourcesArtifact>org.kie.soup:kie-soup-maven-support</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-nio2-model</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-io</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-js</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-security-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-security-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-security-management-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-security-management-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-backend</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-project-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-structure-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-message-console-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-message-console-client</compileSourcesArtifact>
 
-            <!-- Dashbuilder -->
-            <compileSourcesArtifact>org.kie.soup:kie-soup-json</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-widgets</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-validations</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-common-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-services-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-shared</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-default</compileSourcesArtifact>
-            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-google</compileSourcesArtifact>
+            <!-- Errai, Drools etc -->
+            <compileSourcesArtifact>org.jboss.errai:errai-data-binding</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.profile:kie-wb-common-profile-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-submarine-client</compileSourcesArtifact>
 
-            <!-- Experimental Deps -->
+            <!-- UF-ext -->
+            <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-commons</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-table</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-service-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-core-client</compileSourcesArtifact>
+
+            <!-- Uberfire Preferences -->
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>
+
+            <!-- Uberfire Experimentals -->
             <compileSourcesArtifact>org.uberfire:uberfire-experimental-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-experimental-client</compileSourcesArtifact>
 
-            <!-- REDUCED -->
+            <!-- Forms -->
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-adf-base</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-adf-engine-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-adf-engine-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-fields</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-processing-engine</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-common-rendering-shared</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-common-rendering-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-crud-component</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-dynamic-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-dynamic-forms-client</compileSourcesArtifact>
 
-            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-data-modeller-core</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-data-modeller-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-data-modeller-client</compileSourcesArtifact>-->
+            <!-- Stunner -->
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-core-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-backend-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-client-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-core-common</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-client-common</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-lienzo</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-shapes-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-shapes-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-lienzo-extensions</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-svg-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-widgets</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-forms-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-submarine-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-submarine-client</compileSourcesArtifact>
 
-            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-java-editor-client</compileSourcesArtifact>-->
+            <!-- DMN Editor -->
+            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-dmn-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-dmn-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
 
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>-->
+            <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>
 
-            <!--            &lt;!&ndash; UberFire &ndash;&gt;-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-nio2-model</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-io</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-js</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-client</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-backend</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-project-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>-->
+
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-project-datamodel-commons</compileSourcesArtifact>-->
+
+            <!--            &lt;!&ndash; Guvnor &ndash;&gt;-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-structure-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-structure-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-workingset-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-message-console-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-message-console-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-ssh-api</compileSourcesArtifact>-->
 
-            <!--            &lt;!&ndash; Errai, Drools etc &ndash;&gt;-->
-            <!--            <compileSourcesArtifact>org.jboss.errai:errai-data-binding</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>-->
+            <!--            &lt;!&ndash; Common dependencies &ndash;&gt;-->
             <!--            <compileSourcesArtifact>org.kie.workbench.profile:kie-wb-common-profile-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-submarine-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie:kie-api</compileSourcesArtifact>-->
 
-            <!--            &lt;!&ndash; UF-ext &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-project-explorer-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-examples-screen-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-metadata-widget</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-config-resource-widget</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-refactoring-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-command-api</compileSourcesArtifact>-->
+            <!--            &lt;!&ndash; Models for drools-wb &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.drools:drools-workbench-models-commons</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.drools:drools-workbench-models-guided-dtable</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.drools:drools-workbench-models-guided-scorecard</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.drools:drools-workbench-models-guided-template</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.drools:drools-workbench-models-test-scenarios</compileSourcesArtifact>-->
+
+            <!-- drools-wb -->
+            <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.drools:drools-scenario-simulation-api</compileSourcesArtifact>
+
+            <!--            &lt;!&ndash; UberFire extensions &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>-->
+
+            <!--            &lt;!&ndash; UberFire Extensions &ndash;&gt;-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-client</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-commons</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-table</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-service-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-core-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>-->
 
-            <!--            &lt;!&ndash; Uberfire Preferences &ndash;&gt;-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>-->
+            <!--            &lt;!&ndash; Wires &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-trees</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>-->
 
-            <!--            &lt;!&ndash; Uberfire Experimentals &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>-->
+
+            <!--            &lt;!&ndash; UberFire &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-maven-support</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-nio2-model</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-js</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-management-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-security-management-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>-->
+
+            <!--            &lt;!&ndash; Dashbuilder &ndash;&gt;-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-json</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-widgets</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-validations</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-common-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-services-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-shared</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-dataset-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-api</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-navigation-client</compileSourcesArtifact>-->
+            <!--            <compileSourcesArtifact>org.dashbuilder:dashbuilder-renderer-default</compileSourcesArtifact>-->
+
+            <!--            &lt;!&ndash; Experimental Deps &ndash;&gt;-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-experimental-api</compileSourcesArtifact>-->
             <!--            <compileSourcesArtifact>org.uberfire:uberfire-experimental-client</compileSourcesArtifact>-->
-
-
-            <!--            <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>-->
-
-
-            <!--            &lt;!&ndash; drools-wb &ndash;&gt;-->
-            <!--            <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-api</compileSourcesArtifact>-->
-            <!--            <compileSourcesArtifact>org.drools:drools-wb-scenario-simulation-editor-client</compileSourcesArtifact>-->
 
           </compileSourcesArtifacts>
         </configuration>
@@ -856,6 +898,15 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
       </plugin>
     </plugins>
 

@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.screens.scenariosimulation.webapp.shared;
 
-package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
+import javax.enterprise.context.ApplicationScoped;
 
-import javax.enterprise.inject.Alternative;
+import org.uberfire.preferences.shared.UsernameProvider;
 
-import org.kie.workbench.common.widgets.client.submarine.IsSubmarine;
+@ApplicationScoped
+public class UsernameProviderMock implements UsernameProvider {
 
-@Alternative
-public class MockIsSubmarine extends IsSubmarine {
-
-    public boolean get() {
-        return true;
+    @Override
+    public String get() {
+        return "admin";
     }
 }

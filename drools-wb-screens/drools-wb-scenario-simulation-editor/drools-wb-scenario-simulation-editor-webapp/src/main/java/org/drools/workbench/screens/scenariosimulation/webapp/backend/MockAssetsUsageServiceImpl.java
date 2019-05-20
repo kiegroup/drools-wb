@@ -16,34 +16,25 @@
 
 package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
-import java.util.List;
+//@Specializes
+public class MockAssetsUsageServiceImpl /*extends AssetsUsageServiceImpl */{
 
-import javax.enterprise.inject.Specializes;
+//    public MockAssetsUsageServiceImpl() {
+//        super(null, null);
+//    }
 
-import org.kie.workbench.common.services.refactoring.backend.server.query.assetUsages.AssetsUsageServiceImpl;
-import org.kie.workbench.common.services.refactoring.service.PartType;
-import org.kie.workbench.common.services.refactoring.service.ResourceType;
-import org.uberfire.backend.vfs.Path;
-
-@Specializes
-public class MockAssetsUsageServiceImpl extends AssetsUsageServiceImpl {
-
-    public MockAssetsUsageServiceImpl() {
-        super(null, null);
-    }
-
-    @Override
-    public List<Path> getAssetUsages(final String resourceFQN,
-                                     final ResourceType resourceType,
-                                     final Path assetPath) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
-
-    @Override
-    public List<Path> getAssetPartUsages(final String resourceFQN,
-                                         final String resourcePart,
-                                         final PartType partType,
-                                         final Path assetPath) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
+//    @Override
+//    public List<Path> getAssetUsages(final String resourceFQN,
+//                                     final ResourceType resourceType,
+//                                     final Path assetPath) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
+//
+//    @Override
+//    public List<Path> getAssetPartUsages(final String resourceFQN,
+//                                         final String resourcePart,
+//                                         final PartType partType,
+//                                         final Path assetPath) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
 }

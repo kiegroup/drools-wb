@@ -16,44 +16,32 @@
 
 package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
-import java.util.List;
-import java.util.Set;
+//@Specializes
+public class MockRefactoringQueryServiceImpl/* extends RefactoringQueryServiceImpl */{
 
-import javax.enterprise.inject.Specializes;
-
-import org.kie.workbench.common.services.refactoring.backend.server.query.RefactoringQueryServiceImpl;
-import org.kie.workbench.common.services.refactoring.model.index.terms.valueterms.ValueIndexTerm;
-import org.kie.workbench.common.services.refactoring.model.query.RefactoringPageRequest;
-import org.kie.workbench.common.services.refactoring.model.query.RefactoringPageRow;
-import org.kie.workbench.common.services.refactoring.service.impact.QueryOperationRequest;
-import org.uberfire.paging.PageResponse;
-
-@Specializes
-public class MockRefactoringQueryServiceImpl extends RefactoringQueryServiceImpl {
-
-    @Override
-    public int queryHitCount(final RefactoringPageRequest request) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
-
-    @Override
-    public PageResponse<RefactoringPageRow> query(final RefactoringPageRequest request) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
-
-    @Override
-    public List<RefactoringPageRow> query(final String queryName,
-                                          final Set<ValueIndexTerm> queryTerms) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
-
-    @Override
-    public PageResponse<RefactoringPageRow> queryToPageResponse(final QueryOperationRequest request) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
-
-    @Override
-    public List<RefactoringPageRow> queryToList(final QueryOperationRequest request) {
-        throw new UnsupportedOperationException("Not available in Submarine");
-    }
+//    @Override
+//    public int queryHitCount(final RefactoringPageRequest request) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
+//
+//    @Override
+//    public PageResponse<RefactoringPageRow> query(final RefactoringPageRequest request) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
+//
+//    @Override
+//    public List<RefactoringPageRow> query(final String queryName,
+//                                          final Set<ValueIndexTerm> queryTerms) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
+//
+//    @Override
+//    public PageResponse<RefactoringPageRow> queryToPageResponse(final QueryOperationRequest request) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
+//
+//    @Override
+//    public List<RefactoringPageRow> queryToList(final QueryOperationRequest request) {
+//        throw new UnsupportedOperationException("Not available in Submarine");
+//    }
 }

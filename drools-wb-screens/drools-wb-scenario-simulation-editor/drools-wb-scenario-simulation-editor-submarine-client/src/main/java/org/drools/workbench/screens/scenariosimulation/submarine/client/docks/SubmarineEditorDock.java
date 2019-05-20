@@ -15,28 +15,39 @@
  */
 package org.drools.workbench.screens.scenariosimulation.submarine.client.docks;
 
-import org.kie.workbench.common.widgets.client.docks.EditorDock;
+import javax.enterprise.context.Dependent;
+
+import com.google.gwt.core.client.GWT;
+import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
+import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.mvp.PlaceRequest;
 
-public class SubmarineEditorDock implements EditorDock {
+@Dependent
+public class SubmarineEditorDock implements AuthoringEditorDock {
 
     @Override
     public boolean isSetup() {
+        GWT.log(this + " isSetup");
         return false;
     }
 
     @Override
     public void setup(String identifier, PlaceRequest defaultPlaceRequest) {
-
+        GWT.log(this + " setup " + identifier + " " + defaultPlaceRequest);
     }
 
     @Override
     public void show() {
-
+        GWT.log(this + " show");
     }
 
     @Override
     public void hide() {
+        GWT.log(this + " hide");
+    }
 
+    @Override
+    public void expandAuthoringDock(UberfireDock dockToOpen) {
+        GWT.log(this + " expandAuthoringDock " + dockToOpen);
     }
 }
