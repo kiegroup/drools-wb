@@ -90,7 +90,7 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
 
     @Test
     public void isSimpleJavaType() {
-        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(ScenarioSimulationUtils.isSimpleJavaType(clazz.getName())));
+        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(ScenarioSimulationUtils.isSimpleJavaType(clazz.getCanonicalName())));
         assertFalse(ScenarioSimulationUtils.isSimpleJavaType("com.TestBean"));
     }
 

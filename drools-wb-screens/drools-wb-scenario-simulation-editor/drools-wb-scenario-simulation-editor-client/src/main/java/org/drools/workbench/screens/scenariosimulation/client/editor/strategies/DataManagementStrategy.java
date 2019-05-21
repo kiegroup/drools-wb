@@ -33,12 +33,14 @@ import org.uberfire.backend.vfs.ObservablePath;
  */
 public interface DataManagementStrategy {
 
-    Map<String, Class> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
-            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), Boolean.class),
-            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), Double.class),
-            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), Integer.class),
-            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), Number.class),
-            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), String.class)).
+    Map<String, SimpleClassEntry> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
+            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), new SimpleClassEntry(Boolean.class)),
+            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
+            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
+            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
+            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
+            // LocalDate is not supported by GWT
+            new AbstractMap.SimpleEntry<>("LocalDate", new SimpleClassEntry("LocalDate", "java.time.LocalDate"))).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
 
     void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel);
