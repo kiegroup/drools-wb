@@ -143,7 +143,7 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                                          UI_COLUMN_INDEX,
                                                                                                          COLUMN_GROUP);
 
-        assertThat(event.getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE + ";" + COLUMN_TWO_TITLE + ";" + MULTIPART_VALUE);
+        assertThat(event.getFilterTerm()).isEqualTo(null);
         assertThat(event.isNotEqualsSearch()).isTrue();
     }
 
