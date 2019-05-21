@@ -318,15 +318,19 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
+    public void onEnableEditorTab(String factName) {
+        onDisableEditorTab();
+        onPerfectMatchSearchedEvent(factName, true);
+        listGroupItemPresenter.enable(factName);
+        view.enableEditorTab();
+        view.disableSearch();
+    }
+
+    @Override
     public void onEnableEditorTab(String factName, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, notEqualsSearch);
-        /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column.
-         * Therefore, it isn't necessary to search through the maps to check it.
-         */
-        if (!notEqualsSearch) {
-            updateInstanceIsAssignedStatus(factName);
-        }
+        updateInstanceIsAssignedStatus(factName);
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
