@@ -182,8 +182,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                     }
                 });
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getPropertyMetaDataGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(
-                ScenarioSimulationUtils.isLocalDate(propertyClass));
+        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(propertyClass);
         setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyTitle, false, selectedColumn, editableCellPlaceholder);
         selectedColumn.setPropertyAssigned(true);
         context.getModel().updateColumnProperty(columnIndex,

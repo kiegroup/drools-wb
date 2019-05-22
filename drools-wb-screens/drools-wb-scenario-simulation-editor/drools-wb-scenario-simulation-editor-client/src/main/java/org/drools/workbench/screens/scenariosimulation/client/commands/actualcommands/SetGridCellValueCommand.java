@@ -38,8 +38,7 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
         SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
         int columnIndex = status.getColumnIndex();
         String className = simulationDescriptor.getFactMappingByIndex(columnIndex).getClassName();
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(
-                ScenarioSimulationUtils.isLocalDate(className));
+        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(className);
         context.getModel().setCellValue(status.getRowIndex(),
                                         columnIndex,
                                         new ScenarioGridCellValue(status.getGridCellValue(),

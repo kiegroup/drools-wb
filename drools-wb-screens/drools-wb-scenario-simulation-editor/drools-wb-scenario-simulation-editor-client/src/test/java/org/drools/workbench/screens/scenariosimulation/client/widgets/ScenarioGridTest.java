@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -281,12 +282,24 @@ public class ScenarioGridTest {
         assertTrue(scenarioGrid.isPropertyAssigned(true, factMappingInteger));
     }
 
-//    @Test
-//    // FIXME to update
-//    public void getPlaceholder() {
-//        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.insertValue(), scenarioGrid.getPlaceholder(true));
-//        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(), scenarioGrid.getPlaceholder(false));
-//    }
+    @Test
+    public void getPlaceholder() {
+        FactMapping stringFactMapping = new FactMapping(
+                FactIdentifier.create("test", String.class.getCanonicalName()),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.insertValue(),
+                     scenarioGrid.getPlaceholder(true, stringFactMapping));
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(),
+                     scenarioGrid.getPlaceholder(false, stringFactMapping));
+
+        FactMapping localDateFactMapping = new FactMapping(
+                FactIdentifier.create("test", LocalDate.class.getCanonicalName()),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder(),
+                     scenarioGrid.getPlaceholder(true, localDateFactMapping));
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(),
+                     scenarioGrid.getPlaceholder(false, localDateFactMapping));
+    }
 
     @Test
     public void appendRows() {

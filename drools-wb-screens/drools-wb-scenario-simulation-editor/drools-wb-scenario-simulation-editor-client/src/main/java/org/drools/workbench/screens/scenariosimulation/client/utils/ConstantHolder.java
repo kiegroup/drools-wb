@@ -24,4 +24,8 @@ public class ConstantHolder {
     public static final String FA_ANGLE_RIGHT = "fa-angle-right";
     public static final String HIDDEN = "hidden";
     public static final String NODE_HIDDEN = "node-hidden";
+
+    // GWT doesn't support Java 8 LocalDate
+    public static final String LOCALDATE_SIMPLE_NAME = "LocalDate";
+    public static final String LOCALDATE_CANONICAL_NAME = "java.time.LocalDate";
 }

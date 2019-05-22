@@ -883,8 +883,7 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
-            String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(
-                    ScenarioSimulationUtils.isLocalDate(factMappingByIndex.getClassName()));
+            String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(factMappingByIndex.getClassName());
             String placeHolder = ((ScenarioGridColumn) columns.get(columnIndex)).isPropertyAssigned() ?
                     editableCellPlaceholder :
                     ScenarioSimulationEditorConstants.INSTANCE.defineValidType();

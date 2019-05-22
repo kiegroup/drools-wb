@@ -27,6 +27,9 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.uberfire.backend.vfs.ObservablePath;
 
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_SIMPLE_NAME;
+
 /**
  * The <b>Strategy</b> to use to manage/modify/save data inside the editor.
  * Every actual implementation should provide methods to manage a specific kind of data source (ex. RULE, DMN)
@@ -40,7 +43,7 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
             new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
             // LocalDate is not supported by GWT
-            new AbstractMap.SimpleEntry<>("LocalDate", new SimpleClassEntry("LocalDate", "java.time.LocalDate"))).
+            new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME))).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
 
     void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel);

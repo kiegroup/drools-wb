@@ -214,11 +214,8 @@ public class ScenarioGrid extends BaseGridWidget {
      * @param isPropertyAssigned
      * @return
      */
-    // FIXME to test
-    // FIXME verify all ScenarioSimulationEditorConstants.INSTANCE.insertValue() usages
     protected String getPlaceholder(boolean isPropertyAssigned, FactMapping factMapping) {
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(
-                ScenarioSimulationUtils.isLocalDate(factMapping.getClassName()));
+        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
         return isPropertyAssigned ? editableCellPlaceholder : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
     }
 

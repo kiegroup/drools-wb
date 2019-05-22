@@ -29,7 +29,6 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
-// FIXME add LocalDate to cheatsheet
 @ApplicationScoped
 @Templated(stylesheet = "/org/drools/workbench/screens/scenariosimulation/client/resources/css/ScenarioSimulationEditorStyles.css")
 public class CheatSheetViewImpl
