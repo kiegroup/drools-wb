@@ -165,11 +165,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         return getScenarioGridColumn(headerBuilder, factoryCell, placeHolder);
     }
 
-//    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
-//        // indirection add for test
-//        return getScenarioGridColumn(headerBuilder, context.getScenarioCellTextAreaSingletonDOMElementFactory(), ScenarioSimulationEditorConstants.INSTANCE.insertValue());
-//    }
-
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
 
         return context.getScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
