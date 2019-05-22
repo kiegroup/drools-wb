@@ -315,6 +315,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         listGroupItemPresenter.enable();
         editingColumnEnabled = true;
         view.enableEditorTab();
+        view.enableSearch();
     }
 
     @Override
@@ -322,8 +323,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(factName, true);
         listGroupItemPresenter.enable(factName);
+        editingColumnEnabled = true;
         view.enableEditorTab();
-        view.disableSearch();
+        view.enableSearch();
     }
 
     @Override
@@ -334,7 +336,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
-        view.disableSearch();
         if (propertyNameElements != null && !notEqualsSearch) {
             listGroupItemPresenter.selectProperty(factName, propertyNameElements);
         }
