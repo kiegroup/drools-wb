@@ -26,7 +26,6 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.kie.workbench.common.command.client.AbstractCommand;
@@ -166,10 +165,10 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         return getScenarioGridColumn(headerBuilder, factoryCell, placeHolder);
     }
 
-    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
-        // indirection add for test
-        return getScenarioGridColumn(headerBuilder, context.getScenarioCellTextAreaSingletonDOMElementFactory(), ScenarioSimulationEditorConstants.INSTANCE.insertValue());
-    }
+//    protected ScenarioGridColumn getScenarioGridColumnLocal(ScenarioSimulationBuilders.HeaderBuilder headerBuilder, ScenarioSimulationContext context) {
+//        // indirection add for test
+//        return getScenarioGridColumn(headerBuilder, context.getScenarioCellTextAreaSingletonDOMElementFactory(), ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+//    }
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
 

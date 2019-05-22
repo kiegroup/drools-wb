@@ -43,11 +43,12 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
 
-    @Test
-    public void getScenarioGridColumn1() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
-        assertNotNull(retrieved);
-    }
+    // FIXME to remove
+//    @Test
+//    public void getScenarioGridColumn1() {
+//        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(COLUMN_INSTANCE_TITLE_FIRST, COLUMN_PROPERTY_TITLE_FIRST, COLUMN_ID, COLUMN_GROUP_FIRST, factMappingType, scenarioHeaderTextBoxSingletonDOMElementFactoryMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
+//        assertNotNull(retrieved);
+//    }
 
     @Test
     public void getScenarioGridColumn2() {
@@ -55,11 +56,12 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
         assertNotNull(retrieved);
     }
 
-    @Test
-    public void getScenarioGridColumn3() {
-        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
-        assertNotNull(retrieved);
-    }
+    // FIXME to remove
+//    @Test
+//    public void getScenarioGridColumn3() {
+//        final ScenarioGridColumn retrieved = ScenarioSimulationUtils.getScenarioGridColumn(headerBuilderMock, scenarioCellTextAreaSingletonDOMElementFactoryMock);
+//        assertNotNull(retrieved);
+//    }
 
     @Test
     public void getScenarioGridColumn4() {

@@ -98,17 +98,19 @@ public class ScenarioSimulationUtils {
      * @param factoryCell
      * @return
      */
-    public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
-                                                           String propertyTitle,
-                                                           String columnId,
-                                                           String columnGroup,
-                                                           FactMappingType factMappingType,
-                                                           ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
-                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell
-    ) {
-        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
-        return getScenarioGridColumn(headerBuilder, factoryCell);
-    }
+
+    // FIXME to remove
+//    public static ScenarioGridColumn getScenarioGridColumn(String instanceTitle,
+//                                                           String propertyTitle,
+//                                                           String columnId,
+//                                                           String columnGroup,
+//                                                           FactMappingType factMappingType,
+//                                                           ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+//                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell
+//    ) {
+//        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
+//        return getScenarioGridColumn(headerBuilder, factoryCell);
+//    }
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
@@ -167,13 +169,15 @@ public class ScenarioSimulationUtils {
      * @param factoryCell
      * @return
      */
-    public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
-                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell) {
-        ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
-                                                                                                                      headerBuilder,
-                                                                                                                      ScenarioSimulationEditorConstants.INSTANCE.insertValue());
-        return scenarioGridColumnBuilder.build();
-    }
+
+    // FIXME to remove
+//    public static ScenarioGridColumn getScenarioGridColumn(ScenarioSimulationBuilders.HeaderBuilder headerBuilder,
+//                                                           ScenarioCellTextAreaSingletonDOMElementFactory factoryCell) {
+//        ScenarioSimulationBuilders.ScenarioGridColumnBuilder scenarioGridColumnBuilder = getScenarioGridColumnBuilder(factoryCell,
+//                                                                                                                      headerBuilder,
+//                                                                                                                      ScenarioSimulationEditorConstants.INSTANCE.insertValue());
+//        return scenarioGridColumnBuilder.build();
+//    }
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
@@ -316,6 +320,16 @@ public class ScenarioSimulationUtils {
                 context.getCellHeight() / 2 +
                 gridLayer.getDomElementContainer().getAbsoluteTop());
         return new Point2D(cellXMiddle, cellYMiddle);
+    }
+
+    public static boolean isLocalDate(String className) {
+        return "java.time.LocalDate".equals(className);
+    }
+
+    public static String getPlaceholder(boolean isLocalDate) {
+        return isLocalDate ?
+                ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder() :
+                ScenarioSimulationEditorConstants.INSTANCE.insertValue();
     }
 
     protected static double getColumnWidth(String columnId) {
