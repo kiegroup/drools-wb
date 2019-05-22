@@ -38,7 +38,7 @@ public class ScenarioSimulationEditorNavigatorScreen {
 
     public static final String SCREEN_ID = "ScenarioSimulationEditorNavigatorScreen";
 
-    public static final PlaceRequest SCENARIO_SIMULATION = new DefaultPlaceRequest(ScenarioSimulationEditorNavigatorScreen.SCREEN_ID);
+    public static final PlaceRequest SCENARIO_SIMULATION_DEFAULT_REQUEST = new DefaultPlaceRequest(ScenarioSimulationEditorNavigatorScreen.SCREEN_ID);
 
     private ScenarioSimulationEditorSubmarineScreen stateHolder;
 
@@ -56,6 +56,7 @@ public class ScenarioSimulationEditorNavigatorScreen {
     @PostConstruct
     public void init() {
         GWT.log(this.toString() + ": init");
+        stateHolder.newFile();
     }
 
     @OnStartup

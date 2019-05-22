@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -32,7 +33,6 @@ import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMODataManagementStrategy;
@@ -90,7 +90,10 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
 
     @Override
     public void setContent(String value) {
-        service.call((RemoteCallback<ScenarioSimulationModelContent>) this::getModelSuccessCallbackMethod).unmarshal(value);
+        GWT.log("setContent " + value);
+        // TODO WORKAROUND
+        getWidget().init(this);
+        service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
     }
 
     @Override
@@ -164,17 +167,16 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         return scenarioSimulationEditorPresenter.getContentSupplier();
     }
 
-    protected void getModelSuccessCallbackMethod(ScenarioSimulationModelContent content) {
-        scenarioSimulationEditorPresenter.setPackageName(content.getDataModel().getPackageName());
+    protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {
+        scenarioSimulationEditorPresenter.setPackageName("com");
         resetEditorPages();
         DataManagementStrategy dataManagementStrategy;
-        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
+        if (ScenarioSimulationModel.Type.RULE.equals(model.getSimulation().getSimulationDescriptor().getType())) {
             dataManagementStrategy = new SubmarineDMODataManagementStrategy(scenarioSimulationEditorPresenter.getContext());
         } else {
             dataManagementStrategy = new SubmarineDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
-        dataManagementStrategy.manageScenarioSimulationModelContent(null, content);
-        ScenarioSimulationModel model = content.getModel();
+//        dataManagementStrategy.manageScenarioSimulationModelContent(null, content);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 }

@@ -19,19 +19,21 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.ScenarioSimulationEditorSubmarineWrapper;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 @ApplicationScoped
-//@WorkbenchScreen(identifier = ScenarioSimulationEditorPresenter.IDENTIFIER)
 public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
 
     @Inject
     private ScenarioSimulationEditorSubmarineWrapper scenarioSimulationEditorSubmarineWrapper;
+
+    @Inject
+    private ScesimFilesProvider scesimFilesProvider;
 
     private PlaceManager placeManager;
 
@@ -50,14 +52,16 @@ public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
     }
 
     public void newFile() {
-        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
-                                            },
-                                            () -> {
-                                                scenarioSimulationEditorSubmarineWrapper.setContent("");
-                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION);
-                                            });
+        GWT.log("newFile");
+        scenarioSimulationEditorSubmarineWrapper.setContent(scesimFilesProvider.getScesimContent());
 
-        placeManager.goTo(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION);
+//        placeManager.registerOnOpenCallback(  new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
+//                                            },
+//                                            () -> {
+//                                                scenarioSimulationEditorSubmarineWrapper.setContent(scesimFilesProvider.getScesimContent());
+//                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_DEFAULT_REQUEST);
+//                                            });
+
     }
 
 //    public void openFile(final Path path) {
@@ -91,6 +95,4 @@ public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
 //            return null;
 //        });
 //    }
-
-
 }

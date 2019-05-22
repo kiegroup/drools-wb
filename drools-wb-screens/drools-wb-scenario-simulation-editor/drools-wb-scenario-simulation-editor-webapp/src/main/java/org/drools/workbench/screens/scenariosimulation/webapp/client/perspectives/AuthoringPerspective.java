@@ -17,14 +17,14 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.perspectiv
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.uberfire.client.annotations.Perspective;
 import org.uberfire.client.annotations.WorkbenchPerspective;
 import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
+
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_DEFAULT_REQUEST;
 
 @ApplicationScoped
 @WorkbenchPerspective(identifier = AuthoringPerspective.PERSPECTIVE_ID, isTransient = false, isDefault = true)
@@ -36,7 +36,7 @@ public class AuthoringPerspective {
     public PerspectiveDefinition buildPerspective() {
         final PerspectiveDefinition perspective = new PerspectiveDefinitionImpl(MultiListWorkbenchPanelPresenter.class.getName());
         perspective.setName("Authoring");
-        perspective.getRoot().addPart(new PartDefinitionImpl(new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER)));
+        perspective.getRoot().addPart(new PartDefinitionImpl(SCENARIO_SIMULATION_DEFAULT_REQUEST));
         return perspective;
     }
 

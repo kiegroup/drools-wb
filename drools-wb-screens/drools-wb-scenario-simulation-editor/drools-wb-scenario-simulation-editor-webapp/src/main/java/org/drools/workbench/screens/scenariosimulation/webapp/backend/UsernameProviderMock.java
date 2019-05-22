@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.shared;
+package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -21,6 +21,7 @@ import org.uberfire.preferences.shared.UsernameProvider;
 
 @ApplicationScoped
 public class UsernameProviderMock implements UsernameProvider {
+
 
     @Override
     public String get() {

@@ -17,16 +17,21 @@ package org.drools.workbench.screens.scenariosimulation.submarine.client.fakes;
 
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
 import org.kie.soup.project.datamodel.oracle.ModelField;
+import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.uberfire.backend.vfs.Path;
 
+@ApplicationScoped
 public class SubmarineAsyncPackageDataModelOracle {
 
     private final List<String> packageNames = Arrays.asList("com", "com.example");
@@ -36,6 +41,13 @@ public class SubmarineAsyncPackageDataModelOracle {
             factTypes,
             fqcnNames,
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+    private final Map<String, Boolean> collectionTypes = Collections.unmodifiableMap(Stream.of(
+            new AbstractMap.SimpleEntry<>("books", true),
+            new AbstractMap.SimpleEntry<>("currentlyPrinted", false),
+            new AbstractMap.SimpleEntry<>("firstBook", false),
+            new AbstractMap.SimpleEntry<>("isAlive", false)).
+            collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
+
     private final ModelField authorBooks = new ModelField("books",
                                                           List.class.getSimpleName(),
                                                           ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
@@ -196,6 +208,15 @@ public class SubmarineAsyncPackageDataModelOracle {
     public String getParametricFieldType(String factType, String fieldName) {
         String key = factType + "." + fieldName;
         return parametricFieldMap.get(key);
+    }
+
+    public PackageDataModelOracleBaselinePayload getPackageDataModelOracleBaselinePayload() {
+        PackageDataModelOracleBaselinePayload toReturn = new PackageDataModelOracleBaselinePayload();
+        toReturn.setModelFields(modelFieldsMap);
+        toReturn.setPackageName(packageNames.get(0));
+        toReturn.setCollectionTypes(collectionTypes);
+        toReturn.setFieldParametersType(parametricFieldMap);
+        return toReturn;
     }
 
     private ModelField getModelField(String factName, String fieldName) {
