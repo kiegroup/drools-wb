@@ -16,11 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -305,14 +306,14 @@ public class DMNTypeServiceImpl
 
     static class ErrorHolder {
 
-        List<String> multipleNestedObject = new ArrayList<>();
-        List<String> multipleNestedCollection = new ArrayList<>();
+        Set<String> multipleNestedObject = new HashSet<>();
+        Set<String> multipleNestedCollection = new HashSet<>();
 
-        public List<String> getMultipleNestedObject() {
+        public Set<String> getMultipleNestedObject() {
             return multipleNestedObject;
         }
 
-        public List<String> getMultipleNestedCollection() {
+        public Set<String> getMultipleNestedCollection() {
             return multipleNestedCollection;
         }
     }

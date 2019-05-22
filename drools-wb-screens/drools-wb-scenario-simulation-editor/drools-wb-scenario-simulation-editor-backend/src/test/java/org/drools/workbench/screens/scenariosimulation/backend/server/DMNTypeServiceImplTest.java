@@ -186,7 +186,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         dmnTypeServiceImpl.checkTypeSupport(singleCompositeWithComplexCollection, errorHolder, "fieldName");
         assertEquals(0, errorHolder.getMultipleNestedObject().size());
         assertEquals(1, errorHolder.getMultipleNestedCollection().size());
-        assertEquals("fieldName.phoneNumbers.numbers", errorHolder.getMultipleNestedCollection().get(0));
+        assertTrue(errorHolder.getMultipleNestedCollection().contains("fieldName.phoneNumbers.numbers"));
     }
 
     @Test
@@ -201,7 +201,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         dmnTypeServiceImpl.checkTypeSupport(person, errorHolder, "fieldName");
         assertEquals(1, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
-        assertEquals("fieldName.phoneNumbers.complexNumbers", errorHolder.getMultipleNestedObject().get(0));
+        assertTrue(errorHolder.getMultipleNestedCollection().contains("fieldName.phoneNumbers.complexNumbers"));
     }
 
     /**
