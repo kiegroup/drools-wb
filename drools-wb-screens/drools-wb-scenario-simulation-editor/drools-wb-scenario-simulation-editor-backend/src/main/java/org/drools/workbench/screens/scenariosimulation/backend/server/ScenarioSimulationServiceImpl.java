@@ -347,9 +347,11 @@ public class ScenarioSimulationServiceImpl
         Package junitActivatorPackage = getOrCreateJunitActivatorPackage(kieModule);
         final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(junitActivatorPackage);
 
-        boolean removeExistingActivator = ensureDependencies(kieModule);
+        boolean needMigrateActivatorIfExists = ensureDependencies(kieModule);
 
-        if (removeExistingActivator || !ioService.exists(activatorPath)) {
+        // junit activator needs to be created if the project has old dependencies or activator doesn't exist
+        if (needMigrateActivatorIfExists || !ioService.exists(activatorPath)) {
+            // first remove existing activators (if exist)
             removeOldActivatorIfExists(activatorPath, kieModule);
 
             ioService.write(activatorPath,
@@ -368,10 +370,17 @@ public class ScenarioSimulationServiceImpl
         return junitActivatorPackage;
     }
 
+    /**
+     * This routine looks for existing activators to migrate
+     * @param activatorPath
+     * @param kieModule
+     */
     protected void removeOldActivatorIfExists(org.uberfire.java.nio.file.Path activatorPath, KieModule kieModule) {
 
+        // migration step after Test Scenario runner modules split DROOLS-3389
         ioService.deleteIfExists(activatorPath);
 
+        // migration step after Test Scenario activator package fix RHPAM-1923
         String targetPackageName = kieModule.getPom().getGav().getGroupId();
 
         Optional<Package> packageFound = kieModuleService.resolvePackages(kieModule).stream()
@@ -383,6 +392,11 @@ public class ScenarioSimulationServiceImpl
         });
     }
 
+    /**
+     * Verify if the project contains all the needed dependencies removing the old ones if available
+     * @param module
+     * @return boolean that specify if there was old dependencies
+     */
     protected boolean ensureDependencies(KieModule module) {
         POM projectPom = module.getPom();
         Dependencies dependencies = projectPom.getDependencies();
@@ -396,7 +410,7 @@ public class ScenarioSimulationServiceImpl
             toSave |= removeFromPomIfNecessary(dependencies, oldDependency);
         }
 
-        boolean activatorToRecreate = toSave;
+        boolean oldDependenciesExist = toSave;
 
         for (GAV gav : getDependencies(kieVersion)) {
             toSave |= editPomIfNecessary(dependencies, gav);
@@ -406,7 +420,7 @@ public class ScenarioSimulationServiceImpl
             pomService.save(modulePomXMLPath, projectPom, null, "");
         }
 
-        return activatorToRecreate;
+        return oldDependenciesExist;
     }
 
     protected boolean removeFromPomIfNecessary(Dependencies dependencies, GAV oldDependency) {
