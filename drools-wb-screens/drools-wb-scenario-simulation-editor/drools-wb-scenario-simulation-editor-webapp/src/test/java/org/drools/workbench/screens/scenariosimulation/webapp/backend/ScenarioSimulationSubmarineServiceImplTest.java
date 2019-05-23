@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.backend.server;
+package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.backend.TestUtils;
 import org.junit.Test;
 
-import static org.drools.scenariosimulation.backend.TestUtils.getFileContent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -49,7 +49,7 @@ public class ScenarioSimulationSubmarineServiceImplTest {
     @Test
     public void unmarshal() {
         try {
-            String toUnmarshal = getFileContent("scesim-dmn.scesim");
+            String toUnmarshal = TestUtils.getFileContent("scesim-dmn.scesim");
             final ScenarioSimulationModel retrieved = instance.unmarshal(toUnmarshal);
             assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.DMN);
             assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());

@@ -524,6 +524,12 @@
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-widgets</artifactId>
     </dependency>
+    <!-- NEEDED BY org.dashbuilder.renderer.service.RendererSettingsService:RPC -->
+    <dependency>
+      <groupId>org.dashbuilder</groupId>
+      <artifactId>dashbuilder-services</artifactId>
+    </dependency>
+    <!-- END NEEDED -->
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-validations</artifactId>
@@ -598,6 +604,14 @@
       <artifactId>errai-jaxrs-client</artifactId>
     </dependency>
 
+    <!-- TEST -->
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-scenario-simulation-backend</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <dependencyManagement>
@@ -612,6 +626,13 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-submarine-client</artifactId>
         <version>${version.org.kie}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-scenario-simulation-backend</artifactId>
+        <version>${version.org.kie}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.dashbuilder</groupId>

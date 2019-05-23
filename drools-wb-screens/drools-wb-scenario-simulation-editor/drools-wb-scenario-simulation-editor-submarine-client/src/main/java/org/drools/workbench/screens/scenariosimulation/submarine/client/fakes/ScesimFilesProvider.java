@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
+package org.drools.workbench.screens.scenariosimulation.submarine.client.fakes;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -23,12 +23,15 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ScesimFilesProvider {
 
-    public String getScesimContent() {
-       return scesimRule;
+    public String getPopulatedScesimRule() {
+        return populatedScesimRule;
     }
 
+    public String getNewScesimRule() {
+        return newScesimRule;
+    }
 
-    private final static String scesimRule = "<ScenarioSimulationModel version=\"1.3\">\n" +
+    private final static String populatedScesimRule = "<ScenarioSimulationModel version=\"1.3\">\n" +
             "  <simulation>\n" +
             "    <simulationDescriptor>\n" +
             "      <factMappings>\n" +
@@ -202,6 +205,90 @@ public class ScesimFilesProvider {
             "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>\n" +
             "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>\n" +
             "            <rawValue class=\"string\">4</rawValue>\n" +
+            "          </FactMappingValue>\n" +
+            "        </factMappingValues>\n" +
+            "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +
+            "      </Scenario>\n" +
+            "    </scenarios>\n" +
+            "  </simulation>\n" +
+            "  <imports>\n" +
+            "    <imports/>\n" +
+            "  </imports>\n" +
+            "</ScenarioSimulationModel>";
+
+    private static final String newScesimRule = "<ScenarioSimulationModel version=\"1.5\">\n" +
+            "  <simulation>\n" +
+            "    <simulationDescriptor>\n" +
+            "      <factMappings>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements class=\"linked-list\"/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>Index</name>\n" +
+            "            <type>OTHER</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>#</name>\n" +
+            "            <className>java.lang.Integer</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.lang.Integer</className>\n" +
+            "          <factAlias>#</factAlias>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements class=\"linked-list\"/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>Description</name>\n" +
+            "            <type>OTHER</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>Scenario description</name>\n" +
+            "            <className>java.lang.String</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.lang.String</className>\n" +
+            "          <factAlias>Scenario description</factAlias>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements class=\"linked-list\"/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|1</name>\n" +
+            "            <type>GIVEN</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>Empty</name>\n" +
+            "            <className>java.lang.Void</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.lang.Void</className>\n" +
+            "          <factAlias>INSTANCE 1</factAlias>\n" +
+            "          <expressionAlias>PROPERTY 1</expressionAlias>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements class=\"linked-list\"/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|2</name>\n" +
+            "            <type>EXPECT</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier reference=\"../../FactMapping[3]/factIdentifier\"/>\n" +
+            "          <className>java.lang.Void</className>\n" +
+            "          <factAlias>INSTANCE 2</factAlias>\n" +
+            "          <expressionAlias>PROPERTY 2</expressionAlias>\n" +
+            "        </FactMapping>\n" +
+            "      </factMappings>\n" +
+            "      <type>RULE</type>\n" +
+            "      <skipFromBuild>false</skipFromBuild>\n" +
+            "    </simulationDescriptor>\n" +
+            "    <scenarios class=\"linked-list\">\n" +
+            "      <Scenario>\n" +
+            "        <factMappingValues>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>\n" +
             "          </FactMappingValue>\n" +
             "        </factMappingValues>\n" +
             "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +

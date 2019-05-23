@@ -24,7 +24,7 @@ import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
 
-import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_DEFAULT_REQUEST;
+import static org.drools.workbench.screens.scenariosimulation.submarine.client.editor.ScenarioSimulationEditorSubmarineWrapper.SCENARIO_SIMULATION_WRAPPER_DEFAULT_REQUEST;
 
 @ApplicationScoped
 @WorkbenchPerspective(identifier = AuthoringPerspective.PERSPECTIVE_ID, isTransient = false, isDefault = true)
@@ -36,7 +36,7 @@ public class AuthoringPerspective {
     public PerspectiveDefinition buildPerspective() {
         final PerspectiveDefinition perspective = new PerspectiveDefinitionImpl(MultiListWorkbenchPanelPresenter.class.getName());
         perspective.setName("Authoring");
-        perspective.getRoot().addPart(new PartDefinitionImpl(SCENARIO_SIMULATION_DEFAULT_REQUEST));
+        perspective.getRoot().addPart(new PartDefinitionImpl(SCENARIO_SIMULATION_WRAPPER_DEFAULT_REQUEST));
         return perspective;
     }
 

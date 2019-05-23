@@ -21,7 +21,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.uberfire.client.annotations.WorkbenchMenu;
+import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
@@ -29,8 +29,6 @@ import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
-import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
 @WorkbenchScreen(identifier = ScenarioSimulationEditorNavigatorScreen.SCREEN_ID)
@@ -38,11 +36,17 @@ public class ScenarioSimulationEditorNavigatorScreen {
 
     public static final String SCREEN_ID = "ScenarioSimulationEditorNavigatorScreen";
 
-    public static final PlaceRequest SCENARIO_SIMULATION_DEFAULT_REQUEST = new DefaultPlaceRequest(ScenarioSimulationEditorNavigatorScreen.SCREEN_ID);
+    public static final PlaceRequest SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST = new DefaultPlaceRequest(ScenarioSimulationEditorNavigatorScreen.SCREEN_ID);
 
     private ScenarioSimulationEditorSubmarineScreen stateHolder;
 
-    private Menus menu = null;
+//    @Inject
+//    private ScenarioSimulationEditorSubmarineWrapper scenarioSimulationEditorSubmarineWrapper;
+//
+//    @Inject
+//    private ScesimFilesProvider scesimFilesProvider;
+
+//    private Menus menu = null;
 
     public ScenarioSimulationEditorNavigatorScreen() {
         //CDI proxy
@@ -56,27 +60,14 @@ public class ScenarioSimulationEditorNavigatorScreen {
     @PostConstruct
     public void init() {
         GWT.log(this.toString() + ": init");
-        stateHolder.newFile();
+//        /*stateHolder.*/newFile();
     }
 
     @OnStartup
     @SuppressWarnings("unused")
     public void onStartup(final PlaceRequest placeRequest) {
-        this.menu = makeMenuBar();
+        GWT.log(this.toString() + " onStartup " + placeRequest.asString());
         clear();
-    }
-
-    private Menus makeMenuBar() {
-        final MenuFactory.TopLevelMenusBuilder<MenuFactory.MenuBuilder> m =
-                MenuFactory
-                        .newTopLevelMenu("Create")
-                        .respondsWith(() -> stateHolder.newFile())
-                        .endMenu();
-        return m.build();
-    }
-
-    private void clear() {
-        GWT.log(this.toString() + ": clear");
     }
 
     @OnClose
@@ -84,19 +75,23 @@ public class ScenarioSimulationEditorNavigatorScreen {
         clear();
     }
 
-    @WorkbenchMenu
-    public Menus getMenu() {
-        return menu;
-    }
-
     @WorkbenchPartTitle
     public String getTitle() {
+        GWT.log(this.toString() + " getTitle");
         return "Scenario Simulation Title";
     }
 
     @WorkbenchPartView
     public IsWidget getWidget() {
-        return stateHolder.asWidget();
+        GWT.log(this.toString() + " getWidget");
+        final Widget toReturn = stateHolder.asWidget();
+        stateHolder.goToScreen();
+        return toReturn;
+    }
+
+
+    private void clear() {
+        GWT.log(this.toString() + ": clear");
     }
 
 }
