@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependColumnCommand;
@@ -49,6 +50,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.DisableTest
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
@@ -130,6 +132,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration enableTestToolsEventHandlerMock;
     @Mock
+    private HandlerRegistration enableTestToolsInstanceEventHandlerMock;
+    @Mock
     private HandlerRegistration importHandlerRegistrationMock;
     @Mock
     private HandlerRegistration insertColumnHandlerRegistrationMock;
@@ -182,6 +186,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(DuplicateInstanceEvent.TYPE), isA((ScenarioSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableTestToolsEventHandlerMock);
+        when(eventBusMock.addHandler(eq(EnableTestToolsInstanceEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableTestToolsInstanceEventHandlerMock);
         when(eventBusMock.addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(importHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertRowHandlerRegistrationMock);
@@ -298,6 +303,15 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
                                                                isA(EnableTestToolsCommand.class),
+                                                               eq(false));
+    }
+
+    @Test
+    public void onEnableTestToolsInstanceEvent() {
+        EnableTestToolsInstanceEvent event = new EnableTestToolsInstanceEvent();
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
+                                                               isA(EnableTestToolsInstanceCommand.class),
                                                                eq(false));
     }
 
@@ -562,6 +576,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(enableTestToolsEventHandlerMock));
+        verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsInstanceEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(enableTestToolsInstanceEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(importHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));

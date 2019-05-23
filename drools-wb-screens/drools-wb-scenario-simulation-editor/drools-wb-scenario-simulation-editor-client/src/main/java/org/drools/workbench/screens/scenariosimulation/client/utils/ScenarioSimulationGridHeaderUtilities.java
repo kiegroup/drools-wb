@@ -23,7 +23,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ait.lienzo.client.core.types.Point2D;
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -121,7 +120,7 @@ public class ScenarioSimulationGridHeaderUtilities {
         return scenarioHeaderMetaData.isInstanceHeader() || (scenarioHeaderMetaData.isPropertyHeader() && column.isPropertyAssigned());
     }
 
-    public static GwtEvent<? extends EventHandler> getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
+    public static GwtEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
                                                    final ScenarioGridColumn scenarioGridColumn,
                                                    final ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
                                                    final Integer uiColumnIndex,

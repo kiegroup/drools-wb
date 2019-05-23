@@ -25,6 +25,8 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.GwtEvent;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Before;
@@ -44,9 +46,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_TWO_TITLE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_HEIGHT;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_ROW_HEIGHT;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.UI_COLUMN_INDEX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -141,9 +145,8 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                              clickedScenarioHeaderMetadataMock,
                                                                                              UI_COLUMN_INDEX,
                                                                                              COLUMN_GROUP);
-
-        //assertThat(event.getFilterTerm()).isEqualTo(null);
-        //assertThat(event.isNotEqualsSearch()).isTrue();
+        assertTrue(event instanceof EnableTestToolsInstanceEvent);
+        assertThat(((EnableTestToolsInstanceEvent) event).getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE + ";" + COLUMN_TWO_TITLE + ";" + MULTIPART_VALUE);
     }
 
     @Test
@@ -156,8 +159,9 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                                          UI_COLUMN_INDEX,
                                                                                                          COLUMN_GROUP);
 
-       // assertThat(event.getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE + ";" + COLUMN_TWO_TITLE + ";" + MULTIPART_VALUE);
-        //assertThat(event.isNotEqualsSearch()).isFalse();
+        assertTrue(event instanceof EnableTestToolsEvent);
+        assertThat(((EnableTestToolsEvent) event).getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE + ";" + COLUMN_TWO_TITLE + ";" + MULTIPART_VALUE);
+        assertThat(((EnableTestToolsEvent) event).isNotEqualsSearch()).isFalse();
     }
 
     @Test
@@ -171,9 +175,10 @@ public class ScenarioSimulationGridHeaderUtilitiesTest extends AbstractScenarioS
                                                                                                          UI_COLUMN_INDEX,
                                                                                                          COLUMN_GROUP);
 
-        //assertThat(event.getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE);
-        //assertThat(event.getPropertyNameElements()).isNull();
-        //assertThat(event.isNotEqualsSearch()).isFalse();
+        assertTrue(event instanceof EnableTestToolsEvent);
+        assertThat(((EnableTestToolsEvent) event).getFilterTerm()).isEqualTo(COLUMN_ONE_TITLE);
+        assertThat(((EnableTestToolsEvent) event).getPropertyNameElements()).isNull();
+        assertThat(((EnableTestToolsEvent) event).isNotEqualsSearch()).isFalse();
     }
 
     @Test

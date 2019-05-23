@@ -230,7 +230,6 @@ public class TestToolsViewImpl
         clearSearchButton.setDisabled(false);
         searchButton.setDisabled(false);
         inputSearch.setDisabled(false);
-        inputSearch.setValue("");
     }
 
     @Override
@@ -238,7 +237,6 @@ public class TestToolsViewImpl
         clearSearchButton.setDisabled(true);
         searchButton.setDisabled(true);
         inputSearch.setDisabled(true);
-        inputSearch.setValue("");
     }
 
     @Override
