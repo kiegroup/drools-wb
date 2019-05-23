@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -61,7 +62,6 @@ public class DMNTypeServiceImpl
         for (InputDataNode input : dmnModel.getInputs()) {
             DMNType type = input.getType();
             checkTypeSupport(type, errorHolder, input.getName());
-            visitCompositeType(type, false, errorHolder, input.getName());
             try {
                 visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
             } catch (WrongDMNTypeException e) {
@@ -71,7 +71,6 @@ public class DMNTypeServiceImpl
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
             checkTypeSupport(type, errorHolder, decision.getName());
-            visitCompositeType(type, false, errorHolder, decision.getName());
             try {
                 visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             } catch (WrongDMNTypeException e) {
@@ -306,8 +305,8 @@ public class DMNTypeServiceImpl
 
     static class ErrorHolder {
 
-        Set<String> multipleNestedObject = new HashSet<>();
-        Set<String> multipleNestedCollection = new HashSet<>();
+        Set<String> multipleNestedObject = new TreeSet<>();
+        Set<String> multipleNestedCollection = new TreeSet<>();
 
         public Set<String> getMultipleNestedObject() {
             return multipleNestedObject;
