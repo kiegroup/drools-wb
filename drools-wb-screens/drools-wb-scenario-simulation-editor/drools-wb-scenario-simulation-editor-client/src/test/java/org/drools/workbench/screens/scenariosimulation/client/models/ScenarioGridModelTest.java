@@ -141,6 +141,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         when(simulationMock.cloneScenario(ROW_COUNT, ROW_COUNT + 1)).thenReturn(scenarioMock);
 
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValueMock));
+        when(scenarioMock.getFactMappingValue(isA(FactMapping.class))).thenReturn(Optional.of(factMappingValueMock));
         when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
 
         gridCellSupplier = () -> gridCellMock;
@@ -460,6 +461,16 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
+    public void isSameInstanceHeader_Different() {
+        isSameInstanceType(CLASS_NAME, "TOAST", false);
+    }
+
+    @Test
+    public void isSameInstanceHeader_Equal() {
+        isSameInstanceType(CLASS_NAME, CLASS_NAME, true);
+    }
+
+    @Test
     public void refreshErrorsTest() {
         int expectedCalls = scenarioGridModel.getRowCount() * scenarioGridModel.getColumnCount();
         scenarioGridModel.refreshErrors();
@@ -509,16 +520,25 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         commonValidatePropertyUpdate(1, true, true, true, false);
     }
 
+    private void isSameInstanceType(String columnClassName, String value, boolean expectedResult) {
+        FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
+        when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
+        when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_INDEX)).thenReturn(factMappingMock);
+        boolean result = scenarioGridModel.isSameInstanceType(COLUMN_INDEX, value);
+        verify(simulationMock, times(1)).getSimulationDescriptor();
+        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
+        assertEquals(result, expectedResult);
+    }
+
     private void commonCheckSameInstanceHeader(String columnClassName, String value, boolean expected)  {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         when(factIdentifierMock.getClassNameWithoutPackage()).thenReturn(columnClassName);
-        int colIndex = 3;
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
-        when(simulationDescriptorMock.getFactMappingByIndex(colIndex)).thenReturn(factMappingMock);
+        when(simulationDescriptorMock.getFactMappingByIndex(COLUMN_INDEX)).thenReturn(factMappingMock);
         try {
-            scenarioGridModel.checkSameInstanceHeader(colIndex, value);
-            verify(simulationMock, times(1)).getSimulationDescriptor();
-            verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(colIndex));
+            scenarioGridModel.checkSameInstanceHeader(COLUMN_INDEX, value);
+            verify(scenarioGridModel, times(1)).isSameInstanceType(eq(COLUMN_INDEX), eq(value));
         } catch (Exception e) {
             if (expected) {
                 fail("No exception expected, retrieved " + e.getMessage());
@@ -567,4 +587,37 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         }
         reset(eventBusMock);
     }
+
+    @Test
+    public void resetError() {
+        scenarioGridModel = spy(new ScenarioGridModel(false) {
+            {
+                this.simulation = simulationMock;
+                this.eventBus = eventBusMock;
+                this.rows = GRID_ROWS;
+                this.columns = gridColumns;
+            }
+
+            @Override
+            public void refreshErrors() {
+                //Do nothing
+            }
+
+            @Override
+            public GridCell<?> getCell(final int rowIndex,
+                                       final int columnIndex) {
+                if (rowIndex < 0 || rowIndex > rows.size() - 1) {
+                    return null;
+                }
+                return gridCellMock;
+            }
+        });
+        scenarioGridModel.resetError(ROW_INDEX, COLUMN_INDEX);
+        verify(simulationMock, times(1)).getScenarioByIndex(eq(ROW_INDEX));
+        verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
+        verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
+        verify(factMappingValueMock, times(1)).resetStatus();
+        verify(scenarioGridModel, times(1)).refreshErrors();
+    }
+
 }
