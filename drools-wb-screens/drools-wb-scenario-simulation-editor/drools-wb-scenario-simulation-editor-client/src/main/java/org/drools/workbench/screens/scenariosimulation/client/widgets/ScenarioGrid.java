@@ -284,8 +284,8 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     private EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGridColumn scenarioGridColumn,
-                                             final GridData.SelectedCell selectedHeaderCell,
-                                             final int uiColumnIndex) {
+                                                         final GridData.SelectedCell selectedHeaderCell,
+                                                         final int uiColumnIndex) {
         final ScenarioHeaderMetaData scenarioHeaderMetaData =
                 ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData(scenarioGridColumn,
                                                                                       selectedHeaderCell.getRowIndex());
