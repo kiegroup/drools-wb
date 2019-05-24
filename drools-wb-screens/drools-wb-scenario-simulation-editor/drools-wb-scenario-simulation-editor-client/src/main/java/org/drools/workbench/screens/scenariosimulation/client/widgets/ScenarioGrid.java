@@ -21,7 +21,6 @@ import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
@@ -30,6 +29,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -277,13 +277,13 @@ public class ScenarioGrid extends BaseGridWidget {
     private void signalTestToolsHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,
                                                    final GridData.SelectedCell selectedHeaderCell,
                                                    final int uiColumnIndex) {
-        final GwtEvent enableTestToolsEvent = getEnableTestToolsEvent(scenarioGridColumn,
+        final EnableTestToolsEvent enableTestToolsEvent = getEnableTestToolsEvent(scenarioGridColumn,
                                                                                   selectedHeaderCell,
                                                                                   uiColumnIndex);
         eventBus.fireEvent(enableTestToolsEvent);
     }
 
-    private GwtEvent getEnableTestToolsEvent(final ScenarioGridColumn scenarioGridColumn,
+    private EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGridColumn scenarioGridColumn,
                                              final GridData.SelectedCell selectedHeaderCell,
                                              final int uiColumnIndex) {
         final ScenarioHeaderMetaData scenarioHeaderMetaData =

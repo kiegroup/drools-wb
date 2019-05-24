@@ -24,8 +24,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.event.shared.GwtEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -106,11 +106,11 @@ public class ScenarioSimulationGridPanelClickHandler extends AbstractScenarioSim
             eventBus.fireEvent(new ReloadTestToolsEvent(true, true));
             return true;
         }
-        GwtEvent toFire = getEnableTestToolsEvent(scenarioGrid,
-                                                  scenarioGridColumn,
-                                                  clickedScenarioHeaderMetadata,
-                                                  uiColumnIndex,
-                                                  group);
+        EnableTestToolsEvent toFire = getEnableTestToolsEvent(scenarioGrid,
+                                                              scenarioGridColumn,
+                                                              clickedScenarioHeaderMetadata,
+                                                              uiColumnIndex,
+                                                              group);
         eventBus.fireEvent(toFire);
         return true;
     }
