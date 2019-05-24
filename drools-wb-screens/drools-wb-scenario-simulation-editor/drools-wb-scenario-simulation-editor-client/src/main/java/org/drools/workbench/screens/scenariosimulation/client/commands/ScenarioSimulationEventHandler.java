@@ -38,7 +38,6 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DuplicateRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsCommand;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.EnableTestToolsInstanceCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ImportCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.InsertRowCommand;
@@ -58,7 +57,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.DisableTest
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
@@ -83,7 +81,6 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.DisableTe
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateInstanceEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.EnableTestToolsEventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.EnableTestToolsInstanceEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ImportEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertRowEventHandler;
@@ -126,7 +123,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        DuplicateInstanceEventHandler,
                                                        DuplicateRowEventHandler,
                                                        EnableTestToolsEventHandler,
-                                                       EnableTestToolsInstanceEventHandler,
                                                        ImportEventHandler,
                                                        InsertColumnEventHandler,
                                                        InsertRowEventHandler,
@@ -275,14 +271,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setNotEqualsSearch(event.isNotEqualsSearch());
         commonExecution(context,
                         new EnableTestToolsCommand(),
-                        false);
-    }
-
-    @Override
-    public void onEvent(EnableTestToolsInstanceEvent event) {
-        context.getStatus().setFilterTerm(event.getFilterTerm());
-        commonExecution(context,
-                        new EnableTestToolsInstanceCommand(),
                         false);
     }
 
@@ -535,7 +523,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(DuplicateInstanceEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(DuplicateRowEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(EnableTestToolsEvent.TYPE, this));
-        handlerRegistrationList.add(eventBus.addHandler(EnableTestToolsInstanceEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ImportEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertColumnEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(InsertRowEvent.TYPE, this));

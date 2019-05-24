@@ -417,22 +417,12 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
-    public void onEnableEditorTabWithFactNameOnly() {
-        testToolsPresenter.onEnableEditorTab(FACT_NAME);
-        verify(testToolsPresenter, times(1)).onDisableEditorTab();
-        verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(true));
-        verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
-        verify(listGroupItemPresenterMock, never()).enable();
-        verify(testToolsViewMock, times(1)).enableEditorTab();
-        verify(testToolsViewMock, times(1)).enableSearch();
-    }
-
-    @Test
     public void onEnableEditorTabWithFactName_NotEqualsSearch() {
         testToolsPresenter.onEnableEditorTab(FACT_NAME, null, false);
         verify(testToolsPresenter, times(1)).onDisableEditorTab();
         verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(false));
         verify(testToolsPresenter, times(1)).updateInstanceIsAssignedStatus(eq(FACT_NAME));
+        verify(testToolsViewMock, never()).enableSearch();
         verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
         verify(listGroupItemPresenterMock, never()).enable();
         verify(testToolsViewMock, times(1)).enableEditorTab();
@@ -444,7 +434,8 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         testToolsPresenter.onEnableEditorTab(FACT_NAME, null, true);
         verify(testToolsPresenter, times(1)).onDisableEditorTab();
         verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FACT_NAME), eq(true));
-        verify(testToolsPresenter, times(1)).updateInstanceIsAssignedStatus(eq(FACT_NAME));
+        verify(testToolsPresenter, never()).updateInstanceIsAssignedStatus(anyString());
+        verify(testToolsViewMock, times(1)).enableSearch();
         verify(listGroupItemPresenterMock, times(1)).enable(eq(FACT_NAME));
         verify(listGroupItemPresenterMock, never()).enable();
         verify(testToolsViewMock, times(1)).enableEditorTab();

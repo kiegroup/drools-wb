@@ -23,12 +23,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ait.lienzo.client.core.types.Point2D;
-import com.google.gwt.event.shared.GwtEvent;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -120,14 +118,14 @@ public class ScenarioSimulationGridHeaderUtilities {
         return scenarioHeaderMetaData.isInstanceHeader() || (scenarioHeaderMetaData.isPropertyHeader() && column.isPropertyAssigned());
     }
 
-    public static GwtEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
+    public static EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
                                                    final ScenarioGridColumn scenarioGridColumn,
                                                    final ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
                                                    final Integer uiColumnIndex,
                                                    final String columnGroup) {
         if (!scenarioGridColumn.isInstanceAssigned()) {
             String complexSearch = getExistingInstances(columnGroup, scenarioGrid.getModel());
-            return new EnableTestToolsInstanceEvent(complexSearch);
+            return new EnableTestToolsEvent(complexSearch, true);
         } else if (Objects.equals(clickedScenarioHeaderMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY)) {
             List<String> propertyNameElements = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
@@ -137,8 +135,7 @@ public class ScenarioSimulationGridHeaderUtilities {
             return propertyNameElements != null ? new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData()
                                                                                    .getTitle(), propertyNameElements) : new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
         } else {
-            String complexSearch = getExistingInstances(columnGroup, scenarioGrid.getModel());
-            return new EnableTestToolsEvent(complexSearch, false);
+            return new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle(), false);
         }
     }
 

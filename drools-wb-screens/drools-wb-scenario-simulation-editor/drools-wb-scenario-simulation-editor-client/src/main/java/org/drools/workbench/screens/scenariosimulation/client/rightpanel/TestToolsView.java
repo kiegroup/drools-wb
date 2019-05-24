@@ -162,14 +162,6 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         /**
          * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).
-         * Use this when click on grid' <i>instance</i> header.
-         * Call this method to show all the first-level data models <b>enabled</b> (i.e. <b>double-clickable</b> to map to an <i>instance</i> header/column)
-         * and their properties <b>disabled</b> (i.e. <b>not double-clickable</b>)
-         */
-        void onEnableEditorTab(String factName);
-
-        /**
-         * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).
          * Use this when click on grid' <i>property</i> header.
          * Call this method to show only the data model with the given name, <b>disabled</b> (i.e. <b>not double-clickable</b>)
          * and their properties <b>enabled</b> (i.e. <b>double-clickable</b> to map to a <i>property</i> header/column below the belonging data model instance one)
