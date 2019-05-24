@@ -66,10 +66,13 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
      */
     void disableEditorTab();
 
+    /**
+     * It enables all widgets related to the search box
+     */
     void enableSearch();
 
     /**
-     * It disables all widget set related to the search box
+     * It disables all widgets related to the search box
      */
     void disableSearch();
 

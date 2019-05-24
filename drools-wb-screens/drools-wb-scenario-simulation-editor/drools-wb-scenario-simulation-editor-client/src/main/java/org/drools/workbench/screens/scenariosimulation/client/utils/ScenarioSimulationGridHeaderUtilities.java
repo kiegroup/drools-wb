@@ -119,10 +119,10 @@ public class ScenarioSimulationGridHeaderUtilities {
     }
 
     public static EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
-                                                   final ScenarioGridColumn scenarioGridColumn,
-                                                   final ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
-                                                   final Integer uiColumnIndex,
-                                                   final String columnGroup) {
+                                                               final ScenarioGridColumn scenarioGridColumn,
+                                                               final ScenarioHeaderMetaData clickedScenarioHeaderMetadata,
+                                                               final Integer uiColumnIndex,
+                                                               final String columnGroup) {
         if (!scenarioGridColumn.isInstanceAssigned()) {
             String complexSearch = getExistingInstances(columnGroup, scenarioGrid.getModel());
             return new EnableTestToolsEvent(complexSearch, true);
