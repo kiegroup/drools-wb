@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.submarine.client.fakes;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 
 /**
@@ -23,13 +26,180 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class ScesimFilesProvider {
 
-    public String getPopulatedScesimRule() {
-        return populatedScesimRule;
+    private static final List<String> files = Arrays.asList("populatedScesimDmn", "populatedScesimRule");
+
+    public List<String> getFiles() {
+        return files;
+    }
+
+    public String getScesimFile(String fileName) {
+        switch (fileName) {
+            case "populatedScesimDmn":
+                return populatedScesimDmn;
+            case "populatedScesimRule":
+                return populatedScesimRule;
+            default:
+                return newScesimRule;
+        }
     }
 
     public String getNewScesimRule() {
         return newScesimRule;
     }
+
+    private static final String populatedScesimDmn = "<ScenarioSimulationModel version=\"1.4\">\n" +
+            "  <simulation>\n" +
+            "    <simulationDescriptor>\n" +
+            "      <factMappings>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>Index</name>\n" +
+            "            <type>OTHER</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>#</name>\n" +
+            "            <className>java.lang.Integer</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.lang.Integer</className>\n" +
+            "          <factAlias>#</factAlias>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements/>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>Description</name>\n" +
+            "            <type>OTHER</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>Scenario description</name>\n" +
+            "            <className>java.lang.String</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.lang.String</className>\n" +
+            "          <factAlias>Scenario description</factAlias>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>person</step>\n" +
+            "            </ExpressionElement>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>address</step>\n" +
+            "            </ExpressionElement>\n" +
+            "          </expressionElements>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|1</name>\n" +
+            "            <type>GIVEN</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>person</name>\n" +
+            "            <className>person</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.util.List</className>\n" +
+            "          <factAlias>person</factAlias>\n" +
+            "          <expressionAlias>address</expressionAlias>\n" +
+            "          <genericTypes>\n" +
+            "            <string>address</string>\n" +
+            "          </genericTypes>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>person</step>\n" +
+            "            </ExpressionElement>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>age</step>\n" +
+            "            </ExpressionElement>\n" +
+            "          </expressionElements>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|2</name>\n" +
+            "            <type>GIVEN</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier reference=\"../../FactMapping[3]/factIdentifier\"/>\n" +
+            "          <className>age</className>\n" +
+            "          <factAlias>person</factAlias>\n" +
+            "          <expressionAlias>age</expressionAlias>\n" +
+            "          <genericTypes/>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>is the first country European?</step>\n" +
+            "            </ExpressionElement>\n" +
+            "          </expressionElements>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|3</name>\n" +
+            "            <type>EXPECT</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>is the first country European?</name>\n" +
+            "            <className>is the first country European?</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>boolean</className>\n" +
+            "          <factAlias>is the first country European?</factAlias>\n" +
+            "          <expressionAlias>value</expressionAlias>\n" +
+            "          <genericTypes/>\n" +
+            "        </FactMapping>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>is young?</step>\n" +
+            "            </ExpressionElement>\n" +
+            "          </expressionElements>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|4</name>\n" +
+            "            <type>EXPECT</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>is young?</name>\n" +
+            "            <className>is young?</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>boolean</className>\n" +
+            "          <factAlias>is young?</factAlias>\n" +
+            "          <expressionAlias>value</expressionAlias>\n" +
+            "          <genericTypes/>\n" +
+            "        </FactMapping>\n" +
+            "      </factMappings>\n" +
+            "      <dmnFilePath>src/main/resources/com/dmn-list.dmn</dmnFilePath>\n" +
+            "      <type>DMN</type>\n" +
+            "      <skipFromBuild>false</skipFromBuild>\n" +
+            "    </simulationDescriptor>\n" +
+            "    <scenarios>\n" +
+            "      <Scenario>\n" +
+            "        <factMappingValues>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[5]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[5]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[6]/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[6]/expressionIdentifier\"/>\n" +
+            "          </FactMappingValue>\n" +
+            "          <FactMappingValue>\n" +
+            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>\n" +
+            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>\n" +
+            "            <rawValue class=\"string\">1</rawValue>\n" +
+            "          </FactMappingValue>\n" +
+            "        </factMappingValues>\n" +
+            "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +
+            "      </Scenario>\n" +
+            "    </scenarios>\n" +
+            "  </simulation>\n" +
+            "  <imports>\n" +
+            "    <imports/>\n" +
+            "  </imports>\n" +
+            "</ScenarioSimulationModel>";
 
     private final static String populatedScesimRule = "<ScenarioSimulationModel version=\"1.3\">\n" +
             "  <simulation>\n" +

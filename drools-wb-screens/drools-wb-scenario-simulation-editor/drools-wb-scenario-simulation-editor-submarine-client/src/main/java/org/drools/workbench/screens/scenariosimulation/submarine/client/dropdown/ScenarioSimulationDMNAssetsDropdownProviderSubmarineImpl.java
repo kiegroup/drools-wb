@@ -23,14 +23,19 @@ import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
+import org.drools.workbench.screens.scenariosimulation.submarine.client.fakes.ScesimFilesProvider;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 @Dependent
-public class ScenarioSimulationAssetsDropdownProviderSubmarineImpl implements ScenarioSimulationAssetsDropdownProvider {
+public class ScenarioSimulationDMNAssetsDropdownProviderSubmarineImpl implements ScenarioSimulationAssetsDropdownProvider {
 
     private static final List<String> packages = Arrays.asList("com", "com.test");
+
+    @Inject
+    protected ScesimFilesProvider scesimFilesProvider;
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
