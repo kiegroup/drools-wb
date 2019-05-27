@@ -171,7 +171,8 @@ public class ScenarioGridTest {
             protected EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
                                                                    final ScenarioGridColumn scenarioGridColumn,
                                                                    final ScenarioHeaderMetaData scenarioHeaderMetaData,
-                                                                   int uiColumnIndex) {
+                                                                   int uiColumnIndex,
+                                                                   String group) {
                 return new EnableTestToolsEvent();
             }
 

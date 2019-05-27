@@ -283,10 +283,15 @@ public class ScenarioGrid extends BaseGridWidget {
         if (scenarioGridColumn.isInstanceAssigned() && scenarioHeaderMetaData.getMetadataType().equals(ScenarioHeaderMetaData.MetadataType.INSTANCE)) {
             eventBus.fireEvent(new ReloadTestToolsEvent(true, true));
         } else {
+            String group = scenarioHeaderMetaData.getColumnGroup();
+            if (group.contains("-")) {
+                group = group.substring(0, group.indexOf("-"));
+            }
             final EnableTestToolsEvent enableTestToolsEvent = getEnableTestToolsEvent(this,
                                                                                       scenarioGridColumn,
                                                                                       scenarioHeaderMetaData,
-                                                                                      uiColumnIndex);
+                                                                                      uiColumnIndex,
+                                                                                      group);
             eventBus.fireEvent(enableTestToolsEvent);
         }
     }
@@ -301,11 +306,12 @@ public class ScenarioGrid extends BaseGridWidget {
     protected EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
                                                            final ScenarioGridColumn scenarioGridColumn,
                                                            final ScenarioHeaderMetaData scenarioHeaderMetaData,
-                                                           int uiColumnIndex) {
+                                                           int uiColumnIndex,
+                                                           String group) {
         return ScenarioSimulationGridHeaderUtilities.getEnableTestToolsEvent(scenarioGrid,
                                                                       scenarioGridColumn,
                                                                       scenarioHeaderMetaData,
                                                                       uiColumnIndex,
-                                                                      scenarioHeaderMetaData.getColumnGroup());
+                                                                      group);
     }
 }
