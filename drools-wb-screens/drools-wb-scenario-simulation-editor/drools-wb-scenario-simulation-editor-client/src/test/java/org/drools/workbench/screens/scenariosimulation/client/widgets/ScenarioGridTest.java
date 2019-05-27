@@ -31,7 +31,9 @@ import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
@@ -53,6 +55,8 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidg
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_ID;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -71,7 +75,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
 public class ScenarioGridTest {
-
 
     @Mock
     private ScenarioGridModel scenarioGridModelMock;
@@ -163,6 +166,21 @@ public class ScenarioGridTest {
             public Viewport getViewport() {
                 return viewportMock;
             }
+
+            @Override
+            protected ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(final ScenarioGridColumn scenarioGridColumn,
+                                                                             final int rowIndex) {
+                return propertyHeaderMetadataMock;
+            }
+
+            @Override
+            protected EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
+                                                                   final ScenarioGridColumn scenarioGridColumn,
+                                                                   final ScenarioHeaderMetaData scenarioHeaderMetaData,
+                                                                   int uiColumnIndex) {
+                return new EnableTestToolsEvent();
+            }
+
         });
         when(rendererHelperMock.getRenderingInformation()).thenReturn(renderingInformationMock);
         when(renderingInformationMock.getHeaderRowsHeight()).thenReturn(HEADER_ROWS_HEIGHT);
@@ -390,5 +408,39 @@ public class ScenarioGridTest {
             scenario.addMappingValue(FactIdentifier.EMPTY, expectedExpression, null);
         });
         return toReturn;
+    }
+
+    @Test
+    public void signalTestToolsHeaderCellSelected() {
+        final int uiColumnIndex = 0;
+        final int uiRowIndex = 0;
+        final ScenarioGridColumn columnMock = mock(ScenarioGridColumn.class);
+        when(columnMock.getIndex()).thenReturn(uiColumnIndex);
+        when(scenarioGridModelMock.getColumns()).thenReturn(Collections.singletonList(columnMock));
+
+        final GridData.SelectedCell selectedHeaderCell = mock(GridData.SelectedCell.class);
+        when(selectedHeaderCell.getColumnIndex()).thenReturn(uiColumnIndex);
+        when(selectedHeaderCell.getRowIndex()).thenReturn(uiRowIndex);
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.singletonList(selectedHeaderCell));
+        scenarioGrid.signalTestToolsHeaderCellSelected(columnMock, selectedHeaderCell, uiColumnIndex);
+        verify(eventBusMock, times(1)).fireEvent(isA(EnableTestToolsEvent.class));
+    }
+
+    @Test
+    public void signalTestToolsHeaderCellSelected_EmptyInstance() {
+        final int uiColumnIndex = 0;
+        final int uiRowIndex = 0;
+        final ScenarioGridColumn columnMock = mock(ScenarioGridColumn.class);
+        when(columnMock.getIndex()).thenReturn(uiColumnIndex);
+        when(scenarioGridModelMock.getColumns()).thenReturn(Collections.singletonList(columnMock));
+        when(columnMock.isInstanceAssigned()).thenReturn(true);
+        when(propertyHeaderMetadataMock.getMetadataType()).thenReturn(ScenarioHeaderMetaData.MetadataType.INSTANCE);
+
+        final GridData.SelectedCell selectedHeaderCell = mock(GridData.SelectedCell.class);
+        when(selectedHeaderCell.getColumnIndex()).thenReturn(uiColumnIndex);
+        when(selectedHeaderCell.getRowIndex()).thenReturn(uiRowIndex);
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.singletonList(selectedHeaderCell));
+        scenarioGrid.signalTestToolsHeaderCellSelected(columnMock, selectedHeaderCell, uiColumnIndex);
+        verify(eventBusMock, times(1)).fireEvent(isA(ReloadTestToolsEvent.class));
     }
 }

@@ -275,22 +275,37 @@ public class ScenarioGrid extends BaseGridWidget {
         }
     }
 
-    private void signalTestToolsHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,
+    protected void signalTestToolsHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,
                                                    final GridData.SelectedCell selectedHeaderCell,
                                                    final int uiColumnIndex) {
-        final ScenarioHeaderMetaData scenarioHeaderMetaData =
-                ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData(scenarioGridColumn,
-                                                                                      selectedHeaderCell.getRowIndex());
+        final ScenarioHeaderMetaData scenarioHeaderMetaData = getColumnScenarioHeaderMetaData(scenarioGridColumn,
+                                                                                              selectedHeaderCell.getRowIndex());
         if (scenarioGridColumn.isInstanceAssigned() && scenarioHeaderMetaData.getMetadataType().equals(ScenarioHeaderMetaData.MetadataType.INSTANCE)) {
             eventBus.fireEvent(new ReloadTestToolsEvent(true, true));
         } else {
-            final EnableTestToolsEvent enableTestToolsEvent =
-                    ScenarioSimulationGridHeaderUtilities.getEnableTestToolsEvent(this,
-                                                                                  scenarioGridColumn,
-                                                                                  scenarioHeaderMetaData,
-                                                                                  uiColumnIndex,
-                                                                                  scenarioHeaderMetaData.getColumnGroup());
+            final EnableTestToolsEvent enableTestToolsEvent = getEnableTestToolsEvent(this,
+                                                                                      scenarioGridColumn,
+                                                                                      scenarioHeaderMetaData,
+                                                                                      uiColumnIndex);
             eventBus.fireEvent(enableTestToolsEvent);
         }
+    }
+
+    //Indirection for tests
+    protected ScenarioHeaderMetaData getColumnScenarioHeaderMetaData(final ScenarioGridColumn scenarioGridColumn,
+                                                                     final int rowIndex) {
+        return ScenarioSimulationGridHeaderUtilities.getColumnScenarioHeaderMetaData(scenarioGridColumn, rowIndex);
+    }
+
+    //Indirection for tests
+    protected EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
+                                                                 final ScenarioGridColumn scenarioGridColumn,
+                                                                 final ScenarioHeaderMetaData scenarioHeaderMetaData,
+                                                                 int uiColumnIndex) {
+        return ScenarioSimulationGridHeaderUtilities.getEnableTestToolsEvent(scenarioGrid,
+                                                                      scenarioGridColumn,
+                                                                      scenarioHeaderMetaData,
+                                                                      uiColumnIndex,
+                                                                      scenarioHeaderMetaData.getColumnGroup());
     }
 }
