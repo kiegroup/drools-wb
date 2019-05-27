@@ -276,8 +276,8 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected void signalTestToolsHeaderCellSelected(final ScenarioGridColumn scenarioGridColumn,
-                                                   final GridData.SelectedCell selectedHeaderCell,
-                                                   final int uiColumnIndex) {
+                                                     final GridData.SelectedCell selectedHeaderCell,
+                                                     final int uiColumnIndex) {
         final ScenarioHeaderMetaData scenarioHeaderMetaData = getColumnScenarioHeaderMetaData(scenarioGridColumn,
                                                                                               selectedHeaderCell.getRowIndex());
         if (scenarioGridColumn.isInstanceAssigned() && scenarioHeaderMetaData.getMetadataType().equals(ScenarioHeaderMetaData.MetadataType.INSTANCE)) {
@@ -299,9 +299,9 @@ public class ScenarioGrid extends BaseGridWidget {
 
     //Indirection for tests
     protected EnableTestToolsEvent getEnableTestToolsEvent(final ScenarioGrid scenarioGrid,
-                                                                 final ScenarioGridColumn scenarioGridColumn,
-                                                                 final ScenarioHeaderMetaData scenarioHeaderMetaData,
-                                                                 int uiColumnIndex) {
+                                                           final ScenarioGridColumn scenarioGridColumn,
+                                                           final ScenarioHeaderMetaData scenarioHeaderMetaData,
+                                                           int uiColumnIndex) {
         return ScenarioSimulationGridHeaderUtilities.getEnableTestToolsEvent(scenarioGrid,
                                                                       scenarioGridColumn,
                                                                       scenarioHeaderMetaData,
