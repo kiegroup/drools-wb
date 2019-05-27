@@ -53,6 +53,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidg
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.SelectionExtension;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -180,6 +181,7 @@ public class ScenarioGridTest {
         when(rendererHelperMock.getRenderingInformation()).thenReturn(renderingInformationMock);
         when(renderingInformationMock.getHeaderRowsHeight()).thenReturn(HEADER_ROWS_HEIGHT);
         when(renderingInformationMock.getFloatingBlockInformation()).thenReturn(floatingBlockInformationMock);
+        when(propertyHeaderMetadataMock.getColumnGroup()).thenReturn(GRID_COLUMN_GROUP);
         scenarioGrid.setEventBus(eventBusMock);
     }
 
