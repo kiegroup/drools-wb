@@ -40,10 +40,10 @@ public class FileChooserPopupView extends AbstractScenarioPopupView implements F
     public void show(final String mainTitleText,
                      final String okButtonText,
                      final Command okCommand) {
-        scenarioSimulationScesimFilesDropdown.clear();
-        scenarioSimulationScesimFilesDropdown.initialize();
-        scenarioSimulationScesimFilesDropdown.initializeDropdown();
-        filesDropDown.appendChild(scenarioSimulationScesimFilesDropdown.asWidget().asWidget().getElement());
+//        scenarioSimulationScesimFilesDropdown.clear();
+//        scenarioSimulationScesimFilesDropdown.initialize();
+//        scenarioSimulationScesimFilesDropdown.initializeDropdown();
+//        filesDropDown.appendChild(scenarioSimulationScesimFilesDropdown.asWidget().asWidget().getElement());
         super.show(mainTitleText,
                    okButtonText, okCommand);
     }
@@ -55,6 +55,7 @@ public class FileChooserPopupView extends AbstractScenarioPopupView implements F
 
     @Override
     public String getFileName() {
-        return scenarioSimulationScesimFilesDropdown.getValue().isPresent() ?scenarioSimulationScesimFilesDropdown.getValue().get().getValue() : null;
+        return null;
+//        return scenarioSimulationScesimFilesDropdown.getValue().isPresent() ?scenarioSimulationScesimFilesDropdown.getValue().get().getValue() : null;
     }
 }

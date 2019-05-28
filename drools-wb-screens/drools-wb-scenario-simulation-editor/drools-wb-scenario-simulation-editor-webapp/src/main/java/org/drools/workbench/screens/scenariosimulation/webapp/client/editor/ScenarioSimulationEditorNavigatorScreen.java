@@ -21,17 +21,15 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartView;
-import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 @Dependent
-@WorkbenchScreen(identifier = ScenarioSimulationEditorNavigatorScreen.SCREEN_ID)
+//@WorkbenchScreen(identifier = ScenarioSimulationEditorNavigatorScreen.SCREEN_ID)
 public class ScenarioSimulationEditorNavigatorScreen {
 
     public static final String SCREEN_ID = "ScenarioSimulationEditorNavigatorScreen";
@@ -84,9 +82,10 @@ public class ScenarioSimulationEditorNavigatorScreen {
     @WorkbenchPartView
     public IsWidget getWidget() {
         GWT.log(this.toString() + " getWidget");
-        final Widget toReturn = stateHolder.asWidget();
-        stateHolder.goToScreen();
-        return toReturn;
+        return null;
+//        return stateHolder.asWidget();
+//        stateHolder.goToScreen();
+//        return toReturn;
     }
 
 

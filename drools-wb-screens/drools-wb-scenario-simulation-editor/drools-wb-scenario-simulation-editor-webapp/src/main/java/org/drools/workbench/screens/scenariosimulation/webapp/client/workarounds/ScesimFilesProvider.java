@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.submarine.client.fakes;
+package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
 
 import java.util.Arrays;
 import java.util.List;

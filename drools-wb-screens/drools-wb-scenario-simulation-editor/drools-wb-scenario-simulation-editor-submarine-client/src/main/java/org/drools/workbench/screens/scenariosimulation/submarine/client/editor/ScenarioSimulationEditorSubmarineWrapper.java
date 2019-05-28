@@ -31,15 +31,12 @@ import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.submarine.client.fakes.ScesimFilesProvider;
-import org.drools.workbench.screens.scenariosimulation.submarine.client.popup.FileChooserPopupPresenter;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerPresenter;
@@ -49,38 +46,27 @@ import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.backend.vfs.impl.ObservablePathImpl;
-import org.uberfire.client.annotations.WorkbenchMenu;
-import org.uberfire.client.annotations.WorkbenchPartTitle;
-import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
-import org.uberfire.client.annotations.WorkbenchPartView;
-import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
-import org.uberfire.lifecycle.OnMayClose;
-import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
-import static org.drools.workbench.screens.scenariosimulation.submarine.client.editor.ScenarioSimulationEditorSubmarineWrapper.IDENTIFIER;
-
 @Dependent
-@WorkbenchScreen(identifier = IDENTIFIER)
+//@WorkbenchScreen(identifier = IDENTIFIER)
 /**
  * Wrapper to be used inside Submarine
  */
 public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorSubmarineWrapper";
-    public static final PlaceRequest SCENARIO_SIMULATION_WRAPPER_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
+//    public static final PlaceRequest SCENARIO_SIMULATION_WRAPPER_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
-    private ScesimFilesProvider scesimFilesProvider;
     private AuthoringEditorDock authoringWorkbenchDocks;
-    private FileChooserPopupPresenter fileChooserPopupPresenter;
+//    private FileChooserPopupPresenter fileChooserPopupPresenter;
 
     public ScenarioSimulationEditorSubmarineWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -92,16 +78,15 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
                                                     final FileMenuBuilder fileMenuBuilder,
                                                     final PlaceManager placeManager,
                                                     final MultiPageEditorContainerView multiPageEditorContainerView,
-                                                    final ScesimFilesProvider scesimFilesProvider,
-                                                    final AuthoringEditorDock authoringWorkbenchDocks,
-                                                    final FileChooserPopupPresenter fileChooserPopupPresenter) {
+                                                    final AuthoringEditorDock authoringWorkbenchDocks/*,
+                                                    final FileChooserPopupPresenter fileChooserPopupPresenter*/) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
         this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
-        this.scesimFilesProvider = scesimFilesProvider;
+//        this.scesimFilesProvider = scesimFilesProvider;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
-        this.fileChooserPopupPresenter = fileChooserPopupPresenter;
+//        this.fileChooserPopupPresenter = fileChooserPopupPresenter;
     }
 
     @Override
@@ -116,6 +101,9 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         GWT.log(this.toString() + " setContent ");
         // TODO WORKAROUND
         getWidget().init(this);
+        Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
+        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
+        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
         service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
     }
 
@@ -127,43 +115,44 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
 
     @Override
     public void resetContentHash() {
-
+        GWT.log(this.toString() + " resetContentHash");
     }
-
-    @OnStartup
+//
+//    @OnStartup
     public void onStartup(final PlaceRequest place) {
-        GWT.log(this.toString() + " onStartup");
+        GWT.log(this.toString() + " onStartup " + place);
         super.init(place);
 //        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(place.getPath()));
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
     }
-
-    @OnMayClose
+//
+//    @OnMayClose
     public boolean mayClose() {
+        GWT.log(this.toString() + " mayClose");
         return !scenarioSimulationEditorPresenter.isDirty();
     }
-
-    @WorkbenchPartTitle
-    public String getTitleText() {
-        GWT.log(this.toString() + " getTitleText");
-        return "Scenario Simulation wrapper";
-    }
-
-    @WorkbenchPartTitleDecoration
+//
+//    @WorkbenchPartTitle
+//    public String getTitleText() {
+//        GWT.log(this.toString() + " getTitleText");
+//        return "Scenario Simulation wrapper";
+//    }
+//
+//    @WorkbenchPartTitleDecoration
     public IsWidget getTitle() {
         GWT.log(this.toString() + " getTitle");
         return super.getTitle();
     }
-
-    @WorkbenchPartView
+//
+//    @WorkbenchPartView
     public MultiPageEditorContainerView getWidget() {
         GWT.log(this.toString() + " getWidget");
         return super.getWidget();
     }
-
-    @WorkbenchMenu
-    public void getMenus(final Consumer<Menus> menusConsumer) {
-        GWT.log(this.toString() + " getMenus");
+//
+//    @WorkbenchMenu
+    public void setMenus(final Consumer<Menus> menusConsumer) {
+        GWT.log(this.toString() + " setMenus " + menusConsumer);
         menusConsumer.accept(getMenus());
     }
 
@@ -174,6 +163,7 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
 
     @Override
     public void wrappedSave(String commitMessage) {
+        GWT.log(this.toString() + " wrappedSave " + commitMessage);
 //        save(commitMessage);
     }
 
@@ -189,8 +179,8 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     protected void makeMenuBar() {
         GWT.log(this.toString() + " makeMenuBar");
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadAsset));
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::createNewAsset));
+//        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadAsset));
+//        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::createNewAsset));
     }
 
     @Override
@@ -212,24 +202,24 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 
-    protected void loadAsset() {
-        GWT.log(this.toString() + " loadAsset");
-        fileChooserPopupPresenter.show("Choose", "Choose", this::loadAssetCommand);
-    }
-
-    protected void loadAssetCommand() {
-        String fileName = fileChooserPopupPresenter.getFileName();
-        setContent(scesimFilesProvider.getScesimFile(fileChooserPopupPresenter.getFileName()));
-        Path path = new PathFactory.PathImpl(fileName, "file:///" + fileName);
-        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-    }
-
-    protected void createNewAsset() {
-        GWT.log(this.toString() + " createNewAsset");
-        setContent(scesimFilesProvider.getNewScesimRule());
-        Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
-        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-    }
+//    protected void loadAsset() {
+//        GWT.log(this.toString() + " loadAsset");
+//        fileChooserPopupPresenter.show("Choose", "Choose", this::loadAssetCommand);
+//    }
+//
+//    protected void loadAssetCommand() {
+//        String fileName = fileChooserPopupPresenter.getFileName();
+//        setContent(scesimFilesProvider.getScesimFile(fileChooserPopupPresenter.getFileName()));
+//        Path path = new PathFactory.PathImpl(fileName, "file:///" + fileName);
+//        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
+//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+//    }
+//
+//    protected void createNewAsset() {
+//        GWT.log(this.toString() + " createNewAsset");
+//        setContent(scesimFilesProvider.getNewScesimRule());
+//        Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
+//        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
+//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+//    }
 }

@@ -15,31 +15,29 @@
  */
 package org.drools.workbench.screens.scenariosimulation.submarine.client.dropdown;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.submarine.client.fakes.ScesimFilesProvider;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 
 @Dependent
 public class ScenarioSimulationScesimFilesDropdownProviderSubmarineImpl implements KieAssetsDropdownItemsProvider {
 
-    @Inject
-    protected ScesimFilesProvider scesimFilesProvider;
+//    @Inject
+//    protected ScesimFilesProvider scesimFilesProvider;
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        List<KieAssetsDropdownItem> toAccept = scesimFilesProvider.getFiles().stream().map(this::getKieAssetsDropdownItem).collect(Collectors.toList());
+//        List<KieAssetsDropdownItem> toAccept = scesimFilesProvider.getFiles().stream().map(this::getKieAssetsDropdownItem).collect(Collectors.toList());
+        List<KieAssetsDropdownItem> toAccept = new ArrayList<>();
         assetListConsumer.accept(toAccept);
     }
 
-    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
-        return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
-    }
+//    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
+//        return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
+//    }
 }

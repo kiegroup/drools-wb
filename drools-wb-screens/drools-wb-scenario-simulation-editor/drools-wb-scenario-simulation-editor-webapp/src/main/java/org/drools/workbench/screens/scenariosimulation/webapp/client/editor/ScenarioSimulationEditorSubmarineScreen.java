@@ -16,19 +16,36 @@
 
 package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
+import java.util.function.Consumer;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.ScenarioSimulationEditorSubmarineWrapper;
-import org.drools.workbench.screens.scenariosimulation.submarine.client.fakes.ScesimFilesProvider;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
+import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
+import org.uberfire.client.annotations.WorkbenchMenu;
+import org.uberfire.client.annotations.WorkbenchPartTitle;
+import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
+import org.uberfire.client.annotations.WorkbenchPartView;
+import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.lifecycle.OnMayClose;
+import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.workbench.model.menu.Menus;
+
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorSubmarineScreen.IDENTIFIER;
 
 @ApplicationScoped
-public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
+@WorkbenchScreen(identifier = IDENTIFIER)
+public class ScenarioSimulationEditorSubmarineScreen /*implements IsWidget*/ {
+
+    public static final String IDENTIFIER = "ScenarioSimulationEditorSubmarineWrapper";
+    public static final PlaceRequest SCENARIO_SIMULATION_SUBMARINE_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     @Inject
     private ScenarioSimulationEditorSubmarineWrapper scenarioSimulationEditorSubmarineWrapper;
@@ -47,10 +64,48 @@ public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
         this.placeManager = placeManager;
     }
 
-    @Override
-    public Widget asWidget() {
-        return scenarioSimulationEditorSubmarineWrapper.asWidget().asWidget();
+
+    @OnStartup
+    public void onStartup(final PlaceRequest place) {
+        GWT.log(this.toString() + " onStartup " + place);
+        scenarioSimulationEditorSubmarineWrapper.onStartup(place);
+        scenarioSimulationEditorSubmarineWrapper.setContent(scesimFilesProvider.getNewScesimRule());
     }
+
+    @OnMayClose
+    public boolean mayClose() {
+        GWT.log(this.toString() + " mayClose");
+        return scenarioSimulationEditorSubmarineWrapper.mayClose();
+    }
+
+    @WorkbenchPartTitle
+    public String getTitleText() {
+        GWT.log(this.toString() + " getTitleText");
+        return "Scenario Simulation wrapper";
+    }
+
+    @WorkbenchPartTitleDecoration
+    public IsWidget getTitle() {
+        GWT.log(this.toString() + " getTitle");
+        return scenarioSimulationEditorSubmarineWrapper.getTitle();
+    }
+
+    @WorkbenchPartView
+    public MultiPageEditorContainerView getWidget() {
+        GWT.log(this.toString() + " getWidget");
+        return scenarioSimulationEditorSubmarineWrapper.getWidget();
+    }
+
+    @WorkbenchMenu
+    public void setMenus(final Consumer<Menus> menusConsumer) {
+        GWT.log(this.toString() + " setMenus " + menusConsumer);
+        scenarioSimulationEditorSubmarineWrapper.setMenus(menusConsumer);
+    }
+
+//    @Override
+//    public Widget asWidget() {
+//        return scenarioSimulationEditorSubmarineWrapper.asWidget().asWidget();
+//    }
 
 //    public void newFile() {
 //        GWT.log(this.toString() + " newFile");
@@ -65,16 +120,16 @@ public class ScenarioSimulationEditorSubmarineScreen implements IsWidget {
 //
 //    }
 
-    public void goToScreen() {
-        GWT.log(this.toString() + " goToScreen");
-        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorSubmarineWrapper.IDENTIFIER) {
-                                            },
-                                            () -> {
-                                                scenarioSimulationEditorSubmarineWrapper.setContent(scesimFilesProvider.getPopulatedScesimRule());
-                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
-                                            });
-        placeManager.goTo(ScenarioSimulationEditorSubmarineWrapper.IDENTIFIER);
-    }
+//    public void goToScreen() {
+//        GWT.log(this.toString() + " goToScreen");
+//        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorSubmarineWrapper.IDENTIFIER) {
+//                                            },
+//                                            () -> {
+//                                                scenarioSimulationEditorSubmarineWrapper.setContent(scesimFilesProvider.getPopulatedScesimRule());
+//                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
+//                                            });
+//        placeManager.goTo(ScenarioSimulationEditorSubmarineWrapper.IDENTIFIER);
+//    }
 
 //    public void openFile(final Path path) {
 //        placeManager.registerOnOpenCallback(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR,
