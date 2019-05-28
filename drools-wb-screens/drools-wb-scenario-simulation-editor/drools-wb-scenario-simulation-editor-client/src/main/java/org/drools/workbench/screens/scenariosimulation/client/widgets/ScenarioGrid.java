@@ -248,14 +248,14 @@ public class ScenarioGrid extends BaseGridWidget {
     public boolean adjustSelection(final SelectionExtension direction, final boolean isShiftKeyDown) {
         final boolean selectionChanged = super.adjustSelection(direction, isShiftKeyDown);
 
-        signalTestToolsAboutSelectedHeaderCells();
+        signalTestTools();
         scenarioContextMenuRegistry.hideMenus();
         scenarioContextMenuRegistry.hideErrorReportPopover();
 
         return selectionChanged;
     }
 
-    protected void signalTestToolsAboutSelectedHeaderCells() {
+    protected void signalTestTools() {
         eventBus.fireEvent(new DisableTestToolsEvent());
 
         if (model.getSelectedHeaderCells().size() > 0) {
