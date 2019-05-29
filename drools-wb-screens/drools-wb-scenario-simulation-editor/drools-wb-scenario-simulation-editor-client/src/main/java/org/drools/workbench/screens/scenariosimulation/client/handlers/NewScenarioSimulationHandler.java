@@ -24,7 +24,7 @@ import javax.inject.Inject;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.resources.ScenarioSimulationEditorResources;
@@ -66,7 +66,7 @@ public class NewScenarioSimulationHandler
 
     private final AuthorizationManager authorizationManager;
     private final SessionInfo sessionInfo;
-    private final ScenarioSimulationAssetsDropdown scenarioSimulationAssetsDropdown;
+    private final ScenarioSimulationDropdown scenarioSimulationDropdown;
 
     @Inject
     public NewScenarioSimulationHandler(final ScenarioSimulationResourceType resourceType,
@@ -77,7 +77,7 @@ public class NewScenarioSimulationHandler
                                         final Caller<ScenarioSimulationService> scenarioSimulationService,
                                         final AuthorizationManager authorizationManager,
                                         final SessionInfo sessionInfo,
-                                        final ScenarioSimulationAssetsDropdown scenarioSimulationAssetsDropdown) {
+                                        final ScenarioSimulationDropdown scenarioSimulationDropdown) {
         this.resourceType = resourceType;
         this.authorizationManager = authorizationManager;
         this.sessionInfo = sessionInfo;
@@ -86,7 +86,7 @@ public class NewScenarioSimulationHandler
         this.scenarioSimulationService = scenarioSimulationService;
         this.placeManager = placeManager;
         this.notificationEvent = notificationEvent;
-        this.scenarioSimulationAssetsDropdown = scenarioSimulationAssetsDropdown;
+        this.scenarioSimulationDropdown = scenarioSimulationDropdown;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class NewScenarioSimulationHandler
     public void setupExtensions() {
         uploadWidget = new TitledAttachmentFileWidget(ScenarioSimulationEditorConstants.INSTANCE.chooseDMN(),
                                                       scenarioSimulationService,
-                                                      scenarioSimulationAssetsDropdown);
+                                                      scenarioSimulationDropdown);
         sourceTypeSelector = new SourceTypeSelector(uploadWidget);
         extensions.add(Pair.newPair(ScenarioSimulationEditorConstants.INSTANCE.sourceType(), sourceTypeSelector));
         extensions.add(Pair.newPair("", uploadWidget));

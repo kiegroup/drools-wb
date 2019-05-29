@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.jboss.errai.common.client.api.Caller;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public abstract class AbstractNewScenarioTest {
     protected Caller<ScenarioSimulationService> scenarioSimulationServiceMock;
 
     @Mock
-    protected ScenarioSimulationAssetsDropdown scenarioSimulationDropdownMock;
+    protected ScenarioSimulationDropdown scenarioSimulationDropdownMock;
 
     @Before
     public void setup() throws Exception {

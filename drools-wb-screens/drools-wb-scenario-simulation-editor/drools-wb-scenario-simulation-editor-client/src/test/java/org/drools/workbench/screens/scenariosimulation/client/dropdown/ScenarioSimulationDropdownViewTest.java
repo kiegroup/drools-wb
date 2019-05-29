@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ScenarioSimulationAssetsDropdownViewTest extends AbstractScenarioSimulationAssetsDropdownTest {
+public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulationAssetsDropdownTest {
 
     @Mock
     private HTMLSelectElement nativeSelectMock;
@@ -60,7 +60,7 @@ public class ScenarioSimulationAssetsDropdownViewTest extends AbstractScenarioSi
     private TranslationService translationServiceMock;
 
     @Mock
-    private ScenarioSimulationAssetsDropdown presenterMock;
+    private ScenarioSimulationDropdown presenterMock;
 
     @Mock
     private JQuerySelectPicker dropdownMock;
@@ -71,7 +71,7 @@ public class ScenarioSimulationAssetsDropdownViewTest extends AbstractScenarioSi
     @Mock
     protected KieAssetsDropdownItem kieAssetsDropdownItemMock;
 
-    private ScenarioSimulationAssetsDropdownView scenarioSimulationAssetsDropdownView;
+    private ScenarioSimulationDropdownView scenarioSimulationDropdownView;
 
     @Before
     public void setup() {
@@ -79,9 +79,9 @@ public class ScenarioSimulationAssetsDropdownViewTest extends AbstractScenarioSi
         nativeSelectMock.classList = nativeSelectClassListMock;
         when(htmlOptionElementMock.cloneNode(eq(false))).thenReturn(htmlOptionElementClonedMock);
         when(translationServiceMock.format(eq(KieAssetsDropdownView_Select))).thenReturn(KIEASSETSDROPDOWNVIEW_SELECT);
-        scenarioSimulationAssetsDropdownView = spy(new ScenarioSimulationAssetsDropdownView(nativeSelectMock,
-                                                                                      htmlOptionElementMock,
-                                                                                      translationServiceMock) {
+        scenarioSimulationDropdownView = spy(new ScenarioSimulationDropdownView(nativeSelectMock,
+                                                                                htmlOptionElementMock,
+                                                                                translationServiceMock) {
             {
                 this.presenter = presenterMock;
             }
@@ -102,32 +102,32 @@ public class ScenarioSimulationAssetsDropdownViewTest extends AbstractScenarioSi
 
     @Test
     public void init() {
-        scenarioSimulationAssetsDropdownView.init();
+        scenarioSimulationDropdownView.init();
         assertFalse(nativeSelectMock.hidden);
         verify(dropdownMock, times(1)).on(eq("hidden.bs.select"), eq(onDropdownChangeHandlerMock));
     }
 
     @Test
     public void addValue() {
-        scenarioSimulationAssetsDropdownView.addValue(kieAssetsDropdownItemMock);
+        scenarioSimulationDropdownView.addValue(kieAssetsDropdownItemMock);
         verify(nativeSelectMock, times(1)).appendChild(isA(HTMLOptionElement.class));
     }
 
     @Test
     public void initialize() {
-        scenarioSimulationAssetsDropdownView.initialize();
+        scenarioSimulationDropdownView.initialize();
         verify(dropdownMock, times(1)).selectpicker(eq("val"), eq(""));
     }
 
     @Test
     public void refreshSelectPicker() {
-        scenarioSimulationAssetsDropdownView.refreshSelectPicker();
+        scenarioSimulationDropdownView.refreshSelectPicker();
         verify(dropdownMock, times(1)).selectpicker(eq("refresh"));
     }
 
     @Test
     public void getValue() {
-        final String retrieved = scenarioSimulationAssetsDropdownView.getValue();
+        final String retrieved = scenarioSimulationDropdownView.getValue();
         assertEquals(DEFAULT_VALUE, retrieved);
         verify(dropdownMock, times(1)).val();
     }

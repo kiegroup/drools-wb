@@ -46,10 +46,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ScenarioSimulationAssetsDropdownTest extends AbstractScenarioSimulationAssetsDropdownTest {
+public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationAssetsDropdownTest {
 
     @Mock
-    private ScenarioSimulationAssetsDropdownView viewMock;
+    private ScenarioSimulationDropdownView viewMock;
 
     @Mock
     private ScenarioSimulationAssetsDropdownProvider dataProviderMock;
@@ -63,7 +63,7 @@ public class ScenarioSimulationAssetsDropdownTest extends AbstractScenarioSimula
     @Mock
     private KieAssetsDropdownItem kieAssetsDropdownItemMock;
 
-    private ScenarioSimulationAssetsDropdown scenarioSimulationAssetsDropdown;
+    private ScenarioSimulationDropdown scenarioSimulationDropdown;
 
     private List<KieAssetsDropdownItem> assetList = IntStream.range(0, 3)
             .mapToObj(i -> new KieAssetsDropdownItem("File_" + i + ".txt", "", DEFAULT_VALUE, new HashMap<>()))
@@ -74,7 +74,7 @@ public class ScenarioSimulationAssetsDropdownTest extends AbstractScenarioSimula
         super.setup();
         when(viewMock.getElement()).thenReturn(htmlElementMock);
         when(viewMock.getValue()).thenReturn(DEFAULT_VALUE);
-        scenarioSimulationAssetsDropdown = spy(new ScenarioSimulationAssetsDropdown(viewMock, dataProviderMock) {
+        scenarioSimulationDropdown = spy(new ScenarioSimulationDropdown(viewMock, dataProviderMock) {
             {
                 onValueChangeHandler = onValueChangeHandlerMock;
                 this.kieAssets.addAll(assetList);
@@ -84,32 +84,32 @@ public class ScenarioSimulationAssetsDropdownTest extends AbstractScenarioSimula
 
     @Test
     public void init() {
-        scenarioSimulationAssetsDropdown.init();
-        verify(viewMock, times(1)).init(eq(scenarioSimulationAssetsDropdown));
+        scenarioSimulationDropdown.init();
+        verify(viewMock, times(1)).init(eq(scenarioSimulationDropdown));
     }
 
     @Test
     public void loadAssets() {
-        scenarioSimulationAssetsDropdown.loadAssets();
-        verify(scenarioSimulationAssetsDropdown, times(1)).clear();
-        verify(scenarioSimulationAssetsDropdown, times(1)).initializeDropdown();
+        scenarioSimulationDropdown.loadAssets();
+        verify(scenarioSimulationDropdown, times(1)).clear();
+        verify(scenarioSimulationDropdown, times(1)).initializeDropdown();
     }
 
     @Test
     public void initialize() {
-        scenarioSimulationAssetsDropdown.initialize();
+        scenarioSimulationDropdown.initialize();
         verify(viewMock, times(1)).refreshSelectPicker();
     }
 
     @Test
     public void clear() {
-        scenarioSimulationAssetsDropdown.clear();
+        scenarioSimulationDropdown.clear();
         verify(viewMock, times(1)).clear();
     }
 
     @Test
     public void getElement() {
-        final HTMLElement retrieved = scenarioSimulationAssetsDropdown.getElement();
+        final HTMLElement retrieved = scenarioSimulationDropdown.getElement();
         verify(viewMock, times(1)).getElement();
         assertEquals(htmlElementMock, retrieved);
     }
@@ -117,32 +117,32 @@ public class ScenarioSimulationAssetsDropdownTest extends AbstractScenarioSimula
     @Test
     public void getValue() {
         when(viewMock.getValue()).thenReturn(DEFAULT_VALUE);
-        Optional<KieAssetsDropdownItem> retrieved = scenarioSimulationAssetsDropdown.getValue();
+        Optional<KieAssetsDropdownItem> retrieved = scenarioSimulationDropdown.getValue();
         assertNotNull(retrieved);
         assertTrue(retrieved.isPresent());
         verify(viewMock, times(1)).getValue();
         reset(viewMock);
         when(viewMock.getValue()).thenReturn("UNKNOWN");
-        retrieved = scenarioSimulationAssetsDropdown.getValue();
+        retrieved = scenarioSimulationDropdown.getValue();
         assertNotNull(retrieved);
         assertFalse(retrieved.isPresent());
     }
 
     @Test
     public void onValueChanged() {
-        scenarioSimulationAssetsDropdown.onValueChanged();
+        scenarioSimulationDropdown.onValueChanged();
         verify(onValueChangeHandlerMock, times(1)).execute();
     }
 
     @Test
     public void addValue() {
-        scenarioSimulationAssetsDropdown.addValue(kieAssetsDropdownItemMock);
+        scenarioSimulationDropdown.addValue(kieAssetsDropdownItemMock);
         verify(viewMock, times(1)).addValue(eq(kieAssetsDropdownItemMock));
     }
 
     @Test
     public void initializeDropdown() {
-        scenarioSimulationAssetsDropdown.initializeDropdown();
+        scenarioSimulationDropdown.initializeDropdown();
         verify(dataProviderMock, times(1)).getItems(isA(Consumer.class));
     }
 }

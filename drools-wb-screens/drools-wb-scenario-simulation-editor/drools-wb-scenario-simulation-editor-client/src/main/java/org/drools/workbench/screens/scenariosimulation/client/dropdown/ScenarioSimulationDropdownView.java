@@ -19,17 +19,25 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
+import elemental2.dom.HTMLOptionElement;
+import elemental2.dom.HTMLSelectElement;
+import org.jboss.errai.common.client.ui.ElementWrapperWidget;
+import org.jboss.errai.ui.client.local.spi.TranslationService;
+import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownView;
 
 @Dependent
-public class ScenarioSimulationAssetsDropdown extends AbstractKieAssetsDropdown {
+@Templated
+public class ScenarioSimulationDropdownView extends KieAssetsDropdownView implements ScenarioSimulationDropdown.View {
 
     @Inject
-    public ScenarioSimulationAssetsDropdown(ScenarioSimulationAssetsDropdownView view, ScenarioSimulationAssetsDropdownProvider dataProvider) {
-        super(view, dataProvider);
+    public ScenarioSimulationDropdownView(HTMLSelectElement nativeSelect,
+                                          HTMLOptionElement htmlOptionElement,
+                                          TranslationService translationService) {
+        super(nativeSelect, htmlOptionElement, translationService);
     }
 
     public IsWidget asWidget() {
-        return ((ScenarioSimulationAssetsDropdownView) view).asWidget();
+        return ElementWrapperWidget.getWidget(getElement());
     }
 }

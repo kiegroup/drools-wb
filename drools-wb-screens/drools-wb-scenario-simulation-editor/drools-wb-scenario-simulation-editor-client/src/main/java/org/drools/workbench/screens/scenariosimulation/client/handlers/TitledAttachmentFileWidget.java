@@ -23,7 +23,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -41,15 +41,15 @@ public class TitledAttachmentFileWidget extends Composite {
     protected Div divElement = GWT.create(Div.class);
     protected FormLabel titleLabel = GWT.create(FormLabel.class);
     protected Span errorLabel = GWT.create(Span.class);
-    protected ScenarioSimulationAssetsDropdown scenarioSimulationAssetsDropdown;
+    protected ScenarioSimulationDropdown scenarioSimulationDropdown;
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
     protected String selectedPath;
 
     public TitledAttachmentFileWidget(String title,
                                       Caller<ScenarioSimulationService> scenarioSimulationService,
-                                      ScenarioSimulationAssetsDropdown scenarioSimulationAssetsDropdown) {
+                                      ScenarioSimulationDropdown scenarioSimulationDropdown) {
         this.scenarioSimulationService = scenarioSimulationService;
-        this.scenarioSimulationAssetsDropdown = scenarioSimulationAssetsDropdown;
+        this.scenarioSimulationDropdown = scenarioSimulationDropdown;
         titleLabel.setStyleName("control-label");
         titleLabel.setText(title);
         divElement.add(titleLabel);
@@ -58,12 +58,12 @@ public class TitledAttachmentFileWidget extends Composite {
         errorLabel.setColor("#c00");
         errorLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset());
         fields.add(divElement);
-        fields.add(this.scenarioSimulationAssetsDropdown.asWidget());
+        fields.add(this.scenarioSimulationDropdown.asWidget());
         fields.add(this.errorLabel);
         initWidget(fields);
-        scenarioSimulationAssetsDropdown.init();
-        scenarioSimulationAssetsDropdown.registerOnChangeHandler(() -> {
-            final Optional<KieAssetsDropdownItem> value = scenarioSimulationAssetsDropdown.getValue();
+        scenarioSimulationDropdown.init();
+        scenarioSimulationDropdown.registerOnChangeHandler(() -> {
+            final Optional<KieAssetsDropdownItem> value = scenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
             validate();
         });
@@ -76,8 +76,8 @@ public class TitledAttachmentFileWidget extends Composite {
     }
 
     public void updateAssetList() {
-        scenarioSimulationAssetsDropdown.clear();
-        scenarioSimulationAssetsDropdown.loadAssets();
+        scenarioSimulationDropdown.clear();
+        scenarioSimulationDropdown.loadAssets();
     }
 
     public String getSelectedPath() {
