@@ -385,6 +385,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void reset() {
+        listGroupItemPresenter.reset();
         view.reset();
     }
 
@@ -443,5 +444,4 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
             return terms.contains(key);
         }
     }
-
 }
