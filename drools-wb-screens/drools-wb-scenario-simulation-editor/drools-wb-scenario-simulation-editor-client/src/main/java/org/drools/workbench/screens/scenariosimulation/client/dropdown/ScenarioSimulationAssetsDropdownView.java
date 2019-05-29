@@ -31,7 +31,9 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 public class ScenarioSimulationAssetsDropdownView extends KieAssetsDropdownView implements ScenarioSimulationAssetsDropdown.View {
 
     @Inject
-    public ScenarioSimulationAssetsDropdownView(HTMLSelectElement nativeSelect, HTMLOptionElement htmlOptionElement, TranslationService translationService) {
+    public ScenarioSimulationAssetsDropdownView(HTMLSelectElement nativeSelect,
+                                                HTMLOptionElement htmlOptionElement,
+                                                TranslationService translationService) {
         super(nativeSelect, htmlOptionElement, translationService);
     }
 

@@ -66,8 +66,7 @@ public class ScenarioSimulationAssetsDropdownProviderImpl implements ScenarioSim
 
     protected void updateAssets(RemoteCallback<AssetQueryResult> callback) {
         ProjectAssetsQuery query = createProjectQuery();
-        assetQueryService.getAssets(query)
-                .call(callback, new DefaultErrorCallback());
+        assetQueryService.getAssets(query).call(callback, new DefaultErrorCallback());
     }
 
     protected ProjectAssetsQuery createProjectQuery() {
