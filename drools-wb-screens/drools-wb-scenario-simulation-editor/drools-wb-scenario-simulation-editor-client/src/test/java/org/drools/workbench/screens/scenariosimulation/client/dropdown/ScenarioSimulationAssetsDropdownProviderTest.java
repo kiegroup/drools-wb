@@ -160,7 +160,7 @@ public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenar
         Path path = mock(Path.class);
         when(toReturn.getType()).thenReturn(FolderItemType.FILE);
         when(toReturn.getItem()).thenReturn(path);
-        when(path.toURI()).thenReturn("project/test/1");
+        when(path.toURI()).thenReturn("project/test.dmn");
         return toReturn;
     }
 }
