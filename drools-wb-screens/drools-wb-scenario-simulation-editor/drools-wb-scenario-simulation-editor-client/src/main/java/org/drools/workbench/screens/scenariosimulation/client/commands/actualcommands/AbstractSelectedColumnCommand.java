@@ -198,6 +198,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param propertyTitle The title to assign to this property.
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, FactIdentifier factIdentifier, List<String> propertyNameElements, String propertyClass, String propertyTitle) {
+        if (propertyTitle == null) {
+            throw new IllegalArgumentException("Invalid property title");
+        }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         String instanceAliasName = propertyNameElements.get(0);
         if (selectedColumn.isInstanceAssigned() && !instanceAliasName.equals(selectedColumn.getInformationHeaderMetaData().getTitle())) {
