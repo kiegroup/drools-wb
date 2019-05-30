@@ -199,7 +199,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, FactIdentifier factIdentifier, List<String> propertyNameElements, String propertyClass, String propertyTitle) {
         if (propertyTitle == null) {
-            throw new IllegalArgumentException("Invalid property title");
+            throw new IllegalArgumentException("Property type can not be null");
         }
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         String instanceAliasName = propertyNameElements.get(0);
