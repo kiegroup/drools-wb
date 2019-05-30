@@ -42,9 +42,9 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 
 @ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorSubmarineScreen /*implements IsWidget*/ {
+public class ScenarioSimulationEditorSubmarineScreen {
 
-    public static final String IDENTIFIER = "ScenarioSimulationEditorSubmarineWrapper";
+    public static final String IDENTIFIER = "ScenarioSimulationEditorSubmarineScreen";
     public static final PlaceRequest SCENARIO_SIMULATION_SUBMARINE_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     @Inject
@@ -81,7 +81,7 @@ public class ScenarioSimulationEditorSubmarineScreen /*implements IsWidget*/ {
     @WorkbenchPartTitle
     public String getTitleText() {
         GWT.log(this.toString() + " getTitleText");
-        return "Scenario Simulation wrapper";
+        return "Scenario Simulation Submarine Screen";
     }
 
     @WorkbenchPartTitleDecoration

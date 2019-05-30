@@ -34,7 +34,7 @@ import static org.junit.Assert.fail;
 
 public class ScenarioSimulationSubmarineServiceImplTest {
 
-    private static ScenarioSimulationSubmarineServiceImpl instance = new ScenarioSimulationSubmarineServiceImpl();
+    private static ScenarioSimulationSubmarineServiceServerImpl instance = new ScenarioSimulationSubmarineServiceServerImpl();
 
     private static String ASSETS_DIRECTORY = "assets";
 

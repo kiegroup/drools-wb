@@ -53,21 +53,15 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 @Dependent
-//@WorkbenchScreen(identifier = IDENTIFIER)
 /**
  * Wrapper to be used inside Submarine
  */
 public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
-    public static final String IDENTIFIER = "ScenarioSimulationEditorSubmarineWrapper";
-//    public static final PlaceRequest SCENARIO_SIMULATION_WRAPPER_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
-
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
-//    private FileChooserPopupPresenter fileChooserPopupPresenter;
-
     public ScenarioSimulationEditorSubmarineWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
@@ -78,15 +72,12 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
                                                     final FileMenuBuilder fileMenuBuilder,
                                                     final PlaceManager placeManager,
                                                     final MultiPageEditorContainerView multiPageEditorContainerView,
-                                                    final AuthoringEditorDock authoringWorkbenchDocks/*,
-                                                    final FileChooserPopupPresenter fileChooserPopupPresenter*/) {
+                                                    final AuthoringEditorDock authoringWorkbenchDocks) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
         this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
-//        this.scesimFilesProvider = scesimFilesProvider;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
-//        this.fileChooserPopupPresenter = fileChooserPopupPresenter;
     }
 
     @Override
@@ -104,6 +95,7 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+//        getModelSuccessCallbackMethod(service.unmarshal(value));
         service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
     }
 
@@ -117,40 +109,28 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     public void resetContentHash() {
         GWT.log(this.toString() + " resetContentHash");
     }
-//
-//    @OnStartup
+
+
     public void onStartup(final PlaceRequest place) {
         GWT.log(this.toString() + " onStartup " + place);
         super.init(place);
-//        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(place.getPath()));
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
     }
-//
-//    @OnMayClose
     public boolean mayClose() {
         GWT.log(this.toString() + " mayClose");
         return !scenarioSimulationEditorPresenter.isDirty();
     }
-//
-//    @WorkbenchPartTitle
-//    public String getTitleText() {
-//        GWT.log(this.toString() + " getTitleText");
-//        return "Scenario Simulation wrapper";
-//    }
-//
-//    @WorkbenchPartTitleDecoration
+
     public IsWidget getTitle() {
         GWT.log(this.toString() + " getTitle");
         return super.getTitle();
     }
-//
-//    @WorkbenchPartView
+
     public MultiPageEditorContainerView getWidget() {
         GWT.log(this.toString() + " getWidget");
         return super.getWidget();
     }
-//
-//    @WorkbenchMenu
+
     public void setMenus(final Consumer<Menus> menusConsumer) {
         GWT.log(this.toString() + " setMenus " + menusConsumer);
         menusConsumer.accept(getMenus());

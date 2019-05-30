@@ -33,7 +33,7 @@ import org.jboss.errai.bus.server.annotations.Service;
  */
 @Service
 @ApplicationScoped
-public class ScenarioSimulationSubmarineServiceImpl implements ScenarioSimulationSubmarineService {
+public class ScenarioSimulationSubmarineServiceServerImpl implements ScenarioSimulationSubmarineService {
 
 
     @Override
