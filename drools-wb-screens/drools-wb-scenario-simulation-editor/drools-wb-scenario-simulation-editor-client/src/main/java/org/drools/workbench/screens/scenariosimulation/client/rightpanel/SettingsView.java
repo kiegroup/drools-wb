@@ -39,7 +39,7 @@ public interface SettingsView
 
     LabelElement getNameLabel();
 
-    SpanElement getFileName();
+    InputElement getFileName();
 
     LabelElement getTypeLabel();
 
@@ -63,7 +63,7 @@ public interface SettingsView
 
     LabelElement getDmnNameLabel();
 
-    SpanElement getDmnName();
+    InputElement getDmnName();
 
     InputElement getSkipFromBuild();
 
