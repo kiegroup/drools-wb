@@ -75,7 +75,7 @@ abstract class AbstractSettingsTest {
     protected LabelElement dmnNamespaceLabelMock;
 
     @Mock
-    protected SpanElement dmnNamespaceMock;
+    protected InputElement dmnNamespaceMock;
 
     @Mock
     protected LabelElement dmnNameLabelMock;

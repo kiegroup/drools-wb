@@ -203,7 +203,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(settingsViewMock, times(1)).getDmnName();
         verify(dmnNameMock, times(1)).setInnerText(eq(DMN_NAME));
         verify(settingsViewMock, times(1)).getDmnNamespace();
-        verify(dmnNamespaceMock, times(1)).setInnerText(eq(DMN_NAMESPACE));
+        verify(dmnNamespaceMock, times(1)).setValue(eq(DMN_NAMESPACE));
     }
 
     @Test

@@ -59,7 +59,7 @@ public interface SettingsView
 
     LabelElement getDmnNamespaceLabel();
 
-    SpanElement getDmnNamespace();
+    InputElement getDmnNamespace();
 
     LabelElement getDmnNameLabel();
 

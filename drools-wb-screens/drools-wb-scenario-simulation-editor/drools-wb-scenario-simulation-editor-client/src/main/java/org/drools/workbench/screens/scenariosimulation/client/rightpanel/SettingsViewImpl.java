@@ -73,7 +73,7 @@ public class SettingsViewImpl
     protected LabelElement dmnNamespaceLabel = Document.get().createLabelElement();
 
     @DataField("dmnNamespace")
-    protected SpanElement dmnNamespace = Document.get().createSpanElement();
+    protected InputElement dmnNamespace = Document.get().createTextInputElement();
 
     @DataField("dmnNameLabel")
     protected LabelElement dmnNameLabel = Document.get().createLabelElement();
@@ -168,7 +168,7 @@ public class SettingsViewImpl
     }
 
     @Override
-    public SpanElement getDmnNamespace() {
+    public InputElement getDmnNamespace() {
         return dmnNamespace;
     }
 
