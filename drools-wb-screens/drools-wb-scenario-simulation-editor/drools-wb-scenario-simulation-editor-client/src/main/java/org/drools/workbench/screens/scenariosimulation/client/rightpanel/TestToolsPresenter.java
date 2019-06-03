@@ -414,12 +414,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                            .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key).orElse(null)))));
     }
 
-    protected boolean isSimple(String key) {
-        return Optional.ofNullable(getFactModelTreeFromSimpleJavaTypeMap(key))
-                .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key))
-                .isPresent();
-    }
-
     protected void clearLists() {
         clearDataObjectList();
         clearSimpleJavaTypeList();
