@@ -36,6 +36,7 @@
     <module>drools-wb-scenario-simulation-editor-client</module>
     <module>drools-wb-scenario-simulation-editor-backend</module>
     <module>drools-wb-scenario-simulation-editor-businesscentral-client</module>
+    <module>drools-wb-scesim-efm-models</module>
     <module>drools-wb-scenario-simulation-editor-submarine-client</module>
     <module>drools-wb-scenario-simulation-editor-webapp</module>
   </modules>

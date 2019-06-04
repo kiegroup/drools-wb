@@ -20,9 +20,9 @@
 <module>
 
   <source path="client"/>
-  <source path="service"/>
 
   <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI" />
   <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
+  <inherits name='org.drools.ScesimEfmSubmarine'/>
 
 </module>

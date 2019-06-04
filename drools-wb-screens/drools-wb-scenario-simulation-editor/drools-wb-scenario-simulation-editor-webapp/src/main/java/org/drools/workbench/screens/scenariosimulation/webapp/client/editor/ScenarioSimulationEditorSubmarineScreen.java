@@ -64,7 +64,6 @@ public class ScenarioSimulationEditorSubmarineScreen {
         this.placeManager = placeManager;
     }
 
-
     @OnStartup
     public void onStartup(final PlaceRequest place) {
         GWT.log(this.toString() + " onStartup " + place);
@@ -75,6 +74,13 @@ public class ScenarioSimulationEditorSubmarineScreen {
     @OnMayClose
     public boolean mayClose() {
         GWT.log(this.toString() + " mayClose");
+        int x = 34;
+        switch (x) {
+            case 2:
+                break;
+            default:
+                break;
+        }
         return scenarioSimulationEditorSubmarineWrapper.mayClose();
     }
 

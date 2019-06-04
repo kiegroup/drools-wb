@@ -201,7 +201,8 @@ public class ScesimFilesProvider {
             "  </imports>\n" +
             "</ScenarioSimulationModel>";
 
-    private final static String populatedScesimRule = "<ScenarioSimulationModel version=\"1.3\">\n" +
+    private final static String populatedScesimRule =
+            "<ScenarioSimulationModel version=\"1.3\">\n" +
             "  <simulation>\n" +
             "    <simulationDescriptor>\n" +
             "      <factMappings>\n" +
@@ -386,87 +387,89 @@ public class ScesimFilesProvider {
             "  </imports>\n" +
             "</ScenarioSimulationModel>";
 
-    private static final String newScesimRule = "<ScenarioSimulationModel version=\"1.5\">\n" +
-            "  <simulation>\n" +
-            "    <simulationDescriptor>\n" +
-            "      <factMappings>\n" +
-            "        <FactMapping>\n" +
-            "          <expressionElements class=\"linked-list\"/>\n" +
-            "          <expressionIdentifier>\n" +
+    private static final String newScesimRule =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<scesim:ScenarioSimulationModel version=\"1.5\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:scesim=\"http://www.kie.org/scesim\">\n" +
+            "  <scesim:simulation>\n" +
+            "    <scesim:simulationDescriptor>\n" +
+            "      <scesim:factMappings>\n" +
+            "        <scesim:factMapping>\n" +
+            "          <scesim:expressionElements class=\"linked-list\"/>\n" +
+            "          <scesim:expressionIdentifier>\n" +
             "            <name>Index</name>\n" +
-            "            <type>OTHER</type>\n" +
-            "          </expressionIdentifier>\n" +
-            "          <factIdentifier>\n" +
+            "            <scesim:type>OTHER</scesim:type>\n" +
+            "          </scesim:expressionIdentifier>\n" +
+            "          <scesim:factIdentifier>\n" +
             "            <name>#</name>\n" +
             "            <className>java.lang.Integer</className>\n" +
-            "          </factIdentifier>\n" +
+            "          </scesim:factIdentifier>\n" +
             "          <className>java.lang.Integer</className>\n" +
-            "          <factAlias>#</factAlias>\n" +
-            "        </FactMapping>\n" +
-            "        <FactMapping>\n" +
-            "          <expressionElements class=\"linked-list\"/>\n" +
-            "          <expressionIdentifier>\n" +
+            "          <scesim:factAlias>#</scesim:factAlias>\n" +
+            "        </scesim:factMapping>\n" +
+            "        <scesim:factMapping>\n" +
+            "          <scesim:expressionElements class=\"linked-list\"/>\n" +
+            "          <scesim:expressionIdentifier>\n" +
             "            <name>Description</name>\n" +
-            "            <type>OTHER</type>\n" +
-            "          </expressionIdentifier>\n" +
-            "          <factIdentifier>\n" +
+            "            <scesim:type>OTHER</scesim:type>\n" +
+            "          </scesim:expressionIdentifier>\n" +
+            "          <scesim:factIdentifier>\n" +
             "            <name>Scenario description</name>\n" +
             "            <className>java.lang.String</className>\n" +
-            "          </factIdentifier>\n" +
+            "          </scesim:factIdentifier>\n" +
             "          <className>java.lang.String</className>\n" +
-            "          <factAlias>Scenario description</factAlias>\n" +
-            "        </FactMapping>\n" +
-            "        <FactMapping>\n" +
-            "          <expressionElements class=\"linked-list\"/>\n" +
-            "          <expressionIdentifier>\n" +
+            "          <scesim:factAlias>Scenario description</scesim:factAlias>\n" +
+            "        </scesim:factMapping>\n" +
+            "        <scesim:factMapping>\n" +
+            "          <scesim:expressionElements class=\"linked-list\"/>\n" +
+            "          <scesim:expressionIdentifier>\n" +
             "            <name>0|1</name>\n" +
-            "            <type>GIVEN</type>\n" +
-            "          </expressionIdentifier>\n" +
-            "          <factIdentifier>\n" +
+            "            <scesim:type>GIVEN</scesim:type>\n" +
+            "          </scesim:expressionIdentifier>\n" +
+            "          <scesim:factIdentifier>\n" +
             "            <name>Empty</name>\n" +
             "            <className>java.lang.Void</className>\n" +
-            "          </factIdentifier>\n" +
+            "          </scesim:factIdentifier>\n" +
             "          <className>java.lang.Void</className>\n" +
-            "          <factAlias>INSTANCE 1</factAlias>\n" +
-            "          <expressionAlias>PROPERTY 1</expressionAlias>\n" +
-            "        </FactMapping>\n" +
-            "        <FactMapping>\n" +
-            "          <expressionElements class=\"linked-list\"/>\n" +
-            "          <expressionIdentifier>\n" +
+            "          <scesim:factAlias>INSTANCE 1</scesim:factAlias>\n" +
+            "          <scesim:expressionAlias>PROPERTY 1</scesim:expressionAlias>\n" +
+            "        </scesim:factMapping>\n" +
+            "        <scesim:factMapping>\n" +
+            "          <scesim:expressionElements class=\"linked-list\"/>\n" +
+            "          <scesim:expressionIdentifier>\n" +
             "            <name>0|2</name>\n" +
-            "            <type>EXPECT</type>\n" +
-            "          </expressionIdentifier>\n" +
-            "          <factIdentifier reference=\"../../FactMapping[3]/factIdentifier\"/>\n" +
+            "            <scesim:type>EXPECT</scesim:type>\n" +
+            "          </scesim:expressionIdentifier>\n" +
+            "          <scesim:factIdentifier reference=\"../../FactMapping[3]/factIdentifier\"/>\n" +
             "          <className>java.lang.Void</className>\n" +
-            "          <factAlias>INSTANCE 2</factAlias>\n" +
-            "          <expressionAlias>PROPERTY 2</expressionAlias>\n" +
-            "        </FactMapping>\n" +
-            "      </factMappings>\n" +
-            "      <type>RULE</type>\n" +
+            "          <scesim:factAlias>INSTANCE 2</scesim:factAlias>\n" +
+            "          <scesim:expressionAlias>PROPERTY 2</scesim:expressionAlias>\n" +
+            "        </scesim:factMapping>\n" +
+            "      </scesim:factMappings>\n" +
+            "      <scesim:type>RULE</scesim:type>\n" +
             "      <skipFromBuild>false</skipFromBuild>\n" +
-            "    </simulationDescriptor>\n" +
-            "    <scenarios class=\"linked-list\">\n" +
-            "      <Scenario>\n" +
-            "        <factMappingValues>\n" +
-            "          <FactMappingValue>\n" +
-            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>\n" +
-            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>\n" +
-            "          </FactMappingValue>\n" +
-            "          <FactMappingValue>\n" +
-            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
-            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>\n" +
-            "          </FactMappingValue>\n" +
-            "          <FactMappingValue>\n" +
-            "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
-            "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>\n" +
-            "          </FactMappingValue>\n" +
-            "        </factMappingValues>\n" +
-            "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +
-            "      </Scenario>\n" +
-            "    </scenarios>\n" +
-            "  </simulation>\n" +
-            "  <imports>\n" +
-            "    <imports/>\n" +
-            "  </imports>\n" +
-            "</ScenarioSimulationModel>";
+            "    </scesim:simulationDescriptor>\n" +
+            "    <scesim:scenarios class=\"linked-list\">\n" +
+            "      <scesim:Scenario>\n" +
+            "        <scesim:factMappingValues>\n" +
+            "          <scesim:factMappingValue>\n" +
+            "            <scesim:factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>\n" +
+            "            <scesim:expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>\n" +
+            "          </scesim:factMappingValue>\n" +
+            "          <scesim:factMappingValue>\n" +
+            "            <scesim:factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <scesim:expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>\n" +
+            "          </scesim:factMappingValue>\n" +
+            "          <scesim:factMappingValue>\n" +
+            "            <scesim:factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+            "            <scesim:expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>\n" +
+            "          </scesim:factMappingValue>\n" +
+            "        </scesim:factMappingValues>\n" +
+            "        <scesim:simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +
+            "      </scesim:Scenario>\n" +
+            "    </scesim:scenarios>\n" +
+            "  </scesim:simulation>\n" +
+            "  <scesim:imports>\n" +
+            "    <scesim:imports/>\n" +
+            "  </scesim:imports>\n" +
+            "</scesim:ScenarioSimulationModel>";
 }

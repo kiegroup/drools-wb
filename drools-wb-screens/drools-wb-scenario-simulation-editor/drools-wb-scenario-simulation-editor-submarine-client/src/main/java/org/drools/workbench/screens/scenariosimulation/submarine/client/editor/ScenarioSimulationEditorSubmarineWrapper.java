@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.submarine.client.editor;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.emf.models.scesim.util.Scesim2Resource;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
@@ -34,10 +36,8 @@ import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMODataManagementStrategy;
-import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
@@ -59,22 +59,24 @@ import org.uberfire.workbench.model.menu.Menus;
 public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    protected Caller<ScenarioSimulationSubmarineService> service;
+//    protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
+    private Scesim2Resource scesim2Resource = new Scesim2Resource();
+
     public ScenarioSimulationEditorSubmarineWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
 
     @Inject
-    public ScenarioSimulationEditorSubmarineWrapper(final Caller<ScenarioSimulationSubmarineService> service,
+    public ScenarioSimulationEditorSubmarineWrapper(/*final Caller<ScenarioSimulationSubmarineService> service,*/
                                                     final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
                                                     final FileMenuBuilder fileMenuBuilder,
                                                     final PlaceManager placeManager,
                                                     final MultiPageEditorContainerView multiPageEditorContainerView,
                                                     final AuthoringEditorDock authoringWorkbenchDocks) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
-        this.service = service;
+//        this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
@@ -88,6 +90,12 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     }
 
     @Override
+    public Promise getContent() {
+        GWT.log(this.toString() + " getContent");
+        return null;
+    }
+
+    @Override
     public void setContent(String value) {
         GWT.log(this.toString() + " setContent ");
         // TODO WORKAROUND
@@ -95,14 +103,9 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+        unmarshallContent(value);
 //        getModelSuccessCallbackMethod(service.unmarshal(value));
-        service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
-    }
-
-    @Override
-    public Promise getContent() {
-        GWT.log(this.toString() + " getContent");
-        return null;
+//        service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
     }
 
     @Override
@@ -110,12 +113,12 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
         GWT.log(this.toString() + " resetContentHash");
     }
 
-
     public void onStartup(final PlaceRequest place) {
         GWT.log(this.toString() + " onStartup " + place);
         super.init(place);
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
     }
+
     public boolean mayClose() {
         GWT.log(this.toString() + " mayClose");
         return !scenarioSimulationEditorPresenter.isDirty();
@@ -166,6 +169,16 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     @Override
     protected Supplier<ScenarioSimulationModel> getContentSupplier() {
         return scenarioSimulationEditorPresenter.getContentSupplier();
+    }
+
+    protected void unmarshallContent(String toUnmarshal) {
+        GWT.log(this.toString() + " unmarshallContent");
+        try {
+            final org.drools.emf.models.scesim.ScenarioSimulationModel unmarshall = scesim2Resource.unmarshall(toUnmarshal);
+            GWT.log(unmarshall.toString());
+        } catch (IOException e) {
+            GWT.log(this.toString() + e.getMessage());
+        }
     }
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {
