@@ -223,6 +223,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     public void onEvent(DeleteColumnEvent event) {
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setColumnGroup(event.getColumnGroup());
+        context.getStatus().setDisable(true);
+        context.getStatus().setOpenDock(false);
         commonExecution(context,
                         new DeleteColumnCommand(),
                         true);
@@ -249,6 +251,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(true);
         context.getStatus().setAsProperty(false);
+        context.getStatus().setFullPackage(
+                ((ScenarioGridColumn) context.getModel().getSelectedColumn()).getFactIdentifier().getPackageWithoutClassName());
         commonExecution(context,
                         new DuplicateInstanceCommand(),
                         true);
@@ -379,10 +383,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        if (context.getModel().getSelectedColumn() == null) {
-            return;
-        }
-        if (context.getModel().isSameSelectedColumnType(event.getClassName())) {
+        if (context.getModel().isSameInstanceType(event.getClassName())) {
             return;
         }
         context.getStatus().setFullPackage(event.getFullPackage());

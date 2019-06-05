@@ -96,6 +96,16 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
+    public boolean isInstanceAssigned(String factName) {
+        return listGroupItemViewMap.get(factName).isInstanceAssigned();
+    }
+
+    @Override
+    public void setInstanceAssigned(String factName, boolean assigned) {
+        listGroupItemViewMap.get(factName).setInstanceAssigned(assigned);
+    }
+
+    @Override
     public void disable() {
         this.disabled.set(true);
         factName = null;
@@ -156,6 +166,12 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     public void onSelectedElement(FieldItemView selected) {
         testToolsPresenter.setSelectedElement(selected);
         listGroupItemViewMap.values().forEach(ListGroupItemView::unselect);
+    }
+
+    @Override
+    public void reset() {
+        fieldItemPresenter.reset();
+        listGroupItemViewMap.clear();
     }
 
     /**

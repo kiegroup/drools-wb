@@ -67,10 +67,22 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
     void disableEditorTab();
 
     /**
+     * It enables all widgets related to the search box
+     */
+    void enableSearch();
+
+    /**
+     * It disables all widgets related to the search box
+     */
+    void disableSearch();
+
+    /**
      * By default the <b>Add</b> button is disabled (no user interaction allowed).
      * It is enabled only by selection of a property/data object
      */
     void enableAddButton();
+
+    void disableAddButton();
 
     interface Presenter extends SubDockView.Presenter {
 
