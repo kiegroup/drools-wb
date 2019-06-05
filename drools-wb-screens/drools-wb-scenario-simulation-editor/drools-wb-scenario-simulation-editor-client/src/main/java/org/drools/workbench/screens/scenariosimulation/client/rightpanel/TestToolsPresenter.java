@@ -315,6 +315,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         listGroupItemPresenter.enable();
         editingColumnEnabled = true;
         view.enableEditorTab();
+        view.enableSearch();
     }
 
     @Override
@@ -324,6 +325,14 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         listGroupItemPresenter.enable(factName);
         editingColumnEnabled = true;
         view.enableEditorTab();
+        /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column.
+         * Therefore, it isn't necessary to search through the maps to check it. In that case, the search is activated.
+         */
+        if (!notEqualsSearch) {
+            updateInstanceIsAssignedStatus(factName);
+        } else {
+            view.enableSearch();
+        }
         if (propertyNameElements != null && !notEqualsSearch) {
             listGroupItemPresenter.selectProperty(factName, propertyNameElements);
         }
@@ -343,7 +352,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        view.enableAddButton();
+        if (selectedListGroupItemView.isInstanceAssigned()) {
+            view.disableAddButton();
+        } else {
+            view.enableAddButton();
+        }
     }
 
     @Override
@@ -372,7 +385,24 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void reset() {
+        listGroupItemPresenter.reset();
         view.reset();
+    }
+
+    /**
+     * It navigates through the maps, to check if the given key is present or not in the keySet of these maps.
+     * If present, then a INSTANCE is already assigned to the selected column. Then, it assigns the search result to
+     * its related view.
+     * @param key
+     */
+    protected void updateInstanceIsAssignedStatus(String key) {
+        if (key != null && !key.isEmpty()) {
+            boolean assigned = dataObjectFieldsMap.keySet().contains(key) ||
+                    simpleJavaTypeFieldsMap.keySet().contains(key) ||
+                    instanceFieldsMap.keySet().contains(key) ||
+                    simpleJavaInstanceFieldsMap.keySet().contains(key);
+            listGroupItemPresenter.setInstanceAssigned(key, assigned);
+        }
     }
 
     protected Optional<String> getFullPackage(String className) {

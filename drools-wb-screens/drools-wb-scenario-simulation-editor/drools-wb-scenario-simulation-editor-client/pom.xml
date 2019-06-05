@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.23.0-SNAPSHOT</version>
+    <version>7.24.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -26,10 +26,10 @@
       <artifactId>drools-scenario-simulation-api</artifactId>
     </dependency>
 
-    <!--    <dependency>-->
-    <!--      <groupId>org.kie.soup</groupId>-->
-    <!--      <artifactId>kie-soup-project-datamodel-api</artifactId>-->
-    <!--    </dependency>-->
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.kie.soup</groupId>
@@ -43,12 +43,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.kie.soup</groupId>
-          <artifactId>kie-soup-project-datamodel-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -166,12 +160,6 @@
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-dataset-api</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.kie.soup</groupId>
-      <artifactId>kie-soup-project-datamodel-api</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-displayer-api</artifactId>

@@ -23,13 +23,13 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import elemental2.dom.HTMLElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DEFAULT_VALUE;
@@ -45,8 +45,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationDropdownTest {
+@RunWith(LienzoMockitoTestRunner.class)
+public class ScenarioSimulationDropdownTest extends AbstractScenarioSimulationAssetsDropdownTest {
 
     @Mock
     private ScenarioSimulationDropdownView viewMock;

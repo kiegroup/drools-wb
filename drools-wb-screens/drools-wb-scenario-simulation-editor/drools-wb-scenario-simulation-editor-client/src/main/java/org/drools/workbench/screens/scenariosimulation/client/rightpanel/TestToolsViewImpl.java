@@ -226,19 +226,37 @@ public class TestToolsViewImpl
     }
 
     @Override
+    public void enableSearch() {
+        clearSearchButton.setDisabled(false);
+        searchButton.setDisabled(false);
+        inputSearch.setDisabled(false);
+    }
+
+    @Override
+    public void disableSearch() {
+        clearSearchButton.setDisabled(true);
+        searchButton.setDisabled(true);
+        inputSearch.setDisabled(true);
+    }
+
+    @Override
     public void enableAddButton() {
         addButton.setDisabled(false);
     }
 
+    @Override
+    public void disableAddButton() {
+        addButton.setDisabled(true);
+    }
+
     protected void setDisabledStatus(boolean disabled) {
-        clearSearchButton.setDisabled(disabled);
-        searchButton.setDisabled(disabled);
-        inputSearch.setDisabled(disabled);
         nameField.setDisabled(disabled);
         conditionsButton.setDisabled(disabled);
         setContainersDisabledStatus(disabled);
         if (disabled) {
             kieTestToolsContent.addClassName("disabled");
+            disableSearch();
+            disableAddButton();
         } else {
             kieTestToolsContent.removeClassName("disabled");
         }

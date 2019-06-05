@@ -29,7 +29,9 @@ import javax.inject.Named;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
+import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
+import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.backend.metadata.MetadataServerSideService;
 import org.guvnor.common.services.backend.util.CommentedOptionFactory;
@@ -66,6 +68,7 @@ import org.uberfire.java.nio.file.FileSystem;
 import org.uberfire.java.nio.file.OpenOption;
 import org.uberfire.java.nio.fs.file.SimpleFileSystemProvider;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -75,7 +78,9 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -148,10 +153,19 @@ public class ScenarioSimulationServiceImplTest {
     private ScenarioSimulationBuilder scenarioSimulationBuilderMock;
 
     @Mock
-    private DirectoryStream directoryStreamMock;
+    private DMNTypeService dmnTypeServiceMock;
 
     @InjectMocks
-    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
+    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class)) {
+        @Override
+        protected ScenarioSimulationModel unmarshalInternal(String content) {
+            Simulation simulation = new Simulation();
+            simulation.getSimulationDescriptor().setType(Type.DMN);
+            ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
+            toReturn.setSimulation(simulation);
+            return toReturn;
+        }
+    };
 
     private Path path = PathFactory.newPath("contextPath", "file:///contextPath");
 
@@ -275,7 +289,7 @@ public class ScenarioSimulationServiceImplTest {
                                                "test.scesim",
                                                model,
                                                "Commit comment",
-                                               ScenarioSimulationModel.Type.RULE,
+                                               Type.RULE,
                                                "default");
 
         assertNotNull(returnPath);
@@ -294,7 +308,7 @@ public class ScenarioSimulationServiceImplTest {
                                                "test.scesim",
                                                model,
                                                "Commit comment",
-                                               ScenarioSimulationModel.Type.DMN,
+                                               Type.DMN,
                                                "test");
 
         assertNotNull(returnPath);
@@ -377,13 +391,14 @@ public class ScenarioSimulationServiceImplTest {
 
     @Test
     public void removeOldActivatorIfExistsTest() {
-        service.removeOldActivatorIfExists(kieModuleMock);
-        verify(ioServiceMock, times(1)).deleteIfExists(any());
+        org.uberfire.java.nio.file.Path existingActivatorPathMock = mock(org.uberfire.java.nio.file.Path.class);
+        service.removeOldActivatorIfExists(existingActivatorPathMock, kieModuleMock);
+        verify(ioServiceMock, times(2)).deleteIfExists(any());
 
         reset(ioServiceMock);
         when(kieModuleServiceMock.resolvePackages(any(KieModule.class))).thenReturn(new HashSet<>());
-        service.removeOldActivatorIfExists(kieModuleMock);
-        verify(ioServiceMock, never()).deleteIfExists(any());
+        service.removeOldActivatorIfExists(existingActivatorPathMock, kieModuleMock);
+        verify(ioServiceMock, times(1)).deleteIfExists(eq(existingActivatorPathMock));
     }
 
     @Test
@@ -444,21 +459,26 @@ public class ScenarioSimulationServiceImplTest {
         assertTrue(service.getActivatorPath(packageMock).endsWith(ScenarioJunitActivator.ACTIVATOR_CLASS_NAME + ".java"));
     }
 
-    private void getAssetsCommon(String suffix, int expectedSize) {
+    @Test
+    public void load() {
+        ScenarioSimulationModel model = service.load(path);
+
+        assertEquals(Type.DMN, model.getSimulation().getSimulationDescriptor().getType());
+        verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
+
+        doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), anyString());
+
         try {
-            List<String> retrieved = service.getAssets(".", suffix, "com.test");
-            assertNotNull(retrieved);
-            assertEquals(expectedSize, retrieved.size());
+            service.load(path);
         } catch (Exception e) {
-            fail(e.getMessage());
+            fail();
         }
     }
 
-    private List<org.uberfire.java.nio.file.Path> getDirectoryStreamPaths() {
-        FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
-        return Stream.of(drlFiles, dmnFiles)
-                .flatMap(Collection::stream)
-                .map(fileName -> GeneralPathImpl.newFromFile(fileSystem, new File(fileName)))
-                .collect(Collectors.toList());
+    // RHPAM-2089
+    @Test
+    public void checkDependencyForGTable() {
+        GAV gtableDependency = new GAV("org.drools", "drools-workbench-models-guided-dtable", null);
+        assertTrue(service.getDependencies(null).contains(gtableDependency));
     }
 }

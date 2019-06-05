@@ -28,6 +28,7 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public abstract class AbstractDMNDataManagementStrategy extends AbstractDataManagementStrategy {
 
@@ -97,9 +98,10 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
         }
     }
 
-    protected ErrorCallback<Object> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
+    protected ErrorCallback<Message> getErrorCallback(TestToolsView.Presenter testToolsPresenter) {
         return (error, exception) -> {
             testToolsPresenter.setDataObjectFieldsMap(new TreeMap<>());
+            ErrorPopup.showMessage(exception.getMessage());
             return false;
         };
     }

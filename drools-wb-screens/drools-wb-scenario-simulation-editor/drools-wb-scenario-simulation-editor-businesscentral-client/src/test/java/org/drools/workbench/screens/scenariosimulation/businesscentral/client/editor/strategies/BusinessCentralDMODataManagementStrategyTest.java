@@ -74,10 +74,6 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     @Mock
     private AsyncPackageDataModelOracle oracleMock;
 
-    private BusinessCentralDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
-
-    private FactModelTuple factModelTupleLocal;
-
     @Before
     public void setup() {
         super.setup();
@@ -197,7 +193,9 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     public void getSimpleClassFactModelTree() {
         Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
         for (Class expectedClazz : expectedClazzes) {
-            final FactModelTree retrieved = AbstractDataManagementStrategy.getSimpleClassFactModelTree(expectedClazz);
+            final FactModelTree retrieved = AbstractDataManagementStrategy.getSimpleClassFactModelTree(
+                    expectedClazz.getSimpleName(),
+                    expectedClazz.getCanonicalName());
             assertNotNull(retrieved);
             String key = expectedClazz.getSimpleName();
             assertEquals(key, retrieved.getFactName());

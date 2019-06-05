@@ -39,7 +39,7 @@ public interface SettingsView
 
     LabelElement getNameLabel();
 
-    SpanElement getFileName();
+    InputElement getFileName();
 
     LabelElement getTypeLabel();
 
@@ -47,29 +47,27 @@ public interface SettingsView
 
     DivElement getRuleSettings();
 
-    InputElement getKieSession();
-
-    InputElement getKieBase();
+    InputElement getDmoSession();
 
     InputElement getRuleFlowGroup();
-
-    InputElement getDmoSession();
 
     DivElement getDmnSettings();
 
     LabelElement getDmnFileLabel();
 
-    SpanElement getDmnFilePath();
+    InputElement getDmnFilePath();
 
     LabelElement getDmnNamespaceLabel();
 
-    SpanElement getDmnNamespace();
+    InputElement getDmnNamespace();
 
     LabelElement getDmnNameLabel();
 
-    SpanElement getDmnName();
+    InputElement getDmnName();
 
     InputElement getSkipFromBuild();
+
+    SpanElement getSkipFromBuildLabel();
 
     ButtonElement getSaveButton();
 }

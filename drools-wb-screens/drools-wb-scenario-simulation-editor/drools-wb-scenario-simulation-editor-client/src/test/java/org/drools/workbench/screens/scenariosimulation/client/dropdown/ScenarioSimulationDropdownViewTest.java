@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import elemental2.dom.DOMTokenList;
 import elemental2.dom.HTMLOptionElement;
 import elemental2.dom.HTMLSelectElement;
@@ -25,7 +26,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.client.views.pfly.selectpicker.JQuerySelectPicker;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DEFAULT_VALUE;
@@ -41,8 +41,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulationDropdownTest {
+@RunWith(LienzoMockitoTestRunner.class)
+public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulationAssetsDropdownTest {
 
     @Mock
     private HTMLSelectElement nativeSelectMock;
@@ -67,9 +67,6 @@ public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulati
 
     @Mock
     private JQuerySelectPicker.CallbackFunction onDropdownChangeHandlerMock;
-
-    @Mock
-    private HTMLOptionElement entryOptionMock;
 
     @Mock
     protected KieAssetsDropdownItem kieAssetsDropdownItemMock;
@@ -134,5 +131,4 @@ public class ScenarioSimulationDropdownViewTest extends AbstractScenarioSimulati
         assertEquals(DEFAULT_VALUE, retrieved);
         verify(dropdownMock, times(1)).val();
     }
-
 }

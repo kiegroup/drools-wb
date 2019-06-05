@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
 
     @Mock
-    private VerticalPanel fieldsMock;
+    private FlowPanel fieldsMock;
     @Mock
     private FormLabel titleLabelMock;
     @Mock
@@ -50,7 +50,9 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
     @Before
     public void setup() throws Exception {
         super.setup();
-        titledAttachmentFileWidget = spy(new TitledAttachmentFileWidget(ScenarioSimulationEditorConstants.INSTANCE.chooseDMN(), scenarioSimulationServiceMock, scenarioSimulationDropdownMock) {
+        titledAttachmentFileWidget = spy(new TitledAttachmentFileWidget(ScenarioSimulationEditorConstants.INSTANCE.chooseDMN(),
+                                                                        scenarioSimulationServiceMock,
+                                                                        scenarioSimulationDropdownMock) {
             {
                 this.fields = fieldsMock;
                 this.titleLabel = titleLabelMock;

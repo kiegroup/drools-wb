@@ -176,6 +176,8 @@ public interface ScenarioSimulationEditorConstants
 
     String deleteValues();
 
+    String dateFormatPlaceholder();
+
     String deleteScenarioMainTitle();
 
     String deleteScenarioMainQuestion();
@@ -289,4 +291,6 @@ public interface ScenarioSimulationEditorConstants
     String errorPopoverMessageFailedWithError(String expectedValue, String errorValue);
 
     String errorPopoverMessageFailedWithException(String errorMsg);
+
+    String skipSimulation();
 }

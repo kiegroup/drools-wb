@@ -49,6 +49,7 @@ import org.drools.workbench.screens.scenariosimulation.client.factories.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -265,7 +266,6 @@ public class ScenarioGridModel extends BaseGridData {
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
         simulation.removeFactMappingByIndex(columnIndex);
-        eventBus.fireEvent(new ReloadTestToolsEvent(true));
     }
 
     /**
@@ -663,6 +663,15 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * Returns <code>true</code> if no column is selected <b>OR</b> if type of the <b>INSTANCE</b> mapped to the selected column is the same as the provided one
+     * @param className
+     * @return
+     */
+    public boolean isSameInstanceType(String className) {
+        return selectedColumn == null || isSameInstanceType(getColumns().indexOf(selectedColumn), className);
+    }
+
+     /**
      * Check if given <b>headerName</b> is the same as the <b>Fact</b> mapped to the
      * column at given index
      * @param columnIndex
@@ -670,13 +679,22 @@ public class ScenarioGridModel extends BaseGridData {
      * @throws Exception if the given <b>headerName</b> is not the name of the class mapped to the given column
      */
     public void checkSameInstanceHeader(int columnIndex, String headerName) throws Exception {
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-        final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
-        String columnClassName = factIdentifierByIndex.getClassNameWithoutPackage();
-        if (!Objects.equals(columnClassName, headerName)) {
+        if (!isSameInstanceType(columnIndex, headerName)) {
             throw new Exception(headerName + " is not the class of the current column.");
         }
 
+    }
+
+    /**
+     * Returns <code>true</code> if type of the <b>INSTANCE</b> mapped to the column at given index is the same as the provided one
+     * @param columnIndex
+     * @param headerName
+     * @return
+     */
+    public boolean isSameInstanceType(int columnIndex, String headerName) {
+        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
+        return Objects.equals(factIdentifierByIndex.getClassNameWithoutPackage(), headerName);
     }
 
     /**
@@ -694,13 +712,33 @@ public class ScenarioGridModel extends BaseGridData {
         }
     }
 
+    /**
+     * It resets the <code>FactMappingValue</code> status for all CELLS
+     */
     public void resetErrors() {
         IntStream.range(0, getRowCount()).forEach(this::resetErrors);
     }
 
+    /**
+     * It resets the <code>FactMappingValue</code> status for a specific ROW
+     * @param rowIndex
+     */
     public void resetErrors(int rowIndex) {
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         scenarioByIndex.resetErrors();
+        refreshErrors();
+    }
+
+    /**
+     * It resets the <code>FactMappingValue</code> status for a specific CELL
+     * @param rowIndex
+     * @param columnIndex
+     */
+    public void resetError(int rowIndex, int columnIndex) {
+        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMapping);
+        factMappingValue.ifPresent(fmv -> fmv.resetStatus());
         refreshErrors();
     }
 
@@ -846,7 +884,10 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
-            String placeHolder = ((ScenarioGridColumn) columns.get(columnIndex)).isPropertyAssigned() ? ScenarioSimulationEditorConstants.INSTANCE.insertValue() : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+            String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(factMappingByIndex.getClassName());
+            String placeHolder = ((ScenarioGridColumn) columns.get(columnIndex)).isPropertyAssigned() ?
+                    editableCellPlaceholder :
+                    ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
             setCell(rowIndex, columnIndex, () -> {
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
                 if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {

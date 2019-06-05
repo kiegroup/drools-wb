@@ -30,7 +30,6 @@ public abstract class AbstractNewScenarioTest {
     @Mock
     protected ScenarioSimulationDropdown scenarioSimulationDropdownMock;
 
-
     @Before
     public void setup() throws Exception {
     }

@@ -131,6 +131,7 @@ public class TestProperties {
     public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE = new HashMap<>();
     public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1 = new HashMap<>();
     public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2 = new HashMap<>();
+    public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_3 = new HashMap<>();
 
     public static final Double GRID_WIDTH = 100.0;
     public static final Double HEADER_HEIGHT = 10.0;
@@ -178,7 +179,6 @@ public class TestProperties {
     public static final String SCENARIO_TYPE = "SCENARIO_TYPE";
     public static final String FILE_NAME = "FILE_NAME";
     public static final String KIE_SESSION = "KIE_SESSION";
-    public static final String KIE_BASE = "KIE_BASE";
     public static final String RULE_FLOW_GROUP = "RULE_FLOW_GROUP";
     public static final String DMO_SESSION = "DMO_SESSION";
     public static final String DMN_FILE_PATH = "DMN_FILE_PATH";
@@ -200,6 +200,8 @@ public class TestProperties {
     public static final String COLUMN_TWO_TITLE = "column two";
 
     public static final String TEST = "test";
+    public static final String DEFAULT_VALUE = "DEFAULT_VALUE";
+    public static final String KIEASSETSDROPDOWNVIEW_SELECT = "KIEASSETSDROPDOWNVIEW_SELECT";
 
     public static final String DEFAULT_VALUE = "DEFAULT_VALUE";
 
@@ -218,4 +220,10 @@ public class TestProperties {
     public static final String ERROR_VALUE = "error";
     public static final String NULL = "null";
     public static final String EXCEPTION = "GenericException";
+
+    public static final String EXPRESSION_ALIAS_DESCRIPTION = "EXPRESSION_ALIAS_DESCRIPTION";
+    public static final String EXPRESSION_ALIAS_GIVEN = "EXPRESSION_ALIAS_GIVEN";
+    public static final String EXPRESSION_ALIAS_INTEGER = "EXPRESSION_ALIAS_INTEGER";
+    public static final int COLUMNS = 6;
+    public static final double HEADER_ROWS_HEIGHT = 100.0;
 }

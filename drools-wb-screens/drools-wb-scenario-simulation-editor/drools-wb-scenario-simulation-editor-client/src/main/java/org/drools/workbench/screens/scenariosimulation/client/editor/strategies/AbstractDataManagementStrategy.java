@@ -52,10 +52,10 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         this.model = model;
     }
 
-    public static FactModelTree getSimpleClassFactModelTree(Class clazz) {
-        String key = clazz.getSimpleName();
+    public static FactModelTree getSimpleClassFactModelTree(String simpleClass, String canonicalName) {
+        String key = simpleClass;
         Map<String, String> simpleProperties = new HashMap<>();
-        String fullName = clazz.getCanonicalName();
+        String fullName = canonicalName;
         simpleProperties.put("value", fullName);
         String packageName = fullName.substring(0, fullName.lastIndexOf("."));
         FactModelTree toReturn = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
