@@ -173,7 +173,7 @@ public class NewScenarioSimulationHandlerTest extends AbstractNewScenarioTest {
         handler.create(mock(Package.class), "BASEFILENAME", mock(NewResourcePresenter.class));
         if (called) {
             verify(busyIndicatorViewMock, times(1)).showBusyIndicator(eq(CommonConstants.INSTANCE.Saving()));
-            verify(scenarioSimulationServiceMock, times(1)).create(any(), any(), any(), any(), any(), any());
+            verify(scenarioSimulationServiceMock, times(1)).create(any(), any(), any(), any(), any(), eq(null));
         }
     }
 
