@@ -16,13 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import java.util.List;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -35,6 +40,8 @@ import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
@@ -50,6 +57,7 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -99,6 +107,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private ScenarioSimulationContext.Status statusMock;
     @Mock
+    private TestRunnerReportingPanelWrapper testRunnerReportingPanelMock;
+    @Mock
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandlerMock;
     private Promises promises;
     @Mock
@@ -119,12 +129,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private Command saveCommandMock;
     @Mock
     private TextFileExport textFileExportMock;
+    @Captor
+    private ArgumentCaptor<List<ScenarioWithIndex>> scenarioWithIndexCaptor;
 
     @Before
     public void setup() {
         promises = new SyncPromises();
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(simulationRunResultMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
@@ -145,7 +158,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         this.presenter = new ScenarioSimulationEditorPresenter(scenarioSimulationProducerMock,
                                                                mock(ScenarioSimulationResourceType.class),
                                                                placeManagerMock,
-                                                               scenarioSimulationDocksHandlerMock) {
+                                                               testRunnerReportingPanelMock,
+                                                               scenarioSimulationDocksHandlerMock,
+                                                               textFileExportMock,
+                                                               mock(ConfirmPopupPresenter.class)) {
             {
                 this.path = pathMock;
                 this.scenarioGridPanel = scenarioGridPanelMock;
@@ -154,6 +170,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.context = contextMock;
                 this.dataManagementStrategy = dataManagementStrategyMock;
                 this.model = scenarioSimulationModelMock;
+                this.testRunnerReportingPanel = testRunnerReportingPanelMock;
             }
 
             @Override

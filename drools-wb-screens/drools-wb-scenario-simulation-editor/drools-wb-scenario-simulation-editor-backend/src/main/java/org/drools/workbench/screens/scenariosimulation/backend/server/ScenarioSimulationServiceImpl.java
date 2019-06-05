@@ -130,7 +130,6 @@ public class ScenarioSimulationServiceImpl
     @Inject
     private KieModuleService kieModuleService;
 
-
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
 
@@ -261,6 +260,7 @@ public class ScenarioSimulationServiceImpl
         //Signal opening to interested parties
         resourceOpenedEvent.fire(new ResourceOpenedEvent(path,
                                                          safeSessionInfo));
+
         return new ScenarioSimulationModelContent(load(path),
                                                   overview,
                                                   dataModel);

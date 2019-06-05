@@ -15,14 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.io.File;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.inject.Named;
 
@@ -60,13 +54,9 @@ import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
-import org.uberfire.java.nio.base.GeneralPathImpl;
 import org.uberfire.java.nio.base.options.CommentedOption;
-import org.uberfire.java.nio.file.DirectoryStream;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
-import org.uberfire.java.nio.file.FileSystem;
 import org.uberfire.java.nio.file.OpenOption;
-import org.uberfire.java.nio.fs.file.SimpleFileSystemProvider;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.junit.Assert.assertEquals;
@@ -169,13 +159,6 @@ public class ScenarioSimulationServiceImplTest {
 
     private Path path = PathFactory.newPath("contextPath", "file:///contextPath");
 
-    private List<String> drlFiles = IntStream.range(0, 3)
-            .mapToObj(i -> "File_" + i + ".drl")
-            .collect(Collectors.toList());
-    private List<String> dmnFiles = IntStream.range(0, 3)
-            .mapToObj(i -> "File_" + i + ".dmn")
-            .collect(Collectors.toList());
-
     @Before
     public void setup() throws Exception {
         Set<Package> testPackages = new HashSet<>();
@@ -186,7 +169,6 @@ public class ScenarioSimulationServiceImplTest {
         when(kieModuleServiceMock.newPackage(any(), anyString())).thenReturn(testPackage);
         when(kieModuleServiceMock.resolveDefaultPackage(any())).thenReturn(testPackage);
         when(ioServiceMock.exists(activatorPathMock)).thenReturn(false);
-        when(ioServiceMock.newDirectoryStream(any())).thenReturn(directoryStreamMock);
 
         when(kieModuleServiceMock.resolveModule(any())).thenReturn(kieModuleMock);
         when(kieModuleMock.getPom()).thenReturn(projectPomMock);
@@ -198,7 +180,6 @@ public class ScenarioSimulationServiceImplTest {
         when(packageMock.getPackageTestSrcPath()).thenReturn(path);
         when(scenarioSimulationBuilderMock.createSimulation(any(), any(), any())).thenReturn(new Simulation());
         service.scenarioSimulationBuilder = scenarioSimulationBuilderMock;
-        when(directoryStreamMock.iterator()).thenReturn(getDirectoryStreamPaths().iterator());
     }
 
     @Test
@@ -341,21 +322,6 @@ public class ScenarioSimulationServiceImplTest {
                                                   path,
                                                   simulation.getSimulationDescriptor(),
                                                   simulation.getScenarioWithIndex());
-    }
-
-    @Test
-    public void getDRLAssets() {
-        getAssetsCommon("drl", drlFiles.size());
-    }
-
-    @Test
-    public void getDMNAssets() {
-        getAssetsCommon("dmn", dmnFiles.size());
-    }
-
-    @Test
-    public void getNotExistingAssets() {
-        getAssetsCommon("not_existing", 0);
     }
 
     @Test

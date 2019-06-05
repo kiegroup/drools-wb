@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.submarine.client.fakes;
 
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.uberfire.backend.vfs.Path;
@@ -24,5 +25,10 @@ public class SubmarineDMNTypeService implements DMNTypeService {
     @Override
     public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
         return new FactModelTuple();
+    }
+
+    @Override
+    public void initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
+
     }
 }

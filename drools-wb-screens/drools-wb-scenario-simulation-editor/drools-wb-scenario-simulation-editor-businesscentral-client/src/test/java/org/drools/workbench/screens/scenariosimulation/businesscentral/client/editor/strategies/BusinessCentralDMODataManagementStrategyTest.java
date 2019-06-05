@@ -74,6 +74,10 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     @Mock
     private AsyncPackageDataModelOracle oracleMock;
 
+    private BusinessCentralDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
+
+    private FactModelTuple factModelTupleLocal;
+
     @Before
     public void setup() {
         super.setup();

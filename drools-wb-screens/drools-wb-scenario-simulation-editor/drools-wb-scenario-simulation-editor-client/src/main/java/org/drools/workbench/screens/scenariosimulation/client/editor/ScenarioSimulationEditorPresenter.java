@@ -88,14 +88,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.handlers.Sc
 public class ScenarioSimulationEditorPresenter {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
-
+    private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
-
     protected ObservablePath path;
-
     protected EventBus eventBus;
-
     protected ScenarioGridPanel scenarioGridPanel;
     protected PlaceManager placeManager;
     protected DataManagementStrategy dataManagementStrategy;
@@ -103,18 +100,14 @@ public class ScenarioSimulationEditorPresenter {
     protected ScenarioSimulationModel model;
     protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
+    protected long scenarioPresenterId;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
     private TextFileExport textFileExport;
     private ConfirmPopupPresenter confirmPopupPresenter;
-
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
-
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
-
-    private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
-    protected long scenarioPresenterId;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -157,17 +150,14 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onClose() {
-        // TODO TO BE CALLED BY WRAPPER
         scenarioGridPanel.unregister();
-        // TODO TO BE CALLED BY WRAPPER
-        //this.versionRecordManager.clear();
-        // super.onClose();
     }
 
     /**
      * @param status <code>PlaceStatus</code> of <b>TestToolsPresenter</b>
      */
     public void showDocks(PlaceStatus status) {
+        scenarioSimulationEditorWrapper.wrappedRegisterDock(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL, testRunnerReportingPanel.asWidget());
         scenarioSimulationDocksHandler.addDocks();
         scenarioSimulationDocksHandler.setScesimEditorId(String.valueOf(scenarioPresenterId));
         expandToolsDock(status);
@@ -179,6 +169,7 @@ public class ScenarioSimulationEditorPresenter {
     public void hideDocks() {
         scenarioSimulationDocksHandler.removeDocks();
         view.getScenarioGridLayer().getScenarioGrid().clearSelections();
+        unRegisterTestToolsCallback();
         clearTestToolsStatus();
     }
 
@@ -262,7 +253,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onImport(String fileContents) {
-        GWT.log(this.toString() + "onImport(" + fileContents +")");
+        GWT.log(this.toString() + "onImport(" + fileContents + ")");
 //        importExportService.call(getImportCallBack(),
 //                                 getImportErrorCallback())
 //                .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
@@ -423,7 +414,6 @@ public class ScenarioSimulationEditorPresenter {
                 factMapping.getExpressionElements().isEmpty();
     }
 
-
     public void populateRightDocks(String identifier) {
         if (dataManagementStrategy != null) {
             final PlaceRequest currentRightDockPlaceRequest = getCurrentRightDockPlaceRequest(identifier);
@@ -458,6 +448,7 @@ public class ScenarioSimulationEditorPresenter {
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
+        // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
         view.setContent(model.getSimulation());
@@ -519,7 +510,6 @@ public class ScenarioSimulationEditorPresenter {
         final Optional<CoverageReportView> coverageReportViewMap = getCoverageReportView(placeRequest);
         return coverageReportViewMap.map(CoverageReportView::getPresenter);
     }
-
 
     protected Command getSaveCommand() {
         return () -> scenarioSimulationEditorWrapper.wrappedSave("Save");

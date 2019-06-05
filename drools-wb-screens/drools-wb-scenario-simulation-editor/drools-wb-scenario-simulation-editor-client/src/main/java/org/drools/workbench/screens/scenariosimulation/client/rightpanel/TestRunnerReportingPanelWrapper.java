@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 
 /**
@@ -26,4 +27,5 @@ public interface TestRunnerReportingPanelWrapper {
 
     void onTestRun(TestResultMessage testResultMessage);
 
+    IsWidget asWidget();
 }

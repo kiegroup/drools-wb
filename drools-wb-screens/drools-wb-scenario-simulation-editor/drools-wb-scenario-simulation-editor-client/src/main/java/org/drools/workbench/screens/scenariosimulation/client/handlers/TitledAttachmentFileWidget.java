@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.gwtbootstrap3.client.ui.FormLabel;
