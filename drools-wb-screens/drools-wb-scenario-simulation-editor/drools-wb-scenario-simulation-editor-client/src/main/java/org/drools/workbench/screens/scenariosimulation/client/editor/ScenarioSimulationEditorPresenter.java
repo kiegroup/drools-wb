@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -38,6 +37,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -45,19 +45,25 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.enterprise.client.jaxrs.MarshallingWrapper;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -69,7 +75,7 @@ import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
-import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
+import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
@@ -95,10 +101,13 @@ public class ScenarioSimulationEditorPresenter {
     protected DataManagementStrategy dataManagementStrategy;
     protected ScenarioSimulationContext context;
     protected ScenarioSimulationModel model;
+    protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
+    private TextFileExport textFileExport;
+    private ConfirmPopupPresenter confirmPopupPresenter;
 
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
 
@@ -115,13 +124,20 @@ public class ScenarioSimulationEditorPresenter {
     public ScenarioSimulationEditorPresenter(final ScenarioSimulationProducer scenarioSimulationProducer,
                                              final ScenarioSimulationResourceType type,
                                              final PlaceManager placeManager,
-                                             final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler) {
+                                             // TO BE WRAPPED
+                                             final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
+                                             final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
+                                             final TextFileExport textFileExport,
+                                             final ConfirmPopupPresenter confirmPopupPresenter) {
         this.view = scenarioSimulationProducer.getScenarioSimulationView();
+        this.testRunnerReportingPanel = testRunnerReportingPanel;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.type = type;
         this.placeManager = placeManager;
         this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
+        this.textFileExport = textFileExport;
+        this.confirmPopupPresenter = confirmPopupPresenter;
         scenarioGridPanel = view.getScenarioGridPanel();
         context.setScenarioSimulationEditorPresenter(this);
         view.init(this);
@@ -133,6 +149,7 @@ public class ScenarioSimulationEditorPresenter {
     public void init(ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper, ObservablePath path) {
         this.scenarioSimulationEditorWrapper = scenarioSimulationEditorWrapper;
         this.path = path;
+        testRunnerReportingPanel.reset();
     }
 
     public void setPackageName(String packageName) {
@@ -143,6 +160,7 @@ public class ScenarioSimulationEditorPresenter {
         // TODO TO BE CALLED BY WRAPPER
         scenarioGridPanel.unregister();
         // TODO TO BE CALLED BY WRAPPER
+        //this.versionRecordManager.clear();
         // super.onClose();
     }
 
@@ -153,6 +171,8 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationDocksHandler.addDocks();
         scenarioSimulationDocksHandler.setScesimEditorId(String.valueOf(scenarioPresenterId));
         expandToolsDock(status);
+        registerTestToolsCallback();
+        resetDocks();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
@@ -211,7 +231,8 @@ public class ScenarioSimulationEditorPresenter {
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
                 .collect(Collectors.toList());
-        scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new HasBusyIndicatorDefaultErrorCallback(view),
+        view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
+        scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getSimulationDescriptor(),
                                                       toRun);
     }
@@ -256,6 +277,22 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     /**
+     * It resets the status of all Docks widgets present in ScenarioSimulation. Considering the docks are
+     * marked as ApplicationScoped, this method should be call everytime ScenarioSimulationEditor is opened (or closed)
+     */
+    protected void resetDocks() {
+        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getCheatSheetPresenter(getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getTestToolsPresenter(getCurrentRightDockPlaceRequest(TestToolsPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        getCoverageReportPresenter(getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER)).ifPresent(
+                SubDockView.Presenter::reset);
+        testRunnerReportingPanel.reset();
+    }
+
+    /**
      * Method to verify if the given <code>UberfireDocksInteractionEvent</code> is to be processed by current instance.
      * @param uberfireDocksInteractionEvent
      * @return <code>true</code> if <code>UberfireDocksInteractionEvent.getTargetDock() != null</code> <b>and</b>
@@ -266,23 +303,43 @@ public class ScenarioSimulationEditorPresenter {
         return uberfireDocksInteractionEvent.getTargetDock() != null && uberfireDocksInteractionEvent.getTargetDock().getPlaceRequest().getParameter(SCESIMEDITOR_ID, "").equals(String.valueOf(scenarioPresenterId));
     }
 
-    protected RemoteCallback<Map<Integer, Scenario>> getRefreshModelCallback() {
+    protected RemoteCallback<SimulationRunResult> getRefreshModelCallback() {
         return this::refreshModelContent;
     }
 
-    protected void refreshModelContent(Map<Integer, Scenario> newData) {
+    protected void refreshModelContent(SimulationRunResult newData) {
+        view.hideBusyIndicator();
         if (this.model == null) {
             return;
         }
         Simulation simulation = this.model.getSimulation();
-        for (Map.Entry<Integer, Scenario> entry : newData.entrySet()) {
-            int index = entry.getKey() - 1;
-            simulation.replaceScenario(index, entry.getValue());
+        for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
+            int index = scenarioWithIndex.getIndex() - 1;
+            simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         view.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
+        testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
+
+        this.lastRunResult = newData;
+    }
+
+    protected void registerTestToolsCallback() {
+        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), populateTestToolsCommand);
+    }
+
+    protected void unRegisterTestToolsCallback() {
+        placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(populateTestToolsCommand);
+    }
+
+    protected ErrorCallback<Object> getImportErrorCallback() {
+        return (error, exception) -> {
+            confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.importErrorTitle(),
+                                       ScenarioSimulationEditorConstants.INSTANCE.importFailedMessage());
+            return false;
+        };
     }
 
     /**
@@ -435,11 +492,8 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
         Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        if (lastRunResult != null) {
-            presenter.setSimulationRunMetadata(this.lastRunResult.getSimulationRunMetadata(), type);
-        } else {
-            presenter.showEmptyStateMessage(type);
-        }
+        SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
+        presenter.populateCoverageReport(type, simulationRunMetadata);
     }
 
     public String getJsonModel(ScenarioSimulationModel model) {

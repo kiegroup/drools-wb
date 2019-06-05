@@ -18,8 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.businesscentral.client.d
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.AbstractScenarioSimulationDropdownTest;
+import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.AbstractScenarioSimulationAssetsDropdownTest;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.jboss.errai.common.client.api.Caller;
@@ -27,24 +30,31 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.screens.explorer.model.FolderItem;
+import org.kie.workbench.common.screens.explorer.model.FolderItemType;
+import org.kie.workbench.common.screens.library.api.AssetInfo;
 import org.kie.workbench.common.screens.library.api.AssetQueryResult;
+import org.kie.workbench.common.screens.library.api.ProjectAssetsQuery;
 import org.kie.workbench.common.screens.library.client.screens.assets.AssetQueryService;
 import org.kie.workbench.common.screens.library.client.util.LibraryPlaces;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.uberfire.backend.vfs.Path;
+import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenarioSimulationDropdownTest {
+@RunWith(LienzoMockitoTestRunner.class)
+public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenarioSimulationAssetsDropdownTest {
 
     @Mock
     private Caller<ScenarioSimulationService> scenarioSimulationServiceCallerMock;
@@ -54,35 +64,104 @@ public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenar
 
     @Mock
     private LibraryPlaces libraryPlacesMock;
+
     @Mock
-    private  AssetQueryService assetQueryServiceMock;
+    private AssetQueryService assetQueryServiceMock;
+
     @Mock
-    private  WorkspaceProject workspaceProjectMock;
+    private WorkspaceProject workspaceProjectMock;
+
+    @Mock
+    private Path rootPathMock;
+
+    @Mock
+    private AssetQueryService.Invoker<AssetQueryResult> invokerMock;
+
+    @Mock
+    Consumer<List<KieAssetsDropdownItem>> assetListConsumerMock;
 
     private ScenarioSimulationAssetsDropdownProviderBCImpl scenarioSimulationAssetsDropdownProvider;
+    private ProjectAssetsQuery projectAssetsQuery;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() {
         super.setup();
         when(scenarioSimulationServiceCallerMock.call(any())).thenReturn(scenarioSimulationServiceMock);
         when(libraryPlacesMock.getActiveWorkspace()).thenReturn(workspaceProjectMock);
-        scenarioSimulationAssetsDropdownProvider = spy(new ScenarioSimulationAssetsDropdownProviderBCImpl(scenarioSimulationServiceCallerMock, libraryPlacesMock, assetQueryServiceMock) {
-
+        when(workspaceProjectMock.getRootPath()).thenReturn(rootPathMock);
+        when(rootPathMock.toURI()).thenReturn("project/");
+        when(assetQueryServiceMock.getAssets(eq(projectAssetsQuery))).thenReturn(invokerMock);
+        scenarioSimulationAssetsDropdownProvider = spy(new ScenarioSimulationAssetsDropdownProviderBCImpl(scenarioSimulationServiceCallerMock,
+                                                                                                          libraryPlacesMock,
+                                                                                                          assetQueryServiceMock) {
+            @Override
+            protected ProjectAssetsQuery createProjectQuery() {
+                return projectAssetsQuery;
+            }
         });
+        projectAssetsQuery = scenarioSimulationAssetsDropdownProvider.createProjectQuery();
     }
 
     @Test
     public void getItems() {
         Consumer<List<KieAssetsDropdownItem>> assetListConsumerMock = mock(Consumer.class);
+        doAnswer(invocation -> null).when(scenarioSimulationAssetsDropdownProvider).updateAssets(isA(RemoteCallback.class));
         scenarioSimulationAssetsDropdownProvider.getItems(assetListConsumerMock);
         verify(scenarioSimulationAssetsDropdownProvider, times(1)).updateAssets(isA(RemoteCallback.class));
     }
 
     @Test
-    public void updateAssets() throws Exception {
+    public void updateAssets() {
         RemoteCallback<AssetQueryResult> remoteCallbackMock = mock(RemoteCallback.class);
         scenarioSimulationAssetsDropdownProvider.updateAssets(remoteCallbackMock);
-        verify(scenarioSimulationServiceCallerMock, times(1)).call(eq(remoteCallbackMock));
-        verify(scenarioSimulationServiceMock, times(1)).getAssets(eq("."), eq("dmn"), eq(""));
+        verify(assetQueryServiceMock, times(1)).getAssets(eq(projectAssetsQuery));
+        verify(invokerMock, times(1)).call(eq(remoteCallbackMock), isA(DefaultErrorCallback.class));
+    }
+
+    @Test
+    public void createProjectQuery() {
+        scenarioSimulationAssetsDropdownProvider = spy(new ScenarioSimulationAssetsDropdownProviderBCImpl(scenarioSimulationServiceCallerMock,
+                                                                                                          libraryPlacesMock,
+                                                                                                          assetQueryServiceMock) {
+
+        });
+        final ProjectAssetsQuery retrieved = scenarioSimulationAssetsDropdownProvider.createProjectQuery();
+        assertEquals(retrieved.getAmount(),1000);
+        assertEquals(retrieved.getStartIndex(),0);
+        assertEquals(retrieved.getFilter(), "");
+        assertEquals(retrieved.getProject(), workspaceProjectMock);
+    }
+
+    @Test
+    public void addAssets() {
+        int size = 4;
+        AssetQueryResult assetQueryResult = getAssetQueryResult(size);
+        scenarioSimulationAssetsDropdownProvider.addAssets(assetQueryResult, assetListConsumerMock);
+    }
+
+    private AssetQueryResult getAssetQueryResult(int size) {
+        return AssetQueryResult.normal(getAssetInfoList(size));
+    }
+
+    private List<AssetInfo> getAssetInfoList(int size) {
+        return IntStream.range(0, size)
+                .mapToObj(i -> getAssetInfoMock())
+                .collect(Collectors.toList());
+    }
+
+    private AssetInfo getAssetInfoMock() {
+        AssetInfo toReturn = mock(AssetInfo.class);
+        final FolderItem folderItemMock = getFolderItemMock();
+        when(toReturn.getFolderItem()).thenReturn(folderItemMock);
+        return toReturn;
+    }
+
+    private FolderItem getFolderItemMock() {
+        FolderItem toReturn = mock(FolderItem.class);
+        Path path = mock(Path.class);
+        when(toReturn.getType()).thenReturn(FolderItemType.FILE);
+        when(toReturn.getItem()).thenReturn(path);
+        when(path.toURI()).thenReturn("project/test.dmn");
+        return toReturn;
     }
 }

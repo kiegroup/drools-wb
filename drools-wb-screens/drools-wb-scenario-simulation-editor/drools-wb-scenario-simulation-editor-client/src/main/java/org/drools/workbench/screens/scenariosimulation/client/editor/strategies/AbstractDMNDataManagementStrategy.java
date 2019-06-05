@@ -24,6 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
+import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.ObservablePath;

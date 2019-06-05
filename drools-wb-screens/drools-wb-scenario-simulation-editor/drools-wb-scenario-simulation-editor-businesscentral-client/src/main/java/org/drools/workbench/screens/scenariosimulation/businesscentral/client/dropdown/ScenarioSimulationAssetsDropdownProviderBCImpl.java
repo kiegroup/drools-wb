@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.dropdown;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,6 @@ import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
-import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.screens.explorer.model.FolderItemType;
@@ -47,15 +45,15 @@ public class ScenarioSimulationAssetsDropdownProviderBCImpl implements ScenarioS
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
     protected LibraryPlaces libraryPlaces;
     protected AssetQueryService assetQueryService;
-    protected WorkspaceProject workspaceProject;
 
     @Inject
-    public ScenarioSimulationAssetsDropdownProviderBCImpl(Caller<ScenarioSimulationService> scenarioSimulationService, final LibraryPlaces libraryPlaces, final AssetQueryService assetQueryService) {
+    public ScenarioSimulationAssetsDropdownProviderBCImpl(Caller<ScenarioSimulationService> scenarioSimulationService,
+                                                          final LibraryPlaces libraryPlaces,
+                                                          final AssetQueryService assetQueryService) {
         super();
         this.scenarioSimulationService = scenarioSimulationService;
         this.libraryPlaces = libraryPlaces;
         this.assetQueryService = assetQueryService;
-        this.workspaceProject = libraryPlaces.getActiveWorkspace();
     }
 
     @Override
@@ -65,13 +63,12 @@ public class ScenarioSimulationAssetsDropdownProviderBCImpl implements ScenarioS
 
     protected void updateAssets(RemoteCallback<AssetQueryResult> callback) {
         ProjectAssetsQuery query = createProjectQuery();
-        assetQueryService.getAssets(query)
-                .call(callback, new DefaultErrorCallback());
+        assetQueryService.getAssets(query).call(callback, new DefaultErrorCallback());
     }
 
     protected ProjectAssetsQuery createProjectQuery() {
         List<String> suffixes = Collections.singletonList("dmn");
-        return new ProjectAssetsQuery(workspaceProject,
+        return new ProjectAssetsQuery(libraryPlaces.getActiveWorkspace(),
                                       "",
                                       0,
                                       1000,
@@ -85,20 +82,19 @@ public class ScenarioSimulationAssetsDropdownProviderBCImpl implements ScenarioS
     }
 
     protected void addAssets(List<AssetInfo> assetInfos, Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-            final List<KieAssetsDropdownItem> kieAssetsDropdownItems = assetInfos.stream()
-                    .filter(item -> item.getFolderItem().getType().equals(FolderItemType.FILE))
-                    .map(this::getKieAssetsDropdownItem)
-                    .collect(Collectors.toList());
-            assetListConsumer.accept(kieAssetsDropdownItems);
+        final List<KieAssetsDropdownItem> kieAssetsDropdownItems = assetInfos.stream()
+                .filter(item -> item.getFolderItem().getType().equals(FolderItemType.FILE))
+                .map(this::getKieAssetsDropdownItem)
+                .collect(Collectors.toList());
+        assetListConsumer.accept(kieAssetsDropdownItems);
     }
 
     protected KieAssetsDropdownItem getKieAssetsDropdownItem(final AssetInfo asset) {
         final String fullPath = ((Path) asset.getFolderItem().getItem()).toURI();
-        final String projectRootPath = workspaceProject.getRootPath().toURI();
+        final String projectRootPath = libraryPlaces.getActiveWorkspace().getRootPath().toURI();
         final String relativeAssetPath = fullPath.substring(projectRootPath.length());
         final String decodedRelativeAssetPath = URIUtil.decode(relativeAssetPath);
-        return new KieAssetsDropdownItem(decodedRelativeAssetPath,"", decodedRelativeAssetPath, new HashMap<>());
+        final String fileName = ((Path) asset.getFolderItem().getItem()).getFileName();
+        return new KieAssetsDropdownItem(fileName, decodedRelativeAssetPath, decodedRelativeAssetPath, new HashMap<>());
     }
-
-
 }
