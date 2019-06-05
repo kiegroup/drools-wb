@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.util;
 
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
@@ -30,9 +31,9 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
  * The <b>Resource Factory</b> associated with the package.
  * <!-- end-user-doc -->
  * @generated
- * @see org.drools.emf.models.scesim.util.scesimResourceImpl
+ * @see org.drools.emf.models.scesim.util.ScesimResourceImpl
  */
-public class scesimResourceFactoryImpl extends ResourceFactoryImpl {
+public class ScesimResourceFactoryImpl extends ResourceFactoryImpl {
 
     /**
      * <!-- begin-user-doc -->
@@ -47,10 +48,10 @@ public class scesimResourceFactoryImpl extends ResourceFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimResourceFactoryImpl() {
+    public ScesimResourceFactoryImpl() {
         super();
         extendedMetaData = new BasicExtendedMetaData(new EPackageRegistryImpl(EPackage.Registry.INSTANCE));
-        extendedMetaData.putPackage(null, scesimPackage.eINSTANCE);
+        extendedMetaData.putPackage(null, ScesimPackage.eINSTANCE);
     }
 
     /**
@@ -61,7 +62,7 @@ public class scesimResourceFactoryImpl extends ResourceFactoryImpl {
      */
     @Override
     public Resource createResource(URI uri) {
-        XMLResource result = new scesimResourceImpl(uri);
+        XMLResource result = new ScesimResourceImpl(uri);
         result.getDefaultSaveOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
         result.getDefaultLoadOptions().put(XMLResource.OPTION_EXTENDED_META_DATA, extendedMetaData);
 

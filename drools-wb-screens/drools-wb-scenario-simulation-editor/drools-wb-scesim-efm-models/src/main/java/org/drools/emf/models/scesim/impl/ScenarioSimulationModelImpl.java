@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.Imports;
 import org.drools.emf.models.scesim.ScenarioSimulationModel;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -98,7 +99,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.SCENARIO_SIMULATION_MODEL;
+        return ScesimPackage.Literals.SCENARIO_SIMULATION_MODEL;
     }
 
     /**
@@ -106,6 +107,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getVersion() {
         return version;
     }
@@ -115,11 +117,12 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setVersion(String newVersion) {
         String oldVersion = version;
         version = newVersion;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO_SIMULATION_MODEL__VERSION, oldVersion, version));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO_SIMULATION_MODEL__VERSION, oldVersion, version));
         }
     }
 
@@ -128,6 +131,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Simulation getSimulation() {
         return simulation;
     }
@@ -137,21 +141,22 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setSimulation(Simulation newSimulation) {
         if (newSimulation != simulation) {
             NotificationChain msgs = null;
             if (simulation != null) {
-                msgs = ((InternalEObject) simulation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, null, msgs);
+                msgs = ((InternalEObject) simulation).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, null, msgs);
             }
             if (newSimulation != null) {
-                msgs = ((InternalEObject) newSimulation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, null, msgs);
+                msgs = ((InternalEObject) newSimulation).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, null, msgs);
             }
             msgs = basicSetSimulation(newSimulation, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, newSimulation, newSimulation));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, newSimulation, newSimulation));
         }
     }
 
@@ -164,7 +169,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
         Simulation oldSimulation = simulation;
         simulation = newSimulation;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, oldSimulation, newSimulation);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION, oldSimulation, newSimulation);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -179,6 +184,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Imports getImports() {
         return imports;
     }
@@ -188,21 +194,22 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setImports(Imports newImports) {
         if (newImports != imports) {
             NotificationChain msgs = null;
             if (imports != null) {
-                msgs = ((InternalEObject) imports).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, null, msgs);
+                msgs = ((InternalEObject) imports).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, null, msgs);
             }
             if (newImports != null) {
-                msgs = ((InternalEObject) newImports).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, null, msgs);
+                msgs = ((InternalEObject) newImports).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, null, msgs);
             }
             msgs = basicSetImports(newImports, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, newImports, newImports));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, newImports, newImports));
         }
     }
 
@@ -215,7 +222,7 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
         Imports oldImports = imports;
         imports = newImports;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, oldImports, newImports);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS, oldImports, newImports);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -233,9 +240,9 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
                 return basicSetSimulation(null, msgs);
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
                 return basicSetImports(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -249,11 +256,11 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
                 return getVersion();
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
                 return getSimulation();
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
                 return getImports();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -267,13 +274,13 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
                 setVersion((String) newValue);
                 return;
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
                 setSimulation((Simulation) newValue);
                 return;
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
                 setImports((Imports) newValue);
                 return;
         }
@@ -288,13 +295,13 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
                 setVersion(VERSION_EDEFAULT);
                 return;
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
                 setSimulation(null);
                 return;
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
                 setImports(null);
                 return;
         }
@@ -309,11 +316,11 @@ public class ScenarioSimulationModelImpl extends MinimalEObjectImpl.Container im
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__VERSION:
                 return VERSION_EDEFAULT == null ? version != null : !VERSION_EDEFAULT.equals(version);
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__SIMULATION:
                 return simulation != null;
-            case scesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL__IMPORTS:
                 return imports != null;
         }
         return super.eIsSet(featureID);

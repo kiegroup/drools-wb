@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import java.util.Collection;
 
 import org.drools.emf.models.scesim.Scenario;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
 import org.drools.emf.models.scesim.SimulationDescriptor;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -82,7 +83,7 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.SIMULATION;
+        return ScesimPackage.Literals.SIMULATION;
     }
 
     /**
@@ -90,6 +91,7 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public SimulationDescriptor getSimulationDescriptor() {
         return simulationDescriptor;
     }
@@ -99,21 +101,22 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setSimulationDescriptor(SimulationDescriptor newSimulationDescriptor) {
         if (newSimulationDescriptor != simulationDescriptor) {
             NotificationChain msgs = null;
             if (simulationDescriptor != null) {
-                msgs = ((InternalEObject) simulationDescriptor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, null, msgs);
+                msgs = ((InternalEObject) simulationDescriptor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, null, msgs);
             }
             if (newSimulationDescriptor != null) {
-                msgs = ((InternalEObject) newSimulationDescriptor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, null, msgs);
+                msgs = ((InternalEObject) newSimulationDescriptor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, null, msgs);
             }
             msgs = basicSetSimulationDescriptor(newSimulationDescriptor, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, newSimulationDescriptor, newSimulationDescriptor));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, newSimulationDescriptor, newSimulationDescriptor));
         }
     }
 
@@ -126,7 +129,7 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
         SimulationDescriptor oldSimulationDescriptor = simulationDescriptor;
         simulationDescriptor = newSimulationDescriptor;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, oldSimulationDescriptor, newSimulationDescriptor);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR, oldSimulationDescriptor, newSimulationDescriptor);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -141,9 +144,10 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<Scenario> getScenarios() {
         if (scenarios == null) {
-            scenarios = new EObjectContainmentEList<Scenario>(Scenario.class, this, scesimPackage.SIMULATION__SCENARIOS);
+            scenarios = new EObjectContainmentEList<Scenario>(Scenario.class, this, ScesimPackage.SIMULATION__SCENARIOS);
         }
         return scenarios;
     }
@@ -156,9 +160,9 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
                 return basicSetSimulationDescriptor(null, msgs);
-            case scesimPackage.SIMULATION__SCENARIOS:
+            case ScesimPackage.SIMULATION__SCENARIOS:
                 return ((InternalEList<?>) getScenarios()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -172,9 +176,9 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
                 return getSimulationDescriptor();
-            case scesimPackage.SIMULATION__SCENARIOS:
+            case ScesimPackage.SIMULATION__SCENARIOS:
                 return getScenarios();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -189,10 +193,10 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
                 setSimulationDescriptor((SimulationDescriptor) newValue);
                 return;
-            case scesimPackage.SIMULATION__SCENARIOS:
+            case ScesimPackage.SIMULATION__SCENARIOS:
                 getScenarios().clear();
                 getScenarios().addAll((Collection<? extends Scenario>) newValue);
                 return;
@@ -208,10 +212,10 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
                 setSimulationDescriptor(null);
                 return;
-            case scesimPackage.SIMULATION__SCENARIOS:
+            case ScesimPackage.SIMULATION__SCENARIOS:
                 getScenarios().clear();
                 return;
         }
@@ -226,9 +230,9 @@ public class SimulationImpl extends MinimalEObjectImpl.Container implements Simu
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION__SIMULATION_DESCRIPTOR:
                 return simulationDescriptor != null;
-            case scesimPackage.SIMULATION__SCENARIOS:
+            case ScesimPackage.SIMULATION__SCENARIOS:
                 return scenarios != null && !scenarios.isEmpty();
         }
         return super.eIsSet(featureID);

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.util;
 
 import org.drools.emf.models.scesim.ExpressionElement;
@@ -24,9 +25,9 @@ import org.drools.emf.models.scesim.Import;
 import org.drools.emf.models.scesim.Imports;
 import org.drools.emf.models.scesim.Scenario;
 import org.drools.emf.models.scesim.ScenarioSimulationModel;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
 import org.drools.emf.models.scesim.SimulationDescriptor;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
@@ -38,9 +39,9 @@ import org.eclipse.emf.ecore.EObject;
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage
+ * @see org.drools.emf.models.scesim.ScesimPackage
  */
-public class scesimAdapterFactory extends AdapterFactoryImpl {
+public class ScesimAdapterFactory extends AdapterFactoryImpl {
 
     /**
      * The cached model package.
@@ -48,15 +49,16 @@ public class scesimAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static scesimPackage modelPackage;
+    protected static ScesimPackage modelPackage;
     /**
      * The switch that delegates to the <code>createXXX</code> methods.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected scesimSwitch<Adapter> modelSwitch =
-            new scesimSwitch<Adapter>() {
+    protected ScesimSwitch<Adapter> modelSwitch =
+            new ScesimSwitch<Adapter>() {
+
                 @Override
                 public Adapter caseExpressionElement(ExpressionElement object) {
                     return createExpressionElementAdapter();
@@ -124,9 +126,9 @@ public class scesimAdapterFactory extends AdapterFactoryImpl {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimAdapterFactory() {
+    public ScesimAdapterFactory() {
         if (modelPackage == null) {
-            modelPackage = scesimPackage.eINSTANCE;
+            modelPackage = ScesimPackage.eINSTANCE;
         }
     }
 

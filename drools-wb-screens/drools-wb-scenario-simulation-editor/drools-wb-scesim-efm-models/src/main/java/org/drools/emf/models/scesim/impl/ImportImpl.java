@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.Import;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -72,7 +73,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.IMPORT;
+        return ScesimPackage.Literals.IMPORT;
     }
 
     /**
@@ -80,6 +81,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getType() {
         return type;
     }
@@ -89,11 +91,12 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setType(String newType) {
         String oldType = type;
         type = newType;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.IMPORT__TYPE, oldType, type));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.IMPORT__TYPE, oldType, type));
         }
     }
 
@@ -105,7 +108,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.IMPORT__TYPE:
+            case ScesimPackage.IMPORT__TYPE:
                 return getType();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -119,7 +122,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.IMPORT__TYPE:
+            case ScesimPackage.IMPORT__TYPE:
                 setType((String) newValue);
                 return;
         }
@@ -134,7 +137,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.IMPORT__TYPE:
+            case ScesimPackage.IMPORT__TYPE:
                 setType(TYPE_EDEFAULT);
                 return;
         }
@@ -149,7 +152,7 @@ public class ImportImpl extends MinimalEObjectImpl.Container implements Import {
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.IMPORT__TYPE:
+            case ScesimPackage.IMPORT__TYPE:
                 return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
         }
         return super.eIsSet(featureID);

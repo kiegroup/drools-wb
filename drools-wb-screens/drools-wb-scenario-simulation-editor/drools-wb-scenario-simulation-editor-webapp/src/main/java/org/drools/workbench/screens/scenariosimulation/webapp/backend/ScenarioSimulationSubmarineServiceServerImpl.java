@@ -35,7 +35,6 @@ import org.jboss.errai.bus.server.annotations.Service;
 @ApplicationScoped
 public class ScenarioSimulationSubmarineServiceServerImpl implements ScenarioSimulationSubmarineService {
 
-
     @Override
     public String marshal(ScenarioSimulationModel sc) {
         return ScenarioSimulationXMLPersistence.getInstance().marshal(sc);

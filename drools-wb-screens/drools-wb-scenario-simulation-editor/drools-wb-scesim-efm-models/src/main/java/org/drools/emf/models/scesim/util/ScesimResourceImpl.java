@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.util;
 
 import org.eclipse.emf.common.util.URI;
@@ -23,9 +24,9 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
  * The <b>Resource </b> associated with the package.
  * <!-- end-user-doc -->
  * @generated
- * @see org.drools.emf.models.scesim.util.scesimResourceFactoryImpl
+ * @see org.drools.emf.models.scesim.util.ScesimResourceFactoryImpl
  */
-public class scesimResourceImpl extends XMLResourceImpl {
+public class ScesimResourceImpl extends XMLResourceImpl {
 
     /**
      * Creates an instance of the resource.
@@ -34,7 +35,7 @@ public class scesimResourceImpl extends XMLResourceImpl {
      * @param uri the URI of the new resource.
      * @generated
      */
-    public scesimResourceImpl(URI uri) {
+    public ScesimResourceImpl(URI uri) {
         super(uri);
     }
 } //scesimResourceImpl

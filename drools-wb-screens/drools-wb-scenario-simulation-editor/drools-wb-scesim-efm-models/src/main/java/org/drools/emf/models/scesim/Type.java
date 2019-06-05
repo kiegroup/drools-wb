@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * <!-- end-user-doc -->
  * @model extendedMetaData="name='type'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getType()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getType()
  */
 public enum Type implements Enumerator {
     /**
@@ -182,6 +183,7 @@ public enum Type implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public int getValue() {
         return value;
     }
@@ -191,6 +193,7 @@ public enum Type implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -200,6 +203,7 @@ public enum Type implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getLiteral() {
         return literal;
     }

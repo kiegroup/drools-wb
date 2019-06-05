@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.ExpressionElement;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -72,7 +73,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.EXPRESSION_ELEMENT;
+        return ScesimPackage.Literals.EXPRESSION_ELEMENT;
     }
 
     /**
@@ -80,6 +81,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getStep() {
         return step;
     }
@@ -89,11 +91,12 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setStep(String newStep) {
         String oldStep = step;
         step = newStep;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.EXPRESSION_ELEMENT__STEP, oldStep, step));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.EXPRESSION_ELEMENT__STEP, oldStep, step));
         }
     }
 
@@ -105,7 +108,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_ELEMENT__STEP:
+            case ScesimPackage.EXPRESSION_ELEMENT__STEP:
                 return getStep();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -119,7 +122,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_ELEMENT__STEP:
+            case ScesimPackage.EXPRESSION_ELEMENT__STEP:
                 setStep((String) newValue);
                 return;
         }
@@ -134,7 +137,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_ELEMENT__STEP:
+            case ScesimPackage.EXPRESSION_ELEMENT__STEP:
                 setStep(STEP_EDEFAULT);
                 return;
         }
@@ -149,7 +152,7 @@ public class ExpressionElementImpl extends MinimalEObjectImpl.Container implemen
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_ELEMENT__STEP:
+            case ScesimPackage.EXPRESSION_ELEMENT__STEP:
                 return STEP_EDEFAULT == null ? step != null : !STEP_EDEFAULT.equals(step);
         }
         return super.eIsSet(featureID);

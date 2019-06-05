@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.ExpressionElement;
@@ -26,11 +27,11 @@ import org.drools.emf.models.scesim.Imports;
 import org.drools.emf.models.scesim.Name;
 import org.drools.emf.models.scesim.Scenario;
 import org.drools.emf.models.scesim.ScenarioSimulationModel;
+import org.drools.emf.models.scesim.ScesimFactory;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
 import org.drools.emf.models.scesim.SimulationDescriptor;
 import org.drools.emf.models.scesim.Type;
-import org.drools.emf.models.scesim.scesimFactory;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
@@ -46,7 +47,7 @@ import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
  * <!-- end-user-doc -->
  * @generated
  */
-public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
+public class ScesimPackageImpl extends EPackageImpl implements ScesimPackage {
 
     /**
      * <!-- begin-user-doc -->
@@ -181,17 +182,17 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.eclipse.emf.ecore.EPackage.Registry
-     * @see org.drools.emf.models.scesim.scesimPackage#eNS_URI
+     * @see org.drools.emf.models.scesim.ScesimPackage#eNS_URI
      * @see #init()
      */
-    private scesimPackageImpl() {
-        super(eNS_URI, scesimFactory.eINSTANCE);
+    private ScesimPackageImpl() {
+        super(eNS_URI, ScesimFactory.eINSTANCE);
     }
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
      *
-     * <p>This method is used to initialize {@link scesimPackage#eINSTANCE} when that field is accessed.
+     * <p>This method is used to initialize {@link ScesimPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -200,14 +201,14 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * @see #createPackageContents()
      * @see #initializePackageContents()
      */
-    public static scesimPackage init() {
+    public static ScesimPackage init() {
         if (isInited) {
-            return (scesimPackage) EPackage.Registry.INSTANCE.getEPackage(scesimPackage.eNS_URI);
+            return (ScesimPackage) EPackage.Registry.INSTANCE.getEPackage(ScesimPackage.eNS_URI);
         }
 
         // Obtain or create and register package
         Object registeredscesimPackage = EPackage.Registry.INSTANCE.get(eNS_URI);
-        scesimPackageImpl thescesimPackage = registeredscesimPackage instanceof scesimPackageImpl ? (scesimPackageImpl) registeredscesimPackage : new scesimPackageImpl();
+        ScesimPackageImpl thescesimPackage = registeredscesimPackage instanceof ScesimPackageImpl ? (ScesimPackageImpl) registeredscesimPackage : new ScesimPackageImpl();
 
         isInited = true;
 
@@ -224,7 +225,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
         thescesimPackage.freeze();
 
         // Update the registry and return the package
-        EPackage.Registry.INSTANCE.put(scesimPackage.eNS_URI, thescesimPackage);
+        EPackage.Registry.INSTANCE.put(ScesimPackage.eNS_URI, thescesimPackage);
         return thescesimPackage;
     }
 
@@ -233,6 +234,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getExpressionElement() {
         return expressionElementEClass;
     }
@@ -242,6 +244,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getExpressionElement_Step() {
         return (EAttribute) expressionElementEClass.getEStructuralFeatures().get(0);
     }
@@ -251,6 +254,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getExpressionIdentifier() {
         return expressionIdentifierEClass;
     }
@@ -260,6 +264,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getExpressionIdentifier_Name() {
         return (EAttribute) expressionIdentifierEClass.getEStructuralFeatures().get(0);
     }
@@ -269,6 +274,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getExpressionIdentifier_Type() {
         return (EAttribute) expressionIdentifierEClass.getEStructuralFeatures().get(1);
     }
@@ -278,6 +284,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getFactIdentifier() {
         return factIdentifierEClass;
     }
@@ -287,6 +294,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactIdentifier_Name() {
         return (EAttribute) factIdentifierEClass.getEStructuralFeatures().get(0);
     }
@@ -296,6 +304,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactIdentifier_ClassName() {
         return (EAttribute) factIdentifierEClass.getEStructuralFeatures().get(1);
     }
@@ -305,6 +314,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getFactMapping() {
         return factMappingEClass;
     }
@@ -314,6 +324,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getFactMapping_ExpressionElements() {
         return (EReference) factMappingEClass.getEStructuralFeatures().get(0);
     }
@@ -323,6 +334,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getFactMapping_ExpressionIdentifier() {
         return (EReference) factMappingEClass.getEStructuralFeatures().get(1);
     }
@@ -332,6 +344,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getFactMapping_FactIdentifier() {
         return (EReference) factMappingEClass.getEStructuralFeatures().get(2);
     }
@@ -341,6 +354,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactMapping_ClassName() {
         return (EAttribute) factMappingEClass.getEStructuralFeatures().get(3);
     }
@@ -350,6 +364,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactMapping_FactAlias() {
         return (EAttribute) factMappingEClass.getEStructuralFeatures().get(4);
     }
@@ -359,6 +374,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactMapping_ExpressionAlias() {
         return (EAttribute) factMappingEClass.getEStructuralFeatures().get(5);
     }
@@ -368,6 +384,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactMapping_GenericTypes() {
         return (EAttribute) factMappingEClass.getEStructuralFeatures().get(6);
     }
@@ -377,6 +394,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getFactMappingValue() {
         return factMappingValueEClass;
     }
@@ -386,6 +404,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getFactMappingValue_FactIdentifier() {
         return (EReference) factMappingValueEClass.getEStructuralFeatures().get(0);
     }
@@ -395,6 +414,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getFactMappingValue_ExpressionIdentifier() {
         return (EAttribute) factMappingValueEClass.getEStructuralFeatures().get(1);
     }
@@ -404,6 +424,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getFactMappingValue_RawValue() {
         return (EReference) factMappingValueEClass.getEStructuralFeatures().get(2);
     }
@@ -413,6 +434,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getImport() {
         return importEClass;
     }
@@ -422,6 +444,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getImport_Type() {
         return (EAttribute) importEClass.getEStructuralFeatures().get(0);
     }
@@ -431,6 +454,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getImports() {
         return importsEClass;
     }
@@ -440,6 +464,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getImports_Imports() {
         return (EReference) importsEClass.getEStructuralFeatures().get(0);
     }
@@ -449,6 +474,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getScenario() {
         return scenarioEClass;
     }
@@ -458,6 +484,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getScenario_FactMappingValues() {
         return (EReference) scenarioEClass.getEStructuralFeatures().get(0);
     }
@@ -467,6 +494,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getScenario_SimulationDescriptor() {
         return (EReference) scenarioEClass.getEStructuralFeatures().get(1);
     }
@@ -476,6 +504,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getScenarioSimulationModel() {
         return scenarioSimulationModelEClass;
     }
@@ -485,6 +514,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getScenarioSimulationModel_Version() {
         return (EAttribute) scenarioSimulationModelEClass.getEStructuralFeatures().get(0);
     }
@@ -494,6 +524,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getScenarioSimulationModel_Simulation() {
         return (EReference) scenarioSimulationModelEClass.getEStructuralFeatures().get(1);
     }
@@ -503,6 +534,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getScenarioSimulationModel_Imports() {
         return (EReference) scenarioSimulationModelEClass.getEStructuralFeatures().get(2);
     }
@@ -512,6 +544,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getSimulation() {
         return simulationEClass;
     }
@@ -521,6 +554,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getSimulation_SimulationDescriptor() {
         return (EReference) simulationEClass.getEStructuralFeatures().get(0);
     }
@@ -530,6 +564,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getSimulation_Scenarios() {
         return (EReference) simulationEClass.getEStructuralFeatures().get(1);
     }
@@ -539,6 +574,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EClass getSimulationDescriptor() {
         return simulationDescriptorEClass;
     }
@@ -548,6 +584,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getSimulationDescriptor_FactMappings() {
         return (EReference) simulationDescriptorEClass.getEStructuralFeatures().get(0);
     }
@@ -557,6 +594,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_DmoSession() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(1);
     }
@@ -566,6 +604,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_DmnFilePath() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(2);
     }
@@ -575,6 +614,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_Type() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(3);
     }
@@ -584,6 +624,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_FileName() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(4);
     }
@@ -593,6 +634,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_KieSession() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(5);
     }
@@ -602,6 +644,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_KieBase() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(6);
     }
@@ -611,6 +654,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_RuleFlowGroup() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(7);
     }
@@ -620,6 +664,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_DmnNamespace() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(8);
     }
@@ -629,6 +674,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_DmnName() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(9);
     }
@@ -638,6 +684,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getSimulationDescriptor_SkipFromBuild() {
         return (EAttribute) simulationDescriptorEClass.getEStructuralFeatures().get(10);
     }
@@ -647,6 +694,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getFactMappingType() {
         return factMappingTypeEEnum;
     }
@@ -656,6 +704,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getName_() {
         return nameEEnum;
     }
@@ -665,6 +714,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EEnum getType() {
         return typeEEnum;
     }
@@ -674,6 +724,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EDataType getFactMappingTypeObject() {
         return factMappingTypeObjectEDataType;
     }
@@ -683,6 +734,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EDataType getNameObject() {
         return nameObjectEDataType;
     }
@@ -692,6 +744,7 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EDataType getTypeObject() {
         return typeObjectEDataType;
     }
@@ -701,8 +754,9 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimFactory getscesimFactory() {
-        return (scesimFactory) getEFactoryInstance();
+    @Override
+    public ScesimFactory getscesimFactory() {
+        return (ScesimFactory) getEFactoryInstance();
     }
 
     /**
@@ -816,61 +870,95 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
 
         // Initialize classes, features, and operations; add parameters
         initEClass(expressionElementEClass, ExpressionElement.class, "ExpressionElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getExpressionElement_Step(), theXMLTypePackage.getString(), "step", null, 1, 1, ExpressionElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getExpressionElement_Step(), theXMLTypePackage.getString(), "step", null, 1, 1, ExpressionElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
 
         initEClass(expressionIdentifierEClass, ExpressionIdentifier.class, "ExpressionIdentifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getExpressionIdentifier_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, ExpressionIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getExpressionIdentifier_Type(), this.getFactMappingType(), "type", null, 1, 1, ExpressionIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getExpressionIdentifier_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, ExpressionIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getExpressionIdentifier_Type(), getFactMappingType(), "type", null, 1, 1, ExpressionIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
 
         initEClass(factIdentifierEClass, FactIdentifier.class, "FactIdentifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getFactIdentifier_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, FactIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactIdentifier_ClassName(), theXMLTypePackage.getString(), "className", null, 1, 1, FactIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFactIdentifier_Name(), theXMLTypePackage.getString(), "name", null, 1, 1, FactIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
+        initEAttribute(getFactIdentifier_ClassName(), theXMLTypePackage.getString(), "className", null, 1, 1, FactIdentifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
 
         initEClass(factMappingEClass, FactMapping.class, "FactMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getFactMapping_ExpressionElements(), this.getExpressionElement(), null, "expressionElements", null, 0, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getFactMapping_ExpressionIdentifier(), this.getExpressionIdentifier(), null, "expressionIdentifier", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getFactMapping_FactIdentifier(), this.getFactIdentifier(), null, "factIdentifier", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactMapping_ClassName(), theXMLTypePackage.getString(), "className", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactMapping_FactAlias(), theXMLTypePackage.getString(), "factAlias", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactMapping_ExpressionAlias(), theXMLTypePackage.getString(), "expressionAlias", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactMapping_GenericTypes(), theXMLTypePackage.getString(), "genericTypes", null, 0, -1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFactMapping_ExpressionElements(), getExpressionElement(), null, "expressionElements", null, 0, -1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFactMapping_ExpressionIdentifier(), getExpressionIdentifier(), null, "expressionIdentifier", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFactMapping_FactIdentifier(), getFactIdentifier(), null, "factIdentifier", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+                       !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFactMapping_ClassName(), theXMLTypePackage.getString(), "className", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
+        initEAttribute(getFactMapping_FactAlias(), theXMLTypePackage.getString(), "factAlias", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
+        initEAttribute(getFactMapping_ExpressionAlias(), theXMLTypePackage.getString(), "expressionAlias", null, 1, 1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFactMapping_GenericTypes(), theXMLTypePackage.getString(), "genericTypes", null, 0, -1, FactMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
 
         initEClass(factMappingValueEClass, FactMappingValue.class, "FactMappingValue", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getFactMappingValue_FactIdentifier(), this.getFactIdentifier(), null, "factIdentifier", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getFactMappingValue_ExpressionIdentifier(), theXMLTypePackage.getString(), "expressionIdentifier", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getFactMappingValue_RawValue(), ecorePackage.getEObject(), null, "rawValue", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFactMappingValue_FactIdentifier(), getFactIdentifier(), null, "factIdentifier", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getFactMappingValue_ExpressionIdentifier(), theXMLTypePackage.getString(), "expressionIdentifier", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE,
+                       !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getFactMappingValue_RawValue(), ecorePackage.getEObject(), null, "rawValue", null, 1, 1, FactMappingValue.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+                       !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(importEClass, Import.class, "Import", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getImport_Type(), theXMLTypePackage.getString(), "type", null, 1, 1, Import.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(importsEClass, Imports.class, "Imports", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getImports_Imports(), this.getImport(), null, "imports", null, 0, 1, Imports.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getImports_Imports(), getImport(), null, "imports", null, 0, -1, Imports.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
 
         initEClass(scenarioEClass, Scenario.class, "Scenario", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getScenario_FactMappingValues(), this.getFactMappingValue(), null, "factMappingValues", null, 0, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getScenario_SimulationDescriptor(), this.getSimulationDescriptor(), null, "simulationDescriptor", null, 1, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getScenario_FactMappingValues(), getFactMappingValue(), null, "factMappingValues", null, 0, -1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+                       !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getScenario_SimulationDescriptor(), getSimulationDescriptor(), null, "simulationDescriptor", null, 1, 1, Scenario.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(scenarioSimulationModelEClass, ScenarioSimulationModel.class, "ScenarioSimulationModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getScenarioSimulationModel_Version(), theXMLTypePackage.getString(), "version", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getScenarioSimulationModel_Simulation(), this.getSimulation(), null, "simulation", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getScenarioSimulationModel_Imports(), this.getImports(), null, "imports", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getScenarioSimulationModel_Version(), theXMLTypePackage.getString(), "version", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getScenarioSimulationModel_Simulation(), getSimulation(), null, "simulation", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getScenarioSimulationModel_Imports(), getImports(), null, "imports", null, 1, 1, ScenarioSimulationModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES,
+                       !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(simulationEClass, Simulation.class, "Simulation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getSimulation_SimulationDescriptor(), this.getSimulationDescriptor(), null, "simulationDescriptor", null, 1, 1, Simulation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getSimulation_Scenarios(), this.getScenario(), null, "scenarios", null, 0, 1, Simulation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSimulation_SimulationDescriptor(), getSimulationDescriptor(), null, "simulationDescriptor", null, 1, 1, Simulation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSimulation_Scenarios(), getScenario(), null, "scenarios", null, 0, -1, Simulation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(simulationDescriptorEClass, SimulationDescriptor.class, "SimulationDescriptor", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getSimulationDescriptor_FactMappings(), this.getFactMapping(), null, "factMappings", null, 0, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_DmoSession(), theXMLTypePackage.getString(), "dmoSession", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_DmnFilePath(), theXMLTypePackage.getString(), "dmnFilePath", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_Type(), this.getType(), "type", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_FileName(), theXMLTypePackage.getString(), "fileName", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_KieSession(), theXMLTypePackage.getString(), "kieSession", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_KieBase(), theXMLTypePackage.getString(), "kieBase", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_RuleFlowGroup(), theXMLTypePackage.getString(), "ruleFlowGroup", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_DmnNamespace(), theXMLTypePackage.getString(), "dmnNamespace", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_DmnName(), theXMLTypePackage.getString(), "dmnName", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getSimulationDescriptor_SkipFromBuild(), theXMLTypePackage.getBoolean(), "skipFromBuild", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSimulationDescriptor_FactMappings(), getFactMapping(), null, "factMappings", null, 0, -1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE,
+                       !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_DmoSession(), theXMLTypePackage.getString(), "dmoSession", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_DmnFilePath(), theXMLTypePackage.getString(), "dmnFilePath", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_Type(), getType(), "type", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED,
+                       IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_FileName(), theXMLTypePackage.getString(), "fileName", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_KieSession(), theXMLTypePackage.getString(), "kieSession", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_KieBase(), theXMLTypePackage.getString(), "kieBase", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_RuleFlowGroup(), theXMLTypePackage.getString(), "ruleFlowGroup", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_DmnNamespace(), theXMLTypePackage.getString(), "dmnNamespace", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_DmnName(), theXMLTypePackage.getString(), "dmnName", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE,
+                       !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSimulationDescriptor_SkipFromBuild(), theXMLTypePackage.getBoolean(), "skipFromBuild", null, 1, 1, SimulationDescriptor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID,
+                       IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(factMappingTypeEEnum, FactMappingType.class, "FactMappingType");
@@ -910,407 +998,354 @@ public class scesimPackageImpl extends EPackageImpl implements scesimPackage {
      */
     protected void createExtendedMetaDataAnnotations() {
         String source = "http:///org/eclipse/emf/ecore/util/ExtendedMetaData";
-        addAnnotation
-                (this,
-                 source,
-                 new String[]{
-                         "qualified", "false"
-                 });
-        addAnnotation
-                (expressionElementEClass,
-                 source,
-                 new String[]{
-                         "name", "expressionElement",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getExpressionElement_Step(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "step",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (expressionIdentifierEClass,
-                 source,
-                 new String[]{
-                         "name", "expressionIdentifier",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getExpressionIdentifier_Name(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "name",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getExpressionIdentifier_Type(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "type",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (factIdentifierEClass,
-                 source,
-                 new String[]{
-                         "name", "factIdentifier",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getFactIdentifier_Name(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "name",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactIdentifier_ClassName(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "className",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (factMappingEClass,
-                 source,
-                 new String[]{
-                         "name", "factMapping",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getFactMapping_ExpressionElements(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "expressionElements",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_ExpressionIdentifier(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "expressionIdentifier",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_FactIdentifier(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "factIdentifier",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_ClassName(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "className",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_FactAlias(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "factAlias",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_ExpressionAlias(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "expressionAlias",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMapping_GenericTypes(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "genericTypes",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (factMappingTypeEEnum,
-                 source,
-                 new String[]{
-                         "name", "factMappingType"
-                 });
-        addAnnotation
-                (factMappingTypeObjectEDataType,
-                 source,
-                 new String[]{
-                         "name", "factMappingType:Object",
-                         "baseType", "factMappingType"
-                 });
-        addAnnotation
-                (factMappingValueEClass,
-                 source,
-                 new String[]{
-                         "name", "factMappingValue",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getFactMappingValue_FactIdentifier(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "factIdentifier",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMappingValue_ExpressionIdentifier(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "expressionIdentifier",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getFactMappingValue_RawValue(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "rawValue",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (importEClass,
-                 source,
-                 new String[]{
-                         "name", "import",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getImport_Type(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "type",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (importsEClass,
-                 source,
-                 new String[]{
-                         "name", "imports",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getImports_Imports(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "imports",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (nameEEnum,
-                 source,
-                 new String[]{
-                         "name", "name"
-                 });
-        addAnnotation
-                (nameObjectEDataType,
-                 source,
-                 new String[]{
-                         "name", "name:Object",
-                         "baseType", "name"
-                 });
-        addAnnotation
-                (scenarioEClass,
-                 source,
-                 new String[]{
-                         "name", "scenario",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getScenario_FactMappingValues(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "factMappingValues",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getScenario_SimulationDescriptor(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "simulationDescriptor",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (scenarioSimulationModelEClass,
-                 source,
-                 new String[]{
-                         "name", "scenarioSimulationModel",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getScenarioSimulationModel_Version(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "version",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getScenarioSimulationModel_Simulation(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "simulation",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getScenarioSimulationModel_Imports(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "imports",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (simulationEClass,
-                 source,
-                 new String[]{
-                         "name", "simulation",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getSimulation_SimulationDescriptor(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "simulationDescriptor",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulation_Scenarios(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "scenarios",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (simulationDescriptorEClass,
-                 source,
-                 new String[]{
-                         "name", "simulationDescriptor",
-                         "kind", "elementOnly"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_FactMappings(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "factMappings",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_DmoSession(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "dmoSession",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_DmnFilePath(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "dmnFilePath",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_Type(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "type",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_FileName(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "fileName",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_KieSession(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "kieSession",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_KieBase(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "kieBase",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_RuleFlowGroup(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "ruleFlowGroup",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_DmnNamespace(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "dmnNamespace",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_DmnName(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "dmnName",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (getSimulationDescriptor_SkipFromBuild(),
-                 source,
-                 new String[]{
-                         "kind", "element",
-                         "name", "skipFromBuild",
-                         "namespace", "##targetNamespace"
-                 });
-        addAnnotation
-                (typeEEnum,
-                 source,
-                 new String[]{
-                         "name", "type"
-                 });
-        addAnnotation
-                (typeObjectEDataType,
-                 source,
-                 new String[]{
-                         "name", "type:Object",
-                         "baseType", "type"
-                 });
+        addAnnotation(this,
+                      source,
+                      new String[]{
+                              "qualified", "false"
+                      });
+        addAnnotation(expressionElementEClass,
+                      source,
+                      new String[]{
+                              "name", "expressionElement",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getExpressionElement_Step(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "step",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(expressionIdentifierEClass,
+                      source,
+                      new String[]{
+                              "name", "expressionIdentifier",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getExpressionIdentifier_Name(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "name",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getExpressionIdentifier_Type(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "type",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(factIdentifierEClass,
+                      source,
+                      new String[]{
+                              "name", "factIdentifier",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getFactIdentifier_Name(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "name",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactIdentifier_ClassName(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "className",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(factMappingEClass,
+                      source,
+                      new String[]{
+                              "name", "factMapping",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getFactMapping_ExpressionElements(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "expressionElements",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_ExpressionIdentifier(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "expressionIdentifier",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_FactIdentifier(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "factIdentifier",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_ClassName(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "className",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_FactAlias(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "factAlias",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_ExpressionAlias(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "expressionAlias",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMapping_GenericTypes(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "genericTypes",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(factMappingTypeEEnum,
+                      source,
+                      new String[]{
+                              "name", "factMappingType"
+                      });
+        addAnnotation(factMappingTypeObjectEDataType,
+                      source,
+                      new String[]{
+                              "name", "factMappingType:Object",
+                              "baseType", "factMappingType"
+                      });
+        addAnnotation(factMappingValueEClass,
+                      source,
+                      new String[]{
+                              "name", "factMappingValue",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getFactMappingValue_FactIdentifier(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "factIdentifier",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMappingValue_ExpressionIdentifier(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "expressionIdentifier",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getFactMappingValue_RawValue(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "rawValue",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(importEClass,
+                      source,
+                      new String[]{
+                              "name", "import",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getImport_Type(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "type",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(importsEClass,
+                      source,
+                      new String[]{
+                              "name", "imports",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getImports_Imports(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "imports",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(nameEEnum,
+                      source,
+                      new String[]{
+                              "name", "name"
+                      });
+        addAnnotation(nameObjectEDataType,
+                      source,
+                      new String[]{
+                              "name", "name:Object",
+                              "baseType", "name"
+                      });
+        addAnnotation(scenarioEClass,
+                      source,
+                      new String[]{
+                              "name", "scenario",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getScenario_FactMappingValues(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "factMappingValues",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getScenario_SimulationDescriptor(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "simulationDescriptor",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(scenarioSimulationModelEClass,
+                      source,
+                      new String[]{
+                              "name", "scenarioSimulationModel",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getScenarioSimulationModel_Version(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "version",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getScenarioSimulationModel_Simulation(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "simulation",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getScenarioSimulationModel_Imports(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "imports",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(simulationEClass,
+                      source,
+                      new String[]{
+                              "name", "simulation",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getSimulation_SimulationDescriptor(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "simulationDescriptor",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulation_Scenarios(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "scenarios",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(simulationDescriptorEClass,
+                      source,
+                      new String[]{
+                              "name", "simulationDescriptor",
+                              "kind", "elementOnly"
+                      });
+        addAnnotation(getSimulationDescriptor_FactMappings(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "factMappings",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_DmoSession(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "dmoSession",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_DmnFilePath(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "dmnFilePath",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_Type(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "type",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_FileName(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "fileName",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_KieSession(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "kieSession",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_KieBase(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "kieBase",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_RuleFlowGroup(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "ruleFlowGroup",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_DmnNamespace(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "dmnNamespace",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_DmnName(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "dmnName",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(getSimulationDescriptor_SkipFromBuild(),
+                      source,
+                      new String[]{
+                              "kind", "element",
+                              "name", "skipFromBuild",
+                              "namespace", "##targetNamespace"
+                      });
+        addAnnotation(typeEEnum,
+                      source,
+                      new String[]{
+                              "name", "type"
+                      });
+        addAnnotation(typeObjectEDataType,
+                      source,
+                      new String[]{
+                              "name", "type:Object",
+                              "baseType", "type"
+                      });
     }
 } //scesimPackageImpl

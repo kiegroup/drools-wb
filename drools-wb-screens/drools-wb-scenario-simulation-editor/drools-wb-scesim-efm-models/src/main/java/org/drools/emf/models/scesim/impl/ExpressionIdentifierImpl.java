@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.ExpressionIdentifier;
 import org.drools.emf.models.scesim.FactMappingType;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -100,7 +101,7 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.EXPRESSION_IDENTIFIER;
+        return ScesimPackage.Literals.EXPRESSION_IDENTIFIER;
     }
 
     /**
@@ -108,6 +109,7 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -117,11 +119,12 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.EXPRESSION_IDENTIFIER__NAME, oldName, name));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.EXPRESSION_IDENTIFIER__NAME, oldName, name));
         }
     }
 
@@ -130,6 +133,7 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactMappingType getType() {
         return type;
     }
@@ -139,13 +143,14 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setType(FactMappingType newType) {
         FactMappingType oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
         boolean oldTypeESet = typeESet;
         typeESet = true;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.EXPRESSION_IDENTIFIER__TYPE, oldType, type, !oldTypeESet));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.EXPRESSION_IDENTIFIER__TYPE, oldType, type, !oldTypeESet));
         }
     }
 
@@ -154,13 +159,14 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void unsetType() {
         FactMappingType oldType = type;
         boolean oldTypeESet = typeESet;
         type = TYPE_EDEFAULT;
         typeESet = false;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.UNSET, scesimPackage.EXPRESSION_IDENTIFIER__TYPE, oldType, TYPE_EDEFAULT, oldTypeESet));
+            eNotify(new ENotificationImpl(this, Notification.UNSET, ScesimPackage.EXPRESSION_IDENTIFIER__TYPE, oldType, TYPE_EDEFAULT, oldTypeESet));
         }
     }
 
@@ -169,6 +175,7 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isSetType() {
         return typeESet;
     }
@@ -181,9 +188,9 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_IDENTIFIER__NAME:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__NAME:
                 return getName();
-            case scesimPackage.EXPRESSION_IDENTIFIER__TYPE:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__TYPE:
                 return getType();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -197,10 +204,10 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_IDENTIFIER__NAME:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__NAME:
                 setName((String) newValue);
                 return;
-            case scesimPackage.EXPRESSION_IDENTIFIER__TYPE:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__TYPE:
                 setType((FactMappingType) newValue);
                 return;
         }
@@ -215,10 +222,10 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_IDENTIFIER__NAME:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__NAME:
                 setName(NAME_EDEFAULT);
                 return;
-            case scesimPackage.EXPRESSION_IDENTIFIER__TYPE:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__TYPE:
                 unsetType();
                 return;
         }
@@ -233,9 +240,9 @@ public class ExpressionIdentifierImpl extends MinimalEObjectImpl.Container imple
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.EXPRESSION_IDENTIFIER__NAME:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case scesimPackage.EXPRESSION_IDENTIFIER__TYPE:
+            case ScesimPackage.EXPRESSION_IDENTIFIER__TYPE:
                 return isSetType();
         }
         return super.eIsSet(featureID);

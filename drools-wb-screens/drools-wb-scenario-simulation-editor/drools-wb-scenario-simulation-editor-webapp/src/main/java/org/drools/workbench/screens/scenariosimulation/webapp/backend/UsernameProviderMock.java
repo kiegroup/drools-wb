@@ -22,7 +22,6 @@ import org.uberfire.preferences.shared.UsernameProvider;
 @ApplicationScoped
 public class UsernameProviderMock implements UsernameProvider {
 
-
     @Override
     public String get() {
         return "admin";

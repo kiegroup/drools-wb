@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.FactIdentifier;
 import org.drools.emf.models.scesim.FactMappingValue;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
@@ -96,7 +97,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.FACT_MAPPING_VALUE;
+        return ScesimPackage.Literals.FACT_MAPPING_VALUE;
     }
 
     /**
@@ -104,6 +105,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactIdentifier getFactIdentifier() {
         return factIdentifier;
     }
@@ -113,21 +115,22 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setFactIdentifier(FactIdentifier newFactIdentifier) {
         if (newFactIdentifier != factIdentifier) {
             NotificationChain msgs = null;
             if (factIdentifier != null) {
-                msgs = ((InternalEObject) factIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) factIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, null, msgs);
             }
             if (newFactIdentifier != null) {
-                msgs = ((InternalEObject) newFactIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) newFactIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, null, msgs);
             }
             msgs = basicSetFactIdentifier(newFactIdentifier, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, newFactIdentifier, newFactIdentifier));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, newFactIdentifier, newFactIdentifier));
         }
     }
 
@@ -140,7 +143,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
         FactIdentifier oldFactIdentifier = factIdentifier;
         factIdentifier = newFactIdentifier;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, oldFactIdentifier, newFactIdentifier);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER, oldFactIdentifier, newFactIdentifier);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -155,6 +158,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getExpressionIdentifier() {
         return expressionIdentifier;
     }
@@ -164,11 +168,12 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setExpressionIdentifier(String newExpressionIdentifier) {
         String oldExpressionIdentifier = expressionIdentifier;
         expressionIdentifier = newExpressionIdentifier;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER, oldExpressionIdentifier, expressionIdentifier));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER, oldExpressionIdentifier, expressionIdentifier));
         }
     }
 
@@ -177,6 +182,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EObject getRawValue() {
         return rawValue;
     }
@@ -186,21 +192,22 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setRawValue(EObject newRawValue) {
         if (newRawValue != rawValue) {
             NotificationChain msgs = null;
             if (rawValue != null) {
-                msgs = ((InternalEObject) rawValue).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, null, msgs);
+                msgs = ((InternalEObject) rawValue).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, null, msgs);
             }
             if (newRawValue != null) {
-                msgs = ((InternalEObject) newRawValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, null, msgs);
+                msgs = ((InternalEObject) newRawValue).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, null, msgs);
             }
             msgs = basicSetRawValue(newRawValue, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, newRawValue, newRawValue));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, newRawValue, newRawValue));
         }
     }
 
@@ -213,7 +220,7 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
         EObject oldRawValue = rawValue;
         rawValue = newRawValue;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, oldRawValue, newRawValue);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE, oldRawValue, newRawValue);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -231,9 +238,9 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
                 return basicSetFactIdentifier(null, msgs);
-            case scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
                 return basicSetRawValue(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -247,11 +254,11 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
                 return getFactIdentifier();
-            case scesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
                 return getExpressionIdentifier();
-            case scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
                 return getRawValue();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -265,13 +272,13 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
                 setFactIdentifier((FactIdentifier) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
                 setExpressionIdentifier((String) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
                 setRawValue((EObject) newValue);
                 return;
         }
@@ -286,13 +293,13 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
                 setFactIdentifier(null);
                 return;
-            case scesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
                 setExpressionIdentifier(EXPRESSION_IDENTIFIER_EDEFAULT);
                 return;
-            case scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
                 setRawValue(null);
                 return;
         }
@@ -307,11 +314,11 @@ public class FactMappingValueImpl extends MinimalEObjectImpl.Container implement
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__FACT_IDENTIFIER:
                 return factIdentifier != null;
-            case scesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING_VALUE__EXPRESSION_IDENTIFIER:
                 return EXPRESSION_IDENTIFIER_EDEFAULT == null ? expressionIdentifier != null : !EXPRESSION_IDENTIFIER_EDEFAULT.equals(expressionIdentifier);
-            case scesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE__RAW_VALUE:
                 return rawValue != null;
         }
         return super.eIsSet(featureID);

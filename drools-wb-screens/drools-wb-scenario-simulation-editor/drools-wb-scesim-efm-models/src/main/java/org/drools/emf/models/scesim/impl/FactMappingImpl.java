@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import java.util.Collection;
@@ -21,7 +22,7 @@ import org.drools.emf.models.scesim.ExpressionElement;
 import org.drools.emf.models.scesim.ExpressionIdentifier;
 import org.drools.emf.models.scesim.FactIdentifier;
 import org.drools.emf.models.scesim.FactMapping;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -161,7 +162,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.FACT_MAPPING;
+        return ScesimPackage.Literals.FACT_MAPPING;
     }
 
     /**
@@ -169,9 +170,10 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<ExpressionElement> getExpressionElements() {
         if (expressionElements == null) {
-            expressionElements = new EObjectContainmentEList<ExpressionElement>(ExpressionElement.class, this, scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS);
+            expressionElements = new EObjectContainmentEList<ExpressionElement>(ExpressionElement.class, this, ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS);
         }
         return expressionElements;
     }
@@ -181,6 +183,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ExpressionIdentifier getExpressionIdentifier() {
         return expressionIdentifier;
     }
@@ -190,21 +193,22 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setExpressionIdentifier(ExpressionIdentifier newExpressionIdentifier) {
         if (newExpressionIdentifier != expressionIdentifier) {
             NotificationChain msgs = null;
             if (expressionIdentifier != null) {
-                msgs = ((InternalEObject) expressionIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) expressionIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, null, msgs);
             }
             if (newExpressionIdentifier != null) {
-                msgs = ((InternalEObject) newExpressionIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) newExpressionIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, null, msgs);
             }
             msgs = basicSetExpressionIdentifier(newExpressionIdentifier, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, newExpressionIdentifier, newExpressionIdentifier));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, newExpressionIdentifier, newExpressionIdentifier));
         }
     }
 
@@ -217,7 +221,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
         ExpressionIdentifier oldExpressionIdentifier = expressionIdentifier;
         expressionIdentifier = newExpressionIdentifier;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, oldExpressionIdentifier, newExpressionIdentifier);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER, oldExpressionIdentifier, newExpressionIdentifier);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -232,6 +236,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactIdentifier getFactIdentifier() {
         return factIdentifier;
     }
@@ -241,21 +246,22 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setFactIdentifier(FactIdentifier newFactIdentifier) {
         if (newFactIdentifier != factIdentifier) {
             NotificationChain msgs = null;
             if (factIdentifier != null) {
-                msgs = ((InternalEObject) factIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING__FACT_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) factIdentifier).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER, null, msgs);
             }
             if (newFactIdentifier != null) {
-                msgs = ((InternalEObject) newFactIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.FACT_MAPPING__FACT_IDENTIFIER, null, msgs);
+                msgs = ((InternalEObject) newFactIdentifier).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER, null, msgs);
             }
             msgs = basicSetFactIdentifier(newFactIdentifier, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__FACT_IDENTIFIER, newFactIdentifier, newFactIdentifier));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER, newFactIdentifier, newFactIdentifier));
         }
     }
 
@@ -268,7 +274,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
         FactIdentifier oldFactIdentifier = factIdentifier;
         factIdentifier = newFactIdentifier;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__FACT_IDENTIFIER, oldFactIdentifier, newFactIdentifier);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER, oldFactIdentifier, newFactIdentifier);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -283,6 +289,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getClassName() {
         return className;
     }
@@ -292,11 +299,12 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setClassName(String newClassName) {
         String oldClassName = className;
         className = newClassName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__CLASS_NAME, oldClassName, className));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__CLASS_NAME, oldClassName, className));
         }
     }
 
@@ -305,6 +313,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getFactAlias() {
         return factAlias;
     }
@@ -314,11 +323,12 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setFactAlias(String newFactAlias) {
         String oldFactAlias = factAlias;
         factAlias = newFactAlias;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__FACT_ALIAS, oldFactAlias, factAlias));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__FACT_ALIAS, oldFactAlias, factAlias));
         }
     }
 
@@ -327,6 +337,7 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getExpressionAlias() {
         return expressionAlias;
     }
@@ -336,11 +347,12 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setExpressionAlias(String newExpressionAlias) {
         String oldExpressionAlias = expressionAlias;
         expressionAlias = newExpressionAlias;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_MAPPING__EXPRESSION_ALIAS, oldExpressionAlias, expressionAlias));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_MAPPING__EXPRESSION_ALIAS, oldExpressionAlias, expressionAlias));
         }
     }
 
@@ -349,9 +361,10 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<String> getGenericTypes() {
         if (genericTypes == null) {
-            genericTypes = new EDataTypeEList<String>(String.class, this, scesimPackage.FACT_MAPPING__GENERIC_TYPES);
+            genericTypes = new EDataTypeEList<String>(String.class, this, ScesimPackage.FACT_MAPPING__GENERIC_TYPES);
         }
         return genericTypes;
     }
@@ -364,11 +377,11 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
                 return ((InternalEList<?>) getExpressionElements()).basicRemove(otherEnd, msgs);
-            case scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
                 return basicSetExpressionIdentifier(null, msgs);
-            case scesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
                 return basicSetFactIdentifier(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -382,19 +395,19 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
                 return getExpressionElements();
-            case scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
                 return getExpressionIdentifier();
-            case scesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
                 return getFactIdentifier();
-            case scesimPackage.FACT_MAPPING__CLASS_NAME:
+            case ScesimPackage.FACT_MAPPING__CLASS_NAME:
                 return getClassName();
-            case scesimPackage.FACT_MAPPING__FACT_ALIAS:
+            case ScesimPackage.FACT_MAPPING__FACT_ALIAS:
                 return getFactAlias();
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
                 return getExpressionAlias();
-            case scesimPackage.FACT_MAPPING__GENERIC_TYPES:
+            case ScesimPackage.FACT_MAPPING__GENERIC_TYPES:
                 return getGenericTypes();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -409,26 +422,26 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
                 getExpressionElements().clear();
                 getExpressionElements().addAll((Collection<? extends ExpressionElement>) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
                 setExpressionIdentifier((ExpressionIdentifier) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
                 setFactIdentifier((FactIdentifier) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__CLASS_NAME:
+            case ScesimPackage.FACT_MAPPING__CLASS_NAME:
                 setClassName((String) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__FACT_ALIAS:
+            case ScesimPackage.FACT_MAPPING__FACT_ALIAS:
                 setFactAlias((String) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
                 setExpressionAlias((String) newValue);
                 return;
-            case scesimPackage.FACT_MAPPING__GENERIC_TYPES:
+            case ScesimPackage.FACT_MAPPING__GENERIC_TYPES:
                 getGenericTypes().clear();
                 getGenericTypes().addAll((Collection<? extends String>) newValue);
                 return;
@@ -444,25 +457,25 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
                 getExpressionElements().clear();
                 return;
-            case scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
                 setExpressionIdentifier(null);
                 return;
-            case scesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
                 setFactIdentifier(null);
                 return;
-            case scesimPackage.FACT_MAPPING__CLASS_NAME:
+            case ScesimPackage.FACT_MAPPING__CLASS_NAME:
                 setClassName(CLASS_NAME_EDEFAULT);
                 return;
-            case scesimPackage.FACT_MAPPING__FACT_ALIAS:
+            case ScesimPackage.FACT_MAPPING__FACT_ALIAS:
                 setFactAlias(FACT_ALIAS_EDEFAULT);
                 return;
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
                 setExpressionAlias(EXPRESSION_ALIAS_EDEFAULT);
                 return;
-            case scesimPackage.FACT_MAPPING__GENERIC_TYPES:
+            case ScesimPackage.FACT_MAPPING__GENERIC_TYPES:
                 getGenericTypes().clear();
                 return;
         }
@@ -477,19 +490,19 @@ public class FactMappingImpl extends MinimalEObjectImpl.Container implements Fac
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ELEMENTS:
                 return expressionElements != null && !expressionElements.isEmpty();
-            case scesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_IDENTIFIER:
                 return expressionIdentifier != null;
-            case scesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
+            case ScesimPackage.FACT_MAPPING__FACT_IDENTIFIER:
                 return factIdentifier != null;
-            case scesimPackage.FACT_MAPPING__CLASS_NAME:
+            case ScesimPackage.FACT_MAPPING__CLASS_NAME:
                 return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
-            case scesimPackage.FACT_MAPPING__FACT_ALIAS:
+            case ScesimPackage.FACT_MAPPING__FACT_ALIAS:
                 return FACT_ALIAS_EDEFAULT == null ? factAlias != null : !FACT_ALIAS_EDEFAULT.equals(factAlias);
-            case scesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
+            case ScesimPackage.FACT_MAPPING__EXPRESSION_ALIAS:
                 return EXPRESSION_ALIAS_EDEFAULT == null ? expressionAlias != null : !EXPRESSION_ALIAS_EDEFAULT.equals(expressionAlias);
-            case scesimPackage.FACT_MAPPING__GENERIC_TYPES:
+            case ScesimPackage.FACT_MAPPING__GENERIC_TYPES:
                 return genericTypes != null && !genericTypes.isEmpty();
         }
         return super.eIsSet(featureID);

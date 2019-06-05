@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EFactory;
@@ -23,9 +24,9 @@ import org.eclipse.emf.ecore.EFactory;
  * It provides a create method for each non-abstract class of the model.
  * <!-- end-user-doc -->
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage
+ * @see org.drools.emf.models.scesim.ScesimPackage
  */
-public interface scesimFactory extends EFactory {
+public interface ScesimFactory extends EFactory {
 
     /**
      * The singleton instance of the factory.
@@ -33,7 +34,7 @@ public interface scesimFactory extends EFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    scesimFactory eINSTANCE = org.drools.emf.models.scesim.impl.scesimFactoryImpl.init();
+    ScesimFactory eINSTANCE = org.drools.emf.models.scesim.impl.ScesimFactoryImpl.init();
 
     /**
      * Returns a new object of class '<em>Expression Element</em>'.
@@ -141,5 +142,5 @@ public interface scesimFactory extends EFactory {
      * @return the package supported by this factory.
      * @generated
      */
-    scesimPackage getscesimPackage();
+    ScesimPackage getscesimPackage();
 } //scesimFactory

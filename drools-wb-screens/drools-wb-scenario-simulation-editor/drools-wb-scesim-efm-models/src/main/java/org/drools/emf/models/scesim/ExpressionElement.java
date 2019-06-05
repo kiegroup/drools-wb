@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EObject;
@@ -30,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='expressionElement' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getExpressionElement()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getExpressionElement()
  */
 public interface ExpressionElement extends EObject {
 
@@ -43,7 +44,7 @@ public interface ExpressionElement extends EObject {
      * extendedMetaData="kind='element' name='step' namespace='##targetNamespace'"
      * @generated
      * @see #setStep(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getExpressionElement_Step()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getExpressionElement_Step()
      */
     String getStep();
 

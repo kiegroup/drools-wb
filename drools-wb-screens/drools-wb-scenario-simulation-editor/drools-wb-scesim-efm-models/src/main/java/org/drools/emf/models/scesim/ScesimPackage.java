@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -37,9 +38,9 @@ import org.eclipse.emf.ecore.EReference;
  * @model kind="package"
  * extendedMetaData="qualified='false'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimFactory
+ * @see org.drools.emf.models.scesim.ScesimFactory
  */
-public interface scesimPackage extends EPackage {
+public interface ScesimPackage extends EPackage {
 
     /**
      * The package name.
@@ -70,7 +71,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ExpressionElementImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getExpressionElement()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getExpressionElement()
      */
     int EXPRESSION_ELEMENT = 0;
     /**
@@ -103,7 +104,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ExpressionIdentifierImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getExpressionIdentifier()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getExpressionIdentifier()
      */
     int EXPRESSION_IDENTIFIER = 1;
     /**
@@ -144,7 +145,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.FactIdentifierImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactIdentifier()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactIdentifier()
      */
     int FACT_IDENTIFIER = 2;
     /**
@@ -185,11 +186,11 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.FactMappingImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMapping()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMapping()
      */
     int FACT_MAPPING = 3;
     /**
-     * The feature id for the '<em><b>Expression Elements</b></em>' containment reference.
+     * The feature id for the '<em><b>Expression Elements</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -266,7 +267,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.FactMappingValueImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingValue()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingValue()
      */
     int FACT_MAPPING_VALUE = 4;
     /**
@@ -315,7 +316,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ImportImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getImport()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getImport()
      */
     int IMPORT = 5;
     /**
@@ -348,11 +349,11 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ImportsImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getImports()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getImports()
      */
     int IMPORTS = 6;
     /**
-     * The feature id for the '<em><b>Imports</b></em>' containment reference.
+     * The feature id for the '<em><b>Imports</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -381,11 +382,11 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ScenarioImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getScenario()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getScenario()
      */
     int SCENARIO = 7;
     /**
-     * The feature id for the '<em><b>Fact Mapping Values</b></em>' containment reference.
+     * The feature id for the '<em><b>Fact Mapping Values</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -422,7 +423,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.ScenarioSimulationModelImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getScenarioSimulationModel()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getScenarioSimulationModel()
      */
     int SCENARIO_SIMULATION_MODEL = 8;
     /**
@@ -471,7 +472,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.SimulationImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getSimulation()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getSimulation()
      */
     int SIMULATION = 9;
     /**
@@ -483,7 +484,7 @@ public interface scesimPackage extends EPackage {
      */
     int SIMULATION__SIMULATION_DESCRIPTOR = 0;
     /**
-     * The feature id for the '<em><b>Scenarios</b></em>' containment reference.
+     * The feature id for the '<em><b>Scenarios</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -512,11 +513,11 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.impl.SimulationDescriptorImpl
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getSimulationDescriptor()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getSimulationDescriptor()
      */
     int SIMULATION_DESCRIPTOR = 10;
     /**
-     * The feature id for the '<em><b>Fact Mappings</b></em>' containment reference.
+     * The feature id for the '<em><b>Fact Mappings</b></em>' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
@@ -625,7 +626,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.FactMappingType
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingType()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingType()
      */
     int FACT_MAPPING_TYPE = 11;
     /**
@@ -634,7 +635,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.Name
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getName_()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getName_()
      */
     int NAME = 12;
     /**
@@ -643,7 +644,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.Type
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getType()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getType()
      */
     int TYPE = 13;
     /**
@@ -652,7 +653,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.FactMappingType
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingTypeObject()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingTypeObject()
      */
     int FACT_MAPPING_TYPE_OBJECT = 14;
     /**
@@ -661,7 +662,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.Name
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getNameObject()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getNameObject()
      */
     int NAME_OBJECT = 15;
     /**
@@ -670,7 +671,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      * @see org.drools.emf.models.scesim.Type
-     * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getTypeObject()
+     * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getTypeObject()
      */
     int TYPE_OBJECT = 16;
     /**
@@ -679,7 +680,7 @@ public interface scesimPackage extends EPackage {
      * <!-- end-user-doc -->
      * @generated
      */
-    scesimPackage eINSTANCE = org.drools.emf.models.scesim.impl.scesimPackageImpl.init();
+    ScesimPackage eINSTANCE = org.drools.emf.models.scesim.impl.ScesimPackageImpl.init();
 
     /**
      * Returns the meta object for class '{@link org.drools.emf.models.scesim.ExpressionElement <em>Expression Element</em>}'.
@@ -777,10 +778,10 @@ public interface scesimPackage extends EPackage {
     EClass getFactMapping();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.drools.emf.models.scesim.FactMapping#getExpressionElements <em>Expression Elements</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.drools.emf.models.scesim.FactMapping#getExpressionElements <em>Expression Elements</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Expression Elements</em>'.
+     * @return the meta object for the containment reference list '<em>Expression Elements</em>'.
      * @generated
      * @see org.drools.emf.models.scesim.FactMapping#getExpressionElements()
      * @see #getFactMapping()
@@ -928,10 +929,10 @@ public interface scesimPackage extends EPackage {
     EClass getImports();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.drools.emf.models.scesim.Imports#getImports <em>Imports</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.drools.emf.models.scesim.Imports#getImports <em>Imports</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Imports</em>'.
+     * @return the meta object for the containment reference list '<em>Imports</em>'.
      * @generated
      * @see org.drools.emf.models.scesim.Imports#getImports()
      * @see #getImports()
@@ -949,10 +950,10 @@ public interface scesimPackage extends EPackage {
     EClass getScenario();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.drools.emf.models.scesim.Scenario#getFactMappingValues <em>Fact Mapping Values</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.drools.emf.models.scesim.Scenario#getFactMappingValues <em>Fact Mapping Values</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Fact Mapping Values</em>'.
+     * @return the meta object for the containment reference list '<em>Fact Mapping Values</em>'.
      * @generated
      * @see org.drools.emf.models.scesim.Scenario#getFactMappingValues()
      * @see #getScenario()
@@ -1035,10 +1036,10 @@ public interface scesimPackage extends EPackage {
     EReference getSimulation_SimulationDescriptor();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.drools.emf.models.scesim.Simulation#getScenarios <em>Scenarios</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.drools.emf.models.scesim.Simulation#getScenarios <em>Scenarios</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Scenarios</em>'.
+     * @return the meta object for the containment reference list '<em>Scenarios</em>'.
      * @generated
      * @see org.drools.emf.models.scesim.Simulation#getScenarios()
      * @see #getSimulation()
@@ -1056,10 +1057,10 @@ public interface scesimPackage extends EPackage {
     EClass getSimulationDescriptor();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.drools.emf.models.scesim.SimulationDescriptor#getFactMappings <em>Fact Mappings</em>}'.
+     * Returns the meta object for the containment reference list '{@link org.drools.emf.models.scesim.SimulationDescriptor#getFactMappings <em>Fact Mappings</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Fact Mappings</em>'.
+     * @return the meta object for the containment reference list '<em>Fact Mappings</em>'.
      * @generated
      * @see org.drools.emf.models.scesim.SimulationDescriptor#getFactMappings()
      * @see #getSimulationDescriptor()
@@ -1249,7 +1250,7 @@ public interface scesimPackage extends EPackage {
      * @return the factory that creates the instances of the model.
      * @generated
      */
-    scesimFactory getscesimFactory();
+    ScesimFactory getscesimFactory();
 
     /**
      * <!-- begin-user-doc -->
@@ -1272,7 +1273,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ExpressionElementImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getExpressionElement()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getExpressionElement()
          */
         EClass EXPRESSION_ELEMENT = eINSTANCE.getExpressionElement();
 
@@ -1290,7 +1291,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ExpressionIdentifierImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getExpressionIdentifier()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getExpressionIdentifier()
          */
         EClass EXPRESSION_IDENTIFIER = eINSTANCE.getExpressionIdentifier();
 
@@ -1316,7 +1317,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.FactIdentifierImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactIdentifier()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactIdentifier()
          */
         EClass FACT_IDENTIFIER = eINSTANCE.getFactIdentifier();
 
@@ -1342,12 +1343,12 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.FactMappingImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMapping()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMapping()
          */
         EClass FACT_MAPPING = eINSTANCE.getFactMapping();
 
         /**
-         * The meta object literal for the '<em><b>Expression Elements</b></em>' containment reference feature.
+         * The meta object literal for the '<em><b>Expression Elements</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
@@ -1408,7 +1409,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.FactMappingValueImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingValue()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingValue()
          */
         EClass FACT_MAPPING_VALUE = eINSTANCE.getFactMappingValue();
 
@@ -1442,7 +1443,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ImportImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getImport()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getImport()
          */
         EClass IMPORT = eINSTANCE.getImport();
 
@@ -1460,12 +1461,12 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ImportsImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getImports()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getImports()
          */
         EClass IMPORTS = eINSTANCE.getImports();
 
         /**
-         * The meta object literal for the '<em><b>Imports</b></em>' containment reference feature.
+         * The meta object literal for the '<em><b>Imports</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
@@ -1478,12 +1479,12 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ScenarioImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getScenario()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getScenario()
          */
         EClass SCENARIO = eINSTANCE.getScenario();
 
         /**
-         * The meta object literal for the '<em><b>Fact Mapping Values</b></em>' containment reference feature.
+         * The meta object literal for the '<em><b>Fact Mapping Values</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
@@ -1504,7 +1505,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.ScenarioSimulationModelImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getScenarioSimulationModel()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getScenarioSimulationModel()
          */
         EClass SCENARIO_SIMULATION_MODEL = eINSTANCE.getScenarioSimulationModel();
 
@@ -1538,7 +1539,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.SimulationImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getSimulation()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getSimulation()
          */
         EClass SIMULATION = eINSTANCE.getSimulation();
 
@@ -1551,7 +1552,7 @@ public interface scesimPackage extends EPackage {
         EReference SIMULATION__SIMULATION_DESCRIPTOR = eINSTANCE.getSimulation_SimulationDescriptor();
 
         /**
-         * The meta object literal for the '<em><b>Scenarios</b></em>' containment reference feature.
+         * The meta object literal for the '<em><b>Scenarios</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
@@ -1564,12 +1565,12 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.impl.SimulationDescriptorImpl
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getSimulationDescriptor()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getSimulationDescriptor()
          */
         EClass SIMULATION_DESCRIPTOR = eINSTANCE.getSimulationDescriptor();
 
         /**
-         * The meta object literal for the '<em><b>Fact Mappings</b></em>' containment reference feature.
+         * The meta object literal for the '<em><b>Fact Mappings</b></em>' containment reference list feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
          * @generated
@@ -1662,7 +1663,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.FactMappingType
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingType()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingType()
          */
         EEnum FACT_MAPPING_TYPE = eINSTANCE.getFactMappingType();
 
@@ -1672,7 +1673,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.Name
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getName_()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getName_()
          */
         EEnum NAME = eINSTANCE.getName_();
 
@@ -1682,7 +1683,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.Type
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getType()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getType()
          */
         EEnum TYPE = eINSTANCE.getType();
 
@@ -1692,7 +1693,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.FactMappingType
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getFactMappingTypeObject()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getFactMappingTypeObject()
          */
         EDataType FACT_MAPPING_TYPE_OBJECT = eINSTANCE.getFactMappingTypeObject();
 
@@ -1702,7 +1703,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.Name
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getNameObject()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getNameObject()
          */
         EDataType NAME_OBJECT = eINSTANCE.getNameObject();
 
@@ -1712,7 +1713,7 @@ public interface scesimPackage extends EPackage {
          * <!-- end-user-doc -->
          * @generated
          * @see org.drools.emf.models.scesim.Type
-         * @see org.drools.emf.models.scesim.impl.scesimPackageImpl#getTypeObject()
+         * @see org.drools.emf.models.scesim.impl.ScesimPackageImpl#getTypeObject()
          */
         EDataType TYPE_OBJECT = eINSTANCE.getTypeObject();
     }

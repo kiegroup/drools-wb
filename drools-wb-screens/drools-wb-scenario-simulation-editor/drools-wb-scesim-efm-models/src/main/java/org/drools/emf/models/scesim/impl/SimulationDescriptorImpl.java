@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import java.util.Collection;
 
 import org.drools.emf.models.scesim.FactMapping;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.SimulationDescriptor;
 import org.drools.emf.models.scesim.Type;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -278,7 +279,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.SIMULATION_DESCRIPTOR;
+        return ScesimPackage.Literals.SIMULATION_DESCRIPTOR;
     }
 
     /**
@@ -286,9 +287,10 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<FactMapping> getFactMappings() {
         if (factMappings == null) {
-            factMappings = new EObjectContainmentEList<FactMapping>(FactMapping.class, this, scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS);
+            factMappings = new EObjectContainmentEList<FactMapping>(FactMapping.class, this, ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS);
         }
         return factMappings;
     }
@@ -298,6 +300,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDmoSession() {
         return dmoSession;
     }
@@ -307,11 +310,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDmoSession(String newDmoSession) {
         String oldDmoSession = dmoSession;
         dmoSession = newDmoSession;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION, oldDmoSession, dmoSession));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION, oldDmoSession, dmoSession));
         }
     }
 
@@ -320,6 +324,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDmnFilePath() {
         return dmnFilePath;
     }
@@ -329,11 +334,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDmnFilePath(String newDmnFilePath) {
         String oldDmnFilePath = dmnFilePath;
         dmnFilePath = newDmnFilePath;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH, oldDmnFilePath, dmnFilePath));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH, oldDmnFilePath, dmnFilePath));
         }
     }
 
@@ -342,6 +348,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Type getType() {
         return type;
     }
@@ -351,13 +358,14 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setType(Type newType) {
         Type oldType = type;
         type = newType == null ? TYPE_EDEFAULT : newType;
         boolean oldTypeESet = typeESet;
         typeESet = true;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__TYPE, oldType, type, !oldTypeESet));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__TYPE, oldType, type, !oldTypeESet));
         }
     }
 
@@ -366,13 +374,14 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void unsetType() {
         Type oldType = type;
         boolean oldTypeESet = typeESet;
         type = TYPE_EDEFAULT;
         typeESet = false;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.UNSET, scesimPackage.SIMULATION_DESCRIPTOR__TYPE, oldType, TYPE_EDEFAULT, oldTypeESet));
+            eNotify(new ENotificationImpl(this, Notification.UNSET, ScesimPackage.SIMULATION_DESCRIPTOR__TYPE, oldType, TYPE_EDEFAULT, oldTypeESet));
         }
     }
 
@@ -381,6 +390,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isSetType() {
         return typeESet;
     }
@@ -390,6 +400,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getFileName() {
         return fileName;
     }
@@ -399,11 +410,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setFileName(String newFileName) {
         String oldFileName = fileName;
         fileName = newFileName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME, oldFileName, fileName));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME, oldFileName, fileName));
         }
     }
 
@@ -412,6 +424,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getKieSession() {
         return kieSession;
     }
@@ -421,11 +434,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setKieSession(String newKieSession) {
         String oldKieSession = kieSession;
         kieSession = newKieSession;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION, oldKieSession, kieSession));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION, oldKieSession, kieSession));
         }
     }
 
@@ -434,6 +448,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getKieBase() {
         return kieBase;
     }
@@ -443,11 +458,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setKieBase(String newKieBase) {
         String oldKieBase = kieBase;
         kieBase = newKieBase;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE, oldKieBase, kieBase));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE, oldKieBase, kieBase));
         }
     }
 
@@ -456,6 +472,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getRuleFlowGroup() {
         return ruleFlowGroup;
     }
@@ -465,11 +482,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setRuleFlowGroup(String newRuleFlowGroup) {
         String oldRuleFlowGroup = ruleFlowGroup;
         ruleFlowGroup = newRuleFlowGroup;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP, oldRuleFlowGroup, ruleFlowGroup));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP, oldRuleFlowGroup, ruleFlowGroup));
         }
     }
 
@@ -478,6 +496,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDmnNamespace() {
         return dmnNamespace;
     }
@@ -487,11 +506,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDmnNamespace(String newDmnNamespace) {
         String oldDmnNamespace = dmnNamespace;
         dmnNamespace = newDmnNamespace;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE, oldDmnNamespace, dmnNamespace));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE, oldDmnNamespace, dmnNamespace));
         }
     }
 
@@ -500,6 +520,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getDmnName() {
         return dmnName;
     }
@@ -509,11 +530,12 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setDmnName(String newDmnName) {
         String oldDmnName = dmnName;
         dmnName = newDmnName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME, oldDmnName, dmnName));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME, oldDmnName, dmnName));
         }
     }
 
@@ -522,6 +544,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isSkipFromBuild() {
         return skipFromBuild;
     }
@@ -531,13 +554,14 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setSkipFromBuild(boolean newSkipFromBuild) {
         boolean oldSkipFromBuild = skipFromBuild;
         skipFromBuild = newSkipFromBuild;
         boolean oldSkipFromBuildESet = skipFromBuildESet;
         skipFromBuildESet = true;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD, oldSkipFromBuild, skipFromBuild, !oldSkipFromBuildESet));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD, oldSkipFromBuild, skipFromBuild, !oldSkipFromBuildESet));
         }
     }
 
@@ -546,13 +570,14 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void unsetSkipFromBuild() {
         boolean oldSkipFromBuild = skipFromBuild;
         boolean oldSkipFromBuildESet = skipFromBuildESet;
         skipFromBuild = SKIP_FROM_BUILD_EDEFAULT;
         skipFromBuildESet = false;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.UNSET, scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD, oldSkipFromBuild, SKIP_FROM_BUILD_EDEFAULT, oldSkipFromBuildESet));
+            eNotify(new ENotificationImpl(this, Notification.UNSET, ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD, oldSkipFromBuild, SKIP_FROM_BUILD_EDEFAULT, oldSkipFromBuildESet));
         }
     }
 
@@ -561,6 +586,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public boolean isSetSkipFromBuild() {
         return skipFromBuildESet;
     }
@@ -573,7 +599,7 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
                 return ((InternalEList<?>) getFactMappings()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -587,27 +613,27 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
                 return getFactMappings();
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
                 return getDmoSession();
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
                 return getDmnFilePath();
-            case scesimPackage.SIMULATION_DESCRIPTOR__TYPE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__TYPE:
                 return getType();
-            case scesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
                 return getFileName();
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
                 return getKieSession();
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
                 return getKieBase();
-            case scesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
                 return getRuleFlowGroup();
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
                 return getDmnNamespace();
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
                 return getDmnName();
-            case scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
                 return isSkipFromBuild();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -622,38 +648,38 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
                 getFactMappings().clear();
                 getFactMappings().addAll((Collection<? extends FactMapping>) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
                 setDmoSession((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
                 setDmnFilePath((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__TYPE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__TYPE:
                 setType((Type) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
                 setFileName((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
                 setKieSession((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
                 setKieBase((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
                 setRuleFlowGroup((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
                 setDmnNamespace((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
                 setDmnName((String) newValue);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
                 setSkipFromBuild((Boolean) newValue);
                 return;
         }
@@ -668,37 +694,37 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
                 getFactMappings().clear();
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
                 setDmoSession(DMO_SESSION_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
                 setDmnFilePath(DMN_FILE_PATH_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__TYPE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__TYPE:
                 unsetType();
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
                 setFileName(FILE_NAME_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
                 setKieSession(KIE_SESSION_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
                 setKieBase(KIE_BASE_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
                 setRuleFlowGroup(RULE_FLOW_GROUP_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
                 setDmnNamespace(DMN_NAMESPACE_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
                 setDmnName(DMN_NAME_EDEFAULT);
                 return;
-            case scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
                 unsetSkipFromBuild();
                 return;
         }
@@ -713,27 +739,27 @@ public class SimulationDescriptorImpl extends MinimalEObjectImpl.Container imple
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FACT_MAPPINGS:
                 return factMappings != null && !factMappings.isEmpty();
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMO_SESSION:
                 return DMO_SESSION_EDEFAULT == null ? dmoSession != null : !DMO_SESSION_EDEFAULT.equals(dmoSession);
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_FILE_PATH:
                 return DMN_FILE_PATH_EDEFAULT == null ? dmnFilePath != null : !DMN_FILE_PATH_EDEFAULT.equals(dmnFilePath);
-            case scesimPackage.SIMULATION_DESCRIPTOR__TYPE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__TYPE:
                 return isSetType();
-            case scesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__FILE_NAME:
                 return FILE_NAME_EDEFAULT == null ? fileName != null : !FILE_NAME_EDEFAULT.equals(fileName);
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_SESSION:
                 return KIE_SESSION_EDEFAULT == null ? kieSession != null : !KIE_SESSION_EDEFAULT.equals(kieSession);
-            case scesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__KIE_BASE:
                 return KIE_BASE_EDEFAULT == null ? kieBase != null : !KIE_BASE_EDEFAULT.equals(kieBase);
-            case scesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__RULE_FLOW_GROUP:
                 return RULE_FLOW_GROUP_EDEFAULT == null ? ruleFlowGroup != null : !RULE_FLOW_GROUP_EDEFAULT.equals(ruleFlowGroup);
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAMESPACE:
                 return DMN_NAMESPACE_EDEFAULT == null ? dmnNamespace != null : !DMN_NAMESPACE_EDEFAULT.equals(dmnNamespace);
-            case scesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__DMN_NAME:
                 return DMN_NAME_EDEFAULT == null ? dmnName != null : !DMN_NAME_EDEFAULT.equals(dmnName);
-            case scesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
+            case ScesimPackage.SIMULATION_DESCRIPTOR__SKIP_FROM_BUILD:
                 return isSetSkipFromBuild();
         }
         return super.eIsSet(featureID);

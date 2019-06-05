@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.FactIdentifier;
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -90,7 +91,7 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.FACT_IDENTIFIER;
+        return ScesimPackage.Literals.FACT_IDENTIFIER;
     }
 
     /**
@@ -98,6 +99,7 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -107,11 +109,12 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setName(String newName) {
         String oldName = name;
         name = newName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_IDENTIFIER__NAME, oldName, name));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_IDENTIFIER__NAME, oldName, name));
         }
     }
 
@@ -120,6 +123,7 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getClassName() {
         return className;
     }
@@ -129,11 +133,12 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setClassName(String newClassName) {
         String oldClassName = className;
         className = newClassName;
         if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.FACT_IDENTIFIER__CLASS_NAME, oldClassName, className));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.FACT_IDENTIFIER__CLASS_NAME, oldClassName, className));
         }
     }
 
@@ -145,9 +150,9 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.FACT_IDENTIFIER__NAME:
+            case ScesimPackage.FACT_IDENTIFIER__NAME:
                 return getName();
-            case scesimPackage.FACT_IDENTIFIER__CLASS_NAME:
+            case ScesimPackage.FACT_IDENTIFIER__CLASS_NAME:
                 return getClassName();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -161,10 +166,10 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.FACT_IDENTIFIER__NAME:
+            case ScesimPackage.FACT_IDENTIFIER__NAME:
                 setName((String) newValue);
                 return;
-            case scesimPackage.FACT_IDENTIFIER__CLASS_NAME:
+            case ScesimPackage.FACT_IDENTIFIER__CLASS_NAME:
                 setClassName((String) newValue);
                 return;
         }
@@ -179,10 +184,10 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_IDENTIFIER__NAME:
+            case ScesimPackage.FACT_IDENTIFIER__NAME:
                 setName(NAME_EDEFAULT);
                 return;
-            case scesimPackage.FACT_IDENTIFIER__CLASS_NAME:
+            case ScesimPackage.FACT_IDENTIFIER__CLASS_NAME:
                 setClassName(CLASS_NAME_EDEFAULT);
                 return;
         }
@@ -197,9 +202,9 @@ public class FactIdentifierImpl extends MinimalEObjectImpl.Container implements 
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.FACT_IDENTIFIER__NAME:
+            case ScesimPackage.FACT_IDENTIFIER__NAME:
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case scesimPackage.FACT_IDENTIFIER__CLASS_NAME:
+            case ScesimPackage.FACT_IDENTIFIER__CLASS_NAME:
                 return CLASS_NAME_EDEFAULT == null ? className != null : !CLASS_NAME_EDEFAULT.equals(className);
         }
         return super.eIsSet(featureID);

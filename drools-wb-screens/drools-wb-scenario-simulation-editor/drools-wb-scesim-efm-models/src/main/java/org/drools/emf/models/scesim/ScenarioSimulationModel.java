@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='scenarioSimulationModel' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getScenarioSimulationModel()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getScenarioSimulationModel()
  */
 public interface ScenarioSimulationModel extends EObject {
 
@@ -45,7 +46,7 @@ public interface ScenarioSimulationModel extends EObject {
      * extendedMetaData="kind='element' name='version' namespace='##targetNamespace'"
      * @generated
      * @see #setVersion(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getScenarioSimulationModel_Version()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getScenarioSimulationModel_Version()
      */
     String getVersion();
 
@@ -68,7 +69,7 @@ public interface ScenarioSimulationModel extends EObject {
      * extendedMetaData="kind='element' name='simulation' namespace='##targetNamespace'"
      * @generated
      * @see #setSimulation(Simulation)
-     * @see org.drools.emf.models.scesim.scesimPackage#getScenarioSimulationModel_Simulation()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getScenarioSimulationModel_Simulation()
      */
     Simulation getSimulation();
 
@@ -91,7 +92,7 @@ public interface ScenarioSimulationModel extends EObject {
      * extendedMetaData="kind='element' name='imports' namespace='##targetNamespace'"
      * @generated
      * @see #setImports(Imports)
-     * @see org.drools.emf.models.scesim.scesimPackage#getScenarioSimulationModel_Imports()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getScenarioSimulationModel_Imports()
      */
     Imports getImports();
 

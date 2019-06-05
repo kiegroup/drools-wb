@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EObject;
@@ -31,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='factIdentifier' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getFactIdentifier()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getFactIdentifier()
  */
 public interface FactIdentifier extends EObject {
 
@@ -44,7 +45,7 @@ public interface FactIdentifier extends EObject {
      * extendedMetaData="kind='element' name='name' namespace='##targetNamespace'"
      * @generated
      * @see #setName(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactIdentifier_Name()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactIdentifier_Name()
      */
     String getName();
 
@@ -67,7 +68,7 @@ public interface FactIdentifier extends EObject {
      * extendedMetaData="kind='element' name='className' namespace='##targetNamespace'"
      * @generated
      * @see #setClassName(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactIdentifier_ClassName()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactIdentifier_ClassName()
      */
     String getClassName();
 

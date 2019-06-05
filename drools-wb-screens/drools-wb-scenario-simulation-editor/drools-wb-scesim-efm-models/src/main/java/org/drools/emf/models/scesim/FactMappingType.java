@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import java.util.Arrays;
@@ -28,7 +29,7 @@ import org.eclipse.emf.common.util.Enumerator;
  * <!-- end-user-doc -->
  * @model extendedMetaData="name='factMappingType'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getFactMappingType()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getFactMappingType()
  */
 public enum FactMappingType implements Enumerator {
     /**
@@ -206,6 +207,7 @@ public enum FactMappingType implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public int getValue() {
         return value;
     }
@@ -215,6 +217,7 @@ public enum FactMappingType implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -224,6 +227,7 @@ public enum FactMappingType implements Enumerator {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getLiteral() {
         return literal;
     }

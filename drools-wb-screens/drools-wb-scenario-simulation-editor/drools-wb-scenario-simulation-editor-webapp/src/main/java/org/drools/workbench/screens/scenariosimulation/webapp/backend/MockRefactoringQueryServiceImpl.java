@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
 //@Specializes
-public class MockRefactoringQueryServiceImpl/* extends RefactoringQueryServiceImpl */{
+public class MockRefactoringQueryServiceImpl/* extends RefactoringQueryServiceImpl */ {
 
 //    @Override
 //    public int queryHitCount(final RefactoringPageRequest request) {

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EObject;
@@ -30,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='import' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getImport()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getImport()
  */
 public interface Import extends EObject {
 
@@ -43,7 +44,7 @@ public interface Import extends EObject {
      * extendedMetaData="kind='element' name='type' namespace='##targetNamespace'"
      * @generated
      * @see #setType(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getImport_Type()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getImport_Type()
      */
     String getType();
 

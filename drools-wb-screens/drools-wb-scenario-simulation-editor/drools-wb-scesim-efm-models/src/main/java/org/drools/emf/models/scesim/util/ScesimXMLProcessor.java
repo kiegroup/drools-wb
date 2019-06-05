@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.util;
 
 import java.util.Map;
 
-import org.drools.emf.models.scesim.scesimPackage;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageRegistryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -29,7 +30,7 @@ import org.eclipse.emf.ecore.xmi.util.XMLProcessor;
  * <!-- end-user-doc -->
  * @generated
  */
-public class scesimXMLProcessor extends XMLProcessor {
+public class ScesimXMLProcessor extends XMLProcessor {
 
     /**
      * Public constructor to instantiate the helper.
@@ -37,9 +38,9 @@ public class scesimXMLProcessor extends XMLProcessor {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimXMLProcessor() {
+    public ScesimXMLProcessor() {
         super(new EPackageRegistryImpl(EPackage.Registry.INSTANCE));
-        extendedMetaData.putPackage(null, scesimPackage.eINSTANCE);
+        extendedMetaData.putPackage(null, ScesimPackage.eINSTANCE);
     }
 
     /**
@@ -52,8 +53,8 @@ public class scesimXMLProcessor extends XMLProcessor {
     protected Map<String, Resource.Factory> getRegistrations() {
         if (registrations == null) {
             super.getRegistrations();
-            registrations.put(XML_EXTENSION, new scesimResourceFactoryImpl());
-            registrations.put(STAR_EXTENSION, new scesimResourceFactoryImpl());
+            registrations.put(XML_EXTENSION, new ScesimResourceFactoryImpl());
+            registrations.put(STAR_EXTENSION, new ScesimResourceFactoryImpl());
         }
         return registrations;
     }

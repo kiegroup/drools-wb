@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.common.util.EList;
@@ -32,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='scenario' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getScenario()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getScenario()
  */
 public interface Scenario extends EObject {
 
@@ -45,7 +46,7 @@ public interface Scenario extends EObject {
      * @model containment="true"
      * extendedMetaData="kind='element' name='factMappingValues' namespace='##targetNamespace'"
      * @generated
-     * @see org.drools.emf.models.scesim.scesimPackage#getScenario_FactMappingValues()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getScenario_FactMappingValues()
      */
     EList<FactMappingValue> getFactMappingValues();
 
@@ -58,7 +59,7 @@ public interface Scenario extends EObject {
      * extendedMetaData="kind='element' name='simulationDescriptor' namespace='##targetNamespace'"
      * @generated
      * @see #setSimulationDescriptor(SimulationDescriptor)
-     * @see org.drools.emf.models.scesim.scesimPackage#getScenario_SimulationDescriptor()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getScenario_SimulationDescriptor()
      */
     SimulationDescriptor getSimulationDescriptor();
 

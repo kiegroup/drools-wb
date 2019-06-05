@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.ecore.EObject;
@@ -32,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='factMappingValue' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getFactMappingValue()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getFactMappingValue()
  */
 public interface FactMappingValue extends EObject {
 
@@ -45,7 +46,7 @@ public interface FactMappingValue extends EObject {
      * extendedMetaData="kind='element' name='factIdentifier' namespace='##targetNamespace'"
      * @generated
      * @see #setFactIdentifier(FactIdentifier)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMappingValue_FactIdentifier()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMappingValue_FactIdentifier()
      */
     FactIdentifier getFactIdentifier();
 
@@ -68,7 +69,7 @@ public interface FactMappingValue extends EObject {
      * extendedMetaData="kind='element' name='expressionIdentifier' namespace='##targetNamespace'"
      * @generated
      * @see #setExpressionIdentifier(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMappingValue_ExpressionIdentifier()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMappingValue_ExpressionIdentifier()
      */
     String getExpressionIdentifier();
 
@@ -91,7 +92,7 @@ public interface FactMappingValue extends EObject {
      * extendedMetaData="kind='element' name='rawValue' namespace='##targetNamespace'"
      * @generated
      * @see #setRawValue(EObject)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMappingValue_RawValue()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMappingValue_RawValue()
      */
     EObject getRawValue();
 

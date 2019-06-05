@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.submarine.client.editor;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -28,7 +27,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
-import org.drools.emf.models.scesim.util.Scesim2Resource;
+import org.drools.emf.models.scesim.util.ScesimResource;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
@@ -38,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMODataManagementStrategy;
+import org.eclipse.emf.ecore.EObject;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
@@ -52,6 +52,8 @@ import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultE
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
+//import org.drools.emf.models.scesim.util.Scesim2Resource;
+
 @Dependent
 /**
  * Wrapper to be used inside Submarine
@@ -62,7 +64,7 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
 //    protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
-    private Scesim2Resource scesim2Resource = new Scesim2Resource();
+    private ScesimResource scesim2Resource = new ScesimResource();
 
     public ScenarioSimulationEditorSubmarineWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -174,9 +176,11 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     protected void unmarshallContent(String toUnmarshal) {
         GWT.log(this.toString() + " unmarshallContent");
         try {
-            final org.drools.emf.models.scesim.ScenarioSimulationModel unmarshall = scesim2Resource.unmarshall(toUnmarshal);
+            scesim2Resource.load(toUnmarshal);
+//            final org.drools.emf.models.scesim.ScenarioSimulationModel unmarshall =
+            final EObject unmarshall = scesim2Resource.getContents().get(0);
             GWT.log(unmarshall.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             GWT.log(this.toString() + e.getMessage());
         }
     }

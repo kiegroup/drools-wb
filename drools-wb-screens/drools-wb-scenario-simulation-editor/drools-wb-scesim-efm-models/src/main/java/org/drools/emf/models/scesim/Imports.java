@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -30,30 +32,20 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='imports' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getImports()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getImports()
  */
 public interface Imports extends EObject {
 
     /**
-     * Returns the value of the '<em><b>Imports</b></em>' containment reference.
+     * Returns the value of the '<em><b>Imports</b></em>' containment reference list.
+     * The list contents are of type {@link org.drools.emf.models.scesim.Import}.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Imports</em>' containment reference.
+     * @return the value of the '<em>Imports</em>' containment reference list.
      * @model containment="true"
      * extendedMetaData="kind='element' name='imports' namespace='##targetNamespace'"
      * @generated
-     * @see #setImports(Import)
-     * @see org.drools.emf.models.scesim.scesimPackage#getImports_Imports()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getImports_Imports()
      */
-    Import getImports();
-
-    /**
-     * Sets the value of the '{@link org.drools.emf.models.scesim.Imports#getImports <em>Imports</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Imports</em>' containment reference.
-     * @generated
-     * @see #getImports()
-     */
-    void setImports(Import value);
+    EList<Import> getImports();
 } // Imports

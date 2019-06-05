@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
 //@Specializes
-public class MockAssetsUsageServiceImpl /*extends AssetsUsageServiceImpl */{
+public class MockAssetsUsageServiceImpl /*extends AssetsUsageServiceImpl */ {
 
 //    public MockAssetsUsageServiceImpl() {
 //        super(null, null);

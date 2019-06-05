@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.common.util.EList;
@@ -41,7 +42,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='simulationDescriptor' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor()
  */
 public interface SimulationDescriptor extends EObject {
 
@@ -54,7 +55,7 @@ public interface SimulationDescriptor extends EObject {
      * @model containment="true"
      * extendedMetaData="kind='element' name='factMappings' namespace='##targetNamespace'"
      * @generated
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_FactMappings()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_FactMappings()
      */
     EList<FactMapping> getFactMappings();
 
@@ -67,7 +68,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='dmoSession' namespace='##targetNamespace'"
      * @generated
      * @see #setDmoSession(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_DmoSession()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_DmoSession()
      */
     String getDmoSession();
 
@@ -90,7 +91,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='dmnFilePath' namespace='##targetNamespace'"
      * @generated
      * @see #setDmnFilePath(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_DmnFilePath()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_DmnFilePath()
      */
     String getDmnFilePath();
 
@@ -117,7 +118,7 @@ public interface SimulationDescriptor extends EObject {
      * @see #isSetType()
      * @see #unsetType()
      * @see #setType(Type)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_Type()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_Type()
      */
     Type getType();
 
@@ -166,7 +167,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='fileName' namespace='##targetNamespace'"
      * @generated
      * @see #setFileName(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_FileName()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_FileName()
      */
     String getFileName();
 
@@ -189,7 +190,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='kieSession' namespace='##targetNamespace'"
      * @generated
      * @see #setKieSession(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_KieSession()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_KieSession()
      */
     String getKieSession();
 
@@ -212,7 +213,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='kieBase' namespace='##targetNamespace'"
      * @generated
      * @see #setKieBase(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_KieBase()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_KieBase()
      */
     String getKieBase();
 
@@ -235,7 +236,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='ruleFlowGroup' namespace='##targetNamespace'"
      * @generated
      * @see #setRuleFlowGroup(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_RuleFlowGroup()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_RuleFlowGroup()
      */
     String getRuleFlowGroup();
 
@@ -258,7 +259,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='dmnNamespace' namespace='##targetNamespace'"
      * @generated
      * @see #setDmnNamespace(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_DmnNamespace()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_DmnNamespace()
      */
     String getDmnNamespace();
 
@@ -281,7 +282,7 @@ public interface SimulationDescriptor extends EObject {
      * extendedMetaData="kind='element' name='dmnName' namespace='##targetNamespace'"
      * @generated
      * @see #setDmnName(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_DmnName()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_DmnName()
      */
     String getDmnName();
 
@@ -306,7 +307,7 @@ public interface SimulationDescriptor extends EObject {
      * @see #isSetSkipFromBuild()
      * @see #unsetSkipFromBuild()
      * @see #setSkipFromBuild(boolean)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulationDescriptor_SkipFromBuild()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulationDescriptor_SkipFromBuild()
      */
     boolean isSkipFromBuild();
 

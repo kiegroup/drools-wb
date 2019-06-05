@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import org.drools.emf.models.scesim.ExpressionElement;
@@ -26,11 +27,11 @@ import org.drools.emf.models.scesim.Imports;
 import org.drools.emf.models.scesim.Name;
 import org.drools.emf.models.scesim.Scenario;
 import org.drools.emf.models.scesim.ScenarioSimulationModel;
+import org.drools.emf.models.scesim.ScesimFactory;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
 import org.drools.emf.models.scesim.SimulationDescriptor;
 import org.drools.emf.models.scesim.Type;
-import org.drools.emf.models.scesim.scesimFactory;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
@@ -44,7 +45,7 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
  * <!-- end-user-doc -->
  * @generated
  */
-public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
+public class ScesimFactoryImpl extends EFactoryImpl implements ScesimFactory {
 
     /**
      * Creates an instance of the factory.
@@ -52,7 +53,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimFactoryImpl() {
+    public ScesimFactoryImpl() {
         super();
     }
 
@@ -62,16 +63,16 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public static scesimFactory init() {
+    public static ScesimFactory init() {
         try {
-            scesimFactory thescesimFactory = (scesimFactory) EPackage.Registry.INSTANCE.getEFactory(scesimPackage.eNS_URI);
+            ScesimFactory thescesimFactory = (ScesimFactory) EPackage.Registry.INSTANCE.getEFactory(ScesimPackage.eNS_URI);
             if (thescesimFactory != null) {
                 return thescesimFactory;
             }
         } catch (Exception exception) {
             EcorePlugin.INSTANCE.log(exception);
         }
-        return new scesimFactoryImpl();
+        return new ScesimFactoryImpl();
     }
 
     /**
@@ -81,8 +82,8 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @deprecated
      */
     @Deprecated
-    public static scesimPackage getPackage() {
-        return scesimPackage.eINSTANCE;
+    public static ScesimPackage getPackage() {
+        return ScesimPackage.eINSTANCE;
     }
 
     /**
@@ -93,27 +94,27 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
     @Override
     public EObject create(EClass eClass) {
         switch (eClass.getClassifierID()) {
-            case scesimPackage.EXPRESSION_ELEMENT:
+            case ScesimPackage.EXPRESSION_ELEMENT:
                 return createExpressionElement();
-            case scesimPackage.EXPRESSION_IDENTIFIER:
+            case ScesimPackage.EXPRESSION_IDENTIFIER:
                 return createExpressionIdentifier();
-            case scesimPackage.FACT_IDENTIFIER:
+            case ScesimPackage.FACT_IDENTIFIER:
                 return createFactIdentifier();
-            case scesimPackage.FACT_MAPPING:
+            case ScesimPackage.FACT_MAPPING:
                 return createFactMapping();
-            case scesimPackage.FACT_MAPPING_VALUE:
+            case ScesimPackage.FACT_MAPPING_VALUE:
                 return createFactMappingValue();
-            case scesimPackage.IMPORT:
+            case ScesimPackage.IMPORT:
                 return createImport();
-            case scesimPackage.IMPORTS:
+            case ScesimPackage.IMPORTS:
                 return createImports();
-            case scesimPackage.SCENARIO:
+            case ScesimPackage.SCENARIO:
                 return createScenario();
-            case scesimPackage.SCENARIO_SIMULATION_MODEL:
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL:
                 return createScenarioSimulationModel();
-            case scesimPackage.SIMULATION:
+            case ScesimPackage.SIMULATION:
                 return createSimulation();
-            case scesimPackage.SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SIMULATION_DESCRIPTOR:
                 return createSimulationDescriptor();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -128,17 +129,17 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
     @Override
     public Object createFromString(EDataType eDataType, String initialValue) {
         switch (eDataType.getClassifierID()) {
-            case scesimPackage.FACT_MAPPING_TYPE:
+            case ScesimPackage.FACT_MAPPING_TYPE:
                 return createFactMappingTypeFromString(eDataType, initialValue);
-            case scesimPackage.NAME:
+            case ScesimPackage.NAME:
                 return createNameFromString(eDataType, initialValue);
-            case scesimPackage.TYPE:
+            case ScesimPackage.TYPE:
                 return createTypeFromString(eDataType, initialValue);
-            case scesimPackage.FACT_MAPPING_TYPE_OBJECT:
+            case ScesimPackage.FACT_MAPPING_TYPE_OBJECT:
                 return createFactMappingTypeObjectFromString(eDataType, initialValue);
-            case scesimPackage.NAME_OBJECT:
+            case ScesimPackage.NAME_OBJECT:
                 return createNameObjectFromString(eDataType, initialValue);
-            case scesimPackage.TYPE_OBJECT:
+            case ScesimPackage.TYPE_OBJECT:
                 return createTypeObjectFromString(eDataType, initialValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
@@ -153,17 +154,17 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
     @Override
     public String convertToString(EDataType eDataType, Object instanceValue) {
         switch (eDataType.getClassifierID()) {
-            case scesimPackage.FACT_MAPPING_TYPE:
+            case ScesimPackage.FACT_MAPPING_TYPE:
                 return convertFactMappingTypeToString(eDataType, instanceValue);
-            case scesimPackage.NAME:
+            case ScesimPackage.NAME:
                 return convertNameToString(eDataType, instanceValue);
-            case scesimPackage.TYPE:
+            case ScesimPackage.TYPE:
                 return convertTypeToString(eDataType, instanceValue);
-            case scesimPackage.FACT_MAPPING_TYPE_OBJECT:
+            case ScesimPackage.FACT_MAPPING_TYPE_OBJECT:
                 return convertFactMappingTypeObjectToString(eDataType, instanceValue);
-            case scesimPackage.NAME_OBJECT:
+            case ScesimPackage.NAME_OBJECT:
                 return convertNameObjectToString(eDataType, instanceValue);
-            case scesimPackage.TYPE_OBJECT:
+            case ScesimPackage.TYPE_OBJECT:
                 return convertTypeObjectToString(eDataType, instanceValue);
             default:
                 throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
@@ -175,6 +176,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ExpressionElement createExpressionElement() {
         ExpressionElementImpl expressionElement = new ExpressionElementImpl();
         return expressionElement;
@@ -185,6 +187,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ExpressionIdentifier createExpressionIdentifier() {
         ExpressionIdentifierImpl expressionIdentifier = new ExpressionIdentifierImpl();
         return expressionIdentifier;
@@ -195,6 +198,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactIdentifier createFactIdentifier() {
         FactIdentifierImpl factIdentifier = new FactIdentifierImpl();
         return factIdentifier;
@@ -205,6 +209,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactMapping createFactMapping() {
         FactMappingImpl factMapping = new FactMappingImpl();
         return factMapping;
@@ -215,6 +220,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public FactMappingValue createFactMappingValue() {
         FactMappingValueImpl factMappingValue = new FactMappingValueImpl();
         return factMappingValue;
@@ -225,6 +231,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Import createImport() {
         ImportImpl import_ = new ImportImpl();
         return import_;
@@ -235,6 +242,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Imports createImports() {
         ImportsImpl imports = new ImportsImpl();
         return imports;
@@ -245,6 +253,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Scenario createScenario() {
         ScenarioImpl scenario = new ScenarioImpl();
         return scenario;
@@ -255,6 +264,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ScenarioSimulationModel createScenarioSimulationModel() {
         ScenarioSimulationModelImpl scenarioSimulationModel = new ScenarioSimulationModelImpl();
         return scenarioSimulationModel;
@@ -265,6 +275,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Simulation createSimulation() {
         SimulationImpl simulation = new SimulationImpl();
         return simulation;
@@ -275,6 +286,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public SimulationDescriptor createSimulationDescriptor() {
         SimulationDescriptorImpl simulationDescriptor = new SimulationDescriptorImpl();
         return simulationDescriptor;
@@ -352,7 +364,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public FactMappingType createFactMappingTypeObjectFromString(EDataType eDataType, String initialValue) {
-        return createFactMappingTypeFromString(scesimPackage.Literals.FACT_MAPPING_TYPE, initialValue);
+        return createFactMappingTypeFromString(ScesimPackage.Literals.FACT_MAPPING_TYPE, initialValue);
     }
 
     /**
@@ -361,7 +373,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public String convertFactMappingTypeObjectToString(EDataType eDataType, Object instanceValue) {
-        return convertFactMappingTypeToString(scesimPackage.Literals.FACT_MAPPING_TYPE, instanceValue);
+        return convertFactMappingTypeToString(ScesimPackage.Literals.FACT_MAPPING_TYPE, instanceValue);
     }
 
     /**
@@ -370,7 +382,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public Name createNameObjectFromString(EDataType eDataType, String initialValue) {
-        return createNameFromString(scesimPackage.Literals.NAME, initialValue);
+        return createNameFromString(ScesimPackage.Literals.NAME, initialValue);
     }
 
     /**
@@ -379,7 +391,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public String convertNameObjectToString(EDataType eDataType, Object instanceValue) {
-        return convertNameToString(scesimPackage.Literals.NAME, instanceValue);
+        return convertNameToString(ScesimPackage.Literals.NAME, instanceValue);
     }
 
     /**
@@ -388,7 +400,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public Type createTypeObjectFromString(EDataType eDataType, String initialValue) {
-        return createTypeFromString(scesimPackage.Literals.TYPE, initialValue);
+        return createTypeFromString(ScesimPackage.Literals.TYPE, initialValue);
     }
 
     /**
@@ -397,7 +409,7 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * @generated
      */
     public String convertTypeObjectToString(EDataType eDataType, Object instanceValue) {
-        return convertTypeToString(scesimPackage.Literals.TYPE, instanceValue);
+        return convertTypeToString(ScesimPackage.Literals.TYPE, instanceValue);
     }
 
     /**
@@ -405,7 +417,8 @@ public class scesimFactoryImpl extends EFactoryImpl implements scesimFactory {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimPackage getscesimPackage() {
-        return (scesimPackage) getEPackage();
+    @Override
+    public ScesimPackage getscesimPackage() {
+        return (ScesimPackage) getEPackage();
     }
 } //scesimFactoryImpl

@@ -39,5 +39,4 @@ public class AuthoringPerspective {
         perspective.getRoot().addPart(new PartDefinitionImpl(SCENARIO_SIMULATION_SUBMARINE_SCREEN_DEFAULT_REQUEST));
         return perspective;
     }
-
 }

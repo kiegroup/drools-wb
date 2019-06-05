@@ -19,7 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.service;
  * Submarine specific service
  */
 //@ApplicationScoped
-public class ScenarioSimulationSubmarineServiceImpl/* implements ScenarioSimulationSubmarineService */{
+public class ScenarioSimulationSubmarineServiceImpl/* implements ScenarioSimulationSubmarineService */ {
 
 //    private Caller<ScenarioSimulationSubmarineServiceServerImpl> scenarioSimulationSubmarineServiceServer;
 //

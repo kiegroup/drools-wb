@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
 
 import java.util.Collection;
 
 import org.drools.emf.models.scesim.FactMappingValue;
 import org.drools.emf.models.scesim.Scenario;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.SimulationDescriptor;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
@@ -82,7 +83,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.SCENARIO;
+        return ScesimPackage.Literals.SCENARIO;
     }
 
     /**
@@ -90,9 +91,10 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<FactMappingValue> getFactMappingValues() {
         if (factMappingValues == null) {
-            factMappingValues = new EObjectContainmentEList<FactMappingValue>(FactMappingValue.class, this, scesimPackage.SCENARIO__FACT_MAPPING_VALUES);
+            factMappingValues = new EObjectContainmentEList<FactMappingValue>(FactMappingValue.class, this, ScesimPackage.SCENARIO__FACT_MAPPING_VALUES);
         }
         return factMappingValues;
     }
@@ -102,6 +104,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public SimulationDescriptor getSimulationDescriptor() {
         return simulationDescriptor;
     }
@@ -111,21 +114,22 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void setSimulationDescriptor(SimulationDescriptor newSimulationDescriptor) {
         if (newSimulationDescriptor != simulationDescriptor) {
             NotificationChain msgs = null;
             if (simulationDescriptor != null) {
-                msgs = ((InternalEObject) simulationDescriptor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, null, msgs);
+                msgs = ((InternalEObject) simulationDescriptor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, null, msgs);
             }
             if (newSimulationDescriptor != null) {
-                msgs = ((InternalEObject) newSimulationDescriptor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, null, msgs);
+                msgs = ((InternalEObject) newSimulationDescriptor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, null, msgs);
             }
             msgs = basicSetSimulationDescriptor(newSimulationDescriptor, msgs);
             if (msgs != null) {
                 msgs.dispatch();
             }
         } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, newSimulationDescriptor, newSimulationDescriptor));
+            eNotify(new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, newSimulationDescriptor, newSimulationDescriptor));
         }
     }
 
@@ -138,7 +142,7 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
         SimulationDescriptor oldSimulationDescriptor = simulationDescriptor;
         simulationDescriptor = newSimulationDescriptor;
         if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, oldSimulationDescriptor, newSimulationDescriptor);
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR, oldSimulationDescriptor, newSimulationDescriptor);
             if (msgs == null) {
                 msgs = notification;
             } else {
@@ -156,9 +160,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.SCENARIO__FACT_MAPPING_VALUES:
+            case ScesimPackage.SCENARIO__FACT_MAPPING_VALUES:
                 return ((InternalEList<?>) getFactMappingValues()).basicRemove(otherEnd, msgs);
-            case scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
                 return basicSetSimulationDescriptor(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -172,9 +176,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.SCENARIO__FACT_MAPPING_VALUES:
+            case ScesimPackage.SCENARIO__FACT_MAPPING_VALUES:
                 return getFactMappingValues();
-            case scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
                 return getSimulationDescriptor();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -189,11 +193,11 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.SCENARIO__FACT_MAPPING_VALUES:
+            case ScesimPackage.SCENARIO__FACT_MAPPING_VALUES:
                 getFactMappingValues().clear();
                 getFactMappingValues().addAll((Collection<? extends FactMappingValue>) newValue);
                 return;
-            case scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
                 setSimulationDescriptor((SimulationDescriptor) newValue);
                 return;
         }
@@ -208,10 +212,10 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.SCENARIO__FACT_MAPPING_VALUES:
+            case ScesimPackage.SCENARIO__FACT_MAPPING_VALUES:
                 getFactMappingValues().clear();
                 return;
-            case scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
                 setSimulationDescriptor(null);
                 return;
         }
@@ -226,9 +230,9 @@ public class ScenarioImpl extends MinimalEObjectImpl.Container implements Scenar
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.SCENARIO__FACT_MAPPING_VALUES:
+            case ScesimPackage.SCENARIO__FACT_MAPPING_VALUES:
                 return factMappingValues != null && !factMappingValues.isEmpty();
-            case scesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
+            case ScesimPackage.SCENARIO__SIMULATION_DESCRIPTOR:
                 return simulationDescriptor != null;
         }
         return super.eIsSet(featureID);

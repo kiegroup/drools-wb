@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.util;
 
 import org.drools.emf.models.scesim.ExpressionElement;
@@ -24,9 +25,9 @@ import org.drools.emf.models.scesim.Import;
 import org.drools.emf.models.scesim.Imports;
 import org.drools.emf.models.scesim.Scenario;
 import org.drools.emf.models.scesim.ScenarioSimulationModel;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.drools.emf.models.scesim.Simulation;
 import org.drools.emf.models.scesim.SimulationDescriptor;
-import org.drools.emf.models.scesim.scesimPackage;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.util.Switch;
@@ -42,9 +43,9 @@ import org.eclipse.emf.ecore.util.Switch;
  * which is the result of the switch.
  * <!-- end-user-doc -->
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage
+ * @see org.drools.emf.models.scesim.ScesimPackage
  */
-public class scesimSwitch<T> extends Switch<T> {
+public class ScesimSwitch<T> extends Switch<T> {
 
     /**
      * The cached model package
@@ -52,7 +53,7 @@ public class scesimSwitch<T> extends Switch<T> {
      * <!-- end-user-doc -->
      * @generated
      */
-    protected static scesimPackage modelPackage;
+    protected static ScesimPackage modelPackage;
 
     /**
      * Creates an instance of the switch.
@@ -60,9 +61,9 @@ public class scesimSwitch<T> extends Switch<T> {
      * <!-- end-user-doc -->
      * @generated
      */
-    public scesimSwitch() {
+    public ScesimSwitch() {
         if (modelPackage == null) {
-            modelPackage = scesimPackage.eINSTANCE;
+            modelPackage = ScesimPackage.eINSTANCE;
         }
     }
 
@@ -89,7 +90,7 @@ public class scesimSwitch<T> extends Switch<T> {
     @Override
     protected T doSwitch(int classifierID, EObject theEObject) {
         switch (classifierID) {
-            case scesimPackage.EXPRESSION_ELEMENT: {
+            case ScesimPackage.EXPRESSION_ELEMENT: {
                 ExpressionElement expressionElement = (ExpressionElement) theEObject;
                 T result = caseExpressionElement(expressionElement);
                 if (result == null) {
@@ -97,7 +98,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.EXPRESSION_IDENTIFIER: {
+            case ScesimPackage.EXPRESSION_IDENTIFIER: {
                 ExpressionIdentifier expressionIdentifier = (ExpressionIdentifier) theEObject;
                 T result = caseExpressionIdentifier(expressionIdentifier);
                 if (result == null) {
@@ -105,7 +106,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.FACT_IDENTIFIER: {
+            case ScesimPackage.FACT_IDENTIFIER: {
                 FactIdentifier factIdentifier = (FactIdentifier) theEObject;
                 T result = caseFactIdentifier(factIdentifier);
                 if (result == null) {
@@ -113,7 +114,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.FACT_MAPPING: {
+            case ScesimPackage.FACT_MAPPING: {
                 FactMapping factMapping = (FactMapping) theEObject;
                 T result = caseFactMapping(factMapping);
                 if (result == null) {
@@ -121,7 +122,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.FACT_MAPPING_VALUE: {
+            case ScesimPackage.FACT_MAPPING_VALUE: {
                 FactMappingValue factMappingValue = (FactMappingValue) theEObject;
                 T result = caseFactMappingValue(factMappingValue);
                 if (result == null) {
@@ -129,7 +130,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.IMPORT: {
+            case ScesimPackage.IMPORT: {
                 Import import_ = (Import) theEObject;
                 T result = caseImport(import_);
                 if (result == null) {
@@ -137,7 +138,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.IMPORTS: {
+            case ScesimPackage.IMPORTS: {
                 Imports imports = (Imports) theEObject;
                 T result = caseImports(imports);
                 if (result == null) {
@@ -145,7 +146,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.SCENARIO: {
+            case ScesimPackage.SCENARIO: {
                 Scenario scenario = (Scenario) theEObject;
                 T result = caseScenario(scenario);
                 if (result == null) {
@@ -153,7 +154,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.SCENARIO_SIMULATION_MODEL: {
+            case ScesimPackage.SCENARIO_SIMULATION_MODEL: {
                 ScenarioSimulationModel scenarioSimulationModel = (ScenarioSimulationModel) theEObject;
                 T result = caseScenarioSimulationModel(scenarioSimulationModel);
                 if (result == null) {
@@ -161,7 +162,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.SIMULATION: {
+            case ScesimPackage.SIMULATION: {
                 Simulation simulation = (Simulation) theEObject;
                 T result = caseSimulation(simulation);
                 if (result == null) {
@@ -169,7 +170,7 @@ public class scesimSwitch<T> extends Switch<T> {
                 }
                 return result;
             }
-            case scesimPackage.SIMULATION_DESCRIPTOR: {
+            case ScesimPackage.SIMULATION_DESCRIPTOR: {
                 SimulationDescriptor simulationDescriptor = (SimulationDescriptor) theEObject;
                 T result = caseSimulationDescriptor(simulationDescriptor);
                 if (result == null) {

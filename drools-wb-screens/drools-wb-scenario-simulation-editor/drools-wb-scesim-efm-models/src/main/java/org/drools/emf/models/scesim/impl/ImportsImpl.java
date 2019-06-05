@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim.impl;
+
+import java.util.Collection;
 
 import org.drools.emf.models.scesim.Import;
 import org.drools.emf.models.scesim.Imports;
-import org.drools.emf.models.scesim.scesimPackage;
-import org.eclipse.emf.common.notify.Notification;
+import org.drools.emf.models.scesim.ScesimPackage;
 import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 /**
  * <!-- begin-user-doc -->
@@ -40,14 +44,14 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports {
 
     /**
-     * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference.
+     * The cached value of the '{@link #getImports() <em>Imports</em>}' containment reference list.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      * @see #getImports()
      */
-    protected Import imports;
+    protected EList<Import> imports;
 
     /**
      * <!-- begin-user-doc -->
@@ -65,7 +69,7 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
      */
     @Override
     protected EClass eStaticClass() {
-        return scesimPackage.Literals.IMPORTS;
+        return ScesimPackage.Literals.IMPORTS;
     }
 
     /**
@@ -73,50 +77,12 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
      * <!-- end-user-doc -->
      * @generated
      */
-    public Import getImports() {
+    @Override
+    public EList<Import> getImports() {
+        if (imports == null) {
+            imports = new EObjectContainmentEList<Import>(Import.class, this, ScesimPackage.IMPORTS__IMPORTS);
+        }
         return imports;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setImports(Import newImports) {
-        if (newImports != imports) {
-            NotificationChain msgs = null;
-            if (imports != null) {
-                msgs = ((InternalEObject) imports).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - scesimPackage.IMPORTS__IMPORTS, null, msgs);
-            }
-            if (newImports != null) {
-                msgs = ((InternalEObject) newImports).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - scesimPackage.IMPORTS__IMPORTS, null, msgs);
-            }
-            msgs = basicSetImports(newImports, msgs);
-            if (msgs != null) {
-                msgs.dispatch();
-            }
-        } else if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, scesimPackage.IMPORTS__IMPORTS, newImports, newImports));
-        }
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public NotificationChain basicSetImports(Import newImports, NotificationChain msgs) {
-        Import oldImports = imports;
-        imports = newImports;
-        if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, scesimPackage.IMPORTS__IMPORTS, oldImports, newImports);
-            if (msgs == null) {
-                msgs = notification;
-            } else {
-                msgs.add(notification);
-            }
-        }
-        return msgs;
     }
 
     /**
@@ -127,8 +93,8 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case scesimPackage.IMPORTS__IMPORTS:
-                return basicSetImports(null, msgs);
+            case ScesimPackage.IMPORTS__IMPORTS:
+                return ((InternalEList<?>) getImports()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -141,7 +107,7 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case scesimPackage.IMPORTS__IMPORTS:
+            case ScesimPackage.IMPORTS__IMPORTS:
                 return getImports();
         }
         return super.eGet(featureID, resolve, coreType);
@@ -152,11 +118,13 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
      * <!-- end-user-doc -->
      * @generated
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case scesimPackage.IMPORTS__IMPORTS:
-                setImports((Import) newValue);
+            case ScesimPackage.IMPORTS__IMPORTS:
+                getImports().clear();
+                getImports().addAll((Collection<? extends Import>) newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -170,8 +138,8 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case scesimPackage.IMPORTS__IMPORTS:
-                setImports(null);
+            case ScesimPackage.IMPORTS__IMPORTS:
+                getImports().clear();
                 return;
         }
         super.eUnset(featureID);
@@ -185,8 +153,8 @@ public class ImportsImpl extends MinimalEObjectImpl.Container implements Imports
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case scesimPackage.IMPORTS__IMPORTS:
-                return imports != null;
+            case ScesimPackage.IMPORTS__IMPORTS:
+                return imports != null && !imports.isEmpty();
         }
         return super.eIsSet(featureID);
     }

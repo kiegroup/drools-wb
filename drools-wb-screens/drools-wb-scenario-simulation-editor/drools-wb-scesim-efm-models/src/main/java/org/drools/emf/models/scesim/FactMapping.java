@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.common.util.EList;
@@ -37,7 +38,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='factMapping' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping()
  */
 public interface FactMapping extends EObject {
 
@@ -50,7 +51,7 @@ public interface FactMapping extends EObject {
      * @model containment="true"
      * extendedMetaData="kind='element' name='expressionElements' namespace='##targetNamespace'"
      * @generated
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_ExpressionElements()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_ExpressionElements()
      */
     EList<ExpressionElement> getExpressionElements();
 
@@ -63,7 +64,7 @@ public interface FactMapping extends EObject {
      * extendedMetaData="kind='element' name='expressionIdentifier' namespace='##targetNamespace'"
      * @generated
      * @see #setExpressionIdentifier(ExpressionIdentifier)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_ExpressionIdentifier()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_ExpressionIdentifier()
      */
     ExpressionIdentifier getExpressionIdentifier();
 
@@ -86,7 +87,7 @@ public interface FactMapping extends EObject {
      * extendedMetaData="kind='element' name='factIdentifier' namespace='##targetNamespace'"
      * @generated
      * @see #setFactIdentifier(FactIdentifier)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_FactIdentifier()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_FactIdentifier()
      */
     FactIdentifier getFactIdentifier();
 
@@ -109,7 +110,7 @@ public interface FactMapping extends EObject {
      * extendedMetaData="kind='element' name='className' namespace='##targetNamespace'"
      * @generated
      * @see #setClassName(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_ClassName()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_ClassName()
      */
     String getClassName();
 
@@ -132,7 +133,7 @@ public interface FactMapping extends EObject {
      * extendedMetaData="kind='element' name='factAlias' namespace='##targetNamespace'"
      * @generated
      * @see #setFactAlias(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_FactAlias()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_FactAlias()
      */
     String getFactAlias();
 
@@ -155,7 +156,7 @@ public interface FactMapping extends EObject {
      * extendedMetaData="kind='element' name='expressionAlias' namespace='##targetNamespace'"
      * @generated
      * @see #setExpressionAlias(String)
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_ExpressionAlias()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_ExpressionAlias()
      */
     String getExpressionAlias();
 
@@ -178,7 +179,7 @@ public interface FactMapping extends EObject {
      * @model unique="false" dataType="org.eclipse.emf.ecore.xml.type.String"
      * extendedMetaData="kind='element' name='genericTypes' namespace='##targetNamespace'"
      * @generated
-     * @see org.drools.emf.models.scesim.scesimPackage#getFactMapping_GenericTypes()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getFactMapping_GenericTypes()
      */
     EList<String> getGenericTypes();
 } // FactMapping

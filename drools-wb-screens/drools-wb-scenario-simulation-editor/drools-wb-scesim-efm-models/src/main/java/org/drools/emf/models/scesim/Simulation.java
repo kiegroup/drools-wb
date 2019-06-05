@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.drools.emf.models.scesim;
 
 import org.eclipse.emf.common.util.EList;
@@ -32,7 +33,7 @@ import org.eclipse.emf.ecore.EObject;
  * </ul>
  * @model extendedMetaData="name='simulation' kind='elementOnly'"
  * @generated
- * @see org.drools.emf.models.scesim.scesimPackage#getSimulation()
+ * @see org.drools.emf.models.scesim.ScesimPackage#getSimulation()
  */
 public interface Simulation extends EObject {
 
@@ -45,7 +46,7 @@ public interface Simulation extends EObject {
      * extendedMetaData="kind='element' name='simulationDescriptor' namespace='##targetNamespace'"
      * @generated
      * @see #setSimulationDescriptor(SimulationDescriptor)
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulation_SimulationDescriptor()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulation_SimulationDescriptor()
      */
     SimulationDescriptor getSimulationDescriptor();
 
@@ -68,7 +69,7 @@ public interface Simulation extends EObject {
      * @model containment="true"
      * extendedMetaData="kind='element' name='scenarios' namespace='##targetNamespace'"
      * @generated
-     * @see org.drools.emf.models.scesim.scesimPackage#getSimulation_Scenarios()
+     * @see org.drools.emf.models.scesim.ScesimPackage#getSimulation_Scenarios()
      */
     EList<Scenario> getScenarios();
 } // Simulation
