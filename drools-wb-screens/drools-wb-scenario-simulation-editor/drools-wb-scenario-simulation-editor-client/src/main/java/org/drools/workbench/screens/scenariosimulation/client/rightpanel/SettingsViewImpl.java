@@ -43,7 +43,7 @@ public class SettingsViewImpl
     protected LabelElement nameLabel = Document.get().createLabelElement();
 
     @DataField("fileName")
-    protected SpanElement fileName = Document.get().createSpanElement();
+    protected InputElement fileName = Document.get().createTextInputElement();
 
     @DataField("typeLabel")
     protected LabelElement typeLabel = Document.get().createLabelElement();
@@ -54,17 +54,11 @@ public class SettingsViewImpl
     @DataField("ruleSettings")
     protected DivElement ruleSettings = Document.get().createDivElement();
 
-    @DataField("kieSession")
-    protected InputElement kieSession = Document.get().createTextInputElement();
-
-    @DataField("kieBase")
-    protected InputElement kieBase = Document.get().createTextInputElement();
+    @DataField("dmoSession")
+    protected InputElement dmoSession = Document.get().createTextInputElement();
 
     @DataField("ruleFlowGroup")
     protected InputElement ruleFlowGroup = Document.get().createTextInputElement();
-
-    @DataField("dmoSession")
-    protected InputElement dmoSession = Document.get().createTextInputElement();
 
     @DataField("dmnSettings")
     protected DivElement dmnSettings = Document.get().createDivElement();
@@ -73,25 +67,28 @@ public class SettingsViewImpl
     protected LabelElement dmnFileLabel = Document.get().createLabelElement();
 
     @DataField("dmnFilePath")
-    protected SpanElement dmnFilePath = Document.get().createSpanElement();
+    protected InputElement dmnFilePath = Document.get().createTextInputElement();
 
     @DataField("dmnNamespaceLabel")
     protected LabelElement dmnNamespaceLabel = Document.get().createLabelElement();
 
     @DataField("dmnNamespace")
-    protected SpanElement dmnNamespace = Document.get().createSpanElement();
+    protected InputElement dmnNamespace = Document.get().createTextInputElement();
 
     @DataField("dmnNameLabel")
     protected LabelElement dmnNameLabel = Document.get().createLabelElement();
 
     @DataField("dmnName")
-    protected SpanElement dmnName = Document.get().createSpanElement();
+    protected InputElement dmnName = Document.get().createTextInputElement();
 
     @DataField("skipFromBuild")
     protected InputElement skipFromBuild = Document.get().createCheckInputElement();
 
     @DataField("saveButton")
     protected ButtonElement saveButton = Document.get().createButtonElement();
+
+    @DataField("skipFromBuildLabel")
+    protected SpanElement skipFromBuildLabel = Document.get().createSpanElement();
 
     public SettingsViewImpl() {
     }
@@ -109,7 +106,10 @@ public class SettingsViewImpl
     @Override
     public void reset() {
         scenarioType.setInnerText("");
-        fileName.setInnerText("");
+        fileName.setValue("");
+        dmnName.setValue("");
+        dmnNamespace.setValue("");
+        dmnFilePath.setValue("");
         skipFromBuild.setChecked(false);
         dmnSettings.getStyle().setDisplay(Style.Display.NONE);
         ruleSettings.getStyle().setDisplay(Style.Display.NONE);
@@ -121,7 +121,7 @@ public class SettingsViewImpl
     }
 
     @Override
-    public SpanElement getFileName() {
+    public InputElement getFileName() {
         return fileName;
     }
 
@@ -141,23 +141,13 @@ public class SettingsViewImpl
     }
 
     @Override
-    public InputElement getKieSession() {
-        return kieSession;
-    }
-
-    @Override
-    public InputElement getKieBase() {
-        return kieBase;
+    public InputElement getDmoSession() {
+        return dmoSession;
     }
 
     @Override
     public InputElement getRuleFlowGroup() {
         return ruleFlowGroup;
-    }
-
-    @Override
-    public InputElement getDmoSession() {
-        return dmoSession;
     }
 
     @Override
@@ -171,7 +161,7 @@ public class SettingsViewImpl
     }
 
     @Override
-    public SpanElement getDmnFilePath() {
+    public InputElement getDmnFilePath() {
         return dmnFilePath;
     }
 
@@ -181,7 +171,7 @@ public class SettingsViewImpl
     }
 
     @Override
-    public SpanElement getDmnNamespace() {
+    public InputElement getDmnNamespace() {
         return dmnNamespace;
     }
 
@@ -191,13 +181,18 @@ public class SettingsViewImpl
     }
 
     @Override
-    public SpanElement getDmnName() {
+    public InputElement getDmnName() {
         return dmnName;
     }
 
     @Override
     public InputElement getSkipFromBuild() {
         return skipFromBuild;
+    }
+
+    @Override
+    public SpanElement getSkipFromBuildLabel() {
+        return skipFromBuildLabel;
     }
 
     @Override
