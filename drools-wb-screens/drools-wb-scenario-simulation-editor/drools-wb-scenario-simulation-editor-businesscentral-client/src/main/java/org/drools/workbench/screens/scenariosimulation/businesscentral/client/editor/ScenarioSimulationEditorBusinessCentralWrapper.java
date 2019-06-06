@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
@@ -39,9 +40,11 @@ import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimul
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -68,6 +71,7 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter.IDENTIFIER;
+import static org.drools.workbench.screens.scenariosimulation.service.ImportExportType.CSV;
 
 @Dependent
 @WorkbenchEditor(identifier = IDENTIFIER, supportedTypes = {ScenarioSimulationResourceType.class})
@@ -82,6 +86,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     private AsyncPackageDataModelOracleFactory oracleFactory;
     private Caller<ScenarioSimulationService> service;
     private Caller<DMNTypeService> dmnTypeService;
+    private Caller<ImportExportService> importExportService;
 
     public ScenarioSimulationEditorBusinessCentralWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -93,11 +98,13 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                                                           final ImportsWidgetPresenter importsWidget,
                                                           final AsyncPackageDataModelOracleFactory oracleFactory,
                                                           final PlaceManager placeManager,
-                                                          final Caller<DMNTypeService> dmnTypeService) {
+                                                          final Caller<DMNTypeService> dmnTypeService,
+                                                          final Caller<ImportExportService> importExportService) {
         super(scenarioSimulationEditorPresenter.getView());
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.dmnTypeService = dmnTypeService;
         this.service = service;
+        this.importExportService = importExportService;
         this.importsWidget = importsWidget;
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
@@ -158,6 +165,19 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void wrappedRegisterDock(String id, IsWidget widget) {
         registerDock(id, widget);
+    }
+
+    @Override
+    public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
+                importExportService.call(importCallBack,
+                                         importErrorCallback)
+                .importSimulation(CSV, fileContents, simulation);
+    }
+
+    @Override
+    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
+        importExportService.call(exportCallBack, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
+                .exportSimulation(CSV, simulation);
     }
 
     @Override

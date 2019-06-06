@@ -75,6 +75,7 @@ import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+import org.uberfire.ext.editor.commons.client.file.exports.TextContent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
@@ -83,6 +84,7 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
+import static org.drools.workbench.screens.scenariosimulation.service.ImportExportType.CSV;
 
 @Dependent
 public class ScenarioSimulationEditorPresenter {
@@ -254,9 +256,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onImport(String fileContents) {
         GWT.log(this.toString() + "onImport(" + fileContents + ")");
-//        importExportService.call(getImportCallBack(),
-//                                 getImportErrorCallback())
-//                .importSimulation(CSV, fileContents, context.getStatus().getSimulation());
+        scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getSimulation());
     }
 
     public EventBus getEventBus() {
@@ -386,9 +386,26 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void onExportToCsv() {
         GWT.log(this.toString() + "onExportToCsv");
-//        importExportService.call(getExportCallBack(),
-//                                 new DefaultErrorCallback())
-//                .exportSimulation(CSV, context.getStatus().getSimulation());
+        scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
+    }
+
+
+    protected RemoteCallback<Object> getExportCallBack() {
+        return rawResult -> {
+            TextContent textContent = TextContent.create((String) rawResult);
+            textFileExport.export(textContent,
+                                  path.getFileName() + CSV.getExtension());
+        };
+    }
+
+    protected RemoteCallback<Simulation> getImportCallBack() {
+        return simulation -> {
+            cleanReadOnlyColumn(simulation);
+            model.setSimulation(simulation);
+            view.setContent(model.getSimulation());
+            context.getStatus().setSimulation(model.getSimulation());
+            view.onResize();
+        };
     }
 
     /**

@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
@@ -36,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.submarine.client.editor.strategies.SubmarineDMODataManagementStrategy;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
@@ -100,16 +102,23 @@ public class ScenarioSimulationEditorSubmarineWrapper extends MultiPageEditorCon
     }
 
     @Override
+    public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
+        GWT.log(this.toString() + " onImport ");
+    }
+
+    @Override
+    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
+        GWT.log(this.toString() + " onExportToCsv ");
+    }
+
+    @Override
     public void setContent(String value) {
         GWT.log(this.toString() + " setContent ");
-        // TODO WORKAROUND
         getWidget().init(this);
         Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
         unmarshallContent(value);
-//        getModelSuccessCallbackMethod(service.unmarshal(value));
-//        service.call((RemoteCallback<ScenarioSimulationModel>) this::getModelSuccessCallbackMethod).unmarshal(value);
     }
 
     @Override

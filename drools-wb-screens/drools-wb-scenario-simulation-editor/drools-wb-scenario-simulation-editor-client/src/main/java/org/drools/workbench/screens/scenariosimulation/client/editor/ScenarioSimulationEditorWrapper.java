@@ -19,9 +19,11 @@ import java.util.List;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 
 public interface ScenarioSimulationEditorWrapper {
@@ -33,4 +35,8 @@ public interface ScenarioSimulationEditorWrapper {
     Integer getOriginalHash();
 
     void wrappedRegisterDock(final String id, final IsWidget widget);
+
+    void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation);
+
+    void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation);
 }
