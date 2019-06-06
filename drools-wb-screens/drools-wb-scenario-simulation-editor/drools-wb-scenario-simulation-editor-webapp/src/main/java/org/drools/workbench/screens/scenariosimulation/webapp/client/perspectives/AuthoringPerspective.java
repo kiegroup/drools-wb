@@ -24,7 +24,7 @@ import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
 
-import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorSubmarineScreen.SCENARIO_SIMULATION_SUBMARINE_SCREEN_DEFAULT_REQUEST;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoScreen.SCENARIO_SIMULATION_SUBMARINE_SCREEN_DEFAULT_REQUEST;
 
 @ApplicationScoped
 @WorkbenchPerspective(identifier = AuthoringPerspective.PERSPECTIVE_ID, isTransient = false, isDefault = true)

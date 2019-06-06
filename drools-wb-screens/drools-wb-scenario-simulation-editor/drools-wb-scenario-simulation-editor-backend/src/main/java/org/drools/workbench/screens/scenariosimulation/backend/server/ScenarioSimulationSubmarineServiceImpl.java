@@ -35,7 +35,7 @@ public class ScenarioSimulationSubmarineServiceImpl /*implements ScenarioSimulat
 //
 //    @Override
 //    public List<String> getAssets(final String containerDirectoryFullPath, String assetType, String packageName) throws Exception {
-//        // For the moment being the package name is ignored in this submarine version
+//        // For the moment being the package name is ignored in this kogito version
 //        File assetsDirectory = getAssetsDirectory(containerDirectoryFullPath);
 //        final String[] filteredFiles = assetsDirectory.list((dir, name) -> name.endsWith("." + assetType));
 //        return filteredFiles != null ? Arrays.asList(filteredFiles) : Collections.emptyList();

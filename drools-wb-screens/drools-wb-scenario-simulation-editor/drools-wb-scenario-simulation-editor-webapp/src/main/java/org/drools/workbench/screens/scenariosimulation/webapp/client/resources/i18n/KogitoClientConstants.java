@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.drools.workbench.screens.scenariosimulation.webapp.client.resources.i18n;
 
-package org.drools.workbench.screens.scenariosimulation.webapp.client;
+import org.jboss.errai.ui.shared.api.annotations.TranslationKey;
 
-import org.jboss.errai.ioc.client.api.EntryPoint;
-import org.jboss.errai.ui.shared.api.annotations.Bundle;
+public interface KogitoClientConstants {
 
-@EntryPoint
-@Bundle("resources/i18n/KogitoClientConstants.properties")
-public class ShowcaseEntryPoint {
-
+    @TranslationKey(defaultValue = "")
+    String DMNDiagramResourceTypeDownload = "DMNDiagramResourceType.download";
 }

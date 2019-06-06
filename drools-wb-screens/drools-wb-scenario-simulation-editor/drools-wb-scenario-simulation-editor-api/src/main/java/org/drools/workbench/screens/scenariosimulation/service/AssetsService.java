@@ -28,7 +28,7 @@ public interface AssetsService {
 
     /**
      * This method uses only <code>String</code> to avoid importing specific <b>backend</b> implementations where they should not be needed nor available
-     * (e.g. avoid using uberfire vfs stuff inside submarine environment)
+     * (e.g. avoid using uberfire vfs stuff inside kogito environment)
      * @param containerDirectoryFullPath
      * @param assetType
      * @param packageName
