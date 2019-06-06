@@ -39,7 +39,8 @@ public interface ScenarioSimulationService
         SupportsRead<ScenarioSimulationModel>,
         SupportsSaveAndRename<ScenarioSimulationModel, Metadata>,
         SupportsDelete,
-        SupportsCopy {
+        SupportsCopy,
+        AssetsService {
 
     ScenarioSimulationModelContent loadContent(final Path path);
 

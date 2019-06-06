@@ -35,6 +35,11 @@
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-project-datamodel-api</artifactId>
     </dependency>
+    
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-nio2-fs</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -189,6 +194,14 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>drools-scenario-simulation-backend</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+
+
   </dependencies>
 
   <dependencyManagement>
@@ -196,6 +209,13 @@
       <dependency>
         <groupId>org.kie</groupId>
         <artifactId>kie-dmn-core</artifactId>
+        <version>${version.org.kie}</version>
+        <classifier>tests</classifier>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.drools</groupId>
+        <artifactId>drools-scenario-simulation-backend</artifactId>
         <version>${version.org.kie}</version>
         <classifier>tests</classifier>
         <scope>test</scope>
@@ -213,5 +233,10 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
   </build>
 </project>
