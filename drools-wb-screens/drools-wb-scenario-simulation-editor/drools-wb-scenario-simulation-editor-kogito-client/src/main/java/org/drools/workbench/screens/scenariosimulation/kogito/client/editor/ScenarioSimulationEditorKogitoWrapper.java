@@ -26,6 +26,8 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import name.pehl.totoe.xml.client.Document;
+import name.pehl.totoe.xml.client.XmlParser;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -36,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.ReaderWriterFactory;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -51,6 +54,8 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
+//import name.pehl.totoe.xml.client.XmlParser;
+
 //import org.drools.emf.models.scesim.util.Scesim2Resource;
 
 @Dependent
@@ -60,7 +65,7 @@ import org.uberfire.workbench.model.menu.Menus;
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-//    protected Caller<ScenarioSimulationSubmarineService> service;
+    //    protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
 //    private ScesimResource scesim2Resource = new ScesimResource();
@@ -71,11 +76,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Inject
     public ScenarioSimulationEditorKogitoWrapper(/*final Caller<ScenarioSimulationSubmarineService> service,*/
-                                                    final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
-                                                    final FileMenuBuilder fileMenuBuilder,
-                                                    final PlaceManager placeManager,
-                                                    final MultiPageEditorContainerView multiPageEditorContainerView,
-                                                    final AuthoringEditorDock authoringWorkbenchDocks) {
+            final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
+            final FileMenuBuilder fileMenuBuilder,
+            final PlaceManager placeManager,
+            final MultiPageEditorContainerView multiPageEditorContainerView,
+            final AuthoringEditorDock authoringWorkbenchDocks) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
 //        this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
@@ -97,6 +102,16 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
+    public void setContent(String value) {
+        GWT.log(this.toString() + " setContent ");
+        getWidget().init(this);
+        Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
+        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
+        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+        unmarshallContent(value);
+    }
+
+    @Override
     public void wrappedRegisterDock(String id, IsWidget widget) {
         GWT.log(this.toString() + " setContent ");
     }
@@ -109,16 +124,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     @Override
     public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
         GWT.log(this.toString() + " onExportToCsv ");
-    }
-
-    @Override
-    public void setContent(String value) {
-        GWT.log(this.toString() + " setContent ");
-        getWidget().init(this);
-        Path path = new PathFactory.PathImpl("new.scesim", "file:///new.scesim");
-        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-        unmarshallContent(value);
     }
 
     @Override
@@ -186,7 +191,16 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     protected void unmarshallContent(String toUnmarshal) {
         GWT.log(this.toString() + " unmarshallContent");
-//        try {
+//
+        try {
+            Document document = new XmlParser().parse(toUnmarshal);
+            ReaderWriterFactory.SCENARIO_SIMULATION_MODEL_READER.read(document);
+//            org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.ScenarioSimulationModel scenarioSimulationModel = org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.ScenarioSimulationModel.SIMULATION_READER.read(toUnmarshal);
+//            GWT.log(scenarioSimulationModel.toString());
+        } catch (Exception e) {
+            GWT.log(e.getMessage(), e);
+        }
+        //        try {
 //            scesim2Resource.load(toUnmarshal);
 ////            final org.drools.emf.models.scesim.ScenarioSimulationModel unmarshall =
 //            final EObject unmarshall = scesim2Resource.getContents().get(0);

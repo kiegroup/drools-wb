@@ -115,6 +115,22 @@
       <artifactId>errai-ui</artifactId>
     </dependency>
 
+    <!-- MARSHALLING -->
+    <dependency>
+      <groupId>name.pehl</groupId>
+      <artifactId>totoe</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>name.pehl</groupId>
+      <artifactId>piriti-user</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>name.pehl</groupId>
+      <artifactId>piriti-dev</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- END MARSHALLING -->
+
   </dependencies>
 
   <dependencyManagement>
@@ -143,6 +159,24 @@
         <artifactId>drools-scenario-simulation-api</artifactId>
         <version>${version.org.kie}</version>
       </dependency>
+
+      <!-- MARSHALLING -->
+      <dependency>
+        <groupId>name.pehl</groupId>
+        <artifactId>totoe</artifactId>
+        <version>0.7</version>
+      </dependency>
+      <dependency>
+        <groupId>name.pehl</groupId>
+        <artifactId>piriti-user</artifactId>
+        <version>0.10</version>
+      </dependency>
+      <dependency>
+        <groupId>name.pehl</groupId>
+        <artifactId>piriti-dev</artifactId>
+        <version>0.10</version>
+      </dependency>
+      <!-- END MARSHALLING -->
 
     </dependencies>
   </dependencyManagement>
