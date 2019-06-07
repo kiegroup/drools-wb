@@ -39,7 +39,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     protected ManagedInstance<WorkbenchDocksHandler> installedHandlers;
 
     protected String authoringPerspectiveIdentifier = null;
-//    protected String currentPerspectiveIdentifier = null;
+    //    protected String currentPerspectiveIdentifier = null;
     protected WorkbenchDocksHandler activeHandler = null;
     protected UberfireDock[] activeDocks;
 
@@ -59,7 +59,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
             GWT.log(this + " handler " + handler.getClass().getName());
             Command initCommand = () -> setActiveHandler(handler);
             handler.init(initCommand);
-
         });
 
 //        installedHandlers.iterator().forEachRemaining(handler ->

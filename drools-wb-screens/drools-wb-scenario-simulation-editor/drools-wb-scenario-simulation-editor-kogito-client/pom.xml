@@ -116,19 +116,19 @@
     </dependency>
 
     <!-- MARSHALLING -->
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>totoe</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>piriti-user</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>piriti-dev</artifactId>
-      <scope>provided</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>totoe</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>piriti-user</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>piriti-dev</artifactId>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
     <!-- END MARSHALLING -->
 
   </dependencies>
@@ -144,14 +144,14 @@
         <groupId>org.kie.workbench</groupId>
         <artifactId>kie-wb-common-submarine-api</artifactId>
         <!-- momentary fix -->
-        <version>7.22.0-SNAPSHOT</version>
+        <version>7.24.0-SNAPSHOT</version>
       </dependency>
 
       <dependency>
         <groupId>org.kie.workbench</groupId>
         <artifactId>kie-wb-common-submarine-client</artifactId>
         <!-- momentary fix -->
-        <version>7.22.0-SNAPSHOT</version>
+        <version>7.24.0-SNAPSHOT</version>
       </dependency>
 
       <dependency>
@@ -160,23 +160,23 @@
         <version>${version.org.kie}</version>
       </dependency>
 
-      <!-- MARSHALLING -->
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>totoe</artifactId>
-        <version>0.7</version>
-      </dependency>
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>piriti-user</artifactId>
-        <version>0.10</version>
-      </dependency>
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>piriti-dev</artifactId>
-        <version>0.10</version>
-      </dependency>
-      <!-- END MARSHALLING -->
+<!--      &lt;!&ndash; MARSHALLING &ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>totoe</artifactId>-->
+<!--        <version>0.7</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>piriti-user</artifactId>-->
+<!--        <version>0.10</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>piriti-dev</artifactId>-->
+<!--        <version>0.10</version>-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash; END MARSHALLING &ndash;&gt;-->
 
     </dependencies>
   </dependencyManagement>

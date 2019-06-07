@@ -26,8 +26,6 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
-import name.pehl.totoe.xml.client.Document;
-import name.pehl.totoe.xml.client.XmlParser;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -36,9 +34,11 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.converters.ScenarioSimulationModelContainerConverter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.converters.ScenarioSimulationModelConverter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model.ScenarioSimulationModelKM;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.ReaderWriterFactory;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -54,9 +54,6 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
-//import name.pehl.totoe.xml.client.XmlParser;
-
-//import org.drools.emf.models.scesim.util.Scesim2Resource;
 
 @Dependent
 /**
@@ -65,24 +62,21 @@ import org.uberfire.workbench.model.menu.Menus;
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    //    protected Caller<ScenarioSimulationSubmarineService> service;
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
-//    private ScesimResource scesim2Resource = new ScesimResource();
 
     public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
 
     @Inject
-    public ScenarioSimulationEditorKogitoWrapper(/*final Caller<ScenarioSimulationSubmarineService> service,*/
+    public ScenarioSimulationEditorKogitoWrapper(
             final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
             final FileMenuBuilder fileMenuBuilder,
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks) {
         super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
-//        this.service = service;
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
@@ -191,23 +185,18 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     protected void unmarshallContent(String toUnmarshal) {
         GWT.log(this.toString() + " unmarshallContent");
-//
         try {
-            Document document = new XmlParser().parse(toUnmarshal);
-            ReaderWriterFactory.SCENARIO_SIMULATION_MODEL_READER.read(document);
-//            org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.ScenarioSimulationModel scenarioSimulationModel = org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.ScenarioSimulationModel.SIMULATION_READER.read(toUnmarshal);
-//            GWT.log(scenarioSimulationModel.toString());
+            final ScenarioSimulationModelContainerConverter scenarioSimulationModelContainerConverter = new ScenarioSimulationModelContainerConverter();
+            final org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model.ScenarioSimulationModelContainer scenarioSimulationModelContainer = scenarioSimulationModelContainerConverter.deserializeFromJson(toUnmarshal);
+            GWT.log(scenarioSimulationModelContainer.toString() +" " + scenarioSimulationModelContainer.getScenarioSimulationModel());
+            final ScenarioSimulationModelKM scenarioSimulationModelKM = scenarioSimulationModelContainer.getScenarioSimulationModel();
+            GWT.log(scenarioSimulationModelKM.toString() +" " + scenarioSimulationModelKM.getVersion());
+            ScenarioSimulationModel model = new ScenarioSimulationModelConverter().toApiModel(scenarioSimulationModelKM);
+            GWT.log(model.toString());
+            getModelSuccessCallbackMethod(model);
         } catch (Exception e) {
             GWT.log(e.getMessage(), e);
         }
-        //        try {
-//            scesim2Resource.load(toUnmarshal);
-////            final org.drools.emf.models.scesim.ScenarioSimulationModel unmarshall =
-//            final EObject unmarshall = scesim2Resource.getContents().get(0);
-//            GWT.log(unmarshall.toString());
-//        } catch (Exception e) {
-//            GWT.log(this.toString() + e.getMessage());
-//        }
     }
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {

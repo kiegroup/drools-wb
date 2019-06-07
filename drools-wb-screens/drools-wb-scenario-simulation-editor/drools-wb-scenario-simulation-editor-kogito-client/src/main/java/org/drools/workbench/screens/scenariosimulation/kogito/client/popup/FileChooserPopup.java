@@ -19,13 +19,21 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScen
 import org.uberfire.client.mvp.HasPresenter;
 import org.uberfire.mvp.Command;
 
-public interface FileChooserPopup extends AbstractScenarioPopup, HasPresenter<FileChooserPopup.Presenter> {
+public interface FileChooserPopup extends AbstractScenarioPopup,
+                                          HasPresenter<FileChooserPopup.Presenter> {
+
+    /**
+     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
+     * already showing.
+     */
+    void hide();
+
+    String getFileName();
 
     interface Presenter extends AbstractScenarioPopup.Presenter {
 
         /**
          * Same as default show method but with list of accepted extensions
-         *
          * @param mainTitleText
          * @param okButtonText
          * @param okCommand
@@ -36,12 +44,4 @@ public interface FileChooserPopup extends AbstractScenarioPopup, HasPresenter<Fi
 
         String getFileName();
     }
-
-    /**
-     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-     * already showing.
-     */
-    void hide();
-
-    String getFileName();
 }

@@ -34,6 +34,9 @@ import org.uberfire.backend.vfs.Path;
 @ApplicationScoped
 public class KogitoAsyncPackageDataModelOracle {
 
+    final Map<String, String> parametricFieldMap = Stream.of(
+            new AbstractMap.SimpleImmutableEntry<>("Author.books", "Book"))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     private final List<String> packageNames = Arrays.asList("com", "com.example");
     private final String[] factTypes = {"Author", "Book", String.class.getSimpleName(), Integer.class.getSimpleName()};
     private final String[] fqcnNames = {"com.Author", "com.Book", String.class.getCanonicalName(), Integer.class.getCanonicalName()};
@@ -47,7 +50,6 @@ public class KogitoAsyncPackageDataModelOracle {
             new AbstractMap.SimpleEntry<>("firstBook", false),
             new AbstractMap.SimpleEntry<>("isAlive", false)).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
-
     private final ModelField authorBooks = new ModelField("books",
                                                           List.class.getSimpleName(),
                                                           ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
@@ -84,7 +86,6 @@ public class KogitoAsyncPackageDataModelOracle {
                                                          ModelField.FIELD_ORIGIN.SELF,
                                                          FieldAccessorsAndMutators.ACCESSOR,
                                                          DataType.TYPE_THIS);
-
     private final ModelField bookAuthor = new ModelField("author",
                                                          "Author",
                                                          ModelField.FIELD_CLASS_TYPE.REGULAR_CLASS,
@@ -121,7 +122,6 @@ public class KogitoAsyncPackageDataModelOracle {
                                                        ModelField.FIELD_ORIGIN.SELF,
                                                        FieldAccessorsAndMutators.ACCESSOR,
                                                        DataType.TYPE_THIS);
-
     private final ModelField[] authorModelFields = {
             authorBooks,
             authorCurrentlyPrinted,
@@ -130,7 +130,6 @@ public class KogitoAsyncPackageDataModelOracle {
             authorName,
             authorThis
     };
-
     private final ModelField[] bookModelFields = {
             bookAuthor,
             bookIsAvailable,
@@ -139,16 +138,10 @@ public class KogitoAsyncPackageDataModelOracle {
             bookTestField,
             bookThis
     };
-
     private final Map<String, ModelField[]> modelFieldsMap = Stream.of(
             new AbstractMap.SimpleImmutableEntry<>("Author", authorModelFields),
             new AbstractMap.SimpleImmutableEntry<>("Book", bookModelFields))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-    final Map<String, String> parametricFieldMap = Stream.of(
-            new AbstractMap.SimpleImmutableEntry<>("Author.books", "Book"))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
     private Path resourcePath;
 
     public void init(Path resourcePath) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.readers;
 
-import name.pehl.piriti.xml.client.XmlReader;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.Scenario;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model;
 
-public interface ScenarioReader extends XmlReader<Scenario> {}
+public interface ImportKM extends KogitoModel {
+
+    String getType();
+
+    void setType(String type);
+
+}

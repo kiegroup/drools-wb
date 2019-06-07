@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.readers;
 
-import name.pehl.piriti.xml.client.XmlReader;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.SimulationDescriptor;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.converters;
 
-public interface SimulationDescriptorReader extends XmlReader<SimulationDescriptor> {}
+/**
+ * Contains the <b>converters</b> to/from JSON/AutoBean
+ */

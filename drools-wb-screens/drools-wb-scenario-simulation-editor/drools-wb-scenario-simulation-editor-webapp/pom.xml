@@ -543,21 +543,26 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- MARSHALLING -->
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>totoe</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>piriti-user</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>name.pehl</groupId>
-      <artifactId>piriti-dev</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <!-- END MARSHALLING -->
+<!--    &lt;!&ndash; MARSHALLING &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>totoe</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>piriti-user</artifactId>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>name.pehl</groupId>-->
+<!--      <artifactId>piriti-dev</artifactId>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
+<!--    &lt;!&ndash; https://mvnrepository.com/artifact/com.google.gwt.inject/gin &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>com.google.gwt.inject</groupId>-->
+<!--      <artifactId>gin</artifactId>-->
+<!--    </dependency>-->
+<!--    &lt;!&ndash; END MARSHALLING &ndash;&gt;-->
 
   </dependencies>
 
@@ -567,7 +572,7 @@
         <groupId>org.kie.workbench</groupId>
         <artifactId>kie-wb-common-submarine-client</artifactId>
         <!-- momentary fix -->
-        <version>7.22.0-SNAPSHOT</version>
+        <version>7.24.0-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>org.drools</groupId>
@@ -588,21 +593,28 @@
       </dependency>
 
       <!-- MARSHALLING -->
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>totoe</artifactId>
-        <version>0.7</version>
-      </dependency>
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>piriti-user</artifactId>
-        <version>0.10</version>
-      </dependency>
-      <dependency>
-        <groupId>name.pehl</groupId>
-        <artifactId>piriti-dev</artifactId>
-        <version>0.10</version>
-      </dependency>
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>totoe</artifactId>-->
+<!--        <version>0.7</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>piriti-user</artifactId>-->
+<!--        <version>0.10</version>-->
+<!--      </dependency>-->
+<!--      <dependency>-->
+<!--        <groupId>name.pehl</groupId>-->
+<!--        <artifactId>piriti-dev</artifactId>-->
+<!--        <version>0.10</version>-->
+<!--      </dependency>-->
+<!--      &lt;!&ndash; https://mvnrepository.com/artifact/com.google.gwt.inject/gin &ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>com.google.gwt.inject</groupId>-->
+<!--        <artifactId>gin</artifactId>-->
+<!--        <version>2.1.2</version>-->
+<!--      </dependency>-->
+
       <!-- END MARSHALLING -->
 
     </dependencies>

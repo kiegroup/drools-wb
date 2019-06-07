@@ -44,5 +44,4 @@ public class FileChooserPopupPresenter implements FileChooserPopup.Presenter {
     public String getFileName() {
         return fileUploadPopup.getFileName();
     }
-
 }

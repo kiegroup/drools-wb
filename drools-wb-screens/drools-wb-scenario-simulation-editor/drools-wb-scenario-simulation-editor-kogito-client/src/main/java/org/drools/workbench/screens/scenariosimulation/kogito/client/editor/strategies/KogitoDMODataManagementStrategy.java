@@ -51,7 +51,7 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     }
 
     @Override
-    protected void manageDataObjects(List<String> dataObjectsTypes, final TestToolsView.Presenter testToolsPresenter,  int expectedElements,
+    protected void manageDataObjects(List<String> dataObjectsTypes, final TestToolsView.Presenter testToolsPresenter, int expectedElements,
                                      final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
                                      final ScenarioGridModel scenarioGridModel,
                                      final List<String> simpleJavaTypes) {

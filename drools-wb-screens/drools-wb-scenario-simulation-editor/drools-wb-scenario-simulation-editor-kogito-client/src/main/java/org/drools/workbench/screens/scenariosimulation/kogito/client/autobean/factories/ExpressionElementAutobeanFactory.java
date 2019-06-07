@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.readers;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.factories;
 
-import name.pehl.piriti.xml.client.XmlReader;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.piriti.model.ScenarioSimulationModel;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model.ExpressionElementKM;
 
-public interface ScenarioSimulationModelReader extends XmlReader<ScenarioSimulationModel> {
+public interface ExpressionElementAutobeanFactory extends KogitoAutobeanFactory<ExpressionElementKM> {
 
 }
