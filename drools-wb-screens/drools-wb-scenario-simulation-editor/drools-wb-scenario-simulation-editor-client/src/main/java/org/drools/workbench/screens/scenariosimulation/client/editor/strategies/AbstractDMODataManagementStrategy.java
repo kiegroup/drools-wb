@@ -55,7 +55,6 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         if (factModelTreeHolder.getFactModelTuple() != null) {
             storeData(factModelTreeHolder.getFactModelTuple(), testToolsPresenter, scenarioGridModel);
         } else {
-            // Execute only when submarineOracle has been set
             if (skipPopulateTestTools()) {
                 return;
             }
