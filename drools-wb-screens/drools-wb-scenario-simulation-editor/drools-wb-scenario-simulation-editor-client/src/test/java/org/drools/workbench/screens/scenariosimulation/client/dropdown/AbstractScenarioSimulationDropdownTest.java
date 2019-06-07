@@ -16,7 +16,13 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
+import org.mockito.Mock;
+
 public abstract class AbstractScenarioSimulationDropdownTest {
+
+    @Mock
+    protected KieAssetsDropdownItem kieAssetsDropdownItemMock;
 
     public void setup() {
     }
