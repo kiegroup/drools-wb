@@ -77,8 +77,7 @@ public class ScenarioSimulationDocksHandler
                                       "PLAY_CIRCLE",
                                       new DockPlaceHolderPlace(TEST_RUNNER_REPORTING_PANEL),
                                       perspectiveIdentifier);
-        result.add(reportDock.withSize(450).withLabel("TEST REPORT"/*DefaultWorkbenchConstants.INSTANCE.TestReport()*/));
-
+        result.add(reportDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
         coverageDock = new UberfireDock(UberfireDockPosition.EAST,
                                         "BAR_CHART",
                                         new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),

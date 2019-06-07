@@ -36,9 +36,6 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
 
-    //Package for which this Scenario Simulation relates
-    protected String packageName = "";
-
     public BusinessCentralDMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory, final ScenarioSimulationContext scenarioSimulationContext) {
         this.oracleFactory = oracleFactory;
         this.scenarioSimulationContext = scenarioSimulationContext;
