@@ -21,8 +21,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.ait.lienzo.test.LienzoMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.AbstractScenarioSimulationAssetsDropdownTest;
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.AbstractScenarioSimulationDropdownTest;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.jboss.errai.common.client.api.Caller;
@@ -53,8 +53,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(LienzoMockitoTestRunner.class)
-public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenarioSimulationAssetsDropdownTest {
+@RunWith(GwtMockitoTestRunner.class)
+public class ScenarioSimulationAssetsDropdownProviderTest extends AbstractScenarioSimulationDropdownTest {
 
     @Mock
     private Caller<ScenarioSimulationService> scenarioSimulationServiceCallerMock;

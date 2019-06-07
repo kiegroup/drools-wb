@@ -61,6 +61,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRun
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -255,7 +256,6 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onImport(String fileContents) {
-        GWT.log(this.toString() + "onImport(" + fileContents + ")");
         scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getSimulation());
     }
 
@@ -385,7 +385,6 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void onExportToCsv() {
-        GWT.log(this.toString() + "onExportToCsv");
         scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
     }
 
@@ -529,7 +528,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected Command getSaveCommand() {
-        return () -> scenarioSimulationEditorWrapper.wrappedSave("Save");
+        return () -> scenarioSimulationEditorWrapper.wrappedSave(ConstantHolder.SAVE);
     }
 
     /**
