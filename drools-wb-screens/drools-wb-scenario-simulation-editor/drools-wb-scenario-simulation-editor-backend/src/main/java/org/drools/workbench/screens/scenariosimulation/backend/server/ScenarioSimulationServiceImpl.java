@@ -134,9 +134,6 @@ public class ScenarioSimulationServiceImpl
 
     private Properties props = new Properties();
 
-//    private FileSystem fileSystem = new SimpleFileSystemProvider().getFileSystem(null); // null safe here because actual implementation does not use it
-
-
     private static final String KIE_VERSION = "kie.version";
     private static final String junitActivatorPackageName = "testscenario";
 
