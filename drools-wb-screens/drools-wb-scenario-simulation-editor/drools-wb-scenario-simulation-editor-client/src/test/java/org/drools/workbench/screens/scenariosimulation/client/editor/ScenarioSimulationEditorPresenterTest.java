@@ -495,6 +495,22 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenter, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
         verify(presenter, times(1)).getSaveCommand();
         verify(presenter, times(1)).setSettings(eq(settingsPresenterMock));
+        //
+        PlaceRequest coverageReportPlaceRequestMock = mock(PlaceRequest.class);
+        reset(presenter);
+        reset(uberfireDocksInteractionEventMock);
+        presenter.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(coverageReportPlaceRequestMock);
+        when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
+        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(coverageReportPresenterMock)).when(presenter).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
+        when(targetDockMock.getIdentifier()).thenReturn(CoverageReportPresenter.IDENTIFIER);
+        when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
+        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
+        verify(presenter, times(1)).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
+        verify(presenter, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
     }
 
     @Test
