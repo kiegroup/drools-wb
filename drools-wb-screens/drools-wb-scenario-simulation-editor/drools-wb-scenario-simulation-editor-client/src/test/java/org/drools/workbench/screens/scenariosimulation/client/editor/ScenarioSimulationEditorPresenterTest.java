@@ -154,7 +154,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setup() {
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-        when(scenarioSimulationServiceMock.runScenario(any(), any(), any())).thenReturn(simulationRunResultMock);
         when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
