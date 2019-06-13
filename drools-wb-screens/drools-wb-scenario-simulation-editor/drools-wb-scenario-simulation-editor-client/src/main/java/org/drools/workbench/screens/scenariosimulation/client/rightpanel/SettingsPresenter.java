@@ -26,7 +26,9 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.Style;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
 
@@ -45,20 +47,25 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     protected Command saveCommand;
 
+    protected ScenarioSimulationDropdown scenarioSimulationDropdown;
+
     public SettingsPresenter() {
         //Zero argument constructor for CDI
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
     }
 
     @Inject
-    public SettingsPresenter(SettingsView view) {
+    public SettingsPresenter(SettingsView view, ScenarioSimulationDropdown scenarioSimulationDropdown) {
         super(view);
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
+        this.scenarioSimulationDropdown = scenarioSimulationDropdown;
     }
 
     @PostConstruct
     public void init() {
         view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipSimulation());
+        view.setupDropdown(scenarioSimulationDropdown.asWidget().asWidget().getElement());
+        scenarioSimulationDropdown.init();
     }
 
     @Override
@@ -99,6 +106,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void reset() {
         view.reset();
+        scenarioSimulationDropdown.clear();
     }
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
@@ -111,9 +119,12 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
         view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
-        view.getDmnFilePath().setValue(Optional.ofNullable(simulationDescriptor.getDmnFilePath()).orElse(""));
         view.getDmnName().setValue(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
+        scenarioSimulationDropdown.loadAssets();
+        if (simulationDescriptor.getDmnFilePath() != null) {
+            scenarioSimulationDropdown.selectValue(simulationDescriptor.getDmnFilePath());
+        }
     }
 
     protected void saveRuleSettings() {
@@ -122,7 +133,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     protected void saveDMNSettings() {
-        simulationDescriptor.setDmnFilePath(getCleanValue(() -> view.getDmnFilePath().getValue()));
+       String value = scenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse("");
+       simulationDescriptor.setDmnFilePath(getCleanValue(() -> value));
     }
 
     private String getCleanValue(Supplier<String> supplier) {

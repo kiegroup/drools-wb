@@ -15,14 +15,19 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import java.util.List;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 @Dependent
 public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
+
+    String value = "";
 
     @Inject
     public ScenarioSimulationDropdown(ScenarioSimulationDropdownView view, ScenarioSimulationAssetsDropdownProvider dataProvider) {
@@ -32,4 +37,16 @@ public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
     public IsWidget asWidget() {
         return ((ScenarioSimulationDropdownView) view).asWidget();
     }
+
+    public void selectValue(String value) {
+       this.value = value;
+    }
+
+    @Override
+    protected void assetListConsumerMethod(final List<KieAssetsDropdownItem> assetList) {
+        assetList.forEach(this::addValue);
+        view.refreshSelectPicker();
+        ((ScenarioSimulationDropdownView) view).selectValue(value);
+    }
+
 }

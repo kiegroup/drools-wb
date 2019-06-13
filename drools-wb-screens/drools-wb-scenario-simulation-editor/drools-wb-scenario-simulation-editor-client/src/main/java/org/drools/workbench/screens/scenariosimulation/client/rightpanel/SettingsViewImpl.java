@@ -21,6 +21,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -66,8 +67,8 @@ public class SettingsViewImpl
     @DataField("dmnFileLabel")
     protected LabelElement dmnFileLabel = Document.get().createLabelElement();
 
-    @DataField("dmnFilePath")
-    protected InputElement dmnFilePath = Document.get().createTextInputElement();
+    @DataField("dmnFilePathPlaceholder")
+    protected DivElement dmnFilePathPlaceholder = Document.get().createDivElement();
 
     @DataField("dmnNamespaceLabel")
     protected LabelElement dmnNamespaceLabel = Document.get().createLabelElement();
@@ -99,6 +100,11 @@ public class SettingsViewImpl
     }
 
     @Override
+    public void setupDropdown(final Element dropdownElement) {
+        dmnFilePathPlaceholder.appendChild(dropdownElement);
+    }
+
+    @Override
     public Presenter getPresenter() {
         return presenter;
     }
@@ -109,7 +115,6 @@ public class SettingsViewImpl
         fileName.setValue("");
         dmnName.setValue("");
         dmnNamespace.setValue("");
-        dmnFilePath.setValue("");
         skipFromBuild.setChecked(false);
         dmnSettings.getStyle().setDisplay(Style.Display.NONE);
         ruleSettings.getStyle().setDisplay(Style.Display.NONE);
@@ -158,11 +163,6 @@ public class SettingsViewImpl
     @Override
     public LabelElement getDmnFileLabel() {
         return dmnFileLabel;
-    }
-
-    @Override
-    public InputElement getDmnFilePath() {
-        return dmnFilePath;
     }
 
     @Override
