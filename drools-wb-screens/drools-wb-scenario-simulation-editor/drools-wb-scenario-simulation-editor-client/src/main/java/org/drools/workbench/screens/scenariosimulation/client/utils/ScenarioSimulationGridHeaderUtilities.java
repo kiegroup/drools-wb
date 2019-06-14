@@ -133,10 +133,11 @@ public class ScenarioSimulationGridHeaderUtilities {
             List<String> propertyNameElements = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
                 final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
-                if (ScenarioSimulationUtils.isSimpleJavaType(scenarioGridColumn.getFactIdentifier().getClassName()))
+                if (ScenarioSimulationUtils.isSimpleJavaType(scenarioGridColumn.getFactIdentifier().getClassName())) {
                     propertyNameElements = Arrays.asList(VALUE);
-                else
+                } else {
                     propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
+                }
             }
             return propertyNameElements != null ? new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData()
                                                                                    .getTitle(), propertyNameElements) : new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
