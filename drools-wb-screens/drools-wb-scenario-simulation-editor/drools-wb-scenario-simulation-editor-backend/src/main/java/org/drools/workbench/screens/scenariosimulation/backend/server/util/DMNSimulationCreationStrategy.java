@@ -152,7 +152,6 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
             if (previousSteps.isEmpty()) {
                 factMapping.addExpressionElement(factModelTree.getFactName(), factType);
             }
-
             scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
 
             return factMapping;

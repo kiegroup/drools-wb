@@ -375,8 +375,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?
-                    selectedFieldItemView.getFullPath() :
-                selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
+                        selectedFieldItemView.getFullPath() :
+                        selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
                 getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
             }
