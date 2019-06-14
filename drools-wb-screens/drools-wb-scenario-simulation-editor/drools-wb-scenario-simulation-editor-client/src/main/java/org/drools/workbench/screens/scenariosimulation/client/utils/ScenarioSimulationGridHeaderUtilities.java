@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +38,8 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
 
 public class ScenarioSimulationGridHeaderUtilities {
+
+    private static final String VALUE = "value";
 
     /**
      * Retrieve the  <code>ScenarioHeaderMetaData</code> from the <code>GridColumn</code> of a <code>GridWidget</code> at a given point x.
@@ -130,7 +133,10 @@ public class ScenarioSimulationGridHeaderUtilities {
             List<String> propertyNameElements = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
                 final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
-                propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
+                if (ScenarioSimulationUtils.isSimpleJavaType(scenarioGridColumn.getFactIdentifier().getClassName()))
+                    propertyNameElements = Arrays.asList(VALUE);
+                else
+                    propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
             }
             return propertyNameElements != null ? new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData()
                                                                                    .getTitle(), propertyNameElements) : new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
