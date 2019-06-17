@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
@@ -133,11 +134,7 @@ public class ScenarioSimulationGridHeaderUtilities {
             List<String> propertyNameElements = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
                 final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
-                if (ScenarioSimulationUtils.isSimpleJavaType(scenarioGridColumn.getFactIdentifier().getClassName())) {
-                    propertyNameElements = Arrays.asList(VALUE);
-                } else {
-                    propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
-                }
+                propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
             }
             return propertyNameElements != null ? new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData()
                                                                                    .getTitle(), propertyNameElements) : new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
@@ -159,9 +156,15 @@ public class ScenarioSimulationGridHeaderUtilities {
     }
 
     public static List<String> getPropertyNameElements(final Simulation simulation, final int columnIndex) {
-        return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
-                                                    .stream()
-                                                    .map(ExpressionElement::getStep)
-                                                    .collect(Collectors.toList()));
+        final boolean isDMN = simulation.getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.DMN);
+        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        if (ScenarioSimulationUtils.isSimpleJavaType(factMapping.getClassName(), isDMN)) {
+            return Arrays.asList(VALUE);
+        } else {
+            return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
+                                                        .stream()
+                                                        .map(ExpressionElement::getStep)
+                                                        .collect(Collectors.toList()));
+        }
     }
 }
