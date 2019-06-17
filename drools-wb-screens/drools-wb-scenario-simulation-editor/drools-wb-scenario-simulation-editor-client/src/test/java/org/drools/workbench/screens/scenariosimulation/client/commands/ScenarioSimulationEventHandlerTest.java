@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -77,6 +78,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -94,6 +96,9 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyObject;
@@ -278,7 +283,22 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     public void onDuplicateColumnEvent() {
         DuplicateInstanceEvent event = new DuplicateInstanceEvent(COLUMN_INDEX);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(eq(scenarioSimulationContextLocal),
+                                                               isA(DuplicateInstanceCommand.class),
+                                                               eq(true));
+        assertNotNull(scenarioSimulationContextLocal.getStatus().getColumnId());
+        assertEquals(scenarioSimulationContextLocal.getStatus().getColumnIndex(), COLUMN_INDEX);
+        assertTrue(scenarioSimulationContextLocal.getStatus().isRight());
+        assertFalse(scenarioSimulationContextLocal.getStatus().isAsProperty());
+        assertEquals(scenarioSimulationContextLocal.getStatus().getFullPackage(), factIdentifierMock.getPackageWithoutClassName());
+    }
+
+    @Test
+    public void onDuplicateColumnEvent_EmptySelectedColumn() {
+        when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
+        DuplicateInstanceEvent event = new DuplicateInstanceEvent(COLUMN_INDEX);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
                                                                isA(DuplicateInstanceCommand.class),
                                                                eq(true));
     }

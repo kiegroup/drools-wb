@@ -247,6 +247,9 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(DuplicateInstanceEvent event) {
+        if (context.getModel().getSelectedColumn() == null) {
+            return;
+        }
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(true);
