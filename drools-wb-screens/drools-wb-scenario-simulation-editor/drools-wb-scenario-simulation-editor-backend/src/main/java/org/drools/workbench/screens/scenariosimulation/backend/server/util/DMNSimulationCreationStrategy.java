@@ -84,7 +84,10 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         if (factModelTree.isSimple()) {
 
             String factType = factModelTree.getSimpleProperties().get("value");
-            factMappingExtractor.getFactMapping(factModelTree, "value", previousSteps, factType);
+            FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, "value", previousSteps, factType);
+            if (ScenarioSimulationSharedUtils.isList(factType)) {
+                factMapping.addExpressionElement("value", factType);
+            }
         }
         // otherwise it adds a column for each simple properties direct or nested
         else {
@@ -98,6 +101,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
                     factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(factName));
                 }
                 factMapping.addExpressionElement(factName, factType);
+
             }
 
             for (Map.Entry<String, String> entry : factModelTree.getExpandableProperties().entrySet()) {
