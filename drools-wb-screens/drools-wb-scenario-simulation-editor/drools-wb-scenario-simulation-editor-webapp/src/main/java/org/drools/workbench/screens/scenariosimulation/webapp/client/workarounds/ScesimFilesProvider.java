@@ -181,628 +181,130 @@ public class ScesimFilesProvider {
             "  </imports>" +
             "</ScenarioSimulationModel>";
     private final static String populatedScesimRule =
-            "<ScenarioSimulationModel version=\"1.3\">" +
-                    "  <simulation>" +
-                    "    <simulationDescriptor>" +
-                    "      <factMappings>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Index</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>#</name>" +
-                    "            <className>java.lang.Integer</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.Integer</className>" +
-                    "          <factAlias>#</factAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Description</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>Scenario description</name>" +
-                    "            <className>java.lang.String</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.String</className>" +
-                    "          <factAlias>Scenario description</factAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements>" +
-                    "            <ExpressionElement>" +
-                    "              <step>Book</step>" +
-                    "            </ExpressionElement>" +
-                    "            <ExpressionElement>" +
-                    "              <step>numberOfCopies</step>" +
-                    "            </ExpressionElement>" +
-                    "          </expressionElements>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>1549029930045</name>" +
-                    "            <type>GIVEN</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>1549029930045</name>" +
-                    "            <className>com.Book</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.Integer</className>" +
-                    "          <factAlias>Book</factAlias>" +
-                    "          <expressionAlias>numberOfCopies</expressionAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements>" +
-                    "            <ExpressionElement>" +
-                    "              <step>Book</step>" +
-                    "            </ExpressionElement>" +
-                    "            <ExpressionElement>" +
-                    "              <step>isAvailable</step>" +
-                    "            </ExpressionElement>" +
-                    "          </expressionElements>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>0|2</name>" +
-                    "            <type>EXPECT</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier reference=\"../../FactMapping[3]/factIdentifier\"/>" +
-                    "          <className>java.lang.Boolean</className>" +
-                    "          <factAlias>Book</factAlias>" +
-                    "          <expressionAlias>isAvailable</expressionAlias>" +
-                    "        </FactMapping>" +
-                    "      </factMappings>" +
-                    "      <dmoSession>default</dmoSession>" +
-                    "      <type>RULE</type>" +
-                    "    </simulationDescriptor>" +
-                    "    <scenarios>" +
-                    "      <Scenario>" +
-                    "        <factMappingValues>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">te1</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">1</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">0</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">true</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "        </factMappingValues>" +
-                    "        <simulationDescriptor>" +
-                    "          <factMappings/>" +
-                    "          <dmoSession>default</dmoSession>" +
-                    "          <type>RULE</type>" +
-                    "        </simulationDescriptor>" +
-                    "      </Scenario>" +
-                    "      <Scenario>" +
-                    "        <factMappingValues>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">te2</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">0</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">false</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">2</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "        </factMappingValues>" +
-                    "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>" +
-                    "      </Scenario>" +
-                    "      <Scenario>" +
-                    "        <factMappingValues>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">te3</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">1</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">true</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">3</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "        </factMappingValues>" +
-                    "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>" +
-                    "      </Scenario>" +
-                    "      <Scenario>" +
-                    "        <factMappingValues>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">te4</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">1</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">false</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>" +
-                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>" +
-                    "            <rawValue class=\"string\">4</rawValue>" +
-                    "          </FactMappingValue>" +
-                    "        </factMappingValues>" +
-                    "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>" +
-                    "      </Scenario>" +
-                    "    </scenarios>" +
-                    "  </simulation>" +
-                    "  <imports>" +
-                    "    <imports/>" +
-                    "  </imports>" +
+            "<ScenarioSimulationModel version=\"1.4\">\n" +
+                    "  <simulation>\n" +
+                    "    <simulationDescriptor>\n" +
+                    "      <factMappings>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>#</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <expressionIdentifier>\n" +
+                    "            <name>Index</name>\n" +
+                    "            <type>OTHER</type>\n" +
+                    "          </expressionIdentifier>\n" +
+                    "          <factIdentifier>\n" +
+                    "            <name>#</name>\n" +
+                    "            <className>java.lang.Integer</className>\n" +
+                    "          </factIdentifier>\n" +
+                    "          <className>java.lang.Integer</className>\n" +
+                    "          <factAlias>#</factAlias>\n" +
+                    "        </FactMapping>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>Scenario description</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <expressionIdentifier>\n" +
+                    "            <name>Description</name>\n" +
+                    "            <type>OTHER</type>\n" +
+                    "          </expressionIdentifier>\n" +
+                    "          <factIdentifier>\n" +
+                    "            <name>Scenario description</name>\n" +
+                    "            <className>java.lang.String</className>\n" +
+                    "          </factIdentifier>\n" +
+                    "          <className>java.lang.String</className>\n" +
+                    "          <factAlias>Scenario description</factAlias>\n" +
+                    "        </FactMapping>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>1545231213318</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <expressionIdentifier>\n" +
+                    "            <name>1545231213318</name>\n" +
+                    "            <type>GIVEN</type>\n" +
+                    "          </expressionIdentifier>\n" +
+                    "          <factIdentifier>\n" +
+                    "            <name>1545231213318</name>\n" +
+                    "            <className>java.lang.Boolean</className>\n" +
+                    "          </factIdentifier>\n" +
+                    "          <className>java.lang.Boolean</className>\n" +
+                    "          <factAlias>Boolean</factAlias>\n" +
+                    "          <expressionAlias>value</expressionAlias>\n" +
+                    "        </FactMapping>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>1545231216876</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <expressionIdentifier>\n" +
+                    "            <name>1545231216876</name>\n" +
+                    "            <type>EXPECT</type>\n" +
+                    "          </expressionIdentifier>\n" +
+                    "          <factIdentifier>\n" +
+                    "            <name>1545231216876</name>\n" +
+                    "            <className>java.lang.Integer</className>\n" +
+                    "          </factIdentifier>\n" +
+                    "          <className>java.lang.Integer</className>\n" +
+                    "          <factAlias>Integer</factAlias>\n" +
+                    "          <expressionAlias>value</expressionAlias>\n" +
+                    "        </FactMapping>\n" +
+                    "      </factMappings>\n" +
+                    "      <dmoSession>default</dmoSession>\n" +
+                    "      <type>RULE</type>\n" +
+                    "      <fileName></fileName>\n" +
+                    "      <kieSession>default</kieSession>\n" +
+                    "      <kieBase>default</kieBase>\n" +
+                    "      <ruleFlowGroup>default</ruleFlowGroup>\n" +
+                    "    </simulationDescriptor>\n" +
+                    "    <scenarios>\n" +
+                    "      <Scenario>\n" +
+                    "        <factMappingValues>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"/>\n" +
+                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"/>\n" +
+                    "          </FactMappingValue>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"/>\n" +
+                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"/>\n" +
+                    "            <rawValue class=\"string\">1</rawValue>\n" +
+                    "          </FactMappingValue>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"/>\n" +
+                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"/>\n" +
+                    "            <rawValue class=\"string\">true</rawValue>\n" +
+                    "          </FactMappingValue>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/factIdentifier\"/>\n" +
+                    "            <expressionIdentifier reference=\"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"/>\n" +
+                    "            <rawValue class=\"string\">1</rawValue>\n" +
+                    "          </FactMappingValue>\n" +
+                    "        </factMappingValues>\n" +
+                    "        <simulationDescriptor reference=\"../../../simulationDescriptor\"/>\n" +
+                    "      </Scenario>\n" +
+                    "    </scenarios>\n" +
+                    "  </simulation>\n" +
+                    "  <imports>\n" +
+                    "    <imports>\n" +
+                    "      <Import>\n" +
+                    "        <type>java.lang.Integer</type>\n" +
+                    "      </Import>\n" +
+                    "      <Import>\n" +
+                    "        <type>java.lang.String</type>\n" +
+                    "      </Import>\n" +
+                    "      <Import>\n" +
+                    "        <type>java.lang.Boolean</type>\n" +
+                    "      </Import>\n" +
+                    "    </imports>\n" +
+                    "  </imports>\n" +
                     "</ScenarioSimulationModel>";
-    
-    private static final String scesimJson =
-            "{\n" +
-                    "  \"scenarioSimulationModel\": {\n" +
-                    "    \"simulation\": {\n" +
-                    "      \"simulationDescriptor\": {\n" +
-                    "        \"factMappings\": {\n" +
-                    "          \"FactMapping\": [\n" +
-                    "            {\n" +
-                    "              \"expressionElements\": \"\",\n" +
-                    "              \"expressionIdentifier\": {\n" +
-                    "                \"name\": \"Index\",\n" +
-                    "                \"type\": \"OTHER\"\n" +
-                    "              },\n" +
-                    "              \"factIdentifier\": {\n" +
-                    "                \"name\": \"#\",\n" +
-                    "                \"className\": \"java.lang.Integer\"\n" +
-                    "              },\n" +
-                    "              \"className\": \"java.lang.Integer\",\n" +
-                    "              \"factAlias\": \"#\"\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "              \"expressionElements\": \"\",\n" +
-                    "              \"expressionIdentifier\": {\n" +
-                    "                \"name\": \"Description\",\n" +
-                    "                \"type\": \"OTHER\"\n" +
-                    "              },\n" +
-                    "              \"factIdentifier\": {\n" +
-                    "                \"name\": \"Scenario description\",\n" +
-                    "                \"className\": \"java.lang.String\"\n" +
-                    "              },\n" +
-                    "              \"className\": \"java.lang.String\",\n" +
-                    "              \"factAlias\": \"Scenario description\"\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "              \"expressionElements\": {\n" +
-                    "                \"ExpressionElement\": [\n" +
-                    "                  {\n" +
-                    "                    \"step\": \"Book\"\n" +
-                    "                  },\n" +
-                    "                  {\n" +
-                    "                    \"step\": \"numberOfCopies\"\n" +
-                    "                  }\n" +
-                    "                ]\n" +
-                    "              },\n" +
-                    "              \"expressionIdentifier\": {\n" +
-                    "                \"name\": \"0|1\",\n" +
-                    "                \"type\": \"GIVEN\"\n" +
-                    "              },\n" +
-                    "              \"factIdentifier\": {\n" +
-                    "                \"name\": \"0|1\",\n" +
-                    "                \"className\": \"com.Book\"\n" +
-                    "              },\n" +
-                    "              \"className\": \"java.lang.Integer\",\n" +
-                    "              \"factAlias\": \"Book\",\n" +
-                    "              \"expressionAlias\": \"numberOfCopies\"\n" +
-                    "            },\n" +
-                    "            {\n" +
-                    "              \"expressionElements\": {\n" +
-                    "                \"ExpressionElement\": [\n" +
-                    "                  {\n" +
-                    "                    \"step\": \"Book\"\n" +
-                    "                  },\n" +
-                    "                  {\n" +
-                    "                    \"step\": \"isAvailable\"\n" +
-                    "                  }\n" +
-                    "                ]\n" +
-                    "              },\n" +
-                    "              \"expressionIdentifier\": {\n" +
-                    "                \"name\": \"0|2\",\n" +
-                    "                \"type\": \"EXPECT\"\n" +
-                    "              },\n" +
-                    "              \"factIdentifier\": {\n" +
-                    "                \"_reference\": \"../../FactMapping[3]/factIdentifier\"\n" +
-                    "              },\n" +
-                    "              \"className\": \"java.lang.Boolean\",\n" +
-                    "              \"factAlias\": \"Book\",\n" +
-                    "              \"expressionAlias\": \"isAvailable\"\n" +
-                    "            }\n" +
-                    "          ]\n" +
-                    "        },\n" +
-                    "        \"type\": \"RULE\",\n" +
-                    "        \"skipFromBuild\": \"false\"\n" +
-                    "      },\n" +
-                    "      \"scenarios\": {\n" +
-                    "        \"Scenario\": [\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"1\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect success\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"6\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"true\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          },\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"2\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect fail\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"6\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"false\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          },\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"3\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect success\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"0\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"false\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          },\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"4\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect fail\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"0\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"true\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          },\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"5\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect success\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"7\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"true\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          },\n" +
-                    "          {\n" +
-                    "            \"factMappingValues\": {\n" +
-                    "              \"FactMappingValue\": [\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"6\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \".././../../../simulationDescriptor/factMappings/FactMapping[2]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[2]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"expect fail\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"7\"\n" +
-                    "                  }\n" +
-                    "                },\n" +
-                    "                {\n" +
-                    "                  \"factIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[3]/factIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"expressionIdentifier\": {\n" +
-                    "                    \"_reference\": \"../../../../../simulationDescriptor/factMappings/FactMapping[4]/expressionIdentifier\"\n" +
-                    "                  },\n" +
-                    "                  \"rawValue\": {\n" +
-                    "                    \"_class\": \"string\",\n" +
-                    "                    \"__text\": \"false\"\n" +
-                    "                  }\n" +
-                    "                }\n" +
-                    "              ]\n" +
-                    "            },\n" +
-                    "            \"simulationDescriptor\": {\n" +
-                    "              \"_reference\": \"../../../simulationDescriptor\"\n" +
-                    "            }\n" +
-                    "          }\n" +
-                    "        ]\n" +
-                    "      }\n" +
-                    "    },\n" +
-                    "    \"imports\": {\n" +
-                    "      \"imports\": \"\"\n" +
-                    "    },\n" +
-                    "    \"version\": \"1.5\"\n" +
-                    "  }\n" +
-                    "}";
-    
+
     private static final String newScesimRule =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                     "<scesim:ScenarioSimulationModel version=\"1.5\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:scesim=\"http://www.kie.org/scesim.xsd\">" +
@@ -898,13 +400,12 @@ public class ScesimFilesProvider {
             case "populatedScesimDmn":
                 return populatedScesimDmn;
             case "populatedScesimRule":
-                return populatedScesimRule;
             default:
-                return scesimJson;
+                return populatedScesimRule;
         }
     }
 
     public String getNewScesimRule() {
-        return scesimJson;
+        return populatedScesimRule;
     }
 }

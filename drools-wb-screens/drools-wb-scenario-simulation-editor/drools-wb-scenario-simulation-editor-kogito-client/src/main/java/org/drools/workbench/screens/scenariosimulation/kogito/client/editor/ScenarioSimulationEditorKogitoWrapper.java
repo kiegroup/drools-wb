@@ -30,13 +30,13 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.MainJs;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.converters.ScenarioSimulationModelContainerConverter;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.converters.ScenarioSimulationModelConverter;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model.ScenarioSimulationModelKM;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -54,6 +54,7 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
+import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.JSInteropApiConverter.getScenarioSimulationModel;
 
 @Dependent
 /**
@@ -184,19 +185,20 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     protected void unmarshallContent(String toUnmarshal) {
-        GWT.log(this.toString() + " unmarshallContent");
-        try {
-            final ScenarioSimulationModelContainerConverter scenarioSimulationModelContainerConverter = new ScenarioSimulationModelContainerConverter();
-            final org.drools.workbench.screens.scenariosimulation.kogito.client.autobean.model.ScenarioSimulationModelContainer scenarioSimulationModelContainer = scenarioSimulationModelContainerConverter.deserializeFromJson(toUnmarshal);
-            GWT.log(scenarioSimulationModelContainer.toString() +" " + scenarioSimulationModelContainer.getScenarioSimulationModel());
-            final ScenarioSimulationModelKM scenarioSimulationModelKM = scenarioSimulationModelContainer.getScenarioSimulationModel();
-            GWT.log(scenarioSimulationModelKM.toString() +" " + scenarioSimulationModelKM.getVersion());
-            ScenarioSimulationModel model = new ScenarioSimulationModelConverter().toApiModel(scenarioSimulationModelKM);
-            GWT.log(model.toString());
-            getModelSuccessCallbackMethod(model);
-        } catch (Exception e) {
-            GWT.log(e.getMessage(), e);
-        }
+        GWT.log(this.toString() + " unmarshallContent " + toUnmarshal);
+        MainJs.unmarshall(toUnmarshal, getJSInteropUnmarshallConvert());
+    }
+
+    protected SCESIMUnmarshallCallback getJSInteropUnmarshallConvert() {
+        return scesim -> {
+            GWT.log(this.toString() + " SCESIMUnmarshallCallback");
+            final JSIScenarioSimulationModelType scenarioSimulationModelType = scesim.getValue();
+            GWT.log("unmarshall scenarioSimulationModelType.toString() " + scenarioSimulationModelType.toString());
+            GWT.log("unmarshall scenarioSimulationModelType.getClass() " + scenarioSimulationModelType.getClass());
+            GWT.log("unmarshall scenarioSimulationModelType.getVersion() " + scenarioSimulationModelType.getVersion());
+            final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
+            getModelSuccessCallbackMethod(scenarioSimulationModel);
+        };
     }
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {

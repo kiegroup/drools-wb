@@ -24,7 +24,6 @@
   <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI"/>
   <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
   <!-- MARSHALLING -->
-  <!--  <inherits name="name.pehl.piriti.xml.XML" />-->
-  <inherits name="com.google.web.bindery.autobean.AutoBean"/>
+  <inherits name="org.drools.workbench.scenariosimulation.kogito.ScesimMarshaller" />
 
 </module>
