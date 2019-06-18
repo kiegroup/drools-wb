@@ -57,7 +57,7 @@ public class JSIFactMappingValueType {
      *      <b>rawValue</<b>
      */
     @JsProperty(name = "rawValue")
-    public final native Object getRawValue();
+    public final native String getRawValue();
 
     /**
      * Setter for <b>rawValue</b>
@@ -66,6 +66,6 @@ public class JSIFactMappingValueType {
      *      <b>rawValue</<b> to set.
      */
     @JsProperty(name = "rawValue")
-    public final native void setRawValue(Object rawValue);
+    public final native void setRawValue(String rawValue);
 
 }

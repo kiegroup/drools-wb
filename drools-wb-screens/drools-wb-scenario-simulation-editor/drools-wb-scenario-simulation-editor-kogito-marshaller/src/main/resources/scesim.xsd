@@ -7,7 +7,7 @@
   </xs:complexType>
   <xs:complexType name="expressionElementsType">
     <xs:sequence>
-      <xs:element type="ExpressionElementType" name="ExpressionElement"/>
+      <xs:element type="ExpressionElementType" name="ExpressionElement" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="expressionIdentifierType">
@@ -63,7 +63,7 @@
     <xs:sequence>
       <xs:element type="factIdentifierReferenceType" name="factIdentifier"/>
       <xs:element type="expressionIdentifierReferenceType" name="expressionIdentifier"/>
-      <xs:element type="xs:anyType" name="rawValue"/>
+      <xs:element type="xs:string" name="rawValue"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="factMappingValuesType">
@@ -79,7 +79,7 @@
   </xs:complexType>
   <xs:complexType name="scenariosType">
     <xs:sequence>
-      <xs:element type="ScenarioType" name="Scenario"/>
+      <xs:element type="ScenarioType" name="Scenario" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="simulationType">

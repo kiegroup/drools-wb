@@ -15,12 +15,6 @@
     <jsonix:packageMapping
         packageName="org.drools.workbench.scenariosimulation.kogito.marshaller.js.model"
         spaceName="SCESIM"/>
-
-
-<!--    <jaxb:bindings node="//xs:complexType[@name='wrappedImportsType']/xs:sequence/xs:element[@name='Import']">-->
-<!--      <jaxb:property name="imports"></jaxb:property>-->
-<!--    </jaxb:bindings>-->
-
   </jaxb:bindings>
 
 

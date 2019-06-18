@@ -16,8 +16,8 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.converters;
 
 import java.util.Arrays;
-import java.util.List;
 
+import com.google.gwt.core.client.GWT;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -26,13 +26,17 @@ import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenariosType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationDescriptorType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIWrappedImportsType;
@@ -74,15 +78,27 @@ public class JSInteropApiConverter {
     protected static Simulation getSimulation(JSISimulationType source) {
         Simulation toReturn = new Simulation();
         populateSimulationDescriptor(toReturn.getSimulationDescriptor(), source.getSimulationDescriptor());
-        Scenario added = toReturn.addScenario();
-        populateScenario(added, source.getScenarios().getScenario());
+        final JSIScenariosType jsiScenariosType = source.getScenarios();
+        final JSIScenarioType[] jsiScenarioTypes = jsiScenariosType.getScenario();
+        if (jsiScenarioTypes != null) {
+            for(int i = 0; i < jsiScenarioTypes.length; i ++) {
+                Scenario added = toReturn.addScenario();
+                populateScenario(added, jsiScenarioTypes[i], source.getSimulationDescriptor().getFactMappings().getFactMapping());
+            }
+        }
         return toReturn;
     }
 
-    protected static void populateScenario(Scenario toPopulate, JSIScenarioType source) {
-//        for(JSIFactMappingValueType jsiFactMappingValueType : source.getFactMappingValues().getFactMappingValue()) {
-//            toPopulate.addMappingValue(getFactIdentifier(jsiFactMappingValueType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingValueType.getExpressionIdentifier()),jsiFactMappingValueType.getRawValue() ) )
-//        }
+    protected static void populateScenario(Scenario toPopulate, JSIScenarioType source, JSIFactMappingType[] jsiFactMappingTypes) {
+        for (JSIFactMappingValueType jsiFactMappingValueType : source.getFactMappingValues().getFactMappingValue()) {
+            final JSIFactIdentifierReferenceType factIdentifierReference = jsiFactMappingValueType.getFactIdentifier();
+            final JSIFactIdentifierType factIdentifierType = getActualJSIFactIdentifierType(factIdentifierReference.getReference(), jsiFactMappingTypes);
+            final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
+            final JSIExpressionIdentifierType expressionIdentifierType = getActualJSIExpressionIdentifierType(expressionIdentifierReference.getReference(), jsiFactMappingTypes);
+            if (factIdentifierType != null && expressionIdentifierType != null) {
+                toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), jsiFactMappingValueType.getRawValue());
+            }
+        }
     }
 
     protected static void populateSimulationDescriptor(SimulationDescriptor toPopulate, JSISimulationDescriptorType source) {
@@ -112,5 +128,33 @@ public class JSInteropApiConverter {
 
     protected static FactIdentifier getFactIdentifier(JSIFactIdentifierType source) {
         return new FactIdentifier(source.getName(), source.getClassName());
+    }
+
+    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JSIFactMappingType[] jsiFactMappingTypes) {
+        String numberPart = "1";
+        if (reference.contains("[") && reference.contains("]")) {
+            numberPart = reference.substring(reference.indexOf("[") +1, reference.indexOf("]"));
+        }
+        try {
+            int index = Integer.parseInt(numberPart) -1;
+            return jsiFactMappingTypes[index].getFactIdentifier();
+        } catch (Throwable t) {
+            GWT.log("Failed to parse reference " + reference, t);
+            return null;
+        }
+    }
+
+    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JSIFactMappingType[] jsiFactMappingTypes) {
+        String numberPart = "1";
+        if (reference.contains("[") && reference.contains("]")) {
+            numberPart = reference.substring(reference.indexOf("[") +1, reference.indexOf("]"));
+        }
+        try {
+            int index = Integer.parseInt(numberPart) -1;
+            return jsiFactMappingTypes[index].getExpressionIdentifier();
+        } catch (Throwable t) {
+            GWT.log("Failed to parse reference " + reference, t);
+            return null;
+        }
     }
 }

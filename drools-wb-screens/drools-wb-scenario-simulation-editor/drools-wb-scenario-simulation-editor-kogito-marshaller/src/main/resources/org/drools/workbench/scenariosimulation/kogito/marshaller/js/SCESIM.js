@@ -20,16 +20,6 @@ var SCESIM_Module_Factory = function () {
             typeInfo: '.ScenariosType'
           }]
       }, {
-        localName: 'ImportsType',
-        typeName: 'importsType',
-        propertyInfos: [{
-            name: 'imports',
-            elementName: {
-              localPart: 'imports'
-            },
-            typeInfo: '.WrappedImportsType'
-          }]
-      }, {
         localName: 'FactMappingsType',
         typeName: 'factMappingsType',
         propertyInfos: [{
@@ -46,11 +36,24 @@ var SCESIM_Module_Factory = function () {
         typeName: 'scenariosType',
         propertyInfos: [{
             name: 'scenario',
-            required: true,
+            minOccurs: 0,
+            collection: true,
             elementName: {
               localPart: 'Scenario'
             },
             typeInfo: '.ScenarioType'
+          }]
+      }, {
+        localName: 'WrappedImportsType',
+        typeName: 'wrappedImportsType',
+        propertyInfos: [{
+            name: '_import',
+            minOccurs: 0,
+            collection: true,
+            elementName: {
+              localPart: 'Import'
+            },
+            typeInfo: '.ImportType'
           }]
       }, {
         localName: 'ExpressionElementType',
@@ -82,8 +85,7 @@ var SCESIM_Module_Factory = function () {
             required: true,
             elementName: {
               localPart: 'rawValue'
-            },
-            typeInfo: 'AnyType'
+            }
           }]
       }, {
         localName: 'ScenarioType',
@@ -127,16 +129,14 @@ var SCESIM_Module_Factory = function () {
             }
           }]
       }, {
-        localName: 'WrappedImportsType',
-        typeName: 'wrappedImportsType',
+        localName: 'ImportsType',
+        typeName: 'importsType',
         propertyInfos: [{
-            name: '_import',
-            minOccurs: 0,
-            collection: true,
+            name: 'imports',
             elementName: {
-              localPart: 'Import'
+              localPart: 'imports'
             },
-            typeInfo: '.ImportType'
+            typeInfo: '.WrappedImportsType'
           }]
       }, {
         localName: 'FactMappingType',
@@ -187,15 +187,6 @@ var SCESIM_Module_Factory = function () {
             }
           }]
       }, {
-        localName: 'ImportType',
-        propertyInfos: [{
-            name: 'type',
-            required: true,
-            elementName: {
-              localPart: 'type'
-            }
-          }]
-      }, {
         localName: 'ScenarioSimulationModelType',
         propertyInfos: [{
             name: 'simulation',
@@ -218,6 +209,15 @@ var SCESIM_Module_Factory = function () {
               localPart: 'version'
             },
             type: 'attribute'
+          }]
+      }, {
+        localName: 'ImportType',
+        propertyInfos: [{
+            name: 'type',
+            required: true,
+            elementName: {
+              localPart: 'type'
+            }
           }]
       }, {
         localName: 'ExpressionIdentifierType',
@@ -251,6 +251,7 @@ var SCESIM_Module_Factory = function () {
         propertyInfos: [{
             name: 'expressionElement',
             required: true,
+            collection: true,
             elementName: {
               localPart: 'ExpressionElement'
             },
