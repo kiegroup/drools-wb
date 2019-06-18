@@ -287,5 +287,4 @@ public class ScenarioSimulationUtils {
     private static boolean isOther(FactMappingType factMappingType) {
         return FactMappingType.OTHER.equals(factMappingType);
     }
-
 }
