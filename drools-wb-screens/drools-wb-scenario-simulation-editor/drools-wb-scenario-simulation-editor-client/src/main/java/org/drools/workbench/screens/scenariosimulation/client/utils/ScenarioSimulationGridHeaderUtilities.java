@@ -133,8 +133,7 @@ public class ScenarioSimulationGridHeaderUtilities {
         } else if (Objects.equals(clickedScenarioHeaderMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY)) {
             List<String> propertyNameElements = null;
             if (scenarioGridColumn.isPropertyAssigned()) {
-                final Optional<Simulation> optionalSimulation = scenarioGrid.getModel().getSimulation();
-                propertyNameElements = optionalSimulation.map(simulation -> getPropertyNameElements(simulation, uiColumnIndex)).orElse(null);
+                propertyNameElements = getPropertyNameElements(scenarioGrid.getModel(), uiColumnIndex);
             }
             return propertyNameElements != null ? new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData()
                                                                                    .getTitle(), propertyNameElements) : new EnableTestToolsEvent(scenarioGridColumn.getInformationHeaderMetaData().getTitle());
@@ -155,16 +154,18 @@ public class ScenarioSimulationGridHeaderUtilities {
                 .collect(Collectors.toSet()));
     }
 
-    public static List<String> getPropertyNameElements(final Simulation simulation, final int columnIndex) {
-        final boolean isDMN = simulation.getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.DMN);
-        FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        if (ScenarioSimulationUtils.isSimpleJavaType(factMapping.getClassName(), isDMN)) {
-            return Arrays.asList(VALUE);
-        } else {
-            return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
-                                                        .stream()
-                                                        .map(ExpressionElement::getStep)
-                                                        .collect(Collectors.toList()));
-        }
+    public static List<String> getPropertyNameElements(final ScenarioGridModel scenarioGridModel, final int columnIndex) {
+        final Optional<Simulation> optionalSimulation = scenarioGridModel.getSimulation();
+        return optionalSimulation.map(simulation -> {
+            final FactMapping factMapping = scenarioGridModel.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            if (scenarioGridModel.isSimpleType(factMapping.getFactAlias())) {
+                return Arrays.asList(VALUE);
+            } else {
+                return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
+                                                            .stream()
+                                                            .map(ExpressionElement::getStep)
+                                                            .collect(Collectors.toList()));
+            }
+        }).orElse(null);
     }
 }
