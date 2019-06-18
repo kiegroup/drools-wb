@@ -259,17 +259,12 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         if (className.contains(".")) {
             className = className.substring(className.lastIndexOf(".") + 1);
         }
-        final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
-        final FactMapping factMapping = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactModelTree nestedFactModelTree = navigateComplexObject(dataObjectFieldsMap.get(className),
+                                                                        fullPropertyPathElements,
+                                                                        dataObjectFieldsMap);
         selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
-        if (factModelTree.isSimple()) {
-            factMapping.setGenericTypes(factModelTree.getGenericTypeInfo("value"));
-        } else {
-            final FactModelTree nestedFactModelTree = navigateComplexObject(dataObjectFieldsMap.get(className),
-                                                                            fullPropertyPathElements,
-                                                                            dataObjectFieldsMap);
-            factMapping.setGenericTypes(nestedFactModelTree.getGenericTypeInfo(fullPropertyPathElements.get(fullPropertyPathElements.size() - 1)));
-        }
+        final FactMapping factMappingByIndex = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        factMappingByIndex.setGenericTypes(nestedFactModelTree.getGenericTypeInfo(fullPropertyPathElements.get(fullPropertyPathElements.size() - 1)));
     }
 
     /**
