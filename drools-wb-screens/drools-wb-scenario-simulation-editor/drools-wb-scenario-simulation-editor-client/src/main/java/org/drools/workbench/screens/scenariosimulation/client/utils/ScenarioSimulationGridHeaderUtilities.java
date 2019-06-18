@@ -40,8 +40,6 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl
 
 public class ScenarioSimulationGridHeaderUtilities {
 
-    private static final String VALUE = "value";
-
     /**
      * Retrieve the  <code>ScenarioHeaderMetaData</code> from the <code>GridColumn</code> of a <code>GridWidget</code> at a given point x.
      * It returns <code>null</code> if none is present at that position.
@@ -159,7 +157,7 @@ public class ScenarioSimulationGridHeaderUtilities {
         return optionalSimulation.map(simulation -> {
             final FactMapping factMapping = scenarioGridModel.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             if (scenarioGridModel.isSimpleType(factMapping.getFactAlias())) {
-                return Arrays.asList(VALUE);
+                return Arrays.asList(ConstantHolder.VALUE);
             } else {
                 return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
                                                             .stream()
