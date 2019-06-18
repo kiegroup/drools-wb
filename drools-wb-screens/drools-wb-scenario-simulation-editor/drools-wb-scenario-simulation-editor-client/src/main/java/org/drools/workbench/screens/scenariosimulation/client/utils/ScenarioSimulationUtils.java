@@ -46,14 +46,6 @@ public class ScenarioSimulationUtils {
         return columnGroup + "-" + subGroupCounter.getAndIncrement();
     }
 
-    public static boolean isSimpleJavaType(String className, boolean isDMN) {
-        if (isDMN) {
-            return isSimpleJavaTypeDMN(className);
-        } else {
-            return isSimpleJavaType(className);
-        }
-    }
-
     /**
      * This method can be used <b>ONLY</b> when managing a <b>RULE</b> type Test Scenario.
      * @param className
@@ -64,18 +56,6 @@ public class ScenarioSimulationUtils {
                 .stream()
                 .map(SimpleClassEntry::getCanonicalName)
                 .anyMatch(className::equals);
-    }
-
-    /**
-     * This method can be used <b>ONLY</b> when managing a <b>DMN</b> type Test Scenario.
-     * @param className
-     * @return
-     */
-    public static boolean isSimpleJavaTypeDMN(String className) {
-        return SIMPLE_CLASSES_MAP.values()
-                .stream()
-                .map(SimpleClassEntry::getSimpleName)
-                .anyMatch(className::equalsIgnoreCase);
     }
 
     /**
