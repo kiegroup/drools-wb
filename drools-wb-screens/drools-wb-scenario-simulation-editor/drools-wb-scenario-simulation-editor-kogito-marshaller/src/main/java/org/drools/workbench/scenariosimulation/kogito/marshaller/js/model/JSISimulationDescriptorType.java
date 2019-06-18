@@ -20,7 +20,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>factMappings</<b>
      */
-    @JsProperty
+    @JsProperty(name = "factMappings")
     public final native JSIFactMappingsType getFactMappings();
 
     /**
@@ -29,7 +29,7 @@ public class JSISimulationDescriptorType {
      * @param factMappings
      *      <b>factMappings</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "factMappings")
     public final native void setFactMappings(JSIFactMappingsType factMappings);
 
     /**
@@ -38,7 +38,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>dmoSession</<b>
      */
-    @JsProperty
+    @JsProperty(name = "dmoSession")
     public final native String getDmoSession();
 
     /**
@@ -47,8 +47,26 @@ public class JSISimulationDescriptorType {
      * @param dmoSession
      *      <b>dmoSession</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "dmoSession")
     public final native void setDmoSession(String dmoSession);
+
+    /**
+     * Getter for <b>dmnFilePath</b>
+     * 
+     * @return
+     *      <b>dmnFilePath</<b>
+     */
+    @JsProperty(name = "dmnFilePath")
+    public final native String getDmnFilePath();
+
+    /**
+     * Setter for <b>dmnFilePath</b>
+     * 
+     * @param dmnFilePath
+     *      <b>dmnFilePath</<b> to set.
+     */
+    @JsProperty(name = "dmnFilePath")
+    public final native void setDmnFilePath(String dmnFilePath);
 
     /**
      * Getter for <b>type</b>
@@ -56,7 +74,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>type</<b>
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native String getType();
 
     /**
@@ -65,7 +83,7 @@ public class JSISimulationDescriptorType {
      * @param type
      *      <b>type</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native void setType(String type);
 
     /**
@@ -74,7 +92,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>fileName</<b>
      */
-    @JsProperty
+    @JsProperty(name = "fileName")
     public final native String getFileName();
 
     /**
@@ -83,7 +101,7 @@ public class JSISimulationDescriptorType {
      * @param fileName
      *      <b>fileName</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "fileName")
     public final native void setFileName(String fileName);
 
     /**
@@ -92,7 +110,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>kieSession</<b>
      */
-    @JsProperty
+    @JsProperty(name = "kieSession")
     public final native String getKieSession();
 
     /**
@@ -101,7 +119,7 @@ public class JSISimulationDescriptorType {
      * @param kieSession
      *      <b>kieSession</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "kieSession")
     public final native void setKieSession(String kieSession);
 
     /**
@@ -110,7 +128,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>kieBase</<b>
      */
-    @JsProperty
+    @JsProperty(name = "kieBase")
     public final native String getKieBase();
 
     /**
@@ -119,7 +137,7 @@ public class JSISimulationDescriptorType {
      * @param kieBase
      *      <b>kieBase</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "kieBase")
     public final native void setKieBase(String kieBase);
 
     /**
@@ -128,7 +146,7 @@ public class JSISimulationDescriptorType {
      * @return
      *      <b>ruleFlowGroup</<b>
      */
-    @JsProperty
+    @JsProperty(name = "ruleFlowGroup")
     public final native String getRuleFlowGroup();
 
     /**
@@ -137,7 +155,61 @@ public class JSISimulationDescriptorType {
      * @param ruleFlowGroup
      *      <b>ruleFlowGroup</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "ruleFlowGroup")
     public final native void setRuleFlowGroup(String ruleFlowGroup);
+
+    /**
+     * Getter for <b>dmnNamespace</b>
+     * 
+     * @return
+     *      <b>dmnNamespace</<b>
+     */
+    @JsProperty(name = "dmnNamespace")
+    public final native String getDmnNamespace();
+
+    /**
+     * Setter for <b>dmnNamespace</b>
+     * 
+     * @param dmnNamespace
+     *      <b>dmnNamespace</<b> to set.
+     */
+    @JsProperty(name = "dmnNamespace")
+    public final native void setDmnNamespace(String dmnNamespace);
+
+    /**
+     * Getter for <b>dmnName</b>
+     * 
+     * @return
+     *      <b>dmnName</<b>
+     */
+    @JsProperty(name = "dmnName")
+    public final native String getDmnName();
+
+    /**
+     * Setter for <b>dmnName</b>
+     * 
+     * @param dmnName
+     *      <b>dmnName</<b> to set.
+     */
+    @JsProperty(name = "dmnName")
+    public final native void setDmnName(String dmnName);
+
+    /**
+     * Getter for <b>skipFromBuild</b>
+     * 
+     * @return
+     *      <b>skipFromBuild</<b>
+     */
+    @JsProperty(name = "skipFromBuild")
+    public final native Boolean getSkipFromBuild();
+
+    /**
+     * Setter for <b>skipFromBuild</b>
+     * 
+     * @param skipFromBuild
+     *      <b>skipFromBuild</<b> to set.
+     */
+    @JsProperty(name = "skipFromBuild")
+    public final native void setSkipFromBuild(Boolean skipFromBuild);
 
 }

@@ -20,7 +20,7 @@ public class JSIScenarioSimulationModelType {
      * @return
      *      <b>simulation</<b>
      */
-    @JsProperty
+    @JsProperty(name = "simulation")
     public final native JSISimulationType getSimulation();
 
     /**
@@ -29,7 +29,7 @@ public class JSIScenarioSimulationModelType {
      * @param simulation
      *      <b>simulation</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "simulation")
     public final native void setSimulation(JSISimulationType simulation);
 
     /**
@@ -38,7 +38,7 @@ public class JSIScenarioSimulationModelType {
      * @return
      *      <b>imports</<b>
      */
-    @JsProperty
+    @JsProperty(name = "imports")
     public final native JSIImportsType getImports();
 
     /**
@@ -47,7 +47,7 @@ public class JSIScenarioSimulationModelType {
      * @param imports
      *      <b>imports</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "imports")
     public final native void setImports(JSIImportsType imports);
 
     /**
@@ -56,8 +56,8 @@ public class JSIScenarioSimulationModelType {
      * @return
      *      <b>version</<b>
      */
-    @JsProperty
-    public final native Float getVersion();
+    @JsProperty(name = "version")
+    public final native Double getVersion();
 
     /**
      * Setter for <b>version</b>
@@ -65,7 +65,7 @@ public class JSIScenarioSimulationModelType {
      * @param version
      *      <b>version</<b> to set.
      */
-    @JsProperty
-    public final native void setVersion(Float version);
+    @JsProperty(name = "version")
+    public final native void setVersion(Double version);
 
 }

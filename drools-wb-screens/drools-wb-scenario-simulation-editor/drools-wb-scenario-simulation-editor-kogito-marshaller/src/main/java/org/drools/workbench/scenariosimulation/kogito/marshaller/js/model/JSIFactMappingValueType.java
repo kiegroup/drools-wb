@@ -20,7 +20,7 @@ public class JSIFactMappingValueType {
      * @return
      *      <b>factIdentifier</<b>
      */
-    @JsProperty
+    @JsProperty(name = "factIdentifier")
     public final native JSIFactIdentifierReferenceType getFactIdentifier();
 
     /**
@@ -29,7 +29,7 @@ public class JSIFactMappingValueType {
      * @param factIdentifier
      *      <b>factIdentifier</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "factIdentifier")
     public final native void setFactIdentifier(JSIFactIdentifierReferenceType factIdentifier);
 
     /**
@@ -38,7 +38,7 @@ public class JSIFactMappingValueType {
      * @return
      *      <b>expressionIdentifier</<b>
      */
-    @JsProperty
+    @JsProperty(name = "expressionIdentifier")
     public final native JSIExpressionIdentifierReferenceType getExpressionIdentifier();
 
     /**
@@ -47,7 +47,7 @@ public class JSIFactMappingValueType {
      * @param expressionIdentifier
      *      <b>expressionIdentifier</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "expressionIdentifier")
     public final native void setExpressionIdentifier(JSIExpressionIdentifierReferenceType expressionIdentifier);
 
     /**
@@ -56,7 +56,7 @@ public class JSIFactMappingValueType {
      * @return
      *      <b>rawValue</<b>
      */
-    @JsProperty
+    @JsProperty(name = "rawValue")
     public final native Object getRawValue();
 
     /**
@@ -65,7 +65,7 @@ public class JSIFactMappingValueType {
      * @param rawValue
      *      <b>rawValue</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "rawValue")
     public final native void setRawValue(Object rawValue);
 
 }

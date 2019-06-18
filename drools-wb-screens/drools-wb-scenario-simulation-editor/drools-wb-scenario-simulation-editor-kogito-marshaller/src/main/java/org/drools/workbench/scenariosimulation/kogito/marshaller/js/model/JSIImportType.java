@@ -20,7 +20,7 @@ public class JSIImportType {
      * @return
      *      <b>type</<b>
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native String getType();
 
     /**
@@ -29,7 +29,7 @@ public class JSIImportType {
      * @param type
      *      <b>type</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native void setType(String type);
 
 }

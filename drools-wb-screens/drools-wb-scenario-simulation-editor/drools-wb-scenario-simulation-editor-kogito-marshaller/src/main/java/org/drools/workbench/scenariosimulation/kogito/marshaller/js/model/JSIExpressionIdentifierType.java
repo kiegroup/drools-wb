@@ -20,7 +20,7 @@ public class JSIExpressionIdentifierType {
      * @return
      *      <b>name</<b>
      */
-    @JsProperty
+    @JsProperty(name = "name")
     public final native String getName();
 
     /**
@@ -29,7 +29,7 @@ public class JSIExpressionIdentifierType {
      * @param name
      *      <b>name</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "name")
     public final native void setName(String name);
 
     /**
@@ -38,7 +38,7 @@ public class JSIExpressionIdentifierType {
      * @return
      *      <b>type</<b>
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native String getType();
 
     /**
@@ -47,7 +47,7 @@ public class JSIExpressionIdentifierType {
      * @param type
      *      <b>type</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "type")
     public final native void setType(String type);
 
 }

@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.converters;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -32,6 +35,7 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISce
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationDescriptorType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIWrappedImportsType;
 import org.kie.soup.project.datamodel.imports.Import;
 import org.kie.soup.project.datamodel.imports.Imports;
 
@@ -49,15 +53,15 @@ public class JSInteropApiConverter {
 
     protected static Imports getImports(JSIImportsType source) {
         Imports toReturn = new Imports();
-//        final JSIInnerImportsType imports = source.getImports();
-//        if (imports != null) {
-//            final JSIImportType[] importArray = imports.getImport();
-//            if (importArray != null && importArray.length > 0) {
-//                for (int i = 0; i < importArray.length; i++) {
-//                    toReturn.addImport(getImport(importArray[i]));
-//                }
-//            }
-//        }
+        final JSIWrappedImportsType imports = source.getImports();
+        if (imports != null) {
+            final JSIImportType[] importArray = imports.getImport();
+            if (importArray != null && importArray.length > 0) {
+                for (int i = 0; i < importArray.length; i++) {
+                    toReturn.addImport(getImport(importArray[i]));
+                }
+            }
+        }
         return toReturn;
     }
 
@@ -86,18 +90,20 @@ public class JSInteropApiConverter {
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
-//            added.setGenericTypes();
+            if (jsiFactMappingType.getGenericTypes() != null) {
+                added.getGenericTypes().addAll(Arrays.asList(jsiFactMappingType.getGenericTypes()));
+            }
         }
         toPopulate.setDmoSession(source.getDmoSession());
-        toPopulate.setDmnFilePath("????");
+        toPopulate.setDmnFilePath(source.getDmnFilePath());
         toPopulate.setType(ScenarioSimulationModel.Type.valueOf(source.getType()));
         toPopulate.setDmnFilePath(source.getFileName());
         toPopulate.setKieSession(source.getKieSession());
         toPopulate.setKieBase(source.getKieBase());
         toPopulate.setRuleFlowGroup(source.getRuleFlowGroup());
-        toPopulate.setDmnNamespace("????");
-        toPopulate.setDmnName("????");
-//        toPopulate.setSkipFromBuild(source.);
+        toPopulate.setDmnNamespace(source.getDmnNamespace());
+        toPopulate.setDmnName(source.getDmnName());
+        toPopulate.setSkipFromBuild(source.getSkipFromBuild() != null ? source.getSkipFromBuild() : false);
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

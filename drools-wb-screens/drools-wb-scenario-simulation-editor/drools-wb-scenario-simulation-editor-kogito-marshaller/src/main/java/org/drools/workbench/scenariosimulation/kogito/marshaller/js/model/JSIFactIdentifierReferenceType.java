@@ -20,7 +20,7 @@ public class JSIFactIdentifierReferenceType {
      * @return
      *      <b>reference</<b>
      */
-    @JsProperty
+    @JsProperty(name = "reference")
     public final native String getReference();
 
     /**
@@ -29,7 +29,7 @@ public class JSIFactIdentifierReferenceType {
      * @param reference
      *      <b>reference</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "reference")
     public final native void setReference(String reference);
 
 }

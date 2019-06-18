@@ -20,7 +20,7 @@ public class JSIExpressionElementsType {
      * @return
      *      <b>expressionElement</<b>
      */
-    @JsProperty
+    @JsProperty(name = "expressionElement")
     public final native JSIExpressionElementType getExpressionElement();
 
     /**
@@ -29,7 +29,7 @@ public class JSIExpressionElementsType {
      * @param expressionElement
      *      <b>expressionElement</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "expressionElement")
     public final native void setExpressionElement(JSIExpressionElementType expressionElement);
 
 }

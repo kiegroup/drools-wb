@@ -30,6 +30,7 @@
       <xs:element type="xs:string" name="className"/>
       <xs:element type="xs:string" name="factAlias"/>
       <xs:element type="xs:string" name="expressionAlias" minOccurs="0"/>
+      <xs:element type="xs:string" name="genericTypes" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="factMappingsType">
@@ -41,11 +42,15 @@
     <xs:sequence>
       <xs:element type="factMappingsType" name="factMappings" minOccurs="0"/>
       <xs:element type="xs:string" name="dmoSession" minOccurs="0"/>
+      <xs:element type="xs:string" name="dmnFilePath" minOccurs="0"/>
       <xs:element type="xs:string" name="type" minOccurs="0"/>
       <xs:element type="xs:string" name="fileName" minOccurs="0"/>
       <xs:element type="xs:string" name="kieSession" minOccurs="0"/>
       <xs:element type="xs:string" name="kieBase" minOccurs="0"/>
       <xs:element type="xs:string" name="ruleFlowGroup" minOccurs="0"/>
+      <xs:element type="xs:string" name="dmnNamespace" minOccurs="0"/>
+      <xs:element type="xs:string" name="dmnName" minOccurs="0"/>
+      <xs:element type="xs:boolean" name="skipFromBuild" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="factIdentifierReferenceType">
@@ -88,14 +93,14 @@
       <xs:element type="xs:string" name="type"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="innerImportsType">
+  <xs:complexType name="wrappedImportsType">
     <xs:sequence>
       <xs:element type="ImportType" name="Import" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="importsType">
     <xs:sequence>
-      <xs:element type="innerImportsType" name="imports" minOccurs="0"/>
+      <xs:element type="wrappedImportsType" name="imports" minOccurs="0" />
     </xs:sequence>
   </xs:complexType>
 
@@ -104,6 +109,6 @@
       <xs:element type="simulationType" name="simulation"/>
       <xs:element type="importsType" name="imports"/>
     </xs:sequence>
-    <xs:attribute type="xs:float" name="version"/>
+    <xs:attribute type="xs:double" name="version"/>
   </xs:complexType>
 </xs:schema>

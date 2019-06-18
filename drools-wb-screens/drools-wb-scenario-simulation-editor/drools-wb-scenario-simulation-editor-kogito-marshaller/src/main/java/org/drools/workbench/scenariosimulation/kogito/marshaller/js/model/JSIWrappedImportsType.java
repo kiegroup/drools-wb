@@ -7,11 +7,11 @@ import jsinterop.annotations.JsType;
 
 
 /**
- * JSInterop adapter for <code>InnerImportsType</code>
+ * JSInterop adapter for <code>WrappedImportsType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "InnerImportsType")
-public class JSIInnerImportsType {
+@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "WrappedImportsType")
+public class JSIWrappedImportsType {
 
 
     /**
@@ -20,7 +20,7 @@ public class JSIInnerImportsType {
      * @return
      *      <b>_import</<b>
      */
-    @JsProperty
+    @JsProperty(name = "_import")
     public final native JSIImportType[] getImport();
 
     /**
@@ -29,7 +29,7 @@ public class JSIInnerImportsType {
      * @param _import
      *      <b>_import</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "_import")
     public final native void setImport(JSIImportType[] _import);
 
 }

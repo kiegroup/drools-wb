@@ -20,7 +20,7 @@ public class JSIScenarioType {
      * @return
      *      <b>factMappingValues</<b>
      */
-    @JsProperty
+    @JsProperty(name = "factMappingValues")
     public final native JSIFactMappingValuesType getFactMappingValues();
 
     /**
@@ -29,7 +29,7 @@ public class JSIScenarioType {
      * @param factMappingValues
      *      <b>factMappingValues</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "factMappingValues")
     public final native void setFactMappingValues(JSIFactMappingValuesType factMappingValues);
 
     /**
@@ -38,7 +38,7 @@ public class JSIScenarioType {
      * @return
      *      <b>simulationDescriptor</<b>
      */
-    @JsProperty
+    @JsProperty(name = "simulationDescriptor")
     public final native JSISimulationDescriptorType getSimulationDescriptor();
 
     /**
@@ -47,7 +47,7 @@ public class JSIScenarioType {
      * @param simulationDescriptor
      *      <b>simulationDescriptor</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "simulationDescriptor")
     public final native void setSimulationDescriptor(JSISimulationDescriptorType simulationDescriptor);
 
 }

@@ -20,7 +20,7 @@ public class JSIFactMappingValuesType {
      * @return
      *      <b>factMappingValue</<b>
      */
-    @JsProperty
+    @JsProperty(name = "factMappingValue")
     public final native JSIFactMappingValueType[] getFactMappingValue();
 
     /**
@@ -29,7 +29,7 @@ public class JSIFactMappingValuesType {
      * @param factMappingValue
      *      <b>factMappingValue</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "factMappingValue")
     public final native void setFactMappingValue(JSIFactMappingValueType[] factMappingValue);
 
 }

@@ -20,7 +20,7 @@ public class JSISimulationType {
      * @return
      *      <b>simulationDescriptor</<b>
      */
-    @JsProperty
+    @JsProperty(name = "simulationDescriptor")
     public final native JSISimulationDescriptorType getSimulationDescriptor();
 
     /**
@@ -29,7 +29,7 @@ public class JSISimulationType {
      * @param simulationDescriptor
      *      <b>simulationDescriptor</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "simulationDescriptor")
     public final native void setSimulationDescriptor(JSISimulationDescriptorType simulationDescriptor);
 
     /**
@@ -38,7 +38,7 @@ public class JSISimulationType {
      * @return
      *      <b>scenarios</<b>
      */
-    @JsProperty
+    @JsProperty(name = "scenarios")
     public final native JSIScenariosType getScenarios();
 
     /**
@@ -47,7 +47,7 @@ public class JSISimulationType {
      * @param scenarios
      *      <b>scenarios</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "scenarios")
     public final native void setScenarios(JSIScenariosType scenarios);
 
 }

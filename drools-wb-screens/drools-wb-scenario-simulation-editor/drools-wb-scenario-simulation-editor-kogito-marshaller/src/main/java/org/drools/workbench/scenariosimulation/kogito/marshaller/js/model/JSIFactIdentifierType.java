@@ -20,7 +20,7 @@ public class JSIFactIdentifierType {
      * @return
      *      <b>name</<b>
      */
-    @JsProperty
+    @JsProperty(name = "name")
     public final native String getName();
 
     /**
@@ -29,7 +29,7 @@ public class JSIFactIdentifierType {
      * @param name
      *      <b>name</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "name")
     public final native void setName(String name);
 
     /**
@@ -38,7 +38,7 @@ public class JSIFactIdentifierType {
      * @return
      *      <b>className</<b>
      */
-    @JsProperty
+    @JsProperty(name = "className")
     public final native String getClassName();
 
     /**
@@ -47,7 +47,7 @@ public class JSIFactIdentifierType {
      * @param className
      *      <b>className</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "className")
     public final native void setClassName(String className);
 
 }

@@ -20,7 +20,7 @@ public class JSIScenariosType {
      * @return
      *      <b>scenario</<b>
      */
-    @JsProperty
+    @JsProperty(name = "scenario")
     public final native JSIScenarioType getScenario();
 
     /**
@@ -29,7 +29,7 @@ public class JSIScenariosType {
      * @param scenario
      *      <b>scenario</<b> to set.
      */
-    @JsProperty
+    @JsProperty(name = "scenario")
     public final native void setScenario(JSIScenarioType scenario);
 
 }

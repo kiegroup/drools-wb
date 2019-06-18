@@ -20,8 +20,8 @@ public class JSIImportsType {
      * @return
      *      <b>imports</<b>
      */
-    @JsProperty
-    public final native JSIInnerImportsType getImports();
+    @JsProperty(name = "imports")
+    public final native JSIWrappedImportsType getImports();
 
     /**
      * Setter for <b>imports</b>
@@ -29,7 +29,7 @@ public class JSIImportsType {
      * @param imports
      *      <b>imports</<b> to set.
      */
-    @JsProperty
-    public final native void setImports(JSIInnerImportsType imports);
+    @JsProperty(name = "imports")
+    public final native void setImports(JSIWrappedImportsType imports);
 
 }
