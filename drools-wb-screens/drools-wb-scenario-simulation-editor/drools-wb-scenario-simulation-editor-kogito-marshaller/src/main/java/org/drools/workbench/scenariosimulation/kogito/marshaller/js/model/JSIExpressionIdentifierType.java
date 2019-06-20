@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>ExpressionIdentifierType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "ExpressionIdentifierType")
+@JsType(namespace = JsPackage.GLOBAL, name = "ExpressionIdentifierType")
 public class JSIExpressionIdentifierType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIExpressionIdentifierType</code>
+     * 
+     * @return
+     *     <b>SCESIM.ExpressionIdentifierType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.ExpressionIdentifierType";
+    }
 
     /**
      * Getter for <b>name</b>
@@ -49,5 +59,14 @@ public class JSIExpressionIdentifierType {
      */
     @JsProperty(name = "type")
     public final native void setType(String type);
+    
 
+
+
+public static native JSIExpressionIdentifierType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.ExpressionIdentifierType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

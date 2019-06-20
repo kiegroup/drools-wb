@@ -18,6 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.converters
 import java.util.Arrays;
 
 import com.google.gwt.core.client.GWT;
+import jsinterop.base.Js;
+import jsinterop.base.JsArrayLike;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -59,10 +61,11 @@ public class JSInteropApiConverter {
         Imports toReturn = new Imports();
         final JSIWrappedImportsType imports = source.getImports();
         if (imports != null) {
-            final JSIImportType[] importArray = imports.getImport();
-            if (importArray != null && importArray.length > 0) {
-                for (int i = 0; i < importArray.length; i++) {
-                    toReturn.addImport(getImport(importArray[i]));
+            final JsArrayLike<JSIImportType> importArray = imports.getImport();
+            if (importArray != null) {
+                for (int i = 0; i < importArray.getLength(); i++) {
+                    JSIImportType jsiImportType = Js.uncheckedCast(importArray.getAt(i));
+                    toReturn.addImport(getImport(jsiImportType));
                 }
             }
         }
@@ -79,18 +82,21 @@ public class JSInteropApiConverter {
         Simulation toReturn = new Simulation();
         populateSimulationDescriptor(toReturn.getSimulationDescriptor(), source.getSimulationDescriptor());
         final JSIScenariosType jsiScenariosType = source.getScenarios();
-        final JSIScenarioType[] jsiScenarioTypes = jsiScenariosType.getScenario();
+        final JsArrayLike<JSIScenarioType> jsiScenarioTypes = jsiScenariosType.getScenario();
         if (jsiScenarioTypes != null) {
-            for(int i = 0; i < jsiScenarioTypes.length; i ++) {
+            for (int i = 0; i < jsiScenarioTypes.getLength(); i++) {
                 Scenario added = toReturn.addScenario();
-                populateScenario(added, jsiScenarioTypes[i], source.getSimulationDescriptor().getFactMappings().getFactMapping());
+                JSIScenarioType jsiScenarioType = Js.uncheckedCast(jsiScenarioTypes.getAt(i));
+                populateScenario(added, jsiScenarioType, source.getSimulationDescriptor().getFactMappings().getFactMapping());
             }
         }
         return toReturn;
     }
 
-    protected static void populateScenario(Scenario toPopulate, JSIScenarioType source, JSIFactMappingType[] jsiFactMappingTypes) {
-        for (JSIFactMappingValueType jsiFactMappingValueType : source.getFactMappingValues().getFactMappingValue()) {
+    protected static void populateScenario(Scenario toPopulate, JSIScenarioType source, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
+        final JsArrayLike<JSIFactMappingValueType> factMappingValue = source.getFactMappingValues().getFactMappingValue();
+        for (int i = 0; i < factMappingValue.getLength(); i++) {
+            JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
             final JSIFactIdentifierReferenceType factIdentifierReference = jsiFactMappingValueType.getFactIdentifier();
             final JSIFactIdentifierType factIdentifierType = getActualJSIFactIdentifierType(factIdentifierReference.getReference(), jsiFactMappingTypes);
             final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
@@ -102,7 +108,9 @@ public class JSInteropApiConverter {
     }
 
     protected static void populateSimulationDescriptor(SimulationDescriptor toPopulate, JSISimulationDescriptorType source) {
-        for (JSIFactMappingType jsiFactMappingType : source.getFactMappings().getFactMapping()) {
+        final JsArrayLike<JSIFactMappingType> factMapping = source.getFactMappings().getFactMapping();
+        for (int i = 0; i < factMapping.getLength(); i++) {
+            JSIFactMappingType jsiFactMappingType = Js.uncheckedCast(factMapping.getAt(i));
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
@@ -130,28 +138,30 @@ public class JSInteropApiConverter {
         return new FactIdentifier(source.getName(), source.getClassName());
     }
 
-    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JSIFactMappingType[] jsiFactMappingTypes) {
+    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
         String numberPart = "1";
         if (reference.contains("[") && reference.contains("]")) {
-            numberPart = reference.substring(reference.indexOf("[") +1, reference.indexOf("]"));
+            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
         }
         try {
-            int index = Integer.parseInt(numberPart) -1;
-            return jsiFactMappingTypes[index].getFactIdentifier();
+            int index = Integer.parseInt(numberPart) - 1;
+            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
+            return retrieved.getFactIdentifier();
         } catch (Throwable t) {
             GWT.log("Failed to parse reference " + reference, t);
             return null;
         }
     }
 
-    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JSIFactMappingType[] jsiFactMappingTypes) {
+    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
         String numberPart = "1";
         if (reference.contains("[") && reference.contains("]")) {
-            numberPart = reference.substring(reference.indexOf("[") +1, reference.indexOf("]"));
+            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
         }
         try {
-            int index = Integer.parseInt(numberPart) -1;
-            return jsiFactMappingTypes[index].getExpressionIdentifier();
+            int index = Integer.parseInt(numberPart) - 1;
+            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
+            return retrieved.getExpressionIdentifier();
         } catch (Throwable t) {
             GWT.log("Failed to parse reference " + reference, t);
             return null;

@@ -7,7 +7,10 @@
     "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module rename-to='app'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
-  <inherits name='com.google.gwt.user.User'/>
+<!--  <inherits name='com.google.gwt.user.User'/>-->
+  <inherits name="jsinterop.base.Base" />
+<!--  <inherits name="elemental2.core.Core"/>-->
+  <!--  <inherits name="gwt.interop.utils.InteropUtils" />-->
 
 
   <!-- Specify the paths for translatable code                    -->

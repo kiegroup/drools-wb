@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>FactMappingType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "FactMappingType")
+@JsType(namespace = JsPackage.GLOBAL, name = "FactMappingType")
 public class JSIFactMappingType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIFactMappingType</code>
+     * 
+     * @return
+     *     <b>SCESIM.FactMappingType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.FactMappingType";
+    }
 
     /**
      * Getter for <b>expressionElements</b>
@@ -139,5 +149,14 @@ public class JSIFactMappingType {
      */
     @JsProperty(name = "genericTypes")
     public final native void setGenericTypes(String[] genericTypes);
+    
 
+
+
+public static native JSIFactMappingType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

@@ -24,5 +24,16 @@ MainJs = {
         var s = new XMLSerializer();
         var toReturn = s.serializeToString(xmlDocument);
         callback(toReturn);
+    },
+
+    unmarshallObject: function (source)  {
+        console.log("unmarshallObject");
+        // Create Jsonix context
+        var context = new Jsonix.Context([SCESIM]);
+
+        // Create unmarshaller
+        var unmarshaller = context.createUnmarshaller();
+        var toReturn = unmarshaller.unmarshalString(source);
+        return toReturn;
     }
 }

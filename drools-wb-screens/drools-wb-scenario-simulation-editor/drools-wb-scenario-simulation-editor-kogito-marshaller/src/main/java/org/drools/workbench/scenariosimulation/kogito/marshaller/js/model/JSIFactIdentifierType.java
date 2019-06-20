@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>FactIdentifierType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "FactIdentifierType")
+@JsType(namespace = JsPackage.GLOBAL, name = "FactIdentifierType")
 public class JSIFactIdentifierType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIFactIdentifierType</code>
+     * 
+     * @return
+     *     <b>SCESIM.FactIdentifierType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.FactIdentifierType";
+    }
 
     /**
      * Getter for <b>name</b>
@@ -49,5 +59,14 @@ public class JSIFactIdentifierType {
      */
     @JsProperty(name = "className")
     public final native void setClassName(String className);
+    
 
+
+
+public static native JSIFactIdentifierType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.FactIdentifierType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

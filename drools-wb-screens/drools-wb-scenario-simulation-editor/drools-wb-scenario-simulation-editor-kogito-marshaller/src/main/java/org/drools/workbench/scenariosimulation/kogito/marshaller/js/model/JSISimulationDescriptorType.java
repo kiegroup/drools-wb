@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>SimulationDescriptorType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "SimulationDescriptorType")
+@JsType(namespace = JsPackage.GLOBAL, name = "SimulationDescriptorType")
 public class JSISimulationDescriptorType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSISimulationDescriptorType</code>
+     * 
+     * @return
+     *     <b>SCESIM.SimulationDescriptorType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.SimulationDescriptorType";
+    }
 
     /**
      * Getter for <b>factMappings</b>
@@ -211,5 +221,14 @@ public class JSISimulationDescriptorType {
      */
     @JsProperty(name = "skipFromBuild")
     public final native void setSkipFromBuild(Boolean skipFromBuild);
+    
 
+
+
+public static native JSISimulationDescriptorType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.SimulationDescriptorType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

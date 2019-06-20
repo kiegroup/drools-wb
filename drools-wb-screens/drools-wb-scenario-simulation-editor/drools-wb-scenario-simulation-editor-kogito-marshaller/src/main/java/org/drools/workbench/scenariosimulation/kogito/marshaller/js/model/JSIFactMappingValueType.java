@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>FactMappingValueType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "FactMappingValueType")
+@JsType(namespace = JsPackage.GLOBAL, name = "FactMappingValueType")
 public class JSIFactMappingValueType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIFactMappingValueType</code>
+     * 
+     * @return
+     *     <b>SCESIM.FactMappingValueType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.FactMappingValueType";
+    }
 
     /**
      * Getter for <b>factIdentifier</b>
@@ -67,5 +77,14 @@ public class JSIFactMappingValueType {
      */
     @JsProperty(name = "rawValue")
     public final native void setRawValue(String rawValue);
+    
 
+
+
+public static native JSIFactMappingValueType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingValueType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

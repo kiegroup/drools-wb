@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>SimulationType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "SimulationType")
+@JsType(namespace = JsPackage.GLOBAL, name = "SimulationType")
 public class JSISimulationType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSISimulationType</code>
+     * 
+     * @return
+     *     <b>SCESIM.SimulationType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.SimulationType";
+    }
 
     /**
      * Getter for <b>simulationDescriptor</b>
@@ -49,5 +59,14 @@ public class JSISimulationType {
      */
     @JsProperty(name = "scenarios")
     public final native void setScenarios(JSIScenariosType scenarios);
+    
 
+
+
+public static native JSISimulationType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.SimulationType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

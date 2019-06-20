@@ -10,9 +10,19 @@ import jsinterop.annotations.JsType;
  * JSInterop adapter for <code>ImportsType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "ImportsType")
+@JsType(namespace = JsPackage.GLOBAL, name = "ImportsType")
 public class JSIImportsType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIImportsType</code>
+     * 
+     * @return
+     *     <b>SCESIM.ImportsType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.ImportsType";
+    }
 
     /**
      * Getter for <b>imports</b>
@@ -31,5 +41,14 @@ public class JSIImportsType {
      */
     @JsProperty(name = "imports")
     public final native void setImports(JSIWrappedImportsType imports);
+    
 
+
+
+public static native JSIImportsType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.ImportsType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }

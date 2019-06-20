@@ -21,6 +21,7 @@
     <version.thorntail>2.4.0.Final</version.thorntail>
     <gwt.helper.includes>Client,Kogito,Marshaller</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
+    <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
   </properties>
 
 
@@ -544,6 +545,16 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.github.gwtreact</groupId>
+      <artifactId>gwt-interop-utils</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-servlet</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- END MARSHALLING -->
 
   </dependencies>
@@ -579,6 +590,11 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
         <version>${version.org.kie}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.gwtreact</groupId>
+        <artifactId>gwt-interop-utils</artifactId>
+        <version>${gwt-interop-utils.version}</version>
       </dependency>
       <!-- END MARSHALLING -->
 

@@ -20,4 +20,7 @@ public class SCESIM {
     @JsProperty
     public final native JSIScenarioSimulationModelType getValue();
 
+    @JsProperty
+    public final native void setValue(JSIScenarioSimulationModelType value);
+
 }

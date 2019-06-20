@@ -4,15 +4,26 @@ package org.drools.workbench.scenariosimulation.kogito.marshaller.js.model;
 import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
+import jsinterop.base.JsArrayLike;
 
 
 /**
  * JSInterop adapter for <code>FactMappingValuesType</code>
  * 
  */
-@JsType(isNative = true, namespace = JsPackage.GLOBAL, name = "FactMappingValuesType")
+@JsType(namespace = JsPackage.GLOBAL, name = "FactMappingValuesType")
 public class JSIFactMappingValuesType {
 
+
+    /**
+     * Get TYPE_NAME for <code>JSIFactMappingValuesType</code>
+     * 
+     * @return
+     *     <b>SCESIM.FactMappingValuesType</b>
+     */
+    public final static String getTypeName() {
+        return "SCESIM.FactMappingValuesType";
+    }
 
     /**
      * Getter for <b>factMappingValue</b>
@@ -21,7 +32,7 @@ public class JSIFactMappingValuesType {
      *      <b>factMappingValue</<b>
      */
     @JsProperty(name = "factMappingValue")
-    public final native JSIFactMappingValueType[] getFactMappingValue();
+    public final native JsArrayLike<JSIFactMappingValueType> getFactMappingValue();
 
     /**
      * Setter for <b>factMappingValue</b>
@@ -30,6 +41,15 @@ public class JSIFactMappingValuesType {
      *      <b>factMappingValue</<b> to set.
      */
     @JsProperty(name = "factMappingValue")
-    public final native void setFactMappingValue(JSIFactMappingValueType[] factMappingValue);
+    public final native void setFactMappingValue(JsArrayLike<JSIFactMappingValueType> factMappingValue);
+    
 
+
+
+public static native JSIFactMappingValuesType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingValuesType\"}";
+        var retrieved = JSON.parse(json)
+        console.log("retrieved " + retrieved);
+        return retrieved
+    }-*/;
 }
