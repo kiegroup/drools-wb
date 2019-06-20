@@ -1072,6 +1072,15 @@
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-dmn-backend</artifactId>
     </dependency>
+    <!-- Required for PMML integration. These are provided/optional scope in kie-dmn-core -->
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+    </dependency>
 
     <!-- PMML Text Editor -->
     <dependency>
@@ -1293,12 +1302,6 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
