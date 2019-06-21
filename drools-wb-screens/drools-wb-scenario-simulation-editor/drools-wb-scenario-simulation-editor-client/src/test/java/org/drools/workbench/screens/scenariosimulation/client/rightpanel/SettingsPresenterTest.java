@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,6 +56,9 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Mock
     private Command saveCommandMock;
 
+    @Mock
+    private ScenarioSimulationDropdown scenarioSimulationDropdownMock;
+
     @Before
     public void setup() {
         super.setup();
@@ -67,7 +71,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getRuleFlowGroup()).thenReturn(ruleFlowGroupMock);
         when(settingsViewMock.getDmnSettings()).thenReturn(dmnSettingsMock);
         when(settingsViewMock.getDmnFileLabel()).thenReturn(dmnModelLabelMock);
-        when(settingsViewMock.getDmnFilePath()).thenReturn(dmnFilePathMock);
+        when(settingsViewMock.getDmnFilePathPlaceholder()).thenReturn(dmnFilePathPlaceholderMock);
         when(settingsViewMock.getDmnNamespaceLabel()).thenReturn(dmnNamespaceLabelMock);
         when(settingsViewMock.getDmnNamespace()).thenReturn(dmnNamespaceMock);
         when(settingsViewMock.getDmnNameLabel()).thenReturn(dmnNameLabelMock);
@@ -81,9 +85,10 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(simulationDescriptorMock.getDmnNamespace()).thenReturn(DMN_NAMESPACE);
         when(simulationDescriptorMock.getDmnName()).thenReturn(DMN_NAME);
 
-        this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock) {
+        this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock, scenarioSimulationDropdownMock) {
             {
                 this.simulationDescriptor = simulationDescriptorMock;
+                this.scenarioSimulationDropdown = scenarioSimulationDropdownMock;
                 this.saveCommand = saveCommandMock;
             }
         });
@@ -198,8 +203,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(settingsViewMock, times(1)).getDmnSettings();
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
-        verify(settingsViewMock, times(1)).getDmnFilePath();
-        verify(dmnFilePathMock, times(1)).setValue(eq(DMN_FILE_PATH));
+        /*verify(settingsViewMock, times(1)).getDmnFilePath();
+        verify(dmnFilePathMock, times(1)).setValue(eq(DMN_FILE_PATH)); */
         verify(settingsViewMock, times(1)).getDmnName();
         verify(dmnNameMock, times(1)).setValue(eq(DMN_NAME));
         verify(settingsViewMock, times(1)).getDmnNamespace();
@@ -219,8 +224,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test
     public void saveDMNSettings() {
         settingsPresenter.saveDMNSettings();
-        verify(settingsViewMock, times(1)).getDmnFilePath();
-        verify(simulationDescriptorMock, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
+        //verify(settingsViewMock, times(1)).getDmnFilePath();
+        //verify(simulationDescriptorMock, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
     }
 
     @Test

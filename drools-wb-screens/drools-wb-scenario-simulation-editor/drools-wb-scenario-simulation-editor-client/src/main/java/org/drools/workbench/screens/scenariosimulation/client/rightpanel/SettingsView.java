@@ -58,6 +58,8 @@ public interface SettingsView
 
     LabelElement getDmnFileLabel();
 
+    DivElement getDmnFilePathPlaceholder();
+
     LabelElement getDmnNamespaceLabel();
 
     InputElement getDmnNamespace();

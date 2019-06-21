@@ -166,6 +166,11 @@ public class SettingsViewImpl
     }
 
     @Override
+    public DivElement getDmnFilePathPlaceholder() {
+        return dmnFilePathPlaceholder;
+    }
+
+    @Override
     public LabelElement getDmnNamespaceLabel() {
         return dmnNamespaceLabel;
     }

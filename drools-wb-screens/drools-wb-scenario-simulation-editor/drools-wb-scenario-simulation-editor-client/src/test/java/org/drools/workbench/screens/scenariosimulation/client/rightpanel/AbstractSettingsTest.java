@@ -69,7 +69,7 @@ abstract class AbstractSettingsTest {
     protected LabelElement dmnModelLabelMock;
 
     @Mock
-    protected InputElement dmnFilePathMock;
+    protected DivElement dmnFilePathPlaceholderMock;
 
     @Mock
     protected LabelElement dmnNamespaceLabelMock;
@@ -94,7 +94,7 @@ abstract class AbstractSettingsTest {
         when(scenarioTypeMock.getInnerText()).thenReturn(SCENARIO_TYPE);
         when(dmoSessionMock.getValue()).thenReturn(DMO_SESSION);
         when(ruleFlowGroupMock.getValue()).thenReturn(RULE_FLOW_GROUP);
-        when(dmnFilePathMock.getValue()).thenReturn(DMN_FILE_PATH);
+        //when(dmnFilePathMock.getValue()).thenReturn(DMN_FILE_PATH);
         when(dmnNamespaceMock.getValue()).thenReturn(DMN_NAMESPACE);
         when(dmnNameMock.getValue()).thenReturn(DMN_NAME);
         when(ruleSettingsMock.getStyle()).thenReturn(ruleSettingsStyleMock);

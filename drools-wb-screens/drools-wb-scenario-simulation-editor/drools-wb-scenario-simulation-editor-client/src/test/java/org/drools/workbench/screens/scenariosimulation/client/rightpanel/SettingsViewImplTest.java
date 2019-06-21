@@ -53,7 +53,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
                 this.ruleFlowGroup = ruleFlowGroupMock;
                 this.dmnSettings = dmnSettingsMock;
                 this.dmnFileLabel = dmnModelLabelMock;
-                this.dmnFilePath = dmnFilePathMock;
+                this.dmnFilePathPlaceholder = dmnFilePathPlaceholderMock;
                 this.dmnNamespaceLabel = dmnNamespaceLabelMock;
                 this.dmnNamespace = dmnNamespaceMock;
                 this.dmnNameLabel = dmnNameLabelMock;
@@ -78,7 +78,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
         verify(fileNameMock, times(1)).setValue(eq(""));
         verify(dmnNameMock, times(1)).setValue(eq(""));
         verify(dmnNamespaceMock, times(1)).setValue(eq(""));
-        verify(dmnFilePathMock, times(1)).setValue(eq(""));
+        //verify(dmnFilePathMock, times(1)).setValue(eq(""));
         verify(skipFromBuildMock, times(1)).setChecked(eq(false));
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
