@@ -52,6 +52,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -482,43 +483,25 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
-    public void onModifyColumn_NoSelection() {
+    public void onModifyColumn() {
         testToolsPresenter.editingColumnEnabled = true;
         testToolsPresenter.selectedFieldItemView = null;
         testToolsPresenter.selectedListGroupItemView = null;
         testToolsPresenter.onModifyColumn();
-        verify(selectedListGroupItemViewMock, never()).getActualClassName();
-        verify(selectedFieldItemViewMock, never()).getFullPath();
-        verify(selectedFieldItemViewMock, never()).getFieldName();
-        verify(selectedFieldItemViewMock, never()).getClassName();
         verify(eventBusMock, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
         verify(eventBusMock, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
-    }
 
-    @Test
-    public void onModifyColumn_FieldItemSelected() {
-        testToolsPresenter.editingColumnEnabled = true;
+        reset(eventBusMock);
         testToolsPresenter.selectedListGroupItemView = null;
         testToolsPresenter.selectedFieldItemView = selectedFieldItemViewMock;
         testToolsPresenter.onModifyColumn();
-        verify(selectedListGroupItemViewMock, never()).getActualClassName();
-        verify(selectedFieldItemViewMock, times(2)).getFullPath();
-        verify(selectedFieldItemViewMock, times(1)).getFieldName();
-        verify(selectedFieldItemViewMock, times(1)).getClassName();
         verify(eventBusMock, times(1)).fireEvent(isA(SetPropertyHeaderEvent.class));
         verify(eventBusMock, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
-    }
 
-    @Test
-    public void onModifyColumn_ListGroupSelected() {
-        testToolsPresenter.editingColumnEnabled = true;
+        reset(eventBusMock);
         testToolsPresenter.selectedListGroupItemView = selectedListGroupItemViewMock;
         testToolsPresenter.selectedFieldItemView = null;
         testToolsPresenter.onModifyColumn();
-        verify(selectedListGroupItemViewMock, times(1)).getActualClassName();
-        verify(selectedFieldItemViewMock, never()).getFullPath();
-        verify(selectedFieldItemViewMock, never()).getFieldName();
-        verify(selectedFieldItemViewMock, never()).getClassName();
         verify(eventBusMock, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
         verify(eventBusMock, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
     }

@@ -97,6 +97,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
                 if (ScenarioSimulationSharedUtils.isList(factType)) {
                     factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(factName));
                 }
+                factMapping.addExpressionElement(factName, factType);
             }
 
             for (Map.Entry<String, String> entry : factModelTree.getExpandableProperties().entrySet()) {
@@ -151,7 +152,6 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
             if (previousSteps.isEmpty()) {
                 factMapping.addExpressionElement(factModelTree.getFactName(), factType);
             }
-            factMapping.addExpressionElement(propertyName, factType);
             scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
 
             return factMapping;

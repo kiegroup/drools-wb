@@ -374,7 +374,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
-                String value = selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
+                String value = isSimple(baseClass) ?
+                        selectedFieldItemView.getFullPath() :
+                        selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
                 getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
             }
@@ -412,6 +414,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                            .orElseGet(() -> getFactModelTreeFromSimpleJavaTypeMap(key)
                                                    .orElseGet(() -> getFactModelTreeFromInstanceMap(key)
                                                            .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key).orElse(null)))));
+    }
+
+    protected boolean isSimple(String key) {
+        return Optional.ofNullable(getFactModelTreeFromSimpleJavaTypeMap(key))
+                .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key))
+                .isPresent();
     }
 
     protected void clearLists() {
