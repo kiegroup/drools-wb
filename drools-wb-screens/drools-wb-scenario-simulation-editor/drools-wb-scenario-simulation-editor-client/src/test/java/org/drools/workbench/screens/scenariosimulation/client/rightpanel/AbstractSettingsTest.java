@@ -24,7 +24,6 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import org.mockito.Mock;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_FILE_PATH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMN_NAMESPACE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DMO_SESSION;
