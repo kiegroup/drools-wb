@@ -31,7 +31,7 @@ public class JSIFactMappingValueType {
      *      <b>factIdentifier</<b>
      */
     @JsProperty(name = "factIdentifier")
-    public final native JSIFactIdentifierReferenceType getFactIdentifier();
+    public final native JSIFactIdentifierType getFactIdentifier();
 
     /**
      * Setter for <b>factIdentifier</b>
@@ -40,7 +40,7 @@ public class JSIFactMappingValueType {
      *      <b>factIdentifier</<b> to set.
      */
     @JsProperty(name = "factIdentifier")
-    public final native void setFactIdentifier(JSIFactIdentifierReferenceType factIdentifier);
+    public final native void setFactIdentifier(JSIFactIdentifierType factIdentifier);
 
     /**
      * Getter for <b>expressionIdentifier</b>
@@ -67,7 +67,7 @@ public class JSIFactMappingValueType {
      *      <b>rawValue</<b>
      */
     @JsProperty(name = "rawValue")
-    public final native String getRawValue();
+    public final native JSIRawValueType getRawValue();
 
     /**
      * Setter for <b>rawValue</b>
@@ -76,7 +76,7 @@ public class JSIFactMappingValueType {
      *      <b>rawValue</<b> to set.
      */
     @JsProperty(name = "rawValue")
-    public final native void setRawValue(String rawValue);
+    public final native void setRawValue(JSIRawValueType rawValue);
     
 
 
@@ -84,7 +84,6 @@ public class JSIFactMappingValueType {
 public static native JSIFactMappingValueType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingValueType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

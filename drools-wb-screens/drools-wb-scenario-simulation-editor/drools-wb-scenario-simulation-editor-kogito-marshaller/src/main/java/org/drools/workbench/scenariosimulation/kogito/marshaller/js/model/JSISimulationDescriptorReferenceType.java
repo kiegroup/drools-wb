@@ -7,21 +7,21 @@ import jsinterop.annotations.JsType;
 
 
 /**
- * JSInterop adapter for <code>FactIdentifierReferenceType</code>
+ * JSInterop adapter for <code>SimulationDescriptorReferenceType</code>
  * 
  */
-@JsType(namespace = JsPackage.GLOBAL, name = "FactIdentifierReferenceType")
-public class JSIFactIdentifierReferenceType {
+@JsType(namespace = JsPackage.GLOBAL, name = "SimulationDescriptorReferenceType")
+public class JSISimulationDescriptorReferenceType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIFactIdentifierReferenceType</code>
+     * Get TYPE_NAME for <code>JSISimulationDescriptorReferenceType</code>
      * 
      * @return
-     *     <b>SCESIM.FactIdentifierReferenceType</b>
+     *     <b>SCESIM.SimulationDescriptorReferenceType</b>
      */
     public final static String getTypeName() {
-        return "SCESIM.FactIdentifierReferenceType";
+        return "SCESIM.SimulationDescriptorReferenceType";
     }
 
     /**
@@ -45,10 +45,9 @@ public class JSIFactIdentifierReferenceType {
 
 
 
-public static native JSIFactIdentifierReferenceType newInstance() /*-{
-        var json = "{\"TYPE_NAME\": \"SCESIM.FactIdentifierReferenceType\"}";
+public static native JSISimulationDescriptorReferenceType newInstance() /*-{
+        var json = "{\"TYPE_NAME\": \"SCESIM.SimulationDescriptorReferenceType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

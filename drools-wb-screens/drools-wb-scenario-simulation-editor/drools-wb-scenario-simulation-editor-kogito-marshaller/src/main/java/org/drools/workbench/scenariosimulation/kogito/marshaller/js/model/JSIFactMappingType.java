@@ -156,7 +156,6 @@ public class JSIFactMappingType {
 public static native JSIFactMappingType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

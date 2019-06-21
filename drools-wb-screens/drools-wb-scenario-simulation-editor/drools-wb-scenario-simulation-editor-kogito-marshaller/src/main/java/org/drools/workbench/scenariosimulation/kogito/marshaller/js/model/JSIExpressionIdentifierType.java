@@ -66,7 +66,6 @@ public class JSIExpressionIdentifierType {
 public static native JSIExpressionIdentifierType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ExpressionIdentifierType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

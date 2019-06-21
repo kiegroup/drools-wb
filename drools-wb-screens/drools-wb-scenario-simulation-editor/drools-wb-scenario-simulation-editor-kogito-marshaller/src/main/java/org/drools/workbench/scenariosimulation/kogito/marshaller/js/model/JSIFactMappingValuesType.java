@@ -49,7 +49,6 @@ public class JSIFactMappingValuesType {
 public static native JSIFactMappingValuesType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.FactMappingValuesType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

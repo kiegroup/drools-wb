@@ -49,7 +49,7 @@ public class JSIScenarioType {
      *      <b>simulationDescriptor</<b>
      */
     @JsProperty(name = "simulationDescriptor")
-    public final native JSISimulationDescriptorType getSimulationDescriptor();
+    public final native JSISimulationDescriptorReferenceType getSimulationDescriptor();
 
     /**
      * Setter for <b>simulationDescriptor</b>
@@ -58,7 +58,7 @@ public class JSIScenarioType {
      *      <b>simulationDescriptor</<b> to set.
      */
     @JsProperty(name = "simulationDescriptor")
-    public final native void setSimulationDescriptor(JSISimulationDescriptorType simulationDescriptor);
+    public final native void setSimulationDescriptor(JSISimulationDescriptorReferenceType simulationDescriptor);
     
 
 
@@ -66,7 +66,6 @@ public class JSIScenarioType {
 public static native JSIScenarioType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ScenarioType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

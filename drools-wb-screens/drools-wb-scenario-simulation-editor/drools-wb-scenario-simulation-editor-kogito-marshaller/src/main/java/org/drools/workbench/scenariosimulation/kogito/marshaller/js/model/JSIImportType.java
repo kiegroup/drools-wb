@@ -48,7 +48,6 @@ public class JSIImportType {
 public static native JSIImportType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ImportType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

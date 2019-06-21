@@ -66,7 +66,6 @@ public class JSISimulationType {
 public static native JSISimulationType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.SimulationType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

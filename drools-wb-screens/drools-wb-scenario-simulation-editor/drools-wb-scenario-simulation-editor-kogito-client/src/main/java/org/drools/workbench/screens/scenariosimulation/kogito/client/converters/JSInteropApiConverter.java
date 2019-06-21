@@ -20,6 +20,7 @@ import java.util.Arrays;
 import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
 import jsinterop.base.JsArrayLike;
+import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -28,9 +29,10 @@ import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
@@ -97,12 +99,15 @@ public class JSInteropApiConverter {
         final JsArrayLike<JSIFactMappingValueType> factMappingValue = source.getFactMappingValues().getFactMappingValue();
         for (int i = 0; i < factMappingValue.getLength(); i++) {
             JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
-            final JSIFactIdentifierReferenceType factIdentifierReference = jsiFactMappingValueType.getFactIdentifier();
-            final JSIFactIdentifierType factIdentifierType = getActualJSIFactIdentifierType(factIdentifierReference.getReference(), jsiFactMappingTypes);
+            JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
+            if (factIdentifierType.getReference()!= null && ! factIdentifierType.getReference().isEmpty()) {
+                factIdentifierType = getActualJSIFactIdentifierType(factIdentifierType.getReference(), jsiFactMappingTypes);
+            }
             final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
             final JSIExpressionIdentifierType expressionIdentifierType = getActualJSIExpressionIdentifierType(expressionIdentifierReference.getReference(), jsiFactMappingTypes);
             if (factIdentifierType != null && expressionIdentifierType != null) {
-                toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), jsiFactMappingValueType.getRawValue());
+                String value = jsiFactMappingValueType.getRawValue() != null ? jsiFactMappingValueType.getRawValue().getValue() : null;
+                toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), value);
             }
         }
     }
@@ -117,6 +122,16 @@ public class JSInteropApiConverter {
             if (jsiFactMappingType.getGenericTypes() != null) {
                 added.getGenericTypes().addAll(Arrays.asList(jsiFactMappingType.getGenericTypes()));
             }
+            final JSIExpressionElementsType expressionElements = jsiFactMappingType.getExpressionElements();
+            if (expressionElements != null) {
+                final JsArrayLike<JSIExpressionElementType> expressionElement = expressionElements.getExpressionElement();
+                if (expressionElement != null) {
+                    for (int j = 0; j < expressionElement.getLength(); j++) {
+                        JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(expressionElement.getAt(j));
+                        added.addExpressionElement(jsiExpressionElementType.getStep(), jsiFactMappingType.getClassName());
+                    }
+                }
+            }
         }
         toPopulate.setDmoSession(source.getDmoSession());
         toPopulate.setDmnFilePath(source.getDmnFilePath());
@@ -128,6 +143,10 @@ public class JSInteropApiConverter {
         toPopulate.setDmnNamespace(source.getDmnNamespace());
         toPopulate.setDmnName(source.getDmnName());
         toPopulate.setSkipFromBuild(source.getSkipFromBuild() != null ? source.getSkipFromBuild() : false);
+    }
+
+    protected static ExpressionElement getExpressionElement(JSIExpressionElementType jsiExpressionElementType) {
+       return new ExpressionElement(jsiExpressionElementType.getStep());
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

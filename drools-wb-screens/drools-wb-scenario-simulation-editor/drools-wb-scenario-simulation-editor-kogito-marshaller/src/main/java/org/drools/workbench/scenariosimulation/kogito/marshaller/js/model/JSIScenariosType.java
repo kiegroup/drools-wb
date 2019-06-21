@@ -49,7 +49,6 @@ public class JSIScenariosType {
 public static native JSIScenariosType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ScenariosType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

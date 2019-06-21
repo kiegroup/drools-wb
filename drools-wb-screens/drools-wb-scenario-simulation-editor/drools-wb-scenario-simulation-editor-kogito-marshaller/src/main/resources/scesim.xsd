@@ -21,18 +21,22 @@
       <xs:element type="xs:string" name="name" minOccurs="0"/>
       <xs:element type="xs:string" name="className" minOccurs="0"/>
     </xs:sequence>
+    <xs:attribute type="xs:string" name="reference"/>
   </xs:complexType>
   <xs:complexType name="FactMappingType">
     <xs:sequence>
       <xs:element type="expressionElementsType" name="expressionElements"/>
       <xs:element type="expressionIdentifierType" name="expressionIdentifier"/>
-      <xs:element type="factIdentifierType" name="factIdentifier"/>
+      <xs:element name="factIdentifier" type="factIdentifierType"/>
       <xs:element type="xs:string" name="className"/>
       <xs:element type="xs:string" name="factAlias"/>
       <xs:element type="xs:string" name="expressionAlias" minOccurs="0"/>
       <xs:element type="xs:string" name="genericTypes" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+<!--  <xs:complexType name="factIdentifierReferenceType">-->
+<!--    <xs:attribute type="xs:string" name="reference"/>-->
+<!--  </xs:complexType>-->
   <xs:complexType name="factMappingsType">
     <xs:sequence>
       <xs:element type="FactMappingType" name="FactMapping" maxOccurs="unbounded" minOccurs="0"/>
@@ -53,17 +57,21 @@
       <xs:element type="xs:boolean" name="skipFromBuild" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="factIdentifierReferenceType">
-    <xs:attribute type="xs:string" name="reference"/>
-  </xs:complexType>
   <xs:complexType name="expressionIdentifierReferenceType">
     <xs:attribute type="xs:string" name="reference"/>
   </xs:complexType>
+  <xs:complexType name="rawValueType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="class"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
   <xs:complexType name="FactMappingValueType">
     <xs:sequence>
-      <xs:element type="factIdentifierReferenceType" name="factIdentifier"/>
+      <xs:element type="factIdentifierType" name="factIdentifier"/>
       <xs:element type="expressionIdentifierReferenceType" name="expressionIdentifier"/>
-      <xs:element type="xs:string" name="rawValue"/>
+      <xs:element type="rawValueType" name="rawValue" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="factMappingValuesType">
@@ -71,10 +79,13 @@
       <xs:element type="FactMappingValueType" name="FactMappingValue" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="simulationDescriptorReferenceType">
+    <xs:attribute type="xs:string" name="reference"/>
+  </xs:complexType>
   <xs:complexType name="ScenarioType">
     <xs:sequence>
       <xs:element type="factMappingValuesType" name="factMappingValues"/>
-      <xs:element type="simulationDescriptorType" name="simulationDescriptor"/>
+      <xs:element type="simulationDescriptorReferenceType" name="simulationDescriptor"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="scenariosType">
@@ -100,7 +111,7 @@
   </xs:complexType>
   <xs:complexType name="importsType">
     <xs:sequence>
-      <xs:element type="wrappedImportsType" name="imports" minOccurs="0" />
+      <xs:element type="wrappedImportsType" name="imports" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -109,6 +120,6 @@
       <xs:element type="simulationType" name="simulation"/>
       <xs:element type="importsType" name="imports"/>
     </xs:sequence>
-    <xs:attribute type="xs:double" name="version"/>
+    <xs:attribute type="xs:string" name="version"/>
   </xs:complexType>
 </xs:schema>

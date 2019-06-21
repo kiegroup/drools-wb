@@ -33,7 +33,6 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExp
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
@@ -41,9 +40,11 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFac
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportsType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIRawValueType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenariosType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationDescriptorReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationDescriptorType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIWrappedImportsType;
@@ -57,6 +58,7 @@ public class ApiJSInteropConverter {
 
     public static JSIScenarioSimulationModelType getJSIScenarioSimulationModelType(ScenarioSimulationModel source) {
         JSIScenarioSimulationModelType toReturn = JSIScenarioSimulationModelType.newInstance();
+        toReturn.setVersion(source.getVersion());
         toReturn.setImports(getImports(source.getImports()));
         toReturn.setSimulation(getSimulation(source.getSimulation()));
         return toReturn;
@@ -139,22 +141,40 @@ public class ApiJSInteropConverter {
         factMappingValuesType.setFactMappingValue(jsiFactMappingValueTypes);
         for (int i = 0; i < unmodifiableFactMappingValues.size(); i++) {
             FactMappingValue factMappingValue = unmodifiableFactMappingValues.get(i);
-            final JSIFactMappingValueType factMappingValueType = Js.uncheckedCast(getFactMappingValue(factMappingValue, factMappings));
+            final JSIFactMappingValueType factMappingValueType = Js.uncheckedCast(getFactMappingValue(factMappingValue, factMappings, i > 0));
             jsiFactMappingValueTypes.setAt(i, factMappingValueType);
+        }
+        JSISimulationDescriptorReferenceType jsiSimulationDescriptorReferenceType = Js.uncheckedCast(getSimulationDescriptorReference());
+        toReturn.setSimulationDescriptor(jsiSimulationDescriptorReferenceType);
+        return toReturn;
+    }
+
+    protected static JSISimulationDescriptorReferenceType getSimulationDescriptorReference() {
+        JSISimulationDescriptorReferenceType toReturn = JSISimulationDescriptorReferenceType.newInstance();
+        toReturn.setReference("../../../simulationDescriptor");
+        return toReturn;
+    }
+
+    protected static JSIFactMappingValueType getFactMappingValue(FactMappingValue source, List<FactMapping> factMappings, boolean withRawValue) {
+        JSIFactMappingValueType toReturn = JSIFactMappingValueType.newInstance();
+        final JSIExpressionIdentifierReferenceType jsiExpressionIdentifierReferenceType = Js.uncheckedCast(getJSIExpressionIdentifierReferenceType(source.getExpressionIdentifier(), factMappings));
+        toReturn.setExpressionIdentifier(jsiExpressionIdentifierReferenceType);
+        final JSIFactIdentifierType jsiFactIdentifierReferenceType = Js.uncheckedCast(getFactIdentifier(source.getFactIdentifier(), factMappings));
+        toReturn.setFactIdentifier(jsiFactIdentifierReferenceType);
+        if (withRawValue) {
+            Object rawValue = source.getRawValue();
+            if (rawValue != null) {
+                JSIRawValueType jsiRawValueType = Js.uncheckedCast(getRawValueReference(rawValue));
+                toReturn.setRawValue(jsiRawValueType);
+            }
         }
         return toReturn;
     }
 
-    protected static JSIFactMappingValueType getFactMappingValue(FactMappingValue source, List<FactMapping> factMappings) {
-        JSIFactMappingValueType toReturn = JSIFactMappingValueType.newInstance();
-        final JSIExpressionIdentifierReferenceType jsiExpressionIdentifierReferenceType = Js.uncheckedCast(getJSIExpressionIdentifierReferenceType(source.getExpressionIdentifier(), factMappings));
-        toReturn.setExpressionIdentifier(jsiExpressionIdentifierReferenceType);
-        final JSIFactIdentifierReferenceType jsiFactIdentifierReferenceType = Js.uncheckedCast(getJSIFactIdentifierReferenceType(source.getFactIdentifier(), factMappings));
-        toReturn.setFactIdentifier(jsiFactIdentifierReferenceType);
-        Object rawValue = source.getRawValue();
-        if (rawValue != null) {
-            toReturn.setRawValue(rawValue.toString());
-        }
+    protected static JSIRawValueType getRawValueReference(Object rawValue) {
+        JSIRawValueType toReturn = JSIRawValueType.newInstance();
+        toReturn.setClazz("string");
+        toReturn.setValue(rawValue.toString());
         return toReturn;
     }
 
@@ -201,12 +221,12 @@ public class ApiJSInteropConverter {
         return toReturn;
     }
 
-    protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier source) {
-        JSIFactIdentifierType toReturn = JSIFactIdentifierType.newInstance();
-        toReturn.setClassName(source.getClassName());
-        toReturn.setName(source.getName());
-        return toReturn;
-    }
+//    protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier source) {
+//        JSIFactIdentifierType toReturn = JSIFactIdentifierType.newInstance();
+//        toReturn.setClassName(source.getClassName());
+//        toReturn.setName(source.getName());
+//        return toReturn;
+//    }
 
     protected static JSIExpressionIdentifierReferenceType getJSIExpressionIdentifierReferenceType(ExpressionIdentifier expressionIdentifier, List<FactMapping> factMappings) {
         JSIExpressionIdentifierReferenceType toReturn = JSIExpressionIdentifierReferenceType.newInstance();
@@ -215,6 +235,7 @@ public class ApiJSInteropConverter {
         optionalIndex.ifPresent(integer -> {
             String replacement = "";
             if (integer > 0) {
+                integer += 1;
                 replacement = "[" + integer + "]";
             }
             String reference = referenceTemplate.replace("$s", replacement);
@@ -223,18 +244,30 @@ public class ApiJSInteropConverter {
         return toReturn;
     }
 
-    protected static JSIFactIdentifierReferenceType getJSIFactIdentifierReferenceType(FactIdentifier factIdentifier, List<FactMapping> factMappings) {
-        JSIFactIdentifierReferenceType toReturn = JSIFactIdentifierReferenceType.newInstance();
+    protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier factIdentifier) {
+        JSIFactIdentifierType toReturn = JSIFactIdentifierType.newInstance();
+        toReturn.setName(factIdentifier.getName());
+        toReturn.setClassName(factIdentifier.getClassName());
+        return toReturn;
+    }
+
+    protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier factIdentifier, List<FactMapping> factMappings) {
+        JSIFactIdentifierType toReturn;
         String referenceTemplate = "../../../../../simulationDescriptor/factMappings/FactMapping$s/factIdentifier";
         final Optional<Integer> optionalIndex = factMappings.stream().filter(factMapping -> factMapping.getFactIdentifier().equals(factIdentifier)).findFirst().map(factMappings::indexOf);
-        optionalIndex.ifPresent(integer -> {
+        if (optionalIndex.isPresent()) {
+            toReturn = JSIFactIdentifierType.newInstance();
+            int integer = optionalIndex.get();
             String replacement = "";
             if (integer > 0) {
+                integer += 1;
                 replacement = "[" + integer + "]";
             }
             String reference = referenceTemplate.replace("$s", replacement);
             toReturn.setReference(reference);
-        });
+        } else {
+            toReturn = getFactIdentifier(factIdentifier);
+        }
         return toReturn;
     }
 

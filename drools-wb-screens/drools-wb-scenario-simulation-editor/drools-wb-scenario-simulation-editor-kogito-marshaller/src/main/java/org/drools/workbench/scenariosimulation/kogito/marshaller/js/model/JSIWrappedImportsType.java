@@ -49,7 +49,6 @@ public class JSIWrappedImportsType {
 public static native JSIWrappedImportsType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.WrappedImportsType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

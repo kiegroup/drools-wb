@@ -48,7 +48,6 @@ public class JSIExpressionIdentifierReferenceType {
 public static native JSIExpressionIdentifierReferenceType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ExpressionIdentifierReferenceType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

@@ -67,7 +67,7 @@ public class JSIScenarioSimulationModelType {
      *      <b>version</<b>
      */
     @JsProperty(name = "version")
-    public final native Double getVersion();
+    public final native String getVersion();
 
     /**
      * Setter for <b>version</b>
@@ -76,7 +76,7 @@ public class JSIScenarioSimulationModelType {
      *      <b>version</<b> to set.
      */
     @JsProperty(name = "version")
-    public final native void setVersion(Double version);
+    public final native void setVersion(String version);
     
 
 
@@ -84,7 +84,6 @@ public class JSIScenarioSimulationModelType {
 public static native JSIScenarioSimulationModelType newInstance() /*-{
         var json = "{\"TYPE_NAME\": \"SCESIM.ScenarioSimulationModelType\"}";
         var retrieved = JSON.parse(json)
-        console.log("retrieved " + retrieved);
         return retrieved
     }-*/;
 }

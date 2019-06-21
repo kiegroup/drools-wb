@@ -212,11 +212,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected SCESIMUnmarshallCallback getJSInteropUnmarshallConvert() {
         return scesim -> {
             this.scesimContainer = scesim;
-            GWT.log(this.toString() + " SCESIMUnmarshallCallback");
             final JSIScenarioSimulationModelType scenarioSimulationModelType = scesim.getValue();
-//            GWT.log("unmarshall scenarioSimulationModelType.toString() " + scenarioSimulationModelType.toString());
-//            GWT.log("unmarshall scenarioSimulationModelType.getClass() " + scenarioSimulationModelType.getClass());
-//            GWT.log("unmarshall scenarioSimulationModelType.getVersion() " + scenarioSimulationModelType.getVersion());
             final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
             getModelSuccessCallbackMethod(scenarioSimulationModel);
         };
