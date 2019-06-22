@@ -41,16 +41,13 @@ public class ScenarioSimulationDropdownView extends KieAssetsDropdownView implem
         return ElementWrapperWidget.getWidget(getElement());
     }
 
-    public void  selectValue(String value) {
+    public void selectValue(String value) {
         dropdown().selectpicker("val", value);
         dropdown().selectpicker("show");
     }
 
-    /* How to remove "Select" item
-    @Override
-    public void clear() {
+    public void clearWithoutSelectItem() {
         removeChildren(nativeSelect);
-        //nativeSelect.appendChild(selectOption());
         refreshSelectPicker();
-    } */
+    }
 }

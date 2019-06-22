@@ -121,10 +121,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnName().setValue(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
-        scenarioSimulationDropdown.loadAssets();
-        if (simulationDescriptor.getDmnFilePath() != null) {
-            scenarioSimulationDropdown.selectValue(simulationDescriptor.getDmnFilePath());
-        }
+        scenarioSimulationDropdown.loadAssetsAndSelectValue(simulationDescriptor.getDmnFilePath());
     }
 
     protected void saveRuleSettings() {
