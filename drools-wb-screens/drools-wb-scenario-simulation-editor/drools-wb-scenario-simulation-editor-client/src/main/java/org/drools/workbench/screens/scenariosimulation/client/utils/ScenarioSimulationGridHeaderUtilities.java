@@ -155,7 +155,7 @@ public class ScenarioSimulationGridHeaderUtilities {
     public static List<String> getPropertyNameElements(final ScenarioGridModel scenarioGridModel, final int columnIndex) {
         final Optional<Simulation> optionalSimulation = scenarioGridModel.getSimulation();
         return optionalSimulation.map(simulation -> {
-            final FactMapping factMapping = scenarioGridModel.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             if (scenarioGridModel.isSimpleType(factMapping.getFactAlias())) {
                 return Arrays.asList(ConstantHolder.VALUE);
             } else {
