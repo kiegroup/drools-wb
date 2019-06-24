@@ -28,6 +28,7 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
 
     String value;
+    boolean addSelectItem = true;
 
     @Inject
     public ScenarioSimulationDropdown(ScenarioSimulationDropdownView view, ScenarioSimulationAssetsDropdownProvider dataProvider) {
@@ -38,9 +39,22 @@ public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
         return ((ScenarioSimulationDropdownView) view).asWidget();
     }
 
-    public void loadAssetsAndSelectValue(String value) {
-        super.loadAssets();
+    public void setAddSelectItem(boolean addSelectedItem) {
+        this.addSelectItem = addSelectedItem;
+    }
+
+    public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public void clear() {
+        if (!addSelectItem) {
+            ((ScenarioSimulationDropdownView) view).clearWithoutSelectItem();
+        } else {
+            super.clear();
+        }
+        value = null;
     }
 
     @Override
@@ -54,19 +68,7 @@ public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
         }
     }
 
-    @Override
-    public void clear() {
-        // TODO change the condition here
-        if (value != null && !value.isEmpty() && isValuePresentInKieAssets(value)) {
-            ((ScenarioSimulationDropdownView) view).clearWithoutSelectItem();
-        } else {
-            super.clear();
-        }
-        value = null;
-    }
-
-    private boolean isValuePresentInKieAssets(String value) {
+    protected boolean isValuePresentInKieAssets(String value) {
         return kieAssets.stream().anyMatch(asset -> asset.getValue().equals(value));
     }
-
 }

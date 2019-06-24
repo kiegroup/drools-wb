@@ -66,6 +66,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipSimulation());
         view.setupDropdown(scenarioSimulationDropdown.asWidget().asWidget().getElement());
         scenarioSimulationDropdown.init();
+        scenarioSimulationDropdown.setAddSelectItem(false);
     }
 
     @Override
@@ -121,7 +122,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnName().setValue(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
-        scenarioSimulationDropdown.loadAssetsAndSelectValue(simulationDescriptor.getDmnFilePath());
+        scenarioSimulationDropdown.setValue(simulationDescriptor.getDmnFilePath());
+        scenarioSimulationDropdown.loadAssets();
     }
 
     protected void saveRuleSettings() {
