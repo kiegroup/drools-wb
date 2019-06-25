@@ -9,11 +9,11 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>drools-wb-scenario-simulation-kogito-tester</artifactId>
+  <artifactId>drools-wb-scenario-simulation-kogito-testing</artifactId>
   <packaging>war</packaging>
 
-  <name>Drools Workbench - Scenario Simulation Editor - Kogito Tester (Development) webapp</name>
-  <description>Drools Workbench - Scenario Simulation Editor - Kogito Tester (Development) webapp</description>
+  <name>Drools Workbench - Scenario Simulation Editor - Kogito Testing (Development) webapp</name>
+  <description>Drools Workbench - Scenario Simulation Editor - Kogito Testing (Development) webapp</description>
 
   <properties>
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
