@@ -35,7 +35,6 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SC
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.SCESIM;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -181,7 +180,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected void makeMenuBar() {
         GWT.log(this.toString() + " makeMenuBar");
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", this::getContent));
+//        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", this::getContent));
 //        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::createNewAsset));
     }
 

@@ -1,0 +1,28 @@
+<div class="modal fade" id="confirmation-delete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <span class="pficon pficon-close"></span>
+                </button>
+                <h4 class="modal-title" data-field="main-title"></h4>
+            </div>
+            <div class="modal-body">
+                <div style="margin-left: 3em;">
+                    <h2>Choose Type</h2>
+                    <div>
+                        <input type="radio" name="scesimType" data-field="rule-button" value="rule">Rule<br>
+                        <input type="radio" name="scesimType" data-field="dmn-button" value="dmn">DMN<br>
+                    </div>
+                </div>
+                <div data-field="dmn-assets" hidden="true">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-field="cancel-button"></button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" data-field="ok-button"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
