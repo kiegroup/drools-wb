@@ -39,7 +39,7 @@ public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdow
 
     public void loadAssets(String value) {
         this.value = value;
-        loadAssets();
+        super.loadAssets();
     }
 
     public IsWidget asWidget() {
@@ -60,6 +60,7 @@ public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdow
             view.initialize();
             onMissingValueHandler.execute();
         }
+        value = null;
     }
 
     protected boolean isValuePresentInKieAssets(String value) {

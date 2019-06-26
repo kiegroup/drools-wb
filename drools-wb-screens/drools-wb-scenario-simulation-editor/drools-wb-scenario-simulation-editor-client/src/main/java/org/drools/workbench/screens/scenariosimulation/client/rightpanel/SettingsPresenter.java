@@ -74,6 +74,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getScenarioType().setInnerText(scenarioType.name());
         view.getFileName().setValue(fileName);
         view.getSkipFromBuild().setChecked(simulationDescriptor.isSkipFromBuild());
+        view.getSaveButton().setDisabled(false);
         switch (scenarioType) {
             case RULE:
                 setRuleSettings(simulationDescriptor);
