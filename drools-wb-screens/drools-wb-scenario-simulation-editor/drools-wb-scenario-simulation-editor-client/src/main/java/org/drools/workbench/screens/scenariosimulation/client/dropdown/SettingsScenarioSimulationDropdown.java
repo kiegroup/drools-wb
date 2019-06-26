@@ -28,7 +28,7 @@ import org.uberfire.mvp.Command;
 @Dependent
 public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
 
-    protected String value;
+    protected String currentValue;
     protected Command onMissingValueHandler = () -> {/*Nothing/*/};
 
     @Inject
@@ -37,8 +37,12 @@ public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdow
         super(view, dataProvider);
     }
 
-    public void loadAssets(String value) {
-        this.value = value;
+    /**
+     * It loads the DMN assets and it sets currentValue variable.
+     * @param currentValue
+     */
+    public void loadAssets(String currentValue) {
+        this.currentValue = currentValue;
         super.loadAssets();
     }
 
@@ -54,15 +58,20 @@ public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdow
     protected void assetListConsumerMethod(final List<KieAssetsDropdownItem> assetList) {
         assetList.forEach(this::addValue);
         view.refreshSelectPicker();
-        if (isValuePresentInKieAssets(value)) {
-            ((SettingsScenarioSimulationDropdownView) view).initialize(value);
+        if (isValuePresentInKieAssets(currentValue)) {
+            ((SettingsScenarioSimulationDropdownView) view).initialize(currentValue);
         } else {
             view.initialize();
             onMissingValueHandler.execute();
         }
-        value = null;
+        this.currentValue = null;
     }
 
+    /**
+     * It navigate over the kieAssets list to check if a value is present.
+     * @param value
+     * @return
+     */
     protected boolean isValuePresentInKieAssets(String value) {
         return kieAssets.stream().anyMatch(asset -> asset.getValue().equals(value));
     }
