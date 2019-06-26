@@ -122,7 +122,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnName().setValue(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
-        view.getDmnFilePathErrorLabel().setInnerText(null);
+        view.getDmnFilePathErrorLabel().setInnerText("");
         settingsScenarioSimulationDropdown.registerOnMissingValueHandler(this::setDmnErrorPath);
         settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateDmnPath);
         settingsScenarioSimulationDropdown.loadAssets(simulationDescriptor.getDmnFilePath());
@@ -138,12 +138,21 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
        simulationDescriptor.setDmnFilePath(getCleanValue(() -> value));
     }
 
+    /**
+     * It sets an error message to <code>dmnPathErrorLabel</code> span element and it disables the <code>saveButton</code>
+     * This method should be called in case of INVALID DMN file path.
+     */
     protected void setDmnErrorPath() {
         view.getDmnFilePathErrorLabel().setInnerText(
                 ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(simulationDescriptor.getDmnFilePath()));
         view.getSaveButton().setDisabled(true);
     }
 
+    /**
+     * It checks if a user selected DMN path is valid or not. If valid, it enables the <code>saveButton</code>
+     * and it clears the <code>dmnPathErrorLabel</code> span element. If not valid, the otherwise.
+     * This method should be called everytime a value is selected in <code>{@link SettingsScenarioSimulationDropdown}</code> widget
+     */
     protected void validateDmnPath() {
         final Optional<KieAssetsDropdownItem> value = settingsScenarioSimulationDropdown.getValue();
         String selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
@@ -152,7 +161,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
             view.getDmnFilePathErrorLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset());
             view.getSaveButton().setDisabled(true);
         } else {
-            view.getDmnFilePathErrorLabel().setInnerText(null);
+            view.getDmnFilePathErrorLabel().setInnerText("");
             view.getSaveButton().setDisabled(false);
         }
     }
