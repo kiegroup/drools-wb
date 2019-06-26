@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.Style;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.client.annotations.WorkbenchScreen;
@@ -47,7 +47,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     protected Command saveCommand;
 
-    protected ScenarioSimulationDropdown scenarioSimulationDropdown;
+    protected SettingsScenarioSimulationDropdown settingsScenarioSimulationDropdown;
 
     public SettingsPresenter() {
         //Zero argument constructor for CDI
@@ -55,18 +55,17 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     @Inject
-    public SettingsPresenter(SettingsView view, ScenarioSimulationDropdown scenarioSimulationDropdown) {
+    public SettingsPresenter(SettingsView view, SettingsScenarioSimulationDropdown settingsScenarioSimulationDropdown) {
         super(view);
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
-        this.scenarioSimulationDropdown = scenarioSimulationDropdown;
+        this.settingsScenarioSimulationDropdown = settingsScenarioSimulationDropdown;
     }
 
     @PostConstruct
     public void init() {
         view.getSkipFromBuildLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.skipSimulation());
-        view.setupDropdown(scenarioSimulationDropdown.asWidget().asWidget().getElement());
-        scenarioSimulationDropdown.init();
-        scenarioSimulationDropdown.setAddSelectItem(false);
+        view.setupDropdown(settingsScenarioSimulationDropdown.asWidget().asWidget().getElement());
+        settingsScenarioSimulationDropdown.init();
     }
 
     @Override
@@ -107,7 +106,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void reset() {
         view.reset();
-        scenarioSimulationDropdown.clear();
+        settingsScenarioSimulationDropdown.clear();
     }
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
@@ -122,8 +121,10 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnName().setValue(Optional.ofNullable(simulationDescriptor.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(simulationDescriptor.getDmnNamespace()).orElse(""));
-        scenarioSimulationDropdown.setValue(simulationDescriptor.getDmnFilePath());
-        scenarioSimulationDropdown.loadAssets();
+        view.getDmnFilePathErrorLabel().setInnerText(null);
+        settingsScenarioSimulationDropdown.registerOnMissingValueHandler(this::setDmnErrorPath);
+        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateDmnPath);
+        settingsScenarioSimulationDropdown.loadAssets(simulationDescriptor.getDmnFilePath());
     }
 
     protected void saveRuleSettings() {
@@ -132,8 +133,27 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     protected void saveDMNSettings() {
-       String value = scenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse("");
+       String value = settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse("");
        simulationDescriptor.setDmnFilePath(getCleanValue(() -> value));
+    }
+
+    protected void setDmnErrorPath() {
+        view.getDmnFilePathErrorLabel().setInnerText(
+                ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(simulationDescriptor.getDmnFilePath()));
+        view.getSaveButton().setDisabled(true);
+    }
+
+    protected void validateDmnPath() {
+        final Optional<KieAssetsDropdownItem> value = settingsScenarioSimulationDropdown.getValue();
+        String selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
+        boolean isValid = selectedPath != null && !selectedPath.isEmpty();
+        if (!isValid) {
+            view.getDmnFilePathErrorLabel().setInnerText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset());
+            view.getSaveButton().setDisabled(true);
+        } else {
+            view.getDmnFilePathErrorLabel().setInnerText(null);
+            view.getSaveButton().setDisabled(false);
+        }
     }
 
     private String getCleanValue(Supplier<String> supplier) {

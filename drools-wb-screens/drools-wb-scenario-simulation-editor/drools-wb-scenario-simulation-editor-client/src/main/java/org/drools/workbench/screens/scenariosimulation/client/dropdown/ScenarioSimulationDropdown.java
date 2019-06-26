@@ -15,20 +15,14 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
-import java.util.List;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
-import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 @Dependent
 public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
-
-    String value;
-    boolean addSelectItem = true;
 
     @Inject
     public ScenarioSimulationDropdown(ScenarioSimulationDropdownView view, ScenarioSimulationAssetsDropdownProvider dataProvider) {
@@ -37,38 +31,5 @@ public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
 
     public IsWidget asWidget() {
         return ((ScenarioSimulationDropdownView) view).asWidget();
-    }
-
-    public void setAddSelectItem(boolean addSelectedItem) {
-        this.addSelectItem = addSelectedItem;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public void clear() {
-        if (!addSelectItem) {
-            ((ScenarioSimulationDropdownView) view).clearWithoutSelectItem();
-        } else {
-            super.clear();
-        }
-        value = null;
-    }
-
-    @Override
-    protected void assetListConsumerMethod(final List<KieAssetsDropdownItem> assetList) {
-        assetList.forEach(this::addValue);
-        view.refreshSelectPicker();
-        if (value != null && !value.isEmpty() && isValuePresentInKieAssets(value)) {
-            ((ScenarioSimulationDropdownView) view).selectValue(value);
-        } else {
-            view.initialize();
-        }
-    }
-
-    protected boolean isValuePresentInKieAssets(String value) {
-        return kieAssets.stream().anyMatch(asset -> asset.getValue().equals(value));
     }
 }

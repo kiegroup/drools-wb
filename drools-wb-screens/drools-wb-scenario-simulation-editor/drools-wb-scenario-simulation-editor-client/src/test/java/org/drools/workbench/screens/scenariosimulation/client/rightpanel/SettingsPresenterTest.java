@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     private Command saveCommandMock;
 
     @Mock
-    private ScenarioSimulationDropdown scenarioSimulationDropdownMock;
+    private SettingsScenarioSimulationDropdown settingsScenarioSimulationDropdownMock;
 
     @Before
     public void setup() {
@@ -85,10 +85,10 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(simulationDescriptorMock.getDmnNamespace()).thenReturn(DMN_NAMESPACE);
         when(simulationDescriptorMock.getDmnName()).thenReturn(DMN_NAME);
 
-        this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock, scenarioSimulationDropdownMock) {
+        this.settingsPresenter = spy(new SettingsPresenter(settingsViewMock, settingsScenarioSimulationDropdownMock) {
             {
                 this.simulationDescriptor = simulationDescriptorMock;
-                this.scenarioSimulationDropdown = scenarioSimulationDropdownMock;
+                this.settingsScenarioSimulationDropdown = settingsScenarioSimulationDropdownMock;
                 this.saveCommand = saveCommandMock;
             }
         });
@@ -204,7 +204,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(settingsViewMock, times(1)).getDmnSettings();
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         /*verify(settingsViewMock, times(1)).getDmnFilePath();
-        verify(dmnFilePathMock, times(1)).setValue(eq(DMN_FILE_PATH)); */
+        verify(dmnFilePathMock, times(1)).loadAssets(eq(DMN_FILE_PATH)); */
         verify(settingsViewMock, times(1)).getDmnName();
         verify(dmnNameMock, times(1)).setValue(eq(DMN_NAME));
         verify(settingsViewMock, times(1)).getDmnNamespace();

@@ -70,6 +70,9 @@ public class SettingsViewImpl
     @DataField("dmnFilePathPlaceholder")
     protected DivElement dmnFilePathPlaceholder = Document.get().createDivElement();
 
+    @DataField("dmnFilePathErrorLabel")
+    protected SpanElement dmnFilePathErrorLabel = Document.get().createSpanElement();
+
     @DataField("dmnNamespaceLabel")
     protected LabelElement dmnNamespaceLabel = Document.get().createLabelElement();
 
@@ -115,9 +118,11 @@ public class SettingsViewImpl
         fileName.setValue("");
         dmnName.setValue("");
         dmnNamespace.setValue("");
+        dmnFilePathErrorLabel.setInnerText("");
         skipFromBuild.setChecked(false);
         dmnSettings.getStyle().setDisplay(Style.Display.NONE);
         ruleSettings.getStyle().setDisplay(Style.Display.NONE);
+        saveButton.setDisabled(false);
     }
 
     @Override
@@ -168,6 +173,11 @@ public class SettingsViewImpl
     @Override
     public DivElement getDmnFilePathPlaceholder() {
         return dmnFilePathPlaceholder;
+    }
+
+    @Override
+    public SpanElement getDmnFilePathErrorLabel() {
+        return dmnFilePathErrorLabel;
     }
 
     @Override

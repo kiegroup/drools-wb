@@ -28,16 +28,27 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 
 @Dependent
 @Templated
-public class ScenarioSimulationDropdownView extends KieAssetsDropdownView implements ScenarioSimulationDropdown.View {
+public class SettingsScenarioSimulationDropdownView extends KieAssetsDropdownView implements ScenarioSimulationDropdown.View {
 
     @Inject
-    public ScenarioSimulationDropdownView(HTMLSelectElement nativeSelect,
-                                          HTMLOptionElement htmlOptionElement,
-                                          TranslationService translationService) {
+    public SettingsScenarioSimulationDropdownView(HTMLSelectElement nativeSelect,
+                                                  HTMLOptionElement htmlOptionElement,
+                                                  TranslationService translationService) {
         super(nativeSelect, htmlOptionElement, translationService);
     }
 
     public IsWidget asWidget() {
         return ElementWrapperWidget.getWidget(getElement());
+    }
+
+    public void initialize(String value) {
+        dropdown().selectpicker("val", value);
+        dropdown().selectpicker("show");
+    }
+
+    @Override
+    public void clear() {
+        removeChildren(nativeSelect);
+        refreshSelectPicker();
     }
 }

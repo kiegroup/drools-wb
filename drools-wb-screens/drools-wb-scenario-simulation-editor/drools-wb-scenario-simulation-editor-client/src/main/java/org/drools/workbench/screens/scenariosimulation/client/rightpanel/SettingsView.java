@@ -60,6 +60,8 @@ public interface SettingsView
 
     DivElement getDmnFilePathPlaceholder();
 
+    SpanElement getDmnFilePathErrorLabel();
+
     LabelElement getDmnNamespaceLabel();
 
     InputElement getDmnNamespace();
