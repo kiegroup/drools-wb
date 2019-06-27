@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -56,13 +58,13 @@ public class EnableTestToolsCommandTest extends AbstractScenarioSimulationComman
     @Test
     public void executeWithoutFactName() {
         scenarioSimulationContextLocal.setTestToolsPresenter(testToolsPresenterMock);
-        scenarioSimulationContextLocal.getStatus().setFilterTerm(FACT_NAME);
+        scenarioSimulationContextLocal.getStatus().setFilterTerm(null);
         scenarioSimulationContextLocal.getStatus().setPropertyNameElements(null);
         scenarioSimulationContextLocal.getStatus().setNotEqualsSearch(true);
         command.execute(scenarioSimulationContextLocal);
         verify(scenarioSimulationEditorPresenterMock, times(1)).expandToolsDock();
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadTestTools(eq(false));
-        verify(testToolsPresenterMock, never()).onEnableEditorTab(any(), any(), any());
-        verify(testToolsPresenterMock, any()).onEnableEditorTab();
+        verify(testToolsPresenterMock, times(1)).onEnableEditorTab();
+        verify(testToolsPresenterMock, never()).onEnableEditorTab(anyString(), any(), anyBoolean());
     }
 }
