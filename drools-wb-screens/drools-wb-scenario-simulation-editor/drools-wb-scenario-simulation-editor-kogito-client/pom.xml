@@ -13,8 +13,8 @@
   <artifactId>drools-wb-scenario-simulation-editor-kogito-client</artifactId>
   <packaging>jar</packaging>
 
-  <name>Drools Workbench - Scenario Simulation Editor - Kogito package</name>
-  <description>Drools Workbench - Scenario Simulation Editor - Kogito package</description>
+  <name>Drools Workbench - Scenario Simulation Editor - Kogito specific client</name>
+  <description>Drools Workbench - Scenario Simulation Editor - Kogito specific client</description>
 
   <properties>
     <java.module.name>org.drools.wb.scenariosimulation.editor.kogito</java.module.name>
