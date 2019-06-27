@@ -264,7 +264,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void expandToolsDock() {
         presenter.expandToolsDock();
-        verify(scenarioSimulationDocksHandlerMock, never()).expandToolsDock();
+        verify(scenarioSimulationDocksHandlerMock, times(1)).expandToolsDock();
     }
 
     @Test
