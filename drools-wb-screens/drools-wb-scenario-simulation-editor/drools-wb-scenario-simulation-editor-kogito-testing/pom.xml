@@ -19,7 +19,7 @@
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
     <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
     <version.thorntail>2.4.0.Final</version.thorntail>
-    <gwt.helper.includes>Client,Kogito,Marshaller</gwt.helper.includes>
+    <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
     <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
   </properties>
@@ -364,6 +364,7 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -592,6 +593,7 @@
       <dependency>
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
+        <scope>provided</scope>
         <version>${version.org.kie}</version>
       </dependency>
 
@@ -640,7 +642,7 @@
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
           <extraJvmArgs>-Xmx8G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
-          <module>org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationEditorKogitoTesting</module>
+          <module>org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoTesting</module>
           <logLevel>TRACE</logLevel>
           <noServer>false</noServer>
           <server>org.jboss.errai.cdi.server.gwt.EmbeddedWildFlyLauncher</server>

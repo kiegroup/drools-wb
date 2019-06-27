@@ -20,29 +20,30 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.core.client.GWT;
+import elemental2.dom.Event;
+import elemental2.dom.EventListener;
 import elemental2.dom.HTMLDivElement;
+import elemental2.dom.HTMLInputElement;
+import elemental2.dom.InputEvent;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.NewScenarioSimulationDropdown;
-import org.jboss.errai.common.client.dom.MouseEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.jboss.errai.ui.shared.api.annotations.EventHandler;
-import org.jboss.errai.ui.shared.api.annotations.ForEvent;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
+public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup,
+                                                                             EventListener {
 
     @Inject
     @DataField("rule-button")
-    protected RadioButton ruleButton;
+    protected HTMLInputElement ruleButton;
 
     @Inject
     @DataField("dmn-button")
-    protected RadioButton dmnButton;
+    protected HTMLInputElement dmnButton;
 
     @Inject
     @DataField("dmn-assets")
@@ -65,6 +66,7 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
             final Optional<KieAssetsDropdownItem> value = newScenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
+        ruleButton.addEventListener("InputEvent", this);
     }
 
     @Override
@@ -77,23 +79,22 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
         return selectedPath;
     }
 
-    @EventHandler("rule-button")
-    public void onRuleClick(final @ForEvent("click") MouseEvent event) {
-        selectedType= ScenarioSimulationModel.Type.RULE;
-        divElement.setAttribute("hidden", true);
+    @Override
+    public void handleEvent(Event evt) {
+        GWT.log("handleEvent " + evt);
+        if (evt instanceof InputEvent) {
+            GWT.log("InputEvent " + evt);
+            boolean hideDMNDropdown = true;
+            if (ruleButton.checked) {
+                selectedType = ScenarioSimulationModel.Type.RULE;
+            } else if (dmnButton.checked) {
+                selectedType = ScenarioSimulationModel.Type.DMN;
+                hideDMNDropdown = false;
+                newScenarioSimulationDropdown.init();
+            } else {
+                selectedType = null;
+            }
+            divElement.setAttribute("hidden", hideDMNDropdown);
+        }
     }
-
-    @EventHandler("dmn-button")
-    public void onCancelClick(final @ForEvent("click") MouseEvent event) {
-        selectedType= ScenarioSimulationModel.Type.DMN;
-        divElement.setAttribute("hidden", false);
-        newScenarioSimulationDropdown.init();
-    }
-
-
-
-
-
-
-
 }

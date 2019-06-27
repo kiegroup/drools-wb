@@ -50,6 +50,7 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen implements ScenarioSimu
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
 
+
     private PlaceManager placeManager;
 
     public ScenarioSimulationEditorKogitoRuntimeScreen() {

@@ -54,6 +54,7 @@ import org.uberfire.backend.vfs.impl.ObservablePathImpl;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
@@ -152,6 +153,10 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         return super.getWidget();
     }
 
+    public FileMenuBuilder getFileMenuBuilder() {
+        return fileMenuBuilder;
+    }
+
     public void setMenus(final Consumer<Menus> menusConsumer) {
         GWT.log(this.toString() + " setMenus " + menusConsumer);
         menusConsumer.accept(getMenus());
@@ -180,8 +185,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected void makeMenuBar() {
         GWT.log(this.toString() + " makeMenuBar");
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
-//        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", this::getContent));
-//        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::createNewAsset));
     }
 
     @Override

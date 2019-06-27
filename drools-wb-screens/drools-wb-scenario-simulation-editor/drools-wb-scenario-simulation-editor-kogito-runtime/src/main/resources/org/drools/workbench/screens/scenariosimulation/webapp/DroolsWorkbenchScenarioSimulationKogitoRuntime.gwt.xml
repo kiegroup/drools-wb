@@ -22,7 +22,7 @@
   <source path="client"/>
   <source path="shared"/>
 
-  <inherits name="org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationEditorKogitoWebappBase" />
+  <inherits name="org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoWebappBase" />
 
 
 

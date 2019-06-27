@@ -61,8 +61,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
     @Inject
     private NewScesimPopupPresenter newScesimPopupPresenter;
 
-    private FileMenuBuilder fileMenuBuilder;
-
     private PlaceManager placeManager;
 
     public ScenarioSimulationEditorKogitoTestingScreen() {
@@ -70,8 +68,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
     }
 
     @Inject
-    public ScenarioSimulationEditorKogitoTestingScreen(final FileMenuBuilder fileMenuBuilder, final PlaceManager placeManager) {
-        this.fileMenuBuilder = fileMenuBuilder;
+    public ScenarioSimulationEditorKogitoTestingScreen(final PlaceManager placeManager) {
         this.placeManager = placeManager;
     }
 
@@ -83,6 +80,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
     @OnStartup
     public void onStartup(final PlaceRequest place) {
         GWT.log(this.toString() + " onStartup " + place);
+        addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
     }
 
@@ -113,47 +111,35 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
     @WorkbenchMenu
     public void setMenus(final Consumer<Menus> menusConsumer) {
         GWT.log(this.toString() + " setMenus " + menusConsumer);
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::newFile));
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent()));
+
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
-//    @Override
-//    public Widget asWidget() {
-//        return scenarioSimulationEditorKogitoWrapper.asWidget().asWidget();
-//    }
-
     public void newFile() {
         GWT.log(this.toString() + " newFile");
-        Command createCommand = new Command() {
-            @Override
-            public void execute() {
-                final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
-                if (selectedType != null) {
-                    String fileName;
-                    switch (selectedType) {
-                        case DMN:
-                            fileName = newScesimPopupPresenter.getSelectedPath();
-                            break;
-                        case RULE:
-                        default:
-                            fileName = "newScesimRule";
-                    }
-                    scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile(fileName));
-                    newScesimPopupPresenter.hide();
+        Command createCommand = () -> {
+            final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
+            if (selectedType != null) {
+                String fileName;
+                switch (selectedType) {
+                    case DMN:
+                        fileName = newScesimPopupPresenter.getSelectedPath();
+                        break;
+                    case RULE:
+                    default:
+                        fileName = "newScesimRule";
                 }
+                scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile(fileName));
+                newScesimPopupPresenter.hide();
             }
         };
         newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
+    }
 
-
-//        placeManager.registerOnOpenCallback(  new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
-//                                            },
-//                                            () -> {
-//                                                scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimContent());
-//                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
-//                                            });
-
+    protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
+        GWT.log(this.toString() + " addTestingMenus ");
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::newFile));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent()));
     }
 
 //    public void goToScreen() {
