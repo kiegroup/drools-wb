@@ -19,20 +19,22 @@ import java.util.List;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
+@Named(SettingsScenarioSimulationDropdown.BEAN_NAME)
+public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdown {
+
+    final public static String BEAN_NAME = "SettingsDropdown";
 
     protected String currentValue;
     protected Command onMissingValueHandler = () -> {/*Nothing/*/};
 
     @Inject
-    public SettingsScenarioSimulationDropdown(SettingsScenarioSimulationDropdownView view,
+    public SettingsScenarioSimulationDropdown(@Named(SettingsScenarioSimulationDropdownView.BEAN_NAME) SettingsScenarioSimulationDropdownView view,
                                               ScenarioSimulationAssetsDropdownProvider dataProvider) {
         super(view, dataProvider);
     }
@@ -44,10 +46,6 @@ public class SettingsScenarioSimulationDropdown extends AbstractKieAssetsDropdow
     public void loadAssets(String currentValue) {
         this.currentValue = currentValue;
         super.loadAssets();
-    }
-
-    public IsWidget asWidget() {
-        return ((SettingsScenarioSimulationDropdownView) view).asWidget();
     }
 
     public void registerOnMissingValueHandler(final Command onMissingValueHandler) {

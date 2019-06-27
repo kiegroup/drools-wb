@@ -79,6 +79,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
         verify(fileNameMock, times(1)).setValue(eq(""));
         verify(dmnNameMock, times(1)).setValue(eq(""));
         verify(dmnNamespaceMock, times(1)).setValue(eq(""));
+        verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
         verify(skipFromBuildMock, times(1)).setChecked(eq(false));
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));

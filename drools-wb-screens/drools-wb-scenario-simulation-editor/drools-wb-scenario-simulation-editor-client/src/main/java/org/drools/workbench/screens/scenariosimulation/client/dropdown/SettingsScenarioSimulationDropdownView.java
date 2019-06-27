@@ -17,28 +17,25 @@ package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.HTMLOptionElement;
 import elemental2.dom.HTMLSelectElement;
-import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownView;
 
 @Dependent
-@Templated
-public class SettingsScenarioSimulationDropdownView extends KieAssetsDropdownView implements ScenarioSimulationDropdown.View {
+@Templated(value = "/org/kie/workbench/common/widgets/client/assets/dropdown/KieAssetsDropdownView.html")
+@Named(SettingsScenarioSimulationDropdownView.BEAN_NAME)
+public class SettingsScenarioSimulationDropdownView extends ScenarioSimulationDropdownView implements ScenarioSimulationDropdown.View {
+
+    final public static String BEAN_NAME = "SettingsDropdownView";
 
     @Inject
     public SettingsScenarioSimulationDropdownView(HTMLSelectElement nativeSelect,
                                                   HTMLOptionElement htmlOptionElement,
                                                   TranslationService translationService) {
         super(nativeSelect, htmlOptionElement, translationService);
-    }
-
-    public IsWidget asWidget() {
-        return ElementWrapperWidget.getWidget(getElement());
     }
 
     public void initialize(String value) {

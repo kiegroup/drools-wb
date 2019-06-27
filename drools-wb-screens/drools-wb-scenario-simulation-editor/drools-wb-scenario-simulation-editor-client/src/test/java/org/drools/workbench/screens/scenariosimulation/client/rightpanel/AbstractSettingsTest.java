@@ -74,6 +74,9 @@ abstract class AbstractSettingsTest {
     protected SpanElement dmnFilePathErrorLabelMock;
 
     @Mock
+    protected Style dmnFilePathErrorLabelStyleMock;
+
+    @Mock
     protected LabelElement dmnNamespaceLabelMock;
 
     @Mock
@@ -101,5 +104,6 @@ abstract class AbstractSettingsTest {
         when(dmnNameMock.getValue()).thenReturn(DMN_NAME);
         when(ruleSettingsMock.getStyle()).thenReturn(ruleSettingsStyleMock);
         when(dmnSettingsMock.getStyle()).thenReturn(dmnSettingsStyleMock);
+        when(dmnFilePathErrorLabelMock.getStyle()).thenReturn(dmnFilePathErrorLabelStyleMock);
     }
 }

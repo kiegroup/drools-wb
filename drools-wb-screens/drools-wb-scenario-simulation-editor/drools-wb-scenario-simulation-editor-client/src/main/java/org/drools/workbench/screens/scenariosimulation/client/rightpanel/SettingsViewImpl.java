@@ -118,6 +118,7 @@ public class SettingsViewImpl
         fileName.setValue("");
         dmnName.setValue("");
         dmnNamespace.setValue("");
+        dmnFilePathErrorLabel.getStyle().setDisplay(Style.Display.NONE);
         dmnFilePathErrorLabel.setInnerText("");
         skipFromBuild.setChecked(false);
         dmnSettings.getStyle().setDisplay(Style.Display.NONE);
