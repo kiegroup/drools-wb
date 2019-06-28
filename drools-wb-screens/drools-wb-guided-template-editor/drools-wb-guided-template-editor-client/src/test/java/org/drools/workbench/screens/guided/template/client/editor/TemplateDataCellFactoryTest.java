@@ -20,6 +20,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
+import org.drools.workbench.models.guided.template.shared.TemplateModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.mockito.Mock;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -71,6 +73,7 @@ public class TemplateDataCellFactoryTest {
         testedFactory.getCell(column);
 
         verify(testedFactory, never()).makeSelectionEnumCell(factType, factField, "==", dataType);
+        verify(testedFactory).makeTextCellWrapper();
     }
 
     @Test
@@ -88,5 +91,60 @@ public class TemplateDataCellFactoryTest {
         testedFactory.getCell(column);
 
         verify(testedFactory).makeSelectionEnumCell(factType, factField, "==", dataType);
+        verify(testedFactory, never()).makeTextCellWrapper();
+    }
+
+    @Test
+    public void testDoNotGetCellWhenEnumPresentIfDataTypeIsDefault() throws Exception {
+        final String factType = "org.kiegroup.Car";
+        final String factField = "color";
+        final String dataType = TemplateModel.DEFAULT_TYPE;
+
+        doReturn(true).when(oracle).hasEnums(factType, factField);
+        doReturn(factType).when(column).getFactType();
+        doReturn(factField).when(column).getFactField();
+        doReturn(dataType).when(column).getDataType();
+        doReturn("==").when(column).getOperator();
+
+        testedFactory.getCell(column);
+
+        verify(testedFactory, never()).makeSelectionEnumCell(anyString(), anyString(), anyString(), anyString());
+        verify(testedFactory).makeTextCellWrapper();
+    }
+
+    @Test
+    public void testGetCellForInteger() {
+        final String factType = "org.kiegroup.Car";
+        final String factField = "price";
+        final String dataType = DataType.TYPE_NUMERIC_INTEGER;
+        final String operator = ">";
+
+        doReturn(factType).when(column).getFactType();
+        doReturn(factField).when(column).getFactField();
+        doReturn(dataType).when(column).getDataType();
+        doReturn(operator).when(column).getOperator();
+
+        testedFactory.getCell(column);
+
+        verify(testedFactory, never()).makeSelectionEnumCell(factType, factField, operator, dataType);
+        verify(testedFactory, never()).makeTextCellWrapper();
+    }
+
+    @Test
+    public void testGetCellForListOperator() {
+        final String factType = "org.kiegroup.Car";
+        final String factField = "price";
+        final String dataType = DataType.TYPE_NUMERIC_INTEGER;
+        final String operator = "in";
+
+        doReturn(factType).when(column).getFactType();
+        doReturn(factField).when(column).getFactField();
+        doReturn(dataType).when(column).getDataType();
+        doReturn(operator).when(column).getOperator();
+
+        testedFactory.getCell(column);
+
+        verify(testedFactory, never()).makeSelectionEnumCell(factType, factField, operator, dataType);
+        verify(testedFactory).makeTextCellWrapper();
     }
 }

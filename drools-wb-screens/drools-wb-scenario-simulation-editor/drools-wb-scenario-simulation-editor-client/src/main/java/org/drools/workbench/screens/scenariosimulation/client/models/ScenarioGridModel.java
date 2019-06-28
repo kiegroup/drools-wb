@@ -682,6 +682,7 @@ public class ScenarioGridModel extends BaseGridData {
         if (!isSameInstanceType(columnIndex, headerName)) {
             throw new Exception(headerName + " is not the class of the current column.");
         }
+
     }
 
     /**
@@ -793,6 +794,10 @@ public class ScenarioGridModel extends BaseGridData {
             checkAlreadyAssignedProperty(columnIndex, propertyNameElements);
             checkValidAndUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
         }
+    }
+
+    public boolean isSimpleType(String factClassName) {
+        return simpleJavaTypeInstancesName.contains(factClassName);
     }
 
     /**

@@ -20,6 +20,7 @@
     <exclude name="org.drools.workbench.screens.globals.client.**"/>
     <exclude name="org.drools.workbench.screens.enums.client.**"/>
     <exclude name="org.drools.workbench.screens.scenariosimulation.client.**"/>
+    <exclude name="org.drools.workbench.screens.scenariosimulation.businesscentral.client.**"/>
 
     <exclude name="org.guvnor.asset.management.client.**"/>
     <exclude name="org.guvnor.client.**"/>
@@ -42,7 +43,6 @@
     <exclude name="org.kie.workbench.common.screens.projectimportsscreen.client.**"/>
     <exclude name="org.kie.workbench.common.screens.search.client.**"/>
     <exclude name="org.kie.workbench.common.screens.server.management.client.**"/>
-    <exclude name="org.kie.workbench.common.screens.social.hp.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.configresource.client.**"/>
     <exclude name="org.kie.workbench.common.widgets.decoratedgrid.client.**"/>

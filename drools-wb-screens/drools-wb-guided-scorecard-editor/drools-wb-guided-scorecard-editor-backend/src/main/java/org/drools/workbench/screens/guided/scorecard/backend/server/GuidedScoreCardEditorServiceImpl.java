@@ -25,6 +25,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.drools.workbench.models.guided.scorecard.backend.GuidedScoreCardModelVisitor;
 import org.drools.workbench.models.guided.scorecard.backend.GuidedScoreCardXMLPersistence;
 import org.drools.workbench.models.guided.scorecard.shared.Attribute;
 import org.drools.workbench.models.guided.scorecard.shared.Characteristic;
@@ -175,13 +176,11 @@ public class GuidedScoreCardEditorServiceImpl
             final String packageName = (pkg == null ? null : pkg.getPackageName());
             model.setPackageName(packageName);
 
-            Metadata currentMetadata = metadataService.getMetadata(resource);
             ioService.write(Paths.convert(resource),
                             GuidedScoreCardXMLPersistence.getInstance().marshal(model),
                             metadataService.setUpAttributes(resource, metadata),
                             commentedOptionFactory.makeCommentedOption(comment));
 
-            fireMetadataSocialEvents(resource, currentMetadata, metadata);
             return resource;
         } catch (Exception e) {
             throw ExceptionUtilities.handleException(e);

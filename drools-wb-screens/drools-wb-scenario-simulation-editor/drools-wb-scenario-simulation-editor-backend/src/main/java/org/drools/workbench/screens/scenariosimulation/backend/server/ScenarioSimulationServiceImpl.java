@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -239,8 +240,8 @@ public class ScenarioSimulationServiceImpl
         consumedFQCNs.addAll(oracle.getModuleCollectionTypes()
                                      .entrySet()
                                      .stream()
-                                     .filter(entry -> entry.getValue())
-                                     .map(entry -> entry.getKey())
+                                     .filter(Map.Entry::getValue)
+                                     .map(Map.Entry::getKey)
                                      .collect(Collectors.toSet()));
 
         DataModelOracleUtilities.populateDataModel(oracle,
@@ -262,18 +263,14 @@ public class ScenarioSimulationServiceImpl
                      final Metadata metadata,
                      final String comment) {
         try {
-            final Metadata currentMetadata = metadataService.getMetadata(resource);
             ioService.write(Paths.convert(resource),
                             ScenarioSimulationXMLPersistence.getInstance().marshal(content),
                             metadataService.setUpAttributes(resource,
                                                             metadata),
                             commentedOptionFactory.makeCommentedOption(comment));
 
-            fireMetadataSocialEvents(resource,
-                                     currentMetadata,
-                                     metadata);
-
             createActivatorIfNotExist(resource);
+
             return resource;
         } catch (Exception e) {
             throw ExceptionUtilities.handleException(e);
@@ -347,15 +344,17 @@ public class ScenarioSimulationServiceImpl
         Package junitActivatorPackage = getOrCreateJunitActivatorPackage(kieModule);
         final org.uberfire.java.nio.file.Path activatorPath = getActivatorPath(junitActivatorPackage);
 
-        if (!ioService.exists(activatorPath)) {
+        boolean needMigrateActivatorIfExists = ensureDependencies(kieModule);
+
+        // junit activator needs to be created if the project has old dependencies or activator doesn't exist
+        if (needMigrateActivatorIfExists || !ioService.exists(activatorPath)) {
+            // first remove existing activators (if exist)
+            removeOldActivatorIfExists(activatorPath, kieModule);
+
             ioService.write(activatorPath,
                             ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(junitActivatorPackageName),
                             commentedOptionFactory.makeCommentedOption(""));
-
-            removeOldActivatorIfExists(kieModule);
         }
-
-        ensureDependencies(kieModule);
     }
 
     protected Package getOrCreateJunitActivatorPackage(KieModule kieModule) {
@@ -368,8 +367,17 @@ public class ScenarioSimulationServiceImpl
         return junitActivatorPackage;
     }
 
-    protected void removeOldActivatorIfExists(KieModule kieModule) {
+    /**
+     * This routine looks for existing activators to migrate
+     * @param activatorPath
+     * @param kieModule
+     */
+    protected void removeOldActivatorIfExists(org.uberfire.java.nio.file.Path activatorPath, KieModule kieModule) {
 
+        // migration step after Test Scenario runner modules split DROOLS-3389
+        ioService.deleteIfExists(activatorPath);
+
+        // migration step after Test Scenario activator package fix RHPAM-1923
         String targetPackageName = kieModule.getPom().getGav().getGroupId();
 
         Optional<Package> packageFound = kieModuleService.resolvePackages(kieModule).stream()
@@ -381,7 +389,12 @@ public class ScenarioSimulationServiceImpl
         });
     }
 
-    protected void ensureDependencies(KieModule module) {
+    /**
+     * Verify if the project contains all the needed dependencies removing the old ones if available
+     * @param module
+     * @return boolean that specify if there was old dependencies
+     */
+    protected boolean ensureDependencies(KieModule module) {
         POM projectPom = module.getPom();
         Dependencies dependencies = projectPom.getDependencies();
 
@@ -394,6 +407,8 @@ public class ScenarioSimulationServiceImpl
             toSave |= removeFromPomIfNecessary(dependencies, oldDependency);
         }
 
+        boolean oldDependenciesExist = toSave;
+
         for (GAV gav : getDependencies(kieVersion)) {
             toSave |= editPomIfNecessary(dependencies, gav);
         }
@@ -401,6 +416,8 @@ public class ScenarioSimulationServiceImpl
         if (toSave) {
             pomService.save(modulePomXMLPath, projectPom, null, "");
         }
+
+        return oldDependenciesExist;
     }
 
     protected boolean removeFromPomIfNecessary(Dependencies dependencies, GAV oldDependency) {
@@ -441,6 +458,8 @@ public class ScenarioSimulationServiceImpl
         return Arrays.asList(new GAV("org.drools", "drools-scenario-simulation-api", kieVersion),
                              new GAV("org.drools", "drools-scenario-simulation-backend", kieVersion),
                              new GAV("org.drools", "drools-compiler", kieVersion),
+                             // needed to compile guided decision table
+                             new GAV("org.drools", "drools-workbench-models-guided-dtable", kieVersion),
                              new GAV("org.kie", "kie-dmn-feel", kieVersion),
                              new GAV("org.kie", "kie-dmn-api", kieVersion),
                              new GAV("org.kie", "kie-dmn-core", kieVersion));

@@ -27,6 +27,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
+import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
@@ -51,7 +52,6 @@ import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractScenarioSimulationEditorTest extends AbstractScenarioSimulationTest {
@@ -92,6 +92,8 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     protected CoverageReportPresenter coverageReportPresenterMock;
     @Mock
     protected AsyncPackageDataModelOracleFactory oracleFactoryMock;
+    @Mock
+    protected PackageDataModelOracleBaselinePayload packageDataModelOracleBaselinePayload;
 
     protected ScenarioSimulationModelContent content;
     protected ScenarioSimulationModel modelLocal;
@@ -111,10 +113,11 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
         this.modelLocal = new ScenarioSimulationModel();
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, "default"));
+        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, null));
         this.content = new ScenarioSimulationModelContent(modelLocal,
                                                           overviewMock,
-                                                          mock(PackageDataModelOracleBaselinePayload.class));
+                                                          packageDataModelOracleBaselinePayload);
+        when(packageDataModelOracleBaselinePayload.getPackageName()).thenReturn(TestProperties.FACT_PACKAGE);
         when(scenarioSimulationServiceMock.loadContent(observablePathMock)).thenReturn(content);
     }
 
