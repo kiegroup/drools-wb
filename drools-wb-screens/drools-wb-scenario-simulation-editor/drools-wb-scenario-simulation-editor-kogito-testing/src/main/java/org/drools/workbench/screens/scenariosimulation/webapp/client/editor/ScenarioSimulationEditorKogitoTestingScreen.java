@@ -21,12 +21,12 @@ import java.util.function.Consumer;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.FileChooserPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
@@ -63,6 +63,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
     private NewScesimPopupPresenter newScesimPopupPresenter;
 
     @Inject
+    private LoadScesimPopupPresenter loadScesimPopupPresenter;
+
+    @Inject
     private FileChooserPopupPresenter fileChooserPopupPresenter;
 
     private PlaceManager placeManager;
@@ -83,44 +86,36 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
 
     @OnStartup
     public void onStartup(final PlaceRequest place) {
-        GWT.log(this.toString() + " onStartup " + place);
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
     }
 
     @OnMayClose
     public boolean mayClose() {
-        GWT.log(this.toString() + " mayClose");
         return scenarioSimulationEditorKogitoWrapper.mayClose();
     }
 
     @WorkbenchPartTitle
     public String getTitleText() {
-        GWT.log(this.toString() + " getTitleText");
         return "Scenario Simulation Submarine Screen";
     }
 
     @WorkbenchPartTitleDecoration
     public IsWidget getTitle() {
-        GWT.log(this.toString() + " getTitle");
         return scenarioSimulationEditorKogitoWrapper.getTitle();
     }
 
     @WorkbenchPartView
     public MultiPageEditorContainerView getWidget() {
-        GWT.log(this.toString() + " getWidget");
         return scenarioSimulationEditorKogitoWrapper.getWidget();
     }
 
     @WorkbenchMenu
     public void setMenus(final Consumer<Menus> menusConsumer) {
-        GWT.log(this.toString() + " setMenus " + menusConsumer);
-
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
-    public void newFile() {
-        GWT.log(this.toString() + " newFile");
+    protected void newFile() {
         Command createCommand = () -> {
             final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
             if (selectedType != null) {
@@ -140,52 +135,19 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
         newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
     }
 
+    protected void loadFile() {
+        Command loadCommand = () -> {
+            String fileName = loadScesimPopupPresenter.getSelectedPath();
+            scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile(fileName));
+            loadScesimPopupPresenter.hide();
+        };
+        loadScesimPopupPresenter.show("Choose SCESIM", loadCommand);
+    }
+
     protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
-        GWT.log(this.toString() + " addTestingMenus ");
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::newFile));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadFile));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent()));
     }
 
-//    public void goToScreen() {
-//        GWT.log(this.toString() + " goToScreen");
-//        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorKogitoWrapper.IDENTIFIER) {
-//                                            },
-//                                            () -> {
-//                                                scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getPopulatedScesimRule());
-//                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
-//                                            });
-//        placeManager.goTo(ScenarioSimulationEditorKogitoWrapper.IDENTIFIER);
-//    }
-
-//    public void openFile(final Path path) {
-//        placeManager.registerOnOpenCallback(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR,
-//                                            () -> {
-//                                                clientDiagramService.loadAsXml(path,
-//                                                                               new ServiceCallback<String>() {
-//                                                                                   @Override
-//                                                                                   public void onSuccess(final String xml) {
-//                                                                                       scenarioSimulationEditorKogitoWrapper.setContent(xml);
-//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//                                                                                   }
-//
-//                                                                                   @Override
-//                                                                                   public void onError(final ClientRuntimeError error) {
-//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//                                                                                   }
-//                                                                               });
-//                                            });
-//
-//        placeManager.goTo(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    public void saveFile(final ServiceCallback<String> callback) {
-//        final Path path = scenarioSimulationEditorKogitoWrapper.getCanvasHandler().getDiagram().getMetadata().getPath();
-//        scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
-//            clientDiagramService.saveAsXml(path,
-//                                           (String) xml,
-//                                           callback);
-//            return null;
-//        });
-//    }
 }

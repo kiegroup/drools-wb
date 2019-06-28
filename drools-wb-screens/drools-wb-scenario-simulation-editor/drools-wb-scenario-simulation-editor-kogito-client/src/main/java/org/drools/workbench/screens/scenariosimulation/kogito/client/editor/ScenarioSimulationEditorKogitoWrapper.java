@@ -89,21 +89,18 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     protected void buildMenuBar() {
-        GWT.log(this.toString() + " buildMenuBar");
         setMenus(fileMenuBuilder.build());
         getMenus().getItemsMap().values().forEach(menuItem -> menuItem.setEnabled(true));
     }
 
     @Override
     public Promise getContent() {
-        GWT.log(this.toString() + " getContent");
         marshallContent(scenarioSimulationEditorPresenter.getContentSupplier().get());
         return null;
     }
 
     @Override
     public void setContent(String value) {
-        GWT.log(this.toString() + " setContent");
         getWidget().init(this);
         Path path = new PathFactory.PathImpl("new.scesimr", "file:///new.scesimr");
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
@@ -113,42 +110,38 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public void wrappedRegisterDock(String id, IsWidget widget) {
-        GWT.log(this.toString() + " setContent ");
+        //
     }
 
     @Override
     public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
-        GWT.log(this.toString() + " onImport ");
+        //
     }
 
     @Override
     public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
-        GWT.log(this.toString() + " onExportToCsv ");
+        //
     }
 
     @Override
     public void resetContentHash() {
-        GWT.log(this.toString() + " resetContentHash");
+       //
     }
 
     public void onStartup(final PlaceRequest place) {
-        GWT.log(this.toString() + " onStartup " + place);
         super.init(place);
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
     }
 
     public boolean mayClose() {
-        GWT.log(this.toString() + " mayClose");
         return !scenarioSimulationEditorPresenter.isDirty();
     }
 
     public IsWidget getTitle() {
-        GWT.log(this.toString() + " getTitle");
         return super.getTitle();
     }
 
     public MultiPageEditorContainerView getWidget() {
-        GWT.log(this.toString() + " getWidget");
         return super.getWidget();
     }
 
@@ -157,7 +150,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     public void setMenus(final Consumer<Menus> menusConsumer) {
-        GWT.log(this.toString() + " setMenus " + menusConsumer);
         menusConsumer.accept(getMenus());
     }
 
@@ -168,7 +160,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public void wrappedSave(String commitMessage) {
-        GWT.log(this.toString() + " wrappedSave " + commitMessage);
 //        save(commitMessage);
     }
 
@@ -182,7 +173,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
      */
     @Override
     protected void makeMenuBar() {
-        GWT.log(this.toString() + " makeMenuBar");
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
     }
 
@@ -192,20 +182,17 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     protected void marshallContent(ScenarioSimulationModel scenarioSimulationModel) {
-        GWT.log(this.toString() + " marshallContent " + scenarioSimulationModel);
         final JSIScenarioSimulationModelType jsiScenarioSimulationModelType = getJSIScenarioSimulationModelType(scenarioSimulationModel);
         scesimContainer.setValue(jsiScenarioSimulationModelType);
         MainJs.marshall(scesimContainer, getJSInteropMarshallConvert());
     }
 
     protected void unmarshallContent(String toUnmarshal) {
-        GWT.log(this.toString() + " unmarshallContent " + toUnmarshal);
         MainJs.unmarshall(toUnmarshal, getJSInteropUnmarshallConvert());
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallConvert() {
         return xml -> {
-            GWT.log(this.toString() + " SCESIMMarshallCallback");
             GWT.log("xml " + xml);
         };
     }
@@ -234,24 +221,4 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 
-//    protected void loadAsset() {
-//        GWT.log(this.toString() + " loadAsset");
-//        fileChooserPopupPresenter.show("Choose", "Choose", this::loadAssetCommand);
-//    }
-//
-//    protected void loadAssetCommand() {
-//        String fileName = fileChooserPopupPresenter.getFileName();
-//        setContent(scesimFilesProvider.getScesimFile(fileChooserPopupPresenter.getFileName()));
-//        Path path = new PathFactory.PathImpl(fileName, "file:///" + fileName);
-//        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-//    }
-//
-//    protected void createNewAsset() {
-//        GWT.log(this.toString() + " createNewAsset");
-//        setContent(scesimFilesProvider.getNewScesimRule());
-//        Path path = new PathFactory.PathImpl("new.scesimContainer", "file:///new.scesimContainer");
-//        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-//    }
 }

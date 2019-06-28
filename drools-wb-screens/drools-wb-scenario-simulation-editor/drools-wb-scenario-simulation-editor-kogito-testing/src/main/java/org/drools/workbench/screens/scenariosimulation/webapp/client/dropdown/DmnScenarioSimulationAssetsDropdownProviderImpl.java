@@ -21,20 +21,16 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 @Dependent
-public class NewScenarioSimulationAssetsDropdownProviderImpl implements NewScenarioSimulationAssetsDropdownProvider {
-
-    @Inject
-    protected ScesimFilesProvider scesimFilesProvider;
+public class DmnScenarioSimulationAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        List<KieAssetsDropdownItem> toAccept = scesimFilesProvider.fileMap.keySet().stream()
+        List<KieAssetsDropdownItem> toAccept = ScesimFilesProvider.fileMap.keySet().stream()
                 .filter(key -> key.toLowerCase().endsWith("dmn"))
                 .map(this::getKieAssetsDropdownItem)
                 .collect(Collectors.toList());

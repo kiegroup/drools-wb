@@ -20,6 +20,6 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 /**
  * Using this to specialize injected instance
  */
-public interface NewScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
+public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
 
 }

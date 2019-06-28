@@ -21,32 +21,20 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import elemental2.dom.HTMLDivElement;
-import elemental2.dom.HTMLInputElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.NewScenarioSimulationDropdown;
-import org.jboss.errai.common.client.dom.MouseEvent;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.LoadScenarioSimulationDropdown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.jboss.errai.ui.shared.api.annotations.EventHandler;
-import org.jboss.errai.ui.shared.api.annotations.ForEvent;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
+public class LoadScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
 
     @Inject
-    @DataField("rule-button")
-    protected HTMLInputElement ruleButton;
-
-    @Inject
-    @DataField("dmn-button")
-    protected HTMLInputElement dmnButton;
-
-    @Inject
-    @DataField("dmn-assets")
+    @DataField("assets")
     protected HTMLDivElement divElement;
 
     protected ScenarioSimulationModel.Type selectedType = null;
@@ -54,20 +42,20 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
     protected String selectedPath = null;
 
     @Inject
-    protected NewScenarioSimulationDropdown newScenarioSimulationDropdown;
+    protected LoadScenarioSimulationDropdown loadScenarioSimulationDropdown;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
         cancelButton.setText("CANCEL");
-        divElement.appendChild(newScenarioSimulationDropdown.getElement());
-        newScenarioSimulationDropdown.clear();
-        newScenarioSimulationDropdown.init();
-        newScenarioSimulationDropdown.initializeDropdown();
-        newScenarioSimulationDropdown.registerOnChangeHandler(() -> {
-            final Optional<KieAssetsDropdownItem> value = newScenarioSimulationDropdown.getValue();
+        divElement.appendChild(loadScenarioSimulationDropdown.getElement());
+        loadScenarioSimulationDropdown.clear();
+        loadScenarioSimulationDropdown.init();
+        loadScenarioSimulationDropdown.initializeDropdown();
+        loadScenarioSimulationDropdown.registerOnChangeHandler(() -> {
+            final Optional<KieAssetsDropdownItem> value = loadScenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
-        super.show(mainTitleText, "CREATE", okCommand);
+        super.show(mainTitleText, "LOAD", okCommand);
     }
 
     @Override
@@ -80,19 +68,4 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
         return selectedPath;
     }
 
-    @EventHandler("dmn-button")
-    public void onDmnClick(final @ForEvent("click") MouseEvent event) {
-        if (dmnButton.checked) {
-            selectedType = ScenarioSimulationModel.Type.DMN;
-            divElement.removeAttribute("hidden");
-        }
-    }
-
-    @EventHandler("rule-button")
-    public void onRuleClick(final @ForEvent("click") MouseEvent event) {
-        if (ruleButton.checked) {
-            selectedType = ScenarioSimulationModel.Type.RULE;
-            divElement.setAttribute("hidden", "");
-        }
-    }
 }
