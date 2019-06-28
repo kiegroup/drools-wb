@@ -15,20 +15,60 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.fakes;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.uberfire.backend.vfs.Path;
 
 public class KogitoDMNTypeService implements DMNTypeService {
 
+    private static final SortedMap<String, FactModelTree> VISIBLE_FACTS = new TreeMap<>();
+    private static final SortedMap<String, FactModelTree> HIDDEN_FACTS = new TreeMap<>();
+
+    private static final Map<String, String> addressMap = new HashMap<String, String>() {
+        {
+            put("city", "java.lang.String");
+            put("country", "java.lang.String");
+        }
+    };
+
+    private static final Map<String, String> personMap = new HashMap<String, String>() {
+        {
+            put("age", "java.lang.Integer");
+            put("address", "java.util.List");
+        }
+    };
+    private static final Map<String, List<String>> personGenericMap = new HashMap<String, List<String>>() {
+        {
+            put("address", Collections.singletonList("tPlace"));
+        }
+    };
+
+    static {
+        VISIBLE_FACTS.put("person", getFactModelTree("tPerson", personMap, personGenericMap));
+        HIDDEN_FACTS.put("address", getFactModelTree("tPlace", addressMap, new HashMap<>()));
+    }
+
     @Override
     public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
-        return new FactModelTuple();
+        return new FactModelTuple(VISIBLE_FACTS, HIDDEN_FACTS);
     }
 
     @Override
     public void initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
 
     }
+
+    private static FactModelTree getFactModelTree(String factName,  Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap) {
+        return new FactModelTree(factName, "", simpleProperties, genericTypesMap);
+    }
+
 }

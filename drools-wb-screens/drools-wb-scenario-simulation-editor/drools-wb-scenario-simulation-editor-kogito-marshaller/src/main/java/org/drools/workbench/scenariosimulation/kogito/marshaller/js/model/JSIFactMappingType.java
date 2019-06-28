@@ -129,7 +129,7 @@ public class JSIFactMappingType {
      *      <b>genericTypes</<b>
      */
     @JsProperty(name = "genericTypes")
-    public final native String[] getGenericTypes();
+    public final native JSIGenericTypes getGenericTypes();
 
     /**
      * Setter for <b>genericTypes</b>
@@ -138,7 +138,7 @@ public class JSIFactMappingType {
      *      <b>genericTypes</<b> to set.
      */
     @JsProperty(name = "genericTypes")
-    public final native void setGenericTypes(String[] genericTypes);
+    public final native void setGenericTypes(JSIGenericTypes genericTypes);
     
 
 

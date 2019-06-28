@@ -64,7 +64,9 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
     public void show(String mainTitleText, Command okCommand) {
         cancelButton.setText("CANCEL");
         divElement.appendChild(newScenarioSimulationDropdown.getElement());
+        newScenarioSimulationDropdown.clear();
         newScenarioSimulationDropdown.init();
+        newScenarioSimulationDropdown.initializeDropdown();
         newScenarioSimulationDropdown.registerOnChangeHandler(() -> {
             final Optional<KieAssetsDropdownItem> value = newScenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
@@ -86,7 +88,6 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
     public void onDmnClick(final @ForEvent("click") MouseEvent event) {
         if (dmnButton.checked) {
             selectedType = ScenarioSimulationModel.Type.DMN;
-            newScenarioSimulationDropdown.initializeDropdown();
             divElement.removeAttribute("hidden");
         }
     }

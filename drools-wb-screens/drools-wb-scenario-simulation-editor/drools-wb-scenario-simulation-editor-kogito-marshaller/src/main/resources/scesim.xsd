@@ -23,6 +23,11 @@
     </xs:sequence>
     <xs:attribute type="xs:string" name="reference"/>
   </xs:complexType>
+  <xs:complexType name="genericTypes">
+    <xs:sequence>
+      <xs:element type="xs:string" name="string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="FactMappingType">
     <xs:sequence>
       <xs:element type="expressionElementsType" name="expressionElements"/>
@@ -31,12 +36,9 @@
       <xs:element type="xs:string" name="className"/>
       <xs:element type="xs:string" name="factAlias"/>
       <xs:element type="xs:string" name="expressionAlias" minOccurs="0"/>
-      <xs:element type="xs:string" name="genericTypes" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element type="genericTypes" name="genericTypes"/>
     </xs:sequence>
   </xs:complexType>
-<!--  <xs:complexType name="factIdentifierReferenceType">-->
-<!--    <xs:attribute type="xs:string" name="reference"/>-->
-<!--  </xs:complexType>-->
   <xs:complexType name="factMappingsType">
     <xs:sequence>
       <xs:element type="FactMappingType" name="FactMapping" maxOccurs="unbounded" minOccurs="0"/>

@@ -229,7 +229,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
         // TODO CHECK
-//        dataManagementStrategy.manageScenarioSimulationModelContent(null, content);
+//        dataManagementStrategy.manageScenarioSimulationModelContent(null, model);
+        dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 

@@ -38,6 +38,7 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFac
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValuesType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingsType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIGenericTypes;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIRawValueType;
@@ -191,7 +192,9 @@ public class ApiJSInteropConverter {
         toReturn.setFactIdentifier(jsiFactIdentifierType);
         List<String> genericTypes = source.getGenericTypes();
         if (genericTypes != null) {
-            toReturn.setGenericTypes(genericTypes.toArray(new String[0]));
+            JSIGenericTypes toSet = JSIGenericTypes.newInstance();
+            toSet.setString(genericTypes.toArray(new String[genericTypes.size()]));
+            toReturn.setGenericTypes(toSet);
         }
         return toReturn;
     }

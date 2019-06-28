@@ -15,7 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.converters;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
@@ -36,6 +37,7 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExp
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIGenericTypes;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
@@ -119,8 +121,14 @@ public class JSInteropApiConverter {
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
-            if (jsiFactMappingType.getGenericTypes() != null) {
-                added.getGenericTypes().addAll(Arrays.asList(jsiFactMappingType.getGenericTypes()));
+            final JSIGenericTypes genericTypes = jsiFactMappingType.getGenericTypes();
+            if (genericTypes != null && genericTypes.getString() != null) {
+                final String[] genericString = genericTypes.getString();
+                List<String> toSet = new ArrayList<>();
+                for (int j = 0; j < genericString.length; j++) {
+                    toSet.add(genericString[j]);
+                }
+                added.setGenericTypes(toSet);
             }
             final JSIExpressionElementsType expressionElements = jsiFactMappingType.getExpressionElements();
             if (expressionElements != null) {

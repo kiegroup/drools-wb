@@ -21,6 +21,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
@@ -33,6 +34,7 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
 
     @Override
     protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioGridModel scenarioGridModel, String dmnFilePath) {
-        kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath);
+        final FactModelTuple factMappingTuple = kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath);
+        getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, scenarioGridModel);
     }
 }
