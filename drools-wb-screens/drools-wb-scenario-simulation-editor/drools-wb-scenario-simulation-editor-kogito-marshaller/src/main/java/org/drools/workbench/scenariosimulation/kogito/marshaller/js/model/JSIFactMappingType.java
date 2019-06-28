@@ -15,16 +15,6 @@ public class JSIFactMappingType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIFactMappingType</code>
-     * 
-     * @return
-     *     <b>SCESIM.FactMappingType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.FactMappingType";
-    }
-
-    /**
      * Getter for <b>expressionElements</b>
      * 
      * @return

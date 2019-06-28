@@ -15,16 +15,6 @@ public class JSISimulationType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSISimulationType</code>
-     * 
-     * @return
-     *     <b>SCESIM.SimulationType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.SimulationType";
-    }
-
-    /**
      * Getter for <b>simulationDescriptor</b>
      * 
      * @return

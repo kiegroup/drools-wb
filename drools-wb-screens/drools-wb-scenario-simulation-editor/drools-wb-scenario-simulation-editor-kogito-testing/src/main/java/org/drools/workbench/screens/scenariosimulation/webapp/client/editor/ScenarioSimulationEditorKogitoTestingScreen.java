@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.FileChooserPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
@@ -60,6 +61,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimu
 
     @Inject
     private NewScesimPopupPresenter newScesimPopupPresenter;
+
+    @Inject
+    private FileChooserPopupPresenter fileChooserPopupPresenter;
 
     private PlaceManager placeManager;
 

@@ -15,16 +15,6 @@ public class JSIExpressionIdentifierReferenceType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIExpressionIdentifierReferenceType</code>
-     * 
-     * @return
-     *     <b>SCESIM.ExpressionIdentifierReferenceType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.ExpressionIdentifierReferenceType";
-    }
-
-    /**
      * Getter for <b>reference</b>
      * 
      * @return

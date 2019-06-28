@@ -15,16 +15,6 @@ public class JSISimulationDescriptorReferenceType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSISimulationDescriptorReferenceType</code>
-     * 
-     * @return
-     *     <b>SCESIM.SimulationDescriptorReferenceType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.SimulationDescriptorReferenceType";
-    }
-
-    /**
      * Getter for <b>reference</b>
      * 
      * @return

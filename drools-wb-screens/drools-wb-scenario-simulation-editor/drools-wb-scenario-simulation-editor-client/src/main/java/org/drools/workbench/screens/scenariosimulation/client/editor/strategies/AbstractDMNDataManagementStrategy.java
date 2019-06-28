@@ -48,12 +48,13 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
 
     @Override
     public void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
-        String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
-        if (factModelTreeHolder.getFactModelTuple() != null) {
-            getSuccessCallback(testToolsPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
-        } else {
-            retrieveFactModelTuple(testToolsPresenter, scenarioGridModel, dmnFilePath);
-        }
+        // TODO RESTORE
+//        String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
+//        if (factModelTreeHolder.getFactModelTuple() != null) {
+//            getSuccessCallback(testToolsPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
+//        } else {
+//            retrieveFactModelTuple(testToolsPresenter, scenarioGridModel, dmnFilePath);
+//        }
     }
 
     @Override

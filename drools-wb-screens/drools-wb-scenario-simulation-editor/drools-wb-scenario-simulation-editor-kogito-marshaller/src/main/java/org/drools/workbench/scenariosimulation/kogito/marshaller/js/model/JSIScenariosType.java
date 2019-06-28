@@ -16,16 +16,6 @@ public class JSIScenariosType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIScenariosType</code>
-     * 
-     * @return
-     *     <b>SCESIM.ScenariosType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.ScenariosType";
-    }
-
-    /**
      * Getter for <b>scenario</b>
      * 
      * @return

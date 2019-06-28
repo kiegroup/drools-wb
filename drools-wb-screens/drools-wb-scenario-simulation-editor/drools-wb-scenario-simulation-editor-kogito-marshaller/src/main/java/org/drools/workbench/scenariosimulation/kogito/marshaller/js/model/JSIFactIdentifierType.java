@@ -15,16 +15,6 @@ public class JSIFactIdentifierType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIFactIdentifierType</code>
-     * 
-     * @return
-     *     <b>SCESIM.FactIdentifierType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.FactIdentifierType";
-    }
-
-    /**
      * Getter for <b>name</b>
      * 
      * @return

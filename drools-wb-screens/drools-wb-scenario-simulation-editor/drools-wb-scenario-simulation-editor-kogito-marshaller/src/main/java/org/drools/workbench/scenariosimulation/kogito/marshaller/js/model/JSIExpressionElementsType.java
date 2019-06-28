@@ -16,16 +16,6 @@ public class JSIExpressionElementsType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIExpressionElementsType</code>
-     * 
-     * @return
-     *     <b>SCESIM.ExpressionElementsType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.ExpressionElementsType";
-    }
-
-    /**
      * Getter for <b>expressionElement</b>
      * 
      * @return

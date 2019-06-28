@@ -16,16 +16,6 @@ public class JSIWrappedImportsType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIWrappedImportsType</code>
-     * 
-     * @return
-     *     <b>SCESIM.WrappedImportsType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.WrappedImportsType";
-    }
-
-    /**
      * Getter for <b>_import</b>
      * 
      * @return

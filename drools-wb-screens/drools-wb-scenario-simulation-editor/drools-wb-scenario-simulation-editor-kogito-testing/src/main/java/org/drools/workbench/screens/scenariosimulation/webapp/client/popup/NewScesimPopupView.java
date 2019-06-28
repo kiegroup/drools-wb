@@ -29,13 +29,17 @@ import elemental2.dom.InputEvent;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.NewScenarioSimulationDropdown;
+import org.jboss.errai.common.client.dom.MouseEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
+import org.jboss.errai.ui.shared.api.annotations.ForEvent;
+import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup,
-                                                                             EventListener {
+@Templated
+public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
 
     @Inject
     @DataField("rule-button")
@@ -58,7 +62,6 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
-        super.show(mainTitleText, "CREATE", okCommand);
         cancelButton.setText("CANCEL");
         divElement.appendChild(newScenarioSimulationDropdown.getElement());
         newScenarioSimulationDropdown.init();
@@ -66,7 +69,7 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
             final Optional<KieAssetsDropdownItem> value = newScenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
-        ruleButton.addEventListener("InputEvent", this);
+        super.show(mainTitleText, "CREATE", okCommand);
     }
 
     @Override
@@ -79,22 +82,20 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
         return selectedPath;
     }
 
-    @Override
-    public void handleEvent(Event evt) {
-        GWT.log("handleEvent " + evt);
-        if (evt instanceof InputEvent) {
-            GWT.log("InputEvent " + evt);
-            boolean hideDMNDropdown = true;
-            if (ruleButton.checked) {
-                selectedType = ScenarioSimulationModel.Type.RULE;
-            } else if (dmnButton.checked) {
-                selectedType = ScenarioSimulationModel.Type.DMN;
-                hideDMNDropdown = false;
-                newScenarioSimulationDropdown.init();
-            } else {
-                selectedType = null;
-            }
-            divElement.setAttribute("hidden", hideDMNDropdown);
+    @EventHandler("dmn-button")
+    public void onDmnClick(final @ForEvent("click") MouseEvent event) {
+        if (dmnButton.checked) {
+            selectedType = ScenarioSimulationModel.Type.DMN;
+            newScenarioSimulationDropdown.initializeDropdown();
+            divElement.removeAttribute("hidden");
+        }
+    }
+
+    @EventHandler("rule-button")
+    public void onRuleClick(final @ForEvent("click") MouseEvent event) {
+        if (ruleButton.checked) {
+            selectedType = ScenarioSimulationModel.Type.RULE;
+            divElement.setAttribute("hidden", "");
         }
     }
 }

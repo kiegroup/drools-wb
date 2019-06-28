@@ -15,16 +15,6 @@ public class JSIImportsType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIImportsType</code>
-     * 
-     * @return
-     *     <b>SCESIM.ImportsType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.ImportsType";
-    }
-
-    /**
      * Getter for <b>imports</b>
      * 
      * @return

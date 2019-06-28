@@ -100,7 +100,7 @@ public class JSInteropApiConverter {
         for (int i = 0; i < factMappingValue.getLength(); i++) {
             JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
             JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
-            if (factIdentifierType.getReference()!= null && ! factIdentifierType.getReference().isEmpty()) {
+            if (factIdentifierType.getReference() != null && !factIdentifierType.getReference().isEmpty()) {
                 factIdentifierType = getActualJSIFactIdentifierType(factIdentifierType.getReference(), jsiFactMappingTypes);
             }
             final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
@@ -146,7 +146,7 @@ public class JSInteropApiConverter {
     }
 
     protected static ExpressionElement getExpressionElement(JSIExpressionElementType jsiExpressionElementType) {
-       return new ExpressionElement(jsiExpressionElementType.getStep());
+        return new ExpressionElement(jsiExpressionElementType.getStep());
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

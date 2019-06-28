@@ -15,16 +15,6 @@ public class JSIRawValueType {
 
 
     /**
-     * Get TYPE_NAME for <code>JSIRawValueType</code>
-     * 
-     * @return
-     *     <b>SCESIM.RawValueType</b>
-     */
-    public final static String getTypeName() {
-        return "SCESIM.RawValueType";
-    }
-
-    /**
      * Getter for <b>value</b>
      * 
      * @return
