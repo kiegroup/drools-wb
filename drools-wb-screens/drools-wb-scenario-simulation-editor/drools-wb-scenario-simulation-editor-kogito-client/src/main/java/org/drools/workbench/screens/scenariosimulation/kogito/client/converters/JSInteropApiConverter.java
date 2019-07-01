@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.converters
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
 import jsinterop.base.JsArrayLike;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
@@ -32,7 +31,6 @@ import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementsType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierReferenceType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
@@ -102,11 +100,12 @@ public class JSInteropApiConverter {
         for (int i = 0; i < factMappingValue.getLength(); i++) {
             JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
             JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
-            if (factIdentifierType.getReference() != null && !factIdentifierType.getReference().isEmpty()) {
-                factIdentifierType = getActualJSIFactIdentifierType(factIdentifierType.getReference(), jsiFactMappingTypes);
-            }
-            final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
-            final JSIExpressionIdentifierType expressionIdentifierType = getActualJSIExpressionIdentifierType(expressionIdentifierReference.getReference(), jsiFactMappingTypes);
+//            if (factIdentifierType.getReference() != null && !factIdentifierType.getReference().isEmpty()) {
+//                factIdentifierType = getActualJSIFactIdentifierType(factIdentifierType.getReference(), jsiFactMappingTypes);
+//            }
+//            final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
+//            final JSIExpressionIdentifierType expressionIdentifierType = getActualJSIExpressionIdentifierType(expressionIdentifierReference.getReference(), jsiFactMappingTypes);
+            final JSIExpressionIdentifierType expressionIdentifierType = jsiFactMappingValueType.getExpressionIdentifier();
             if (factIdentifierType != null && expressionIdentifierType != null) {
                 String value = jsiFactMappingValueType.getRawValue() != null ? jsiFactMappingValueType.getRawValue().getValue() : null;
                 toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), value);
@@ -165,33 +164,31 @@ public class JSInteropApiConverter {
         return new FactIdentifier(source.getName(), source.getClassName());
     }
 
-    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
-        String numberPart = "1";
-        if (reference.contains("[") && reference.contains("]")) {
-            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
-        }
-        try {
-            int index = Integer.parseInt(numberPart) - 1;
-            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
-            return retrieved.getFactIdentifier();
-        } catch (Throwable t) {
-            GWT.log("Failed to parse reference " + reference, t);
-            return null;
-        }
-    }
+//    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
+//        String numberPart = "1";
+//        if (reference.contains("[") && reference.contains("]")) {
+//            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
+//        }
+//        try {
+//            int index = Integer.parseInt(numberPart) - 1;
+//            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
+//            return retrieved.getFactIdentifier();
+//        } catch (Throwable t) {
+//            return null;
+//        }
+//    }
 
-    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
-        String numberPart = "1";
-        if (reference.contains("[") && reference.contains("]")) {
-            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
-        }
-        try {
-            int index = Integer.parseInt(numberPart) - 1;
-            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
-            return retrieved.getExpressionIdentifier();
-        } catch (Throwable t) {
-            GWT.log("Failed to parse reference " + reference, t);
-            return null;
-        }
-    }
+//    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
+//        String numberPart = "1";
+//        if (reference.contains("[") && reference.contains("]")) {
+//            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
+//        }
+//        try {
+//            int index = Integer.parseInt(numberPart) - 1;
+//            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
+//            return retrieved.getExpressionIdentifier();
+//        } catch (Throwable t) {
+//            return null;
+//        }
+//    }
 }

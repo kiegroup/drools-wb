@@ -39,7 +39,7 @@ public class JSIFactMappingValueType {
      *      <b>expressionIdentifier</<b>
      */
     @JsProperty(name = "expressionIdentifier")
-    public final native JSIExpressionIdentifierReferenceType getExpressionIdentifier();
+    public final native JSIExpressionIdentifierType getExpressionIdentifier();
 
     /**
      * Setter for <b>expressionIdentifier</b>
@@ -48,7 +48,7 @@ public class JSIFactMappingValueType {
      *      <b>expressionIdentifier</<b> to set.
      */
     @JsProperty(name = "expressionIdentifier")
-    public final native void setExpressionIdentifier(JSIExpressionIdentifierReferenceType expressionIdentifier);
+    public final native void setExpressionIdentifier(JSIExpressionIdentifierType expressionIdentifier);
 
     /**
      * Getter for <b>rawValue</b>

@@ -31,24 +31,6 @@ public class JSIScenarioType {
      */
     @JsProperty(name = "factMappingValues")
     public final native void setFactMappingValues(JSIFactMappingValuesType factMappingValues);
-
-    /**
-     * Getter for <b>simulationDescriptor</b>
-     * 
-     * @return
-     *      <b>simulationDescriptor</<b>
-     */
-    @JsProperty(name = "simulationDescriptor")
-    public final native JSISimulationDescriptorReferenceType getSimulationDescriptor();
-
-    /**
-     * Setter for <b>simulationDescriptor</b>
-     * 
-     * @param simulationDescriptor
-     *      <b>simulationDescriptor</<b> to set.
-     */
-    @JsProperty(name = "simulationDescriptor")
-    public final native void setSimulationDescriptor(JSISimulationDescriptorReferenceType simulationDescriptor);
     
 
 

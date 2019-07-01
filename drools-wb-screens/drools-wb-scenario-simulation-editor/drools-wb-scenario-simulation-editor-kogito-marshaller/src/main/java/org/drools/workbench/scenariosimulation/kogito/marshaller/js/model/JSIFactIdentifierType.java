@@ -49,24 +49,6 @@ public class JSIFactIdentifierType {
      */
     @JsProperty(name = "className")
     public final native void setClassName(String className);
-
-    /**
-     * Getter for <b>reference</b>
-     * 
-     * @return
-     *      <b>reference</<b>
-     */
-    @JsProperty(name = "reference")
-    public final native String getReference();
-
-    /**
-     * Setter for <b>reference</b>
-     * 
-     * @param reference
-     *      <b>reference</<b> to set.
-     */
-    @JsProperty(name = "reference")
-    public final native void setReference(String reference);
     
 
 

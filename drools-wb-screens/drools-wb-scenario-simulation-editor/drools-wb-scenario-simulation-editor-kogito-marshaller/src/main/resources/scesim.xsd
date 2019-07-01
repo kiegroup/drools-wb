@@ -21,7 +21,6 @@
       <xs:element type="xs:string" name="name" minOccurs="0"/>
       <xs:element type="xs:string" name="className" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute type="xs:string" name="reference"/>
   </xs:complexType>
   <xs:complexType name="genericTypes">
     <xs:sequence>
@@ -59,9 +58,9 @@
       <xs:element type="xs:boolean" name="skipFromBuild" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="expressionIdentifierReferenceType">
-    <xs:attribute type="xs:string" name="reference"/>
-  </xs:complexType>
+<!--  <xs:complexType name="expressionIdentifierReferenceType">-->
+<!--    <xs:attribute type="xs:string" name="reference"/>-->
+<!--  </xs:complexType>-->
   <xs:complexType name="rawValueType">
     <xs:simpleContent>
       <xs:extension base="xs:string">
@@ -72,7 +71,7 @@
   <xs:complexType name="FactMappingValueType">
     <xs:sequence>
       <xs:element type="factIdentifierType" name="factIdentifier"/>
-      <xs:element type="expressionIdentifierReferenceType" name="expressionIdentifier"/>
+      <xs:element type="expressionIdentifierType" name="expressionIdentifier"/>
       <xs:element type="rawValueType" name="rawValue" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
@@ -81,13 +80,13 @@
       <xs:element type="FactMappingValueType" name="FactMappingValue" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="simulationDescriptorReferenceType">
-    <xs:attribute type="xs:string" name="reference"/>
-  </xs:complexType>
+<!--  <xs:complexType name="simulationDescriptorReferenceType">-->
+<!--    <xs:attribute type="xs:string" name="reference"/>-->
+<!--  </xs:complexType>-->
   <xs:complexType name="ScenarioType">
     <xs:sequence>
       <xs:element type="factMappingValuesType" name="factMappingValues"/>
-      <xs:element type="simulationDescriptorReferenceType" name="simulationDescriptor"/>
+<!--      <xs:element type="simulationDescriptorReferenceType" name="simulationDescriptor"/>-->
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="scenariosType">

@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>drools-wb-scenario-simulation-kogito-testing</artifactId>
+  <artifactId>drools-wb-scenario-simulation-editor-kogito-testing</artifactId>
   <packaging>war</packaging>
 
   <name>Drools Workbench - Scenario Simulation Editor - Kogito Testing (Development) webapp</name>
