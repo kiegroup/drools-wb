@@ -24,6 +24,7 @@ import org.guvnor.common.services.project.categories.Decision;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.workbench.annotations.VisibleAsset;
 import org.uberfire.workbench.category.Category;
+import org.uberfire.workbench.diff.DiffMode;
 import org.uberfire.workbench.type.ResourceTypeDefinition;
 
 import static org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils.FILE_EXTENSION;
@@ -81,5 +82,10 @@ public class ScenarioSimulationResourceTypeDefinition implements ResourceTypeDef
     @Override
     public boolean accept(final Path path) {
         return path.getFileName().endsWith("." + getSuffix());
+    }
+
+    @Override
+    public DiffMode getDiffMode() {
+        return DiffMode.VISUAL;
     }
 }
