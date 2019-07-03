@@ -596,6 +596,10 @@
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-workbench-backend</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.screens</groupId>
+      <artifactId>kie-wb-common-server-ui-api</artifactId>
+    </dependency>
 
     <!-- KIE Workbench Playground Repository -->
     <dependency>
@@ -1182,6 +1186,16 @@
       <artifactId>errai-cdi-server</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-cdi-shared</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-data-binding</artifactId>
+    </dependency>
+
     <!-- GWT and GWT Extensions -->
     <dependency>
       <groupId>com.google.gwt</groupId>
@@ -1238,6 +1252,10 @@
     </dependency>
 
     <!-- Uberfire Security Management -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-management-client</artifactId>

@@ -69,6 +69,13 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kie-platform-bom</artifactId>
+        <version>${version.org.kie}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.jboss.errai.bom</groupId>
         <artifactId>errai-internal-bom</artifactId>
         <version>${version.org.jboss.errai}</version>
@@ -193,6 +200,27 @@
             <goals>
               <goal>run</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <executions>
+          <execution>
+            <id>enforce-direct-dependencies</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <illegalTransitiveDependencyCheck implementation="de.is24.maven.enforcer.rules.IllegalTransitiveDependencyCheck">
+                  <useClassesFromLastBuild>true</useClassesFromLastBuild>
+                </illegalTransitiveDependencyCheck>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>
