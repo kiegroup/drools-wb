@@ -22,7 +22,6 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.uberfire.client.mvp.PlaceStatus;
 
 /**
  * <code>Command</code> to <b>enable</b> the <code>TestToolsView</code>
@@ -38,7 +37,7 @@ public class EnableTestToolsCommand extends AbstractScenarioSimulationCommand {
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
         if (context.getScenarioSimulationEditorPresenter() != null) {
-            context.getScenarioSimulationEditorPresenter().expandToolsDock(PlaceStatus.OPEN);
+            context.getScenarioSimulationEditorPresenter().expandToolsDock();
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
         if (context.getTestToolsPresenter() != null) {
