@@ -117,6 +117,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmoSession().setValue(Optional.ofNullable(simulationDescriptor.getDmoSession()).orElse(""));
         view.getRuleFlowGroup().setValue(Optional.ofNullable(simulationDescriptor.getRuleFlowGroup()).orElse(""));
+        view.getStateless().setChecked(simulationDescriptor.isStateless());
     }
 
     protected void setDMNSettings(SimulationDescriptor simulationDescriptor) {
@@ -134,6 +135,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void saveRuleSettings() {
         simulationDescriptor.setDmoSession(getCleanValue(() -> view.getDmoSession().getValue()));
         simulationDescriptor.setRuleFlowGroup(getCleanValue(() -> view.getRuleFlowGroup().getValue()));
+        simulationDescriptor.setStateless(view.getStateless().isChecked());
     }
 
     protected void saveDMNSettings() {

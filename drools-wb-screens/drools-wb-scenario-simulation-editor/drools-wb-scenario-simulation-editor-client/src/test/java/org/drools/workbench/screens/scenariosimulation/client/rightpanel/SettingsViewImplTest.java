@@ -60,6 +60,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
                 this.dmnNameLabel = dmnNameLabelMock;
                 this.dmnName = dmnNameMock;
                 this.skipFromBuild = skipFromBuildMock;
+                this.stateless = statelessMock;
                 this.saveButton = saveButtonMock;
             }
         });
@@ -82,6 +83,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
         verify(skipFromBuildMock, times(1)).setChecked(eq(false));
+        verify(statelessMock, times(1)).setChecked(eq(false));
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(saveButtonMock, times(1)).setDisabled(eq(false));

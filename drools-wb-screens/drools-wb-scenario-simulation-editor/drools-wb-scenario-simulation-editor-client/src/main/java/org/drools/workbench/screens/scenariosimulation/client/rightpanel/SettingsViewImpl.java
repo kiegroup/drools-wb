@@ -88,11 +88,14 @@ public class SettingsViewImpl
     @DataField("skipFromBuild")
     protected InputElement skipFromBuild = Document.get().createCheckInputElement();
 
+    @DataField("skipFromBuildLabel")
+    protected SpanElement skipFromBuildLabel = Document.get().createSpanElement();
+
     @DataField("saveButton")
     protected ButtonElement saveButton = Document.get().createButtonElement();
 
-    @DataField("skipFromBuildLabel")
-    protected SpanElement skipFromBuildLabel = Document.get().createSpanElement();
+    @DataField("stateless")
+    protected InputElement stateless = Document.get().createCheckInputElement();
 
     public SettingsViewImpl() {
     }
@@ -121,6 +124,7 @@ public class SettingsViewImpl
         dmnFilePathErrorLabel.getStyle().setDisplay(Style.Display.NONE);
         dmnFilePathErrorLabel.setInnerText("");
         skipFromBuild.setChecked(false);
+        stateless.setChecked(false);
         dmnSettings.getStyle().setDisplay(Style.Display.NONE);
         ruleSettings.getStyle().setDisplay(Style.Display.NONE);
         saveButton.setDisabled(false);
@@ -212,6 +216,11 @@ public class SettingsViewImpl
     }
 
     @Override
+    public InputElement getStateless() {
+        return stateless;
+    }
+
+    @Override
     public ButtonElement getSaveButton() {
         return saveButton;
     }
@@ -220,5 +229,4 @@ public class SettingsViewImpl
     public void onSaveButtonClickEvent(ClickEvent event) {
         presenter.onSaveButton(scenarioType.getInnerText());
     }
-
 }

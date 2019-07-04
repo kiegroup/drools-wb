@@ -83,12 +83,14 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         when(settingsViewMock.getDmnName()).thenReturn(dmnNameMock);
         when(settingsViewMock.getSkipFromBuild()).thenReturn(skipFromBuildMock);
         when(settingsViewMock.getSaveButton()).thenReturn(saveButtonMock);
+        when(settingsViewMock.getStateless()).thenReturn(statelessMock);
 
         when(simulationDescriptorMock.getRuleFlowGroup()).thenReturn(RULE_FLOW_GROUP);
         when(simulationDescriptorMock.getDmoSession()).thenReturn(DMO_SESSION);
         when(simulationDescriptorMock.getDmnFilePath()).thenReturn(DMN_FILE_PATH);
         when(simulationDescriptorMock.getDmnNamespace()).thenReturn(DMN_NAMESPACE);
         when(simulationDescriptorMock.getDmnName()).thenReturn(DMN_NAME);
+        when(simulationDescriptorMock.isStateless()).thenReturn(true);
 
         KieAssetsDropdownItem item = new KieAssetsDropdownItem("DMNFile", "", DMN_FILE_PATH, null);
         when(settingsScenarioSimulationDropdownMock.getValue()).thenReturn(Optional.of(item));
@@ -206,6 +208,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmoSessionMock, times(1)).setValue(eq(DMO_SESSION));
         verify(settingsViewMock, times(1)).getRuleFlowGroup();
         verify(ruleFlowGroupMock, times(1)).setValue(eq(RULE_FLOW_GROUP));
+        verify(statelessMock, times(1)).setChecked(eq(simulationDescriptorMock.isStateless()));
     }
 
     @Test
@@ -235,6 +238,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(settingsViewMock, times(1)).getDmoSession();
         verify(settingsViewMock, times(1)).getRuleFlowGroup();
         verify(simulationDescriptorMock, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
+        verify(simulationDescriptorMock, times(1)).setStateless(eq(false));
     }
 
     @Test
