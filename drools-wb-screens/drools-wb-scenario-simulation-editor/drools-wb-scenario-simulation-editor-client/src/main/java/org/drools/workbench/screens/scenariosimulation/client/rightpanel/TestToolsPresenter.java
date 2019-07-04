@@ -18,9 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -56,6 +58,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     protected Map<String, FactModelTree> simpleJavaInstanceFieldsMap = new TreeMap<>();
 
     protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
+
+    protected Set<String> assignedInstanceTitleSet = new HashSet<>();
+
+    protected Map<String, Set<String>> assignedInstanceAndPropertiesMap = new TreeMap<>();
 
     protected EventBus eventBus;
 
@@ -352,7 +358,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (selectedListGroupItemView.isInstanceAssigned()) {
+        //if (assignedInstanceTitleSet.stream().anyMatch(t -> t.substring(0, t.lastIndexOf(".")).equals(selected.getActualClassName()))) {
+        if (assignedInstanceTitleSet.contains(selected.getActualClassName())) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
@@ -363,7 +370,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(FieldItemView selected) {
         selectedFieldItemView = selected;
         selectedListGroupItemView = null;
-        view.enableAddButton();
+        String selectedFactName = selectedFieldItemView.getFactName();
+        if (assignedInstanceTitleSet.contains(selectedFactName) && !listGroupItemPresenter.getFactName().equals(selectedFactName)) {
+            view.disableAddButton();
+        } else {
+            view.enableAddButton();
+        }
     }
 
     @Override
@@ -387,6 +399,16 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void reset() {
         listGroupItemPresenter.reset();
         view.reset();
+    }
+
+    @Override
+    public void setAssignedInstanceTitleSet(Set assignedInstanceTitleSet) {
+        this.assignedInstanceTitleSet = assignedInstanceTitleSet;
+    }
+
+    @Override
+    public void setAssignedInstanceTitleAndPropertiesMap(Map<String, Set<String>> assignedInstanceAndPropertiesMap) {
+        this.assignedInstanceAndPropertiesMap = assignedInstanceAndPropertiesMap;
     }
 
     /**

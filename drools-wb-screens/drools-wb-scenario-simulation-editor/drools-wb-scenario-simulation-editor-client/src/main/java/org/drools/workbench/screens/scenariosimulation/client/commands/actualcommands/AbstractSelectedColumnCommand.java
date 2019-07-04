@@ -99,6 +99,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
      */
     protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String fullClassName) {
+        /*if (isInstanceTitleAssigned(context, selectedColumn, alias)) {
+            throw new IllegalArgumentException("It's not possible to assign this instance");
+        } */
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
@@ -309,5 +312,14 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                 })
                 .findFirst()
                 .map(FactMapping::getExpressionAlias);
+    }
+
+    protected boolean isInstanceTitleAssigned(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String title) {
+        String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
+        String groupName = columnGroup.contains("-") ? columnGroup.substring(0, columnGroup.indexOf("-")) : columnGroup;
+        return context.getScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
+                .filter(column -> !((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId().equals(selectedColumn.getInformationHeaderMetaData().getColumnId()) )
+                .filter(column -> groupName.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup()))
+                .anyMatch(column -> title.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()));
     }
 }

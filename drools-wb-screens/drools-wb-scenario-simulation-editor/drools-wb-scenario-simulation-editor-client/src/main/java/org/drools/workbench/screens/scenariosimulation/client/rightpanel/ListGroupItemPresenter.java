@@ -174,6 +174,11 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         listGroupItemViewMap.clear();
     }
 
+    @Override
+    public String getFactName() {
+        return factName;
+    }
+
     /**
      * Populate the "Assets" list. When
      * @param toPopulate
