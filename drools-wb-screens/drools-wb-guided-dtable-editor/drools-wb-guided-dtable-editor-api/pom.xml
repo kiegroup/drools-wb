@@ -79,6 +79,13 @@
       <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
 
+    <!-- Warned by dependency:analyze -->
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-api</artifactId>
+    </dependency>
+    <!-- End dependency:analyze requirements -->
+
     <!-- Needed for DataModelOracle builder used in tests -->
     <dependency>
       <groupId>org.kie.workbench.services</groupId>

@@ -124,6 +124,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-core</artifactId>
+        <version>${version.org.powermock}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -215,11 +221,81 @@
               <goal>enforce</goal>
             </goals>
             <configuration>
+              <fail>false</fail>
               <rules>
                 <illegalTransitiveDependencyCheck implementation="de.is24.maven.enforcer.rules.IllegalTransitiveDependencyCheck">
                   <useClassesFromLastBuild>true</useClassesFromLastBuild>
                 </illegalTransitiveDependencyCheck>
               </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>analyze-only</id>
+            <phase>verify</phase> <!-- it is anyway the default -->
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+              <verbose>true</verbose>
+              <!--
+               <regexIgnoredClass>org\.jboss\.errai\.marshalling\.server\.impl\.ServerMarshallingFactory.*</regexIgnoredClass>
+                    <regexIgnoredClass>io\.fabric8\.kubernetes.*</regexIgnoredClass>
+                    <regexIgnoredClass>io\.fabric8\.openshift.*</regexIgnoredClass>
+                    <regexIgnoredClass>com\.sun\.net\.httpserver\..+</regexIgnoredClass>
+                    <regexIgnoredClass>javax\..+</regexIgnoredClass>
+                    <regexIgnoredClass>org\.w3c\.dom\..+</regexIgnoredClass>
+                    <regexIgnoredClass>org\.xml\.sax\..+</regexIgnoredClass>
+              -->
+              <ignoredUsedUndeclaredDependencies>
+                <!-- List of dependencies that will be ignored if they are used but undeclared. -->
+                <!-- For the moment being, manually add one-by-one. Next step will be to identify a pattern
+                 equivalent to the regexp used previously -->
+                <dependency>
+                  org.gwtbootstrap3:gwtbootstrap3
+                </dependency>
+                <dependency>
+                  javax.*
+                </dependency>
+                <dependency>
+                  org.slf4j:*
+                </dependency>
+                <dependency>
+                  org.uberfire:uberfire-nio2-model
+                </dependency>
+                <dependency>
+                  org.jboss.errai:*
+                </dependency>
+                <dependency>
+                  org.jboss.spec.javax.annotation:jboss-annotations-api_1.2_spec
+                </dependency>
+                <dependency>
+                  org.apache.lucene:lucene-core
+                </dependency>
+                <dependency>
+                  commons-io:*
+                </dependency>
+                <dependency>
+                  org.jgroups:*
+                </dependency>
+                <dependency>
+                  org.apache.commons*
+                </dependency>
+              </ignoredUsedUndeclaredDependencies>
+              <ignoredUnusedDeclaredDependencies>
+              <dependency>
+                <!-- We have to skip'em all because most of them are needed at runtime, but un-detectable at compile time -->
+                *:*
+              </dependency>
+              </ignoredUnusedDeclaredDependencies>
+              <failOnWarning>true</failOnWarning>
+              <!-- other configurations here -->
             </configuration>
           </execution>
         </executions>

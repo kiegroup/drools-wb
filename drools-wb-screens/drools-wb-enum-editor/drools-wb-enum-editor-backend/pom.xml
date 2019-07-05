@@ -137,6 +137,13 @@
       <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
 
+    <!-- Warned by dependency:analyze -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-nio2-api</artifactId>
+    </dependency>
+    <!-- End dependency:analyze requirements -->
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.jboss.weld.se</groupId>

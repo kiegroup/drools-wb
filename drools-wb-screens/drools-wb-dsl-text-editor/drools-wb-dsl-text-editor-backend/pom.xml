@@ -117,6 +117,18 @@
       <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
 
+    <!-- Warned by dependency:analyze -->
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-metadata-backend-lucene</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-commons</artifactId>
+    </dependency>
+    <!-- End dependency:analyze requirements -->
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.jboss.weld.se</groupId>

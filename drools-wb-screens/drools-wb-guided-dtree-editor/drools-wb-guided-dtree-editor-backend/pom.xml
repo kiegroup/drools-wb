@@ -130,6 +130,18 @@
       <artifactId>uberfire-commons-editor-backend</artifactId>
     </dependency>
 
+    <!-- Warned by dependency:analyze -->
+    <dependency>
+      <groupId>org.kie.workbench.services</groupId>
+      <artifactId>kie-wb-common-refactoring-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.kie.soup</groupId>
+      <artifactId>kie-soup-project-datamodel-commons</artifactId>
+    </dependency>
+    <!-- End dependency:analyze requirements -->
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.uberfire</groupId>
