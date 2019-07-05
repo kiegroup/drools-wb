@@ -18,6 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.businesscentral.client.r
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRunnerReportingPanelWrapper;
 import org.guvnor.common.services.shared.test.TestResultMessage;
@@ -45,6 +48,9 @@ public class TestRunnerReportingPanelWrapperImpl implements TestRunnerReportingP
 
     @Override
     public IsWidget asWidget() {
-        return testRunnerReportingPanel.asWidget();
+        FlowPanel flowPanel = GWT.create(FlowPanel.class);
+        flowPanel.getElement().getStyle().setPaddingTop(4, Style.Unit.PX);
+        flowPanel.add(testRunnerReportingPanel.asWidget());
+        return flowPanel;
     }
 }
