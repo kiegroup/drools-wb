@@ -1869,6 +1869,24 @@
 
   </build>
 
+  <repositories>
+    <!-- This is to override inherited configuration and disable remote snapshots downloading FOR THIS MODULE!!!
+      Snapshots are expected to be updated/downloaded during full drools-wb build -->
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+    </repository>
+  </repositories>
+
   <profiles>
     <!-- profile to disable GWT compilation of showcase (useful in full downstream builds) -->
     <profile>
@@ -1884,6 +1902,27 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <!-- This is to override local .m2/settings.xml and disable remote snapshots downloading -->
+    <profile>
+      <id>standard-extra-repos</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <repositories>
+        <repository>
+          <id>jboss-developer-repository-group</id>
+          <name>JBoss.org Developer Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+        </repository>
+      </repositories>
     </profile>
   </profiles>
 </project>
