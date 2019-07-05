@@ -46,10 +46,6 @@
       <artifactId>uberfire-project-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-commons</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-commons</artifactId>
     </dependency>
@@ -70,11 +66,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-wb-guided-rule-editor-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
@@ -85,13 +76,6 @@
       <artifactId>kie-soup-project-datamodel-api</artifactId>
     </dependency>
     <!-- End dependency:analyze requirements -->
-
-    <!-- Needed for DataModelOracle builder used in tests -->
-    <dependency>
-      <groupId>org.kie.workbench.services</groupId>
-      <artifactId>kie-wb-common-datamodel-backend</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 </project>
