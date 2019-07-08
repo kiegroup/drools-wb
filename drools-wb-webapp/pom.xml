@@ -37,6 +37,8 @@
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
     <gwt.helper.includes>Client,BusinessCentral</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/drools-wb-screens</gwt.helper.rootDirectories>
+    <!-- Horrible workaround used to deploy to local-maven-repo dir -->
+    <root-base-dir>${project.parent.basedir}</root-base-dir>
   </properties>
 
   <dependencies>
@@ -1868,6 +1870,30 @@
     </plugins>
 
   </build>
+
+<!--  <repositories>-->
+<!--&lt;!&ndash;    <repository>&ndash;&gt;-->
+<!--&lt;!&ndash;      <releases>&ndash;&gt;-->
+<!--&lt;!&ndash;        <enabled>true</enabled>&ndash;&gt;-->
+<!--&lt;!&ndash;        <updatePolicy>never</updatePolicy>&ndash;&gt;-->
+<!--&lt;!&ndash;      </releases>&ndash;&gt;-->
+<!--&lt;!&ndash;      <snapshots>&ndash;&gt;-->
+<!--&lt;!&ndash;        <enabled>true</enabled>&ndash;&gt;-->
+<!--&lt;!&ndash;        <updatePolicy>daily</updatePolicy>&ndash;&gt;-->
+<!--&lt;!&ndash;      </snapshots>&ndash;&gt;-->
+<!--&lt;!&ndash;      <id>jboss-public-repository-group</id>&ndash;&gt;-->
+<!--&lt;!&ndash;      <name>JBoss Public Repository Group</name>&ndash;&gt;-->
+<!--&lt;!&ndash;      <url>https://repository.jboss.org/nexus/content/groups/public/</url>&ndash;&gt;-->
+<!--&lt;!&ndash;    </repository>&ndash;&gt;-->
+<!--    <repository>-->
+<!--      <snapshots>-->
+<!--        <enabled>false</enabled>-->
+<!--      </snapshots>-->
+<!--      <id>central</id>-->
+<!--      <name>Central Repository</name>-->
+<!--      <url>https://repo.maven.apache.org/maven2</url>-->
+<!--    </repository>-->
+<!--  </repositories>-->
 
   <profiles>
     <!-- profile to disable GWT compilation of showcase (useful in full downstream builds) -->

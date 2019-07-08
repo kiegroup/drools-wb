@@ -39,6 +39,10 @@
     <checkstyle.logViolationsToConsole>true</checkstyle.logViolationsToConsole>
     <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
     <spotbugs.failOnViolation>true</spotbugs.failOnViolation>
+    <!-- This property has to be overridden by each module -->
+    <root-base-dir>${project.basedir}</root-base-dir>
+    <!-- This property mix module-specific properties to common one -->
+    <local-maven-repo>file:///${root-base-dir}/local-maven-repo</local-maven-repo>
   </properties>
 
   <repositories>
@@ -289,14 +293,14 @@
                 </dependency>
               </ignoredUsedUndeclaredDependencies>
               <ignoredUnusedDeclaredDependencies>
-              <dependency>
-                <!-- We have to skip'em all for two reasons:
-                1) some/most of them are inherited, not explicitly declared, so they should be "excluded" from inherited dependency,
-                2) some/most of them are required at runtime by showcases, so it is not possible to detect them at build time
-                Please remember primary scope of this configuration it is to (try to) avoid code breakage if inheritance tree changes.
-                -->
-                *:*
-              </dependency>
+                <dependency>
+                  <!-- We have to skip'em all for two reasons:
+                  1) some/most of them are inherited, not explicitly declared, so they should be "excluded" from inherited dependency,
+                  2) some/most of them are required at runtime by showcases, so it is not possible to detect them at build time
+                  Please remember primary scope of this configuration it is to (try to) avoid code breakage if inheritance tree changes.
+                  -->
+                  *:*
+                </dependency>
               </ignoredUnusedDeclaredDependencies>
               <failOnWarning>true</failOnWarning>
               <!-- other configurations here -->
@@ -304,8 +308,61 @@
           </execution>
         </executions>
       </plugin>
-
     </plugins>
-
   </build>
+
+  <profiles>
+    <profile>
+      <!-- Scope of this profile is to "deploy" locally built artifacts to drools-wb/local-maven-repo; when used by drools-wb-webapp,
+       the latter will first try to resolve artifacts from such folder, and eventually later from other repos.
+        Please note that repository order matter for resolution-->
+      <id>local-dev</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>deploy-local-maven-repo</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <altSnapshotDeploymentRepository>local-maven-repo::default::${local-maven-repo}</altSnapshotDeploymentRepository>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+          <id>local-maven-repo</id>
+          <url>file:///home/gcardosi/Developing/git/drools-wb/local-maven-repo</url>
+        </repository>
+        <repository>
+          <id>jboss-public-repository-group</id>
+          <name>JBoss Public Repository Group</name>
+          <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+          <layout>default</layout>
+          <releases>
+            <enabled>false</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
 </project>

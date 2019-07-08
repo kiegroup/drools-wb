@@ -31,6 +31,11 @@
   <name>Drools Workbench - Scenario Simulation Editor</name>
   <description>Drools Workbench - Scenario Simulation Editor</description>
 
+  <properties>
+    <!-- Horrible workaround used to deploy to local-maven-repo dir -->
+    <root-base-dir>${project.parent.parent.basedir}</root-base-dir>
+  </properties>
+
   <modules>
     <module>drools-wb-scenario-simulation-editor-api</module>
     <module>drools-wb-scenario-simulation-editor-client</module>
