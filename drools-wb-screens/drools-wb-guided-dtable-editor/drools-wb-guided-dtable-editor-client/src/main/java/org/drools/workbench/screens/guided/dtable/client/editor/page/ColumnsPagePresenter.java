@@ -367,19 +367,21 @@ public class ColumnsPagePresenter {
 
         final VerticalPanel conditionsWidget = getConditionsWidget();
 
-        conditionsWidget.clear();
+        if (conditionsWidget != null) {
+            conditionsWidget.clear();
 
-        if (conditionColumns.isEmpty()) {
-            getAccordion().getItem(CONDITION).setOpen(false);
-            conditionsWidget.add(blankSlate());
-            return;
+            if (conditionColumns.isEmpty()) {
+                getAccordion().getItem(CONDITION).setOpen(false);
+                conditionsWidget.add(blankSlate());
+                return;
+            }
+
+            conditionsWidget.add(getConditionsPanel());
+
+            final Map<String, List<BaseColumn>> columnGroups = groupByTitle(conditionColumns);
+
+            getConditionsPanel().renderColumns(columnGroups);
         }
-
-        conditionsWidget.add(getConditionsPanel());
-
-        final Map<String, List<BaseColumn>> columnGroups = groupByTitle(conditionColumns);
-
-        getConditionsPanel().renderColumns(columnGroups);
     }
 
     <T extends BaseColumn> Map<String, List<BaseColumn>> groupByTitle(final List<T> columns) {
@@ -397,19 +399,21 @@ public class ColumnsPagePresenter {
 
         final VerticalPanel actionsWidget = getActionsWidget();
 
-        actionsWidget.clear();
+        if (actionsWidget != null) {
+            actionsWidget.clear();
 
-        if (actionColumns.isEmpty()) {
-            getAccordion().getItem(ACTION).setOpen(false);
-            actionsWidget.add(blankSlate());
-            return;
+            if (actionColumns.isEmpty()) {
+                getAccordion().getItem(ACTION).setOpen(false);
+                actionsWidget.add(blankSlate());
+                return;
+            }
+
+            actionsWidget.add(getActionsPanel());
+
+            final Map<String, List<BaseColumn>> columnGroups = groupByTitle(actionColumns);
+
+            getActionsPanel().renderColumns(columnGroups);
         }
-
-        actionsWidget.add(getActionsPanel());
-
-        final Map<String, List<BaseColumn>> columnGroups = groupByTitle(actionColumns);
-
-        getActionsPanel().renderColumns(columnGroups);
     }
 
     ColumnManagementView getActionsPanel() {
