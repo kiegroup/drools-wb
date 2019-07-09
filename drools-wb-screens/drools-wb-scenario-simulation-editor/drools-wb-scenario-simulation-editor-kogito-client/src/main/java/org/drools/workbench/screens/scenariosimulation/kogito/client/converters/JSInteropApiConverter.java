@@ -61,13 +61,15 @@ public class JSInteropApiConverter {
 
     protected static Imports getImports(JSIImportsType source) {
         Imports toReturn = new Imports();
-        final JSIWrappedImportsType imports = source.getImports();
-        if (imports != null) {
-            final JsArrayLike<JSIImportType> importArray = imports.getImport();
-            if (importArray != null) {
-                for (int i = 0; i < importArray.getLength(); i++) {
-                    JSIImportType jsiImportType = Js.uncheckedCast(importArray.getAt(i));
-                    toReturn.addImport(getImport(jsiImportType));
+        if (source != null) {
+            final JSIWrappedImportsType imports = source.getImports();
+            if (imports != null) {
+                final JsArrayLike<JSIImportType> importArray = imports.getImport();
+                if (importArray != null) {
+                    for (int i = 0; i < importArray.getLength(); i++) {
+                        JSIImportType jsiImportType = Js.uncheckedCast(importArray.getAt(i));
+                        toReturn.addImport(getImport(jsiImportType));
+                    }
                 }
             }
         }
@@ -163,32 +165,4 @@ public class JSInteropApiConverter {
     protected static FactIdentifier getFactIdentifier(JSIFactIdentifierType source) {
         return new FactIdentifier(source.getName(), source.getClassName());
     }
-
-//    protected static JSIFactIdentifierType getActualJSIFactIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
-//        String numberPart = "1";
-//        if (reference.contains("[") && reference.contains("]")) {
-//            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
-//        }
-//        try {
-//            int index = Integer.parseInt(numberPart) - 1;
-//            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
-//            return retrieved.getFactIdentifier();
-//        } catch (Throwable t) {
-//            return null;
-//        }
-//    }
-
-//    protected static JSIExpressionIdentifierType getActualJSIExpressionIdentifierType(String reference, JsArrayLike<JSIFactMappingType> jsiFactMappingTypes) {
-//        String numberPart = "1";
-//        if (reference.contains("[") && reference.contains("]")) {
-//            numberPart = reference.substring(reference.indexOf("[") + 1, reference.indexOf("]"));
-//        }
-//        try {
-//            int index = Integer.parseInt(numberPart) - 1;
-//            JSIFactMappingType retrieved = Js.uncheckedCast(jsiFactMappingTypes.getAt(index));
-//            return retrieved.getExpressionIdentifier();
-//        } catch (Throwable t) {
-//            return null;
-//        }
-//    }
 }
