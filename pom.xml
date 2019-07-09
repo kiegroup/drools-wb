@@ -224,7 +224,7 @@
               <fail>false</fail>
               <rules>
                 <illegalTransitiveDependencyCheck implementation="de.is24.maven.enforcer.rules.IllegalTransitiveDependencyCheck">
-                  <useClassesFromLastBuild>true</useClassesFromLastBuild>
+                  <useClassesFromLastBuild>false</useClassesFromLastBuild>
                 </illegalTransitiveDependencyCheck>
               </rules>
             </configuration>
