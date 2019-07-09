@@ -48,6 +48,7 @@ public class TestRunnerReportingPanelWrapperImpl implements TestRunnerReportingP
 
     @Override
     public IsWidget asWidget() {
+        /* Here, a FlowPanel is added to align the padding with other DocksPanels */
         FlowPanel flowPanel = GWT.create(FlowPanel.class);
         flowPanel.getElement().getStyle().setPaddingTop(4, Style.Unit.PX);
         flowPanel.add(testRunnerReportingPanel.asWidget());
