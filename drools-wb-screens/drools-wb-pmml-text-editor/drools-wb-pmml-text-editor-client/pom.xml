@@ -32,8 +32,7 @@
 
   <properties>
     <java.module.name>org.drools.wb.pmml.text.editor.client</java.module.name>
-    <!-- Horrible workaround used to deploy to local-maven-repo dir -->
-    <root-base-dir>${project.parent.parent.parent.basedir}</root-base-dir>
+
   </properties>
 
   <dependencies>

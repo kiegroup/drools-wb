@@ -40,9 +40,10 @@
     <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
     <spotbugs.failOnViolation>true</spotbugs.failOnViolation>
     <!-- This property has to be overridden by each module -->
-    <root-base-dir>${project.basedir}</root-base-dir>
+    <root.base.dir>${project.basedir}</root.base.dir>
     <!-- This property mix module-specific properties to common one -->
-    <local-maven-repo>file:///${root-base-dir}/local-maven-repo</local-maven-repo>
+<!--    <local-maven-repo>file:///${root.base.dir}/local-maven-repo</local-maven-repo>-->
+    <local-maven-repo>file:///${maven.multiModuleProjectDirectory}/local-maven-repo</local-maven-repo>
   </properties>
 
   <repositories>
@@ -346,7 +347,7 @@
             <enabled>true</enabled>
           </snapshots>
           <id>local-maven-repo</id>
-          <url>file:///home/gcardosi/Developing/git/drools-wb/local-maven-repo</url>
+          <url>${local-maven-repo}</url>
         </repository>
         <repository>
           <id>jboss-public-repository-group</id>
