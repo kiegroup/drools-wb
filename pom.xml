@@ -216,7 +216,7 @@
         <executions>
           <execution>
             <id>enforce-direct-dependencies</id>
-            <phase>verify</phase>
+            <phase>none</phase>
             <goals>
               <goal>enforce</goal>
             </goals>
