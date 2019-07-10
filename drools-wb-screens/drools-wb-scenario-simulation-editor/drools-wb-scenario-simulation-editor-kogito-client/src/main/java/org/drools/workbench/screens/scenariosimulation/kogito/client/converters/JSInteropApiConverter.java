@@ -20,7 +20,6 @@ import java.util.List;
 
 import jsinterop.base.Js;
 import jsinterop.base.JsArrayLike;
-import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -102,11 +101,6 @@ public class JSInteropApiConverter {
         for (int i = 0; i < factMappingValue.getLength(); i++) {
             JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
             JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
-//            if (factIdentifierType.getReference() != null && !factIdentifierType.getReference().isEmpty()) {
-//                factIdentifierType = getActualJSIFactIdentifierType(factIdentifierType.getReference(), jsiFactMappingTypes);
-//            }
-//            final JSIExpressionIdentifierReferenceType expressionIdentifierReference = jsiFactMappingValueType.getExpressionIdentifier();
-//            final JSIExpressionIdentifierType expressionIdentifierType = getActualJSIExpressionIdentifierType(expressionIdentifierReference.getReference(), jsiFactMappingTypes);
             final JSIExpressionIdentifierType expressionIdentifierType = jsiFactMappingValueType.getExpressionIdentifier();
             if (factIdentifierType != null && expressionIdentifierType != null) {
                 String value = jsiFactMappingValueType.getRawValue() != null ? jsiFactMappingValueType.getRawValue().getValue() : null;
@@ -152,10 +146,6 @@ public class JSInteropApiConverter {
         toPopulate.setDmnNamespace(source.getDmnNamespace());
         toPopulate.setDmnName(source.getDmnName());
         toPopulate.setSkipFromBuild(source.getSkipFromBuild() != null ? source.getSkipFromBuild() : false);
-    }
-
-    protected static ExpressionElement getExpressionElement(JSIExpressionElementType jsiExpressionElementType) {
-        return new ExpressionElement(jsiExpressionElementType.getStep());
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

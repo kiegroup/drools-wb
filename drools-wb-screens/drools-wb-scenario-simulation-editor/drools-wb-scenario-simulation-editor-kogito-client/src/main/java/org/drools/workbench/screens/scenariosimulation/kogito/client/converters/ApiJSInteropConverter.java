@@ -87,10 +87,8 @@ public class ApiJSInteropConverter {
 
     protected static JSISimulationType getSimulation(Simulation source) {
         JSISimulationType toReturn = JSISimulationType.newInstance();
-        ///
         JSISimulationDescriptorType jsiSimulationDescriptorType = getSimulationDescriptor(source.getSimulationDescriptor());
         toReturn.setSimulationDescriptor(jsiSimulationDescriptorType);
-        ///
         final List<Scenario> unmodifiableScenarios = source.getUnmodifiableScenarios();
         JSIScenariosType jsiScenariosType = JSIScenariosType.newInstance();
         toReturn.setScenarios(jsiScenariosType);
@@ -220,75 +218,6 @@ public class ApiJSInteropConverter {
         toReturn.setClassName(factIdentifier.getClassName());
         return toReturn;
     }
-
-//    protected static JSIExpressionIdentifierReferenceType getJSIExpressionIdentifierReferenceType(ExpressionIdentifier expressionIdentifier, List<FactMapping> factMappings) {
-//        JSIExpressionIdentifierReferenceType toReturn = JSIExpressionIdentifierReferenceType.newInstance();
-//        String referenceTemplate = "../../../../../simulationDescriptor/factMappings/FactMapping$s/expressionIdentifier";
-//        final Optional<Integer> optionalIndex = factMappings.stream().filter(factMapping -> factMapping.getExpressionIdentifier().equals(expressionIdentifier)).findFirst().map(factMappings::indexOf);
-//        optionalIndex.ifPresent(integer -> {
-//            String replacement = "";
-//            if (integer > 0) {
-//                integer += 1;
-//                replacement = "[" + integer + "]";
-//            }
-//            String reference = referenceTemplate.replace("$s", replacement);
-//            toReturn.setReference(reference);
-//        });
-//        return toReturn;
-//    }
-
-//
-//    protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier factIdentifier, List<FactMapping> factMappings) {
-//        JSIFactIdentifierType toReturn;
-//        String referenceTemplate = "../../../../../simulationDescriptor/factMappings/FactMapping$s/factIdentifier";
-//        final Optional<Integer> optionalIndex = factMappings.stream().filter(factMapping -> factMapping.getFactIdentifier().equals(factIdentifier)).findFirst().map(factMappings::indexOf);
-//        if (optionalIndex.isPresent()) {
-//            toReturn = JSIFactIdentifierType.newInstance();
-//            int integer = optionalIndex.get();
-//            String replacement = "";
-//            if (integer > 0) {
-//                integer += 1;
-//                replacement = "[" + integer + "]";
-//            }
-//            String reference = referenceTemplate.replace("$s", replacement);
-//            toReturn.setReference(reference);
-//        } else {
-//            toReturn = getFactIdentifier(factIdentifier);
-//        }
-//        return toReturn;
-//    }
-
-//    protected static native Object getJSIType(String typeName) /*-{
-//        var json = "{\"TYPE_NAME\": \"" + typeName + "\"}";
-//        var retrieved = JSON.parse(json)
-//        console.log("retrieved " + retrieved);
-//        return retrieved
-//
-//    }-*/;
-
-//    private static class MyCollectionList<E> extends AbstractCollection<E> {
-//
-//        /**
-//         * This field holds a JavaScript array.
-//         */
-//        private transient E[] array = (E[]) new Object[0];
-//
-//        @Override
-//        public Iterator<E> iterator() {
-//            return null;
-//        }
-//
-//        @Override
-//        public boolean add(E o) {
-//            array[array.length] = o;
-//            return true;
-//        }
-//
-//        @Override
-//        public int size() {
-//            return array.length;
-//        }
-//    }
 
     protected static native JsArrayLike getNativeArray() /*-{
         return [];

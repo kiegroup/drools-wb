@@ -61,7 +61,7 @@ import static org.drools.workbench.screens.scenariosimulation.kogito.client.conv
 
 @Dependent
 /**
- * Wrapper to be used inside Submarine
+ * Wrapper to be used inside Kogito
  */
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
@@ -215,8 +215,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         } else {
             dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
-        // TODO CHECK
-//        dataManagementStrategy.manageScenarioSimulationModelContent(null, model);
         dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
