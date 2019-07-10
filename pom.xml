@@ -211,28 +211,6 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M1</version>
-        <executions>
-          <execution>
-            <id>enforce-direct-dependencies</id>
-            <phase>none</phase>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <configuration>
-              <fail>false</fail>
-              <rules>
-                <illegalTransitiveDependencyCheck implementation="de.is24.maven.enforcer.rules.IllegalTransitiveDependencyCheck">
-                  <useClassesFromLastBuild>true</useClassesFromLastBuild>
-                </illegalTransitiveDependencyCheck>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
