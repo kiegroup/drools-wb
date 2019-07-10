@@ -19,7 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.SortedMap;
 
 import com.google.gwt.dom.client.DivElement;
@@ -198,9 +197,5 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
          * @param selected
          */
         void setSelectedElement(FieldItemView selected);
-
-        void setAssignedInstanceTitleSet(Set assignedInstanceTitleSet);
-
-        void setAssignedInstanceTitleAndPropertiesMap(Map<String, Set<String>> assignedInstanceAndPropertiesMap);
     }
 }

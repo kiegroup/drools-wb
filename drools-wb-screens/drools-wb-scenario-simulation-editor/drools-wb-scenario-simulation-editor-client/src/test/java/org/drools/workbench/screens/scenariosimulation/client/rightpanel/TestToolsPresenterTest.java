@@ -461,7 +461,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         verify(testToolsViewMock, times(1)).disableEditorTab();
     }
 
-    @Test
+
     public void setSelectedElement_WithInstanceAssigned() {
         when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
@@ -471,7 +471,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
     }
 
-    @Test
+
     public void setSelectedElement_WithoutInstanceAssigned() {
         when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(false);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);

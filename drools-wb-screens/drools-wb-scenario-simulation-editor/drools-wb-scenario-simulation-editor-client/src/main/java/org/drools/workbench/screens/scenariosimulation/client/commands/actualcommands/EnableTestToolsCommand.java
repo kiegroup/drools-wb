@@ -15,13 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
 /**
  * <code>Command</code> to <b>enable</b> the <code>TestToolsView</code>
@@ -46,21 +42,6 @@ public class EnableTestToolsCommand extends AbstractScenarioSimulationCommand {
             } else {
                 context.getTestToolsPresenter().onEnableEditorTab(status.getFilterTerm(), status.getPropertyNameElements(), status.isNotEqualsSearch());
             }
-
-            final Set<String> assignedInstanceTitle = new HashSet<>();
-            String columnGroup = ((ScenarioGridColumn) context.getModel().getSelectedColumn()).getInformationHeaderMetaData().getColumnGroup();
-            String groupName = columnGroup.contains("-") ? columnGroup.substring(0, columnGroup.indexOf("-")) : columnGroup;
-            context.getModel().getColumns().stream().
-                    filter(c -> groupName.equals(((ScenarioGridColumn) c).getInformationHeaderMetaData().getColumnGroup())).
-                    forEach(c -> assignedInstanceTitle.add(((ScenarioGridColumn) c).getInformationHeaderMetaData().getTitle()));
-            context.getTestToolsPresenter().setAssignedInstanceTitleSet(assignedInstanceTitle);
-
-/*
-            final Map<String, Set<String>> assignedInstanceAndPropertiesMap = new TreeMap<>();
-            context.getModel().getColumns().stream().
-                    filter(c -> groupName.equals(((ScenarioGridColumn) c).getInformationHeaderMetaData().getColumnGroup())).
-                    forEach(c -> assignedInstanceTitle.add(((ScenarioGridColumn) c).getInformationHeaderMetaData().getTitle()));
-            context.getTestToolsPresenter().setAssignedInstanceTitleAndPropertiesMap(assignedInstanceAndPropertiesMap); */
         }
     }
 }

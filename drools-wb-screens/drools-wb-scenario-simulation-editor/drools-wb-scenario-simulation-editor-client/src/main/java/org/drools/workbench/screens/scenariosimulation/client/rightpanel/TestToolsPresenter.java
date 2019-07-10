@@ -18,11 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -58,10 +56,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     protected Map<String, FactModelTree> simpleJavaInstanceFieldsMap = new TreeMap<>();
 
     protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
-
-    protected Set<String> assignedInstanceTitleSet = new HashSet<>();
-
-    protected Map<String, Set<String>> assignedInstanceAndPropertiesMap = new TreeMap<>();
 
     protected EventBus eventBus;
 
@@ -325,22 +319,22 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void onEnableEditorTab(String factName, List<String> propertyNameElements, boolean notEqualsSearch) {
+    public void onEnableEditorTab(String filterTerm, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
-        onPerfectMatchSearchedEvent(factName, notEqualsSearch);
-        listGroupItemPresenter.enable(factName);
+        onPerfectMatchSearchedEvent(filterTerm, notEqualsSearch);
+        listGroupItemPresenter.enable(filterTerm);
         editingColumnEnabled = true;
         view.enableEditorTab();
         /* If notEqualsSearch is TRUE, then the instance is not assigned for the selected column.
          * Therefore, it isn't necessary to search through the maps to check it. In that case, the search is activated.
          */
         if (!notEqualsSearch) {
-            updateInstanceIsAssignedStatus(factName);
+            updateInstanceIsAssignedStatus(filterTerm);
         } else {
             view.enableSearch();
         }
         if (propertyNameElements != null && !notEqualsSearch) {
-            listGroupItemPresenter.selectProperty(factName, propertyNameElements);
+            listGroupItemPresenter.selectProperty(filterTerm, propertyNameElements);
         }
     }
 
@@ -358,8 +352,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        //if (assignedInstanceTitleSet.stream().anyMatch(t -> t.substring(0, t.lastIndexOf(".")).equals(selected.getActualClassName()))) {
-        if (assignedInstanceTitleSet.contains(selected.getActualClassName())) {
+        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), false)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
@@ -370,8 +363,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(FieldItemView selected) {
         selectedFieldItemView = selected;
         selectedListGroupItemView = null;
-        String selectedFactName = selectedFieldItemView.getFactName();
-        if (assignedInstanceTitleSet.contains(selectedFactName) && !listGroupItemPresenter.getFactName().equals(selectedFactName)) {
+        if (!listGroupItemPresenter.isInstanceAssigned(selected.getFactName()) &&
+                filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), false)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
@@ -399,16 +392,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void reset() {
         listGroupItemPresenter.reset();
         view.reset();
-    }
-
-    @Override
-    public void setAssignedInstanceTitleSet(Set assignedInstanceTitleSet) {
-        this.assignedInstanceTitleSet = assignedInstanceTitleSet;
-    }
-
-    @Override
-    public void setAssignedInstanceTitleAndPropertiesMap(Map<String, Set<String>> assignedInstanceAndPropertiesMap) {
-        this.assignedInstanceAndPropertiesMap = assignedInstanceAndPropertiesMap;
     }
 
     /**
