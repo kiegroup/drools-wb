@@ -86,6 +86,6 @@ public class ScenarioSimulationResourceTypeDefinition implements ResourceTypeDef
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }

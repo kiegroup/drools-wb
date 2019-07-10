@@ -85,6 +85,6 @@ public class GuidedRuleDRLResourceTypeDefinition
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }

@@ -84,6 +84,6 @@ public class GuidedDTableGraphResourceTypeDefinition implements ResourceTypeDefi
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }

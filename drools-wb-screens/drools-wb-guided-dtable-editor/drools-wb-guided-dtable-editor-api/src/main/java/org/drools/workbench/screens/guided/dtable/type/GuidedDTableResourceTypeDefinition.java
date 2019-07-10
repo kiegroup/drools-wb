@@ -84,6 +84,6 @@ public class GuidedDTableResourceTypeDefinition implements ResourceTypeDefinitio
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }

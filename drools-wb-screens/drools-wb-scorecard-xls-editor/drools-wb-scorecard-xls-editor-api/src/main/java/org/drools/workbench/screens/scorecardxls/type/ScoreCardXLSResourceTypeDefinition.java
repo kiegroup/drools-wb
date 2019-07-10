@@ -85,6 +85,6 @@ public class ScoreCardXLSResourceTypeDefinition
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }

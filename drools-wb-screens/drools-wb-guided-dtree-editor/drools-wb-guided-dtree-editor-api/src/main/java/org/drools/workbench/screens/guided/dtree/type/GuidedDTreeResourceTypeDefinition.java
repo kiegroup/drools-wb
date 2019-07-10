@@ -83,6 +83,6 @@ public class GuidedDTreeResourceTypeDefinition implements ResourceTypeDefinition
 
     @Override
     public DiffMode getDiffMode() {
-        return DiffMode.VISUAL;
+        return DiffMode.TEXTUAL;
     }
 }
