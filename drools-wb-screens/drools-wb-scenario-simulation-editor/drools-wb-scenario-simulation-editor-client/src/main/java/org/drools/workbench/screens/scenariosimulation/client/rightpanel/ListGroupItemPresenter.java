@@ -202,7 +202,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     /**
-     * Set the property' <b>name</b> (filterName) and <b>type</b> (factModelTreeClass) of a given <code>ListGroupItemView</code>
+     * Set the property' <b>name</b> (factName) and <b>type</b> (factModelTreeClass) of a given <code>ListGroupItemView</code>
      * @param toPopulate
      * @param factName the property' name
      * @param factType the property' type
