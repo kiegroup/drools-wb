@@ -278,6 +278,7 @@
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-dev</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
