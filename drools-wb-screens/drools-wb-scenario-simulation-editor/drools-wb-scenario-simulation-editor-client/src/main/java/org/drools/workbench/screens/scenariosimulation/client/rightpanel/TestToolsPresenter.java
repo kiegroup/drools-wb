@@ -441,6 +441,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         updateSimpleJavaInstanceFieldListSeparator();
     }
 
+    /**
+     * It determines if a key (factTitle) is present or not in the search variable.
+     * @param key It's the title of the fact to search
+     * @param search It represents a concatenation of title, with ";" as separator
+     * @param notEqualsSearch It establishes the method logic: to check if a key is present or not in search string
+     * @return
+     */
     protected boolean filterTerm(String key, String search, boolean notEqualsSearch) {
         List<String> terms = Arrays.asList(search.split(";"));
         if (notEqualsSearch) {

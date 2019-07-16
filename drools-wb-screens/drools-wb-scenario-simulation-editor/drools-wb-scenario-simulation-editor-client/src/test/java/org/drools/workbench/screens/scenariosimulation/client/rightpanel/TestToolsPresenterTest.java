@@ -41,7 +41,9 @@ import org.mockito.Mock;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME_2;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_PACKAGE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILTER_TERM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -461,24 +463,62 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         verify(testToolsViewMock, times(1)).disableEditorTab();
     }
 
-
-    public void setSelectedElement_WithInstanceAssigned() {
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
+    @Test
+    public void setSelectedElement_InstanceAssigned() {
+        when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(selectedListGroupItemViewMock, times(1)).isInstanceAssigned();
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME), eq(FILTER_TERM), eq(false));
         verify(testToolsViewMock, times(1)).disableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
     }
 
-
-    public void setSelectedElement_WithoutInstanceAssigned() {
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(false);
+    @Test
+    public void setSelectedElement_InstanceNotAssigned() {
+        when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME_2);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(selectedListGroupItemViewMock, times(1)).isInstanceAssigned();
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME_2), eq(FILTER_TERM), eq(false));
         verify(testToolsViewMock, times(1)).enableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
+    }
+
+    @Test
+    public void setSelectedElementProperty_InstanceAssigned() {
+        when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(true);
+        when(selectedFieldItemViewMock.getFactName()).thenReturn(FACT_NAME);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
+        testToolsPresenter.setSelectedElement(selectedFieldItemViewMock);
+        verify(testToolsPresenter, never()).filterTerm(any(), any(), anyBoolean());
+        verify(testToolsViewMock, times(1)).enableAddButton();
+        assertNull(testToolsPresenter.selectedListGroupItemView);
+        assertEquals(selectedFieldItemViewMock, testToolsPresenter.selectedFieldItemView);
+    }
+
+    @Test
+    public void setSelectedElementProperty_InstanceNotAssignedFactNameAlreadyAssigned() {
+        when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(false);
+        when(selectedFieldItemViewMock.getFactName()).thenReturn(FACT_NAME);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
+        testToolsPresenter.setSelectedElement(selectedFieldItemViewMock);
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME), eq(FILTER_TERM), eq(false));
+        verify(testToolsViewMock, times(1)).disableAddButton();
+        assertNull(testToolsPresenter.selectedListGroupItemView);
+        assertEquals(selectedFieldItemViewMock, testToolsPresenter.selectedFieldItemView);
+    }
+
+    @Test
+    public void setSelectedElementProperty_InstanceNotAssignedFactNameNotAssigned() {
+        when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME_2)).thenReturn(false);
+        when(selectedFieldItemViewMock.getFactName()).thenReturn(FACT_NAME_2);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
+        testToolsPresenter.setSelectedElement(selectedFieldItemViewMock);
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME_2), eq(FILTER_TERM), eq(false));
+        verify(testToolsViewMock, times(1)).enableAddButton();
+        assertNull(testToolsPresenter.selectedListGroupItemView);
+        assertEquals(selectedFieldItemViewMock, testToolsPresenter.selectedFieldItemView);
     }
 
     @Test
