@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
@@ -62,46 +61,16 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @RunWith(GwtMockitoTestRunner.class)
 public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandTest {
 
-
-
     @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock1;
+    private ScenarioGridColumn scenarioGridColumnMock3;
     @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock2;
+    private FactMapping factMappingMock3;
     @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock3;
+    private FactMappingValue factMappingValueMock3;
     @Mock
-    protected FactMapping factMappingMock1;
+    private List<GridColumn.HeaderMetaData> headerMetaDatasMock3;
     @Mock
-    protected FactMapping factMappingMock2;
-    @Mock
-    protected FactMapping factMappingMock3;
-    @Mock
-    protected FactMappingValue factMappingValueMock1;
-    @Mock
-    protected FactMappingValue factMappingValueMock2;
-    @Mock
-    protected FactMappingValue factMappingValueMock3;
-    @Mock
-    protected FactIdentifier factIdentifierMock1;
-    @Mock
-    protected FactIdentifier factIdentifierMock2;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock1;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock2;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock3;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock1;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock2;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock1;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock2;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock3;
+    private ScenarioHeaderMetaData propertyHeaderMetaDataMock3;
 
     @Before
     public void setup() {
@@ -119,13 +88,13 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
             }
         });
         assertTrue(command.isUndoable());
-        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
-                          factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
-                          "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
     }
 
     @Test
     public void executeIfSelectedColumn_WithoutInstanceAndProperty() {
+        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
+                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
+                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
         when(scenarioGridColumnMock1.isInstanceAssigned()).thenReturn(Boolean.FALSE);
         when(scenarioGridColumnMock1.isPropertyAssigned()).thenReturn(Boolean.FALSE);
         ((DuplicateInstanceCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, scenarioGridColumnMock1);
@@ -138,6 +107,9 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
 
     @Test
     public void executeIfSelectedColumn_WithInstanceOnly() {
+        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
+                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
+                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
         when(scenarioGridColumnMock1.isPropertyAssigned()).thenReturn(Boolean.FALSE);
         ((DuplicateInstanceCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, scenarioGridColumnMock1);
         verify(scenarioGridModelMock, times(1)).getInstancesCount(eq(scenarioGridColumnMock1.getFactIdentifier().getClassName()));
@@ -149,6 +121,9 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
 
     @Test
     public void executeIfSelectedColumn_WithInstanceAndProperty() {
+        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
+                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
+                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
         ((DuplicateInstanceCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, scenarioGridColumnMock1);
         verify(scenarioGridModelMock, times(1)).getInstancesCount(eq(scenarioGridColumnMock1.getFactIdentifier().getClassName()));
         verify((DuplicateInstanceCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(scenarioGridColumnMock1), eq(COLUMN_NUMBER + 1), eq(Boolean.FALSE));
@@ -161,6 +136,9 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
 
     @Test
     public void executeIfSelectedColumn_WithInstanceAndPropertyAndThreeColumns() {
+        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
+                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
+                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
         final String SECOND = "SECOND";
         addNewColumn(scenarioGridColumnMock2, headerMetaDatasMock2, informationHeaderMetaDataMock2, propertyHeaderMetaDataMock2, factIdentifierMock2, factMappingMock2,
                      factMappingValueMock2, COLUMN_NUMBER + 1, COLUMN_NUMBER + 2, COLUMN_NUMBER + 1, MULTIPART_VALUE + "_2", GRID_PROPERTY_TITLE + "_2", GRID_COLUMN_ID + "_2", FACT_ALIAS + "_2", VALUE_CLASS_NAME,

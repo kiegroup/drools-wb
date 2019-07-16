@@ -44,7 +44,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
 
     /* In case of a selected column with <b>assigned</b> Instance, it contains its related Instance title.
        Otherwise, in case of a <b>NOT assigned</b> Instance, it contains all the titles assigned to other columns of
-       the same group */
+       the same group with the following syntax: "TITLE1;TITLE2;.." */
     private String filterTerm = null;
 
     @Override

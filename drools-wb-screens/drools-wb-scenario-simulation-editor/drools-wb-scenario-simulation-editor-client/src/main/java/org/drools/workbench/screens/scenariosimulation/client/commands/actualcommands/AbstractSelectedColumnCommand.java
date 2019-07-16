@@ -99,12 +99,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
      */
     protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String fullClassName) {
-        /*if (isInstanceTitleAssigned(context, selectedColumn, alias)) {
-            throw new IllegalArgumentException("It's not possible to assign this instance");
-        } */
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
-        setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
+        setInstanceHeaderMetaData(context, selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
         setPropertyMetaData(propertyHeaderMetaData, getPropertyPlaceHolder(columnIndex), false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
         context.getModel().updateColumnInstance(columnIndex, selectedColumn);
@@ -152,14 +149,18 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
 
     /**
      * Sets the metadata for an instance header on a given <code>ScenarioGridColumn</code>.
-     * @param scenarioGridColumn
-     * @param aliasName
-     * @param factIdentifier
+     * @param context It contains the <b>Context</b> inside which the commands will be executed
+     * @param selectedColumn The selected <code>ScenarioGridColumn</code> where the command was launched
+     * @param aliasName The title to assign to the selected column
+     * @param factIdentifier The <code>FactIdentifier</code> to assign to the selected column
      */
-    protected void setInstanceHeaderMetaData(ScenarioGridColumn scenarioGridColumn, String aliasName, FactIdentifier factIdentifier) {
-        scenarioGridColumn.getInformationHeaderMetaData().setTitle(aliasName);
-        scenarioGridColumn.setInstanceAssigned(true);
-        scenarioGridColumn.setFactIdentifier(factIdentifier);
+    protected void setInstanceHeaderMetaData(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String aliasName, FactIdentifier factIdentifier) {
+        if (isValidInstanceTitle(context, selectedColumn, factIdentifier, aliasName)) {
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleAssignedError(aliasName));
+        }
+        selectedColumn.getInformationHeaderMetaData().setTitle(aliasName);
+        selectedColumn.setInstanceAssigned(true);
+        selectedColumn.setFactIdentifier(factIdentifier);
     }
 
     /**
@@ -216,7 +217,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                 .forEach(index -> {
                     final ScenarioGridColumn scenarioGridColumn = (ScenarioGridColumn) context.getModel().getColumns().get(index);
                     if (!scenarioGridColumn.isInstanceAssigned()) { // We have not defined the instance, yet
-                        setInstanceHeaderMetaData(scenarioGridColumn, instanceAliasName, factIdentifier);
+                        setInstanceHeaderMetaData(context, scenarioGridColumn, instanceAliasName, factIdentifier);
                     }
                 });
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getPropertyMetaDataGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
@@ -314,12 +315,54 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                 .map(FactMapping::getExpressionAlias);
     }
 
-    protected boolean isInstanceTitleAssigned(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String title) {
+    /**
+     * It checks if the provided instance title is valid. A title is valid if not already present in his own column group
+     * (GIVEN/EXPECTED). The only exception is when the selected column is part (i.e on the left or on the right) of
+     * the the same instance group of the selected column (i.e columns with the same <code>factIdentifier</code> and in
+     * the same Range).
+     * @param context
+     * @param selectedColumn It's the user selected column
+     * @param factIdentifier It's the factIdentifier to assign to selectedColumn
+     * @param title It's the title to assign to selectedColumn
+     * @return
+     *
+     */
+    protected boolean isValidInstanceTitle(ScenarioSimulationContext context,
+                                           ScenarioGridColumn selectedColumn,
+                                           FactIdentifier factIdentifier,
+                                           String title) {
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
         String groupName = columnGroup.contains("-") ? columnGroup.substring(0, columnGroup.indexOf("-")) : columnGroup;
-        return context.getScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
-                .filter(column -> !((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId().equals(selectedColumn.getInformationHeaderMetaData().getColumnId()) )
-                .filter(column -> groupName.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnGroup()))
-                .anyMatch(column -> title.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()));
+        int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
+        return context.getModel().getColumns().stream()
+                .map(column -> (ScenarioGridColumn) column)
+                .filter(column -> groupName.equals(column.getInformationHeaderMetaData().getColumnGroup()))
+                .filter(column -> !checkInstanceGroup(context, column, factIdentifier, columnIndex))
+                .anyMatch(column -> title.equals(column.getInformationHeaderMetaData().getTitle()));
+    }
+
+    /**
+     * It checks if the evaluated column is part (i.e. on the left or on the right) of a group instances with the same
+     * <code>factIdentifier</code> of the user selected fact.
+     * @param context
+     * @param evaluatedColumn The current analyzed column
+     * @param factIdentifier The <code>FactIdentifier</code> related to the selected column
+     * @param columnIndex The column index of the selected column
+     * @return True if the selected column (described by its factIdentifier and columnIndex) is part of the same
+     *         instance group of the evaluatedColumn. False otherwise.
+     */
+    private boolean checkInstanceGroup(ScenarioSimulationContext context,
+                                       ScenarioGridColumn evaluatedColumn,
+                                       FactIdentifier factIdentifier,
+                                       int columnIndex) {
+        if (Objects.equals(evaluatedColumn.getFactIdentifier(), factIdentifier)) {
+            int evaluatedColumnIndex = context.getModel().getColumns().indexOf(evaluatedColumn);
+            final GridData.Range evaluatedColumnRange = context.getModel().getInstanceLimits(evaluatedColumnIndex);
+            if (columnIndex == evaluatedColumnRange.getMaxRowIndex() + 1 ||
+                    columnIndex == evaluatedColumnRange.getMinRowIndex() - 1) {
+                return true;
+            }
+        }
+        return false;
     }
 }

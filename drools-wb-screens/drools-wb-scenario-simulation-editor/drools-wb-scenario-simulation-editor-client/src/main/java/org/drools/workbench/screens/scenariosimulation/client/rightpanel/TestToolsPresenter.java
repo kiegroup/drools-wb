@@ -444,7 +444,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     /**
      * It determines if a key (factTitle) is present or not in the search variable.
      * @param key It's the title of the fact to search
-     * @param search It represents a concatenation of title, with ";" as separator
+     * @param search It represents a concatenation of titles, with ";" as separator
      * @param notEqualsSearch It establishes the method logic: to check if a key is present or not in search string
      * @return
      */
