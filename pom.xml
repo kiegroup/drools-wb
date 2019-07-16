@@ -215,6 +215,8 @@
             </goals>
             <configuration>
               <verbose>true</verbose>
+              <!-- The following lines are the original configuration of the replaced  IllegalTransitiveCheck rule.
+              We are keeping them here because we want to recreate them as similar as possible, even if they follow a different semantics -->
               <!--
                <regexIgnoredClass>org\.jboss\.errai\.marshalling\.server\.impl\.ServerMarshallingFactory.*</regexIgnoredClass>
                     <regexIgnoredClass>io\.fabric8\.kubernetes.*</regexIgnoredClass>
