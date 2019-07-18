@@ -85,6 +85,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
+    public void onUndoSearch() {
+        view.clearInputSearch();
+        view.hideClearButton();
+        onPerfectMatchSearchedEvent(listGroupItemPresenter.getFilterTerm(), true);
+    }
+
+    @Override
     public void onClearNameField() {
         view.clearNameField();
     }
@@ -321,7 +328,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     @Override
     public void onEnableEditorTab(String filterTerm, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
-        onPerfectMatchSearchedEvent(filterTerm, notEqualsSearch);
         listGroupItemPresenter.enable(filterTerm);
         editingColumnEnabled = true;
         view.enableEditorTab();
@@ -363,8 +369,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(FieldItemView selected) {
         selectedFieldItemView = selected;
         selectedListGroupItemView = null;
-        if (!listGroupItemPresenter.isInstanceAssigned(selected.getFactName()) &&
-                filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), false)) {
+        String factName = selectedFieldItemView.getFullPath().split("\\.")[0];
+        boolean isFactNameAssigned = listGroupItemPresenter.isInstanceAssigned(factName);
+        if (filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
