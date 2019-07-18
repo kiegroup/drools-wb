@@ -328,6 +328,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     @Override
     public void onEnableEditorTab(String filterTerm, List<String> propertyNameElements, boolean notEqualsSearch) {
         onDisableEditorTab();
+        onPerfectMatchSearchedEvent(filterTerm, notEqualsSearch);
         listGroupItemPresenter.enable(filterTerm);
         editingColumnEnabled = true;
         view.enableEditorTab();
