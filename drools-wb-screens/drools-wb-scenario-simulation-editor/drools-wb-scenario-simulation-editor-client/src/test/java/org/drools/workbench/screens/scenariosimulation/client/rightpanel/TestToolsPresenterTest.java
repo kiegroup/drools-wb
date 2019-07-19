@@ -181,7 +181,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         verify(testToolsViewMock, times(1)).clearInputSearch();
         verify(testToolsViewMock, times(1)).hideClearButton();
         verify(listGroupItemPresenterMock, times(1)).getFilterTerm();
-        verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FILTER_TERM), eq(false));
+        verify(testToolsPresenter, times(1)).onPerfectMatchSearchedEvent(eq(FILTER_TERM), eq(true));
     }
 
     @Test
@@ -543,7 +543,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     @Test
     public void setSelectedElementProperty_InstanceNotAssignedFactNameNotAssigned() {
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME_2)).thenReturn(false);
-        when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME);
+        when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME_2);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedFieldItemViewMock);
         verify(listGroupItemPresenterMock, times(1)).isInstanceAssigned(eq(FACT_NAME_2));
