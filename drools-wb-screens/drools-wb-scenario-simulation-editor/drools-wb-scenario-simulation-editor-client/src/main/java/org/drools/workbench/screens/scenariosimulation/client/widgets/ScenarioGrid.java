@@ -148,6 +148,11 @@ public class ScenarioGrid extends BaseGridWidget {
             scenarioGridColumn.setColumnWidthMode(ColumnWidthMode.FIXED);
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
+        if (factMapping.getColumnWidth() != null) {
+            scenarioGridColumn.setWidth(factMapping.getColumnWidth());
+        } else {
+            factMapping.setColumnWidth(scenarioGridColumn.getWidth());
+        }
         if (isPropertyAssigned) {
             setDOMElementFactory(scenarioGridColumn, factMapping.getClassName());
         }

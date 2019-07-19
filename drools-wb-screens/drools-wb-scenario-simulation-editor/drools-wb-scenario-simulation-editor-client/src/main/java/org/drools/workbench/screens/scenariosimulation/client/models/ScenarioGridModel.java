@@ -866,6 +866,7 @@ public class ScenarioGridModel extends BaseGridData {
             } else {
                 super.insertColumn(index, column);
             }
+            createdFactMapping.setColumnWidth(column.getWidth());
             final Range instanceLimits = getInstanceLimits(columnIndex);
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)

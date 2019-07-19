@@ -16,8 +16,10 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.ait.lienzo.client.core.shape.Layer;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridWidgetDnDMouseMoveHandler;
 import org.uberfire.ext.wires.core.grids.client.model.Bounds;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseBounds;
+import org.uberfire.ext.wires.core.grids.client.widget.dnd.GridWidgetDnDMouseMoveHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
 
 /**
@@ -61,5 +63,9 @@ public class ScenarioGridLayer extends DefaultGridLayer {
     public Layer addScenarioGrid(final ScenarioGrid scenarioGrid) {
         this.scenarioGrid = scenarioGrid;
         return super.add(scenarioGrid);
+    }
+
+    protected GridWidgetDnDMouseMoveHandler getGridWidgetDnDMouseMoveHandler() {
+        return new ScenarioGridWidgetDnDMouseMoveHandler(this, getGridWidgetHandlersState());
     }
 }
