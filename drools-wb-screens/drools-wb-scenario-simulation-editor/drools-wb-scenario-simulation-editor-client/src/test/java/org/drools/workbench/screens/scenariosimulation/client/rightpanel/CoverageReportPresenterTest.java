@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -29,13 +28,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -64,7 +60,7 @@ public class CoverageReportPresenterTest {
     protected SimulationRunMetadata simulationRunMetadataLocal;
 
     private Map<String, Integer> outputCounterLocal;
-    private Map<ScenarioWithIndex, List<String>> scenarioCounterLocal;
+    private Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounterLocal;
     private int availableLocal;
     private int executedLocal;
     private double coverageLocal;
@@ -80,8 +76,13 @@ public class CoverageReportPresenterTest {
         outputCounterLocal.put("d1", 1);
         outputCounterLocal.put("d2", 2);
         scenarioCounterLocal = new HashMap<>();
-        scenarioCounterLocal.put(new ScenarioWithIndex(1, new Scenario()), asList("d1", "d2"));
-        scenarioCounterLocal.put(new ScenarioWithIndex(2, new Scenario()), singletonList("d2"));
+        Map<String, Integer> scenario1Data = new HashMap<>();
+        scenario1Data.put("d1", 1);
+        scenario1Data.put("d2", 1);
+        Map<String, Integer> scenario2Data = new HashMap<>();
+        scenario2Data.put("d2", 1);
+        scenarioCounterLocal.put(new ScenarioWithIndex(1, new Scenario()), scenario1Data);
+        scenarioCounterLocal.put(new ScenarioWithIndex(2, new Scenario()), scenario2Data);
         simulationRunMetadataLocal = new SimulationRunMetadata(availableLocal, executedLocal, outputCounterLocal, scenarioCounterLocal);
     }
 
@@ -93,12 +94,12 @@ public class CoverageReportPresenterTest {
         reset(presenterSpy);
 
         presenterSpy.populateCoverageReport(Type.DMN, null);
-        verify(presenterSpy, times(1)).showEmptyStateMessage(eq(Type.DMN));
+        verify(presenterSpy, times(1)).showEmptyStateMessage();
 
         reset(presenterSpy);
 
-        presenterSpy.populateCoverageReport(Type.RULE, mock(SimulationRunMetadata.class));
-        verify(presenterSpy, times(1)).showEmptyStateMessage(eq(Type.RULE));
+        presenterSpy.populateCoverageReport(Type.RULE, simulationRunMetadataLocal);
+        verify(presenterSpy, times(1)).setSimulationRunMetadata(eq(simulationRunMetadataLocal));
     }
 
     @Test
@@ -137,7 +138,7 @@ public class CoverageReportPresenterTest {
 
     @Test
     public void showEmptyStateMessage() {
-        presenterSpy.showEmptyStateMessage(null);
+        presenterSpy.showEmptyStateMessage();
         verify(coverageReportViewMock, times(1)).setEmptyStatusText(anyString());
         verify(coverageReportViewMock, times(1)).hide();
     }

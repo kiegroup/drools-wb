@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import java.util.List;
+import java.util.Map;
 
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLLIElement;
@@ -43,7 +43,7 @@ public interface CoverageScenarioListView {
 
         void clear();
 
-        void addScenarioGroup(ScenarioWithIndex key, List<String> value);
+        void addScenarioGroup(ScenarioWithIndex key, Map<String, Integer> value);
 
         void onElementClick(CoverageScenarioListView coverageScenarioListView);
     }

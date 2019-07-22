@@ -79,11 +79,11 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     @Override
     public void populateCoverageReport(ScenarioSimulationModel.Type type, SimulationRunMetadata simulationRunMetadata) {
-        if (simulationRunMetadata != null && ScenarioSimulationModel.Type.DMN.equals(type)) {
+        if (simulationRunMetadata != null) {
             setSimulationRunMetadata(simulationRunMetadata);
         }
         else {
-            showEmptyStateMessage(type);
+            showEmptyStateMessage();
         }
     }
 
@@ -98,12 +98,8 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         view.show();
     }
 
-    protected void showEmptyStateMessage(ScenarioSimulationModel.Type type) {
-        if (ScenarioSimulationModel.Type.RULE.equals(type)) {
-            view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.coverageNotSupportedForRule());
-        } else {
-            view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.runATestToSeeCoverageReport());
-        }
+    protected void showEmptyStateMessage() {
+        view.setEmptyStatusText(ScenarioSimulationEditorConstants.INSTANCE.runATestToSeeCoverageReport());
         view.hide();
     }
 
@@ -127,7 +123,7 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         }
     }
 
-    protected void populateScenarioList(Map<ScenarioWithIndex, List<String>> scenarioCounter) {
+    protected void populateScenarioList(Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounter) {
         coverageScenarioListPresenter.clear();
         List<ScenarioWithIndex> scenarioIndexes = new ArrayList<>(scenarioCounter.keySet());
         scenarioIndexes.sort(Comparator.comparingInt(ScenarioWithIndex::getIndex));

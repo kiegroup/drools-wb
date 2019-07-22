@@ -16,8 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -43,7 +45,7 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
     }
 
     @Override
-    public void addScenarioGroup(ScenarioWithIndex scenarioWithIndex, List<String> decisions) {
+    public void addScenarioGroup(ScenarioWithIndex scenarioWithIndex, Map<String, Integer> decisions) {
         CoverageScenarioListView coverageScenarioListView = viewsProvider.getCoverageScenarioListView();
         coverageScenarioListView.setPresenter(this);
         coverageScenarioListView.setVisible(false);
@@ -65,11 +67,13 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
         }
     }
 
-    protected HTMLUListElement createDecisionList(List<String> decisions, HTMLUListElement decisionGroup) {
-        decisions.sort(Comparator.naturalOrder());
-        for (String decision : decisions) {
+    protected HTMLUListElement createDecisionList(Map<String, Integer> decisions, HTMLUListElement decisionGroup) {
+        List<String> keys = new ArrayList<>(decisions.keySet());
+        keys.sort(Comparator.naturalOrder());
+        for (String key : keys) {
+            Integer counter = decisions.get(key);
             HTMLLIElement listElement = createDecisionLi();
-            listElement.textContent = decision;
+            listElement.textContent = createDecisionContent(key, counter);
             decisionGroup.appendChild(listElement);
         }
         return decisionGroup;
@@ -79,6 +83,10 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
         HTMLLIElement decisionLi = (HTMLLIElement) DomGlobal.document.createElement("li");
         decisionLi.classList.add("list-group-item");
         return decisionLi;
+    }
+
+    protected String createDecisionContent(String decision, Integer counter) {
+        return decision + (counter != null && counter > 1 ? " (" + counter + ")" : "");
     }
 
     @Override
