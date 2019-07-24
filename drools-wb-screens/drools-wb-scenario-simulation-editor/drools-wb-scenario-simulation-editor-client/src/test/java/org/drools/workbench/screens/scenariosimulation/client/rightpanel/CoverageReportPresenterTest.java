@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -25,12 +26,16 @@ import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
-import static org.mockito.Matchers.any;
+import static org.jgroups.util.Util.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.endsWith;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -44,7 +49,7 @@ public class CoverageReportPresenterTest {
     protected CoverageReportDonutPresenter coverageReportDonutPresenterMock;
 
     @Mock
-    protected CoverageDecisionElementPresenter coverageDecisionElementPresenterMock;
+    protected CoverageElementPresenter coverageElementPresenterMock;
 
     @Mock
     protected CoverageScenarioListPresenter coverageScenarioListPresenterMock;
@@ -54,6 +59,18 @@ public class CoverageReportPresenterTest {
 
     @InjectMocks
     protected CoverageReportPresenter presenter;
+
+    @Captor
+    protected ArgumentCaptor<ScenarioWithIndex> scenarioWithIndexCaptor;
+
+    @Captor
+    protected ArgumentCaptor<Map<String, Integer>> resultCounterCaptor;
+
+    @Captor
+    protected ArgumentCaptor<String> descriptionCaptor;
+
+    @Captor
+    protected ArgumentCaptor<String> valueCaptor;
 
     protected CoverageReportPresenter presenterSpy;
 
@@ -70,7 +87,7 @@ public class CoverageReportPresenterTest {
         presenterSpy = spy(presenter);
 
         availableLocal = 10;
-        executedLocal = 5;
+        executedLocal = 6;
         coverageLocal = (double) executedLocal / availableLocal * 100;
         outputCounterLocal = new HashMap<>();
         outputCounterLocal.put("d1", 1);
@@ -89,7 +106,7 @@ public class CoverageReportPresenterTest {
     @Test
     public void populateCoverageReport() {
         presenterSpy.populateCoverageReport(Type.DMN, simulationRunMetadataLocal);
-        verify(presenterSpy, times(1)).setSimulationRunMetadata(eq(simulationRunMetadataLocal));
+        verify(presenterSpy, times(1)).setSimulationRunMetadata(eq(simulationRunMetadataLocal), eq(Type.DMN));
 
         reset(presenterSpy);
 
@@ -99,15 +116,15 @@ public class CoverageReportPresenterTest {
         reset(presenterSpy);
 
         presenterSpy.populateCoverageReport(Type.RULE, simulationRunMetadataLocal);
-        verify(presenterSpy, times(1)).setSimulationRunMetadata(eq(simulationRunMetadataLocal));
+        verify(presenterSpy, times(1)).setSimulationRunMetadata(eq(simulationRunMetadataLocal), eq(Type.RULE));
     }
 
     @Test
     public void setSimulationRunMetadata() {
-        presenterSpy.setSimulationRunMetadata(simulationRunMetadataLocal);
+        presenterSpy.setSimulationRunMetadata(simulationRunMetadataLocal, Type.DMN);
         verify(presenterSpy, times(1)).populateSummary(eq(availableLocal), eq(executedLocal), eq(coverageLocal));
-        verify(presenterSpy, times(1)).populateDecisionList(eq(outputCounterLocal));
-        verify(presenterSpy, times(1)).populateScenarioList(eq(scenarioCounterLocal));
+        verify(presenterSpy, times(1)).populateList(eq(outputCounterLocal));
+        verify(presenterSpy, times(1)).populateScenarioList(eq(scenarioCounterLocal), eq(Type.DMN));
         verify(coverageReportViewMock, times(1)).show();
     }
 
@@ -116,24 +133,54 @@ public class CoverageReportPresenterTest {
         presenterSpy.populateSummary(availableLocal, executedLocal, coverageLocal);
         verify(coverageReportViewMock, times(1)).setReportAvailable(eq(availableLocal + ""));
         verify(coverageReportViewMock, times(1)).setReportExecuted(eq(executedLocal + ""));
-        verify(coverageReportViewMock, times(1)).setReportCoverage(eq(coverageLocal + "%"));
+        // cannot test actual value because it uses GWT NumberFormat that is not available on server side
+        verify(coverageReportViewMock, times(1)).setReportCoverage(endsWith("%"));
         int delta = availableLocal - executedLocal;
         verify(coverageReportDonutPresenterMock, times(1)).showCoverageReport(eq(executedLocal),
                                                                               eq(delta));
     }
 
     @Test
-    public void populateDecisionList() {
-        presenterSpy.populateDecisionList(outputCounterLocal);
-        verify(coverageDecisionElementPresenterMock, times(1)).clear();
-        verify(coverageDecisionElementPresenterMock, times(outputCounterLocal.size())).addDecisionElementView(anyString(), anyString());
+    public void populateList() {
+        presenterSpy.populateList(outputCounterLocal);
+        verify(coverageElementPresenterMock, times(1)).clear();
+        verify(coverageElementPresenterMock, times(outputCounterLocal.size()))
+                .addElementView(descriptionCaptor.capture(),
+                                valueCaptor.capture());
+
+        List<String> descriptions = descriptionCaptor.getAllValues();
+        assertEquals(2, descriptions.size());
+        assertEquals("d1", descriptions.get(0));
+        assertEquals("d2", descriptions.get(1));
+
+        List<String> values = valueCaptor.getAllValues();
+        assertEquals(2, values.size());
+        assertEquals("1", values.get(0));
+        assertEquals("2", values.get(1));
     }
 
     @Test
     public void populateScenarioList() {
-        presenterSpy.populateScenarioList(scenarioCounterLocal);
+        presenterSpy.populateScenarioList(scenarioCounterLocal, Type.DMN);
         verify(coverageScenarioListPresenterMock, times(1)).clear();
-        verify(coverageScenarioListPresenterMock, times(scenarioCounterLocal.size())).addScenarioGroup(any(), any());
+        verify(coverageScenarioListPresenterMock, times(scenarioCounterLocal.size()))
+                .addScenarioGroup(scenarioWithIndexCaptor.capture(),
+                                  resultCounterCaptor.capture(),
+                                  eq(Type.DMN));
+
+        List<ScenarioWithIndex> scenarios = scenarioWithIndexCaptor.getAllValues();
+        assertEquals(scenarioCounterLocal.size(), scenarios.size());
+        assertEquals(1, scenarios.get(0).getIndex());
+        assertEquals(2, scenarios.get(1).getIndex());
+
+        List<Map<String, Integer>> resultCounters = resultCounterCaptor.getAllValues();
+        assertEquals(scenarioCounterLocal.size(), resultCounters.size());
+        assertTrue(resultCounters.get(0).keySet().contains("d1"));
+        assertEquals(1, resultCounters.get(0).get("d1"));
+        assertTrue(resultCounters.get(0).keySet().contains("d2"));
+        assertEquals(1, resultCounters.get(0).get("d2"));
+        assertTrue(resultCounters.get(1).keySet().contains("d2"));
+        assertEquals(1, resultCounters.get(1).get("d2"));
     }
 
     @Test

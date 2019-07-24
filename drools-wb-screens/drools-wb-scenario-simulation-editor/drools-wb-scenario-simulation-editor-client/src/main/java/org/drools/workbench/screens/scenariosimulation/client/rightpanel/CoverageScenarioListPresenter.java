@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLLIElement;
 import elemental2.dom.HTMLUListElement;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
@@ -45,17 +46,21 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
     }
 
     @Override
-    public void addScenarioGroup(ScenarioWithIndex scenarioWithIndex, Map<String, Integer> decisions) {
+    public void addScenarioGroup(ScenarioWithIndex scenarioWithIndex, Map<String, Integer> resultCounter, Type type) {
         CoverageScenarioListView coverageScenarioListView = viewsProvider.getCoverageScenarioListView();
         coverageScenarioListView.setPresenter(this);
         coverageScenarioListView.setVisible(false);
 
         HTMLLIElement scenarioElement = coverageScenarioListView.getScenarioElement();
 
-        coverageScenarioListView.getFaAngleRight().textContent = "  " + ScenarioSimulationEditorConstants.INSTANCE.decisionsEvaluated()
+        String customText = Type.DMN.equals(type) ?
+                ScenarioSimulationEditorConstants.INSTANCE.decisionsEvaluated() :
+                ScenarioSimulationEditorConstants.INSTANCE.rulesFired();
+
+        coverageScenarioListView.getFaAngleRight().textContent = "  " + customText
                 + " " + scenarioWithIndex.getIndex() + ": " + scenarioWithIndex.getScenario().getDescription();
 
-        scenarioElement.appendChild(createDecisionList(decisions, coverageScenarioListView.getDecisionElement()));
+        scenarioElement.appendChild(createInternalList(resultCounter, coverageScenarioListView.getScenarioContentList()));
 
         this.scenarioList.appendChild(scenarioElement);
     }
@@ -67,26 +72,26 @@ public class CoverageScenarioListPresenter implements CoverageScenarioListView.P
         }
     }
 
-    protected HTMLUListElement createDecisionList(Map<String, Integer> decisions, HTMLUListElement decisionGroup) {
-        List<String> keys = new ArrayList<>(decisions.keySet());
+    protected HTMLUListElement createInternalList(Map<String, Integer> elements, HTMLUListElement listGroup) {
+        List<String> keys = new ArrayList<>(elements.keySet());
         keys.sort(Comparator.naturalOrder());
         for (String key : keys) {
-            Integer counter = decisions.get(key);
-            HTMLLIElement listElement = createDecisionLi();
-            listElement.textContent = createDecisionContent(key, counter);
-            decisionGroup.appendChild(listElement);
+            Integer counter = elements.get(key);
+            HTMLLIElement listElement = createElementLi();
+            listElement.textContent = createContent(key, counter);
+            listGroup.appendChild(listElement);
         }
-        return decisionGroup;
+        return listGroup;
     }
 
-    protected HTMLLIElement createDecisionLi() {
-        HTMLLIElement decisionLi = (HTMLLIElement) DomGlobal.document.createElement("li");
-        decisionLi.classList.add("list-group-item");
-        return decisionLi;
+    protected HTMLLIElement createElementLi() {
+        HTMLLIElement li = (HTMLLIElement) DomGlobal.document.createElement("li");
+        li.classList.add("list-group-item");
+        return li;
     }
 
-    protected String createDecisionContent(String decision, Integer counter) {
-        return decision + (counter != null && counter > 1 ? " (" + counter + ")" : "");
+    protected String createContent(String value, Integer counter) {
+        return value + (counter != null && counter > 1 ? " (" + counter + ")" : "");
     }
 
     @Override

@@ -25,7 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import com.google.gwt.i18n.client.NumberFormat;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -40,11 +41,13 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     public static final int DEFAULT_PREFERRED_WIDHT = 300;
 
+    private static final NumberFormat numberFormat = NumberFormat.getFormat("00.00");
+
     public static final String IDENTIFIER = "org.drools.scenariosimulation.CoverageReport";
 
     protected CoverageReportDonutPresenter coverageReportDonutPresenter;
 
-    protected CoverageDecisionElementPresenter coverageDecisionElementPresenter;
+    protected CoverageElementPresenter coverageElementPresenter;
 
     protected CoverageScenarioListPresenter coverageScenarioListPresenter;
 
@@ -56,19 +59,19 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     @Inject
     public CoverageReportPresenter(CoverageReportView view,
                                    CoverageReportDonutPresenter coverageReportDonutPresenter,
-                                   CoverageDecisionElementPresenter coverageDecisionElementPresenter,
+                                   CoverageElementPresenter coverageElementPresenter,
                                    CoverageScenarioListPresenter coverageScenarioListPresenter) {
         super(view);
         title = ScenarioSimulationEditorConstants.INSTANCE.coverageReport();
         this.coverageReportDonutPresenter = coverageReportDonutPresenter;
-        this.coverageDecisionElementPresenter = coverageDecisionElementPresenter;
+        this.coverageElementPresenter = coverageElementPresenter;
         this.coverageScenarioListPresenter = coverageScenarioListPresenter;
     }
 
     @PostConstruct
     public void init() {
         coverageReportDonutPresenter.init(view.getDonutChart());
-        coverageDecisionElementPresenter.initDecisionList(view.getDecisionList());
+        coverageElementPresenter.initElementList(view.getList());
         coverageScenarioListPresenter.initScenarioList(view.getScenarioList());
     }
 
@@ -78,23 +81,24 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     }
 
     @Override
-    public void populateCoverageReport(ScenarioSimulationModel.Type type, SimulationRunMetadata simulationRunMetadata) {
+    public void populateCoverageReport(Type type, SimulationRunMetadata simulationRunMetadata) {
         if (simulationRunMetadata != null) {
-            setSimulationRunMetadata(simulationRunMetadata);
+            setSimulationRunMetadata(simulationRunMetadata, type);
         }
         else {
             showEmptyStateMessage();
         }
     }
 
-    protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata) {
+    protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, Type type) {
+        view.initText(type);
         populateSummary(simulationRunMetadata.getAvailable(),
                         simulationRunMetadata.getExecuted(),
                         simulationRunMetadata.getCoveragePercentage());
 
-        populateDecisionList(simulationRunMetadata.getOutputCounter());
+        populateList(simulationRunMetadata.getOutputCounter());
 
-        populateScenarioList(simulationRunMetadata.getScenarioCounter());
+        populateScenarioList(simulationRunMetadata.getScenarioCounter(), type);
         view.show();
     }
 
@@ -106,7 +110,8 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected void populateSummary(int available, int executed, double coveragePercentage) {
         view.setReportAvailable(available + "");
         view.setReportExecuted(executed + "");
-        view.setReportCoverage(coveragePercentage + "%");
+        String coveragePercentageFormatted = numberFormat.format(coveragePercentage);
+        view.setReportCoverage(coveragePercentageFormatted + "%");
 
         // donut chart
         coverageReportDonutPresenter
@@ -114,21 +119,21 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
                                     available - executed);
     }
 
-    protected void populateDecisionList(Map<String, Integer> outputCounter) {
-        coverageDecisionElementPresenter.clear();
-        List<String> decisions = new ArrayList<>(outputCounter.keySet());
-        decisions.sort(Comparator.naturalOrder());
-        for (String decision : decisions) {
-            coverageDecisionElementPresenter.addDecisionElementView(decision, outputCounter.get(decision) + "");
+    protected void populateList(Map<String, Integer> outputCounter) {
+        coverageElementPresenter.clear();
+        List<String> elements = new ArrayList<>(outputCounter.keySet());
+        elements.sort(Comparator.naturalOrder());
+        for (String element : elements) {
+            coverageElementPresenter.addElementView(element, outputCounter.get(element) + "");
         }
     }
 
-    protected void populateScenarioList(Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounter) {
+    protected void populateScenarioList(Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounter, Type type) {
         coverageScenarioListPresenter.clear();
         List<ScenarioWithIndex> scenarioIndexes = new ArrayList<>(scenarioCounter.keySet());
         scenarioIndexes.sort(Comparator.comparingInt(ScenarioWithIndex::getIndex));
         for (ScenarioWithIndex scenarioWithIndex : scenarioIndexes) {
-            coverageScenarioListPresenter.addScenarioGroup(scenarioWithIndex, scenarioCounter.get(scenarioWithIndex));
+            coverageScenarioListPresenter.addScenarioGroup(scenarioWithIndex, scenarioCounter.get(scenarioWithIndex), type);
         }
     }
 }
