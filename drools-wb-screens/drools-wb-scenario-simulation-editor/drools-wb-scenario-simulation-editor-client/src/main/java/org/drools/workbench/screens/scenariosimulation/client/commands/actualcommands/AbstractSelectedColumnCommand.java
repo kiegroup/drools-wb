@@ -40,7 +40,7 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.scenariosimulation.api.model.FactMapping.getPropertyPlaceHolder;
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyMetaDataGroup;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getColumnSubGroup;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
 
 /**
@@ -220,7 +220,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                         setInstanceHeaderMetaData(context, scenarioGridColumn, instanceAliasName, factIdentifier);
                     }
                 });
-        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getPropertyMetaDataGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
+        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
         String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(propertyClass);
         setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyTitle, false, selectedColumn, editableCellPlaceholder);
         selectedColumn.setPropertyAssigned(true);
@@ -332,7 +332,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                            FactIdentifier factIdentifier,
                                            String title) {
         String columnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-        String groupName = columnGroup.contains("-") ? columnGroup.substring(0, columnGroup.indexOf("-")) : columnGroup;
+        String groupName = ScenarioSimulationUtils.getOriginalColumnGroup(columnGroup);
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         return context.getModel().getColumns().stream()
                 .map(column -> (ScenarioGridColumn) column)

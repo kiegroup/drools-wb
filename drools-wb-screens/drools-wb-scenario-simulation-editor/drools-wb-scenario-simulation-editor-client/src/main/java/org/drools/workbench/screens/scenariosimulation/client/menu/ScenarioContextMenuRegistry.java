@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.Unmodi
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
@@ -227,10 +228,7 @@ public class ScenarioContextMenuRegistry {
             return false;
         }
         boolean showDuplicateInstance = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.RULE);
-        String group = columnMetadata.getColumnGroup();
-        if (group.contains("-")) {
-            group = group.substring(0, group.indexOf("-"));
-        }
+        String group = ScenarioSimulationUtils.getOriginalColumnGroup(columnMetadata.getColumnGroup());
         switch (group) {
             case "":
                 switch (columnMetadata.getTitle()) {
