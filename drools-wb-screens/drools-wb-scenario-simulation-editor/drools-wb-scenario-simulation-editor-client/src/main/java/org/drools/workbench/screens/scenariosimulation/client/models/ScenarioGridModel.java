@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -244,6 +245,11 @@ public class ScenarioGridModel extends BaseGridData {
     public void insertColumnGridOnly(final int index, final GridColumn<?> column) {
         checkSimulation();
         super.insertColumn(index, column);
+
+        /*column.setIndex(columns.size());
+        columns.add(index, column);
+
+        selectionsManager.onInsertColumn(index);*/
     }
 
     /**
@@ -513,6 +519,26 @@ public class ScenarioGridModel extends BaseGridData {
     public void clearSelections() {
         super.clearSelections();
         selectedColumn = null;
+    }
+
+    @Override
+    protected boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
+        boolean toRefresh = super.internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth) ;
+
+        if (toRefresh) {
+
+            for (GridColumn<?> column : getColumns()) {
+                if (!column.isVisible() || GridColumn.ColumnWidthMode.isFixed(column)) {
+                    continue;
+                }
+                int columnIndex = getColumns().indexOf(column);
+                FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+                factMapping.setColumnWidth(column.getWidth());
+            }
+
+        }
+
+        return toRefresh;
     }
 
     /**

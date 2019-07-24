@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -26,20 +25,24 @@ import org.uberfire.ext.wires.core.grids.client.widget.dnd.GridWidgetDnDMouseMov
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
+/**
+ * MouseMoveHandler to handle column resize event.
+ */
 public class ScenarioGridWidgetDnDMouseMoveHandler extends GridWidgetDnDMouseMoveHandler {
 
     public ScenarioGridWidgetDnDMouseMoveHandler(GridLayer layer, GridWidgetDnDHandlersState state) {
         super(layer, state);
     }
 
+    /**
+     * It addition to the original method behavior, which updates column width at any column resize, it updates the
+     * column width in its related <code>FactMapping</code>
+     * @param columnNewWidth
+     * @param activeGridColumn
+     * @param activeGridWidget
+     * @return
+     */
     @Override
-    public void onNodeMouseMove(final NodeMouseMoveEvent event) {
-        super.onNodeMouseMove(event);
-        /*if (GridWidgetDnDHandlersState.GridWidgetHandlersOperation.COLUMN_RESIZE.equals(state.getOperation())) {
-            ScenarioGridModel model = ((ScenarioGridLayer) layer).getScenarioGrid().getModel();
-        } */
-    }
-
     protected double adjustColumnWidth(double columnNewWidth, GridColumn<?> activeGridColumn, GridWidget activeGridWidget) {
         double columnWidth = super.adjustColumnWidth(columnNewWidth, activeGridColumn, activeGridWidget);
         final ScenarioGridModel model = ((ScenarioGridLayer) layer).getScenarioGrid().getModel();

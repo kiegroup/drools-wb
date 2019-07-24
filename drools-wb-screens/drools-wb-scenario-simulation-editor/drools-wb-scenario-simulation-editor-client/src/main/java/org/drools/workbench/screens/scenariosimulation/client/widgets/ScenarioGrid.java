@@ -128,6 +128,13 @@ public class ScenarioGrid extends BaseGridWidget {
                 .forEach(columnIndex -> {
                     setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders);
                 });
+        /* If the model has visible width = 0, it means is loading and is useless to refresh it.
+           Panel refresh will be managed when the visible width will be > 0, and a resize event will be thrown.
+           Otherwise, the panel is loaded and a data update is called (eg Scenario renaming)
+         */
+        if (getModel().getVisibleWidth() > 0) {
+            //model.refreshWidth();
+        }
     }
 
     protected void setHeaderColumn(int columnIndex, FactMapping factMapping, boolean editableHeaders) {
@@ -148,7 +155,8 @@ public class ScenarioGrid extends BaseGridWidget {
             scenarioGridColumn.setColumnWidthMode(ColumnWidthMode.FIXED);
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
-        if (factMapping.getColumnWidth() != null) {
+        boolean isStoredWidth = factMapping.getColumnWidth() != null;
+        if (isStoredWidth) {
             scenarioGridColumn.setWidth(factMapping.getColumnWidth());
         } else {
             factMapping.setColumnWidth(scenarioGridColumn.getWidth());
