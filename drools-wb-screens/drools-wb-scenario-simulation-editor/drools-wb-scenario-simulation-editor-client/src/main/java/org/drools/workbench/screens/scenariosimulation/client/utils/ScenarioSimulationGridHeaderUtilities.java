@@ -144,9 +144,9 @@ public class ScenarioSimulationGridHeaderUtilities {
 
     public static String getExistingInstances(final String group,
                                               final ScenarioSimulationModel.Type scenarioType,
-                                              final List<GridColumn<?>> scenarioGridModel) {
+                                              final List<GridColumn<?>> columns) {
         final boolean isDMN = ScenarioSimulationModel.Type.DMN.equals(scenarioType);
-        return String.join(";", scenarioGridModel
+        return String.join(";", columns
                 .stream()
                 .map(column -> (ScenarioGridColumn) column)
                 .filter(scenarioGridColumn -> {
