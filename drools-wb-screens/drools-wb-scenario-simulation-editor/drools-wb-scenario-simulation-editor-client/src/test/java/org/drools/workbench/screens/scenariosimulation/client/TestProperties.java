@@ -35,7 +35,6 @@ public class TestProperties {
 
     public static final int ROW_INDEX = 2;
     public static final int ROW_COUNT = 3;
-    public static final int FIRST_COLUMN_INDEX = 0;
     public static final int COLUMN_INDEX = 3;
     public static final int COLUMN_NUMBER = COLUMN_INDEX + 1;
 

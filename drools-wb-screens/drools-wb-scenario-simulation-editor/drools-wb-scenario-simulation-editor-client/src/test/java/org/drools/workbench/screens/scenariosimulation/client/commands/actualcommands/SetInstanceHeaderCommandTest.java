@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -29,8 +30,10 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FIRST_COLUMN_INDEX;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertTrue;
@@ -45,11 +48,14 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationCommandTest {
 
+    @Mock
+    private List<GridColumn<?>> mockGridColumns;
+
     @Before
     public void setup() {
         super.setup();
-        /*when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);*/
+        when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
+        when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
         command = spy(new SetInstanceHeaderCommand() {
 
             @Override
@@ -84,7 +90,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE_CLASS_NAME));
         verify(gridColumnMock, times(1)).setInstanceAssigned(eq(true));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
-        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(FIRST_COLUMN_INDEX), eq(gridColumnMock));
+        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock));
     }
 
     @Test
@@ -98,6 +104,6 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioSimulationComm
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE_CLASS_NAME));
         verify(gridColumnMock, times(1)).setInstanceAssigned(eq(true));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
-        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(FIRST_COLUMN_INDEX), eq(gridColumnMock));
+        verify(scenarioGridModelMock, times(1)).updateColumnInstance(eq(COLUMN_INDEX), eq(gridColumnMock));
     }
 }

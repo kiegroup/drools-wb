@@ -510,10 +510,6 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         assertEquals(selectedFieldItemViewMock, testToolsPresenter.selectedFieldItemView);
     }
 
-    /*String factName = selectedFieldItemView.getFullPath().split("\\.")[0];
-    boolean isFactNameAssigned = listGroupItemPresenter.isInstanceAssigned(factName);
-        if (filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) { */
-
     @Test
     public void setSelectedElementProperty_InstanceNotAssignedFactNameAlreadyAssigned() {
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(false);

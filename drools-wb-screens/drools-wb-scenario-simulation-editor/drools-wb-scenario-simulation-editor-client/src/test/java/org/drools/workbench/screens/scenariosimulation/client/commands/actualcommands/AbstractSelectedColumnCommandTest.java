@@ -26,12 +26,9 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.drools.scenariosimulation.api.model.ExpressionElement;
-import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -42,34 +39,22 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_NUMBER;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_ALIAS;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_ALIAS_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_IDENTIFIER_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_IDENTIFIER_NAME_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_CLASSNAME_CREATED;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_CLASS_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_CLASS_NAME_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PROPERTY_NAME_ELEMENTS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PROPERTY_PATH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PROPERTY_PATH_ELEMENTS;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_ID;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_ID_1;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_PROPERTY_TITLE;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_PROPERTY_TITLE_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LIST_CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LIST_PROPERTY_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE_ELEMENTS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.PROPERTY_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -90,34 +75,6 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
     protected List<GridColumn<?>> gridColumnsMock;
     @Mock
     protected FactModelTree factModelTreeMock;
-    @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock1;
-    @Mock
-    protected ScenarioGridColumn scenarioGridColumnMock2;
-    @Mock
-    protected FactMapping factMappingMock1;
-    @Mock
-    protected FactMapping factMappingMock2;
-    @Mock
-    protected FactMappingValue factMappingValueMock1;
-    @Mock
-    protected FactMappingValue factMappingValueMock2;
-    @Mock
-    protected FactIdentifier factIdentifierMock1;
-    @Mock
-    protected FactIdentifier factIdentifierMock2;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock1;
-    @Mock
-    protected List<GridColumn.HeaderMetaData> headerMetaDatasMock2;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock1;
-    @Mock
-    protected ScenarioHeaderMetaData informationHeaderMetaDataMock2;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock1;
-    @Mock
-    protected ScenarioHeaderMetaData propertyHeaderMetaDataMock2;
 
     public void setup() {
         super.setup();
@@ -213,7 +170,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         scenarioSimulationContextLocal.getStatus().setValue(FULL_PROPERTY_PATH);
         doReturn(factIdentifierMock).when(((AbstractSelectedColumnCommand) command)).setEditableHeadersAndGetFactIdentifier(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(CLASS_NAME), eq(FULL_CLASS_NAME));
         ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, FULL_PROPERTY_PATH_ELEMENTS, LIST_CLASS_NAME);
-        verify(((AbstractSelectedColumnCommand) command), times(2)).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
+        verify(((AbstractSelectedColumnCommand) command), times(2)).setInstanceHeaderMetaData(eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(eq(LIST_PROPERTY_NAME));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
@@ -229,7 +186,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         when(gridColumnMock.getInformationHeaderMetaData().getTitle()).thenReturn(CLASS_NAME);
         ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, FULL_PROPERTY_PATH_ELEMENTS, LIST_CLASS_NAME);
-        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
+        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(eq(LIST_PROPERTY_NAME));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
@@ -245,7 +202,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         when(gridColumnMock.getInformationHeaderMetaData().getTitle()).thenReturn(CLASS_NAME);
         ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, FULL_PROPERTY_PATH_ELEMENTS, LIST_CLASS_NAME, PROPERTY_NAME);
-        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
+        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
         verify(propertyHeaderMetaDataMock, times(1)).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, times(1)).setTitle(eq(PROPERTY_NAME));
         verify(propertyHeaderMetaDataMock, times(1)).setReadOnly(eq(false));
@@ -260,7 +217,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         scenarioSimulationContextLocal.getStatus().setValue(FULL_PROPERTY_PATH);
         when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, FULL_PROPERTY_PATH_ELEMENTS, LIST_CLASS_NAME);
-        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
+        verify(((AbstractSelectedColumnCommand) command), never()).setInstanceHeaderMetaData(eq(gridColumnMock), eq(CLASS_NAME), eq(factIdentifierMock));
         verify(propertyHeaderMetaDataMock, never()).setColumnGroup(anyString());
         verify(propertyHeaderMetaDataMock, never()).setTitle(anyString());
         verify(propertyHeaderMetaDataMock, never()).setReadOnly(anyBoolean());
@@ -269,40 +226,13 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify((AbstractSelectedColumnCommand) command, never()).navigateComplexObject(eq(factModelTreeMock), eq(FULL_PROPERTY_PATH_ELEMENTS), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void executePropertyWithWithoutInstanceAssigningUsedInstanceTitle() {
-        String value = FACT_NAME + "." + PROPERTY_NAME;
-        scenarioSimulationContextLocal.getStatus().setValueClassName(LIST_CLASS_NAME);
-        scenarioSimulationContextLocal.getStatus().setValue(value);
-        when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
-        when(informationHeaderMetaDataMock.getTitle()).thenReturn(FACT_NAME);
-        final List<String> fullPropertyPathElements = Arrays.asList(value.split("\\."));
-        ((AbstractSelectedColumnCommand) command).setPropertyHeader(scenarioSimulationContextLocal, gridColumnMock, fullPropertyPathElements, LIST_CLASS_NAME);
-        verify(((AbstractSelectedColumnCommand) command), times(1)).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(FACT_NAME), eq(factIdentifierMock));
-        verify(propertyHeaderMetaDataMock, never()).setColumnGroup(anyString());
-        verify(propertyHeaderMetaDataMock, never()).setTitle(anyString());
-        verify(propertyHeaderMetaDataMock, never()).setReadOnly(anyBoolean());
-        verify(scenarioGridModelMock, never()).updateColumnProperty(anyInt(), eq(gridColumnMock), eq(FULL_PROPERTY_PATH_ELEMENTS), eq(LIST_CLASS_NAME), anyBoolean());
-        verify((AbstractSelectedColumnCommand) command, never()).manageCollectionProperty(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(FULL_CLASSNAME_CREATED), eq(0), eq(fullPropertyPathElements));
-        verify((AbstractSelectedColumnCommand) command, never()).navigateComplexObject(eq(factModelTreeMock), eq(fullPropertyPathElements), eq(scenarioSimulationContextLocal.getDataObjectFieldsMap()));
-    }
-
     @Test
     public void setInstanceHeaderMetaData() {
-        ((AbstractSelectedColumnCommand) command).setInstanceHeaderMetaData(scenarioSimulationContextLocal, gridColumnMock, FACT_NAME, factIdentifierMock);
-        verify(((AbstractSelectedColumnCommand) command)).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(FACT_NAME), eq(factIdentifierMock));
+        ((AbstractSelectedColumnCommand) command).setInstanceHeaderMetaData(gridColumnMock, FACT_NAME, factIdentifierMock);
+        verify(((AbstractSelectedColumnCommand) command)).setInstanceHeaderMetaData(eq(gridColumnMock), eq(FACT_NAME), eq(factIdentifierMock));
         verify(gridColumnMock, times(1)).setInstanceAssigned(true);
         verify(gridColumnMock, times(1)).setFactIdentifier(eq(factIdentifierMock));
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(FACT_NAME));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void setInstanceHeaderMetaData_TitleAlreadyAssigned() {
-        ((AbstractSelectedColumnCommand) command).setInstanceHeaderMetaData(scenarioSimulationContextLocal, gridColumnMock, MULTIPART_VALUE, factIdentifierMock);
-        verify(((AbstractSelectedColumnCommand) command)).setInstanceHeaderMetaData(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(MULTIPART_VALUE), eq(factIdentifierMock));
-        verify(gridColumnMock, never()).setInstanceAssigned(anyBoolean());
-        verify(gridColumnMock, never()).setFactIdentifier(any());
-        verify(informationHeaderMetaDataMock, never()).setTitle(any());
     }
 
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
@@ -391,33 +321,5 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         when(factMappingMock.getExpressionElements()).thenReturn(expressionElements);
         retrieved = ((AbstractSelectedColumnCommand) command).getMatchingExpressionAlias(scenarioSimulationContextLocal, FULL_PROPERTY_NAME_ELEMENTS, factIdentifierMock);
         assertEquals(Optional.of(EXPRESSION_ALIAS), retrieved);
-    }
-
-    @Test
-    public void isValidInstanceTitle_NotAssigned() {
-        boolean result = ((AbstractSelectedColumnCommand) command).isValidInstanceTitle(scenarioSimulationContextLocal, gridColumnMock, factIdentifierMock, FACT_NAME);
-        assertFalse(result);
-    }
-
-    @Test
-    public void isValidInstanceTitle_TitleAssignedToNearColumn() {
-        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
-                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
-                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
-        boolean result = ((AbstractSelectedColumnCommand) command).isValidInstanceTitle(scenarioSimulationContextLocal, scenarioGridColumnMock1, factIdentifierMock, MULTIPART_VALUE);
-        assertFalse(result);
-    }
-
-    @Test
-    public void isValidInstanceTitle_TitleAssignedToNotNearColumn() {
-        addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
-                     factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
-                     "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);
-        addNewColumn(scenarioGridColumnMock2, headerMetaDatasMock2, informationHeaderMetaDataMock2, propertyHeaderMetaDataMock2, factIdentifierMock2, factMappingMock2,
-                     factMappingValueMock2, COLUMN_NUMBER + 1, COLUMN_NUMBER + 1, COLUMN_NUMBER + 1, MULTIPART_VALUE + "_2",
-                     GRID_PROPERTY_TITLE + "_2", GRID_COLUMN_ID + "_2", FACT_ALIAS + "_2", VALUE_CLASS_NAME,
-                     "test", FULL_CLASS_NAME + "_2", FACT_IDENTIFIER_NAME + "_2");
-        boolean result = ((AbstractSelectedColumnCommand) command).isValidInstanceTitle(scenarioSimulationContextLocal, scenarioGridColumnMock2, factIdentifierMock, MULTIPART_VALUE);
-        assertTrue(result);
     }
 }
