@@ -307,4 +307,8 @@ public interface ScenarioSimulationEditorConstants
     String errorPopoverMessageFailedWithException(String errorMsg);
 
     String skipSimulation();
+
+    String noDecisionsAvailable();
+
+    String noRulesAvailable();
 }

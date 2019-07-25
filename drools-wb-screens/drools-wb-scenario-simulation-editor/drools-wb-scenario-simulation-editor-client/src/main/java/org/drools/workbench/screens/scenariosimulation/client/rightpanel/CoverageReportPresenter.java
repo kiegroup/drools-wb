@@ -32,6 +32,7 @@ import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.uberfire.client.annotations.WorkbenchScreen;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.IDENTIFIER;
 
@@ -84,14 +85,23 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     public void populateCoverageReport(Type type, SimulationRunMetadata simulationRunMetadata) {
         if (simulationRunMetadata != null) {
             setSimulationRunMetadata(simulationRunMetadata, type);
-        }
-        else {
+        } else {
             showEmptyStateMessage();
         }
     }
 
     protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, Type type) {
+        // Coverage report should not be shown if there are no rules/decisions.
+        if (simulationRunMetadata.getAvailable() == 0) {
+            String messageToShow = DMN.equals(type) ?
+                    ScenarioSimulationEditorConstants.INSTANCE.noDecisionsAvailable() :
+                    ScenarioSimulationEditorConstants.INSTANCE.noRulesAvailable();
+            view.setEmptyStatusText(messageToShow);
+            view.hide();
+            return;
+        }
         view.initText(type);
+
         populateSummary(simulationRunMetadata.getAvailable(),
                         simulationRunMetadata.getExecuted(),
                         simulationRunMetadata.getCoveragePercentage());
