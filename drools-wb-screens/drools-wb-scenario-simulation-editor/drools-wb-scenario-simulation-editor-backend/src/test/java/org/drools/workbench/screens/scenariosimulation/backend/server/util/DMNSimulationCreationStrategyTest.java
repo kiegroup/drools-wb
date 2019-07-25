@@ -43,8 +43,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.drools.scenariosimulation.api.model.FactMappingType.EXPECT;
 import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
+import static org.drools.scenariosimulation.api.model.FactMappingType.OTHER;
 import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.Type.DECISION;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -110,7 +112,7 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
 
-        dmnSimulationCreationStrategy.addEmptyColumnIfNeeded(simulation, scenarioWithIndex);
+        dmnSimulationCreationStrategy.addEmptyColumnsIfNeeded(simulation, scenarioWithIndex);
         assertEquals(2, simulationDescriptor.getFactMappings().size());
         assertTrue(simulationDescriptor.getFactMappings().stream()
                            .anyMatch(elem -> EXPECT.equals(elem.getExpressionIdentifier().getType())));
@@ -121,7 +123,7 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
         simulationDescriptor = simulation.getSimulationDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);
 
-        dmnSimulationCreationStrategy.addEmptyColumnIfNeeded(simulation, scenarioWithIndex);
+        dmnSimulationCreationStrategy.addEmptyColumnsIfNeeded(simulation, scenarioWithIndex);
         assertEquals(2, simulationDescriptor.getFactMappings().size());
         assertTrue(simulationDescriptor.getFactMappings().stream()
                            .anyMatch(elem -> GIVEN.equals(elem.getExpressionIdentifier().getType())));
@@ -129,18 +131,21 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
 
     @Test
     public void findNewIndexOfGroup() {
-        Simulation simulation = new Simulation();
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        SimulationDescriptor simulationDescriptorGiven = new SimulationDescriptor();
         ExpressionIdentifier givenExpressionIdentifier = ExpressionIdentifier.create("given1", GIVEN);
-        simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
-        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptor, GIVEN));
-        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptor, EXPECT));
+        simulationDescriptorGiven.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
+        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorGiven, GIVEN));
+        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorGiven, EXPECT));
 
-        simulationDescriptor = new SimulationDescriptor();
+        SimulationDescriptor simulationDescriptorExpect = new SimulationDescriptor();
         ExpressionIdentifier expectExpressionIdentifier = ExpressionIdentifier.create("expect1", EXPECT);
-        simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);
-        assertEquals(0, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptor, GIVEN));
-        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptor, EXPECT));
+        simulationDescriptorExpect.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);
+        assertEquals(0, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorExpect, GIVEN));
+        assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorExpect, EXPECT));
+
+        assertThatThrownBy(() -> dmnSimulationCreationStrategy.findNewIndexOfGroup(new SimulationDescriptor(), OTHER))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("This method can be invoked only with GIVEN or EXPECT as FactMappingType");
     }
 
     private void verifySimulationCreated(boolean hasInput, boolean hasOutput) throws Exception {

@@ -73,7 +73,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
             addToScenario(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
         });
 
-        addEmptyColumnIfNeeded(toReturn, scenarioWithIndex);
+        addEmptyColumnsIfNeeded(toReturn, scenarioWithIndex);
 
         return toReturn;
     }
@@ -83,7 +83,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
      * @param simulation
      * @param scenarioWithIndex
      */
-    protected void addEmptyColumnIfNeeded(Simulation simulation, ScenarioWithIndex scenarioWithIndex) {
+    protected void addEmptyColumnsIfNeeded(Simulation simulation, ScenarioWithIndex scenarioWithIndex) {
         boolean hasGiven = false;
         boolean hasExpect = false;
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
