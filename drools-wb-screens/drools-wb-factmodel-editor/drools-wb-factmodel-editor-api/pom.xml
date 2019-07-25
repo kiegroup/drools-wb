@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-factmodel-editor</artifactId>
-    <version>7.24.0-SNAPSHOT</version>
+    <version>7.25.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-factmodel-editor-api</artifactId>
@@ -27,24 +27,10 @@
     </dependency>
 
     <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-workbench-models-datamodel-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-services-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-common</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.kie.workbench.services</groupId>
-      <artifactId>kie-wb-common-datamodel-api</artifactId>
-    </dependency>
   </dependencies>
 
 </project>

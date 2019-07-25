@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb</artifactId>
-    <version>7.24.0-SNAPSHOT</version>
+    <version>7.25.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-webapp</artifactId>
@@ -264,6 +264,11 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-preferences-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-client-backend</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -1255,7 +1260,14 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-management-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.uberfire</groupId>
+          <artifactId>uberfire-servlet-security</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-management-client</artifactId>
@@ -1662,6 +1674,7 @@
             <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-client</compileSourcesArtifact>
