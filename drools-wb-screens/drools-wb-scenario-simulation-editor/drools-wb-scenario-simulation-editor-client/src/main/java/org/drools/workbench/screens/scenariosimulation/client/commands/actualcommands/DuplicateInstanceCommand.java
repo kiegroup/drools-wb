@@ -48,6 +48,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
         context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(
                 originalColumn -> {
                     ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
+                    createdColumn.setWidth(originalColumn.getWidth());
                     if (originalColumn.isInstanceAssigned()) {
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
 

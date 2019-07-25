@@ -244,12 +244,11 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void insertColumnGridOnly(final int index, final GridColumn<?> column) {
         checkSimulation();
-        super.insertColumn(index, column);
 
-        /*column.setIndex(columns.size());
+        column.setIndex(columns.size());
         columns.add(index, column);
 
-        selectionsManager.onInsertColumn(index);*/
+        selectionsManager.onInsertColumn(index);
     }
 
     /**
