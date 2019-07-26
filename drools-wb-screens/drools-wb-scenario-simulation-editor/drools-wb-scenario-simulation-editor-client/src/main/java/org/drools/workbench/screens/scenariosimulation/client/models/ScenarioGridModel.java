@@ -324,7 +324,7 @@ public class ScenarioGridModel extends BaseGridData {
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, ei);
         IntStream.range(0, widthsToRestore.size())
-                .forEach(index -> getColumns().get(index).setWidth(widthsToRestore.get(index)));
+                .forEach(index -> updateColumnWidth(getColumns().get(index), widthsToRestore.get(index)));
     }
 
     /**
@@ -520,24 +520,35 @@ public class ScenarioGridModel extends BaseGridData {
         selectedColumn = null;
     }
 
-    @Override
-    protected boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
-        boolean toRefresh = super.internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth) ;
+    public boolean refreshWidth(boolean changedNumberOfColumn, OptionalDouble currentWidth) {
+        return internalRefreshWidth(changedNumberOfColumn, currentWidth);
+    }
 
+    @Override
+    public boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
+        final boolean toRefresh = super.internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth);
         if (toRefresh) {
 
             for (GridColumn<?> column : getColumns()) {
-                if (!column.isVisible() || GridColumn.ColumnWidthMode.isFixed(column)) {
-                    continue;
-                }
-                int columnIndex = getColumns().indexOf(column);
-                FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-                factMapping.setColumnWidth(column.getWidth());
+                synchronizeFactMappingWidth(column);
             }
 
         }
-
         return toRefresh;
+    }
+
+    public void updateColumnWidth(GridColumn<?> column, double width) {
+        column.setWidth(width);
+        synchronizeFactMappingWidth(column);
+    }
+
+    public void synchronizeFactMappingWidth(final GridColumn<?> column) {
+        if (!column.isVisible() || GridColumn.ColumnWidthMode.isFixed(column)) {
+            return;
+        }
+        final int columnIndex = getColumns().indexOf(column);
+        final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        factMapping.setColumnWidth(column.getWidth());
     }
 
     /**
@@ -891,7 +902,7 @@ public class ScenarioGridModel extends BaseGridData {
             } else {
                 super.insertColumn(index, column);
             }
-            createdFactMapping.setColumnWidth(column.getWidth());
+            synchronizeFactMappingWidth(column);
             final Range instanceLimits = getInstanceLimits(columnIndex);
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)
