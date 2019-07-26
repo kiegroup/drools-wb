@@ -238,7 +238,8 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model
+     * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model.
+     * It doesn't apply any auto resize to columns. It should be used only when a scenario is fully loaded.
      * @param index
      * @param column
      */
@@ -520,12 +521,25 @@ public class ScenarioGridModel extends BaseGridData {
         selectedColumn = null;
     }
 
-    public boolean refreshWidth(boolean changedNumberOfColumn, OptionalDouble currentWidth) {
-        return internalRefreshWidth(changedNumberOfColumn, currentWidth);
+    /**
+     * Public redirection for <code>internalRefreshWidth</code>
+     * @param changedNumberOfColumn
+     * @param optionalCurrentWidth
+     * @return
+     */
+    public boolean refreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
+        return internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth);
     }
 
+    /**
+     * Its checks if the grid columns should be refreshed and it refreshes it (original superclass behavior).
+     * In addition, if there was a refresh (refreshed variable), it synchronizes column's related <code>factMapping</code>
+     * @param changedNumberOfColumn
+     * @param optionalCurrentWidth
+     * @return
+     */
     @Override
-    public boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
+    protected boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
         final boolean toRefresh = super.internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth);
         if (toRefresh) {
 
@@ -537,11 +551,20 @@ public class ScenarioGridModel extends BaseGridData {
         return toRefresh;
     }
 
+    /**
+     * It update a column width and its related <code>factMapping</code> columnWidth
+     * @param column
+     * @param width
+     */
     public void updateColumnWidth(GridColumn<?> column, double width) {
         column.setWidth(width);
         synchronizeFactMappingWidth(column);
     }
 
+    /**
+     * It update a column related <code>factMapping</code> columnWidth
+     * @param column
+     */
     public void synchronizeFactMappingWidth(final GridColumn<?> column) {
         if (!column.isVisible() || GridColumn.ColumnWidthMode.isFixed(column)) {
             return;

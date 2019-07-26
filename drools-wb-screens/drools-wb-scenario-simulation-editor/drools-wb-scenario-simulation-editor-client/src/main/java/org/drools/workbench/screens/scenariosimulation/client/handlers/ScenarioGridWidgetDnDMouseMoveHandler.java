@@ -34,7 +34,7 @@ public class ScenarioGridWidgetDnDMouseMoveHandler extends GridWidgetDnDMouseMov
     }
 
     /**
-     * It addition to the original method behavior, which updates column width at any column resize, it updates the
+     * It addition to the original method behavior, which updates column width at any column resize, it synchronizes the
      * column width in its related <code>FactMapping</code>
      * @param columnNewWidth
      * @param activeGridColumn
