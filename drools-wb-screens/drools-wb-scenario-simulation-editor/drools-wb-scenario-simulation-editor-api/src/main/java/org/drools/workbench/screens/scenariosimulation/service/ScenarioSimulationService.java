@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -53,4 +54,6 @@ public interface ScenarioSimulationService
                 final String comment,
                 final ScenarioSimulationModel.Type type,
                 final String value);
+
+    void validate(Simulation simulation);
 }

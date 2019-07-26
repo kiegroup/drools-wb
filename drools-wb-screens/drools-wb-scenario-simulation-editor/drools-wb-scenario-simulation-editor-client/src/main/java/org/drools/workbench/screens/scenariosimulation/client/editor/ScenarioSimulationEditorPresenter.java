@@ -338,6 +338,7 @@ public class ScenarioSimulationEditorPresenter {
      * @param fileMenuBuilder
      */
     public void makeMenuBar(FileMenuBuilder fileMenuBuilder) {
+        fileMenuBuilder.addValidate(getValidateCommand());
         fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
         fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
@@ -405,6 +406,12 @@ public class ScenarioSimulationEditorPresenter {
             context.getStatus().setSimulation(model.getSimulation());
             view.onResize();
         };
+    }
+
+    protected Command getValidateCommand() {
+
+        // FIXME to implement
+        return null;
     }
 
     /**

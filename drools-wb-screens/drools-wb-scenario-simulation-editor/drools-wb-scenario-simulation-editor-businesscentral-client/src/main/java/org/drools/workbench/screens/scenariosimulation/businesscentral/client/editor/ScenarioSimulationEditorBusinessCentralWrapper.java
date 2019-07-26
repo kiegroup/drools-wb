@@ -210,6 +210,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.addDownloadMenuItem(fileMenuBuilder, getPathSupplier());
     }
 
+    @Override
+    public void validate(Simulation simulation) {
+        // FIXME to add callbacks
+        service.call().validate(simulation);
+    }
+
     protected void registerTestToolsCallback() {
         placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), scenarioSimulationEditorPresenter.getPopulateTestToolsCommand());
     }

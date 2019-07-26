@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,14 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
 import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
+import org.drools.scenariosimulation.backend.util.ScenarioBeanUtil;
 import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
 import org.drools.workbench.screens.scenariosimulation.backend.server.util.ScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -58,6 +61,7 @@ import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.errai.security.shared.api.identity.User;
+import org.kie.api.runtime.KieContainer;
 import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
 import org.kie.workbench.common.services.backend.service.KieService;
 import org.kie.workbench.common.services.datamodel.backend.server.DataModelOracleUtilities;
@@ -76,7 +80,10 @@ import org.uberfire.java.nio.file.FileAlreadyExistsException;
 import org.uberfire.rpc.SessionInfo;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
+import static org.drools.scenariosimulation.api.model.FactMappingType.OTHER;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
 
 @Service
 @ApplicationScoped
@@ -207,7 +214,7 @@ public class ScenarioSimulationServiceImpl
 
             ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
             Simulation simulation = scenarioSimulationModel.getSimulation();
-            if(simulation != null && Type.DMN.equals(simulation.getSimulationDescriptor().getType())) {
+            if(simulation != null && DMN.equals(simulation.getSimulationDescriptor().getType())) {
                 try {
                     dmnTypeService.initializeNameAndNamespace(simulation,
                                                               path,
@@ -355,6 +362,37 @@ public class ScenarioSimulationServiceImpl
                             ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(junitActivatorPackageName),
                             commentedOptionFactory.makeCommentedOption(""));
         }
+    }
+
+    @Override
+    public void validate(Simulation simulation) {
+        Type type = simulation.getSimulationDescriptor().getType();
+        if(DMN.equals(type)) {
+            validateDMN();
+        } else if(RULE.equals(type)){
+            validateRULE();
+        } else {
+            throw new IllegalArgumentException("Only DMN and RULE test scenarios can be validated");
+        }
+    }
+
+    protected void validateDMN() {
+
+    }
+
+    protected void validateRULE(Simulation simulation, KieContainer kieContainer) {
+        Map<String, Object> beanMap = new HashMap<>();
+        for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {
+            String instanceClassName = factMapping.getFactIdentifier().getClassName();
+            if(OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
+                continue;
+            }
+            beanMap.computeIfAbsent(instanceClassName, className -> ScenarioBeanUtil.loadClass(className, ))
+
+        }
+
+        ScenarioBeanUtil.loadClass()
+
     }
 
     protected Package getOrCreateJunitActivatorPackage(KieModule kieModule) {
