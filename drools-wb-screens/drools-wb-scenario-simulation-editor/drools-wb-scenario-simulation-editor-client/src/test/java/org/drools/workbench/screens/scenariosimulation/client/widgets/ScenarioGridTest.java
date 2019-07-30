@@ -44,6 +44,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
@@ -69,6 +70,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -201,11 +203,14 @@ public class ScenarioGridTest {
 
     @Test
     public void setContent() {
+        InOrder callsOrder = inOrder(scenarioGridModelMock, scenarioGrid);
         scenarioGrid.setContent(simulation);
-        verify(scenarioGridModelMock, times(1)).clear();
-        verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
-        verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
-        verify(scenarioGrid, times(1)).appendRows(eq(simulation));
+        callsOrder.verify(scenarioGridModelMock, times(1)).clear();
+        callsOrder.verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
+        callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
+        callsOrder.verify(scenarioGrid, times(1)).appendRows(eq(simulation));
+        callsOrder.verify(scenarioGridModelMock, times(1)).loadFactMappingsWidth();
+        callsOrder.verify(scenarioGridModelMock, times(1)).forceRefreshWidth();
     }
 
     @Test
