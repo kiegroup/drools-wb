@@ -246,6 +246,8 @@ public interface ScenarioSimulationEditorConstants
 
     String settings();
 
+    String dmnPathErrorLabel(String dmnPath);
+
     String coverageReport();
 
     String uploadWarning();
@@ -259,6 +261,8 @@ public interface ScenarioSimulationEditorConstants
     String notCovered();
 
     String decisionsEvaluated();
+
+    String rulesFired();
 
     String coverageNotSupportedForRule();
 
@@ -282,6 +286,14 @@ public interface ScenarioSimulationEditorConstants
 
     String numberOfTimesDecisionEvaluated();
 
+    String reportAvailableRuleLabel();
+
+    String reportExecutedRuleLabel();
+
+    String reportCoverageRuleLabel();
+
+    String numberOfTimesRulesFired();
+
     String errorReason();
 
     String keep();
@@ -295,4 +307,8 @@ public interface ScenarioSimulationEditorConstants
     String errorPopoverMessageFailedWithException(String errorMsg);
 
     String skipSimulation();
+
+    String noDecisionsAvailable();
+
+    String noRulesAvailable();
 }

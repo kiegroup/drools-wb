@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.HTMLOptionElement;
@@ -27,8 +28,11 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownView;
 
 @Dependent
-@Templated
+@Templated(value = "/org/kie/workbench/common/widgets/client/assets/dropdown/KieAssetsDropdownView.html")
+@Named(ScenarioSimulationDropdownView.BEAN_NAME)
 public class ScenarioSimulationDropdownView extends KieAssetsDropdownView implements ScenarioSimulationDropdown.View {
+
+    final public static String BEAN_NAME = "ScenarioDropdownView";
 
     @Inject
     public ScenarioSimulationDropdownView(HTMLSelectElement nativeSelect,
