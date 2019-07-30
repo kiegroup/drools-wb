@@ -5,7 +5,7 @@
   <parent>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.24.0-SNAPSHOT</version>
+    <version>7.25.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -363,7 +363,7 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
-      <scope>provided</scope>
+<!--      <scope>provided</scope>-->
     </dependency>
 
     <!-- Test dependencies -->
@@ -415,6 +415,36 @@
       <classifier>sources</classifier>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.jsinterop</groupId>
+      <artifactId>base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.jsinterop</groupId>
+      <artifactId>jsinterop-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-workbench-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-commons-editor-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-client-backend</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-project-api</artifactId>
+    </dependency>
+
 
     <!-- Scenario Simulation -->
     <dependency>
@@ -609,6 +639,12 @@
       </dependency>
       <!-- END MARSHALLING -->
 
+      <dependency>
+        <groupId>com.google.jsinterop</groupId>
+        <artifactId>base</artifactId>
+        <version>1.0.0-beta-1</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -699,6 +735,7 @@
             <!-- Uberfire Preferences -->
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>
 
             <!-- Uberfire Experimentals -->

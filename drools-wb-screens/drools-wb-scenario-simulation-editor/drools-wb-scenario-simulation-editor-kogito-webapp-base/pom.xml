@@ -5,7 +5,7 @@
   <parent>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.24.0-SNAPSHOT</version>
+    <version>7.25.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -20,8 +20,6 @@
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
     <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
     <version.thorntail>2.4.0.Final</version.thorntail>
-    <gwt.helper.includes>Client,Kogito,Marshaller</gwt.helper.includes>
-    <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
     <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
   </properties>
 
@@ -533,6 +531,22 @@
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-jaxrs-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-workbench-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-preferences-client-backend</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-project-api</artifactId>
+    </dependency>
 
     <!-- TEST -->
     <dependency>
@@ -607,23 +621,6 @@
     <finalName>${project.artifactId}</finalName>
 
     <plugins>
-      <!-- Include additional sources path for hot reload -->
-      <plugin>
-        <groupId>org.kie</groupId>
-        <artifactId>kie-gwthelper-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <includes>${gwt.helper.includes}</includes> <!-- will include all GWT module whose configuration file name match that pattern -->
-              <rootDirectories>${gwt.helper.rootDirectories}</rootDirectories> <!-- will search inside those directories -->
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -691,6 +688,7 @@
             <!-- Uberfire Experimentals -->
             <compileSourcesArtifact>org.uberfire:uberfire-experimental-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-experimental-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
 
             <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>
