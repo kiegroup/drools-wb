@@ -238,8 +238,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model.
-     * It doesn't apply any auto resize to columns. It should be used only when a scenario is fully loaded.
+     * This method <i>insert</i> a new column to the grid <b>without</b> modify underlying model
      * @param index
      * @param column
      */
@@ -530,9 +529,16 @@ public class ScenarioGridModel extends BaseGridData {
      * @param column
      * @param width
      */
-    public void updateColumnWidth(GridColumn<?> column, double width) {
+    public void updateColumnWidth(final GridColumn<?> column, final double width) {
         column.setWidth(width);
         synchronizeFactMappingWidth(column);
+    }
+
+    /**
+     * It synchronizes all columns related <code>factMapping</code> columnnWidths
+     */
+    public void synchronizeFactMappingsWidths() {
+        getColumns().forEach(column -> synchronizeFactMappingWidth(column));
     }
 
     /**
@@ -549,14 +555,10 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * It updates all columns related <code>factMapping</code> widths
+     * It retrieves the stored columnWidths and assigns them to every grid column.
      */
-    public void synchronizeFactMappingsWidths() {
-        getColumns().forEach(column -> synchronizeFactMappingWidth(column));
-    }
-
     public void loadFactMappingsWidth() {
-        for (GridColumn<?> column : getColumns()) {
+        for (final GridColumn<?> column : getColumns()) {
             final int columnIndex = getColumns().indexOf(column);
             final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             if (factMapping.getColumnWidth() != null) {

@@ -75,6 +75,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                         }
                     }
                 });
+        /* Restoring the expected columns dimension, overriding the automatic resizing */
         IntStream.range(0, widthsToRestore.size())
                 .forEach(index -> context.getModel().updateColumnWidth(context.getModel().getColumns().get(index), widthsToRestore.get(index)));
     }
