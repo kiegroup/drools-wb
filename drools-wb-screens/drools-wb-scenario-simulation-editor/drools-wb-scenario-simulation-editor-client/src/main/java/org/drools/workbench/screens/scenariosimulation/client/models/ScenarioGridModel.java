@@ -245,11 +245,7 @@ public class ScenarioGridModel extends BaseGridData {
      */
     public void insertColumnGridOnly(final int index, final GridColumn<?> column) {
         checkSimulation();
-
-        column.setIndex(columns.size());
-        columns.add(index, column);
-
-        selectionsManager.onInsertColumn(index);
+        super.insertColumn(index, column);
     }
 
     /**
@@ -272,6 +268,7 @@ public class ScenarioGridModel extends BaseGridData {
         final GridColumn<?> toDelete = getColumns().get(columnIndex);
         deleteColumn(toDelete);
         simulation.removeFactMappingByIndex(columnIndex);
+        synchronizeFactMappingsWidths();
     }
 
     /**
@@ -522,37 +519,14 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Public redirection for <code>internalRefreshWidth</code>
-     * @param changedNumberOfColumn
-     * @param optionalCurrentWidth
-     * @return
+     * It forces a <code>internalRefreshWidth</code> refresh
      */
-    public boolean refreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
-        return internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth);
+    public boolean forceRefreshWidth() {
+        return internalRefreshWidth(true, OptionalDouble.empty());
     }
 
     /**
-     * Its checks if the grid columns should be refreshed and it refreshes it (original superclass behavior).
-     * In addition, if there was a refresh (refreshed variable), it synchronizes column's related <code>factMapping</code>
-     * @param changedNumberOfColumn
-     * @param optionalCurrentWidth
-     * @return
-     */
-    @Override
-    protected boolean internalRefreshWidth(boolean changedNumberOfColumn, OptionalDouble optionalCurrentWidth) {
-        final boolean toRefresh = super.internalRefreshWidth(changedNumberOfColumn, optionalCurrentWidth);
-        if (toRefresh) {
-
-            for (GridColumn<?> column : getColumns()) {
-                synchronizeFactMappingWidth(column);
-            }
-
-        }
-        return toRefresh;
-    }
-
-    /**
-     * It update a column width and its related <code>factMapping</code> columnWidth
+     * It updates a column width and its related <code>factMapping</code> columnWidth
      * @param column
      * @param width
      */
@@ -562,16 +536,35 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * It update a column related <code>factMapping</code> columnWidth
+     * It updates a column related <code>factMapping</code> columnWidth
      * @param column
      */
     public void synchronizeFactMappingWidth(final GridColumn<?> column) {
-        if (!column.isVisible() || GridColumn.ColumnWidthMode.isFixed(column)) {
+        if (!column.isVisible()) {
             return;
         }
         final int columnIndex = getColumns().indexOf(column);
         final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         factMapping.setColumnWidth(column.getWidth());
+    }
+
+    /**
+     * It updates all columns related <code>factMapping</code> widths
+     */
+    public void synchronizeFactMappingsWidths() {
+        getColumns().forEach(column -> synchronizeFactMappingWidth(column));
+    }
+
+    public void loadFactMappingsWidth() {
+        for (GridColumn<?> column : getColumns()) {
+            final int columnIndex = getColumns().indexOf(column);
+            final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            if (factMapping.getColumnWidth() != null) {
+                column.setWidth(factMapping.getColumnWidth());
+            } else {
+                factMapping.setColumnWidth(column.getWidth());
+            }
+        }
     }
 
     /**
@@ -925,7 +918,7 @@ public class ScenarioGridModel extends BaseGridData {
             } else {
                 super.insertColumn(index, column);
             }
-            synchronizeFactMappingWidth(column);
+            synchronizeFactMappingsWidths();
             final Range instanceLimits = getInstanceLimits(columnIndex);
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)

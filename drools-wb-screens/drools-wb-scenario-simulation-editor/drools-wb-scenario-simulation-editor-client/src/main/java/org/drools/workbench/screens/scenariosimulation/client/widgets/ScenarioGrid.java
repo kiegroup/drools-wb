@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
@@ -70,12 +69,12 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     public void setContent(Simulation simulation) {
-        boolean changedColumnsCount = model.getColumnCount() != simulation.getSimulationDescriptor().getUnmodifiableFactMappings().size();
         ((ScenarioGridModel) model).clear();
         ((ScenarioGridModel) model).bindContent(simulation);
         setHeaderColumns(simulation);
-        ((ScenarioGridModel) model).refreshWidth(changedColumnsCount, OptionalDouble.empty());
         appendRows(simulation);
+        ((ScenarioGridModel) model).loadFactMappingsWidth();
+        ((ScenarioGridModel) model).forceRefreshWidth();
     }
 
     public EventBus getEventBus() {
@@ -150,11 +149,6 @@ public class ScenarioGrid extends BaseGridWidget {
         if (FactMappingType.OTHER.equals(factMapping.getExpressionIdentifier().getType())) {
             scenarioGridColumn.setColumnWidthMode(ColumnWidthMode.FIXED);
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
-        }
-        if (factMapping.getColumnWidth() != null) {
-            scenarioGridColumn.setWidth(factMapping.getColumnWidth());
-        } else {
-            factMapping.setColumnWidth(scenarioGridColumn.getWidth());
         }
         if (isPropertyAssigned) {
             setDOMElementFactory(scenarioGridColumn, factMapping.getClassName());

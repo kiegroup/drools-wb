@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.widget.dnd.GridWidgetDnDHandlersState;
@@ -45,8 +44,7 @@ public class ScenarioGridWidgetDnDMouseMoveHandler extends GridWidgetDnDMouseMov
     protected double adjustColumnWidth(double columnNewWidth, GridColumn<?> activeGridColumn, GridWidget activeGridWidget) {
         double columnWidth = super.adjustColumnWidth(columnNewWidth, activeGridColumn, activeGridWidget);
         final ScenarioGridModel model = ((ScenarioGridLayer) layer).getScenarioGrid().getModel();
-        final ScenarioGridColumn resizedColumn = ((ScenarioGridColumn) activeGridColumn);
-        model.synchronizeFactMappingWidth(resizedColumn);
+        model.synchronizeFactMappingsWidths();
         return columnWidth;
     }
 }
