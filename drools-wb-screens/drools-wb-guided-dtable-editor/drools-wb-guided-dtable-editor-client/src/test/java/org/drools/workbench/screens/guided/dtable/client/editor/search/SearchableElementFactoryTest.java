@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
@@ -29,7 +28,6 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.kie.workbench.common.services.shared.preferences.ApplicationPreferences.DATE_FORMAT;
-import static org.kie.workbench.common.services.shared.preferences.ApplicationPreferences.getDroolsDateFormat;
 import static org.mockito.Mockito.mock;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -38,15 +36,11 @@ public class SearchableElementFactoryTest {
     @Mock
     private GuidedDecisionTableGridHighlightHelper highlightHelper;
 
-    private DateTimeFormat format;
-
     private SearchableElementFactory factory;
 
     @Before
     public void setup() {
         ApplicationPreferences.setUp(new Maps.Builder<String, String>().put(DATE_FORMAT, "dd/mm/yy").build());
-
-        format = DateTimeFormat.getFormat(getDroolsDateFormat());
         factory = new SearchableElementFactory(highlightHelper);
     }
 
@@ -66,13 +60,5 @@ public class SearchableElementFactoryTest {
         assertEquals(value, element.getValue());
         assertEquals(modeller, element.getModeller());
         assertEquals(highlightHelper, element.getHighlightHelper());
-    }
-
-    @Test
-    public void testConvertDTCellValueToString() {
-        assertEquals("string", factory.convertDTCellValueToString(new DTCellValue52("string")));
-        assertEquals("10", factory.convertDTCellValueToString(new DTCellValue52(10)));
-        assertEquals("true", factory.convertDTCellValueToString(new DTCellValue52(true)));
-        assertEquals("02/01/92", factory.convertDTCellValueToString(new DTCellValue52(format.parse("02/01/92"))));
     }
 }

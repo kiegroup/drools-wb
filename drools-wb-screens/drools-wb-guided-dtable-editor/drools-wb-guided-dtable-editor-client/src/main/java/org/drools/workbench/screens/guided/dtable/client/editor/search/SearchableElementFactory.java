@@ -16,24 +16,27 @@
 
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
-import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.CellUtilities;
+import org.drools.workbench.screens.guided.rule.client.util.GWTDateConverter;
+import org.kie.soup.project.datamodel.oracle.DateConverter;
 
 public class SearchableElementFactory {
 
-    private final DateTimeFormat formatter = getFormat();
-
     private final GuidedDecisionTableGridHighlightHelper highlightHelper;
+
+    private final CellUtilities cellUtilities;
 
     @Inject
     public SearchableElementFactory(final GuidedDecisionTableGridHighlightHelper highlightHelper) {
+
         this.highlightHelper = highlightHelper;
+        this.cellUtilities = new CellUtilities();
+
+        CellUtilities.injectDateConvertor(getDateConverter());
     }
 
     public GuidedDecisionTableSearchableElement makeSearchableElement(final Integer row,
@@ -45,47 +48,14 @@ public class SearchableElementFactory {
 
         searchableElement.setHighlightHelper(highlightHelper);
         searchableElement.setModeller(modeller);
-        searchableElement.setValue(convertDTCellValueToString(cellValue52));
+        searchableElement.setValue(cellUtilities.asString(cellValue52));
         searchableElement.setRow(row);
         searchableElement.setColumn(column);
 
         return searchableElement;
     }
 
-    String convertDTCellValueToString(final DTCellValue52 cellValue52) {
-        switch (cellValue52.getDataType()) {
-            case NUMERIC:
-            case NUMERIC_BIGDECIMAL:
-            case NUMERIC_BIGINTEGER:
-            case NUMERIC_BYTE:
-            case NUMERIC_DOUBLE:
-            case NUMERIC_FLOAT:
-            case NUMERIC_INTEGER:
-            case NUMERIC_LONG:
-            case NUMERIC_SHORT:
-                return getStringValue(cellValue52.getNumericValue());
-            case DATE:
-                return getStringValue(cellValue52.getDateValue());
-            case BOOLEAN:
-                return getStringValue(cellValue52.getBooleanValue());
-            default:
-                return cellValue52.getStringValue();
-        }
-    }
-
-    private String getStringValue(final Number number) {
-        return number == null ? null : number.toString();
-    }
-
-    private String getStringValue(final Boolean bool) {
-        return bool == null ? null : bool.toString();
-    }
-
-    private String getStringValue(final Date date) {
-        return date == null ? null : formatter.format(date);
-    }
-
-    private DateTimeFormat getFormat() {
-        return DateTimeFormat.getFormat(ApplicationPreferences.getDroolsDateFormat());
+    private DateConverter getDateConverter() {
+        return GWTDateConverter.getInstance();
     }
 }
