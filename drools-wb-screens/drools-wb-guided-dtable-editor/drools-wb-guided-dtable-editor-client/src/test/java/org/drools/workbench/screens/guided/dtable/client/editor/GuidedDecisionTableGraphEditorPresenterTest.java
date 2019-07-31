@@ -30,7 +30,9 @@ import javax.enterprise.event.Event;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableGraphResourceType;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter.Access.LockedBy;
@@ -90,6 +92,7 @@ import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -230,7 +233,10 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                                                            columnsPage,
                                                            saveAndRenameCommandBuilder,
                                                            alertsButtonMenuItemBuilder,
-                                                           downloadMenuItemBuilder) {
+                                                           downloadMenuItemBuilder,
+                                                           elemental2DomUtil,
+                                                           editorSearchIndex,
+                                                           searchBarComponent) {
             {
                 workbenchContext = GuidedDecisionTableGraphEditorPresenterTest.this.workbenchContext;
                 projectController = GuidedDecisionTableGraphEditorPresenterTest.this.projectController;
@@ -1674,7 +1680,75 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                                                            columnsPage,
                                                            saveAndRenameCommandBuilder,
                                                            alertsButtonMenuItemBuilder,
-                                                           downloadMenuItemBuilder);
+                                                           downloadMenuItemBuilder,
+                                                           null,
+                                                           null,
+                                                           null);
+    }
+
+    @Test
+    public void testGetSearchableElements() {
+
+        final GuidedDecisionTableEditorContent m1 = createDecisionTableEditorContentMock();
+        final GuidedDecisionTable52 model1 = m1.getModel();
+        final GuidedDecisionTableEditorContent m2 = createDecisionTableEditorContentMock();
+        final GuidedDecisionTable52 model2 = m2.getModel();
+
+        final Supplier<List<GuidedDecisionTableEditorContent>> modelSupplier = () -> asList(m1, m2);
+
+        final GuidedDecisionTableView widget1 = mock(GuidedDecisionTableView.class);
+        final GuidedDecisionTableView widget2 = mock(GuidedDecisionTableView.class);
+
+        doReturn(widget1).when(presenter).getWidgetToModel(model1);
+        doReturn(widget2).when(presenter).getWidgetToModel(model2);
+        doReturn(modelSupplier).when(presenter).getContentSupplier();
+
+        final List<GuidedDecisionTableSearchableElement> elements = presenter.getSearchableElements();
+
+        assertEquals(8, elements.size());
+
+        assertEquals("cell 1", elements.get(0).getValue());
+        assertEquals("cell 2", elements.get(1).getValue());
+        assertEquals("cell 3", elements.get(2).getValue());
+        assertEquals("cell 4", elements.get(3).getValue());
+
+        assertEquals(0, elements.get(0).getRow());
+        assertEquals(0, elements.get(1).getRow());
+        assertEquals(1, elements.get(2).getRow());
+        assertEquals(1, elements.get(3).getRow());
+
+        assertEquals(0, elements.get(0).getColumn());
+        assertEquals(1, elements.get(1).getColumn());
+        assertEquals(0, elements.get(2).getColumn());
+        assertEquals(1, elements.get(3).getColumn());
+
+        assertEquals(modeller, elements.get(0).getModeller());
+        assertEquals(modeller, elements.get(1).getModeller());
+        assertEquals(modeller, elements.get(2).getModeller());
+        assertEquals(modeller, elements.get(3).getModeller());
+
+        assertEquals(widget1, elements.get(0).getWidget());
+        assertEquals(widget1, elements.get(1).getWidget());
+        assertEquals(widget1, elements.get(2).getWidget());
+        assertEquals(widget1, elements.get(3).getWidget());
+        assertEquals(widget2, elements.get(4).getWidget());
+        assertEquals(widget2, elements.get(5).getWidget());
+        assertEquals(widget2, elements.get(6).getWidget());
+        assertEquals(widget2, elements.get(7).getWidget());
+    }
+
+    private GuidedDecisionTableEditorContent createDecisionTableEditorContentMock() {
+
+        final GuidedDecisionTableEditorContent content = mock(GuidedDecisionTableEditorContent.class);
+        final GuidedDecisionTable52 model = mock(GuidedDecisionTable52.class);
+        when(content.getModel()).thenReturn(model);
+        final List<DTCellValue52> row1 = asList(new DTCellValue52("cell 1"), new DTCellValue52("cell 2"));
+        final List<DTCellValue52> row2 = asList(new DTCellValue52("cell 3"), new DTCellValue52("cell 4"));
+        final List<List<DTCellValue52>> data = asList(row1, row2);
+
+        when(model.getData()).thenReturn(data);
+
+        return content;
     }
 
     private static class OnSaveSetupDataHolder {

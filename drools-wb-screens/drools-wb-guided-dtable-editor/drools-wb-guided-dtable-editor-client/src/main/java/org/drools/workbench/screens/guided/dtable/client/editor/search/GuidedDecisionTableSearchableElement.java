@@ -27,6 +27,7 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.search.common.Searchable;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -49,6 +50,8 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
     private Integer column;
 
     private GuidedDecisionTableModellerView.Presenter modeller;
+
+    private GuidedDecisionTableView widget;
 
     public void setCellValue52(final DTCellValue52 cellValue52) {
         this.cellValue52 = cellValue52;
@@ -200,6 +203,9 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
     }
 
     private GridWidget getGridWidget() {
+        if (!Objects.isNull(getWidget())) {
+            return getWidget();
+        }
         return getView()
                 .getGridWidgets()
                 .stream()
@@ -246,5 +252,13 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
             return rows.get(index).getHeight();
         }
         return 0;
+    }
+
+    public void setWidget(final GuidedDecisionTableView guidedDecisionTableView) {
+        this.widget = guidedDecisionTableView;
+    }
+
+    public GuidedDecisionTableView getWidget() {
+        return widget;
     }
 }

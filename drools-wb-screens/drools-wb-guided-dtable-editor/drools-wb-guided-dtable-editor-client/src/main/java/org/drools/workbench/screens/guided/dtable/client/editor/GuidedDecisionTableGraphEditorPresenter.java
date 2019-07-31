@@ -34,13 +34,17 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.dom.Element;
+import elemental2.dom.HTMLElement;
 import elemental2.promise.Promise;
+import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.EditMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.InsertMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.RadarMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.ViewMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.page.ColumnsPage;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableGraphResourceType;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter;
@@ -61,6 +65,7 @@ import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuIt
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.kie.soup.project.datamodel.imports.Imports;
 import org.kie.workbench.common.services.shared.project.KieModuleService;
@@ -68,6 +73,9 @@ import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallb
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
+import org.kie.workbench.common.widgets.client.search.common.EditorSearchIndex;
+import org.kie.workbench.common.widgets.client.search.common.HasSearchableElements;
+import org.kie.workbench.common.widgets.client.search.component.SearchBarComponent;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
@@ -92,6 +100,8 @@ import org.uberfire.ext.editor.commons.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.editor.commons.version.events.RestoreEvent;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
+import org.uberfire.ext.wires.core.grids.client.util.GridHighlightHelper;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnFocus;
 import org.uberfire.lifecycle.OnMayClose;
@@ -116,7 +126,7 @@ import static org.uberfire.ext.widgets.common.client.common.ConcurrentChangePopu
  */
 @Dependent
 @WorkbenchEditor(identifier = "GuidedDecisionTableGraphEditor", supportedTypes = {GuidedDTableGraphResourceType.class}, lockingStrategy = EDITOR_PROVIDED)
-public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionTableEditorPresenter {
+public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionTableEditorPresenter implements HasSearchableElements<GuidedDecisionTableSearchableElement> {
 
     private final Caller<GuidedDecisionTableGraphEditorService> graphService;
     private final Caller<KieModuleService> moduleService;
@@ -124,6 +134,9 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     private final Event<SaveInProgressEvent> saveInProgressEvent;
     private final LockManager lockManager;
     private final SaveAndRenameCommandBuilder<List<GuidedDecisionTableEditorContent>, Metadata> saveAndRenameCommandBuilder;
+    private final Elemental2DomUtil util;
+    private final EditorSearchIndex<GuidedDecisionTableSearchableElement> editorSearchIndex;
+    private final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent;
     protected ObservablePath.OnConcurrentUpdateEvent concurrentUpdateSessionInfo = null;
     protected Access access = new Access();
     protected Integer originalGraphHash;
@@ -157,7 +170,10 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final ColumnsPage columnsPage,
                                                    final SaveAndRenameCommandBuilder<List<GuidedDecisionTableEditorContent>, Metadata> saveAndRenameCommandBuilder,
                                                    final AlertsButtonMenuItemBuilder alertsButtonMenuItemBuilder,
-                                                   final DownloadMenuItemBuilder downloadMenuItem) {
+                                                   final DownloadMenuItemBuilder downloadMenuItem,
+                                                   final Elemental2DomUtil util,
+                                                   final EditorSearchIndex<GuidedDecisionTableSearchableElement> editorSearchIndex,
+                                                   final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent) {
         super(view,
               service,
               docks,
@@ -183,6 +199,9 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         this.lockManager = lockManager;
         this.graphSaveAndRenameService = graphSaveAndRenameService;
         this.saveAndRenameCommandBuilder = saveAndRenameCommandBuilder;
+        this.util = util;
+        this.editorSearchIndex = editorSearchIndex;
+        this.searchBarComponent = searchBarComponent;
     }
 
     @PostConstruct
@@ -204,6 +223,10 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         });
 
         registeredDocumentsMenuBuilder.setNewDocumentCommand(this::onNewDocument);
+        editorSearchIndex.setIsDirtySupplier(getIsDirtySupplier());
+        editorSearchIndex.setNoResultsFoundCallback(getNoResultsFoundCallback());
+        editorSearchIndex.registerSubIndex(this);
+        searchBarComponent.init(editorSearchIndex);
     }
 
     void onNewDocument() {
@@ -215,6 +238,33 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                 view,
                                                 (path) -> onOpenDocumentsInEditor(Collections.singletonList(path)));
         }).resolvePackage(editorPath);
+    }
+
+    Command getNoResultsFoundCallback() {
+        return () -> highlightHelper().clearSelections();
+    }
+
+    @Override
+    protected GuidedDecisionTableModellerView getModellerView() {
+
+        final GuidedDecisionTableModellerView view = super.getModellerView();
+        final HTMLElement modellerViewElement = util.asHTMLElement(view.asWidget().getElement());
+
+        modellerViewElement.appendChild(getSearchElement());
+
+        return view;
+    }
+
+    private Element getSearchElement() {
+        return searchBarComponent.getView().getElement();
+    }
+
+    private GridHighlightHelper highlightHelper() {
+
+        final GuidedDecisionTableModellerView view = modeller.getView();
+        final GridWidget gridWidget = view.getGridWidgets().iterator().next();
+
+        return new GridHighlightHelper(view.getGridPanel(), gridWidget);
     }
 
     @Override
@@ -728,6 +778,57 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                 access.setLock(NOBODY);
             }
         }
+    }
+
+    @Override
+    public List<GuidedDecisionTableSearchableElement> getSearchableElements() {
+
+        final List<GuidedDecisionTableSearchableElement> searchableElements = new ArrayList<>();
+        final List<GuidedDecisionTableEditorContent> contentSupplier = getContentSupplier().get();
+
+        for (final GuidedDecisionTableEditorContent table : contentSupplier) {
+            final GuidedDecisionTable52 model = table.getModel();
+            final List<List<DTCellValue52>> data = model.getData();
+            final GuidedDecisionTableView widget = getWidgetToModel(model);
+
+            for (int row = 0, dataSize = data.size(); row < dataSize; row++) {
+                for (int line = 0; line < data.get(row).size(); line++) {
+
+                    final DTCellValue52 cellValue52 = data.get(row).get(line);
+                    final GuidedDecisionTableSearchableElement searchableElement = makeSearchable(row, line, cellValue52);
+
+                    searchableElement.setWidget(widget);
+                    searchableElements.add(searchableElement);
+                }
+            }
+        }
+        return searchableElements;
+    }
+
+    GuidedDecisionTableView getWidgetToModel(GuidedDecisionTable52 model) {
+
+        final Optional<GridWidget> widget = modeller.getView()
+                .getGridWidgets()
+                .stream()
+                .filter(w -> (w instanceof GuidedDecisionTableView)
+                        && ((GuidedDecisionTableView) w).getPresenter().getModel().equals(model))
+                .findFirst();
+
+        return (GuidedDecisionTableView) widget.get();
+    }
+
+    private GuidedDecisionTableSearchableElement makeSearchable(final int row,
+                                                                final int column,
+                                                                final DTCellValue52 cellValue52) {
+
+        final GuidedDecisionTableSearchableElement searchableElement = new GuidedDecisionTableSearchableElement();
+
+        searchableElement.setCellValue52(cellValue52);
+        searchableElement.setRow(row);
+        searchableElement.setColumn(column);
+        searchableElement.setModeller(modeller);
+
+        return searchableElement;
     }
 
     private class LoadGraphLatch {
