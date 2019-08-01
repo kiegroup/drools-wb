@@ -320,6 +320,7 @@ public class ScenarioGridModel extends BaseGridData {
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, ei);
+        /* Restoring the expected columns dimension, overriding the automatic resizing */
         IntStream.range(0, widthsToRestore.size())
                 .forEach(index -> updateColumnWidth(getColumns().get(index), widthsToRestore.get(index)));
     }
@@ -920,6 +921,9 @@ public class ScenarioGridModel extends BaseGridData {
             } else {
                 super.insertColumn(index, column);
             }
+            /* Restoring the expected columns dimension, overriding the automatic resizing */
+            column.setWidth(column.getMinimumWidth());
+            forceRefreshWidth();
             synchronizeFactMappingsWidths();
             final Range instanceLimits = getInstanceLimits(columnIndex);
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)

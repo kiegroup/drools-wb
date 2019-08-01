@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
@@ -69,6 +70,7 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     public void setContent(Simulation simulation) {
+        this.synchronizeSimulationWidths(simulation);
         ((ScenarioGridModel) model).clear();
         ((ScenarioGridModel) model).bindContent(simulation);
         setHeaderColumns(simulation);
@@ -122,6 +124,29 @@ public class ScenarioGrid extends BaseGridWidget {
         handlers.add(new ScenarioSimulationGridWidgetMouseEventHandler());
         return handlers;
     }
+
+    /**
+     * It synchronizes the <code>FactMapping</code> columns width contained in the new <code>Simulation</code> object to load
+     * with the current <code>Simulation</code> values. This cover the case where a user modifies the columns width
+     * and then performs a undo/redo action: the changed columns width by the user must remain the same after one of these actions.
+     * @param simulation The new Simulation object to be loaded
+     */
+    protected void synchronizeSimulationWidths(Simulation simulation) {
+        /* If currently the model doesn't have a simulation, it skips the synchronization */
+        if (!((ScenarioGridModel) model).getSimulation().isPresent()) {
+            return;
+        }
+        simulation.getSimulationDescriptor().getUnmodifiableFactMappings().forEach(
+                factMapping -> {
+                    Optional<FactMapping> currentFactMapping =
+                            ((ScenarioGridModel) model).getSimulation().get().getSimulationDescriptor()
+                                    .getFactMapping(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
+                    if (currentFactMapping.isPresent()) {
+                        factMapping.setColumnWidth(currentFactMapping.get().getColumnWidth());
+                    }
+                });
+    }
+
 
     protected void setHeaderColumns(Simulation simulation) {
         final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
