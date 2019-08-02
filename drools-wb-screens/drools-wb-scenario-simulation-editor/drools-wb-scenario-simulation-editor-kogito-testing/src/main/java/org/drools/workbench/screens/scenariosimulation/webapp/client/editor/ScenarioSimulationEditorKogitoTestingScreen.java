@@ -29,6 +29,7 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.FileC
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
+import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.client.annotations.WorkbenchMenu;
@@ -48,7 +49,7 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 
 @ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorKogitoTestingScreen implements ScenarioSimulationEditorKogitoScreen {
+public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoTestingScreen";
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);

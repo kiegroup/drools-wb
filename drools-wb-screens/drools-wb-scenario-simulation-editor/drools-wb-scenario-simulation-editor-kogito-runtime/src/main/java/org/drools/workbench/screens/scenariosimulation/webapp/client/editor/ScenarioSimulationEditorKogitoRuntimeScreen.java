@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
+import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -41,7 +42,7 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 
 @ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorKogitoRuntimeScreen implements ScenarioSimulationEditorKogitoScreen {
+public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoRuntimeScreen";
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);

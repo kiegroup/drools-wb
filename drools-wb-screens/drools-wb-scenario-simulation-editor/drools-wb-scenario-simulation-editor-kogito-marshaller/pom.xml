@@ -38,10 +38,6 @@
       <groupId>com.google.jsinterop</groupId>
       <artifactId>base</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>com.google.elemental2</groupId>-->
-<!--      <artifactId>elemental2-core</artifactId>-->
-<!--    </dependency>-->
   </dependencies>
 
   <dependencyManagement>
@@ -66,16 +62,34 @@
         <artifactId>base</artifactId>
         <version>1.0.0-RC1</version>
       </dependency>
-<!--      <dependency>-->
-<!--        <groupId>com.google.elemental2</groupId>-->
-<!--        <artifactId>elemental2-core</artifactId>-->
-<!--        <version>1.0.0-beta-1</version>-->
-<!--      </dependency>-->
     </dependencies>
   </dependencyManagement>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <failOnError>false</failOnError>
+          <filesets>
+            <fileset>
+              <directory>src/main/java/org/drools/workbench/scenariosimulation/kogito/marshaller/js/model</directory>
+              <includes>
+                <include>**</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>${js.destination}</directory>
+              <includes>
+                <include>SCESIM.js</include>
+                <include>Jsonix-all.js</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.jvnet.jaxb2.maven2</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>

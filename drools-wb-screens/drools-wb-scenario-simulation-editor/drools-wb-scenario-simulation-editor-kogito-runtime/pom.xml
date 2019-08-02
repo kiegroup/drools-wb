@@ -363,7 +363,16 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
-<!--      <scope>provided</scope>-->
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench</groupId>
+      <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench</groupId>
+      <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+      <classifier>sources</classifier>
     </dependency>
 
     <!-- Test dependencies -->
@@ -596,12 +605,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-submarine-client</artifactId>
-        <!-- momentary fix -->
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-client</artifactId>
         <version>${version.org.kie}</version>
@@ -623,6 +626,18 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
         <scope>provided</scope>
+        <version>${version.org.kie}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench</groupId>
+        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+        <classifier>sources</classifier>
+        <version>${version.org.kie}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.kie.workbench</groupId>
+        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
         <version>${version.org.kie}</version>
       </dependency>
 
