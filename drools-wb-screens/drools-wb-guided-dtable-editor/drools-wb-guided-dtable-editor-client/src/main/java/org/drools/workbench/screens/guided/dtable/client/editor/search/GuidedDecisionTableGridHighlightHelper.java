@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -25,6 +26,7 @@ import javax.enterprise.context.ApplicationScoped;
 import com.ait.lienzo.client.core.shape.IDrawable;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.util.GridHighlightHelper;
@@ -36,10 +38,11 @@ public class GuidedDecisionTableGridHighlightHelper {
 
     void highlight(final Integer row,
                    final Integer column,
+                   final GuidedDecisionTableView widget,
                    final GuidedDecisionTableModellerView.Presenter modeller) {
-        double paddingX = getPaddingX(column, modeller);
-        double paddingY = getPaddingY(row, modeller);
-        highlightHelper(modeller)
+        double paddingX = getPaddingX(column, modeller, widget);
+        double paddingY = getPaddingY(row, modeller, widget);
+        highlightHelper(modeller, widget)
                 .withMinX(getMinX(modeller))
                 .withMinY(getMinY(modeller))
                 .withPaddingX(paddingX)
@@ -47,10 +50,11 @@ public class GuidedDecisionTableGridHighlightHelper {
                 .highlight(row, column);
     }
 
-    private double getPaddingY(final Integer row,
-                               final GuidedDecisionTableModellerView.Presenter modeller) {
+    double getPaddingY(final Integer row,
+                       final GuidedDecisionTableModellerView.Presenter modeller,
+                       final GuidedDecisionTableView widget) {
 
-        final List<GridRow> rows = getGridWidget(modeller).getModel().getRows();
+        final List<GridRow> rows = getGridWidget(modeller, widget).getModel().getRows();
         final double titleRowHeight = getHeight(rows, 0);
         final double headerRowHeight = getHeight(rows, 1);
         final double subHeaderRowHeight = getHeight(rows, 2);
@@ -59,10 +63,11 @@ public class GuidedDecisionTableGridHighlightHelper {
         return titleRowHeight + headerRowHeight + subHeaderRowHeight + currentRowHeight;
     }
 
-    private double getPaddingX(final Integer column,
-                               final GuidedDecisionTableModellerView.Presenter modeller) {
+    double getPaddingX(final Integer column,
+                       final GuidedDecisionTableModellerView.Presenter modeller,
+                       final GuidedDecisionTableView widget) {
 
-        final List<GridColumn<?>> columns = getGridWidget(modeller).getModel().getColumns();
+        final List<GridColumn<?>> columns = getGridWidget(modeller, widget).getModel().getColumns();
         final double idColumnWidth = getWidth(columns, 0);
         final double descriptionColumnWidth = getWidth(columns, 1);
         final double currentColumnWidth = getWidth(columns, column);
@@ -86,7 +91,11 @@ public class GuidedDecisionTableGridHighlightHelper {
                 .orElseThrow(UnsupportedOperationException::new);
     }
 
-    private GridWidget getGridWidget(final GuidedDecisionTableModellerView.Presenter modeller) {
+    private GridWidget getGridWidget(final GuidedDecisionTableModellerView.Presenter modeller,
+                                     final GuidedDecisionTableView widget) {
+        if (!Objects.isNull(widget)) {
+            return widget;
+        }
         return modeller
                 .getView()
                 .getGridWidgets()
@@ -125,7 +134,8 @@ public class GuidedDecisionTableGridHighlightHelper {
         return modeller.getView().getGridPanel();
     }
 
-    GridHighlightHelper highlightHelper(final GuidedDecisionTableModellerView.Presenter modeller) {
-        return new GridHighlightHelper(getGridPanel(modeller), getGridWidget(modeller));
+    GridHighlightHelper highlightHelper(final GuidedDecisionTableModellerView.Presenter modeller,
+                                        final GuidedDecisionTableView widget) {
+        return new GridHighlightHelper(getGridPanel(modeller), getGridWidget(modeller, widget));
     }
 }
