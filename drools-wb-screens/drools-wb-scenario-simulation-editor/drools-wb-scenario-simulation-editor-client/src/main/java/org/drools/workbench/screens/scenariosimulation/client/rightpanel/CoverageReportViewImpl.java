@@ -18,6 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLDivElement;
@@ -25,6 +29,7 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
@@ -37,6 +42,9 @@ public class CoverageReportViewImpl
         implements CoverageReportView {
 
     protected Presenter presenter;
+
+    @DataField
+    protected ButtonElement downloadReportButton = Document.get().createButtonElement();
 
     @DataField
     protected HTMLElement reportAvailableLabel = (HTMLElement) DomGlobal.document.createElement("dt");
@@ -117,6 +125,7 @@ public class CoverageReportViewImpl
     @Override
     public void hide() {
         emptyStatus.classList.remove(HIDDEN);
+        downloadReportButton.getStyle().setVisibility(Style.Visibility.HIDDEN);
         summarySection.classList.add(HIDDEN);
         listSection.classList.add(HIDDEN);
         scenarioListSection.classList.add(HIDDEN);
@@ -125,6 +134,7 @@ public class CoverageReportViewImpl
     @Override
     public void show() {
         emptyStatus.classList.add(HIDDEN);
+        downloadReportButton.getStyle().setVisibility(Style.Visibility.VISIBLE);
         summarySection.classList.remove(HIDDEN);
         listSection.classList.remove(HIDDEN);
         scenarioListSection.classList.remove(HIDDEN);
@@ -163,5 +173,15 @@ public class CoverageReportViewImpl
     @Override
     public HTMLUListElement getScenarioList() {
         return scenarioList;
+    }
+
+    @Override
+    public ButtonElement getDownloadReportButton() {
+        return downloadReportButton;
+    }
+
+    @EventHandler("downloadReportButton")
+    public void onDownloadReportButton(ClickEvent event) {
+        presenter.onDownloadReportButtonClicked();
     }
 }

@@ -90,6 +90,11 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         }
     }
 
+    @Override
+    public void onDownloadReportButtonClicked() {
+        //TODO
+    }
+
     protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, Type type) {
         // Coverage report should not be shown if there are no rules/decisions.
         if (simulationRunMetadata.getAvailable() == 0) {
