@@ -207,7 +207,6 @@ public class ScenarioGridTest {
     public void setContent() {
         InOrder callsOrder = inOrder(scenarioGridModelMock, scenarioGrid);
         scenarioGrid.setContent(simulation);
-        callsOrder.verify(scenarioGrid, times(1)).synchronizeSimulationWidths(eq(simulation));
         callsOrder.verify(scenarioGridModelMock, times(1)).clear();
         callsOrder.verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
         callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
