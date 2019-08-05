@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwt.event.shared.EventBus;
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
@@ -27,8 +28,10 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
 
@@ -114,5 +117,35 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
             verify(scenarioGridPanelMock, times(1)).onResize();
             verify(scenarioGridPanelMock, times(1)).select();
         }
+    }
+
+    @Test
+    public void updateColumnsWidth_SameColumns() {
+        when(factMappingMock.getColumnWidth()).thenReturn(10.0);
+        FactMapping factMappingMock2 = mock(FactMapping.class);
+        when(factMappingMock2.getColumnWidth()).thenReturn(20.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(1)).thenReturn(factMappingMock2);
+        FactMapping factMappingMock3 = mock(FactMapping.class);
+        when(factMappingMock3.getColumnWidth()).thenReturn(30.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(2)).thenReturn(factMappingMock3);
+        FactMapping factMappingMock4 = mock(FactMapping.class);
+        when(factMappingMock4.getColumnWidth()).thenReturn(40.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(3)).thenReturn(factMappingMock4);
+
+        command.restorableStatus = scenarioSimulationContextLocal.getStatus();
+        command.updateColumnsWidth(scenarioSimulationContextLocal);
+
+        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(0));
+        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(1));
+        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(2));
+        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(3));
+        verify(factMappingMock, times(1)).getColumnWidth();
+        verify(factMappingMock, times(1)).setColumnWidth(eq(10.0));
+        verify(factMappingMock2, times(1)).getColumnWidth();
+        verify(factMappingMock2, times(1)).setColumnWidth(eq(20.0));
+        verify(factMappingMock3, times(1)).getColumnWidth();
+        verify(factMappingMock3, times(1)).setColumnWidth(eq(30.0));
+        verify(factMappingMock4, times(1)).getColumnWidth();
+        verify(factMappingMock4, times(1)).setColumnWidth(eq(40.0));
     }
 }
