@@ -28,7 +28,6 @@ import org.mockito.Mock;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -40,6 +39,16 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     @Mock
     protected EventBus eventBusMock;
+
+    @Mock
+    protected FactMapping factMapping2Mock;
+
+    @Mock
+    protected FactMapping factMapping3Mock;
+
+    @Mock
+    protected FactMapping factMapping4Mock;
+
 
     protected AbstractScenarioSimulationCommand command;
 
@@ -122,15 +131,12 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
     @Test
     public void updateColumnsWidth_SameColumns() {
         when(factMappingMock.getColumnWidth()).thenReturn(10.0);
-        FactMapping factMappingMock2 = mock(FactMapping.class);
-        when(factMappingMock2.getColumnWidth()).thenReturn(20.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(1)).thenReturn(factMappingMock2);
-        FactMapping factMappingMock3 = mock(FactMapping.class);
-        when(factMappingMock3.getColumnWidth()).thenReturn(30.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(2)).thenReturn(factMappingMock3);
-        FactMapping factMappingMock4 = mock(FactMapping.class);
-        when(factMappingMock4.getColumnWidth()).thenReturn(40.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(3)).thenReturn(factMappingMock4);
+        when(factMapping2Mock.getColumnWidth()).thenReturn(20.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(1)).thenReturn(factMapping2Mock);
+        when(factMapping3Mock.getColumnWidth()).thenReturn(30.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(2)).thenReturn(factMapping3Mock);
+        when(factMapping4Mock.getColumnWidth()).thenReturn(40.0);
+        when(simulationDescriptorMock.getFactMappingByIndex(3)).thenReturn(factMapping4Mock);
 
         command.restorableStatus = scenarioSimulationContextLocal.getStatus();
         command.updateColumnsWidth(scenarioSimulationContextLocal);
@@ -141,11 +147,11 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
         verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(3));
         verify(factMappingMock, times(1)).getColumnWidth();
         verify(factMappingMock, times(1)).setColumnWidth(eq(10.0));
-        verify(factMappingMock2, times(1)).getColumnWidth();
-        verify(factMappingMock2, times(1)).setColumnWidth(eq(20.0));
-        verify(factMappingMock3, times(1)).getColumnWidth();
-        verify(factMappingMock3, times(1)).setColumnWidth(eq(30.0));
-        verify(factMappingMock4, times(1)).getColumnWidth();
-        verify(factMappingMock4, times(1)).setColumnWidth(eq(40.0));
+        verify(factMapping2Mock, times(1)).getColumnWidth();
+        verify(factMapping2Mock, times(1)).setColumnWidth(eq(20.0));
+        verify(factMapping3Mock, times(1)).getColumnWidth();
+        verify(factMapping3Mock, times(1)).setColumnWidth(eq(30.0));
+        verify(factMapping4Mock, times(1)).getColumnWidth();
+        verify(factMapping4Mock, times(1)).setColumnWidth(eq(40.0));
     }
 }
