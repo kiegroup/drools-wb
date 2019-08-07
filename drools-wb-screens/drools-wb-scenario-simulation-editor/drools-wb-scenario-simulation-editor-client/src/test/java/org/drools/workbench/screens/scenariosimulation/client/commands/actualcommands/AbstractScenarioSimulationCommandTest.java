@@ -127,31 +127,4 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
             verify(scenarioGridPanelMock, times(1)).select();
         }
     }
-
-    @Test
-    public void updateColumnsWidth_SameColumns() {
-        when(factMappingMock.getColumnWidth()).thenReturn(10.0);
-        when(factMapping2Mock.getColumnWidth()).thenReturn(20.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(1)).thenReturn(factMapping2Mock);
-        when(factMapping3Mock.getColumnWidth()).thenReturn(30.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(2)).thenReturn(factMapping3Mock);
-        when(factMapping4Mock.getColumnWidth()).thenReturn(40.0);
-        when(simulationDescriptorMock.getFactMappingByIndex(3)).thenReturn(factMapping4Mock);
-
-        command.restorableStatus = scenarioSimulationContextLocal.getStatus();
-        command.updateColumnsWidth(scenarioSimulationContextLocal);
-
-        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(0));
-        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(1));
-        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(2));
-        verify(simulationDescriptorMock, times(2)).getFactMappingByIndex(eq(3));
-        verify(factMappingMock, times(1)).getColumnWidth();
-        verify(factMappingMock, times(1)).setColumnWidth(eq(10.0));
-        verify(factMapping2Mock, times(1)).getColumnWidth();
-        verify(factMapping2Mock, times(1)).setColumnWidth(eq(20.0));
-        verify(factMapping3Mock, times(1)).getColumnWidth();
-        verify(factMapping3Mock, times(1)).setColumnWidth(eq(30.0));
-        verify(factMapping4Mock, times(1)).getColumnWidth();
-        verify(factMapping4Mock, times(1)).setColumnWidth(eq(40.0));
-    }
 }

@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.IntStream;
 
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
@@ -113,7 +112,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
             final Simulation toRestore = restorableStatus.getSimulation();
             if (toRestore != null) {
                 final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
-                updateColumnsWidth(context);
                 context.getModel().clearSelections();
                 context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
                 context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
@@ -127,45 +125,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }
-    }
-
-    /**
-     * Its scope is to update the columns width from the current Scenario to the Scenario to restore, in order
-     * to don't lost columns widths modified by user before launching an undo/redo command.
-     * @param currentContext
-     */
-    protected void updateColumnsWidth(ScenarioSimulationContext currentContext) {
-        final Simulation currentSimulation = currentContext.getModel().getSimulation().get();
-        final Simulation simulationToRestore = restorableStatus.getSimulation();
-        int currentFactMappings = currentSimulation.getSimulationDescriptor().getUnmodifiableFactMappings().size();
-        int factMappingsToRestore = simulationToRestore.getSimulationDescriptor().getUnmodifiableFactMappings().size();
-
-        /* Retrieving columnIndex of the changed column. If the command in analysis is an InsertColumnCommand or
-        *  a DuplicateInstanceCommand, it must consider the isRight() value. */
-        int columnIndex;
-        if (this instanceof InsertColumnCommand || this instanceof DuplicateInstanceCommand) {
-            columnIndex = restorableStatus.isRight() ? restorableStatus.getColumnIndex() + 1 : restorableStatus.getColumnIndex();
-        } else {
-            columnIndex = restorableStatus.getColumnIndex();
-        }
-
-        IntStream.range(0, factMappingsToRestore).forEach(index -> {
-            int realIndex;
-            if (currentFactMappings == factMappingsToRestore) {
-                realIndex = index;
-            } else {
-                /* If the current columns are < of the columns to restore AND the evaluating index is the same of columnIndex
-                *  then this represents the column no more present in the restorable status. Skip it.*/
-                if (currentFactMappings < factMappingsToRestore && columnIndex == index) {
-                    return;
-                }
-                /* It calculates the shifted index of the columns on the right of the added/removed column */
-                realIndex = (index >= columnIndex) ? (index + (currentFactMappings - factMappingsToRestore)) : index;
-            }
-            /* Updating width dimensions based on index and realIndex provided */
-            final Double widthToUpdate = currentSimulation.getSimulationDescriptor().getFactMappingByIndex(realIndex).getColumnWidth();
-            simulationToRestore.getSimulationDescriptor().getFactMappingByIndex(index).setColumnWidth(widthToUpdate);
-        });
     }
 
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
