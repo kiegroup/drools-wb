@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
@@ -30,7 +29,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public abstract class AbstractScenarioSimulationCommandTest extends AbstractScenarioSimulationTest {
 
@@ -39,16 +37,6 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
 
     @Mock
     protected EventBus eventBusMock;
-
-    @Mock
-    protected FactMapping factMapping2Mock;
-
-    @Mock
-    protected FactMapping factMapping3Mock;
-
-    @Mock
-    protected FactMapping factMapping4Mock;
-
 
     protected AbstractScenarioSimulationCommand command;
 
