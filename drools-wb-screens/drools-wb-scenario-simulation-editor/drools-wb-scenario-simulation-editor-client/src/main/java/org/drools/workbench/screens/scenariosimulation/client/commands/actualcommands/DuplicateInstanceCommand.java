@@ -42,7 +42,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
         /* Generating the new instance alias with following schema: <original instance name> + '_copy_' + <number of existing instances> */
         int instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         String alias = selectedColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0] + COPY_LABEL + instancesCount;
-        List<Double> widthsToRestore = context.getModel().getColumns().stream().map(GridColumn::getWidth).collect(Collectors.toList());
+        final List<Double> widthsToRestore = context.getModel().getColumns().stream().map(GridColumn::getWidth).collect(Collectors.toList());
 
         /* For every columns which belongs to the selected instance, it creates a new column and assign it the duplicated instance
          * and the duplicated property, if are assigned */
