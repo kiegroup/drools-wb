@@ -1677,7 +1677,10 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                                                            columnsPage,
                                                            saveAndRenameCommandBuilder,
                                                            alertsButtonMenuItemBuilder,
-                                                           downloadMenuItemBuilder, editorSearchIndex, searchBarComponent, searchableElementFactory);
+                                                           downloadMenuItemBuilder,
+                                                           editorSearchIndex,
+                                                           searchBarComponent,
+                                                           searchableElementFactory);
     }
 
     private static class OnSaveSetupDataHolder {

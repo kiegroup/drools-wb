@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -283,16 +284,16 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         return searchableElements;
     }
 
-    GuidedDecisionTableView getWidgetToModel(GuidedDecisionTable52 model) {
+    GuidedDecisionTableView getWidgetToModel(final GuidedDecisionTable52 model) {
 
-        final Optional<GridWidget> widget = modeller.getView()
+        return modeller.getView()
                 .getGridWidgets()
                 .stream()
-                .filter(w -> (w instanceof GuidedDecisionTableView)
-                        && ((GuidedDecisionTableView) w).getPresenter().getModel().equals(model))
-                .findFirst();
-
-        return (GuidedDecisionTableView) widget.get();
+                .filter(w -> w instanceof GuidedDecisionTableView)
+                .map(w -> (GuidedDecisionTableView) w)
+                .filter(w -> Objects.equals(w.getPresenter().getModel(), model))
+                .findFirst()
+                .get();
     }
 
     private GuidedDecisionTableSearchableElement makeSearchable(final int row,
