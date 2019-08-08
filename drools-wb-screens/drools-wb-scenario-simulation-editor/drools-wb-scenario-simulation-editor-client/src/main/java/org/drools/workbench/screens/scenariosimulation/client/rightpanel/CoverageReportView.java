@@ -22,6 +22,7 @@ import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+import org.uberfire.mvp.Command;
 
 public interface CoverageReportView
         extends SubDockView<CoverageReportView.Presenter> {
@@ -53,5 +54,7 @@ public interface CoverageReportView
         void populateCoverageReport(ScenarioSimulationModel.Type type, SimulationRunMetadata simulationRunMetadata);
 
         void onDownloadReportButtonClicked();
+
+        void setDownloadReportCommand(Command downloadReportCommand);
     }
 }

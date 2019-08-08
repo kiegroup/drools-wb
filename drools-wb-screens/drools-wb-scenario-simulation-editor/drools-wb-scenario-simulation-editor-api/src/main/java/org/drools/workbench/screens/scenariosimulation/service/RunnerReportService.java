@@ -15,19 +15,23 @@
  */
 package org.drools.workbench.screens.scenariosimulation.service;
 
-import org.drools.scenariosimulation.api.model.Simulation;
+import java.util.Map;
+
+import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.jboss.errai.bus.server.annotations.Remote;
 
 /**
- * Return the report of the given run execution
+ * This interface define the service to download a report with the <b>audit messages</b> of a given <code>Simulation</code>
  */
+@Remote
 public interface RunnerReportService {
 
     /**
-     * This method returns the report of the given simulation
+     * This method returns the report of the given <b>auditMessagesMap</b>>
      *
-     * @param simulation
+     * @param auditMessagesMap
      * @return
      */
-    Object getReport(Simulation simulation);
+    Object getReport(Map<ScenarioWithIndex, Map<String, String>> auditMessagesMap);
 
 }

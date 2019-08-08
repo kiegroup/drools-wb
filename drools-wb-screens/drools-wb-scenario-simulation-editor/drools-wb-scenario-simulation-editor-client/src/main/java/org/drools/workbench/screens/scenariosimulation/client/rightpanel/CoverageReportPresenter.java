@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.uberfire.client.annotations.WorkbenchScreen;
+import org.uberfire.mvp.Command;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.DEFAULT_PREFERRED_WIDHT;
@@ -51,6 +53,11 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected CoverageElementPresenter coverageElementPresenter;
 
     protected CoverageScenarioListPresenter coverageScenarioListPresenter;
+
+    /**
+     * Command to invoke when the user click the <b>download</b> button
+     */
+    protected Command downloadReportCommand;
 
     public CoverageReportPresenter() {
         //Zero argument constructor for CDI
@@ -74,11 +81,13 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         coverageReportDonutPresenter.init(view.getDonutChart());
         coverageElementPresenter.initElementList(view.getList());
         coverageScenarioListPresenter.initScenarioList(view.getScenarioList());
+        resetDownload();
     }
 
     @Override
     public void reset() {
         view.reset();
+        resetDownload();
     }
 
     @Override
@@ -92,7 +101,14 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     @Override
     public void onDownloadReportButtonClicked() {
-        //TODO
+        if (downloadReportCommand != null) {
+            downloadReportCommand.execute();
+        }
+    }
+
+    @Override
+    public void setDownloadReportCommand(Command downloadReportCommand) {
+        this.downloadReportCommand = downloadReportCommand;
     }
 
     protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, Type type) {
@@ -115,6 +131,11 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
         populateScenarioList(simulationRunMetadata.getScenarioCounter(), type);
         view.show();
+    }
+
+    protected void resetDownload() {
+        downloadReportCommand = null;
+        view.getDownloadReportButton().setDisabled(true);
     }
 
     protected void showEmptyStateMessage() {

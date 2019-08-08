@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -388,7 +389,6 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
     }
 
-
     protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
             TextContent textContent = TextContent.create((String) rawResult);
@@ -501,6 +501,9 @@ public class ScenarioSimulationEditorPresenter {
         Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
         presenter.populateCoverageReport(type, simulationRunMetadata);
+        if (simulationRunMetadata != null) {
+            presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditMessagesMap()));
+        }
     }
 
     public String getJsonModel(ScenarioSimulationModel model) {
@@ -529,6 +532,10 @@ public class ScenarioSimulationEditorPresenter {
 
     protected Command getSaveCommand() {
         return () -> scenarioSimulationEditorWrapper.wrappedSave(ConstantHolder.SAVE);
+    }
+
+    protected Command getDownloadReportCommand(Map<ScenarioWithIndex, Map<String, String>> auditMessagesMap) {
+        return () -> scenarioSimulationEditorWrapper.onDownloadReportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), auditMessagesMap);
     }
 
     /**

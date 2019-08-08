@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
@@ -39,4 +40,7 @@ public interface ScenarioSimulationEditorWrapper {
     void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation);
 
     void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation);
+
+    void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Map<ScenarioWithIndex, Map<String, String>> auditMessagesMap);
+
 }
