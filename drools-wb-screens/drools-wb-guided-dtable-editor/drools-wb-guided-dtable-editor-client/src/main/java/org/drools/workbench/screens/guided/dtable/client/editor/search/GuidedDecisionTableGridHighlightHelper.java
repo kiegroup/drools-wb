@@ -18,13 +18,9 @@ package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import com.ait.lienzo.client.core.shape.IDrawable;
-import com.ait.lienzo.client.core.shape.IPrimitive;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -40,11 +36,9 @@ public class GuidedDecisionTableGridHighlightHelper {
                    final Integer column,
                    final GuidedDecisionTableView widget,
                    final GuidedDecisionTableModellerView.Presenter modeller) {
-        double paddingX = getPaddingX(column, modeller, widget);
-        double paddingY = getPaddingY(row, modeller, widget);
+        final double paddingX = getPaddingX(column, modeller, widget);
+        final double paddingY = getPaddingY(row, modeller, widget);
         highlightHelper(modeller, widget)
-                .withMinX(getMinX(modeller))
-                .withMinY(getMinY(modeller))
                 .withPaddingX(paddingX)
                 .withPaddingY(paddingY)
                 .highlight(row, column);
@@ -75,22 +69,6 @@ public class GuidedDecisionTableGridHighlightHelper {
         return idColumnWidth + descriptionColumnWidth + currentColumnWidth;
     }
 
-    private Double getMinX(final GuidedDecisionTableModellerView.Presenter modeller) {
-        return mapVisibleGridWidgetsAndGetMin(IPrimitive::getX, modeller);
-    }
-
-    private Double getMinY(final GuidedDecisionTableModellerView.Presenter modeller) {
-        return mapVisibleGridWidgetsAndGetMin(IPrimitive::getY, modeller);
-    }
-
-    private Double mapVisibleGridWidgetsAndGetMin(final Function<GridWidget, Double> mapper,
-                                                  final GuidedDecisionTableModellerView.Presenter modeller) {
-        return getVisibleGridWidgets(modeller)
-                .map(mapper)
-                .reduce(Double::min)
-                .orElseThrow(UnsupportedOperationException::new);
-    }
-
     private GridWidget getGridWidget(final GuidedDecisionTableModellerView.Presenter modeller,
                                      final GuidedDecisionTableView widget) {
         if (!Objects.isNull(widget)) {
@@ -103,15 +81,6 @@ public class GuidedDecisionTableGridHighlightHelper {
                 .filter(GridWidget::isSelected)
                 .findFirst()
                 .orElseThrow(UnsupportedOperationException::new);
-    }
-
-    private Stream<GridWidget> getVisibleGridWidgets(final GuidedDecisionTableModellerView.Presenter modeller) {
-        return modeller
-                .getView()
-                .getGridLayerView()
-                .getGridWidgets()
-                .stream()
-                .filter(IDrawable::isVisible);
     }
 
     Double getWidth(final List<GridColumn<?>> columns,
