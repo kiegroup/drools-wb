@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimul
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportService;
 import org.drools.workbench.screens.scenariosimulation.service.ImportExportType;
+import org.drools.workbench.screens.scenariosimulation.service.RunnerReportService;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
@@ -116,6 +117,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
+    private CallerMock<RunnerReportService> runnerReportServiceCaller;
     private Promises promises;
     private ScenarioSimulationEditorBusinessCentralWrapper scenarioSimulationEditorBusinessClientWrapper;
 
@@ -131,7 +133,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                                                oracleFactoryMock,
                                                                                                                placeManagerMock,
                                                                                                                new CallerMock<>(dmnTypeServiceMock),
-                                                                                                               importExportCaller) {
+                                                                                                               importExportCaller,
+                                                                                                               runnerReportServiceCaller) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;

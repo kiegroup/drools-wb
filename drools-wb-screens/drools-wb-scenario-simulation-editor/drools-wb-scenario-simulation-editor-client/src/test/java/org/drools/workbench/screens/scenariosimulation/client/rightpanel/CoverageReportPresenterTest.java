@@ -78,6 +78,7 @@ public class CoverageReportPresenterTest {
 
     private Map<String, Integer> outputCounterLocal;
     private Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounterLocal;
+    private Map<ScenarioWithIndex, Map<String, String>> auditMessages;
     private int availableLocal;
     private int executedLocal;
     private double coverageLocal;
@@ -100,7 +101,7 @@ public class CoverageReportPresenterTest {
         scenario2Data.put("d2", 1);
         scenarioCounterLocal.put(new ScenarioWithIndex(1, new Scenario()), scenario1Data);
         scenarioCounterLocal.put(new ScenarioWithIndex(2, new Scenario()), scenario2Data);
-        simulationRunMetadataLocal = new SimulationRunMetadata(availableLocal, executedLocal, outputCounterLocal, scenarioCounterLocal);
+        simulationRunMetadataLocal = new SimulationRunMetadata(availableLocal, executedLocal, outputCounterLocal, scenarioCounterLocal, auditMessages);
     }
 
     @Test
@@ -194,5 +195,6 @@ public class CoverageReportPresenterTest {
     public void resetTest() {
         presenterSpy.reset();
         verify(coverageReportViewMock, times(1)).reset();
+        verify(presenterSpy, times(1)).resetDownload();
     }
 }
