@@ -98,7 +98,7 @@ public class CoverageReportViewImpl
         if (Type.DMN.equals(type)) {
             reportAvailableLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportAvailableLabel();
             reportExecutedLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportExecutedLabel();
-            reportCoverageLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportCoverageRuleLabel();
+            reportCoverageLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportCoverageLabel();
             numberOfTimesElementEvaluated.textContent = ScenarioSimulationEditorConstants.INSTANCE.numberOfTimesDecisionEvaluated();
         } else {
             reportAvailableLabel.textContent = ScenarioSimulationEditorConstants.INSTANCE.reportAvailableRuleLabel();
