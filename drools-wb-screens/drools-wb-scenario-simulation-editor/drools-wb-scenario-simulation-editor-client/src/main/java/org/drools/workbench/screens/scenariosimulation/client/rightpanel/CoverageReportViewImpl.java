@@ -20,7 +20,6 @@ import javax.enterprise.context.ApplicationScoped;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.Composite;
 import elemental2.dom.DomGlobal;
@@ -44,7 +43,7 @@ public class CoverageReportViewImpl
     protected Presenter presenter;
 
     @DataField
-    protected ButtonElement downloadReportButton = Document.get().createButtonElement();
+    protected ButtonElement downloadReportButton = Document.get().createPushButtonElement();
 
     @DataField
     protected HTMLElement reportAvailableLabel = (HTMLElement) DomGlobal.document.createElement("dt");
@@ -78,6 +77,9 @@ public class CoverageReportViewImpl
 
     @DataField
     protected HTMLDivElement emptyStatusText = (HTMLDivElement) DomGlobal.document.createElement("div");
+
+    @DataField
+    protected HTMLDivElement buttonSection = (HTMLDivElement) DomGlobal.document.createElement("div");
 
     @DataField
     protected HTMLDivElement summarySection = (HTMLDivElement) DomGlobal.document.createElement("div");
@@ -125,7 +127,7 @@ public class CoverageReportViewImpl
     @Override
     public void hide() {
         emptyStatus.classList.remove(HIDDEN);
-        downloadReportButton.getStyle().setVisibility(Style.Visibility.HIDDEN);
+        buttonSection.classList.add(HIDDEN);
         summarySection.classList.add(HIDDEN);
         listSection.classList.add(HIDDEN);
         scenarioListSection.classList.add(HIDDEN);
@@ -134,7 +136,7 @@ public class CoverageReportViewImpl
     @Override
     public void show() {
         emptyStatus.classList.add(HIDDEN);
-        downloadReportButton.getStyle().setVisibility(Style.Visibility.VISIBLE);
+        buttonSection.classList.remove(HIDDEN);
         summarySection.classList.remove(HIDDEN);
         listSection.classList.remove(HIDDEN);
         scenarioListSection.classList.remove(HIDDEN);
