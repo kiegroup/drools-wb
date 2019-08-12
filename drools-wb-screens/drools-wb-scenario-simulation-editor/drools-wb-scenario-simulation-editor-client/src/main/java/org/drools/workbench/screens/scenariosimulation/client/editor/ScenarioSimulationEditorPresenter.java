@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -31,6 +30,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
+import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -501,8 +501,8 @@ public class ScenarioSimulationEditorPresenter {
         Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
         presenter.populateCoverageReport(type, simulationRunMetadata);
-        if (simulationRunMetadata != null) {
-            presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditMessagesMap()));
+        if (simulationRunMetadata != null && simulationRunMetadata.getAuditLog() != null) {
+            presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditLog() ));
         }
     }
 
@@ -534,8 +534,8 @@ public class ScenarioSimulationEditorPresenter {
         return () -> scenarioSimulationEditorWrapper.wrappedSave(ConstantHolder.SAVE);
     }
 
-    protected Command getDownloadReportCommand(Map<ScenarioWithIndex, Map<String, String>> auditMessagesMap) {
-        return () -> scenarioSimulationEditorWrapper.onDownloadReportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), auditMessagesMap);
+    protected Command getDownloadReportCommand(AuditLog auditLog) {
+        return () -> scenarioSimulationEditorWrapper.onDownloadReportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), auditLog);
     }
 
     /**

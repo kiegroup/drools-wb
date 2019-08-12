@@ -17,32 +17,35 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.downloadr
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.AuditLog;
+import org.drools.scenariosimulation.api.model.AuditLogLine;
 
 public class ScenarioCsvDownloadReport {
 
     /**
-     * @param auditMessagesMap Map of the messages to print in the CSV report: inside the <b>value</b> Map, <b>key</b> is the message, <b>value</b> is the severity level
+     * @param auditLog the <code>AuditLog</code> to print out
      * @return
      * @throws IOException
      */
-    public String getReport(Map<ScenarioWithIndex, Map<String, String>> auditMessagesMap) throws IOException {
+    public String getReport(AuditLog auditLog) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
         generateHeader(printer);
-        for (Map.Entry<ScenarioWithIndex, Map<String, String>> auditEntry : auditMessagesMap.entrySet()) {
-            String scenario = auditEntry.getKey().getScenario().getDescription();
-            List<Object> values = auditEntry.getValue().entrySet().stream().map(entry -> Arrays.asList(scenario, entry.getKey(), entry.getValue())).collect(Collectors.toList());
-            printer.printRecord(values.toArray());
+        for (AuditLogLine auditLogLine : auditLog.getAuditLogLines()) {
+            printAuditLogLine(auditLogLine, printer);
         }
         printer.close();
         return stringBuilder.toString();
+    }
+
+    protected void printAuditLogLine(AuditLogLine toPrint, CSVPrinter printer) throws IOException {
+        printer.print(toPrint.getScenario());
+        printer.print(toPrint.getMessage());
+        printer.print(toPrint.getLevel());
+        printer.println();
     }
 
     protected void generateHeader(CSVPrinter printer) throws IOException {

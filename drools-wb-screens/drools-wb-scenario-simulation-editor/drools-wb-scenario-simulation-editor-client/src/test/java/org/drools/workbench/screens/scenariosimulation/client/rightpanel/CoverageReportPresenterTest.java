@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
@@ -78,7 +79,7 @@ public class CoverageReportPresenterTest {
 
     private Map<String, Integer> outputCounterLocal;
     private Map<ScenarioWithIndex, Map<String, Integer>> scenarioCounterLocal;
-    private Map<ScenarioWithIndex, Map<String, String>> auditMessages;
+    private AuditLog auditLog;
     private int availableLocal;
     private int executedLocal;
     private double coverageLocal;
@@ -101,7 +102,7 @@ public class CoverageReportPresenterTest {
         scenario2Data.put("d2", 1);
         scenarioCounterLocal.put(new ScenarioWithIndex(1, new Scenario()), scenario1Data);
         scenarioCounterLocal.put(new ScenarioWithIndex(2, new Scenario()), scenario2Data);
-        simulationRunMetadataLocal = new SimulationRunMetadata(availableLocal, executedLocal, outputCounterLocal, scenarioCounterLocal, auditMessages);
+        simulationRunMetadataLocal = new SimulationRunMetadata(availableLocal, executedLocal, outputCounterLocal, scenarioCounterLocal, auditLog);
     }
 
     @Test
