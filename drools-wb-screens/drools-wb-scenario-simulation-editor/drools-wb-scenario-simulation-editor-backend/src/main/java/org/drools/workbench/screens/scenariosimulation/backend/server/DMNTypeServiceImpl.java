@@ -270,9 +270,9 @@ public class DMNTypeServiceImpl
      * @param fullPropertyPath
      */
     protected void checkTypeSupport(DMNType type,
-                                  boolean alreadyInCollection,
-                                  ErrorHolder errorHolder,
-                                  String fullPropertyPath) {
+                                    boolean alreadyInCollection,
+                                    ErrorHolder errorHolder,
+                                    String fullPropertyPath) {
         if (type.isComposite()) {
             for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
                 String name = entry.getKey();

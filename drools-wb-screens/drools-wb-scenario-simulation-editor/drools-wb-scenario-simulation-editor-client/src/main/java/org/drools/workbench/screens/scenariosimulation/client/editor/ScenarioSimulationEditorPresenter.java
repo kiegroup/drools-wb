@@ -63,6 +63,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -389,7 +390,6 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
     }
 
-
     protected RemoteCallback<Object> getExportCallBack() {
         return rawResult -> {
             TextContent textContent = TextContent.create((String) rawResult);
@@ -412,9 +412,21 @@ public class ScenarioSimulationEditorPresenter {
         return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), getValidationCallback());
     }
 
-    // FIXME to implement popup with messages
-    protected RemoteCallback<?> getValidationCallback() {
-        return (result) -> {};
+    protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
+        return result -> {
+
+            // FIXME to localize
+            StringBuilder errorMessage = new StringBuilder("The data structure behind these columns has changed and need to be fixed:<br/>");
+            for (FactMappingValidationError validationError : result) {
+                errorMessage.append("<b>");
+                errorMessage.append(validationError.getErrorId());
+                errorMessage.append("</b> - ");
+                errorMessage.append(validationError.getErrorMessage());
+                errorMessage.append("<br/>");
+            }
+
+            confirmPopupPresenter.show("Wrong column mapping", errorMessage.toString());
+        };
     }
 
     /**

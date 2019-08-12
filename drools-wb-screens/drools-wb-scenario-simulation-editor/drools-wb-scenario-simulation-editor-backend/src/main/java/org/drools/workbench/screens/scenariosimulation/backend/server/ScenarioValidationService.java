@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.scenariosimulation.backend.runner.ScenarioException;
 import org.drools.scenariosimulation.backend.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
@@ -43,8 +45,12 @@ import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Ty
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
 import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNModel;
 import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNRuntime;
+import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.fillBean;
 import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.loadClass;
 import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.navigateToObject;
+import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createFieldChangedError;
+import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createGenericError;
+import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createNodeChangedError;
 
 @ApplicationScoped
 public class ScenarioValidationService
@@ -72,8 +78,6 @@ public class ScenarioValidationService
                 continue;
             }
 
-            String instanceClassName = factMapping.getFactIdentifier().getClassName();
-
             String nodeName = factMapping.getFactIdentifier().getName();
 
             DMNType rootType = dmnModel.getDecisionByName(nodeName) != null ?
@@ -82,25 +86,25 @@ public class ScenarioValidationService
 
             List<String> steps = expressionElementToString(factMapping);
 
+            if (steps.size() == 0 && rootType.isComposite()) {
+                errors.add(createNodeChangedError(factMapping, rootType.getName()));
+                continue;
+            }
+
             // verify if node type has changed
-            if (!Objects.equals(instanceClassName, rootType.getName())) {
-                errors.add(new FactMappingValidationError(
-                        factMapping,
-                        "Node type has changed: old '" + instanceClassName + "', current '" + rootType.getName() + "'"));
+            if (!isDMNFactMappingValid(factMapping.getFactIdentifier().getClassName(), factMapping, rootType)) {
+                errors.add(createNodeChangedError(factMapping, rootType.getName()));
                 continue;
             }
 
             try {
                 DMNType fieldType = navigateDMNType(rootType, steps);
 
-                if (!Objects.equals(factMapping.getClassName(), fieldType.getName())) {
-                    errors.add(
-                            new FactMappingValidationError(
-                                    factMapping,
-                                    "Field type has changed: old '" + factMapping.getClassName() + "', current '" + fieldType.getName() + "'"));
+                if (!isDMNFactMappingValid(factMapping.getClassName(), factMapping, fieldType)) {
+                    errors.add(createFieldChangedError(factMapping, fieldType.getName()));
                 }
             } catch (IllegalStateException e) {
-                errors.add(new FactMappingValidationError(factMapping, e.getMessage()));
+                errors.add(createGenericError(factMapping, e.getMessage()));
             }
         }
         return errors;
@@ -113,30 +117,39 @@ public class ScenarioValidationService
             if (isToSkip(factMapping)) {
                 continue;
             }
-            String instanceClassName = factMapping.getFactIdentifier().getClassName();
-
-            Object bean = beanInstanceMap.computeIfAbsent(instanceClassName,
-                                                          className -> loadClass(className, kieContainer.getClassLoader()));
 
             // try to navigate using all the steps to verify if structure is still valid
             List<String> steps = expressionElementToString(factMapping);
 
             try {
-                ScenarioBeanWrapper<?> scenarioBeanWrapper = navigateToObject(bean, steps, true);
+                String instanceClassName = factMapping.getFactIdentifier().getClassName();
 
-                String targetClassName = scenarioBeanWrapper.getBeanClass() != null ?
-                        scenarioBeanWrapper.getBeanClass().getCanonicalName() :
-                        null;
+                if (steps.isEmpty()) {
+                    // in case of top level simple types just try to load the class
+                    loadClass(instanceClassName, kieContainer.getClassLoader());
+                } else {
+                    Object bean = beanInstanceMap.computeIfAbsent(
+                            instanceClassName,
+                            className -> fillBean(className, Collections.emptyMap(), kieContainer.getClassLoader()));
 
-                // check if target field has
-                if (!Objects.equals(factMapping.getClassName(), targetClassName)) {
-                    errors.add(
-                            new FactMappingValidationError(
-                                    factMapping,
-                                    "Field type has changed: old '" + factMapping.getClassName() + "', current '" + targetClassName + "'"));
+                    List<String> stepsToField = steps.subList(0, steps.size() - 1);
+                    String lastStep = steps.get(steps.size() - 1);
+
+                    ScenarioBeanWrapper<?> beanBeforeLastStep = navigateToObject(bean, stepsToField, true);
+
+                    ScenarioBeanWrapper<?> beanWrapper = navigateToObject(beanBeforeLastStep.getBean(), Collections.singletonList(lastStep), false);
+
+                    String targetClassName = beanWrapper.getBeanClass() != null ?
+                            beanWrapper.getBeanClass().getCanonicalName() :
+                            null;
+
+                    // check if target field has valid type
+                    if (!Objects.equals(factMapping.getClassName(), targetClassName)) {
+                        errors.add(createFieldChangedError(factMapping, targetClassName));
+                    }
                 }
             } catch (ScenarioException e) {
-                errors.add(new FactMappingValidationError(factMapping, e.getMessage()));
+                errors.add(createGenericError(factMapping, e.getMessage()));
             }
         }
         return errors;
@@ -157,12 +170,28 @@ public class ScenarioValidationService
 
     private DMNType navigateDMNType(DMNType rootType, List<String> steps) {
         DMNType toReturn = rootType;
-        for(String step : steps) {
-            if(!toReturn.getFields().containsKey(step)) {
+        for (String step : steps) {
+            if (!toReturn.getFields().containsKey(step)) {
                 throw new IllegalStateException("Impossible to find field '" + step + "' in type '" + toReturn.getName() + "'");
             }
             toReturn = toReturn.getFields().get(step);
         }
         return toReturn;
+    }
+
+    private boolean isDMNFactMappingValid(String typeName, FactMapping factMapping, DMNType dmnType) {
+        boolean isCoherent = ScenarioSimulationSharedUtils.isList(typeName) ==
+                dmnType.isCollection();
+        if (!isCoherent) {
+            return false;
+        }
+        String factMappingType = ScenarioSimulationSharedUtils.isList(typeName) ?
+                factMapping.getGenericTypes().get(0) :
+                typeName;
+
+        if (Objects.equals(factMappingType, dmnType.getName())) {
+            return true;
+        }
+        return false;
     }
 }

@@ -24,21 +24,39 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class FactMappingValidationError {
 
-    protected FactMapping factMapping;
+    protected String errorId;
 
     protected String errorMessage;
+
+    public static FactMappingValidationError createFieldChangedError(FactMapping factMapping, String newType) {
+        return new FactMappingValidationError(extractFactMappingId(factMapping),
+                                              "Field type has changed: old '" + factMapping.getClassName() + "', current '" + newType + "'");
+    }
+
+    public static FactMappingValidationError createNodeChangedError(FactMapping factMapping, String newType) {
+        return new FactMappingValidationError(extractFactMappingId(factMapping),
+                                              "Node type has changed: old '" + factMapping.getFactIdentifier().getClassName() + "', current '" + newType + "'");
+    }
+
+    public static FactMappingValidationError createGenericError(FactMapping factMapping, String genericError) {
+        return new FactMappingValidationError(extractFactMappingId(factMapping), genericError);
+    }
+
+    private static String extractFactMappingId(FactMapping factMapping) {
+        return factMapping.getFactAlias() + "." + factMapping.getExpressionAlias();
+    }
 
     public FactMappingValidationError() {
         // CDI
     }
 
-    public FactMappingValidationError(FactMapping factMapping, String errorMessage) {
-        this.factMapping = factMapping;
+    public FactMappingValidationError(String errorId, String errorMessage) {
+        this.errorId = errorId;
         this.errorMessage = errorMessage;
     }
 
-    public FactMapping getFactMapping() {
-        return factMapping;
+    public String getErrorId() {
+        return errorId;
     }
 
     public String getErrorMessage() {
