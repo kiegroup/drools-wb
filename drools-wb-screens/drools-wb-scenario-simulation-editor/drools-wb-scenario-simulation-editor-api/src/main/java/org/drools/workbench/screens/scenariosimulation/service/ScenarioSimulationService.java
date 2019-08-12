@@ -22,6 +22,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -55,5 +56,5 @@ public interface ScenarioSimulationService
                 final ScenarioSimulationModel.Type type,
                 final String value);
 
-    void validate(Simulation simulation);
+    List<FactMappingValidationError> validate(Simulation simulation, Path path);
 }

@@ -40,5 +40,5 @@ public interface ScenarioSimulationEditorWrapper {
 
     void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation);
 
-    void validate(Simulation simulation);
+    void validate(Simulation simulation, RemoteCallback<?> callback);
 }

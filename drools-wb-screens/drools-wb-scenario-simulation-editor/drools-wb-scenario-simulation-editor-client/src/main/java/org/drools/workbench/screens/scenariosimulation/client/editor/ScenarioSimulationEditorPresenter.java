@@ -409,9 +409,12 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected Command getValidateCommand() {
+        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), getValidationCallback());
+    }
 
-        // FIXME to implement
-        return null;
+    // FIXME to implement popup with messages
+    protected RemoteCallback<?> getValidationCallback() {
+        return (result) -> {};
     }
 
     /**
@@ -477,6 +480,8 @@ public class ScenarioSimulationEditorPresenter {
         view.setContent(model.getSimulation());
         context.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
+        // check if structure is valid
+        getValidateCommand().execute();
     }
 
     public ScenarioSimulationResourceType getType() {

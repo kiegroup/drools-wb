@@ -211,9 +211,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void validate(Simulation simulation) {
-        // FIXME to add callbacks
-        service.call().validate(simulation);
+    public void validate(Simulation simulation, RemoteCallback<?> callback) {
+        service.call(callback).validate(simulation, versionRecordManager.getCurrentPath());
     }
 
     protected void registerTestToolsCallback() {
