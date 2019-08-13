@@ -222,13 +222,6 @@ public class ScenarioValidationService
         return toReturn;
     }
 
-    /**
-     * A FactMapping in a DMN
-     * @param typeName
-     * @param factMapping
-     * @param dmnType
-     * @return
-     */
     private boolean isDMNFactMappingValid(String typeName, FactMapping factMapping, DMNType dmnType) {
         boolean isCoherent = ScenarioSimulationSharedUtils.isList(typeName) ==
                 dmnType.isCollection();
