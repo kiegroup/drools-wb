@@ -147,9 +147,10 @@ public class ScenarioValidationServiceTest {
         List<FactMappingValidationError> errorsTest1 = scenarioValidationServiceSpy.validateDMN(test1, kieContainerMock);
         checkResult(errorsTest1);
 
-        test1.getSimulationDescriptor().addFactMapping(
+        FactMapping notValidFactMapping = test1.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", "notValidClass"),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        notValidFactMapping.addExpressionElement("notValidClass", "notValidClass");
 
         errorsTest1 = scenarioValidationServiceSpy.validateDMN(test1, kieContainerMock);
         checkResult(errorsTest1, "Node type has changed: old 'notValidClass', current 'tMYSIMPLETYPE'");
@@ -161,6 +162,7 @@ public class ScenarioValidationServiceTest {
         FactMapping nameFM = test2.getSimulationDescriptor().addFactMapping(
                 myComplexFactIdentifier,
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
+        nameFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
         nameFM.addExpressionElement("name", "tNAME");
 
         createDMNType("myComplexType", "myComplexType", "name");
@@ -169,6 +171,7 @@ public class ScenarioValidationServiceTest {
         FactMapping parentFM = test2.getSimulationDescriptor().addFactMapping(
                 myComplexFactIdentifier,
                 ExpressionIdentifier.create("parent", FactMappingType.EXPECT));
+        parentFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
         parentFM.addExpressionElement("parent", "tPARENT");
 
         createDMNType("myComplexType", "myComplexType", "parent");
@@ -185,6 +188,7 @@ public class ScenarioValidationServiceTest {
         FactMapping nameWrongTypeFM = test2.getSimulationDescriptor().addFactMapping(
                 myComplexFactIdentifier,
                 ExpressionIdentifier.create("parent2", FactMappingType.EXPECT));
+        nameWrongTypeFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
         nameWrongTypeFM.addExpressionElement("name", Integer.class.getCanonicalName());
         errorsTest2 = scenarioValidationServiceSpy.validateDMN(test2, kieContainerMock);
         checkResult(errorsTest2,
@@ -197,6 +201,7 @@ public class ScenarioValidationServiceTest {
         FactMapping topLevelListFM = test3.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("myList", List.class.getCanonicalName()),
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
+        topLevelListFM.addExpressionElement("tPERSON", List.class.getCanonicalName());
         topLevelListFM.setGenericTypes(Collections.singletonList("tPERSON"));
 
         createDMNType("myList", "person");
@@ -206,6 +211,7 @@ public class ScenarioValidationServiceTest {
         FactMapping addressesFM = test3.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("myComplexObject", "tMYCOMPLEXOBJECT"),
                 ExpressionIdentifier.create("addresses", FactMappingType.EXPECT));
+        addressesFM.addExpressionElement("tMYCOMPLEXOBJECT", "tMYCOMPLEXOBJECT");
         addressesFM.addExpressionElement("addresses", List.class.getCanonicalName());
         addressesFM.setGenericTypes(Collections.singletonList("tADDRESSES"));
 
@@ -217,9 +223,10 @@ public class ScenarioValidationServiceTest {
 
         // Test 4 - complex type changed
         Simulation test4 = new Simulation();
-        test4.getSimulationDescriptor().addFactMapping(
+        FactMapping factMappingChanged = test4.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", "tMYSIMPLETYPE"),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        factMappingChanged.addExpressionElement("tMYSIMPLETYPE", "tMYSIMPLETYPE");
 
         createDMNType("mySimpleType", "mySimpleType", "name");
 
@@ -228,14 +235,14 @@ public class ScenarioValidationServiceTest {
 
         // Test 5 - not existing node
         Simulation test5 = new Simulation();
-        test5.getSimulationDescriptor().addFactMapping(
+        FactMapping factMappingNodeRemoved = test5.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", "tMYSIMPLETYPE"),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        factMappingNodeRemoved.addExpressionElement("tMYSIMPLETYPE", "tMYSIMPLETYPE");
 
         when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
         List<FactMappingValidationError> errorsTest5 = scenarioValidationServiceSpy.validateDMN(test5, kieContainerMock);
         checkResult(errorsTest5, "Node type has changed: old 'tMYSIMPLETYPE', current 'node not found'");
-
     }
 
     @Test
@@ -268,9 +275,10 @@ public class ScenarioValidationServiceTest {
         List<FactMappingValidationError> errorsTest1 = scenarioValidationServiceSpy.validateRULE(test1, kieContainerMock);
         checkResult(errorsTest1);
 
-        test1.getSimulationDescriptor().addFactMapping(
+        FactMapping mySimpleType = test1.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", "notValidClass"),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        mySimpleType.addExpressionElement("notValidClass", "notValidClass");
 
         errorsTest1 = scenarioValidationServiceSpy.validateRULE(test1, kieContainerMock);
         checkResult(errorsTest1, "Impossible to load class notValidClass");
@@ -282,12 +290,14 @@ public class ScenarioValidationServiceTest {
         FactMapping nameFM = test2.getSimulationDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
+        nameFM.addExpressionElement("SampleBean", String.class.getCanonicalName());
         nameFM.addExpressionElement("name", String.class.getCanonicalName());
 
         // parentFM is valid
         FactMapping parentFM = test2.getSimulationDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("parent", FactMappingType.EXPECT));
+        parentFM.addExpressionElement("SampleBean", SampleBean.class.getCanonicalName());
         parentFM.addExpressionElement("parent", SampleBean.class.getCanonicalName());
 
         List<FactMappingValidationError> errorsTest2 = scenarioValidationServiceSpy.validateRULE(test2, kieContainerMock);
@@ -302,6 +312,7 @@ public class ScenarioValidationServiceTest {
         FactMapping nameWrongTypeFM = test2.getSimulationDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("parent2", FactMappingType.EXPECT));
+        nameWrongTypeFM.addExpressionElement("SampleBean", Integer.class.getCanonicalName());
         nameWrongTypeFM.addExpressionElement("name", Integer.class.getCanonicalName());
         errorsTest2 = scenarioValidationServiceSpy.validateRULE(test2, kieContainerMock);
         checkResult(errorsTest2,
@@ -314,12 +325,14 @@ public class ScenarioValidationServiceTest {
         FactMapping topLevelListFM = test3.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", List.class.getCanonicalName()),
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
+        topLevelListFM.addExpressionElement("List", List.class.getCanonicalName());
         topLevelListFM.setGenericTypes(Collections.singletonList(String.class.getCanonicalName()));
 
         // addressesFM is valid
         FactMapping addressesFM = test3.getSimulationDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("addresses", FactMappingType.EXPECT));
+        addressesFM.addExpressionElement("SampleBean", List.class.getCanonicalName());
         addressesFM.addExpressionElement("addresses", List.class.getCanonicalName());
         addressesFM.setGenericTypes(Collections.singletonList(String.class.getCanonicalName()));
 

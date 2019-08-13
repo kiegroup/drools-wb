@@ -196,7 +196,8 @@ public class ScenarioValidationService
     }
 
     private List<String> expressionElementToString(FactMapping factMapping) {
-        return factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
+        return factMapping.getExpressionElementsWithoutClass().stream()
+                .map(ExpressionElement::getStep).collect(Collectors.toList());
     }
 
     /**
