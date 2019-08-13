@@ -41,9 +41,8 @@ public class ScenarioSimulationKogitoServiceServerImpl implements ScenarioSimula
     }
 
     @Override
-    public ScenarioSimulationModel unmarshal(String rawXml) {
-        final ScenarioSimulationModel toReturn = ScenarioSimulationXMLPersistence.getInstance().unmarshal(rawXml);
-        return toReturn;
+    public ScenarioSimulationModel unmarshal(String rawXml) throws Exception {
+        return ScenarioSimulationXMLPersistence.getInstance().unmarshal(rawXml);
     }
 
     @Override

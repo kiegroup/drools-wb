@@ -145,7 +145,7 @@ public class JSInteropApiConverter {
         toPopulate.setRuleFlowGroup(source.getRuleFlowGroup());
         toPopulate.setDmnNamespace(source.getDmnNamespace());
         toPopulate.setDmnName(source.getDmnName());
-        toPopulate.setSkipFromBuild(source.getSkipFromBuild() != null ? source.getSkipFromBuild() : false);
+        toPopulate.setSkipFromBuild(source.getSkipFromBuild());
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

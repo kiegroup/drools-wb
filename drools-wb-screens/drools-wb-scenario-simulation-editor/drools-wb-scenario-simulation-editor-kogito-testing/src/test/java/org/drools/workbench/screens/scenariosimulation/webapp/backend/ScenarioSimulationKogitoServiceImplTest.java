@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -29,8 +28,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 
 public class ScenarioSimulationKogitoServiceImplTest {
 
@@ -47,31 +44,23 @@ public class ScenarioSimulationKogitoServiceImplTest {
     }
 
     @Test
-    public void unmarshal() {
-        try {
-            String toUnmarshal = TestUtils.getFileContent("scesim-dmn.scesim");
-            final ScenarioSimulationModel retrieved = instance.unmarshal(toUnmarshal);
-            assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.DMN);
-            assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());
-            assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail();
-        }
+    public void unmarshal() throws Exception {
+        String toUnmarshal = TestUtils.getFileContent("scesim-dmn.scesim");
+        final ScenarioSimulationModel retrieved = instance.unmarshal(toUnmarshal);
+        assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.DMN);
+        assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());
+        assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
     }
 
     @Test
-    public void getAssetsFromExistingDirectory() {
-        try {
-            List<String> retrieved = instance.getAssets(ASSETS_DIRECTORY, "dmn", "com.test");
-            assertNotNull(retrieved);
-            assertFalse(retrieved.isEmpty());
-            retrieved = instance.getAssets(ASSETS_DIRECTORY, "not_existing", "com.test");
-            assertNotNull(retrieved);
-            assertTrue(retrieved.isEmpty());
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    public void getAssetsFromExistingDirectory() throws Exception {
+
+        List<String> retrieved = instance.getAssets(ASSETS_DIRECTORY, "dmn", "com.test");
+        assertNotNull(retrieved);
+        assertFalse(retrieved.isEmpty());
+        retrieved = instance.getAssets(ASSETS_DIRECTORY, "not_existing", "com.test");
+        assertNotNull(retrieved);
+        assertTrue(retrieved.isEmpty());
     }
 
     @Test(expected = Exception.class)
@@ -80,12 +69,8 @@ public class ScenarioSimulationKogitoServiceImplTest {
     }
 
     @Test
-    public void getAssetsDirectory() {
-        try {
-            File retrieved = instance.getAssetsDirectory(ASSETS_DIRECTORY);
-            assertNotNull(retrieved);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    public void getAssetsDirectory() throws Exception {
+        File retrieved = instance.getAssetsDirectory(ASSETS_DIRECTORY);
+        assertNotNull(retrieved);
     }
 }

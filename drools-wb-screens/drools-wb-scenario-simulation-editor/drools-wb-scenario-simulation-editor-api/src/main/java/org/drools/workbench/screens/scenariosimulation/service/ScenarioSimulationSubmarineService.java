@@ -27,7 +27,7 @@ public interface ScenarioSimulationSubmarineService extends AssetsService {
 
     String marshal(final ScenarioSimulationModel sc);
 
-    ScenarioSimulationModel unmarshal(final String rawXml);
+    ScenarioSimulationModel unmarshal(final String rawXml) throws Exception;
 
 
 
