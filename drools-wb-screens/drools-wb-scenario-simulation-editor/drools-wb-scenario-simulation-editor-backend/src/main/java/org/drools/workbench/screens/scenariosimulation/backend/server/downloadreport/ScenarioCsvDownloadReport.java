@@ -32,8 +32,7 @@ public class ScenarioCsvDownloadReport {
      */
     public String getReport(AuditLog auditLog) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        CSVFormat pipeSeparatedFormat = CSVFormat.DEFAULT.withDelimiter('|');
-        CSVPrinter printer = new CSVPrinter(stringBuilder, pipeSeparatedFormat);
+        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
         generateHeader(printer);
         for (AuditLogLine auditLogLine : auditLog.getAuditLogLines()) {
             printAuditLogLine(auditLogLine, printer);
