@@ -415,17 +415,20 @@ public class ScenarioSimulationEditorPresenter {
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
         return result -> {
 
-            // FIXME to localize
-            StringBuilder errorMessage = new StringBuilder("The data structure behind these columns has changed and need to be fixed:<br/>");
-            for (FactMappingValidationError validationError : result) {
-                errorMessage.append("<b>");
-                errorMessage.append(validationError.getErrorId());
-                errorMessage.append("</b> - ");
-                errorMessage.append(validationError.getErrorMessage());
-                errorMessage.append("<br/>");
-            }
+            if(result != null && result.size() > 0) {
+                StringBuilder errorMessage = new StringBuilder(ScenarioSimulationEditorConstants.INSTANCE.validationErrorMessage());
+                errorMessage.append(":<br/>");
+                for (FactMappingValidationError validationError : result) {
+                    errorMessage.append("<b>");
+                    errorMessage.append(validationError.getErrorId());
+                    errorMessage.append("</b> - ");
+                    errorMessage.append(validationError.getErrorMessage());
+                    errorMessage.append("<br/>");
+                }
 
-            confirmPopupPresenter.show("Wrong column mapping", errorMessage.toString());
+                confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.validationErrorTitle(),
+                                           errorMessage.toString());
+            }
         };
     }
 

@@ -313,4 +313,8 @@ public interface ScenarioSimulationEditorConstants
     String noRulesAvailable();
 
     String instanceTitleAssignedError(String title);
+
+    String validationErrorTitle();
+
+    String validationErrorMessage();
 }
