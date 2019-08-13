@@ -43,6 +43,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
@@ -82,6 +83,7 @@ import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
@@ -415,7 +417,7 @@ public class ScenarioSimulationEditorPresenter {
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
         return result -> {
 
-            if(result != null && result.size() > 0) {
+            if (result != null && result.size() > 0) {
                 StringBuilder errorMessage = new StringBuilder(ScenarioSimulationEditorConstants.INSTANCE.validationErrorMessage());
                 errorMessage.append(":<br/>");
                 for (FactMappingValidationError validationError : result) {
@@ -428,6 +430,8 @@ public class ScenarioSimulationEditorPresenter {
 
                 confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.validationErrorTitle(),
                                            errorMessage.toString());
+            } else {
+                eventBus.fireEvent(new ScenarioNotificationEvent("Validation succeed", NotificationEvent.NotificationType.SUCCESS));
             }
         };
     }

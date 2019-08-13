@@ -169,8 +169,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
-                importExportService.call(importCallBack,
-                                         importErrorCallback)
+        importExportService.call(importCallBack,
+                                 importErrorCallback)
                 .importSimulation(CSV, fileContents, simulation);
     }
 
@@ -212,7 +212,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void validate(Simulation simulation, RemoteCallback<?> callback) {
-        service.call(callback).validate(simulation, versionRecordManager.getCurrentPath());
+        scenarioSimulationEditorPresenter.getView().showLoading();
+        service.call(
+                callback,
+                new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()))
+                .validate(simulation, versionRecordManager.getCurrentPath());
     }
 
     protected void registerTestToolsCallback() {

@@ -37,6 +37,8 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidati
 import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.core.impl.BaseDMNTypeImpl;
+import org.kie.dmn.feel.lang.Type;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.model.FactIdentifier.EMPTY;
@@ -48,9 +50,12 @@ import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extr
 import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.fillBean;
 import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.loadClass;
 import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.navigateToObject;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNTypeUtils.getRootType;
 import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createFieldChangedError;
 import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createGenericError;
 import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createNodeChangedError;
+import static org.kie.dmn.feel.lang.types.BuiltInType.CONTEXT;
+import static org.kie.dmn.feel.lang.types.BuiltInType.UNKNOWN;
 
 @ApplicationScoped
 public class ScenarioValidationService
@@ -80,7 +85,6 @@ public class ScenarioValidationService
      * - empty column skip
      * - DMN node removed
      * - simple type becomes complex type
-     * - node type changed
      * - navigation of data type still valid
      * - field type changed
      * @param simulation
@@ -99,9 +103,9 @@ public class ScenarioValidationService
 
             String nodeName = factMapping.getFactIdentifier().getName();
 
-            DMNType rootType;
+            DMNType rootDMNType;
             try {
-                rootType = dmnModel.getDecisionByName(nodeName) != null ?
+                rootDMNType = dmnModel.getDecisionByName(nodeName) != null ?
                         dmnModel.getDecisionByName(nodeName).getResultType() :
                         dmnModel.getInputByName(nodeName).getType();
             } catch (NullPointerException e) {
@@ -112,18 +116,15 @@ public class ScenarioValidationService
             List<String> steps = expressionElementToString(factMapping);
 
             // error if direct mapping (= simple type) but it is a composite
-            if (steps.size() == 0 && rootType.isComposite()) {
-                errors.add(createNodeChangedError(factMapping, rootType.getName()));
-                continue;
-            }
-
-            if (!isDMNFactMappingValid(factMapping.getFactIdentifier().getClassName(), factMapping, rootType)) {
-                errors.add(createNodeChangedError(factMapping, rootType.getName()));
+            // NOTE: context is a special case so it is composite even if no fields are declared
+            Type rootType = getRootType((BaseDMNTypeImpl) rootDMNType);
+            if (!CONTEXT.equals(rootType) && steps.size() == 0 && rootDMNType.isComposite()) {
+                errors.add(createNodeChangedError(factMapping, rootDMNType.getName()));
                 continue;
             }
 
             try {
-                DMNType fieldType = navigateDMNType(rootType, steps);
+                DMNType fieldType = navigateDMNType(rootDMNType, steps);
 
                 if (!isDMNFactMappingValid(factMapping.getClassName(), factMapping, fieldType)) {
                     errors.add(createFieldChangedError(factMapping, fieldType.getName()));
@@ -224,7 +225,9 @@ public class ScenarioValidationService
     }
 
     private boolean isDMNFactMappingValid(String typeName, FactMapping factMapping, DMNType dmnType) {
-        boolean isCoherent = ScenarioSimulationSharedUtils.isList(typeName) ==
+        // NOTE: Any/Undefined is a special case where collection is true
+        Type rootType = getRootType((BaseDMNTypeImpl) dmnType);
+        boolean isCoherent = UNKNOWN.equals(rootType) || ScenarioSimulationSharedUtils.isList(typeName) ==
                 dmnType.isCollection();
         if (!isCoherent) {
             return false;

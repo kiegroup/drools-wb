@@ -36,6 +36,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DecisionNode;
+import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
@@ -146,14 +147,6 @@ public class ScenarioValidationServiceTest {
 
         List<FactMappingValidationError> errorsTest1 = scenarioValidationServiceSpy.validateDMN(test1, kieContainerMock);
         checkResult(errorsTest1);
-
-        FactMapping notValidFactMapping = test1.getSimulationDescriptor().addFactMapping(
-                FactIdentifier.create("mySimpleType", "notValidClass"),
-                ExpressionIdentifier.create("value", FactMappingType.GIVEN));
-        notValidFactMapping.addExpressionElement("notValidClass", "notValidClass");
-
-        errorsTest1 = scenarioValidationServiceSpy.validateDMN(test1, kieContainerMock);
-        checkResult(errorsTest1, "Node type has changed: old 'notValidClass', current 'tMYSIMPLETYPE'");
 
         // Test 2 - nested field
         Simulation test2 = new Simulation();
@@ -389,7 +382,7 @@ public class ScenarioValidationServiceTest {
     }
 
     private DMNType initDMNType(String name) {
-        DMNType dmnTypeMock = mock(DMNType.class);
+        DMNType dmnTypeMock = mock(BaseDMNTypeImpl.class);
         when(dmnTypeMock.getFields()).thenReturn(new HashMap<>());
         String type = createDMNTypeName(name);
         when(dmnTypeMock.getName()).thenReturn(type);
