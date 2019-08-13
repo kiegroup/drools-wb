@@ -16,7 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.ButtonElement;
+import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
@@ -47,7 +47,7 @@ public interface CoverageReportView
 
     void initText(ScenarioSimulationModel.Type type);
 
-    ButtonElement getDownloadReportButton();
+    HTMLButtonElement getDownloadReportButton();
 
     interface Presenter extends SubDockView.Presenter {
 
