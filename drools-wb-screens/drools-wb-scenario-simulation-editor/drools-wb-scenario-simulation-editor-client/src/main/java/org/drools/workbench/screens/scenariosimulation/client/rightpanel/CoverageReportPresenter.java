@@ -108,7 +108,7 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     @Override
     public void setDownloadReportCommand(Command downloadReportCommand) {
         this.downloadReportCommand = downloadReportCommand;
-        view.getDownloadReportButton().setDisabled(this.downloadReportCommand == null);
+        view.getDownloadReportButton().disabled = this.downloadReportCommand == null;
     }
 
     protected void setSimulationRunMetadata(SimulationRunMetadata simulationRunMetadata, Type type) {
@@ -135,7 +135,7 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
 
     protected void resetDownload() {
         downloadReportCommand = null;
-        view.getDownloadReportButton().setDisabled(true);
+        view.getDownloadReportButton().disabled = true;
     }
 
     protected void showEmptyStateMessage() {

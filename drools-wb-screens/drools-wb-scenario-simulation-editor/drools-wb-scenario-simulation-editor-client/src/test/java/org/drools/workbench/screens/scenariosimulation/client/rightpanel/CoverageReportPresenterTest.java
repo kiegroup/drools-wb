@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
@@ -76,7 +76,7 @@ public class CoverageReportPresenterTest {
     private HTMLUListElement scenarioList;
 
     @Mock
-    private ButtonElement downloadReportButtonMock;
+    private HTMLButtonElement downloadReportButtonMock;
 
     @Mock
     private Command downloadReportCommandMock;
@@ -251,7 +251,7 @@ public class CoverageReportPresenterTest {
     @Test
     public void resetDownload() {
         presenterSpy.resetDownload();
-        verify(downloadReportButtonMock, times(1)).setDisabled(eq(true));
+        assertTrue(downloadReportButtonMock.disabled);
         assertNull(presenterSpy.downloadReportCommand);
     }
 }
