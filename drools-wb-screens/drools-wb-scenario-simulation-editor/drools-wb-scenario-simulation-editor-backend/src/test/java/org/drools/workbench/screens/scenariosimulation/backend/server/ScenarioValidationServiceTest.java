@@ -225,6 +225,17 @@ public class ScenarioValidationServiceTest {
 
         List<FactMappingValidationError> errorsTest4 = scenarioValidationServiceSpy.validateDMN(test4, kieContainerMock);
         checkResult(errorsTest4, "Node type has changed: old 'tMYSIMPLETYPE', current 'tMYSIMPLETYPE'");
+
+        // Test 5 - not existing node
+        Simulation test5 = new Simulation();
+        test5.getSimulationDescriptor().addFactMapping(
+                FactIdentifier.create("mySimpleType", "tMYSIMPLETYPE"),
+                ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+
+        when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
+        List<FactMappingValidationError> errorsTest5 = scenarioValidationServiceSpy.validateDMN(test5, kieContainerMock);
+        checkResult(errorsTest5, "Node type has changed: old 'tMYSIMPLETYPE', current 'node not found'");
+
     }
 
     @Test

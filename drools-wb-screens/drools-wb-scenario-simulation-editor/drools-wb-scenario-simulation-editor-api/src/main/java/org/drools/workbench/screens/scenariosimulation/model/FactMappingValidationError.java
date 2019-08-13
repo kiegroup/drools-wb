@@ -19,7 +19,7 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Transport object that contains FactMapping with validation error information
+ * Transport object that contains validation errors
  */
 @Portable
 public class FactMappingValidationError {
