@@ -101,13 +101,15 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         final Map<String, List<DTCellValue52>> originalColumnsData = new HashMap<>();
         for (BRLConditionVariableColumn variable : originalColumn.getChildColumns()) {
             int iColumnIndex = model.getExpandedColumns().indexOf(variable);
-            final List<DTCellValue52> originalColumnData = new ArrayList<>();
-            final String key = makeUpdateBRLConditionColumnKey(variable);
-            for (List<DTCellValue52> row : model.getData()) {
-                originalColumnData.add(row.get(iColumnIndex));
+            if (iColumnIndex != -1) {
+                final List<DTCellValue52> originalColumnData = new ArrayList<>();
+                final String key = makeUpdateBRLConditionColumnKey(variable);
+                for (List<DTCellValue52> row : model.getData()) {
+                    originalColumnData.add(row.get(iColumnIndex));
+                }
+                originalColumnsData.put(key,
+                                        originalColumnData);
             }
-            originalColumnsData.put(key,
-                                    originalColumnData);
         }
 
         //Insert new columns setting data from that above, if applicable. Column visibility is handled here too.

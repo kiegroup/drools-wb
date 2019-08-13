@@ -84,13 +84,15 @@ public class BRLActionColumnSynchronizer extends BaseColumnSynchronizer<BaseColu
         final Map<String, List<DTCellValue52>> originalColumnsData = new HashMap<String, List<DTCellValue52>>();
         for (BRLActionVariableColumn variable : originalColumn.getChildColumns()) {
             int iColumnIndex = model.getExpandedColumns().indexOf(variable);
-            final List<DTCellValue52> originalColumnData = new ArrayList<DTCellValue52>();
-            final String key = makeUpdateBRLActionColumnKey(variable);
-            for (List<DTCellValue52> row : model.getData()) {
-                originalColumnData.add(row.get(iColumnIndex));
+            if (iColumnIndex != -1) {
+                final List<DTCellValue52> originalColumnData = new ArrayList<DTCellValue52>();
+                final String key = makeUpdateBRLActionColumnKey(variable);
+                for (List<DTCellValue52> row : model.getData()) {
+                    originalColumnData.add(row.get(iColumnIndex));
+                }
+                originalColumnsData.put(key,
+                                        originalColumnData);
             }
-            originalColumnsData.put(key,
-                                    originalColumnData);
         }
 
         //Insert new columns setting data from that above, if applicable. Column visibility is handled here too.
