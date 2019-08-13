@@ -21,10 +21,10 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.scenariosimulation.api.model.AuditLog;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
+import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
