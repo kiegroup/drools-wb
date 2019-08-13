@@ -32,7 +32,8 @@ public class ScenarioCsvDownloadReport {
      */
     public String getReport(AuditLog auditLog) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
+        CSVFormat pipeSeparatedFormat = CSVFormat.DEFAULT.withDelimiter('|');
+        CSVPrinter printer = new CSVPrinter(stringBuilder, pipeSeparatedFormat);
         generateHeader(printer);
         for (AuditLogLine auditLogLine : auditLog.getAuditLogLines()) {
             printAuditLogLine(auditLogLine, printer);
@@ -42,13 +43,15 @@ public class ScenarioCsvDownloadReport {
     }
 
     protected void printAuditLogLine(AuditLogLine toPrint, CSVPrinter printer) throws IOException {
+        printer.print(toPrint.getScenarioIndex());
         printer.print(toPrint.getScenario());
+        printer.print(toPrint.getExecutionIndex());
         printer.print(toPrint.getMessage());
         printer.print(toPrint.getLevel());
         printer.println();
     }
 
     protected void generateHeader(CSVPrinter printer) throws IOException {
-        printer.printRecord(Arrays.asList("Scenario", "Result", "Level"));
+        printer.printRecord(Arrays.asList("Scenario index", "Scenario", "Result index", "Result", "Level"));
     }
 }
