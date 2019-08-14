@@ -39,6 +39,10 @@
     <checkstyle.logViolationsToConsole>true</checkstyle.logViolationsToConsole>
     <jacoco.haltOnFailure>true</jacoco.haltOnFailure>
     <spotbugs.failOnViolation>true</spotbugs.failOnViolation>
+    <!-- JaCoCo coverage data file location. Using a single file for appending in the project's root directory makes it
+       possible to measure cross-module test coverage -->
+    <!--suppress UnresolvedMavenProperty -->
+    <jacoco.exec.file>${maven.multiModuleProjectDirectory}/target/jacoco.exec</jacoco.exec.file>
   </properties>
 
   <repositories>
