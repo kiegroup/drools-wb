@@ -46,7 +46,7 @@ import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.uberfire.backend.vfs.Path;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNTypeUtils.getRootType;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNUtils.getRootType;
 
 @Service
 @ApplicationScoped

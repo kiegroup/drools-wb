@@ -26,19 +26,19 @@ import org.kie.dmn.feel.lang.types.BuiltInType;
 
 import static org.junit.Assert.assertEquals;
 
-public class DMNTypeUtilsTest {
+public class DMNUtilsTest {
 
     @Test
     public void getRootType() {
         SimpleTypeImpl simpleTypeAny = new SimpleTypeImpl(null, "tSimple", null, false, Collections.emptyList(), null, BuiltInType.UNKNOWN);
-        assertEquals(BuiltInType.UNKNOWN, DMNTypeUtils.getRootType(simpleTypeAny));
+        assertEquals(BuiltInType.UNKNOWN, DMNUtils.getRootType(simpleTypeAny));
 
         Type aliasFeelType = new AliasFEELType("alias", BuiltInType.UNKNOWN);
         CompositeTypeImpl aliasType = new CompositeTypeImpl(null, "tSimple", null, false, Collections.emptyMap(), simpleTypeAny, aliasFeelType);
-        assertEquals(BuiltInType.UNKNOWN, DMNTypeUtils.getRootType(aliasType));
+        assertEquals(BuiltInType.UNKNOWN, DMNUtils.getRootType(aliasType));
 
         Type notBuiltInType = new AliasFEELType("notBuiltIn", BuiltInType.UNKNOWN);
         SimpleTypeImpl notBuiltIn = new SimpleTypeImpl(null, "tSimple", null, false, Collections.emptyList(), null, notBuiltInType);
-        assertEquals(notBuiltInType, DMNTypeUtils.getRootType(notBuiltIn));
+        assertEquals(notBuiltInType, DMNUtils.getRootType(notBuiltIn));
     }
 }

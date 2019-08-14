@@ -15,13 +15,16 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import java.util.List;
+
+import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 
-public class DMNTypeUtils {
+public class DMNUtils {
 
-    private DMNTypeUtils() {
+    private DMNUtils() {
     }
 
     /**
@@ -36,5 +39,16 @@ public class DMNTypeUtils {
             return getRootType((BaseDMNTypeImpl) dmnType.getBaseType());
         }
         return dmnType.getFeelType();
+    }
+
+    public static DMNType navigateDMNType(DMNType rootType, List<String> steps) {
+        DMNType toReturn = rootType;
+        for (String step : steps) {
+            if (!toReturn.getFields().containsKey(step)) {
+                throw new IllegalStateException("Impossible to find field '" + step + "' in type '" + toReturn.getName() + "'");
+            }
+            toReturn = toReturn.getFields().get(step);
+        }
+        return toReturn;
     }
 }

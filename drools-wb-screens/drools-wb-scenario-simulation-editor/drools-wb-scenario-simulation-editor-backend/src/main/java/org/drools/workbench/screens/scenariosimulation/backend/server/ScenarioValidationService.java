@@ -16,46 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.scenariosimulation.api.model.ExpressionElement;
-import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
-import org.drools.scenariosimulation.backend.runner.ScenarioException;
-import org.drools.scenariosimulation.backend.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.kie.api.runtime.KieContainer;
-import org.kie.dmn.api.core.DMNModel;
-import org.kie.dmn.api.core.DMNType;
-import org.kie.dmn.core.impl.BaseDMNTypeImpl;
-import org.kie.dmn.feel.lang.Type;
 import org.uberfire.backend.vfs.Path;
 
-import static org.drools.scenariosimulation.api.model.FactIdentifier.EMPTY;
-import static org.drools.scenariosimulation.api.model.FactMappingType.OTHER;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
-import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNModel;
-import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNRuntime;
-import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.fillBean;
-import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.loadClass;
-import static org.drools.scenariosimulation.backend.util.ScenarioBeanUtil.navigateToObject;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNTypeUtils.getRootType;
-import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createFieldChangedError;
-import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createGenericError;
-import static org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError.createNodeChangedError;
-import static org.kie.dmn.feel.lang.types.BuiltInType.CONTEXT;
-import static org.kie.dmn.feel.lang.types.BuiltInType.UNKNOWN;
 
 @ApplicationScoped
 public class ScenarioValidationService
@@ -79,166 +51,12 @@ public class ScenarioValidationService
         }
     }
 
-    /**
-     * Validate structure of a DMN test scenario.
-     * Supported checks for each column:
-     * - empty column skip
-     * - DMN node removed
-     * - simple type becomes complex type
-     * - navigation of data type still valid
-     * - field type changed
-     * @param simulation
-     * @param kieContainer
-     * @return
-     */
     protected List<FactMappingValidationError> validateDMN(Simulation simulation, KieContainer kieContainer) {
-        List<FactMappingValidationError> errors = new ArrayList<>();
-        String dmnFilePath = simulation.getSimulationDescriptor().getDmnFilePath();
-        DMNModel dmnModel = getDMNModel(kieContainer, dmnFilePath);
-
-        for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {
-            if (isToSkip(factMapping)) {
-                continue;
-            }
-
-            String nodeName = factMapping.getFactIdentifier().getName();
-
-            DMNType rootDMNType;
-            try {
-                rootDMNType = dmnModel.getDecisionByName(nodeName) != null ?
-                        dmnModel.getDecisionByName(nodeName).getResultType() :
-                        dmnModel.getInputByName(nodeName).getType();
-            } catch (NullPointerException e) {
-                errors.add(createNodeChangedError(factMapping, "node not found"));
-                continue;
-            }
-
-            List<String> steps = expressionElementToString(factMapping);
-
-            // error if direct mapping (= simple type) but it is a composite
-            // NOTE: context is a special case so it is composite even if no fields are declared
-            Type rootType = getRootType((BaseDMNTypeImpl) rootDMNType);
-            if (!CONTEXT.equals(rootType) && steps.size() == 0 && rootDMNType.isComposite()) {
-                errors.add(createNodeChangedError(factMapping, rootDMNType.getName()));
-                continue;
-            }
-
-            try {
-                DMNType fieldType = navigateDMNType(rootDMNType, steps);
-
-                if (!isDMNFactMappingValid(factMapping.getClassName(), factMapping, fieldType)) {
-                    errors.add(createFieldChangedError(factMapping, fieldType.getName()));
-                }
-            } catch (IllegalStateException e) {
-                errors.add(createGenericError(factMapping, e.getMessage()));
-            }
-        }
-        return errors;
+        return DMNScenarioValidation.INSTANCE.validate(simulation, kieContainer);
     }
 
-    /**
-     * Validate structure of a RULE test scenario.
-     * Supported checks for each column:
-     * - empty column skip
-     * - instance type removed
-     * - navigation of bean still valid
-     * - field type changed
-     * @param simulation
-     * @param kieContainer
-     * @return
-     */
     protected List<FactMappingValidationError> validateRULE(Simulation simulation, KieContainer kieContainer) {
-        List<FactMappingValidationError> errors = new ArrayList<>();
-        Map<String, Object> beanInstanceMap = new HashMap<>();
-        for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {
-            if (isToSkip(factMapping)) {
-                continue;
-            }
-
-            // try to navigate using all the steps to verify if structure is still valid
-            List<String> steps = expressionElementToString(factMapping);
-
-            try {
-                String instanceClassName = factMapping.getFactIdentifier().getClassName();
-
-                if (steps.isEmpty()) {
-                    // in case of top level simple types just try to load the class
-                    loadClass(instanceClassName, kieContainer.getClassLoader());
-                } else {
-                    Object bean = beanInstanceMap.computeIfAbsent(
-                            instanceClassName,
-                            className -> fillBean(className, Collections.emptyMap(), kieContainer.getClassLoader()));
-
-                    List<String> stepsToField = steps.subList(0, steps.size() - 1);
-                    String lastStep = steps.get(steps.size() - 1);
-
-                    ScenarioBeanWrapper<?> beanBeforeLastStep = navigateToObject(bean, stepsToField, true);
-
-                    ScenarioBeanWrapper<?> beanWrapper = navigateToObject(beanBeforeLastStep.getBean(), Collections.singletonList(lastStep), false);
-
-                    String targetClassName = beanWrapper.getBeanClass() != null ?
-                            beanWrapper.getBeanClass().getCanonicalName() :
-                            null;
-
-                    // check if target field has valid type
-                    if (!Objects.equals(factMapping.getClassName(), targetClassName)) {
-                        errors.add(createFieldChangedError(factMapping, targetClassName));
-                    }
-                }
-            } catch (ScenarioException e) {
-                errors.add(createGenericError(factMapping, e.getMessage()));
-            }
-        }
-        return errors;
+        return RULEScenarioValidation.INSTANCE.validate(simulation, kieContainer);
     }
 
-    protected DMNModel getDMNModel(KieContainer kieContainer, String dmnPath) {
-        return extractDMNModel(extractDMNRuntime(kieContainer), dmnPath);
-    }
-
-    private List<String> expressionElementToString(FactMapping factMapping) {
-        return factMapping.getExpressionElementsWithoutClass().stream()
-                .map(ExpressionElement::getStep).collect(Collectors.toList());
-    }
-
-    /**
-     * Skip descriptive columns (FactMappingType.OTHER), column with no instance (FactIdentifier.EMPTY)
-     * and with not expression elements
-     * @param factMapping
-     * @return
-     */
-    private boolean isToSkip(FactMapping factMapping) {
-        return OTHER.equals(factMapping.getExpressionIdentifier().getType()) ||
-                EMPTY.equals(factMapping.getFactIdentifier()) ||
-                factMapping.getExpressionElements().size() == 0;
-    }
-
-    private DMNType navigateDMNType(DMNType rootType, List<String> steps) {
-        DMNType toReturn = rootType;
-        for (String step : steps) {
-            if (!toReturn.getFields().containsKey(step)) {
-                throw new IllegalStateException("Impossible to find field '" + step + "' in type '" + toReturn.getName() + "'");
-            }
-            toReturn = toReturn.getFields().get(step);
-        }
-        return toReturn;
-    }
-
-    private boolean isDMNFactMappingValid(String typeName, FactMapping factMapping, DMNType dmnType) {
-        // NOTE: Any/Undefined is a special case where collection is true
-        Type rootType = getRootType((BaseDMNTypeImpl) dmnType);
-        boolean isCoherent = UNKNOWN.equals(rootType) || ScenarioSimulationSharedUtils.isList(typeName) ==
-                dmnType.isCollection();
-        if (!isCoherent) {
-            return false;
-        }
-        String factMappingType = ScenarioSimulationSharedUtils.isList(typeName) ?
-                factMapping.getGenericTypes().get(0) :
-                typeName;
-
-        if (Objects.equals(factMappingType, dmnType.getName())) {
-            return true;
-        }
-        return false;
-    }
 }
