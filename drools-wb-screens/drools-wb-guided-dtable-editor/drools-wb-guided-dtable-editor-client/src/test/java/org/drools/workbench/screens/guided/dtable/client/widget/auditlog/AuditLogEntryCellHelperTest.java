@@ -27,6 +27,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.datamodel.rule.ActionRetractFact;
+import org.drools.workbench.models.datamodel.rule.Attribute;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.workitems.PortableStringParameterDefinition;
@@ -136,8 +137,8 @@ public class AuditLogEntryCellHelperTest {
         originalColumn.setHideColumn(false);
         originalColumn.setDefaultValue(new DTCellValue52("def1"));
         // header & attribute name of an attribute column cannot be updated in the ui
-        originalColumn.setAttribute("attr");
-        originalColumn.setHeader("attr");
+        originalColumn.setAttribute(Attribute.SALIENCE.getAttributeName());
+        originalColumn.setHeader(Attribute.SALIENCE.getAttributeName());
 
         AttributeCol52 newColumn = new AttributeCol52();
         newColumn.setReverseOrder(true);
@@ -145,8 +146,8 @@ public class AuditLogEntryCellHelperTest {
         newColumn.setHideColumn(true);
         newColumn.setDefaultValue(new DTCellValue52("def2"));
         // header & attribute name of an attribute column cannot be updated in the ui
-        newColumn.setAttribute("attr");
-        newColumn.setHeader("attr");
+        newColumn.setAttribute(Attribute.SALIENCE.getAttributeName());
+        newColumn.setHeader(Attribute.SALIENCE.getAttributeName());
 
         List<BaseColumnFieldDiff> diffs = originalColumn.diff(newColumn);
 
@@ -530,7 +531,7 @@ public class AuditLogEntryCellHelperTest {
         boolean WIParamValueOnly = diff instanceof WorkItemColumnParameterValueDiffImpl;
         String paramName = WIParamValueOnly ? ((WorkItemColumnParameterValueDiffImpl) diff).getParameterName() : "";
         return format("updatedField(%s, '%s', '%s')",
-            getDisplayableFieldValue(diff.getFieldName(), paramName, WIParamValueOnly), getNonNullValue(diff.getOldValue(), constraintValueType), getNonNullValue(diff.getValue(), constraintValueType));
+                      getDisplayableFieldValue(diff.getFieldName(), paramName, WIParamValueOnly), getNonNullValue(diff.getOldValue(), constraintValueType), getNonNullValue(diff.getValue(), constraintValueType));
     }
 
     private String getNonNullValue(Object diffValue, boolean constraintValueType) {
@@ -546,66 +547,81 @@ public class AuditLogEntryCellHelperTest {
     }
 
     // this might be useful in the helper itself..?
-    private String getDisplayableFieldValue( String field, String optionalParameter, boolean WIParamValueOnly ) {
-        switch ( field ) {
-            case DTColumnConfig52.FIELD_HEADER: return GuidedDecisionTableConstants.INSTANCE.ColumnHeader();
-            case DTColumnConfig52.FIELD_HIDE_COLUMN : return GuidedDecisionTableConstants.INSTANCE.HideThisColumn();
-            case DTColumnConfig52.FIELD_DEFAULT_VALUE : return GuidedDecisionTableConstants.INSTANCE.DefaultValue();
-            case MetadataCol52.FIELD_METADATA : return GuidedDecisionTableConstants.INSTANCE.Metadata1();
-            case AttributeCol52.FIELD_REVERSE_ORDER : return GuidedDecisionTableConstants.INSTANCE.ReverseOrder();
-            case AttributeCol52.FIELD_USE_ROW_NUMBER : return GuidedDecisionTableConstants.INSTANCE.UseRowNumber();
-            case Pattern52.FIELD_ENTRY_POINT_NAME : return GuidedDecisionTableConstants.INSTANCE.DTLabelFromEntryPoint();
-            case ConditionCol52.FIELD_BINDING : return GuidedDecisionTableConstants.INSTANCE.Binding();
-            case ConditionCol52.FIELD_CONSTRAINT_VALUE_TYPE : return GuidedDecisionTableConstants.INSTANCE.CalculationType();
-            case ConditionCol52.FIELD_OPERATOR : return GuidedDecisionTableConstants.INSTANCE.Operator();
-            case ConditionCol52.FIELD_FIELD_TYPE :
-            case ActionSetFieldCol52.FIELD_TYPE : return GuidedDecisionTableConstants.INSTANCE.FieldType();
-            case ActionSetFieldCol52.FIELD_UPDATE : return GuidedDecisionTableConstants.INSTANCE.UpdateEngineWithChanges();
-            case ActionInsertFactCol52.FIELD_IS_INSERT_LOGICAL : return GuidedDecisionTableConstants.INSTANCE.LogicallyInsert();
-            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_NAME : return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemName();
-            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_PARAMETER_NAME : return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterName();
-            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_PARAMETER_VALUE : {
-                if ( WIParamValueOnly ) {
-                    return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterValueOnly0( optionalParameter );
+    private String getDisplayableFieldValue(String field, String optionalParameter, boolean WIParamValueOnly) {
+        switch (field) {
+            case DTColumnConfig52.FIELD_HEADER:
+                return GuidedDecisionTableConstants.INSTANCE.ColumnHeader();
+            case DTColumnConfig52.FIELD_HIDE_COLUMN:
+                return GuidedDecisionTableConstants.INSTANCE.HideThisColumn();
+            case DTColumnConfig52.FIELD_DEFAULT_VALUE:
+                return GuidedDecisionTableConstants.INSTANCE.DefaultValue();
+            case MetadataCol52.FIELD_METADATA:
+                return GuidedDecisionTableConstants.INSTANCE.Metadata1();
+            case AttributeCol52.FIELD_REVERSE_ORDER:
+                return GuidedDecisionTableConstants.INSTANCE.ReverseOrder();
+            case AttributeCol52.FIELD_USE_ROW_NUMBER:
+                return GuidedDecisionTableConstants.INSTANCE.UseRowNumber();
+            case Pattern52.FIELD_ENTRY_POINT_NAME:
+                return GuidedDecisionTableConstants.INSTANCE.DTLabelFromEntryPoint();
+            case ConditionCol52.FIELD_BINDING:
+                return GuidedDecisionTableConstants.INSTANCE.Binding();
+            case ConditionCol52.FIELD_CONSTRAINT_VALUE_TYPE:
+                return GuidedDecisionTableConstants.INSTANCE.CalculationType();
+            case ConditionCol52.FIELD_OPERATOR:
+                return GuidedDecisionTableConstants.INSTANCE.Operator();
+            case ConditionCol52.FIELD_FIELD_TYPE:
+            case ActionSetFieldCol52.FIELD_TYPE:
+                return GuidedDecisionTableConstants.INSTANCE.FieldType();
+            case ActionSetFieldCol52.FIELD_UPDATE:
+                return GuidedDecisionTableConstants.INSTANCE.UpdateEngineWithChanges();
+            case ActionInsertFactCol52.FIELD_IS_INSERT_LOGICAL:
+                return GuidedDecisionTableConstants.INSTANCE.LogicallyInsert();
+            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_NAME:
+                return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemName();
+            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_PARAMETER_NAME:
+                return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterName();
+            case ActionWorkItemCol52.FIELD_WORKITEM_DEFINITION_PARAMETER_VALUE: {
+                if (WIParamValueOnly) {
+                    return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterValueOnly0(optionalParameter);
                 } else {
                     return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterValue();
                 }
             }
         }
-        if ( Arrays.asList( Pattern52.FIELD_FACT_TYPE,
-                            ActionInsertFactCol52.FIELD_FACT_TYPE ).contains( field ) ) {
+        if (Arrays.asList(Pattern52.FIELD_FACT_TYPE,
+                          ActionInsertFactCol52.FIELD_FACT_TYPE).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.FactType();
         }
-        if ( Arrays.asList( Pattern52.FIELD_BOUND_NAME,
-                            ActionInsertFactCol52.FIELD_BOUND_NAME,
-                            ActionSetFieldCol52.FIELD_BOUND_NAME ).contains( field ) ) {
+        if (Arrays.asList(Pattern52.FIELD_BOUND_NAME,
+                          ActionInsertFactCol52.FIELD_BOUND_NAME,
+                          ActionSetFieldCol52.FIELD_BOUND_NAME).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.Binding();
         }
-        if ( Arrays.asList( ConditionCol52.FIELD_FACT_FIELD,
-                            ActionInsertFactCol52.FIELD_FACT_FIELD,
-                             ActionSetFieldCol52.FIELD_FACT_FIELD ).contains( field ) ) {
+        if (Arrays.asList(ConditionCol52.FIELD_FACT_FIELD,
+                          ActionInsertFactCol52.FIELD_FACT_FIELD,
+                          ActionSetFieldCol52.FIELD_FACT_FIELD).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.Field();
         }
-        if ( Arrays.asList( ConditionCol52.FIELD_VALUE_LIST,
-                            ActionInsertFactCol52.FIELD_VALUE_LIST,
-                            ActionSetFieldCol52.FIELD_VALUE_LIST ).contains( field ) ) {
+        if (Arrays.asList(ConditionCol52.FIELD_VALUE_LIST,
+                          ActionInsertFactCol52.FIELD_VALUE_LIST,
+                          ActionSetFieldCol52.FIELD_VALUE_LIST).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.ValueList();
         }
-        if ( Arrays.asList( ActionWorkItemInsertFactCol52.FIELD_PARAMETER_CLASSNAME,
-                            ActionWorkItemSetFieldCol52.FIELD_PARAMETER_CLASSNAME ).contains( field ) ) {
+        if (Arrays.asList(ActionWorkItemInsertFactCol52.FIELD_PARAMETER_CLASSNAME,
+                          ActionWorkItemSetFieldCol52.FIELD_PARAMETER_CLASSNAME).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterClassName();
         }
-        if ( Arrays.asList( ActionWorkItemInsertFactCol52.FIELD_WORK_ITEM_NAME,
-                            ActionWorkItemSetFieldCol52.FIELD_WORK_ITEM_NAME ).contains( field ) ) {
+        if (Arrays.asList(ActionWorkItemInsertFactCol52.FIELD_WORK_ITEM_NAME,
+                          ActionWorkItemSetFieldCol52.FIELD_WORK_ITEM_NAME).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemName();
         }
-        if ( Arrays.asList( ActionWorkItemInsertFactCol52.FIELD_WORK_ITEM_RESULT_PARAM_NAME,
-                            ActionWorkItemSetFieldCol52.FIELD_WORK_ITEM_RESULT_PARAM_NAME ).contains( field ) ) {
+        if (Arrays.asList(ActionWorkItemInsertFactCol52.FIELD_WORK_ITEM_RESULT_PARAM_NAME,
+                          ActionWorkItemSetFieldCol52.FIELD_WORK_ITEM_RESULT_PARAM_NAME).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.DecisionTableAuditLogWorkItemParameterName();
         }
-        if ( Arrays.asList( LimitedEntryActionInsertFactCol52.FIELD_VALUE,
-                            LimitedEntryActionSetFieldCol52.FIELD_VALUE,
-                            LimitedEntryConditionCol52.FIELD_VALUE ).contains( field ) ) {
+        if (Arrays.asList(LimitedEntryActionInsertFactCol52.FIELD_VALUE,
+                          LimitedEntryActionSetFieldCol52.FIELD_VALUE,
+                          LimitedEntryConditionCol52.FIELD_VALUE).contains(field)) {
             return GuidedDecisionTableConstants.INSTANCE.Value();
         }
         return "";

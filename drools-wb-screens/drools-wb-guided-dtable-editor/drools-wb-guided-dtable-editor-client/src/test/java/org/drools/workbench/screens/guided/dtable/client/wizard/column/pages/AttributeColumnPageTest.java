@@ -27,11 +27,10 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.models.datamodel.rule.Attribute;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.plugins.AttributeColumnPlugin;
-import org.drools.workbench.screens.guided.rule.client.widget.attribute.RuleAttributeWidget;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -42,6 +41,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -83,24 +83,24 @@ public class AttributeColumnPageTest {
 
     @Test
     public void testGetAttributesWhenThereAreReservedAttributes() {
-        reservedAttributeNamesMock(RuleAttributeWidget.SALIENCE_ATTR,
-                                   RuleAttributeWidget.AGENDA_GROUP_ATTR);
+        reservedAttributeNamesMock(Attribute.SALIENCE.getAttributeName(),
+                                   Attribute.AGENDA_GROUP.getAttributeName());
 
         final List<String> result = page.getAttributes();
         final List<String> expected = new ArrayList<String>() {{
-            add(RuleAttributeWidget.ENABLED_ATTR);
-            add(RuleAttributeWidget.DATE_EFFECTIVE_ATTR);
-            add(RuleAttributeWidget.DATE_EXPIRES_ATTR);
-            add(RuleAttributeWidget.NO_LOOP_ATTR);
-            add(RuleAttributeWidget.ACTIVATION_GROUP_ATTR);
-            add(RuleAttributeWidget.DURATION_ATTR);
-            add(RuleAttributeWidget.TIMER_ATTR);
-            add(RuleAttributeWidget.CALENDARS_ATTR);
-            add(RuleAttributeWidget.AUTO_FOCUS_ATTR);
-            add(RuleAttributeWidget.LOCK_ON_ACTIVE_ATTR);
-            add(RuleAttributeWidget.RULEFLOW_GROUP_ATTR);
-            add(RuleAttributeWidget.DIALECT_ATTR);
-            add(GuidedDecisionTable52.NEGATE_RULE_ATTR);
+            add(Attribute.ENABLED.getAttributeName());
+            add(Attribute.DATE_EFFECTIVE.getAttributeName());
+            add(Attribute.DATE_EXPIRES.getAttributeName());
+            add(Attribute.NO_LOOP.getAttributeName());
+            add(Attribute.ACTIVATION_GROUP.getAttributeName());
+            add(Attribute.DURATION.getAttributeName());
+            add(Attribute.TIMER.getAttributeName());
+            add(Attribute.CALENDARS.getAttributeName());
+            add(Attribute.AUTO_FOCUS.getAttributeName());
+            add(Attribute.LOCK_ON_ACTIVE.getAttributeName());
+            add(Attribute.RULEFLOW_GROUP.getAttributeName());
+            add(Attribute.DIALECT.getAttributeName());
+            add(Attribute.NEGATE_RULE.getAttributeName());
         }};
 
         assertEquals(expected,
@@ -127,14 +127,14 @@ public class AttributeColumnPageTest {
 
     @Test
     public void testIsCompleteWhenAttributeIsBlank() {
-        when(plugin.getAttribute()).thenReturn("");
+        when(plugin.getAttribute()).thenReturn(null);
 
         page.isComplete(Assert::assertFalse);
     }
 
     @Test
     public void testIsCompleteWhenAttributeIsNotNull() {
-        when(plugin.getAttribute()).thenReturn(RuleAttributeWidget.SALIENCE_ATTR);
+        when(plugin.getAttribute()).thenReturn(Attribute.SALIENCE.getAttributeName());
 
         page.isComplete(Assert::assertTrue);
     }
@@ -169,7 +169,7 @@ public class AttributeColumnPageTest {
 
     @Test
     public void testSelectItem() {
-        final String item = "item";
+        final String item = mock(String.class);
 
         page.selectItem(item);
 
@@ -195,21 +195,21 @@ public class AttributeColumnPageTest {
 
     private List<String> fakeRawAttributesList() {
         return new ArrayList<String>() {{
-            add(RuleAttributeWidget.SALIENCE_ATTR);
-            add(RuleAttributeWidget.ENABLED_ATTR);
-            add(RuleAttributeWidget.DATE_EFFECTIVE_ATTR);
-            add(RuleAttributeWidget.DATE_EXPIRES_ATTR);
-            add(RuleAttributeWidget.NO_LOOP_ATTR);
-            add(RuleAttributeWidget.AGENDA_GROUP_ATTR);
-            add(RuleAttributeWidget.ACTIVATION_GROUP_ATTR);
-            add(RuleAttributeWidget.DURATION_ATTR);
-            add(RuleAttributeWidget.TIMER_ATTR);
-            add(RuleAttributeWidget.CALENDARS_ATTR);
-            add(RuleAttributeWidget.AUTO_FOCUS_ATTR);
-            add(RuleAttributeWidget.LOCK_ON_ACTIVE_ATTR);
-            add(RuleAttributeWidget.RULEFLOW_GROUP_ATTR);
-            add(RuleAttributeWidget.DIALECT_ATTR);
-            add(GuidedDecisionTable52.NEGATE_RULE_ATTR);
+            add(Attribute.SALIENCE.getAttributeName());
+            add(Attribute.ENABLED.getAttributeName());
+            add(Attribute.DATE_EFFECTIVE.getAttributeName());
+            add(Attribute.DATE_EXPIRES.getAttributeName());
+            add(Attribute.NO_LOOP.getAttributeName());
+            add(Attribute.AGENDA_GROUP.getAttributeName());
+            add(Attribute.ACTIVATION_GROUP.getAttributeName());
+            add(Attribute.DURATION.getAttributeName());
+            add(Attribute.TIMER.getAttributeName());
+            add(Attribute.CALENDARS.getAttributeName());
+            add(Attribute.AUTO_FOCUS.getAttributeName());
+            add(Attribute.LOCK_ON_ACTIVE.getAttributeName());
+            add(Attribute.RULEFLOW_GROUP.getAttributeName());
+            add(Attribute.DIALECT.getAttributeName());
+            add(Attribute.NEGATE_RULE.getAttributeName());
         }};
     }
 }

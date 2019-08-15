@@ -79,7 +79,7 @@ public class AttributeColumnPlugin extends BaseDecisionTableColumnPlugin {
         return attribute;
     }
 
-    public void setAttribute(String attribute) {
+    public void setAttribute(String  attribute) {
         this.attribute = attribute;
 
         fireChangeEvent(page);
