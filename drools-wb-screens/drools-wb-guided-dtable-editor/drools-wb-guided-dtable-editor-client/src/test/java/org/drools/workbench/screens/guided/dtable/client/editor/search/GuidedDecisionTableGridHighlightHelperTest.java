@@ -134,8 +134,7 @@ public class GuidedDecisionTableGridHighlightHelperTest {
         when(gridRow4.getHeight()).thenReturn(gridRow4Height);
         when(column1.getWidth()).thenReturn(column1Width);
         when(column2.getWidth()).thenReturn(column2Width);
-        when(highlightHelper.withMinX(minX)).thenReturn(highlightHelper);
-        when(highlightHelper.withMinY(minY)).thenReturn(highlightHelper);
+
         when(highlightHelper.withPaddingX(paddingX)).thenReturn(highlightHelper);
         when(highlightHelper.withPaddingY(paddingY)).thenReturn(highlightHelper);
 
