@@ -18,6 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 import java.util.Collections;
 import java.util.List;
 
+import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
+import org.drools.scenariosimulation.api.model.FactIdentifier;
+import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
@@ -30,6 +34,7 @@ import org.uberfire.backend.vfs.Path;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
@@ -64,6 +69,17 @@ public class ScenarioValidationServiceTest {
                 return kieContainerMock;
             }
         });
+
+        simulation.getSimulationDescriptor().setType(ScenarioSimulationModel.Type.DMN);
+        scenarioValidationServiceSpy.validateSimulationStructure(simulation, pathMock);
+        verify(scenarioValidationServiceSpy, never()).validateDMN(eq(simulation), eq(kieContainerMock));
+        verify(scenarioValidationServiceSpy, never()).validateRULE(eq(simulation), eq(kieContainerMock));
+
+        reset(scenarioValidationServiceSpy);
+        FactMapping sampleFactMapping = simulation.getSimulationDescriptor()
+                .addFactMapping(FactIdentifier.create("sample", String.class.getCanonicalName()),
+                                ExpressionIdentifier.create("sample", FactMappingType.GIVEN));
+        sampleFactMapping.addExpressionElement("sample", String.class.getCanonicalName());
 
         simulation.getSimulationDescriptor().setType(ScenarioSimulationModel.Type.DMN);
         scenarioValidationServiceSpy.validateSimulationStructure(simulation, pathMock);

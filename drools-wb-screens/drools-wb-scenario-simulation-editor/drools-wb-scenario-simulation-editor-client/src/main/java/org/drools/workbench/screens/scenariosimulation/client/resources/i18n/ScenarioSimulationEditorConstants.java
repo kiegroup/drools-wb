@@ -317,4 +317,8 @@ public interface ScenarioSimulationEditorConstants
     String validationErrorTitle();
 
     String validationErrorMessage();
+
+    String validationFailedNotification();
+
+    String validationSucceed();
 }

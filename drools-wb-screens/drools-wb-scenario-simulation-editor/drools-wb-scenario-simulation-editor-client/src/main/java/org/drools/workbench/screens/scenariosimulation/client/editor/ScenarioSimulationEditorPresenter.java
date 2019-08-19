@@ -80,6 +80,7 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextContent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
+import org.uberfire.ext.widgets.common.client.common.BusyPopup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
@@ -416,6 +417,7 @@ public class ScenarioSimulationEditorPresenter {
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
         return result -> {
+            view.hideBusyIndicator();
 
             if (result != null && result.size() > 0) {
                 StringBuilder errorMessage = new StringBuilder(ScenarioSimulationEditorConstants.INSTANCE.validationErrorMessage());
@@ -431,8 +433,17 @@ public class ScenarioSimulationEditorPresenter {
                 confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.validationErrorTitle(),
                                            errorMessage.toString());
             } else {
-                eventBus.fireEvent(new ScenarioNotificationEvent("Validation succeed", NotificationEvent.NotificationType.SUCCESS));
+                eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.validationSucceed(), NotificationEvent.NotificationType.SUCCESS));
             }
+        };
+    }
+
+    public ErrorCallback<?> getValidationFailedCallback() {
+        return (message, exception) -> {
+            CustomBusyPopup.close();
+            BusyPopup.close();
+            eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.validationFailedNotification(), NotificationEvent.NotificationType.ERROR));
+            return false;
         };
     }
 

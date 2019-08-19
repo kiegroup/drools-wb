@@ -215,7 +215,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.getView().showLoading();
         service.call(
                 callback,
-                new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()))
+                scenarioSimulationEditorPresenter.getValidationFailedCallback())
                 .validate(simulation, versionRecordManager.getCurrentPath());
     }
 
