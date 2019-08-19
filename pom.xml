@@ -43,6 +43,7 @@
        possible to measure cross-module test coverage -->
     <!--suppress UnresolvedMavenProperty -->
     <jacoco.exec.file>${maven.multiModuleProjectDirectory}/target/jacoco.exec</jacoco.exec.file>
+    <code.coverage.disabled>false</code.coverage.disabled>
   </properties>
 
   <repositories>
@@ -362,6 +363,9 @@
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <skip>${code.coverage.disabled}</skip>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -385,6 +389,7 @@
               <groupId>org.jacoco</groupId>
               <artifactId>jacoco-maven-plugin</artifactId>
               <configuration>
+                <skip>${code.coverage.disabled}</skip>
                 <fileSets>
                   <fileSet>
                     <directory>${project.build.directory}</directory>
