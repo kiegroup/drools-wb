@@ -40,14 +40,17 @@ import org.drools.workbench.screens.guided.dtable.client.editor.menu.InsertMenuB
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.RadarMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.ViewMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.page.ColumnsPage;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableEditorSearchIndex;
 import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
 import org.drools.workbench.screens.guided.dtable.client.editor.search.SearchableElementFactory;
+import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResult;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -57,7 +60,6 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
-import org.kie.workbench.common.widgets.client.search.common.EditorSearchIndex;
 import org.kie.workbench.common.widgets.client.search.common.HasSearchableElements;
 import org.kie.workbench.common.widgets.client.search.component.SearchBarComponent;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
@@ -82,6 +84,8 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
+import org.uberfire.workbench.model.menu.MenuFactory;
+import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.uberfire.client.annotations.WorkbenchEditor.LockingStrategy.EDITOR_PROVIDED;
@@ -95,11 +99,11 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
 
     private final SaveAndRenameCommandBuilder<GuidedDecisionTable52, Metadata> saveAndRenameCommandBuilder;
 
-    private final EditorSearchIndex<GuidedDecisionTableSearchableElement> editorSearchIndex;
+    private final GuidedDecisionTableEditorSearchIndex editorSearchIndex;
 
     private final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent;
-
     private final SearchableElementFactory searchableElementFactory;
+    private MenuItem convertMenuItem = null;
 
     @Inject
     public GuidedDecisionTableEditorPresenter(final View view,
@@ -121,7 +125,7 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
                                               final SaveAndRenameCommandBuilder<GuidedDecisionTable52, Metadata> saveAndRenameCommandBuilder,
                                               final AlertsButtonMenuItemBuilder alertsButtonMenuItemBuilder,
                                               final DownloadMenuItemBuilder downloadMenuItemBuilder,
-                                              final EditorSearchIndex<GuidedDecisionTableSearchableElement> editorSearchIndex,
+                                              final GuidedDecisionTableEditorSearchIndex editorSearchIndex,
                                               final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent,
                                               final SearchableElementFactory searchableElementFactory) {
         super(view,
@@ -153,11 +157,15 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
     @PostConstruct
     public void init() {
         super.init();
-        editorSearchIndex.setIsDirtySupplier(getIsDirtySupplier());
+        editorSearchIndex.setCurrentAssetHashcodeSupplier(getCurrentHashCodeSupplier());
         editorSearchIndex.setNoResultsFoundCallback(getNoResultsFoundCallback());
         editorSearchIndex.registerSubIndex(this);
 
         setupSearchComponent();
+    }
+
+    protected Supplier<Integer> getCurrentHashCodeSupplier() {
+        return () -> currentHashCode(getActiveDocument());
     }
 
     private void setupSearchComponent() {
@@ -314,6 +322,8 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
                         .addNewTopLevelMenu(alertsButtonMenuItemBuilder.build());
                 addDownloadMenuItem(fileMenuBuilder);
 
+                fileMenuBuilder.addNewTopLevelMenu(getConvertMenuItem());
+
                 this.menus = fileMenuBuilder.build();
 
                 return promises.resolve();
@@ -321,6 +331,29 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
         }
 
         return promises.resolve();
+    }
+
+    private MenuItem getConvertMenuItem() {
+        if (convertMenuItem == null) {
+
+            convertMenuItem = MenuFactory.newTopLevelMenu(GuidedDecisionTableConstants.INSTANCE.Convert())
+                    .respondsWith(() -> onConvert())
+                    .endMenu()
+                    .build()
+                    .getItems()
+                    .get(0);
+        }
+        return convertMenuItem;
+    }
+
+    public void onConvert() {
+        service.call((RemoteCallback<XLSConversionResult>) result -> {
+            if (result.isConverted()) {
+                view.showConversionSuccess();
+            } else {
+                view.showConversionMessage(result.getMessage());
+            }
+        }).convert(versionRecordManager.getCurrentPath());
     }
 
     protected Command getSaveAndRenameCommand() {
