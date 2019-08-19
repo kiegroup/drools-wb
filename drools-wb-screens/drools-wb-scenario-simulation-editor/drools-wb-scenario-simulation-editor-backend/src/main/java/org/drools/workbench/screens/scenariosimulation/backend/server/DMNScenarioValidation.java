@@ -83,7 +83,7 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
             // error if direct mapping (= simple type) but it is a composite
             // NOTE: context is a special case so it is composite even if no fields are declared
             Type rootType = getRootType((BaseDMNTypeImpl) rootDMNType);
-            if (!CONTEXT.equals(rootType) && steps.size() == 0 && rootDMNType.isComposite()) {
+            if (!CONTEXT.equals(rootType) && steps.isEmpty() && rootDMNType.isComposite()) {
                 errors.add(createNodeChangedError(factMapping, rootDMNType.getName()));
                 continue;
             }
@@ -113,14 +113,10 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
                 factMapping.getGenericTypes().get(0) :
                 typeName;
 
-        if (Objects.equals(factMappingType, dmnType.getName())) {
-            return true;
-        }
-        return false;
+        return Objects.equals(factMappingType, dmnType.getName());
     }
 
     protected DMNModel getDMNModel(KieContainer kieContainer, String dmnPath) {
         return extractDMNModel(extractDMNRuntime(kieContainer), dmnPath);
     }
-
 }
