@@ -27,7 +27,6 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
@@ -84,8 +83,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Mock
     private PathPlaceRequest placeRequestMock;
     @Mock
-    private ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    @Mock
     private ScenarioSimulationResourceType scenarioSimulationResourceType;
     @Mock
     private KieEditorWrapperView kieViewMock;
@@ -126,7 +123,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationCaller = spy(new CallerMock<>(scenarioSimulationServiceMock));
         importExportCaller = spy(new CallerMock<>(importExportServiceMock));
         scenarioSimulationEditorBusinessClientWrapper = spy(new ScenarioSimulationEditorBusinessCentralWrapper(scenarioSimulationCaller,
-                                                                                                               scenarioSimulationEditorPresenter,
+                                                                                                               scenarioSimulationEditorPresenterMock,
                                                                                                                importsWidgetPresenterMock,
                                                                                                                oracleFactoryMock,
                                                                                                                placeManagerMock,
@@ -149,11 +146,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
             }
         });
         when(placeRequestMock.getPath()).thenReturn(observablePathMock);
-        when(scenarioSimulationEditorPresenter.getType()).thenReturn(scenarioSimulationResourceType);
-        when(scenarioSimulationEditorPresenter.getPopulateTestToolsCommand()).thenReturn(populateTestToolsCommand);
-        when(scenarioSimulationEditorPresenter.getJsonModel(any())).thenReturn("");
-        when(scenarioSimulationEditorPresenter.getView()).thenReturn(scenarioSimulationViewMock);
-        when(scenarioSimulationEditorPresenter.getModel()).thenReturn(scenarioSimulationModelMock);
+        when(scenarioSimulationEditorPresenterMock.getType()).thenReturn(scenarioSimulationResourceType);
+        when(scenarioSimulationEditorPresenterMock.getPopulateTestToolsCommand()).thenReturn(populateTestToolsCommand);
+        when(scenarioSimulationEditorPresenterMock.getJsonModel(any())).thenReturn("");
+        when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
+        when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
+        when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
     }
@@ -161,20 +159,20 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onStartup() {
         scenarioSimulationEditorBusinessClientWrapper.onStartup(observablePathMock, placeRequestMock);
-        verify(scenarioSimulationEditorPresenter, times(1)).init(eq(scenarioSimulationEditorBusinessClientWrapper), eq(observablePathMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).init(eq(scenarioSimulationEditorBusinessClientWrapper), eq(observablePathMock));
     }
 
     @Test
     public void onClose() {
         scenarioSimulationEditorBusinessClientWrapper.onClose();
         verify(versionRecordManagerMock, times(1)).clear();
-        verify(scenarioSimulationEditorPresenter, times(1)).onClose();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onClose();
     }
 
     @Test
     public void mayClose() {
         scenarioSimulationEditorBusinessClientWrapper.mayClose();
-        verify(scenarioSimulationEditorPresenter, times(1)).isDirty();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).isDirty();
     }
 
     @Test
@@ -183,7 +181,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         when(placeManagerMock.getStatus(eq(placeRequest))).thenReturn(placeStatusMock);
         scenarioSimulationEditorBusinessClientWrapper.showDocks();
-        verify(scenarioSimulationEditorPresenter, times(1)).showDocks(same(placeStatusMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).showDocks(same(placeStatusMock));
     }
 
     @Test
@@ -208,7 +206,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void hideDocks() {
         scenarioSimulationEditorBusinessClientWrapper.hideDocks();
-        verify(scenarioSimulationEditorPresenter, times(1)).hideDocks();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).hideDocks();
         verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).unRegisterTestToolsCallback();
     }
 
@@ -227,7 +225,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void addDownloadMenuItem() {
         scenarioSimulationEditorBusinessClientWrapper.addDownloadMenuItem(fileMenuBuilderMock);
-        verify(scenarioSimulationEditorPresenter, times(1)).addDownloadMenuItem(eq(fileMenuBuilderMock), isA(Supplier.class));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).addDownloadMenuItem(eq(fileMenuBuilderMock), isA(Supplier.class));
     }
 
     @Test
@@ -252,20 +250,21 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void makeMenuBar() {
         scenarioSimulationEditorBusinessClientWrapper.makeMenuBar();
-        verify(scenarioSimulationEditorPresenter, times(1)).makeMenuBar(same(fileMenuBuilderMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(same(fileMenuBuilderMock));
     }
 
     @Test
     public void getContentSupplier() {
         scenarioSimulationEditorBusinessClientWrapper.getContentSupplier();
-        verify(scenarioSimulationEditorPresenter, times(1)).getContentSupplier();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getContentSupplier();
     }
 
     @Test
     public void save() {
         String saveMessage = "Save";
         scenarioSimulationEditorBusinessClientWrapper.save(saveMessage);
-        verify(scenarioSimulationEditorPresenter, times(1)).getModel();
+        verify(scenarioGridModelMock, times(1)).synchronizeFactMappingsWidths();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getModel();
         verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(HasBusyIndicatorDefaultErrorCallback.class));
         verify(scenarioSimulationServiceMock, times(1)).save(eq(observablePathMock), eq(scenarioSimulationModelMock), eq(metaDataMock), eq(saveMessage));
     }
@@ -273,7 +272,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void addCommonActions() {
         scenarioSimulationEditorBusinessClientWrapper.addCommonActions(fileMenuBuilderMock);
-        verify(scenarioSimulationEditorPresenter, times(1)).addCommonActions(eq(fileMenuBuilderMock), eq(versionRecordMenuItemMock), eq(alertsButtonMenuItemMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).addCommonActions(eq(fileMenuBuilderMock), eq(versionRecordMenuItemMock), eq(alertsButtonMenuItemMock));
     }
 
     @Test
@@ -287,28 +286,28 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void getModelSuccessCallBackMethod_Rule() {
         modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, null));
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
-        verify(scenarioSimulationEditorPresenter, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */
-        verify(scenarioSimulationEditorPresenter, never()).getEventBus();
+        verify(scenarioSimulationEditorPresenterMock, never()).getEventBus();
         /* Not possible to mock a new Instance, for this reason any()s are used */
         verify(importsWidgetPresenterMock, times(1)).setContent(any(), any(), anyBoolean());
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
-        verify(scenarioSimulationEditorPresenter, times(1)).getJsonModel(eq(modelLocal));
-        verify(scenarioSimulationEditorPresenter, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getJsonModel(eq(modelLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
     }
 
     @Test
     public void getModelSuccessCallBackMethod_DMN() {
         modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.DMN, null));
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
-        verify(scenarioSimulationEditorPresenter, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */
-        verify(scenarioSimulationEditorPresenter, times(1)).getEventBus();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getEventBus();
         verify(versionRecordManagerMock, times(2)).getCurrentPath();
         verify(importsWidgetPresenterMock, never()).setContent(any(), any(), anyBoolean());
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
-        verify(scenarioSimulationEditorPresenter, times(1)).getJsonModel(eq(modelLocal));
-        verify(scenarioSimulationEditorPresenter, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getJsonModel(eq(modelLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
     }
 
 }

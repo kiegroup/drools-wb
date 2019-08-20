@@ -35,6 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -234,6 +235,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     protected void save(final String commitMessage) {
+        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView().getScenarioGridLayer().getScenarioGrid().getModel();
+        scenarioGridModel.synchronizeFactMappingsWidths();
         final ScenarioSimulationModel model = scenarioSimulationEditorPresenter.getModel();
         RemoteCallback<Path> saveSuccessCallback = getSaveSuccessCallback(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         service.call(saveSuccessCallback,
