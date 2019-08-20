@@ -369,23 +369,5 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>sonarcloud-analysis-pull-request</id>
-      <activation>
-        <property>
-          <name>env.ghprbPullId</name>
-        </property>
-
-      </activation>
-      <properties>
-        <sonar.pullrequest.provider>GitHub</sonar.pullrequest.provider>
-        <!--suppress UnresolvedMavenProperty -->
-        <sonar.pullrequest.branch>${env.ghprbSourceBranch}</sonar.pullrequest.branch>
-        <!--suppress UnresolvedMavenProperty -->
-        <sonar.pullrequest.key>${env.ghprbPullId}</sonar.pullrequest.key>
-        <!--suppress UnresolvedMavenProperty -->
-        <sonar.pullrequest.base>${env.ghprbTargetBranch}</sonar.pullrequest.base>
-      </properties>
-    </profile>
   </profiles>
 </project>
