@@ -104,7 +104,9 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
     private final GuidedDecisionTableEditorSearchIndex editorSearchIndex;
 
     private final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent;
+
     private final SearchableElementFactory searchableElementFactory;
+
     private MenuItem convertMenuItem = null;
 
     private final Event<SearchPerformedEvent> searchPerformedEvent;
@@ -255,7 +257,7 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
                                                                        final int column,
                                                                        final GuidedDecisionTable52 model) {
         final DTCellValue52 cellValue52 = data.get(row).get(column);
-        return searchableElementFactory.makeSearchableElement(row, column, cellValue52, modeller, model);
+        return searchableElementFactory.makeSearchableElement(row, column, cellValue52, null, model, modeller);
     }
 
     protected RemoteCallback<GuidedDecisionTableEditorContent> getLoadContentSuccessCallback(final ObservablePath path,

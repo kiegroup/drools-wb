@@ -55,7 +55,7 @@ public class SearchableElementFactoryTest {
         final GuidedDecisionTableModellerView.Presenter modeller = mock(GuidedDecisionTableModellerView.Presenter.class);
         final GuidedDecisionTable52 model = mock(GuidedDecisionTable52.class);
 
-        final GuidedDecisionTableSearchableElement element = factory.makeSearchableElement(row, column, cellValue52, modeller, model);
+        final GuidedDecisionTableSearchableElement element = factory.makeSearchableElement(row, column, cellValue52, null, model, modeller);
 
         assertEquals(row, element.getRow());
         assertEquals(column, element.getColumn());
