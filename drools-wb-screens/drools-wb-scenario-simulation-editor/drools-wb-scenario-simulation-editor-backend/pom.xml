@@ -17,7 +17,7 @@
 
   <properties>
     <java.module.name>org.drools.wb.scenariosimulation.editor.backend</java.module.name>
-    <code.coverage.disabled>true</code.coverage.disabled>
+<!--    <code.coverage.disabled>true</code.coverage.disabled>-->
   </properties>
 
   <dependencies>
@@ -185,6 +185,13 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.jacoco</groupId>
+      <artifactId>org.jacoco.agent</artifactId>
+      <classifier>runtime</classifier>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <dependencyManagement>
@@ -221,5 +228,6 @@
         <directory>src/test/resources</directory>
       </testResource>
     </testResources>
+
   </build>
 </project>

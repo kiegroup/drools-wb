@@ -18,7 +18,6 @@
 
   <properties>
     <java.module.name>org.drools.wb.scenariosimulation.editor.businesscentral.client</java.module.name>
-    <code.coverage.disabled>true</code.coverage.disabled>
   </properties>
 
   <dependencies>
