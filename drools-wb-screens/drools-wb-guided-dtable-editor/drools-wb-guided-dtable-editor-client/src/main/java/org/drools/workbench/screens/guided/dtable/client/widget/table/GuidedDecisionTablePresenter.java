@@ -623,19 +623,15 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
     }
 
     void onSearchPerformed(final @Observes SearchPerformedEvent event) {
-        renderer.clearCellHighlight();
         if (event.hasElement()) {
             final Searchable element = event.getCurrentElement();
             if (element instanceof GuidedDecisionTableSearchableElement) {
                 final GuidedDecisionTableSearchableElement gdtElement = ((GuidedDecisionTableSearchableElement) element);
-                if (Objects.equals(model, gdtElement.getModel())) {
-                    int column = gdtElement.getColumn();
-                    int row = gdtElement.getRow();
-                    renderer.highlightCell(column, row);
+                if (!Objects.equals(model, gdtElement.getModel())) {
+                    renderer.clearCellHighlight();
                 }
             }
         }
-
         getView().draw();
     }
 

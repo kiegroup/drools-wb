@@ -168,6 +168,7 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
         editorSearchIndex.setCurrentAssetHashcodeSupplier(getCurrentHashCodeSupplier());
         editorSearchIndex.setNoResultsFoundCallback(getNoResultsFoundCallback());
         editorSearchIndex.setSearchPerformedCallback(getSearchPerformedCallback());
+        editorSearchIndex.setSearchClosedCallback(getSearchClosedCallback());
         editorSearchIndex.registerSubIndex(this);
 
         setupSearchComponent();
@@ -198,8 +199,15 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
         };
     }
 
+    Command getSearchClosedCallback() {
+        return () -> highlightHelper().clearHighlight();
+    }
+
     Command getNoResultsFoundCallback() {
-        return () -> highlightHelper().clearSelections();
+        return () -> {
+            highlightHelper().clearSelections();
+            highlightHelper().clearHighlight();
+        };
     }
 
     private GridHighlightHelper highlightHelper() {

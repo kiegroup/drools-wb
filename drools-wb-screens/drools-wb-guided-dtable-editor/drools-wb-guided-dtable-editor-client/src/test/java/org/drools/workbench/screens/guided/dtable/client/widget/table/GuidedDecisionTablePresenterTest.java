@@ -1697,18 +1697,13 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
     @Test
     public void testOnSearchPerformed() {
-        final int row = 2;
-        final int column = 3;
         final GuidedDecisionTableSearchableElement element = mock(GuidedDecisionTableSearchableElement.class);
         when(element.getModel()).thenReturn(model);
-        when(element.getColumn()).thenReturn(column);
-        when(element.getRow()).thenReturn(row);
         final SearchPerformedEvent event = new SearchPerformedEvent(element);
 
         dtPresenter.onSearchPerformed(event);
 
-        verify(renderer).clearCellHighlight();
-        verify(renderer).highlightCell(column, row);
+        verify(renderer, never()).clearCellHighlight();
         verify(view).draw();
     }
 
@@ -1724,7 +1719,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
         dtPresenter.onSearchPerformed(event);
 
-        verify(renderer, never()).highlightCell(anyInt(), anyInt());
+        verify(renderer).clearCellHighlight();
     }
 
     /*

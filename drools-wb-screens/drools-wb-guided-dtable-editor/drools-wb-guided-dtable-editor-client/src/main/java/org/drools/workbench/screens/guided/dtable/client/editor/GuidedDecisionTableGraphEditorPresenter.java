@@ -103,6 +103,8 @@ import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.ext.wires.core.grids.client.util.GridHighlightHelper;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRenderer;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnFocus;
 import org.uberfire.lifecycle.OnMayClose;
@@ -229,6 +231,7 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         registeredDocumentsMenuBuilder.setNewDocumentCommand(this::onNewDocument);
         editorSearchIndex.setCurrentAssetHashcodeSupplier(getCurrentHashCodeSupplier());
         editorSearchIndex.setNoResultsFoundCallback(getNoResultsFoundCallback());
+        editorSearchIndex.setSearchClosedCallback(getSearchClosedCallback());
         editorSearchIndex.setClearCurrentResultsCallback(getClearCurrentResultsCallback());
         editorSearchIndex.setSearchPerformedCallback(getSearchPerformedCallback());
         editorSearchIndex.registerSubIndex(this);
@@ -286,8 +289,28 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         getKieEditorWrapperMultiPage().addTabBarWidget(getWidget(element));
     }
 
+    Command getSearchClosedCallback() {
+        return () -> clearAllHighlights();
+    }
+
     Command getNoResultsFoundCallback() {
-        return () -> highlightHelper().clearSelections();
+        return () -> {
+            highlightHelper().clearSelections();
+            highlightHelper().clearHighlight();
+        };
+    }
+
+    void clearAllHighlights() {
+        final GuidedDecisionTableModellerView view = modeller.getView();
+        final Set<GridWidget> widgets = view.getGridWidgets();
+        for (GridWidget gridWidget : widgets) {
+            final GridRenderer renderer = gridWidget.getRenderer();
+            if (renderer instanceof BaseGridRenderer) {
+                ((BaseGridRenderer) renderer).clearCellHighlight();
+            }
+        }
+
+        view.getGridLayerView().draw();
     }
 
     private GridHighlightHelper highlightHelper() {
