@@ -21,15 +21,20 @@
     <module>drools-wb-guided-scorecard-editor-client</module>
   </modules>
 
+  <properties>
+    <code.coverage.disabled>true</code.coverage.disabled>
+  </properties>
+
   <profiles>
     <profile>
       <id>sonarcloud-analysis</id>
       <properties>
-        <!-- Excluding the entire module from coverage statistics. API modules like this one contain only interfaces
-             and enums, thus nothing JaCoCo can measure. -->
-        <sonar.coverage.exclusions>**/*.java</sonar.coverage.exclusions>
+        <!-- Excluding the entire module from coverage statistics. -->
+        <sonar.coverage.exclusions>**/*.*</sonar.coverage.exclusions>
       </properties>
     </profile>
   </profiles>
+
+
 
 </project>

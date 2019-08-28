@@ -37,4 +37,20 @@
     <module>drools-wb-guided-rule-editor-backend</module>
   </modules>
 
+  <properties>
+    <code.coverage.disabled>true</code.coverage.disabled>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>sonarcloud-analysis</id>
+      <properties>
+        <!-- Excluding the entire module from coverage statistics. -->
+        <sonar.coverage.exclusions>**/*.*</sonar.coverage.exclusions>
+      </properties>
+    </profile>
+  </profiles>
+
+
+
 </project>
