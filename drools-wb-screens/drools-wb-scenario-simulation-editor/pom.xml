@@ -31,6 +31,11 @@
   <name>Drools Workbench - Scenario Simulation Editor</name>
   <description>Drools Workbench - Scenario Simulation Editor</description>
 
+  <properties>
+    <code.coverage.disabled>false</code.coverage.disabled>
+    <sonar.skip>false</sonar.skip>
+  </properties>
+
   <modules>
     <module>drools-wb-scenario-simulation-editor-api</module>
     <module>drools-wb-scenario-simulation-editor-client</module>
