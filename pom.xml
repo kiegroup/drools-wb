@@ -43,7 +43,6 @@
        possible to measure cross-module test coverage -->
     <!--suppress UnresolvedMavenProperty -->
     <code.coverage.disabled>false</code.coverage.disabled>
-    <sonar.coverage.exclusions></sonar.coverage.exclusions>
   </properties>
 
   <repositories>
