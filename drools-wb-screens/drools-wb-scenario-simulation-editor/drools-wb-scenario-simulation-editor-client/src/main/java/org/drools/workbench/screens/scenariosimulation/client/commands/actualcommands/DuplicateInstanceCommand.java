@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import javax.enterprise.context.Dependent;
 
@@ -27,7 +26,6 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
 /**
  * <code>Command</code> to <b>duplicate</b> an instance
@@ -35,14 +33,13 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 @Dependent
 public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
-    public final static String COPY_LABEL = "_copy_";
+    public static final String COPY_LABEL = "_copy_";
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
         /* Generating the new instance alias with following schema: <original instance name> + '_copy_' + <number of existing instances> */
         int instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         String alias = selectedColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0] + COPY_LABEL + instancesCount;
-        final List<Double> widthsToRestore = context.getModel().getColumns().stream().map(GridColumn::getWidth).collect(Collectors.toList());
 
         /* For every columns which belongs to the selected instance, it creates a new column and assign it the duplicated instance
          * and the duplicated property, if are assigned */
@@ -50,9 +47,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
         AtomicInteger nextColumnPosition = new AtomicInteger(columnPosition);
         context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(
                 originalColumn -> {
-                    int newColumnPosition = nextColumnPosition.getAndIncrement();
-                    widthsToRestore.add(newColumnPosition, originalColumn.getWidth());
-                    ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, newColumnPosition, false);
+                    ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
                     if (originalColumn.isInstanceAssigned()) {
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
 
@@ -75,9 +70,6 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                         }
                     }
                 });
-        /* Restoring the expected columns dimension, overriding the automatic resizing */
-        IntStream.range(0, widthsToRestore.size())
-                .forEach(index -> context.getModel().updateColumnWidth(context.getModel().getColumns().get(index), widthsToRestore.get(index)));
     }
 
 }

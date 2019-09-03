@@ -51,12 +51,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -121,10 +117,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
                 return gridColumnMock;
             }
         });
-        doAnswer(invocationOnMock -> {
-            gridColumns.add(gridColumnMock);
-            return gridColumnMock;
-        }).when(scenarioGridModelMock).insertColumn(anyInt(), isA(GridColumn.class));
         assertTrue(command.isUndoable());
         addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
                           factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
@@ -141,7 +133,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify((DuplicateInstanceCommand) command, never()).setInstanceHeader(any(), any(), any(), any());
         verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any(), any());
         verify(scenarioGridModelMock, never()).duplicateColumnValues(anyInt(), eq(0)); // The created column is mocked as gridColumnMock, with position 0
-        verify(scenarioGridModelMock, times(gridColumns.size())).updateColumnWidth(isA(GridColumn.class), anyDouble());
     }
 
     @Test
@@ -153,7 +144,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify((DuplicateInstanceCommand) command, times(1)).setInstanceHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(VALUE_1 + DuplicateInstanceCommand.COPY_LABEL + "1"), eq(FULL_CLASS_NAME_1));
         verify((DuplicateInstanceCommand) command, never()).setPropertyHeader(any(), any(), any(), any(), any());
         verify(scenarioGridModelMock, never()).duplicateColumnValues(anyInt(), eq(0)); // The created column is mocked as gridColumnMock, with position 0
-        verify(scenarioGridModelMock, times(gridColumns.size())).updateColumnWidth(isA(GridColumn.class), anyDouble());
     }
 
     @Test
@@ -166,7 +156,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         List<String> expectedPropertyNameElements = Arrays.asList(expectedDuplicatedLabel, "test");
         verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(expectedPropertyNameElements), eq(VALUE_CLASS_NAME), eq(GRID_PROPERTY_TITLE_1));
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER), eq(0)); // The created column is mocked as gridColumnMock, with position 0
-        verify(scenarioGridModelMock, atLeast(gridColumns.size())).updateColumnWidth(isA(GridColumn.class), anyDouble());
     }
 
     @Test
@@ -191,7 +180,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
         verify((DuplicateInstanceCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(expectedPropertyNameElementsThird), eq(VALUE_CLASS_NAME), eq(GRID_PROPERTY_TITLE + "_3"));
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER + 1), eq(0)); // The created column is mocked as gridColumnMock, with position 0
         verify(scenarioGridModelMock, times(1)).duplicateColumnValues(eq(COLUMN_NUMBER + 2), eq(0)); // The created column is mocked as gridColumnMock, with position 0
-        verify(scenarioGridModelMock, atLeast(gridColumns.size())).updateColumnWidth(isA(GridColumn.class), anyDouble());
     }
 
 }

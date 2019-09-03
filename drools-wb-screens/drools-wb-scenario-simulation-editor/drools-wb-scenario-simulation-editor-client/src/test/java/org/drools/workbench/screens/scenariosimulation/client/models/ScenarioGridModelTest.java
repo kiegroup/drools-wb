@@ -280,7 +280,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     public void replaceColumnTest() {
         scenarioGridModel.replaceColumn(ROW_INDEX, gridColumnMock);
         verify(gridColumnMock, times(COLUMN_NUMBER)).getWidth();
-        verify(gridColumnMock, atLeast(COLUMN_NUMBER)).setWidth(anyDouble());
+        verify(gridColumnMock, times(COLUMN_NUMBER)).setWidth(anyDouble());
         verify(scenarioGridModel, times(1)).deleteColumn(eq(ROW_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(ROW_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
         verify(scenarioGridModel, times(gridColumns.size())).updateColumnWidth(isA(GridColumn.class), anyDouble());
