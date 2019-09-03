@@ -154,6 +154,10 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             }
 
             @Override
+            public void deleteColumn(GridColumn<?> column) {
+            }
+
+            @Override
             public GridCell<?> getCell(final int rowIndex,
                                        final int columnIndex) {
                 if (rowIndex < 0 || rowIndex > rows.size() - 1) {
