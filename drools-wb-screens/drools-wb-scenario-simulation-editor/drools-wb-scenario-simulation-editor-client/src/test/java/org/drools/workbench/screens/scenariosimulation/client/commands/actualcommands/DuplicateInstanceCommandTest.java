@@ -62,6 +62,8 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 @RunWith(GwtMockitoTestRunner.class)
 public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandTest {
 
+
+
     @Mock
     protected ScenarioGridColumn scenarioGridColumnMock1;
     @Mock
@@ -111,8 +113,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
             }
 
             @Override
-            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
-                                                                    FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
+            protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
                 return gridColumnMock;
             }

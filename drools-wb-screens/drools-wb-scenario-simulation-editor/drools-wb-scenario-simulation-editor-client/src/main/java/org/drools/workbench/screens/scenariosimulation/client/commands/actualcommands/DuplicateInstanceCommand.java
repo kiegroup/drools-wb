@@ -33,7 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
-    public static final String COPY_LABEL = "_copy_";
+    public final static String COPY_LABEL = "_copy_";
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
