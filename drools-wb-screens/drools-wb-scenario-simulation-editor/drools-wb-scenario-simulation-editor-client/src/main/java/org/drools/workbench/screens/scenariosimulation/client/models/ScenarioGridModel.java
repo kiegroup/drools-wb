@@ -321,7 +321,7 @@ public class ScenarioGridModel extends BaseGridData {
         commonAddColumn(columnIndex, column, ei);
         /* Restoring the expected columns dimension, overriding the automatic resizing */
         IntStream.range(0, widthsToRestore.size())
-                .forEach(index -> updateColumnWidth(getColumns().get(index), widthsToRestore.get(index)));
+                .forEach(index -> getColumns().get(index).setWidth(widthsToRestore.get(index)));
     }
 
     /**
@@ -525,16 +525,6 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * It updates a column width and its related <code>factMapping</code> columnWidth
-     * @param column
-     * @param width
-     */
-    public void updateColumnWidth(final GridColumn<?> column, final double width) {
-        column.setWidth(width);
-        synchronizeFactMappingWidth(column);
-    }
-
-    /**
      * It synchronizes all columns related <code>factMapping</code> columnnWidths
      */
     public void synchronizeFactMappingsWidths() {
@@ -563,8 +553,6 @@ public class ScenarioGridModel extends BaseGridData {
             final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             if (factMapping.getColumnWidth() != null) {
                 column.setWidth(factMapping.getColumnWidth());
-            } else {
-                factMapping.setColumnWidth(column.getWidth());
             }
         }
     }
