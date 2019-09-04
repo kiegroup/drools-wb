@@ -356,22 +356,7 @@
                 </systemPropertyVariables>
                 <skip>${code.coverage.disabled}</skip>
               </configuration>
-            </plugin>
-            <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>default-testCompile</id>
-                  <phase>test-compile</phase>
-                  <goals>
-                    <goal>testCompile</goal>
-                  </goals>
-                  <configuration>
-                    <skip>${code.coverage.disabled}</skip>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
+                   </plugin>
           </plugins>
         </pluginManagement>
         <plugins>
