@@ -94,7 +94,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         String factPackageName = packageName;
         String fullFactClassName = getFQCNByFactName(factName);
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
-            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
+            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
