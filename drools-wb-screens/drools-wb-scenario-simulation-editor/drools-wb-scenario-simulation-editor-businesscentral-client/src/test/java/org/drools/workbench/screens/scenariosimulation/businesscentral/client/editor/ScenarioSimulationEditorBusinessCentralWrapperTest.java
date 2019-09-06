@@ -48,17 +48,20 @@ import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallb
 import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
+import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.mockito.Mock;
 import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.promise.Promises;
+import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
+import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.promise.SyncPromises;
@@ -114,6 +117,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private Metadata metaDataMock;
     @Mock
     private AuditLog auditLog;
+    @Mock
+    private SaveAndRenameCommandBuilder<ScenarioSimulationModel, Metadata> saveAndRenameCommandBuilderMock;
+    @Mock
+    private AssetUpdateValidator assetUpdateValidatorMock;
+    @Mock
+    private Supplier<ScenarioSimulationModel> contentSupplierMock;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
@@ -128,6 +137,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationCaller = spy(new CallerMock<>(scenarioSimulationServiceMock));
         importExportCaller = spy(new CallerMock<>(importExportServiceMock));
         runnerReportServiceCaller = spy(new CallerMock<>(runnerReportServiceMock));
+        saveAndRenameCommandBuilderMock = spy( new SaveAndRenameCommandBuilder<>(null, null, null, null));
         scenarioSimulationEditorBusinessClientWrapper = spy(new ScenarioSimulationEditorBusinessCentralWrapper(scenarioSimulationCaller,
                                                                                                                scenarioSimulationEditorPresenterMock,
                                                                                                                importsWidgetPresenterMock,
@@ -150,6 +160,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                 this.baseView = scenarioSimulationViewMock;
                 this.promises = ScenarioSimulationEditorBusinessCentralWrapperTest.this.promises;
                 this.metadata = metaDataMock;
+                this.saveAndRenameCommandBuilder = saveAndRenameCommandBuilderMock;
+                this.assetUpdateValidator = assetUpdateValidatorMock;
             }
         });
         when(placeRequestMock.getPath()).thenReturn(observablePathMock);
@@ -158,6 +170,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getJsonModel(any())).thenReturn("");
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
+        when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
         when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
@@ -295,6 +308,20 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void addCommonActions() {
         scenarioSimulationEditorBusinessClientWrapper.addCommonActions(fileMenuBuilderMock);
         verify(scenarioSimulationEditorPresenterMock, times(1)).addCommonActions(eq(fileMenuBuilderMock), eq(versionRecordMenuItemMock), eq(alertsButtonMenuItemMock));
+    }
+
+    @Test
+    public void getSaveAndRename() {
+        scenarioSimulationEditorBusinessClientWrapper.getSaveAndRename();
+        verify(saveAndRenameCommandBuilderMock, times(1)).addPathSupplier(isA(Supplier.class));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addValidator(eq(assetUpdateValidatorMock));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addValidator(isA(Supplier.class));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addRenameService(eq(scenarioSimulationCaller));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addMetadataSupplier(isA(Supplier.class));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addContentSupplier(eq(contentSupplierMock));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addIsDirtySupplier(isA(Supplier.class));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addSuccessCallback(isA(ParameterizedCommand.class));
+        verify(saveAndRenameCommandBuilderMock, times(1)).addBeforeSaveAndRenameCommand(isA(Command.class));
     }
 
     @Test
