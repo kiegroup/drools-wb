@@ -279,10 +279,16 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void save() {
         String saveMessage = "Save";
         scenarioSimulationEditorBusinessClientWrapper.save(saveMessage);
-        verify(scenarioGridModelMock, times(1)).synchronizeFactMappingsWidths();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).synchronizeColumnsDimension();
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModel();
         verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(HasBusyIndicatorDefaultErrorCallback.class));
         verify(scenarioSimulationServiceMock, times(1)).save(eq(observablePathMock), eq(scenarioSimulationModelMock), eq(metaDataMock), eq(saveMessage));
+    }
+
+    @Test
+    public void synchronizeColumnsDimension() {
+        scenarioSimulationEditorBusinessClientWrapper.synchronizeColumnsDimension();
+        verify(scenarioGridModelMock, times(1)).synchronizeFactMappingsWidths();
     }
 
     @Test

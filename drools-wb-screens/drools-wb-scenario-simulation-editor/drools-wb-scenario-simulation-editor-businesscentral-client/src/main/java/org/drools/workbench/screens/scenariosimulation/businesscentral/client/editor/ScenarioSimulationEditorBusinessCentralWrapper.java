@@ -140,21 +140,25 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         return !scenarioSimulationEditorPresenter.isDirty();
     }
 
+    @Override
     @WorkbenchPartTitle
     public String getTitleText() {
         return super.getTitleText();
     }
 
+    @Override
     @WorkbenchPartTitleDecoration
     public IsWidget getTitle() {
         return super.getTitle();
     }
 
+    @Override
     @WorkbenchPartView
     public IsWidget getWidget() {
         return super.getWidget();
     }
 
+    @Override
     @WorkbenchMenu
     public void getMenus(final Consumer<Menus> menusConsumer) {
         super.getMenus(menusConsumer);
