@@ -118,8 +118,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Mock
     private AuditLog auditLog;
     @Mock
-    private SaveAndRenameCommandBuilder<ScenarioSimulationModel, Metadata> saveAndRenameCommandBuilderMock;
-    @Mock
     private AssetUpdateValidator assetUpdateValidatorMock;
     @Mock
     private Supplier<ScenarioSimulationModel> contentSupplierMock;
@@ -129,6 +127,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private CallerMock<RunnerReportService> runnerReportServiceCaller;
     private Promises promises;
     private ScenarioSimulationEditorBusinessCentralWrapper scenarioSimulationEditorBusinessClientWrapper;
+    private SaveAndRenameCommandBuilder<ScenarioSimulationModel, Metadata> saveAndRenameCommandBuilderMock;
 
     @Before
     public void setup() {
@@ -137,7 +136,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationCaller = spy(new CallerMock<>(scenarioSimulationServiceMock));
         importExportCaller = spy(new CallerMock<>(importExportServiceMock));
         runnerReportServiceCaller = spy(new CallerMock<>(runnerReportServiceMock));
-        saveAndRenameCommandBuilderMock = spy( new SaveAndRenameCommandBuilder<>(null, null, null, null));
+        saveAndRenameCommandBuilderMock = spy(new SaveAndRenameCommandBuilder<>(null, null, null, null));
         scenarioSimulationEditorBusinessClientWrapper = spy(new ScenarioSimulationEditorBusinessCentralWrapper(scenarioSimulationCaller,
                                                                                                                scenarioSimulationEditorPresenterMock,
                                                                                                                importsWidgetPresenterMock,
