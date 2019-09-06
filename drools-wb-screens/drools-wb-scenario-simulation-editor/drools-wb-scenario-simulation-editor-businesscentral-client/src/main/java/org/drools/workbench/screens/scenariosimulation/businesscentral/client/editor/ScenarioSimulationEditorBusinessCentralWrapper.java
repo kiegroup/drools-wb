@@ -69,6 +69,7 @@ import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultE
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
@@ -255,8 +256,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     protected void save(final String commitMessage) {
-        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView().getScenarioGridLayer().getScenarioGrid().getModel();
-        scenarioGridModel.synchronizeFactMappingsWidths();
+        synchronizeColumnsDimension();
         final ScenarioSimulationModel model = scenarioSimulationEditorPresenter.getModel();
         RemoteCallback<Path> saveSuccessCallback = getSaveSuccessCallback(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         service.call(saveSuccessCallback,
@@ -264,6 +264,27 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                                                                                                                  model,
                                                                                                                  metadata,
                                                                                                                  commitMessage);
+    }
+
+    @Override
+    protected Command getSaveAndRename() {
+        return getSaveAndRenameCommandBuilder()
+                .addPathSupplier(getPathSupplier())
+                .addValidator(getRenameValidator())
+                .addValidator(getSaveValidator())
+                .addRenameService(getSaveAndRenameServiceCaller())
+                .addMetadataSupplier(getMetadataSupplier())
+                .addContentSupplier(getContentSupplier())
+                .addIsDirtySupplier(isDirtySupplier())
+                .addSuccessCallback(onSuccess())
+                .addBeforeSaveAndRenameCommand(this::synchronizeColumnsDimension)
+                .build();
+    }
+
+    protected void synchronizeColumnsDimension() {
+        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView().getScenarioGridLayer()
+                .getScenarioGrid().getModel();
+        scenarioGridModel.synchronizeFactMappingsWidths();
     }
 
     @Override
