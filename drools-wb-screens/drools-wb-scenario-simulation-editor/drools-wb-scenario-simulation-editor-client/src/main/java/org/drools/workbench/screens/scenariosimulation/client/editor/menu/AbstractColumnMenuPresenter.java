@@ -36,10 +36,10 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     protected String COLUMNCONTEXTMENU_LABEL;
     protected String COLUMNCONTEXTMENU_I18N;
 
-    private LIElement insertColumnLeftLIElement;
-    private LIElement insertColumnRightLIElement;
-    private LIElement deleteColumnInstanceLIElement;
-    private LIElement duplicateInstanceLIElement;
+    protected LIElement insertColumnLeftLIElement;
+    protected LIElement insertColumnRightLIElement;
+    protected LIElement deleteColumnInstanceLIElement;
+    protected LIElement duplicateInstanceLIElement;
     protected LIElement columnContextLIElement;
 
     /**
@@ -71,6 +71,10 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         if (duplicateInstanceLIElement != null) {
             mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(columnIndex));
         }
+        callSuperShow(mx, my);
+    }
+
+    protected void callSuperShow(final int mx, final int my) {
         super.show(mx, my);
     }
 

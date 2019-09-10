@@ -27,11 +27,11 @@ import javax.enterprise.context.Dependent;
 public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String EXPECTCONTEXTMENU_EXPECT = "expectcontextmenu-expect";
-    private final String EXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "expectcontextmenu-insert-column-left";
-    private final String EXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectcontextmenu-insert-column-right";
-    private final String EXPECTCONTEXTMENU_DELETE_COLUMN = "expectcontextmenu-delete-column";
-    private final String EXPECTCONTEXTMENU_DELETE_INSTANCE = "expectcontextmenu-delete-instance";
+    protected static final String EXPECTCONTEXTMENU_EXPECT = "expectcontextmenu-expect";
+    protected static final String EXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "expectcontextmenu-insert-column-left";
+    protected static final String EXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectcontextmenu-insert-column-right";
+    protected static final String EXPECTCONTEXTMENU_DELETE_COLUMN = "expectcontextmenu-delete-column";
+    protected static final String EXPECTCONTEXTMENU_DELETE_INSTANCE = "expectcontextmenu-delete-instance";
 
     @PostConstruct
     @Override

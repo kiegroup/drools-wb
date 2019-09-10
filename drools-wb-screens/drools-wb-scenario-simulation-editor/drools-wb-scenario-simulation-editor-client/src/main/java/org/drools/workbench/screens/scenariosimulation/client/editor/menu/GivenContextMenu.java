@@ -27,12 +27,12 @@ import javax.enterprise.context.Dependent;
 public class GivenContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String GIVENCONTEXTMENU_GIVEN = "givencontextmenu-given";
-    private final String GIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "givencontextmenu-insert-column-left";
-    private final String GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "givencontextmenu-insert-column-right";
-    private final String GIVENCONTEXTMENU_DELETE_COLUMN = "givencontextmenu-delete-column";
-    private final String GIVENCONTEXTMENU_DELETE_INSTANCE = "givencontextmenu-delete-instance";
-    private final String GIVENCONTEXTMENU_DUPLICATE_INSTANCE = "givencontextmenu-duplicate-instance";
+    protected static final String GIVENCONTEXTMENU_GIVEN = "givencontextmenu-given";
+    protected static final String GIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "givencontextmenu-insert-column-left";
+    protected static final String GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "givencontextmenu-insert-column-right";
+    protected static final String GIVENCONTEXTMENU_DELETE_COLUMN = "givencontextmenu-delete-column";
+    protected static final String GIVENCONTEXTMENU_DELETE_INSTANCE = "givencontextmenu-delete-instance";
+    protected static final String GIVENCONTEXTMENU_DUPLICATE_INSTANCE = "givencontextmenu-duplicate-instance";
 
     @PostConstruct
     @Override

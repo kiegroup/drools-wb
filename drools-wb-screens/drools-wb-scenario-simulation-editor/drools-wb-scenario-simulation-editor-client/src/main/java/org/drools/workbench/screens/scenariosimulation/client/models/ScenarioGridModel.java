@@ -277,7 +277,7 @@ public class ScenarioGridModel extends BaseGridData {
         checkSimulation();
         Range instanceRange = getInstanceLimits(columnIndex);
         IntStream.iterate(instanceRange.getMaxRowIndex(), i -> i - 1)
-                .limit(instanceRange.getMaxRowIndex() - instanceRange.getMinRowIndex()+ 1)
+                .limit(instanceRange.getMaxRowIndex() - instanceRange.getMinRowIndex() + 1L)
                 .forEach(this::deleteColumn);
     }
 
