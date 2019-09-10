@@ -271,18 +271,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    protected Command getSaveAndRename() {
-        return getSaveAndRenameCommandBuilder()
-                .addPathSupplier(getPathSupplier())
-                .addValidator(getRenameValidator())
-                .addValidator(getSaveValidator())
-                .addRenameService(getSaveAndRenameServiceCaller())
-                .addMetadataSupplier(getMetadataSupplier())
-                .addContentSupplier(getContentSupplier())
-                .addIsDirtySupplier(isDirtySupplier())
-                .addSuccessCallback(onSuccess())
-                .addBeforeSaveAndRenameCommand(this::synchronizeColumnsDimension)
-                .build();
+    protected Command getBeforeSaveAndRenameCommand() {
+        return this::synchronizeColumnsDimension;
     }
 
     protected void synchronizeColumnsDimension() {

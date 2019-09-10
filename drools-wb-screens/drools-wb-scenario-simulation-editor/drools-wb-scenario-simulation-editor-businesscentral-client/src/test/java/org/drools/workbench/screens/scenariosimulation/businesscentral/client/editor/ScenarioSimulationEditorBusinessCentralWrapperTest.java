@@ -61,7 +61,6 @@ import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultE
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
-import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.promise.SyncPromises;
@@ -307,20 +306,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void addCommonActions() {
         scenarioSimulationEditorBusinessClientWrapper.addCommonActions(fileMenuBuilderMock);
         verify(scenarioSimulationEditorPresenterMock, times(1)).addCommonActions(eq(fileMenuBuilderMock), eq(versionRecordMenuItemMock), eq(alertsButtonMenuItemMock));
-    }
-
-    @Test
-    public void getSaveAndRename() {
-        scenarioSimulationEditorBusinessClientWrapper.getSaveAndRename();
-        verify(saveAndRenameCommandBuilderMock, times(1)).addPathSupplier(isA(Supplier.class));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addValidator(eq(assetUpdateValidatorMock));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addValidator(isA(Supplier.class));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addRenameService(eq(scenarioSimulationCaller));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addMetadataSupplier(isA(Supplier.class));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addContentSupplier(eq(contentSupplierMock));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addIsDirtySupplier(isA(Supplier.class));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addSuccessCallback(isA(ParameterizedCommand.class));
-        verify(saveAndRenameCommandBuilderMock, times(1)).addBeforeSaveAndRenameCommand(isA(Command.class));
     }
 
     @Test
