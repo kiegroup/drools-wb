@@ -47,20 +47,20 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     protected ScenarioSimulationContext scenarioSimulationContext;
     protected ResultHolder factModelTreeHolder = new ResultHolder();
 
+    @Override
+    public void setModel(ScenarioSimulationModel model) {
+        this.model = model;
+    }
+
     public static FactModelTree getSimpleClassFactModelTree(String simpleClass, String canonicalName) {
         String key = simpleClass;
         Map<String, String> simpleProperties = new HashMap<>();
         String fullName = canonicalName;
         simpleProperties.put("value", fullName);
-        String packageName = fullName.substring(0, fullName.lastIndexOf('.'));
+        String packageName = fullName.substring(0, fullName.lastIndexOf("."));
         FactModelTree toReturn = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
         toReturn.setSimple(true);
         return toReturn;
-    }
-
-    @Override
-    public void setModel(ScenarioSimulationModel model) {
-        this.model = model;
     }
 
     /**
@@ -78,8 +78,10 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     public Map<String, List<List<String>>> getPropertiesToHide(ScenarioGridModel scenarioGridModel) {
         final Map<String, List<List<String>>> toReturn = new HashMap<>();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) scenarioGridModel.getSelectedColumn();
-        if (selectedColumn != null && selectedColumn.isInstanceAssigned()) {
-            toReturn.put(selectedColumn.getInformationHeaderMetaData().getTitle(), getPropertiesToHide(selectedColumn, scenarioGridModel));
+        if (selectedColumn != null) {
+            if (selectedColumn.isInstanceAssigned()) {
+                toReturn.put(selectedColumn.getInformationHeaderMetaData().getTitle(), getPropertiesToHide(selectedColumn, scenarioGridModel));
+            }
         }
         return toReturn;
     }
@@ -184,7 +186,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         return toReturn;
     }
 
-    public static class ResultHolder {
+    static public class ResultHolder {
 
         FactModelTuple factModelTuple;
 

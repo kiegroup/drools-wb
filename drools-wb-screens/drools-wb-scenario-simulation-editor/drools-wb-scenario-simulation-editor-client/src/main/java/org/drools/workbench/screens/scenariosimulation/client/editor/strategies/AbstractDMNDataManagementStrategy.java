@@ -81,13 +81,13 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
     protected void showErrorsAndCleanupState(FactModelTuple factModelTuple) {
         StringBuilder builder = new StringBuilder();
         boolean showError = false;
-        if (!factModelTuple.getMultipleNestedCollectionError().isEmpty()) {
+        if (factModelTuple.getMultipleNestedCollectionError().size() > 0) {
             showError = true;
             builder.append("Nested collections are not supported! Violated by:<br/>");
             factModelTuple.getMultipleNestedCollectionError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
             builder.append("<br/>");
         }
-        if (!factModelTuple.getMultipleNestedObjectError().isEmpty()) {
+        if (factModelTuple.getMultipleNestedObjectError().size() > 0) {
             showError = true;
             builder.append("Complex nested objects inside a collection are not supported! Violated by:<br/>");
             factModelTuple.getMultipleNestedObjectError().forEach(error -> builder.append("<b>" + error + "</b><br/>"));
