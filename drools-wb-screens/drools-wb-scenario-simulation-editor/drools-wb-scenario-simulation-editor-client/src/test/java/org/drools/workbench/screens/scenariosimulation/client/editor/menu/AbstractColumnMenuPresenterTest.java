@@ -30,6 +30,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -62,17 +63,29 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
     }
 
     @Test
-    public void show() {
+    public void showFalseFalse() {
         commonShow(4, 5, false, false);
+    }
+
+    @Test
+    public void showFalseTrue() {
         commonShow(4, 5, false, true);
+    }
+
+    @Test
+    public void showTrueFalse() {
         commonShow(4, 5, true, false);
+    }
+
+    @Test
+    public void showTrueTrue() {
         commonShow(4, 5, true, true);
     }
 
-    private void commonShow( int mx, int my, boolean asProperty, boolean showDuplicateInstance) {
+    private void commonShow(int mx, int my, boolean asProperty, boolean showDuplicateInstance) {
         abstractColumnMenuPresenterSpy.initMenu();
         final LIElement duplicateInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.duplicateInstanceLIElement;
-        final LIElement deleteColumnInstanceLIElementOriginal =abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement;
+        final LIElement deleteColumnInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement;
         abstractColumnMenuPresenterSpy.show(mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
         if (!showDuplicateInstance) {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).removeMenuItem(eq(duplicateInstanceLIElementOriginal));
@@ -91,5 +104,6 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement), isA(DuplicateInstanceEvent.class));
         }
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).callSuperShow(eq(mx), eq(my));
+        reset(abstractColumnMenuPresenterSpy);
     }
 }
