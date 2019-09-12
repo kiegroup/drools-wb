@@ -63,6 +63,10 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         return toReturn;
     }
 
+    public static void populateMvelInstance(FactModelTree factModelTree) {
+        factModelTree.addSimpleProperty("instance", factModelTree.getFactName());
+    }
+
     /**
      * This method returns a <code>Map</code> with the properties of a given <b>Type</b> (Fact, class, other dmn defined) instance,
      * to be hidden from the right panel.

@@ -144,6 +144,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         if (factTypeFieldsMap.size() == expectedElements) { // This is used to invoke this callback only once, when all the expected "complex" objects has been managed
             factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
+            factTypeFieldsMap.values().forEach(factModelTree -> populateMvelInstance(factModelTree));
             SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap =
                     new TreeMap<>(simpleJavaTypes.stream()
                                           .collect(Collectors.toMap(
