@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
@@ -172,6 +173,10 @@ public class ScenarioGridTest {
                 return new EnableTestToolsEvent();
             }
 
+            @Override
+            public Layer getLayer() {
+                return scenarioGridLayerMock;
+            }
         });
         when(rendererHelperMock.getRenderingInformation()).thenReturn(renderingInformationMock);
         when(renderingInformationMock.getHeaderRowsHeight()).thenReturn(HEADER_ROWS_HEIGHT);
@@ -206,6 +211,32 @@ public class ScenarioGridTest {
         verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
         verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
         verify(scenarioGrid, times(1)).appendRows(eq(simulation));
+    }
+
+    @Test
+    public void clearSelections() {
+        scenarioGrid.clearSelections();
+        verify(scenarioGridModelMock, times(1)).clearSelections();
+        verify(scenarioGridLayerMock, times(1)).batch();
+    }
+
+    @Test
+    public void setSelectedColumnAndHeader() {
+        int headerRowIndex = 1;
+        int columnIndex = 1;
+        scenarioGrid.setSelectedColumnAndHeader(headerRowIndex, columnIndex);
+        verify(scenarioGridModelMock, times(1)).selectColumn(eq(columnIndex));
+        verify(scenarioGridModelMock, times(1)).selectHeaderCell(eq(headerRowIndex), eq(columnIndex));
+        verify(scenarioGridLayerMock, times(1)).batch();
+    }
+
+    @Test
+    public void setSelectedCell() {
+        int rowIndex = 1;
+        int columnIndex = 1;
+        scenarioGrid.setSelectedCell(rowIndex, columnIndex);
+        verify(scenarioGrid, times(1)).selectCell(eq(rowIndex), eq(columnIndex), eq(false), eq(false));
+        verify(scenarioGridLayerMock, times(1)).batch();
     }
 
     @Test
