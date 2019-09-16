@@ -670,7 +670,6 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-verifier-core</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.drools</groupId>

@@ -89,7 +89,6 @@ public class BuilderFactory {
 
     public FieldResolver getFieldResolver() {
         return new FieldResolver(this,
-                                 headerMetaData,
                                  configuration);
     }
 

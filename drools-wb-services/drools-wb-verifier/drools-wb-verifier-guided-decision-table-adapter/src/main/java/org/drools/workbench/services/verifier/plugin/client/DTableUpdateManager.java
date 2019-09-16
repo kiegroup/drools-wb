@@ -22,6 +22,7 @@ import java.util.Set;
 import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.index.Index;
 import org.drools.verifier.core.index.model.Column;
+import org.drools.verifier.core.index.model.ColumnType;
 import org.drools.verifier.core.index.model.Rule;
 import org.drools.verifier.core.main.Analyzer;
 import org.drools.verifier.core.util.PortablePreconditions;
@@ -136,6 +137,7 @@ public class DTableUpdateManager {
         final Column column = builderFactory
                 .getColumnBuilder()
                 .with(columnIndex)
+                .with(ColumnType.LHS)
                 .build();
 
         analyzer.newColumn(column);

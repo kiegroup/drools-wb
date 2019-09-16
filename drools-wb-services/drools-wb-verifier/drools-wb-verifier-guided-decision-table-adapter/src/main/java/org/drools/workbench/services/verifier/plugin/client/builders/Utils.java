@@ -23,6 +23,7 @@ import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.index.model.Field;
 import org.drools.verifier.core.index.model.ObjectField;
 import org.drools.verifier.core.index.model.ObjectType;
+import org.drools.verifier.core.index.model.meta.ConditionParentType;
 import org.drools.verifier.core.relations.Operator;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTColumnConfig52;
@@ -44,11 +45,11 @@ public class Utils {
         return Optional.empty();
     }
 
-    public static ObjectField resolveObjectField(final ObjectType objectType,
+    public static ConditionParentType resolveObjectField(final ObjectType objectType,
                                                  final String fieldType,
                                                  final String factField,
                                                  final AnalyzerConfiguration configuration) {
-        final ObjectField first = objectType.getFields()
+        final ConditionParentType first = objectType.getFields()
                 .where(Field.name()
                                .is(factField))
                 .select()

@@ -24,7 +24,7 @@ import org.drools.verifier.core.index.model.Column;
 import org.drools.verifier.core.index.model.Condition;
 import org.drools.verifier.core.index.model.Field;
 import org.drools.verifier.core.index.model.FieldCondition;
-import org.drools.verifier.core.index.model.Pattern;
+import org.drools.verifier.core.index.model.meta.ConditionMaster;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.services.verifier.plugin.client.util.NullEqualityOperator;
@@ -36,7 +36,7 @@ public class FieldConditionBuilder {
     private final Index index;
     private final VerifierColumnUtilities utils;
     private final AnalyzerConfiguration configuration;
-    private Pattern pattern;
+    private ConditionMaster pattern;
     private ConditionCol52 conditionCol52;
     private DTCellValue52 realCellValue;
     private int columnIndex;
@@ -160,7 +160,7 @@ public class FieldConditionBuilder {
         }
     }
 
-    public FieldConditionBuilder with(final Pattern pattern) {
+    public FieldConditionBuilder with(final ConditionMaster pattern) {
         this.pattern = pattern;
         return this;
     }

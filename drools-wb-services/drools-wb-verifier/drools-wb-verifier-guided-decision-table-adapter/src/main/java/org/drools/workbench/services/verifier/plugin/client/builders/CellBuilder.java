@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.drools.verifier.core.index.model.Action;
 import org.drools.verifier.core.index.model.Condition;
-import org.drools.verifier.core.index.model.Pattern;
 import org.drools.verifier.core.index.model.Rule;
+import org.drools.verifier.core.index.model.meta.ConditionMaster;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
@@ -82,7 +82,7 @@ public class CellBuilder {
         }
     }
 
-    private Pattern resolvePattern(final Rule rule) {
+    private ConditionMaster resolvePattern(final Rule rule) {
         return builderFactory.getPatternResolver()
                 .with(rule)
                 .with(columnIndex)

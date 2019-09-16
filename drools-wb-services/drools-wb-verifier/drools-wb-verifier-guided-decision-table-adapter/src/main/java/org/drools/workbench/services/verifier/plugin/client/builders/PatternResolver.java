@@ -21,6 +21,7 @@ import org.drools.verifier.core.index.Index;
 import org.drools.verifier.core.index.model.ObjectType;
 import org.drools.verifier.core.index.model.Pattern;
 import org.drools.verifier.core.index.model.Rule;
+import org.drools.verifier.core.index.model.meta.ConditionMaster;
 import org.drools.workbench.services.verifier.plugin.client.api.HeaderMetaData;
 import org.kie.soup.commons.validation.PortablePreconditions;
 
@@ -62,12 +63,12 @@ public class PatternResolver {
         }
     }
 
-    public Pattern resolve() {
+    public ConditionMaster resolve() {
 
         PortablePreconditions.checkNotNull("rule",
                                            rule);
 
-        final Pattern pattern = rule.getPatterns()
+        final ConditionMaster pattern = rule.getPatterns()
                 .where(Pattern.boundName()
                                .is(getBoundName()))
                 .select()

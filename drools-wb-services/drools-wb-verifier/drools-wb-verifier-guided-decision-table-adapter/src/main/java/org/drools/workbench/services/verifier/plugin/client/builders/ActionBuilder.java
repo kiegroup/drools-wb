@@ -151,11 +151,6 @@ public class ActionBuilder {
     private Action addInsertFactAction(final ActionInsertFactCol52 actionCol) throws
             BuildException {
 
-        builderFactory.getPatternResolver()
-                .with(rule)
-                .with(columnIndex)
-                .resolve();
-
         return addAction(actionCol,
                          row.get(columnIndex));
     }
@@ -189,8 +184,7 @@ public class ActionBuilder {
         return action;
     }
 
-    private Field resolveField(final ActionCol52 actionCol) throws
-            BuildException {
+    private Field resolveField(final ActionCol52 actionCol) {
         return builderFactory.getFieldResolver()
                 .with(rule)
                 .with(actionCol)

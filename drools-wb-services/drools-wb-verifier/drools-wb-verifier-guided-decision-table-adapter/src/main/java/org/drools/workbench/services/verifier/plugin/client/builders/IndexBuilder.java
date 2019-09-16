@@ -18,6 +18,7 @@ package org.drools.workbench.services.verifier.plugin.client.builders;
 import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.index.Index;
 import org.drools.verifier.core.index.IndexImpl;
+import org.drools.verifier.core.index.model.ColumnType;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.services.verifier.plugin.client.api.HeaderMetaData;
 import org.kie.soup.commons.validation.PortablePreconditions;
@@ -32,7 +33,7 @@ public class IndexBuilder {
                         final HeaderMetaData headerMetaData,
                         final VerifierColumnUtilities utils,
                         final AnalyzerConfiguration configuration) {
-        this.index = new IndexImpl();
+        this.index = new IndexImpl(configuration);
 
         this.model = PortablePreconditions.checkNotNull("model",
                                                         model);
@@ -59,6 +60,7 @@ public class IndexBuilder {
             this.index.getColumns()
                     .add(builderFactory.getColumnBuilder()
                                  .with(columnIndex)
+                                 .with(ColumnType.UNKNOWN)
                                  .build());
         }
     }

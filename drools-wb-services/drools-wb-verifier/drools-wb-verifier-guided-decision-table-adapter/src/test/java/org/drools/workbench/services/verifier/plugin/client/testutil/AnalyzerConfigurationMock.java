@@ -15,8 +15,13 @@
  */
 package org.drools.workbench.services.verifier.plugin.client.testutil;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.drools.verifier.core.checks.base.JavaCheckRunner;
 import org.drools.verifier.core.configuration.AnalyzerConfiguration;
+import org.drools.verifier.core.index.model.Action;
+import org.drools.verifier.core.index.model.Condition;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.services.verifier.plugin.client.CheckConfigurationProvider;
 
@@ -32,6 +37,8 @@ public class AnalyzerConfigurationMock
               new DateTimeFormatProviderMock(),
               new UUIDKeyProviderMock(),
               CheckConfigurationProvider.get(hitPolicy),
+              new HashSet<>(Arrays.asList(Condition.keyDefinitions())),
+              new HashSet<>(Arrays.asList(Action.keyDefinitions())),
               new JavaCheckRunner());
     }
 }

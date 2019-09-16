@@ -17,6 +17,7 @@ package org.drools.workbench.services.verifier.plugin.client.builders;
 
 import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.index.model.Column;
+import org.drools.verifier.core.index.model.ColumnType;
 import org.kie.soup.commons.validation.PortablePreconditions;
 
 public class ColumnBuilder {
@@ -24,6 +25,7 @@ public class ColumnBuilder {
     private final AnalyzerConfiguration configuration;
 
     private int columnIndex;
+    private ColumnType columnType;
 
     public ColumnBuilder(final AnalyzerConfiguration configuration) {
         this.configuration = PortablePreconditions.checkNotNull("configuration",
@@ -32,9 +34,14 @@ public class ColumnBuilder {
 
     public Column build() {
         return new Column(columnIndex,
+                          columnType,
                           configuration);
     }
 
+    public ColumnBuilder with(final ColumnType columnType) {
+        this.columnType = columnType;
+        return this;
+    }
     public ColumnBuilder with(final int columnIndex) {
         this.columnIndex = columnIndex;
         return this;

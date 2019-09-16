@@ -16,9 +16,14 @@
 
 package org.drools.workbench.services.verifier.plugin.client.testutil;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.configuration.CheckConfiguration;
 import org.drools.verifier.core.index.Index;
+import org.drools.verifier.core.index.model.Action;
+import org.drools.verifier.core.index.model.Condition;
 import org.drools.verifier.core.main.Analyzer;
 import org.drools.verifier.core.main.Reporter;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
@@ -66,6 +71,8 @@ public class DecisionTableAnalyzerBuilder {
                 new DateTimeFormatProviderMock(),
                 new UUIDKeyProviderMock(),
                 CheckConfiguration.newDefault(),
+                new HashSet<>(Arrays.asList(Condition.keyDefinitions())),
+                new HashSet<>(Arrays.asList(Action.keyDefinitions())),
                 new GWTCheckRunner()));
     }
 

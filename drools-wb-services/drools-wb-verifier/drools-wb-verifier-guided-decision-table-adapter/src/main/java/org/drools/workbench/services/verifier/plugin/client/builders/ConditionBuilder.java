@@ -19,8 +19,8 @@ package org.drools.workbench.services.verifier.plugin.client.builders;
 import java.util.List;
 
 import org.drools.verifier.core.index.model.Condition;
-import org.drools.verifier.core.index.model.Pattern;
 import org.drools.verifier.core.index.model.Rule;
+import org.drools.verifier.core.index.model.meta.ConditionMaster;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
@@ -83,7 +83,7 @@ public class ConditionBuilder {
             PortablePreconditions.checkNotNull("rule",
                                                rule);
 
-            final Pattern pattern = builderFactory.getPatternResolver()
+            final ConditionMaster pattern = builderFactory.getPatternResolver()
                     .with(rule)
                     .with(columnIndex)
                     .resolve();

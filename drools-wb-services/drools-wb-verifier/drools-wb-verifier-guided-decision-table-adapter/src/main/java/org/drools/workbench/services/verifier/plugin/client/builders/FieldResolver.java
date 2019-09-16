@@ -20,36 +20,33 @@ import org.drools.verifier.core.configuration.AnalyzerConfiguration;
 import org.drools.verifier.core.index.model.Field;
 import org.drools.verifier.core.index.model.Pattern;
 import org.drools.verifier.core.index.model.Rule;
+import org.drools.verifier.core.index.model.meta.ConditionMaster;
+import org.drools.verifier.core.index.model.meta.ConditionParent;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
-import org.drools.workbench.services.verifier.plugin.client.api.HeaderMetaData;
 import org.kie.soup.commons.validation.PortablePreconditions;
 
 public class FieldResolver {
 
     private final BuilderFactory builderFactory;
-    private final HeaderMetaData headerMetaData;
     private final AnalyzerConfiguration configuration;
     private BaseColumn baseColumn;
     private Rule rule;
-    private Pattern pattern;
+    private ConditionMaster pattern;
     private int columnIndex;
 
     public FieldResolver(final BuilderFactory builderFactory,
-                         final HeaderMetaData headerMetaData,
                          final AnalyzerConfiguration configuration) {
         this.builderFactory = PortablePreconditions.checkNotNull("builderFactory",
                                                                  builderFactory);
-        this.headerMetaData = PortablePreconditions.checkNotNull("headerMetaData",
-                                                                 headerMetaData);
         this.configuration = PortablePreconditions.checkNotNull("configuration",
                                                                 configuration);
     }
 
-    public Field resolveField(final Pattern pattern,
+    public Field resolveField(final ConditionMaster pattern,
                               final String fieldType,
                               final String factField,
                               final AnalyzerConfiguration configuration) {
@@ -61,14 +58,14 @@ public class FieldResolver {
         PortablePreconditions.checkNotNull("factField",
                                            factField);
 
-        final Field first = pattern.getFields()
+        final ConditionParent first = pattern.getConditionParents()
                 .where(Field.name()
                                .is(factField))
                 .select()
                 .first();
 
         if (first == null) {
-            final Field field = new Field(Utils.resolveObjectField(pattern.getObjectType(),
+            final Field field = new Field(Utils.resolveObjectField(((Pattern) pattern).getObjectType(),
                                                                    fieldType,
                                                                    factField,
                                                                    configuration),
@@ -76,16 +73,15 @@ public class FieldResolver {
                                           fieldType,
                                           factField,
                                           configuration);
-            pattern.getFields()
+            pattern.getConditionParents()
                     .add(field);
             return field;
         } else {
-            return first;
+            return (Field) first;
         }
     }
 
-    public Field resolve() throws
-            BuildException {
+    public Field resolve() {
         if (rule != null) {
             return resolveField(getPattern(),
                                 getType(),
@@ -99,7 +95,7 @@ public class FieldResolver {
         }
     }
 
-    private Pattern getPattern() {
+    private ConditionMaster getPattern() {
         if (pattern != null) {
             return pattern;
         } else {
@@ -153,7 +149,7 @@ public class FieldResolver {
         return this;
     }
 
-    public FieldResolver with(final Pattern pattern) {
+    public FieldResolver with(final ConditionMaster pattern) {
         this.pattern = pattern;
         return this;
     }
