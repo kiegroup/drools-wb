@@ -555,7 +555,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validateInstanceHeaderUpdate(MULTIPART_VALUE, columnIndex, isADataType);
@@ -576,7 +576,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);

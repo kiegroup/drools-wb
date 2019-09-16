@@ -314,6 +314,16 @@ public interface ScenarioSimulationEditorConstants
 
     String instanceTitleAssignedError(String title);
 
+    String instanceTitleEmptyError();
+
+    String instanceTitleWithPeriodsError();
+
+    String propertyTitleAssignedError(String title);
+
+    String propertyTitleEmptyError();
+
+    String propertyTitleWithPeriodsError();
+
     String validationErrorTitle();
 
     String validationErrorMessage();
