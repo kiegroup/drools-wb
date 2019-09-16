@@ -41,7 +41,8 @@ public abstract class AbstractScenarioValidation {
     public static boolean isToSkip(FactMapping factMapping) {
         return OTHER.equals(factMapping.getExpressionIdentifier().getType()) ||
                 EMPTY.equals(factMapping.getFactIdentifier()) ||
-                factMapping.getExpressionElements().isEmpty();
+                factMapping.getExpressionElements().isEmpty() ||
+                "expression".equals(factMapping.getClassName());
     }
 
     protected List<String> expressionElementToString(FactMapping factMapping) {

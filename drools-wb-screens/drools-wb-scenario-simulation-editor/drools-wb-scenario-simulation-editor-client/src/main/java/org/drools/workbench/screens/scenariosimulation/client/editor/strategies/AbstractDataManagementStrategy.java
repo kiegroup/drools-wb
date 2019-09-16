@@ -63,8 +63,8 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         return toReturn;
     }
 
-    public static void populateMvelInstance(FactModelTree factModelTree) {
-        factModelTree.addSimpleProperty("instance", factModelTree.getFactName());
+    public static void populateExpressionProperty(FactModelTree factModelTree) {
+        factModelTree.addSimpleProperty(factModelTree.getFactName() + "Expression", "expression");
     }
 
     /**

@@ -94,7 +94,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         String factPackageName = packageName;
         String fullFactClassName = getFQCNByFactName(factName);
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
-            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf("."));
+            factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
@@ -144,7 +144,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         if (factTypeFieldsMap.size() == expectedElements) { // This is used to invoke this callback only once, when all the expected "complex" objects has been managed
             factTypeFieldsMap.values().forEach(factModelTree -> populateFactModelTree(factModelTree, factTypeFieldsMap));
-            factTypeFieldsMap.values().forEach(factModelTree -> populateMvelInstance(factModelTree));
+            factTypeFieldsMap.values().forEach(AbstractDataManagementStrategy::populateExpressionProperty);
             SortedMap<String, FactModelTree> simpleJavaTypeFieldsMap =
                     new TreeMap<>(simpleJavaTypes.stream()
                                           .collect(Collectors.toMap(
