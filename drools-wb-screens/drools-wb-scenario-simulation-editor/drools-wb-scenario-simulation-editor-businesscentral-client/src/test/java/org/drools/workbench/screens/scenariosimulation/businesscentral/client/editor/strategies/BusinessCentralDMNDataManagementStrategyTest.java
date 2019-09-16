@@ -143,11 +143,15 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
     @Test
     public void getSuccessCallbackMethod() {
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
+        FactModelTree factModelTree = new FactModelTree("Test", "com", new HashMap<>(), new HashMap<>());
+        visibleFactsLocal.put("TEST", factModelTree);
         factModelTreeHolderlocal.setFactModelTuple(null);
         doReturn(alreadyAssignedProperties).when(businessCentralDmnDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         businessCentralDmnDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, testToolsPresenterMock, scenarioGridModelMock);
         verify(businessCentralDmnDataManagementStrategySpy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
         assertEquals(factModelTupleLocal, factModelTreeHolderlocal.getFactModelTuple());
+        assertTrue(factModelTree.getSimpleProperties().containsKey("TestExpression"));
+        assertTrue(factModelTree.getSimpleProperties().containsValue("expression"));
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setHiddenFieldsMap(eq(hiddenFactsLocal));

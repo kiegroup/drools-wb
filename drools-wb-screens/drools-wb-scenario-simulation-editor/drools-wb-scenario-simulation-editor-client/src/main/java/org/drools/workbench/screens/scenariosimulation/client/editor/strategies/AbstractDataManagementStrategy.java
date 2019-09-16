@@ -63,7 +63,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         return toReturn;
     }
 
-    public static void populateExpressionProperty(FactModelTree factModelTree) {
+    public void populateExpressionProperty(FactModelTree factModelTree) {
         factModelTree.addSimpleProperty(factModelTree.getFactName() + "Expression", "expression");
     }
 

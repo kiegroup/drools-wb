@@ -33,8 +33,8 @@ public abstract class AbstractScenarioValidation {
     public abstract List<FactMappingValidationError> validate(Simulation simulation, KieContainer kieContainer);
 
     /**
-     * Skip descriptive columns (FactMappingType.OTHER), column with no instance (FactIdentifier.EMPTY)
-     * and with not expression elements
+     * Skip descriptive columns (FactMappingType.OTHER), column with no instance (FactIdentifier.EMPTY), with
+     * not expression elements and expression columns
      * @param factMapping
      * @return
      */

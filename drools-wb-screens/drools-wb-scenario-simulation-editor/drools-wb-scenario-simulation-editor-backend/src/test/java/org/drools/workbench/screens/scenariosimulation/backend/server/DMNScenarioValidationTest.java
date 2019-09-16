@@ -82,6 +82,10 @@ public class DMNScenarioValidationTest {
         test0.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.EMPTY,
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        FactMapping expressionFactMapping = test0.getSimulationDescriptor().addFactMapping(
+                FactIdentifier.create("myComplexType", "tMYCOMPLEXTYPE"),
+                ExpressionIdentifier.create("expression", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("myComplexTypeExpression", "expression");
 
         List<FactMappingValidationError> errorsTest0 = validationSpy.validate(test0, null);
         checkResult(errorsTest0);

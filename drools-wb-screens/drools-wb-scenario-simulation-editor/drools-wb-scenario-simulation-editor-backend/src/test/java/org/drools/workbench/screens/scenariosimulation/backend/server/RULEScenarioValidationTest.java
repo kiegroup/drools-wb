@@ -60,6 +60,10 @@ public class RULEScenarioValidationTest {
         test0.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.EMPTY,
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
+        FactMapping expressionFactMapping = test0.getSimulationDescriptor().addFactMapping(
+                FactIdentifier.create("myType", "anyClass"),
+                ExpressionIdentifier.create("expression", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("myComplexTypeExpression", "expression");
 
         List<FactMappingValidationError> errorsTest0 = validation.validate(test0, kieContainerMock);
         checkResult(errorsTest0);
