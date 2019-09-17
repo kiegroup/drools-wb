@@ -225,6 +225,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setColumnGroup(event.getColumnGroup());
         context.getStatus().setDisable(true);
         context.getStatus().setOpenDock(false);
+        context.getStatus().setAsProperty(event.isAsProperty());
         commonExecution(context,
                         new DeleteColumnCommand(),
                         true);
@@ -358,7 +359,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(ScenarioNotificationEvent event) {
-        notificationEvent.fire(new NotificationEvent(event.getMessage(), event.getType()));
+        notificationEvent.fire(new NotificationEvent(event.getMessage(), event.getNotificationType()));
     }
 
     @Override
@@ -506,7 +507,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     protected void commonNotifyError(CommandResult<ScenarioSimulationViolation> status, String operation) {
         String violations = StreamSupport.stream(status.getViolations().spliterator(), false)
-                .map(violation -> violation.getMessage())
+                .map(ScenarioSimulationViolation::getMessage)
                 .collect(Collectors.joining("\r\n"));
         String message = new StringBuilder()
                 .append(operation + ": " + status.getType())
