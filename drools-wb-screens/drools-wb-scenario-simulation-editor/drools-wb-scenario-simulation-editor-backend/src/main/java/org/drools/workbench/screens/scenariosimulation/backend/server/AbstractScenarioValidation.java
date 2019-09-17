@@ -17,8 +17,10 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -42,7 +44,7 @@ public abstract class AbstractScenarioValidation {
         return OTHER.equals(factMapping.getExpressionIdentifier().getType()) ||
                 EMPTY.equals(factMapping.getFactIdentifier()) ||
                 factMapping.getExpressionElements().isEmpty() ||
-                "expression".equals(factMapping.getClassName());
+                Objects.equals(ConstantsHolder.EXPRESSION_CLASSNAME, factMapping.getClassName());
     }
 
     protected List<String> expressionElementToString(FactMapping factMapping) {

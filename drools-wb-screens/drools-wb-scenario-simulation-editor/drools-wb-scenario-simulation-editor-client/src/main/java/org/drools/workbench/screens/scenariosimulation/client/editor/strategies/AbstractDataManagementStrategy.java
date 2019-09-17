@@ -27,6 +27,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -64,7 +65,8 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     }
 
     public void populateExpressionProperty(FactModelTree factModelTree) {
-        factModelTree.addSimpleProperty(factModelTree.getFactName() + "Expression", "expression");
+        factModelTree.addSimpleProperty(factModelTree.getFactName() + ConstantsHolder.EXPRESSION_SUFFIX,
+                                        ConstantsHolder.EXPRESSION_CLASSNAME);
     }
 
     /**

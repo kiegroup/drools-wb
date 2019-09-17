@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -40,7 +41,8 @@ public class AbstractScenarioValidationTest {
                                                        ExpressionIdentifier.create("value", FactMappingType.GIVEN));
         assertTrue(AbstractScenarioValidation.isToSkip(emptyFactMapping));
         FactMapping expressionFactMapping = new FactMapping(FactIdentifier.create("myType", "anyClass"),
-                                                            ExpressionIdentifier.create("expression", FactMappingType.GIVEN));
+                                                            ExpressionIdentifier.create(ConstantsHolder.EXPRESSION_CLASSNAME,
+                                                                                        FactMappingType.GIVEN));
         assertTrue(AbstractScenarioValidation.isToSkip(expressionFactMapping));
     }
 }

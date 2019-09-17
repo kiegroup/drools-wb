@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -84,8 +85,8 @@ public class DMNScenarioValidationTest {
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
         FactMapping expressionFactMapping = test0.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("myComplexType", "tMYCOMPLEXTYPE"),
-                ExpressionIdentifier.create("expression", FactMappingType.GIVEN));
-        expressionFactMapping.addExpressionElement("myComplexTypeExpression", "expression");
+                ExpressionIdentifier.create(ConstantsHolder.EXPRESSION_CLASSNAME, FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("myComplexTypeExpression", ConstantsHolder.EXPRESSION_CLASSNAME);
 
         List<FactMappingValidationError> errorsTest0 = validationSpy.validate(test0, null);
         checkResult(errorsTest0);

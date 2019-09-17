@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -62,8 +63,8 @@ public class RULEScenarioValidationTest {
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
         FactMapping expressionFactMapping = test0.getSimulationDescriptor().addFactMapping(
                 FactIdentifier.create("myType", "anyClass"),
-                ExpressionIdentifier.create("expression", FactMappingType.GIVEN));
-        expressionFactMapping.addExpressionElement("myComplexTypeExpression", "expression");
+                ExpressionIdentifier.create(ConstantsHolder.EXPRESSION_CLASSNAME, FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("myComplexTypeExpression", ConstantsHolder.EXPRESSION_CLASSNAME);
 
         List<FactMappingValidationError> errorsTest0 = validation.validate(test0, kieContainerMock);
         checkResult(errorsTest0);

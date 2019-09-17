@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDataManagementStrategyTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -150,8 +151,8 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
         businessCentralDmnDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, testToolsPresenterMock, scenarioGridModelMock);
         verify(businessCentralDmnDataManagementStrategySpy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
         assertEquals(factModelTupleLocal, factModelTreeHolderlocal.getFactModelTuple());
-        assertTrue(factModelTree.getSimpleProperties().containsKey("TestExpression"));
-        assertTrue(factModelTree.getSimpleProperties().containsValue("expression"));
+        assertTrue(factModelTree.getSimpleProperties().containsKey("Test" + ConstantsHolder.EXPRESSION_SUFFIX));
+        assertTrue(factModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setHiddenFieldsMap(eq(hiddenFactsLocal));
