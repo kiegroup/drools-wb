@@ -242,8 +242,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         factModelTreeHolderlocal.setFactModelTuple(null);
         businessCentralDmoDataManagementStrategy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 1, factTypeFieldsMap, scenarioGridModelMock, resultMock, simpleJavaTypes);
         assertTrue(factTypeFieldsMap.containsKey(resultName));
-        //One inside method AbstractDataManagementStrategy.populateExpressionProperty()
-        verify(resultMock, times(2)).getFactName();
+        verify(resultMock, times(2)).getFactName(); //One time occurs in AbstractDataManagementStrategy.populateExpressionProperty()
         verify(businessCentralDmoDataManagementStrategy, times(factTypeFieldsMap.size())).populateExpressionProperty(isA(FactModelTree.class));
         factTypeFieldsMap.values().forEach(factModelTree -> verify(businessCentralDmoDataManagementStrategy, times(1)).populateExpressionProperty(eq(factModelTree)));
         assertEquals(resultMock, factTypeFieldsMap.get(resultName));
