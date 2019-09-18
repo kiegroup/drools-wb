@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.core.util.StringUtils;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -995,7 +994,7 @@ public class ScenarioGridModel extends BaseGridData {
      * inside the <b>group (GIVEN/EXPECT)</b> of the given column <b>OR</b> instanceHeaderCellValue is <i>empty</i>
      */
     protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) {
-        if (StringUtils.isEmpty(instanceHeaderCellValue)) {
+        if (Objects.isNull(instanceHeaderCellValue) || instanceHeaderCellValue.isEmpty()) {
             throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleEmptyError());
         }
         if (instanceHeaderCellValue.contains(".")) {
@@ -1038,7 +1037,7 @@ public class ScenarioGridModel extends BaseGridData {
      * inside the <b>instance</b> of the given column
      */
     protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
-        if (StringUtils.isEmpty(propertyHeaderCellValue)) {
+        if (Objects.isNull(propertyHeaderCellValue) || propertyHeaderCellValue.isEmpty()) {
             throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleEmptyError());
         }
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
