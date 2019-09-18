@@ -74,8 +74,10 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
     public void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
         // Instantiate a map of already assigned properties
         factModelTreeHolder.setFactModelTuple(factModelTuple);
-        factModelTuple.getVisibleFacts().values().forEach(this::populateExpressionProperty);
-
+        // Add an "expression" property to all NOT simple objects
+        factModelTuple.getVisibleFacts().values().stream()
+                .filter(factModelTree -> !factModelTree.isSimple())
+                .forEach(this::populateExpressionProperty);
         storeData(factModelTuple, testToolsPresenter, scenarioGridModel);
         showErrorsAndCleanupState(factModelTuple);
     }

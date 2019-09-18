@@ -17,9 +17,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -42,7 +44,7 @@ public abstract class AbstractDataManagementStrategyTest extends AbstractScenari
 
     protected AbstractDataManagementStrategy abstractDataManagementStrategySpy;
 
-    public void setUp() throws Exception {
+    public void setup() {
         super.setup();
     }
 
@@ -56,6 +58,37 @@ public abstract class AbstractDataManagementStrategyTest extends AbstractScenari
         assertEquals(clazz.getSimpleName(), retrieved.getFactName());
         assertEquals("java.lang", retrieved.getFullPackage());
         assertNotNull(retrieved.getSimpleProperties());
+    }
+
+    @Test
+    public void populateExpressionProperty() {
+        FactModelTree complexFactModelTree = new FactModelTree("ComplexType", "com", new HashMap<>(), new HashMap<>());
+        abstractDataManagementStrategySpy.populateExpressionProperty(complexFactModelTree);
+        assertTrue(complexFactModelTree.getSimpleProperties().size() == 1);
+        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX));
+        assertTrue(complexFactModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
+    }
+
+    @Test
+    public void populateExpressionProperty_Present() {
+        FactModelTree complexFactModelTree = new FactModelTree("ComplexType", "com", new HashMap<>(), new HashMap<>());
+        complexFactModelTree.addSimpleProperty("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX, ConstantsHolder.EXPRESSION_CLASSNAME);
+        abstractDataManagementStrategySpy.populateExpressionProperty(complexFactModelTree);
+        assertTrue(complexFactModelTree.getSimpleProperties().size() == 1);
+        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX));
+        assertTrue(complexFactModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
+    }
+
+    @Test
+    public void populateExpressionProperty_FactNamePresent() {
+        FactModelTree complexFactModelTree = new FactModelTree("ComplexType", "com", new HashMap<>(), new HashMap<>());
+        complexFactModelTree.addSimpleProperty("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX, "com.test");
+        abstractDataManagementStrategySpy.populateExpressionProperty(complexFactModelTree);
+        assertTrue(complexFactModelTree.getSimpleProperties().size() == 2);
+        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX));
+        assertTrue(complexFactModelTree.getSimpleProperties().containsValue("com.test"));
+        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX + "_1"));
+        assertTrue(complexFactModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
     }
 
     @Test

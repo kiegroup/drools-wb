@@ -18,11 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
+import org.drools.scenariosimulation.api.ConstantsHolder;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
@@ -41,7 +44,11 @@ public class FieldItemPresenter implements FieldItemView.Presenter {
         String key = parentPath  + "." + fieldName;
         if (!fieldItemMap.containsKey(key)) {
             FieldItemView fieldItemView = viewsProvider.getFieldItemView();
-            fieldItemView.setFieldData(parentPath, factName, fieldName, className);
+            if (Objects.equals(className, ConstantsHolder.EXPRESSION_CLASSNAME)) {
+                fieldItemView.setFieldData(parentPath, factName, fieldName, className, ScenarioSimulationEditorConstants.INSTANCE.expressionLabel());
+            } else {
+                fieldItemView.setFieldData(parentPath, factName, fieldName, className);
+            }
             fieldItemView.setPresenter(this);
             fieldItemMap.put(key, fieldItemView);
         }

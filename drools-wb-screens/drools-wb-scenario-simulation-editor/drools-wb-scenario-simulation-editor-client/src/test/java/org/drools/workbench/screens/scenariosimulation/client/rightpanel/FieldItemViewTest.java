@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -21,9 +20,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_ALIAS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FIELD_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PROPERTY_PATH;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -35,12 +36,14 @@ public class FieldItemViewTest extends AbstractTestToolsTest {
     private FieldItemViewImpl fieldItemView;
 
     private String INNER_HTML;
+    private String INNER_HTML_ALIAS;
     private String ID_ATTRIBUTE;
 
     @Before
     public void setup() {
         super.setup();
         INNER_HTML = "<a>" + FIELD_NAME + "</a> [" + FACT_MODEL_TREE.getFactName() + "]";
+        INNER_HTML_ALIAS = "<a>" + FIELD_NAME + "</a> [" + FACT_ALIAS + "]";
         ID_ATTRIBUTE = "fieldElement-" + FACT_NAME + "-" + FIELD_NAME;
         this.fieldItemView = spy(new FieldItemViewImpl() {
             {
@@ -57,5 +60,23 @@ public class FieldItemViewTest extends AbstractTestToolsTest {
         verify(lIElementMock, times(1)).setAttribute(eq("fieldName"), eq(FIELD_NAME));
         verify(lIElementMock, times(1)).setAttribute(eq("className"), eq(FACT_MODEL_TREE.getFactName()));
         verify(lIElementMock, times(1)).setAttribute(eq("fullPath"), eq(FULL_PROPERTY_PATH));
+        assertEquals(FACT_NAME, fieldItemView.getFactName());
+        assertEquals(FIELD_NAME, fieldItemView.getFieldName());
+        assertEquals(FACT_MODEL_TREE.getFactName(), fieldItemView.getClassName());
+        assertEquals(FULL_PROPERTY_PATH, fieldItemView.getFullPath());
+    }
+
+    @Test
+    public void setFieldDataWithAlias() {
+        fieldItemView.setFieldData(FULL_PROPERTY_PATH, FACT_NAME, FIELD_NAME, FACT_MODEL_TREE.getFactName(), FACT_ALIAS);
+        verify(lIElementMock, times(1)).setInnerHTML(eq(INNER_HTML_ALIAS));
+        verify(lIElementMock, times(1)).setAttribute(eq("id"), eq(ID_ATTRIBUTE));
+        verify(lIElementMock, times(1)).setAttribute(eq("fieldName"), eq(FIELD_NAME));
+        verify(lIElementMock, times(1)).setAttribute(eq("className"), eq(FACT_MODEL_TREE.getFactName()));
+        verify(lIElementMock, times(1)).setAttribute(eq("fullPath"), eq(FULL_PROPERTY_PATH));
+        assertEquals(FACT_NAME, fieldItemView.getFactName());
+        assertEquals(FIELD_NAME, fieldItemView.getFieldName());
+        assertEquals(FACT_MODEL_TREE.getFactName(), fieldItemView.getClassName());
+        assertEquals(FULL_PROPERTY_PATH, fieldItemView.getFullPath());
     }
 }

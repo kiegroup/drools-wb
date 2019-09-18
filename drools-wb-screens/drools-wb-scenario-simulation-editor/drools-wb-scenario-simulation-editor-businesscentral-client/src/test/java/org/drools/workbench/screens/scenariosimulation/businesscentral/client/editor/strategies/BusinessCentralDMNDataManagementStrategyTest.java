@@ -146,6 +146,9 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
         FactModelTree factModelTree = new FactModelTree("Test", "com", new HashMap<>(), new HashMap<>());
         visibleFactsLocal.put("TEST", factModelTree);
+        FactModelTree simpleFactModelTree = new FactModelTree("Simple", "com", new HashMap<>(), new HashMap<>());
+        simpleFactModelTree.setSimple(true);
+        visibleFactsLocal.put("SIMPLE", simpleFactModelTree);
         factModelTreeHolderlocal.setFactModelTuple(null);
         doReturn(alreadyAssignedProperties).when(businessCentralDmnDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         businessCentralDmnDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, testToolsPresenterMock, scenarioGridModelMock);
@@ -153,6 +156,8 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
         assertEquals(factModelTupleLocal, factModelTreeHolderlocal.getFactModelTuple());
         assertTrue(factModelTree.getSimpleProperties().containsKey("Test" + ConstantsHolder.EXPRESSION_SUFFIX));
         assertTrue(factModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
+        assertFalse(simpleFactModelTree.getSimpleProperties().containsKey("Simple" + ConstantsHolder.EXPRESSION_SUFFIX));
+        assertFalse(simpleFactModelTree.getSimpleProperties().containsKey(ConstantsHolder.EXPRESSION_CLASSNAME));
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setHiddenFieldsMap(eq(hiddenFactsLocal));

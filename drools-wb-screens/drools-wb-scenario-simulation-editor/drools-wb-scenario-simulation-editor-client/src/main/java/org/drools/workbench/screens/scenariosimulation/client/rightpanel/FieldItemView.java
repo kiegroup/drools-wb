@@ -62,6 +62,17 @@ public interface FieldItemView {
      */
     void setFieldData(String fullPath, String factName, String fieldName, String className);
 
+
+    /**
+     * @param fullPath The parent path (empty if the properties belongs to a <b>top-level</b> element)
+     * @param factName
+     * @param fieldName
+     * @param className
+     * @param classNameAlias
+     * @return
+     */
+    void setFieldData(String fullPath, String factName, String fieldName, String className, String classNameAlias);
+
     LIElement getLIElement();
 
     void unselect();

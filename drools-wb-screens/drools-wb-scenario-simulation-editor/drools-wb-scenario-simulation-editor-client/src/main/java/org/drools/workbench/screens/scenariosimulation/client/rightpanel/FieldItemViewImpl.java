@@ -44,11 +44,16 @@ public class FieldItemViewImpl implements FieldItemView {
 
     @Override
     public void setFieldData(String fullPath, String factName, String fieldName, String className) {
+        this.setFieldData(fullPath, factName, fieldName, className, className);
+    }
+
+    @Override
+    public void setFieldData(String fullPath, String factName, String fieldName, String className, String classNameAlias) {
         String innerHtml = new StringBuilder()
                 .append("<a>")
                 .append(fieldName)
                 .append("</a> [")
-                .append(className)
+                .append(classNameAlias)
                 .append("]")
                 .toString();
         fieldElement.setInnerHTML(innerHtml);

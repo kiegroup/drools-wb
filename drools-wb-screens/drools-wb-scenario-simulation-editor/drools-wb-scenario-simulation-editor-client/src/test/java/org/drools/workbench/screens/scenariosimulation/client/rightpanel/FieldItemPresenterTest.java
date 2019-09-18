@@ -20,13 +20,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.ConstantsHolder;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -60,7 +64,34 @@ public class FieldItemPresenterTest extends AbstractTestToolsTest {
     public void getLIElement() {
         fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
         verify(viewsProviderMock, times(1)).getFieldItemView();
-        verify(mockFieldItemView, times(1)).setFieldData(eq(""), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()));
+        verify(mockFieldItemView, times(1)).setFieldData(eq(""),
+                                                                              eq(FACT_NAME),
+                                                                              eq(FACT_NAME),
+                                                                              eq(FACT_MODEL_TREE.getFactName()));
+        verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any(), any());
+        verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
+    }
+
+    @Test
+    public void getLIElement_KeyPresent() {
+        fieldItemViewMapSpy.put("." + FACT_NAME, mockFieldItemView);
+        fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
+        verify(viewsProviderMock, never()).getFieldItemView();
+        verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any());
+        verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any(), any());
+        verify(mockFieldItemView, never()).setPresenter(any());
+    }
+
+    @Test
+    public void getLIElement_ExpressionType() {
+        fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, ConstantsHolder.EXPRESSION_CLASSNAME);
+        verify(viewsProviderMock, times(1)).getFieldItemView();
+        verify(mockFieldItemView, times(1)).setFieldData(eq(""),
+                                                                              eq(FACT_NAME),
+                                                                              eq(FACT_NAME),
+                                                                              eq(ConstantsHolder.EXPRESSION_CLASSNAME),
+                                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.expressionLabel()));
+        verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any());
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
 
