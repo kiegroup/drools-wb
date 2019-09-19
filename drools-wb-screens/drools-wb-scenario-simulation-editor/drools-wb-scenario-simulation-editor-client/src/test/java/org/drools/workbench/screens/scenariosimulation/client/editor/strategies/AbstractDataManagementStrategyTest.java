@@ -80,18 +80,6 @@ public abstract class AbstractDataManagementStrategyTest extends AbstractScenari
     }
 
     @Test
-    public void populateExpressionProperty_FactNamePresent() {
-        FactModelTree complexFactModelTree = new FactModelTree("ComplexType", "com", new HashMap<>(), new HashMap<>());
-        complexFactModelTree.addSimpleProperty("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX, "com.test");
-        abstractDataManagementStrategySpy.populateExpressionProperty(complexFactModelTree);
-        assertTrue(complexFactModelTree.getSimpleProperties().size() == 2);
-        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX));
-        assertTrue(complexFactModelTree.getSimpleProperties().containsValue("com.test"));
-        assertTrue(complexFactModelTree.getSimpleProperties().containsKey("ComplexType" + ConstantsHolder.EXPRESSION_SUFFIX + "_1"));
-        assertTrue(complexFactModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME));
-    }
-
-    @Test
     public void setModel() {
         abstractDataManagementStrategySpy.model = null;
         ScenarioSimulationModel modelMock = mock(ScenarioSimulationModel.class);

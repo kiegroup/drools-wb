@@ -69,12 +69,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
      * @param factModelTree
      */
     public void populateExpressionProperty(FactModelTree factModelTree) {
-        if (factModelTree.getSimpleProperties().containsValue(ConstantsHolder.EXPRESSION_CLASSNAME)) {
-            return;
-        }
-        final String expressionName = factModelTree.getFactName() + ConstantsHolder.EXPRESSION_SUFFIX;
-        long count = factModelTree.getSimpleProperties().keySet().stream().filter(key -> key.startsWith(expressionName)).count();
-        factModelTree.addSimpleProperty(count > 0 ? expressionName + "_" + count : expressionName, ConstantsHolder.EXPRESSION_CLASSNAME);
+        factModelTree.addSimpleProperty(factModelTree.getFactName() + ConstantsHolder.EXPRESSION_SUFFIX, ConstantsHolder.EXPRESSION_CLASSNAME);
     }
 
     /**
