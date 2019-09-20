@@ -65,9 +65,9 @@ public class FieldItemPresenterTest extends AbstractTestToolsTest {
         fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
         verify(viewsProviderMock, times(1)).getFieldItemView();
         verify(mockFieldItemView, times(1)).setFieldData(eq(""),
-                                                                              eq(FACT_NAME),
-                                                                              eq(FACT_NAME),
-                                                                              eq(FACT_MODEL_TREE.getFactName()));
+                                                         eq(FACT_NAME),
+                                                         eq(FACT_NAME),
+                                                         eq(FACT_MODEL_TREE.getFactName()));
         verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any(), any());
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
@@ -87,10 +87,10 @@ public class FieldItemPresenterTest extends AbstractTestToolsTest {
         fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, ConstantsHolder.EXPRESSION_CLASSNAME);
         verify(viewsProviderMock, times(1)).getFieldItemView();
         verify(mockFieldItemView, times(1)).setFieldData(eq(""),
-                                                                              eq(FACT_NAME),
-                                                                              eq(FACT_NAME),
-                                                                              eq(ConstantsHolder.EXPRESSION_CLASSNAME),
-                                                                              eq(ScenarioSimulationEditorConstants.INSTANCE.expressionLabel()));
+                                                         eq(FACT_NAME),
+                                                         eq(FACT_NAME),
+                                                         eq(ConstantsHolder.EXPRESSION_CLASSNAME),
+                                                         eq(ScenarioSimulationEditorConstants.INSTANCE.expressionLabel()));
         verify(mockFieldItemView, never()).setFieldData(any(), any(), any(), any());
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
