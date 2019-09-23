@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -51,6 +52,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_TITLE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_PROPERTY_TITLE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_ROWS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_META_DATA;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
@@ -586,6 +588,32 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             }
         }
         reset(eventBusMock);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_Empty() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle("", COLUMN_INDEX);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_Null() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle(null, COLUMN_INDEX);
+    }
+
+    @Test
+    public void checkUniquePropertyHeaderTitle_ReserverdKeywordExpressionType() {
+        when(factMappingMock.getClassName()).thenReturn(ConstantsHolder.EXPRESSION_CLASSNAME);
+        scenarioGridModel.checkUniquePropertyHeaderTitle(CLASS_NAME + ConstantsHolder.EXPRESSION_SUFFIX, COLUMN_INDEX);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_ReserverdKeywordNotExpressionType() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle(CLASS_NAME + ConstantsHolder.EXPRESSION_SUFFIX, COLUMN_INDEX);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_AssignedLabel() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle(GRID_PROPERTY_TITLE, COLUMN_INDEX);
     }
 
     @Test

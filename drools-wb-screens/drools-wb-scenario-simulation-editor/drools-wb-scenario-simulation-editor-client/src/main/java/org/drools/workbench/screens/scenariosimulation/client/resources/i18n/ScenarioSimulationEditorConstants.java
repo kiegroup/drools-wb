@@ -326,6 +326,8 @@ public interface ScenarioSimulationEditorConstants
 
     String propertyTitleWithPeriodsError();
 
+    String propertyTitleReservedKeyError();
+
     String validationErrorTitle();
 
     String validationErrorMessage();

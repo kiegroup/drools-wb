@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.google.gwt.event.shared.EventBus;
+import org.drools.scenariosimulation.api.ConstantsHolder;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -1041,6 +1042,11 @@ public class ScenarioGridModel extends BaseGridData {
             throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleEmptyError());
         }
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        if (! Objects.equals(factMapping.getClassName(), ConstantsHolder.EXPRESSION_CLASSNAME) &&
+                propertyHeaderCellValue.endsWith(ConstantsHolder.EXPRESSION_SUFFIX)) {
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleReservedKeyError());
+        }
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         if (IntStream.range(0, getColumnCount())
                 .filter(index -> index != columnIndex)
