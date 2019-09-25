@@ -15,11 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 
-public interface ScenarioSimulationGridPanelClickHandler extends ClickHandler,
-                                                                 ContextMenuHandler {
+public interface ScenarioSimulationGridPanelMouseMoveHandler extends NodeMouseMoveHandler {
 
-    void hideMenus();
+    void hidePopover();
 }

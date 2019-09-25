@@ -61,9 +61,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
-public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandlerTest {
+public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends AbstractScenarioSimulationGridHandlerTest {
 
-    private CommonOnMoveHandler commonOnMoveHandler;
+    private ScenarioSimulationMainGridPanelMouseMoveHandler commonOnMoveHandler;
 
     @Mock
     private ErrorReportPopoverPresenter errorReportPopupPresenterMock;
@@ -79,7 +79,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
     @Before
     public void setup() {
         super.setup();
-        commonOnMoveHandler = spy(new CommonOnMoveHandler() {
+        commonOnMoveHandler = spy(new ScenarioSimulationMainGridPanelMouseMoveHandler() {
             {
                 errorReportPopupPresenter = errorReportPopupPresenterMock;
                 scenarioGrid = scenarioGridMock;
@@ -224,7 +224,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
 
     @Test
     public void manageBodyCoordinates_sameCellAndIsShown() {
-        commonOnMoveHandler = spy(new CommonOnMoveHandler() {
+        commonOnMoveHandler = spy(new ScenarioSimulationMainGridPanelMouseMoveHandler() {
             {
                 currentlyShownBodyColumnIndex = 0;
                 currentlyShownBodyRowIndex = 0;
@@ -243,7 +243,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
 
     @Test
     public void manageBodyCoordinates_sameCellAndIsNotShown() {
-        commonOnMoveHandler = spy(new CommonOnMoveHandler() {
+        commonOnMoveHandler = spy(new ScenarioSimulationMainGridPanelMouseMoveHandler() {
             {
                 currentlyShownBodyColumnIndex = COLUMN_INDEX;
                 currentlyShownBodyRowIndex = ROW_INDEX;
@@ -280,7 +280,7 @@ public class CommonOnMoveHandlerTest extends AbstractScenarioSimulationGridHandl
 
     @Test
     public void manageBodyCoordinates_awayFromGrid() {
-        commonOnMoveHandler = spy(new CommonOnMoveHandler() {
+        commonOnMoveHandler = spy(new ScenarioSimulationMainGridPanelMouseMoveHandler() {
             {
                 currentlyShownBodyColumnIndex = 0;
                 currentlyShownBodyRowIndex = 0;

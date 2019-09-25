@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 
+import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
@@ -38,21 +39,24 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
  * This class is meant to provide common implementations for <b>on hover</b> behavior to be used by both mouse keyboard handler
  */
 @Dependent
-public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHandler {
+public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractScenarioSimulationGridPanelHandler
+        implements ScenarioSimulationGridPanelMouseMoveHandler {
 
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
-    private static int POPOVER_WIDTH = 200;
-    private static String NULL = "null";
+    private static final int POPOVER_WIDTH = 200;
+    private static final String NULL = "null";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     protected Integer currentlyShownBodyRowIndex = -1;
     protected Integer currentlyShownBodyColumnIndex = -1;
 
-    public void handleOnMove(final int mx, final int my) {
-        manageCoordinates(mx, my);
+    @Override
+    public void onNodeMouseMove(NodeMouseMoveEvent event) {
+        manageCoordinates(event.getX(), event.getY());
     }
 
+    @Override
     public void hidePopover() {
         errorReportPopupPresenter.hide();
     }

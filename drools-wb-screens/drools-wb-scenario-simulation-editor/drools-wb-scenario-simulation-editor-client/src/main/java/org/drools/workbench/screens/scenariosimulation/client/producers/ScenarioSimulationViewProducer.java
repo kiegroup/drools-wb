@@ -21,8 +21,8 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.CommonOnMoveHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelMouseMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -40,7 +40,7 @@ public class ScenarioSimulationViewProducer {
     protected ScenarioGridPanelProducer scenarioGridPanelProducer;
 
     @Inject
-    protected CommonOnMoveHandler commonOnMoveHandler;
+    protected ScenarioSimulationMainGridPanelMouseMoveHandler commonOnMoveHandler;
 
     @Inject
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
@@ -48,16 +48,16 @@ public class ScenarioSimulationViewProducer {
     public ScenarioSimulationView getScenarioSimulationView(final EventBus eventBus) {
         final ScenarioGridPanel scenarioGridPanel = scenarioGridPanelProducer.getScenarioGridPanel();
         scenarioGridPanel.setEventBus(eventBus);
-        final ScenarioSimulationGridPanelClickHandler scenarioSimulationGridPanelClickHandler = scenarioGridPanelProducer.getScenarioSimulationGridPanelClickHandler();
+        final ScenarioSimulationMainGridPanelClickHandler scenarioSimulationMainGridPanelClickHandler = scenarioGridPanelProducer.getScenarioSimulationMainGridPanelClickHandler();
         final ScenarioContextMenuRegistry scenarioContextMenuRegistry = scenarioGridPanelProducer.getScenarioContextMenuRegistry();
         scenarioContextMenuRegistry.setEventBus(eventBus);
-        scenarioSimulationGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
-        scenarioSimulationGridPanelClickHandler.setScenarioGridPanel(scenarioGridPanel);
-        scenarioSimulationGridPanelClickHandler.setEventBus(eventBus);
+        scenarioSimulationMainGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
+        scenarioSimulationMainGridPanelClickHandler.setScenarioGridPanel(scenarioGridPanel);
+        scenarioSimulationMainGridPanelClickHandler.setEventBus(eventBus);
         scenarioContextMenuRegistry.setErrorReportPopoverPresenter(errorReportPopupPresenter);
         commonOnMoveHandler.setScenarioGridPanel(scenarioGridPanel);
         commonOnMoveHandler.setErrorReportPopupPresenter(errorReportPopupPresenter);
-        scenarioGridPanel.addHandlers(scenarioSimulationGridPanelClickHandler, commonOnMoveHandler);
+        scenarioGridPanel.addHandlers(scenarioSimulationMainGridPanelClickHandler, commonOnMoveHandler);
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);
         return scenarioSimulationView;
     }
