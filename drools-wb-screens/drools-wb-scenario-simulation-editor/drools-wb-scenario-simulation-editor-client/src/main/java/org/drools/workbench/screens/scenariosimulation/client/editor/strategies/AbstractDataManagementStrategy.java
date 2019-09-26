@@ -65,7 +65,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     }
 
     /**
-     * It adds an "expression" simple property to the given <code></code>
+     * It adds an "expression" simple property to the given <code>FactModelTree</code>
      * @param factModelTree
      */
     public void populateExpressionProperty(FactModelTree factModelTree) {

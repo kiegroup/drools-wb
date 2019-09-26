@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.TreeMap;
+import java.util.stream.Stream;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -23,6 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.Unsupported
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -75,7 +77,9 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
         // Instantiate a map of already assigned properties
         factModelTreeHolder.setFactModelTuple(factModelTuple);
         // Add an "expression" property to all NOT simple objects
-        factModelTuple.getVisibleFacts().values().stream()
+        Stream<FactModelTree> visibleFactStream = factModelTuple.getVisibleFacts().values().stream();
+        Stream<FactModelTree> hiddenFactStream = factModelTuple.getHiddenFacts().values().stream();
+        Stream.concat(visibleFactStream, hiddenFactStream)
                 .filter(factModelTree -> !factModelTree.isSimple())
                 .forEach(this::populateExpressionProperty);
         storeData(factModelTuple, testToolsPresenter, scenarioGridModel);
