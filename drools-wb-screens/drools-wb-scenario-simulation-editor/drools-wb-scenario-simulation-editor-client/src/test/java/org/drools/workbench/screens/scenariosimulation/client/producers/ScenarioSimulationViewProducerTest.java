@@ -60,7 +60,7 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
             {
                 this.scenarioSimulationView = scenarioSimulationViewMock;
                 this.scenarioGridPanelProducer = scenarioGridPanelProducerMock;
-                this.commonOnMoveHandler = commonOnMoveHandlerMock;
+                this.mouseMoveHandler = commonOnMoveHandlerMock;
                 this.errorReportPopupPresenter = errorReportPopupPresenterMock;
             }
         });

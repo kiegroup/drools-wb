@@ -138,9 +138,7 @@ public class ScenarioGrid extends BaseGridWidget {
         final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
         boolean editableHeaders = !simulation.getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.DMN);
         IntStream.range(0, factMappings.size())
-                .forEach(columnIndex -> {
-                    setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders);
-                });
+                .forEach(columnIndex -> setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders));
     }
 
     protected void setHeaderColumn(int columnIndex, FactMapping factMapping, boolean editableHeaders) {
@@ -271,7 +269,7 @@ public class ScenarioGrid extends BaseGridWidget {
     protected void signalTestTools() {
         eventBus.fireEvent(new DisableTestToolsEvent());
 
-        if (model.getSelectedHeaderCells().size() > 0) {
+        if (!model.getSelectedHeaderCells().isEmpty()) {
             final GridData.SelectedCell cell = model.getSelectedHeaderCells().get(0);
 
             final int uiColumnIndex = ColumnIndexUtilities.findUiColumnIndex(model.getColumns(),

@@ -40,7 +40,7 @@ public class ScenarioSimulationViewProducer {
     protected ScenarioGridPanelProducer scenarioGridPanelProducer;
 
     @Inject
-    protected ScenarioSimulationMainGridPanelMouseMoveHandler commonOnMoveHandler;
+    protected ScenarioSimulationMainGridPanelMouseMoveHandler mouseMoveHandler;
 
     @Inject
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
@@ -48,16 +48,18 @@ public class ScenarioSimulationViewProducer {
     public ScenarioSimulationView getScenarioSimulationView(final EventBus eventBus) {
         final ScenarioGridPanel scenarioGridPanel = scenarioGridPanelProducer.getScenarioGridPanel();
         scenarioGridPanel.setEventBus(eventBus);
-        final ScenarioSimulationMainGridPanelClickHandler scenarioSimulationMainGridPanelClickHandler = scenarioGridPanelProducer.getScenarioSimulationMainGridPanelClickHandler();
-        final ScenarioContextMenuRegistry scenarioContextMenuRegistry = scenarioGridPanelProducer.getScenarioContextMenuRegistry();
+        final ScenarioSimulationMainGridPanelClickHandler scenarioSimulationMainGridPanelClickHandler =
+                scenarioGridPanelProducer.getScenarioSimulationMainGridPanelClickHandler();
+        final ScenarioContextMenuRegistry scenarioContextMenuRegistry =
+                scenarioGridPanelProducer.getScenarioContextMenuRegistry();
         scenarioContextMenuRegistry.setEventBus(eventBus);
         scenarioSimulationMainGridPanelClickHandler.setScenarioContextMenuRegistry(scenarioContextMenuRegistry);
         scenarioSimulationMainGridPanelClickHandler.setScenarioGridPanel(scenarioGridPanel);
         scenarioSimulationMainGridPanelClickHandler.setEventBus(eventBus);
         scenarioContextMenuRegistry.setErrorReportPopoverPresenter(errorReportPopupPresenter);
-        commonOnMoveHandler.setScenarioGridPanel(scenarioGridPanel);
-        commonOnMoveHandler.setErrorReportPopupPresenter(errorReportPopupPresenter);
-        scenarioGridPanel.addHandlers(scenarioSimulationMainGridPanelClickHandler, commonOnMoveHandler);
+        mouseMoveHandler.setScenarioGridPanel(scenarioGridPanel);
+        mouseMoveHandler.setErrorReportPopupPresenter(errorReportPopupPresenter);
+        scenarioGridPanel.addHandlers(scenarioSimulationMainGridPanelClickHandler, mouseMoveHandler);
         scenarioSimulationView.setScenarioGridPanel(scenarioGridPanel);
         return scenarioSimulationView;
     }
