@@ -590,16 +590,6 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         reset(eventBusMock);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void checkUniquePropertyHeaderTitle_Empty() {
-        scenarioGridModel.checkUniquePropertyHeaderTitle("", COLUMN_INDEX);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void checkUniquePropertyHeaderTitle_Null() {
-        scenarioGridModel.checkUniquePropertyHeaderTitle(null, COLUMN_INDEX);
-    }
-
     @Test
     public void checkUniquePropertyHeaderTitle_ReserverdKeywordExpressionType() {
         when(factMappingMock.getClassName()).thenReturn(ConstantsHolder.EXPRESSION_CLASSNAME);

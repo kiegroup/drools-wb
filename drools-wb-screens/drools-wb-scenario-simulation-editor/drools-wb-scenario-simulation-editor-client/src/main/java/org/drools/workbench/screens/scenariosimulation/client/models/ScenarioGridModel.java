@@ -995,9 +995,6 @@ public class ScenarioGridModel extends BaseGridData {
      * inside the <b>group (GIVEN/EXPECT)</b> of the given column <b>OR</b> instanceHeaderCellValue is <i>empty</i>
      */
     protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) {
-        if (Objects.isNull(instanceHeaderCellValue) || instanceHeaderCellValue.isEmpty()) {
-            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleEmptyError());
-        }
         if (instanceHeaderCellValue.contains(".")) {
             throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleWithPeriodsError());
         }
@@ -1038,9 +1035,6 @@ public class ScenarioGridModel extends BaseGridData {
      * inside the <b>instance</b> of the given column
      */
     protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
-        if (Objects.isNull(propertyHeaderCellValue) || propertyHeaderCellValue.isEmpty()) {
-            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleEmptyError());
-        }
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
         if (! Objects.equals(factMapping.getClassName(), ConstantsHolder.EXPRESSION_CLASSNAME) &&

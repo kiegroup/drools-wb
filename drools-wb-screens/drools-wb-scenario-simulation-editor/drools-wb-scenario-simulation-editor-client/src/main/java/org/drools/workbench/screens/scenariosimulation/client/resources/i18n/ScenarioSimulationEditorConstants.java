@@ -314,15 +314,13 @@ public interface ScenarioSimulationEditorConstants
 
     String noRulesAvailable();
 
-    String instanceTitleAssignedError(String title);
+    String headerTitleEmptyError();
 
-    String instanceTitleEmptyError();
+    String instanceTitleAssignedError(String title);
 
     String instanceTitleWithPeriodsError();
 
     String propertyTitleAssignedError(String title);
-
-    String propertyTitleEmptyError();
 
     String propertyTitleWithPeriodsError();
 
