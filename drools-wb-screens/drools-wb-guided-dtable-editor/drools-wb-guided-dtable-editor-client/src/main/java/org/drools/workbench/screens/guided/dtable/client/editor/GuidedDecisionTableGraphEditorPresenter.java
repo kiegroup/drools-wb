@@ -719,7 +719,7 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                 view.alertReadOnly();
                 return;
             } else {
-                versionRecordManager.restoreToCurrentVersion();
+                versionRecordManager.restoreToCurrentVersion(saveWithComments);
                 return;
             }
         }
