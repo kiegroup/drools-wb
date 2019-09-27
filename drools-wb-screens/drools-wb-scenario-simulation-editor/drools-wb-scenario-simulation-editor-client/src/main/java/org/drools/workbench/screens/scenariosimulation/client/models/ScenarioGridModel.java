@@ -581,7 +581,7 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * It put the column present in the given columnIndex as the current selected one.
+     * It puts the column present in the given columnIndex as the current selected one.
      * @param columnIndex
      */
     public void selectColumn(int columnIndex) {
