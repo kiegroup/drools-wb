@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioMainGrid;
 
 /**
  * <code>@Dependent</code> <i>Producer</i> for a given {@link ScenarioGridPanel}
@@ -58,24 +59,27 @@ public class ScenarioGridPanelProducer {
     @PostConstruct
     public void init() {
         ScenarioGridModel scenarioGridModel = new ScenarioGridModel(false);
-        final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
-                                                           scenarioGridLayer,
-                                                           new ScenarioGridRenderer(false),
-                                                           scenarioContextMenuRegistry);
+        final ScenarioGrid scenarioGrid = new ScenarioMainGrid(scenarioGridModel,
+                                                               scenarioGridLayer,
+                                                               new ScenarioGridRenderer(false),
+                                                               scenarioContextMenuRegistry);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
         scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanel);
-        scenarioGridModel.setCollectionEditorSingletonDOMElementFactory(new CollectionEditorSingletonDOMElementFactory(scenarioGridPanel,
-                                                                                                                       scenarioGridLayer,
-                                                                                                                       scenarioGridLayer.getScenarioGrid(),
-                                                                                                                       scenarioSimulationContext,
-                                                                                                                       viewsProvider));
-        scenarioGridModel.setScenarioCellTextAreaSingletonDOMElementFactory(new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanel,
-                                                                                                                               scenarioGridLayer,
-                                                                                                                               scenarioGridLayer.getScenarioGrid()));
-        scenarioGridModel.setScenarioHeaderTextBoxSingletonDOMElementFactory(new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
-                                                                                                                                 scenarioGridLayer,
-                                                                                                                                 scenarioGridLayer.getScenarioGrid()));
+        scenarioGridModel.setCollectionEditorSingletonDOMElementFactory(
+                new CollectionEditorSingletonDOMElementFactory(scenarioGridPanel,
+                                                               scenarioGridLayer,
+                                                               scenarioGridLayer.getScenarioGrid(),
+                                                               scenarioSimulationContext,
+                                                               viewsProvider));
+        scenarioGridModel.setScenarioCellTextAreaSingletonDOMElementFactory(
+                new ScenarioCellTextAreaSingletonDOMElementFactory(scenarioGridPanel,
+                                                                   scenarioGridLayer,
+                                                                   scenarioGridLayer.getScenarioGrid()));
+        scenarioGridModel.setScenarioHeaderTextBoxSingletonDOMElementFactory(
+                new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
+                                                                    scenarioGridLayer,
+                                                                    scenarioGridLayer.getScenarioGrid()));
     }
 
     public ScenarioSimulationMainGridPanelClickHandler getScenarioSimulationMainGridPanelClickHandler() {
@@ -94,4 +98,3 @@ public class ScenarioGridPanelProducer {
         return scenarioContextMenuRegistry;
     }
 }
-
