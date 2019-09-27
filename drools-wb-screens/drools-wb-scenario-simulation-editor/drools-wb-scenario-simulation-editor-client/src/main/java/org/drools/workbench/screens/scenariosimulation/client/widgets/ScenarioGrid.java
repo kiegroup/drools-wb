@@ -106,6 +106,11 @@ public class ScenarioGrid extends BaseGridWidget {
      */
     public void setSelectedColumnAndHeader(int headerRowIndex, int columnIndex) {
         ((ScenarioGridModel) model).selectColumn(columnIndex);
+
+
+
+
+
         model.selectHeaderCell(headerRowIndex, columnIndex);
         getLayer().batch();
     }

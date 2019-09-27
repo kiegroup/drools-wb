@@ -47,7 +47,7 @@ public class ScenarioHeaderTextAreaDOMElement extends ScenarioCellTextAreaDOMEle
 
     @Override
     public void flush(final String value) {
-        if (Objects.isNull(value) || value.isEmpty()) {
+        if (Objects.isNull(value) || value.trim().isEmpty()) {
             ((ScenarioGrid) gridWidget).getEventBus().fireEvent(
                     new ScenarioNotificationEvent(
                             ScenarioSimulationEditorConstants.INSTANCE.headerTitleEmptyError(),
