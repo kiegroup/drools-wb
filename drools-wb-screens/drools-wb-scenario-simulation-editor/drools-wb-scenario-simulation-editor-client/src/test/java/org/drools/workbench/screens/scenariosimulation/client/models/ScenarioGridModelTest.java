@@ -51,6 +51,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_TITLE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_PROPERTY_TITLE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_ROWS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_META_DATA;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
@@ -569,14 +570,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) throws Exception {
         if (isSamePropertyHeader) {
-            doThrow(new Exception("isSamePropertyHeader")).when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
+            doThrow(new IllegalArgumentException("isSamePropertyHeader")).when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
         } else {
             doNothing().when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
         }
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);
@@ -586,6 +587,11 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             }
         }
         reset(eventBusMock);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_AssignedLabel() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle(GRID_PROPERTY_TITLE, COLUMN_INDEX);
     }
 
     @Test
