@@ -549,14 +549,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) throws Exception {
         if (isSameInstanceHeader) {
-            doThrow(new Exception("isSameInstanceHeader")).when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
+            doThrow(new IllegalArgumentException("isSameInstanceHeader")).when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
         } else {
             doNothing().when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
         }
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validateInstanceHeaderUpdate(MULTIPART_VALUE, columnIndex, isADataType);

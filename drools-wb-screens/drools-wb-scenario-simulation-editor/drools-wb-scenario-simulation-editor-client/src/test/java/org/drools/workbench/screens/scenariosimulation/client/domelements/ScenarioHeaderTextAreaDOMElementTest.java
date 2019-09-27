@@ -89,6 +89,13 @@ public class ScenarioHeaderTextAreaDOMElementTest extends AbstractFactoriesTest 
     }
 
     @Test
+    public void flushEmptyStringMultipleSpaces() {
+        scenarioHeaderTextAreaDOMElement.flush("            ");
+        verify(eventBusMock, times(1)).fireEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioHeaderTextAreaDOMElement, never()).internalFlush(any());
+    }
+
+    @Test
     public void flushNullMetadata() {
         scenarioHeaderTextAreaDOMElement.setScenarioHeaderMetaData(null);
         scenarioHeaderTextAreaDOMElement.flush(MULTIPART_VALUE);
