@@ -151,7 +151,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     protected Event<NotificationEvent> notificationEvent;
 
-    protected ScenarioSimulationContext context;
+    protected ScenarioSimulationContext context; //TODO via!
 
     protected ScenarioCommandRegistry scenarioCommandRegistry;
 
