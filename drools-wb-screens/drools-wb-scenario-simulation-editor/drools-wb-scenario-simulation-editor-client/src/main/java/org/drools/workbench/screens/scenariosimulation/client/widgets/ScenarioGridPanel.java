@@ -29,6 +29,7 @@ import com.google.gwt.event.dom.client.ScrollHandler;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelFocusHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelMouseMoveHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
@@ -48,7 +49,8 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
     Set<HandlerRegistration> handlerRegistrations = new HashSet<>();
 
     public void addHandlers(final ScenarioSimulationGridPanelClickHandler clickHandler,
-                            final ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler) {
+                            final ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler,
+                            final ScenarioSimulationGridPanelFocusHandler focusHandler) {
         this.clickHandler = clickHandler;
         this.mouseMoveHandler = mouseMoveHandler;
         unregister();
@@ -59,6 +61,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseOutHandler(this));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseMoveHandler(mouseMoveHandler));
         handlerRegistrations.add(getScrollPanel().addDomHandler(this, ScrollEvent.getType()));
+        handlerRegistrations.add(addFocusHandler(focusHandler));
     }
 
     public ScenarioGridLayer getScenarioGridLayer() {

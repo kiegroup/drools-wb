@@ -73,6 +73,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.SetInstance
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UpdateFocusedContextEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
@@ -97,6 +98,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstan
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.UpdateFocusedContextEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
@@ -138,7 +140,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        SetInstanceHeaderEventHandler,
                                                        SetPropertyHeaderEventHandler,
                                                        UndoEventHandler,
-                                                       UnsupportedDMNEventHandler {
+                                                       UnsupportedDMNEventHandler,
+                                                       UpdateFocusedContextEventHandler {
 
     protected DeletePopupPresenter deletePopupPresenter;
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
@@ -475,6 +478,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         confirmPopupPresenter.show("Unsupported DMN asset", event.getMessage());
     }
 
+    @Override
+    public void onEvent(UpdateFocusedContextEvent event) {
+        event.getContext().getScenarioSimulationEditorPresenter().setFocusedContext(event.getContext());
+    }
+
     /**
      * Common method to execute the given <code>Command</code> inside the given <code>ScenarioSimulationContext</code>
      * If successful, it adds the command to the <code>ScenarioCommandRegistry</code>, otherwise it fire a new <code>ScenarioNotificationEvent</code>
@@ -538,5 +546,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UndoEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UnsupportedDMNEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(UpdateFocusedContextEvent.TYPE, this));
     }
 }
