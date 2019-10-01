@@ -131,7 +131,7 @@ public class ScenarioGridTest {
         factMappingInteger = new FactMapping(EXPRESSION_ALIAS_INTEGER, factIdentifierInteger, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
         simulation = getSimulation();
 
-        scenarioGrid = spy(new ScenarioMainGrid(scenarioGridModelMock,
+        scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock,
                                                 scenarioGridLayerMock,
                                                 scenarioGridRendererMock,
                                                 scenarioContextMenuRegistryMock) {
@@ -215,7 +215,7 @@ public class ScenarioGridTest {
         callsOrder.verify(scenarioGridModelMock, times(1)).clear();
         callsOrder.verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
         callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
-        callsOrder.verify(scenarioGrid, times(1)).appendRows(eq(simulation.getUnmodifiableScenarios()));
+        callsOrder.verify(scenarioGrid, times(1)).appendRows(eq(simulation));
         callsOrder.verify(scenarioGridModelMock, times(1)).loadFactMappingsWidth();
         callsOrder.verify(scenarioGridModelMock, times(1)).forceRefreshWidth();
     }
@@ -349,7 +349,7 @@ public class ScenarioGridTest {
 
     @Test
     public void appendRows() {
-        scenarioGrid.appendRows(simulation.getUnmodifiableScenarios());
+        scenarioGrid.appendRows(simulation);
         verify(scenarioGrid, times(1)).appendRow(anyInt(), isA(Scenario.class));
     }
 

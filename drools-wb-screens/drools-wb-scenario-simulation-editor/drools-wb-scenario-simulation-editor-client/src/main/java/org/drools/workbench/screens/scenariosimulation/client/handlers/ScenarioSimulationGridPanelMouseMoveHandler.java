@@ -16,8 +16,14 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
+import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 
 public interface ScenarioSimulationGridPanelMouseMoveHandler extends NodeMouseMoveHandler {
 
     void hidePopover();
+
+    void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
+
+    void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter);
 }

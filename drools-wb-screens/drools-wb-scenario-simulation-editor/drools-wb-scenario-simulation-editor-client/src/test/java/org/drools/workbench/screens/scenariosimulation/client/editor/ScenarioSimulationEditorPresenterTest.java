@@ -158,8 +158,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setup() {
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-        when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
-        when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioSimulationViewMock.getScenarioMainGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
@@ -167,7 +166,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
-        when(scenarioSimulationProducerMock.getScenarioSimulationContext()).thenReturn(contextMock);
+        //when(scenarioSimulationProducerMock.getScenarioSimulationContext()).thenReturn(contextMock);
         when(placeRequestMock.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
         when(testToolsViewMock.getPresenter()).thenReturn(testToolsPresenterMock);
         when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
@@ -186,10 +185,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                    confirmPopupPresenterMock) {
             {
                 this.path = pathMock;
-                this.scenarioGridPanel = scenarioGridPanelMock;
+                this.scenarioMainGridPanel = scenarioGridPanelMock;
                 this.packageName = SCENARIO_PACKAGE;
                 this.eventBus = eventBusMock;
-                this.context = contextMock;
+                this.focusedContext = contextMock;
                 this.dataManagementStrategy = dataManagementStrategyMock;
                 this.model = scenarioSimulationModelMock;
                 this.testRunnerReportingPanel = testRunnerReportingPanelMock;
@@ -562,7 +561,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void isDirty() {
-        when(scenarioSimulationViewMock.getScenarioGridPanel()).thenThrow(new RuntimeException());
+        when(scenarioSimulationViewMock.getScenarioMainGridPanel()).thenThrow(new RuntimeException());
         assertFalse(presenter.isDirty());
     }
 

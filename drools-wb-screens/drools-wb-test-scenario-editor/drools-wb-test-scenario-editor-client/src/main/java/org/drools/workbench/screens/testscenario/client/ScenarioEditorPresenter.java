@@ -158,8 +158,6 @@ public class ScenarioEditorPresenter
         return service;
     }
 
-    //TODO getFocusedContext()
-
     private RemoteCallback<TestScenarioModelContent> getModelSuccessCallback() {
         return new RemoteCallback<TestScenarioModelContent>() {
             @Override

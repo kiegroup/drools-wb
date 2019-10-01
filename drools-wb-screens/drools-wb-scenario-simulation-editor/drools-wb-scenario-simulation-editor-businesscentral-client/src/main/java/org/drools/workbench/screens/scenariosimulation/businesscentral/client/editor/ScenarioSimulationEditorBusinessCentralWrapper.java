@@ -276,8 +276,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     protected void synchronizeColumnsDimension() {
-        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView().getScenarioGridLayer()
-                .getScenarioGrid().getModel();
+        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView()
+                .getScenarioMainGridPanel().getScenarioGridLayer().getScenarioGrid().getModel();
         scenarioGridModel.synchronizeFactMappingsWidths();
     }
 
@@ -327,9 +327,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         resetEditorPages(content.getOverview());
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
-            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getContext());
+            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getFocusedContext());
         } else {
-            dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getFocusedContext(), scenarioSimulationEditorPresenter.getEventBus());
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
         ScenarioSimulationModel model = content.getModel();

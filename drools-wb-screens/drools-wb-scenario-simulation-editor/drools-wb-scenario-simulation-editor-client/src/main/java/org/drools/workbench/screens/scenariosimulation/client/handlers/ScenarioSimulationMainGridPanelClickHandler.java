@@ -50,6 +50,7 @@ public class ScenarioSimulationMainGridPanelClickHandler extends AbstractScenari
      * This method must be called <b>after</b> all the <i>ContextMenu</i> setters
      * @param eventBus
      */
+    @Override
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
     }

@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioInvokeContextMenuForSelectedCell;
@@ -78,7 +77,7 @@ public class ScenarioSimulationProducer {
 
     @PostConstruct
     public void init() {
-        final ScenarioGridPanel scenarioGridPanel = getScenarioSimulationView().getScenarioGridPanel();
+        final ScenarioGridPanel scenarioGridPanel = getScenarioSimulationView().getScenarioMainGridPanel();
         final ScenarioGridLayer scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
         final ScenarioSimulationKeyboardEditHandler scenarioSimulationKeyboardEditHandler = new ScenarioSimulationKeyboardEditHandler(scenarioGridLayer);
 
@@ -106,7 +105,6 @@ public class ScenarioSimulationProducer {
         scenarioSimulationEventHandler.setConfirmPopupPresenter(confirmPopupPresenter);
         scenarioSimulationEventHandler.setFileUploadPopupPresenter(fileUploadPopupPresenter);
         scenarioSimulationEventHandler.setNotificationEvent(notificationEvent);
-        scenarioSimulationEventHandler.setContext(getScenarioSimulationContext());
         scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
         scenarioSimulationEventHandler.setScenarioCommandRegistry(scenarioCommandRegistry);
     }
@@ -117,9 +115,5 @@ public class ScenarioSimulationProducer {
 
     public ScenarioSimulationView getScenarioSimulationView() {
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
-    }
-
-    public ScenarioSimulationContext getScenarioSimulationContext() {
-        return scenarioSimulationViewProducer.getScenarioSimulationContext();
     }
 }

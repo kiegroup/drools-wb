@@ -157,10 +157,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     protected ScenarioCommandManager scenarioCommandManager;
 
-    public ScenarioSimulationEventHandler() {
-        // CDI
-    }
-
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
         registerHandlers();

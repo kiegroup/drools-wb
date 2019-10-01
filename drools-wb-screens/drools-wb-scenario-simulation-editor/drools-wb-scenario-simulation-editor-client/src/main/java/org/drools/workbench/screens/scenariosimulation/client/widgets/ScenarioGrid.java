@@ -24,10 +24,11 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.ScenarioData;
+import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
@@ -53,40 +54,30 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedM
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
 
-/**
- * It represent an abstract ScenarioGrid wigdet, where are present all shared logic between the current 2 implementation
- * <code>ScenarioMainGrid</code> and <code>ScenarioBackground</code>
- */
-public abstract class ScenarioGrid<T extends ScenarioData> extends BaseGridWidget {
+public class ScenarioGrid extends BaseGridWidget {
 
     private ScenarioContextMenuRegistry scenarioContextMenuRegistry;
+    private ScenarioSimulationContext scenarioSimulationContext;
     private EventBus eventBus;
 
-    protected ScenarioGrid(ScenarioGridModel model,
-                           ScenarioGridLayer scenarioGridLayer,
-                           ScenarioGridRenderer renderer,
-                           ScenarioContextMenuRegistry scenarioContextMenuRegistry) {
+    public ScenarioGrid(ScenarioGridModel model,
+                        ScenarioGridLayer scenarioGridLayer,
+                        ScenarioGridRenderer renderer,
+                        ScenarioContextMenuRegistry scenarioContextMenuRegistry) {
         super(model, scenarioGridLayer, scenarioGridLayer, renderer);
         this.scenarioContextMenuRegistry = scenarioContextMenuRegistry;
         setDraggable(false);
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
 
-    /**
-     * It set the content (i.e. the columns) of the Grid retrieving data from the given <code>Simulation</code>
-     * @param simulation
-     */
-    public abstract void setContent(Simulation simulation);
-
-    /**
-     * It set the dataset (i.e. the rows) of the Grid retrieving data from the given <code>Simulation</code>
-     */
-    protected abstract void appendRows(List<T> data);
-
-    /**
-     * It set the dataset (i.e. the rows) of the Grid retrieving data from the given rowIndex and data
-     */
-    protected abstract void appendRow(int rowIndex, T data);
+    public void setContent(Simulation simulation) {
+        ((ScenarioGridModel) model).clear();
+        ((ScenarioGridModel) model).bindContent(simulation);
+        setHeaderColumns(simulation);
+        appendRows(simulation);
+        ((ScenarioGridModel) model).loadFactMappingsWidth();
+        ((ScenarioGridModel) model).forceRefreshWidth();
+    }
 
     public EventBus getEventBus() {
         return eventBus;
@@ -96,6 +87,14 @@ public abstract class ScenarioGrid<T extends ScenarioData> extends BaseGridWidge
         this.eventBus = eventBus;
         ((ScenarioGridModel) model).setEventBus(eventBus);
         scenarioContextMenuRegistry.setEventBus(eventBus);
+    }
+
+    public ScenarioSimulationContext getScenarioSimulationContext() {
+        return scenarioSimulationContext;
+    }
+
+    public void setScenarioSimulationContext(ScenarioSimulationContext scenarioSimulationContext) {
+        this.scenarioSimulationContext = scenarioSimulationContext;
     }
 
     @Override
@@ -255,6 +254,15 @@ public abstract class ScenarioGrid<T extends ScenarioData> extends BaseGridWidge
     protected ScenarioSimulationBuilders.HeaderBuilder getHeaderBuilderLocal(String instanceTitle, String
             propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType) {
         return ScenarioSimulationUtils.getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, ((ScenarioGridModel) model).getScenarioHeaderTextBoxSingletonDOMElementFactory());
+    }
+
+    protected void appendRows(Simulation simulation) {
+        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
+        IntStream.range(0, scenarios.size()).forEach(rowIndex -> appendRow(rowIndex, scenarios.get(rowIndex)));
+    }
+
+    protected void appendRow(int rowIndex, Scenario scenario) {
+        ((ScenarioGridModel) model).insertRowGridOnly(rowIndex, new ScenarioGridRow(), scenario);
     }
 
     @Override

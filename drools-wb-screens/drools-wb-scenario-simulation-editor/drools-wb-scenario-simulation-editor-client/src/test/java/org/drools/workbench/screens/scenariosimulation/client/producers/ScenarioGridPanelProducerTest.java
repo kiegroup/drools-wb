@@ -45,8 +45,8 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
         super.setup();
         scenarioGridPanelProducer = spy(new ScenarioGridPanelProducer() {
             {
-                this.scenarioGridLayer = scenarioGridLayerMock;
-                this.scenarioGridPanel = scenarioGridPanelMock;
+                this.scenarioMainGridLayer = scenarioGridLayerMock;
+                this.scenarioMainGridPanel = scenarioGridPanelMock;
             }
         });
     }
@@ -60,7 +60,7 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
 
     @Test
     public void getScenarioGridPanel() {
-        final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getScenarioGridPanel();
+        final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getScenarioBackgroundGridPanel();
         assertEquals(scenarioGridPanelMock, retrieved);
     }
 }

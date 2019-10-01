@@ -62,6 +62,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         errorReportPopupPresenter.hide();
     }
 
+    @Override
     public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
         this.errorReportPopupPresenter = errorReportPopupPresenter;
     }

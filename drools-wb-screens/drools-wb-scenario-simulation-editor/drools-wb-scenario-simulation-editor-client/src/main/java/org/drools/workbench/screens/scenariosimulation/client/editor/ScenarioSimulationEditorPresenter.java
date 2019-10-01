@@ -101,10 +101,11 @@ public class ScenarioSimulationEditorPresenter {
     protected String packageName = "";
     protected ObservablePath path;
     protected EventBus eventBus;
-    protected ScenarioGridPanel scenarioGridPanel;
+    protected ScenarioGridPanel scenarioMainGridPanel;
+    protected ScenarioGridPanel scenarioBackgroundGridPanel;
     protected PlaceManager placeManager;
     protected DataManagementStrategy dataManagementStrategy;
-    protected ScenarioSimulationContext context;
+    protected ScenarioSimulationContext focusedContext;
     protected ScenarioSimulationModel model;
     protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
@@ -125,7 +126,6 @@ public class ScenarioSimulationEditorPresenter {
     public ScenarioSimulationEditorPresenter(final ScenarioSimulationProducer scenarioSimulationProducer,
                                              final ScenarioSimulationResourceType type,
                                              final PlaceManager placeManager,
-                                             // TO BE WRAPPED
                                              final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final TextFileExport textFileExport,
@@ -135,15 +135,16 @@ public class ScenarioSimulationEditorPresenter {
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
         this.type = type;
         this.placeManager = placeManager;
-        this.context = scenarioSimulationProducer.getScenarioSimulationContext();
         this.eventBus = scenarioSimulationProducer.getEventBus();
         this.textFileExport = textFileExport;
         this.confirmPopupPresenter = confirmPopupPresenter;
-        scenarioGridPanel = view.getScenarioGridPanel();
-        context.setScenarioSimulationEditorPresenter(this);
+        scenarioMainGridPanel = view.getScenarioMainGridPanel();
+        scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
+        scenarioMainGridPanel.select();
+        scenarioBackgroundGridPanel = view.getScenarioBackgroundGridPanel();
+        scenarioBackgroundGridPanel.getScenarioGrid().getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
-        scenarioGridPanel.select();
         scenarioPresenterId = SCENARIO_PRESENTER_COUNTER.getAndIncrement();
     }
 
@@ -153,12 +154,17 @@ public class ScenarioSimulationEditorPresenter {
         testRunnerReportingPanel.reset();
     }
 
+    public void setFocusedContext(ScenarioSimulationContext focusedContext) {
+        this.focusedContext = focusedContext;
+    }
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
     public void onClose() {
-        scenarioGridPanel.unregister();
+        scenarioMainGridPanel.unregister();
+        scenarioBackgroundGridPanel.unregister();
     }
 
     /**
@@ -178,7 +184,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void hideDocks() {
         scenarioSimulationDocksHandler.removeDocks();
-        view.getScenarioGridLayer().getScenarioGrid().clearSelections();
+        scenarioMainGridPanel.getScenarioGridLayer().getScenarioGrid().clearSelections();
         unRegisterTestToolsCallback();
         clearTestToolsStatus();
     }
@@ -217,15 +223,15 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableScenarios().size())
+        List<Integer> indexes = IntStream.range(0, focusedContext.getStatus().getSimulation().getUnmodifiableScenarios().size())
                 .boxed()
                 .collect(Collectors.toList());
         onRunScenario(indexes);
     }
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
-        view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-        model.setSimulation(context.getStatus().getSimulation());
+        scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
+        model.setSimulation(focusedContext.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
@@ -261,15 +267,15 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onImport(String fileContents) {
-        scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getSimulation());
+        scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), focusedContext.getStatus().getSimulation());
     }
 
     public EventBus getEventBus() {
         return eventBus;
     }
 
-    public ScenarioSimulationContext getContext() {
-        return context;
+    public ScenarioSimulationContext getFocusedContext() {
+        return focusedContext;
     }
 
     /**
@@ -314,7 +320,7 @@ public class ScenarioSimulationEditorPresenter {
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         view.refreshContent(simulation);
-        context.getStatus().setSimulation(simulation);
+        focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
@@ -369,7 +375,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public boolean isDirty() {
         try {
-            view.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+            scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
             int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
             return scenarioSimulationEditorWrapper.getOriginalHash() != currentHashcode;
         } catch (Exception ignored) {
@@ -391,7 +397,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void onExportToCsv() {
-        scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
+        scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), focusedContext.getStatus().getSimulation());
     }
 
     protected RemoteCallback<Object> getExportCallBack() {
@@ -407,13 +413,13 @@ public class ScenarioSimulationEditorPresenter {
             cleanReadOnlyColumn(simulation);
             model.setSimulation(simulation);
             view.setContent(model.getSimulation());
-            context.getStatus().setSimulation(model.getSimulation());
+            focusedContext.getStatus().setSimulation(model.getSimulation());
             view.onResize();
         };
     }
 
     protected Command getValidateCommand() {
-        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), getValidationCallback());
+        return () -> scenarioSimulationEditorWrapper.validate(focusedContext.getStatus().getSimulation(), getValidationCallback());
     }
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
@@ -509,7 +515,7 @@ public class ScenarioSimulationEditorPresenter {
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
         view.setContent(model.getSimulation());
-        context.getStatus().setSimulation(model.getSimulation());
+        focusedContext.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
         getValidateCommand().execute();
@@ -520,9 +526,9 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void setTestTools(TestToolsView.Presenter presenter) {
-        context.setTestToolsPresenter(presenter);
+        focusedContext.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
-        dataManagementStrategy.populateTestTools(presenter, scenarioGridPanel.getScenarioGrid().getModel());
+        dataManagementStrategy.populateTestTools(presenter, scenarioMainGridPanel.getScenarioGrid().getModel());
     }
 
     protected void clearTestToolsStatus() {

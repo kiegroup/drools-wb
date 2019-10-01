@@ -17,9 +17,18 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ContextMenuHandler;
+import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 
 public interface ScenarioSimulationGridPanelClickHandler extends ClickHandler,
                                                                  ContextMenuHandler {
 
     void hideMenus();
+
+    void setScenarioContextMenuRegistry(ScenarioContextMenuRegistry scenarioContextMenuRegistry);
+
+    void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
+
+    void setEventBus(EventBus eventBus);
 }
