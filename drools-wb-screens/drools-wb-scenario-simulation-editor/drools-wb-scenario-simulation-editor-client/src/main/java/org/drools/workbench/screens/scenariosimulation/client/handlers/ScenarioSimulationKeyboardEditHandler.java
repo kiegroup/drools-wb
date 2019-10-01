@@ -33,10 +33,8 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
     @Override
     public boolean isExecutable(final GridWidget gridWidget) {
         final GridData model = gridWidget.getModel();
-        if (model.getSelectedHeaderCells().size() == 1 && model.getSelectedCells().size() == 0) {
-            return true;
-        }
-        if (model.getSelectedHeaderCells().size() == 0 && model.getSelectedCells().size() == 1) {
+        if ((!model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().isEmpty()) ||
+                (model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().size() == 1)) {
             return true;
         }
         return false;
