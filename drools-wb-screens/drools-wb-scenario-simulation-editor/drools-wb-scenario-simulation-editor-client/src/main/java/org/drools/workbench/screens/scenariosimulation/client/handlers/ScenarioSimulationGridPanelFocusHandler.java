@@ -22,6 +22,7 @@ public class ScenarioSimulationGridPanelFocusHandler implements FocusHandler {
 
     @Override
     public void onFocus(FocusEvent focusEvent) {
-        //TODO
+        int i = 0;
+        i++;
     }
 }

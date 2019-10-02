@@ -44,4 +44,6 @@ public interface ScenarioSimulationEditorWrapper {
     void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AuditLog auditLog);
 
     void validate(Simulation simulation, RemoteCallback<?> callback);
+
+    void addTab(IsWidget widget, String title);
 }

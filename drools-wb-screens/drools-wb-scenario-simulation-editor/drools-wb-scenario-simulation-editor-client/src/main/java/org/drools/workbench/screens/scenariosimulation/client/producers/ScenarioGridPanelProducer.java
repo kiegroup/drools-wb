@@ -67,8 +67,9 @@ public class ScenarioGridPanelProducer {
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false),
                                                            scenarioContextMenuRegistry);
+        scenarioGrid.setDraggable(false);
         scenarioGridLayer.addScenarioGrid(scenarioGrid);
-        scenarioGridPanel.add(scenarioGridPanel);
+        scenarioGridPanel.add(scenarioGridLayer);
         ScenarioSimulationContext scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanel);
         scenarioGrid.setScenarioSimulationContext(scenarioSimulationContext);
         scenarioGridModel.setCollectionEditorSingletonDOMElementFactory(

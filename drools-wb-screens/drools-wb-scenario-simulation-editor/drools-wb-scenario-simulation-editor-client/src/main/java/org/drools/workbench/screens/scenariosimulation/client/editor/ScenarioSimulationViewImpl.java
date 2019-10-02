@@ -73,12 +73,12 @@ public class ScenarioSimulationViewImpl
                 scenarioMainGridPanel.getScenarioGridLayer().getScenarioGrid(), () -> {
                 });  // Hack to overcome default implementation
         initWidget(scenarioMainGridPanel);
-        initWidget(scenarioBackgroundGridPanel);
     }
 
     @Override
     public void setContent(Simulation simulation) {
         scenarioMainGridPanel.getScenarioGrid().setContent(simulation);
+        scenarioBackgroundGridPanel.getScenarioGrid().setContent(simulation.cloneSimulation());
 
         // prepare grid for keyboard navigation
         scenarioMainGridPanel.setFocus(true);

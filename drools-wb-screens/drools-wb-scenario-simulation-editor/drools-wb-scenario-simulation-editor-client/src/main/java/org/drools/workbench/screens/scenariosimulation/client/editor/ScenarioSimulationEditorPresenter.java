@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -96,7 +97,10 @@ import static org.drools.workbench.screens.scenariosimulation.service.ImportExpo
 public class ScenarioSimulationEditorPresenter {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
+    protected static final String MAIN_TAB_TITLE = "Model";
+    protected static final String BACKGROUND_TAB_TITLE = "Background";
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
+
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
     protected ObservablePath path;
@@ -511,6 +515,8 @@ public class ScenarioSimulationEditorPresenter {
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
+
+        scenarioSimulationEditorWrapper.addTab(scenarioBackgroundGridPanel, BACKGROUND_TAB_TITLE);
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
@@ -644,5 +650,13 @@ public class ScenarioSimulationEditorPresenter {
 
     private Command createPopulateTestToolsCommand() {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
+    }
+
+    public void updateFocusedScenarioContext(String tabTitle) {
+        if (Objects.equals(BACKGROUND_TAB_TITLE, tabTitle)) {
+            focusedContext = scenarioBackgroundGridPanel.getScenarioGrid().getScenarioSimulationContext();
+        } else if (Objects.equals(MAIN_TAB_TITLE, tabTitle)) {
+            focusedContext = scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext();
+        }
     }
 }

@@ -34,7 +34,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 /**
- * ScenarioGridPanel implementation of <code>GridLienzoPanel</code>.
+ * ScenarioGridPanel implementation ofScenarioSimulationEditorPresenter <code>GridLienzoPanel</code>.
  * <p>
  * This panel contains a <code>ScenarioGridLayer</code> and it is instantiated only once.
  * The Clicks are managed by the injected <code>ScenarioSimulationMainGridPanelClickHandler</code>

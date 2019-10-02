@@ -72,6 +72,9 @@ public class ScenarioSimulationViewProducer {
                       scenarioBackgroundGridPanelClickHandler,
                       scenarioBackgroundGridPanelMouseMoveHandler,
                       scenarioSimulationGridPanelFocusHandler);
+        ;
+        scenarioSimulationView.setScenarioMainGridPanel(scenarioGridPanelProducer.getScenarioMainGridPanel());
+        scenarioSimulationView.setScenarioBackgroundGridPanel(scenarioGridPanelProducer.getScenarioBackgroundGridPanel());
         return scenarioSimulationView;
     }
 
@@ -91,7 +94,6 @@ public class ScenarioSimulationViewProducer {
         mouseMoveHandler.setScenarioGridPanel(scenarioGridPanel);
         mouseMoveHandler.setErrorReportPopupPresenter(errorReportPopupPresenter);
         scenarioGridPanel.addHandlers(clickHandler, mouseMoveHandler, focusHandler);
-        scenarioSimulationView.setScenarioMainGridPanel(scenarioGridPanel);
     }
 
     public ScenarioContextMenuRegistry getScenarioContextMenuRegistry() {
