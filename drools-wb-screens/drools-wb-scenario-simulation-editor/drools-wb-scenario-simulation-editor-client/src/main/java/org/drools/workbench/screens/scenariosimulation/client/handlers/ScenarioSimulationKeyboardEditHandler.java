@@ -33,11 +33,8 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
     @Override
     public boolean isExecutable(final GridWidget gridWidget) {
         final GridData model = gridWidget.getModel();
-        if ((!model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().isEmpty()) ||
-                (model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().size() == 1)) {
-            return true;
-        }
-        return false;
+        return ((!model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().isEmpty()) ||
+                (model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().size() == 1));
     }
 
     @Override
@@ -49,9 +46,9 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
         // Allows editing only if a single cell is selected
         GridData.SelectedCell selectedCell = null;
         boolean isHeader = true;
-        if (scenarioGridModel.getSelectedHeaderCells().size() > 0) {
+        if (!scenarioGridModel.getSelectedHeaderCells().isEmpty()) {
             selectedCell = scenarioGridModel.getSelectedHeaderCells().get(0);
-        } else if (scenarioGridModel.getSelectedCells().size() > 0) {
+        } else if (!scenarioGridModel.getSelectedCells().isEmpty()) {
             selectedCell = scenarioGridModel.getSelectedCellsOrigin();
             isHeader = false;
         }
