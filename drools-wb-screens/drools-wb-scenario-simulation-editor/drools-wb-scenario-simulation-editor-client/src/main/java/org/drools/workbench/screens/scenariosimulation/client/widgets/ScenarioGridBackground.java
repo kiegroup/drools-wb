@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.google.gwt.user.client.ui.ResizeComposite;
@@ -37,16 +36,11 @@ public class ScenarioGridBackground extends ResizeComposite {
 
     public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
         this.scenarioGridPanel = scenarioGridPanel;
-       /* panel.getScenarioGridLayer().enterPinnedMode(
-                panel.getScenarioGridLayer().getScenarioGrid(), () -> {
-                });  // Hack to overcome default implementation*/
         initWidget(scenarioGridPanel);
     }
+
     public void setContent(Simulation simulation) {
         scenarioGridPanel.getScenarioGrid().setContent(simulation);
-
-        // prepare grid for keyboard navigation
-        //scenarioGridPanel.setFocus(true);
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

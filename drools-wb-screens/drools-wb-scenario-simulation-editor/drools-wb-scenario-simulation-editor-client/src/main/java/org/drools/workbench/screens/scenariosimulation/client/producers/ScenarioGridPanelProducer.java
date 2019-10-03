@@ -23,6 +23,8 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioInvokeContextMenuForSelectedCell;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationKeyboardEditHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
@@ -30,6 +32,12 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidgetKeyboardHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveDown;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveLeft;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveRight;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationMoveUp;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationSelectTopLeftCell;
 
 /**
  * <code>@Dependent</code> <i>Producer</i> for a given {@link ScenarioGridPanel}
@@ -86,6 +94,21 @@ public class ScenarioGridPanelProducer {
                 new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
                                                                     scenarioGridLayer,
                                                                     scenarioGridLayer.getScenarioGrid()));
+
+        final ScenarioSimulationKeyboardEditHandler scenarioSimulationKeyboardEditHandler =
+                new ScenarioSimulationKeyboardEditHandler(scenarioGridLayer);
+        final ScenarioInvokeContextMenuForSelectedCell invokeContextMenuKeyboardOperation =
+                new ScenarioInvokeContextMenuForSelectedCell(scenarioGridLayer, scenarioContextMenuRegistry);
+
+        final BaseGridWidgetKeyboardHandler handler = new BaseGridWidgetKeyboardHandler(scenarioGridLayer);
+        handler.addOperation(scenarioSimulationKeyboardEditHandler,
+                             new KeyboardOperationSelectTopLeftCell(scenarioGridLayer),
+                             new KeyboardOperationMoveLeft(scenarioGridLayer),
+                             new KeyboardOperationMoveRight(scenarioGridLayer),
+                             new KeyboardOperationMoveUp(scenarioGridLayer),
+                             new KeyboardOperationMoveDown(scenarioGridLayer),
+                             invokeContextMenuKeyboardOperation);
+        scenarioGridPanel.addKeyDownHandler(handler);
     }
 
     public ScenarioGridPanel getScenarioMainGridPanel() {
