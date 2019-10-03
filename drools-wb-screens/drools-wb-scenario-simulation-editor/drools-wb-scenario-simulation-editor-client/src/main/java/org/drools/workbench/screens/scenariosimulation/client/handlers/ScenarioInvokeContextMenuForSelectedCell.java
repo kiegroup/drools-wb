@@ -42,13 +42,8 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
     @Override
     public boolean isExecutable(final GridWidget gridWidget) {
         final GridData model = gridWidget.getModel();
-        if (model.getSelectedHeaderCells().size() == 1 && model.getSelectedCells().size() == 0) {
-            return true;
-        }
-        if (model.getSelectedHeaderCells().size() == 0 && model.getSelectedCells().size() == 1) {
-            return true;
-        }
-        return false;
+        return ((!model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().isEmpty()) ||
+                (model.getSelectedHeaderCells().isEmpty() && model.getSelectedCells().size() == 1));
     }
 
     @Override
@@ -56,12 +51,14 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
         final GridData model = gridWidget.getModel();
         GridData.SelectedCell origin = null;
         boolean isHeader = false;
-        if (model.getSelectedHeaderCells().size() == 1) {
+        if (!model.getSelectedHeaderCells().isEmpty()) {
             origin = model.getSelectedHeaderCells().get(0);
             isHeader = true;
-        } else if (model.getSelectedCells().size() == 1) {
+        } else if (!model.getSelectedCells().isEmpty()) {
             origin = model.getSelectedCellsOrigin();
-            isHeader = false;
+        }
+        if (origin == null) {
+            return false;
         }
         final int uiRowIndex = origin.getRowIndex();
         final int uiColumnIndex = ColumnIndexUtilities.findUiColumnIndex(model.getColumns(),
