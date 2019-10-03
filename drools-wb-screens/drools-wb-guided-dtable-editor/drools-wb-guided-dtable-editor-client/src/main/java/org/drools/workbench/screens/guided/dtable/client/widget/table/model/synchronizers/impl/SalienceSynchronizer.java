@@ -71,7 +71,7 @@ public class SalienceSynchronizer {
     private void setSalienceByRowNumbers( final AttributeCol52 modelColumn,
                                           final int iModelColumn ) {
         //If Salience values are reverse order derive them and update column
-        int salience = (modelColumn.isReverseOrder() ? model.getData().size() : 1);
+        int salience = modelColumn.isReverseOrder() ? model.getData().size() : 1;
         for (int rowNumber = 0; rowNumber < model.getData().size(); rowNumber++) {
             final List<DTCellValue52> modelRow = model.getData().get( rowNumber );
             final DTCellValue52 modelCell = modelRow.get( iModelColumn );
