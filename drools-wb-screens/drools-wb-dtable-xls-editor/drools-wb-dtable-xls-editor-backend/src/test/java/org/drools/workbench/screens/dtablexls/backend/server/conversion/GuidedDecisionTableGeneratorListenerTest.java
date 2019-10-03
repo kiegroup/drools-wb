@@ -180,45 +180,45 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
         //Check individual attributes
         AttributeCol52 attrCol2 = ((AttributeCol52) columns.get(2));
-        assertEquals(Attribute.SALIENCE,
+        assertEquals(Attribute.SALIENCE.getAttributeName(),
                      attrCol2.getAttribute());
         assertFalse(attrCol2.isUseRowNumber());
         assertFalse(attrCol2.isReverseOrder());
 
         AttributeCol52 attrCol3 = ((AttributeCol52) columns.get(3));
-        assertEquals(Attribute.ACTIVATION_GROUP,
+        assertEquals(Attribute.ACTIVATION_GROUP.getAttributeName(),
                      attrCol3.getAttribute());
 
         AttributeCol52 attrCol4 = ((AttributeCol52) columns.get(4));
-        assertEquals(Attribute.DURATION,
+        assertEquals(Attribute.DURATION.getAttributeName(),
                      attrCol4.getAttribute());
 
         AttributeCol52 attrCol5 = ((AttributeCol52) columns.get(5));
-        assertEquals(Attribute.TIMER,
+        assertEquals(Attribute.TIMER.getAttributeName(),
                      attrCol5.getAttribute());
 
         AttributeCol52 attrCol6 = ((AttributeCol52) columns.get(6));
-        assertEquals(Attribute.CALENDARS,
+        assertEquals(Attribute.CALENDARS.getAttributeName(),
                      attrCol6.getAttribute());
 
         AttributeCol52 attrCol7 = ((AttributeCol52) columns.get(7));
-        assertEquals(Attribute.NO_LOOP,
+        assertEquals(Attribute.NO_LOOP.getAttributeName(),
                      attrCol7.getAttribute());
 
         AttributeCol52 attrCol8 = ((AttributeCol52) columns.get(8));
-        assertEquals(Attribute.LOCK_ON_ACTIVE,
+        assertEquals(Attribute.LOCK_ON_ACTIVE.getAttributeName(),
                      attrCol8.getAttribute());
 
         AttributeCol52 attrCol9 = ((AttributeCol52) columns.get(9));
-        assertEquals(Attribute.AUTO_FOCUS,
+        assertEquals(Attribute.AUTO_FOCUS.getAttributeName(),
                      attrCol9.getAttribute());
 
         AttributeCol52 attrCol10 = ((AttributeCol52) columns.get(10));
-        assertEquals(Attribute.AGENDA_GROUP,
+        assertEquals(Attribute.AGENDA_GROUP.getAttributeName(),
                      attrCol10.getAttribute());
 
         AttributeCol52 attrCol11 = ((AttributeCol52) columns.get(11));
-        assertEquals(Attribute.RULEFLOW_GROUP,
+        assertEquals(Attribute.RULEFLOW_GROUP.getAttributeName(),
                      attrCol11.getAttribute());
 
         //Check data
@@ -281,7 +281,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
         //Check attribute column
         AttributeCol52 attrCol2 = ((AttributeCol52) columns.get(2));
-        assertEquals(Attribute.SALIENCE,
+        assertEquals(Attribute.SALIENCE.getAttributeName(),
                      attrCol2.getAttribute());
         assertTrue(attrCol2.isUseRowNumber());
         assertTrue(attrCol2.isReverseOrder());
@@ -352,7 +352,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
         //Check attribute column
         AttributeCol52 attrCol2 = ((AttributeCol52) columns.get(2));
-        assertEquals(Attribute.SALIENCE,
+        assertEquals(Attribute.SALIENCE.getAttributeName(),
                      attrCol2.getAttribute());
         assertFalse(attrCol2.isUseRowNumber());
         assertFalse(attrCol2.isReverseOrder());
@@ -423,7 +423,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
         //Check attribute column
         AttributeCol52 attrCol2 = ((AttributeCol52) columns.get(2));
-        assertEquals(Attribute.DURATION,
+        assertEquals(Attribute.DURATION.getAttributeName(),
                      attrCol2.getAttribute());
         assertFalse(attrCol2.isUseRowNumber());
         assertFalse(attrCol2.isReverseOrder());
@@ -1071,7 +1071,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
         assertTrue(columns0.get(4) instanceof BRLActionVariableColumn);
 
         AttributeCol52 attrCol0_2 = ((AttributeCol52) columns0.get(2));
-        assertEquals(Attribute.AGENDA_GROUP,
+        assertEquals(Attribute.AGENDA_GROUP.getAttributeName(),
                      attrCol0_2.getAttribute());
 
         //Check individual condition columns

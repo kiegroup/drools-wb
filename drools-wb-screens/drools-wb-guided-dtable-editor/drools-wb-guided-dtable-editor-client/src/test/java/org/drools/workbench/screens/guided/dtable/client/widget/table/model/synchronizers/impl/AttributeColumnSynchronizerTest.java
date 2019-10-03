@@ -622,7 +622,7 @@ public class AttributeColumnSynchronizerTest extends BaseSynchronizerTest {
                      uiModelColumn1.getHeaderMetaData().get(0).getTitle());
         assertEquals(Attribute.AGENDA_GROUP.getAttributeName(),
                      uiModelColumn2.getHeaderMetaData().get(0).getTitle());
-        assertEquals(Attribute.AUTO_FOCUS,
+        assertEquals(Attribute.AUTO_FOCUS.getAttributeName(),
                      uiModelColumn3.getHeaderMetaData().get(0).getTitle());
         assertTrue(uiModelColumn1 instanceof IntegerUiColumn);
         assertTrue(uiModelColumn2 instanceof StringUiColumn);

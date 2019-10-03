@@ -41,7 +41,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -169,7 +168,7 @@ public class AttributeColumnPageTest {
 
     @Test
     public void testSelectItem() {
-        final String item = mock(String.class);
+        final String item = "attributeMock";
 
         page.selectItem(item);
 
