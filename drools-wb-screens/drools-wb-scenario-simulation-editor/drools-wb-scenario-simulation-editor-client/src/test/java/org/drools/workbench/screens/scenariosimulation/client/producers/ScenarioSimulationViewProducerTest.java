@@ -81,6 +81,6 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         verify(commonOnMoveHandlerMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
         verify(commonOnMoveHandlerMock, times(1)).setErrorReportPopupPresenter(eq(errorReportPopupPresenterMock));
         //verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationMainGridPanelClickHandlerMock), eq(commonOnMoveHandlerMock));
-        verify(retrieved, times(1)).setScenarioMainGridPanel(eq(scenarioGridPanelMock));
+        verify(retrieved, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
     }
 }

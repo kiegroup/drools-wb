@@ -39,9 +39,7 @@ public class ScenarioSimulationViewImpl
         extends KieEditorViewImpl
         implements ScenarioSimulationView {
 
-    private ScenarioGridPanel scenarioMainGridPanel;
-
-    private ScenarioGridPanel scenarioBackgroundGridPanel;
+    private ScenarioGridPanel scenarioGridPanel;
 
     private ScenarioSimulationEditorPresenter presenter;
 
@@ -62,31 +60,30 @@ public class ScenarioSimulationViewImpl
      * @param scenarioGridPanel
      */
     @Override
-    public void setScenarioMainGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioMainGridPanel = scenarioGridPanel;
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
     }
 
     @Override
     public void init(final ScenarioSimulationEditorPresenter presenter) {
         this.presenter = presenter;
-        scenarioMainGridPanel.getScenarioGridLayer().enterPinnedMode(
-                scenarioMainGridPanel.getScenarioGridLayer().getScenarioGrid(), () -> {
+        scenarioGridPanel.getScenarioGridLayer().enterPinnedMode(
+                scenarioGridPanel.getScenarioGridLayer().getScenarioGrid(), () -> {
                 });  // Hack to overcome default implementation
-        initWidget(scenarioMainGridPanel);
+        initWidget(scenarioGridPanel);
     }
 
     @Override
     public void setContent(Simulation simulation) {
-        scenarioMainGridPanel.getScenarioGrid().setContent(simulation);
-        scenarioBackgroundGridPanel.getScenarioGrid().setContent(simulation.cloneSimulation());
+        scenarioGridPanel.getScenarioGrid().setContent(simulation);
 
         // prepare grid for keyboard navigation
-        scenarioMainGridPanel.setFocus(true);
+        scenarioGridPanel.setFocus(true);
     }
 
     @Override
     public void refreshContent(Simulation simulation) {
-        scenarioMainGridPanel.getScenarioGrid().getModel().bindContent(simulation);
+        scenarioGridPanel.getScenarioGrid().getModel().bindContent(simulation);
         refreshErrors();
     }
 
@@ -145,22 +142,12 @@ public class ScenarioSimulationViewImpl
     }
 
     @Override
-    public ScenarioGridPanel getScenarioMainGridPanel() {
-        return scenarioMainGridPanel;
-    }
-
-    @Override
-    public void setScenarioBackgroundGridPanel(ScenarioGridPanel scenarioBackgroundGridPanel) {
-        this.scenarioBackgroundGridPanel = scenarioBackgroundGridPanel;
-    }
-
-    @Override
-    public ScenarioGridPanel getScenarioBackgroundGridPanel() {
-        return scenarioBackgroundGridPanel;
+    public ScenarioGridPanel getScenarioGridPanel() {
+        return scenarioGridPanel;
     }
 
     private void refreshErrors() {
-        scenarioMainGridPanel.getScenarioGrid().getModel().refreshErrors();
+        scenarioGridPanel.getScenarioGrid().getModel().refreshErrors();
         onResize();
     }
 
@@ -172,6 +159,6 @@ public class ScenarioSimulationViewImpl
             final double h = parent.getOffsetHeight();
             setPixelSize((int) w, (int) h);
         }
-        scenarioMainGridPanel.onResize();
+        scenarioGridPanel.onResize();
     }
 }

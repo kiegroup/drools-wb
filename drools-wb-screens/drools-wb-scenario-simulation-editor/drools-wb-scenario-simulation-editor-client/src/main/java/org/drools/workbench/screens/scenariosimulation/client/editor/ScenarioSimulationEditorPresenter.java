@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -65,6 +64,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -97,16 +97,13 @@ import static org.drools.workbench.screens.scenariosimulation.service.ImportExpo
 public class ScenarioSimulationEditorPresenter {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
-    protected static final String MAIN_TAB_TITLE = "Model";
-    protected static final String BACKGROUND_TAB_TITLE = "Background";
     private static final AtomicLong SCENARIO_PRESENTER_COUNTER = new AtomicLong();
-
     //Package for which this Scenario Simulation relates
     protected String packageName = "";
     protected ObservablePath path;
     protected EventBus eventBus;
     protected ScenarioGridPanel scenarioMainGridPanel;
-    protected ScenarioGridPanel scenarioBackgroundGridPanel;
+    protected ScenarioGridBackground scenarioGridBackground;
     protected PlaceManager placeManager;
     protected DataManagementStrategy dataManagementStrategy;
     protected ScenarioSimulationContext focusedContext;
@@ -142,13 +139,18 @@ public class ScenarioSimulationEditorPresenter {
         this.eventBus = scenarioSimulationProducer.getEventBus();
         this.textFileExport = textFileExport;
         this.confirmPopupPresenter = confirmPopupPresenter;
-        scenarioMainGridPanel = view.getScenarioMainGridPanel();
-        scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
+        scenarioMainGridPanel = view.getScenarioGridPanel();
+        scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext()
+                .setScenarioSimulationEditorPresenter(this);
         scenarioMainGridPanel.select();
-        scenarioBackgroundGridPanel = view.getScenarioBackgroundGridPanel();
-        scenarioBackgroundGridPanel.getScenarioGrid().getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
+        scenarioGridBackground = scenarioSimulationProducer.getScenarioGridBackground();
+        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext()
+                .setScenarioSimulationEditorPresenter(this);
+        setMainContextFocused();
+        scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
+        scenarioMainGridPanel.select();
         scenarioPresenterId = SCENARIO_PRESENTER_COUNTER.getAndIncrement();
     }
 
@@ -158,8 +160,12 @@ public class ScenarioSimulationEditorPresenter {
         testRunnerReportingPanel.reset();
     }
 
-    public void setFocusedContext(ScenarioSimulationContext focusedContext) {
-        this.focusedContext = focusedContext;
+    public void setMainContextFocused() {
+        focusedContext = scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext();
+    }
+
+    public void setBackgroundContextFocused() {
+        focusedContext = scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext();
     }
 
     public void setPackageName(String packageName) {
@@ -168,7 +174,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onClose() {
         scenarioMainGridPanel.unregister();
-        scenarioBackgroundGridPanel.unregister();
+        scenarioGridBackground.getScenarioGridPanel().unregister();
     }
 
     /**
@@ -430,7 +436,7 @@ public class ScenarioSimulationEditorPresenter {
         return result -> {
             view.hideBusyIndicator();
 
-            if (result != null && result.size() > 0) {
+            if (result != null && !result.isEmpty()) {
                 StringBuilder errorMessage = new StringBuilder(ScenarioSimulationEditorConstants.INSTANCE.validationErrorMessage());
                 errorMessage.append(":<br/>");
                 for (FactMappingValidationError validationError : result) {
@@ -508,6 +514,8 @@ public class ScenarioSimulationEditorPresenter {
                         presenter.setCurrentPath(path);
                     });
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -515,12 +523,12 @@ public class ScenarioSimulationEditorPresenter {
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
-
-        scenarioSimulationEditorWrapper.addTab(scenarioBackgroundGridPanel, BACKGROUND_TAB_TITLE);
+        scenarioSimulationEditorWrapper.addBackgroundPage(scenarioGridBackground);
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
         view.setContent(model.getSimulation());
+        scenarioGridBackground.setContent(model.getSimulation().cloneSimulation());
         focusedContext.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
@@ -542,20 +550,20 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void setCheatSheet(CheatSheetView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        presenter.initCheatSheet(type);
+        Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        presenter.initCheatSheet(modelType);
     }
 
     protected void setSettings(SettingsView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
+        Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        presenter.setScenarioType(modelType, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         presenter.setSaveCommand(getSaveCommand());
     }
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
-        Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
-        presenter.populateCoverageReport(type, simulationRunMetadata);
+        presenter.populateCoverageReport(modelType, simulationRunMetadata);
         if (simulationRunMetadata != null && simulationRunMetadata.getAuditLog() != null) {
             presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditLog() ));
         }
@@ -650,13 +658,5 @@ public class ScenarioSimulationEditorPresenter {
 
     private Command createPopulateTestToolsCommand() {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
-    }
-
-    public void updateFocusedScenarioContext(String tabTitle) {
-        if (Objects.equals(BACKGROUND_TAB_TITLE, tabTitle)) {
-            focusedContext = scenarioBackgroundGridPanel.getScenarioGrid().getScenarioSimulationContext();
-        } else if (Objects.equals(MAIN_TAB_TITLE, tabTitle)) {
-            focusedContext = scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext();
-        }
     }
 }

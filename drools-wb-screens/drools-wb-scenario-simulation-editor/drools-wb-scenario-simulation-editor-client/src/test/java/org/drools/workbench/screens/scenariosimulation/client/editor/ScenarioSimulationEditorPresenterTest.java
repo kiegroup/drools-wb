@@ -158,7 +158,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setup() {
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-        when(scenarioSimulationViewMock.getScenarioMainGridPanel()).thenReturn(scenarioGridPanelMock);
+        when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(scenarioSimulationViewMock.getRunScenarioMenuItem()).thenReturn(runScenarioMenuItemMock);
         when(scenarioSimulationViewMock.getUndoMenuItem()).thenReturn(undoMenuItemMock);
         when(scenarioSimulationViewMock.getRedoMenuItem()).thenReturn(redoMenuItemMock);
@@ -561,7 +561,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void isDirty() {
-        when(scenarioSimulationViewMock.getScenarioMainGridPanel()).thenThrow(new RuntimeException());
+        when(scenarioSimulationViewMock.getScenarioGridPanel()).thenThrow(new RuntimeException());
         assertFalse(presenter.isDirty());
     }
 

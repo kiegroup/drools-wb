@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -33,7 +32,6 @@ import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.editor.BackGroundWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -41,7 +39,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -64,7 +62,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.client.views.pfly.multipage.MultiPageEditorSelectedPageEvent;
+import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
 import org.uberfire.ext.editor.commons.service.support.SupportsRename;
@@ -96,7 +94,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     private Caller<DMNTypeService> dmnTypeService;
     private Caller<ImportExportService> importExportService;
     private Caller<RunnerReportService> runnerReportService;
-    private int page;
 
     public ScenarioSimulationEditorBusinessCentralWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -282,7 +279,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     protected void synchronizeColumnsDimension() {
         final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView()
-                .getScenarioMainGridPanel().getScenarioGridLayer().getScenarioGrid().getModel();
+                .getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid().getModel();
         scenarioGridModel.synchronizeFactMappingsWidths();
     }
 
@@ -349,18 +346,30 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 
+    /**
+     * This method is called when the main grid tab (Model) is focused
+     */
     @Override
-    public void addTab(IsWidget widget, String title) {
-        BackGroundWrapper wrapper = new BackGroundWrapper();
-        wrapper.init((ScenarioGridPanel) widget);
-        kieView.getMultiPage().addWidget(wrapper, title);
+    public void onEditTabSelected() {
+        scenarioSimulationEditorPresenter.setMainContextFocused();
+    }
+
+    /**
+     * This method adds specifically the Background grid and its related onFocus behavior
+     * @param scenarioGridBackground
+     */
+    @Override
+    public void addBackgroundPage(ScenarioGridBackground scenarioGridBackground) {
+        addPage(new PageImpl(scenarioGridBackground,
+                             "BackGround") {
+            @Override
+            public void onFocus() {
+                scenarioSimulationEditorPresenter.setBackgroundContextFocused();
+            }
+        });
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
         return this::getModelSuccessCallbackMethod;
-    }
-
-    public void onMultiPageEditorSelectedPageEvent(final @Observes MultiPageEditorSelectedPageEvent event) {
-        scenarioSimulationEditorPresenter.updateFocusedScenarioContext(event.getPageTitle());
     }
 }

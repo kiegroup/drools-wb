@@ -207,7 +207,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                 this.preserveDeletePopupPresenter = preserveDeletePopupPresenterMock;
                 this.confirmPopupPresenter = confirmPopupPresenterMock;
                 this.fileUploadPopupPresenter = fileUploadPopupPresenterMock;
-                this.context = scenarioSimulationContextLocal;
+                //this.context = scenarioSimulationContextLocal;
                 this.scenarioCommandManager = scenarioCommandManagerMock;
                 this.scenarioCommandRegistry = scenarioCommandRegistryMock;
                 this.notificationEvent = ScenarioSimulationEventHandlerTest.this.notificationEvent;

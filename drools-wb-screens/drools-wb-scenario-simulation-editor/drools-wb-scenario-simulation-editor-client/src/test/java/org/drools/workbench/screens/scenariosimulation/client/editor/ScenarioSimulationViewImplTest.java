@@ -55,7 +55,7 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGrid.getModel()).thenReturn(scenarioGridModel);
 
         scenarioView = new ScenarioSimulationViewImpl();
-        scenarioView.setScenarioMainGridPanel(scenarioGridPanel);
+        scenarioView.setScenarioGridPanel(scenarioGridPanel);
     }
 
     @Test
