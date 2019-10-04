@@ -169,7 +169,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
-
+        when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
     }
@@ -313,6 +313,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationEditorBusinessClientWrapper.loadContent();
         verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(CommandDrivenErrorCallback.class));
         verify(scenarioSimulationServiceMock, times(1)).loadContent(eq(observablePathMock));
+    }
+
+    @Test
+    public void onEditTabSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setMainContextFocused();
     }
 
     @Test

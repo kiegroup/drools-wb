@@ -37,6 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
@@ -360,8 +361,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
      */
     @Override
     public void addBackgroundPage(ScenarioGridBackground scenarioGridBackground) {
-        addPage(new PageImpl(scenarioGridBackground,
-                             "BackGround") {
+        addPage(new PageImpl(scenarioGridBackground, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
                 scenarioSimulationEditorPresenter.setBackgroundContextFocused();

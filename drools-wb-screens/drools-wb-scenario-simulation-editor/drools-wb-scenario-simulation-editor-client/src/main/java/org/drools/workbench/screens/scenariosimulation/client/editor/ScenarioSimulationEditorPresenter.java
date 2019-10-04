@@ -150,7 +150,6 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
-        scenarioMainGridPanel.select();
         scenarioPresenterId = SCENARIO_PRESENTER_COUNTER.getAndIncrement();
     }
 
@@ -195,6 +194,7 @@ public class ScenarioSimulationEditorPresenter {
     public void hideDocks() {
         scenarioSimulationDocksHandler.removeDocks();
         scenarioMainGridPanel.getScenarioGridLayer().getScenarioGrid().clearSelections();
+        scenarioGridBackground.getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid().clearSelections();
         unRegisterTestToolsCallback();
         clearTestToolsStatus();
     }
@@ -241,6 +241,9 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
+        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
+        /* Background note: Here, the data from both grids should be merged (in the model) and send to the RunScenario
+        * Data are stored in 2 different context  */
         model.setSimulation(focusedContext.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
@@ -330,6 +333,8 @@ public class ScenarioSimulationEditorPresenter {
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         view.refreshContent(simulation);
+        /* Temporary: this is wrong, because it updates but grid with same scenario, every time it changes */
+        scenarioGridBackground.refreshContent(simulation);
         focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
@@ -385,6 +390,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public boolean isDirty() {
         try {
+            /* How to handle background here ? */
             scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
             int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
             return scenarioSimulationEditorWrapper.getOriginalHash() != currentHashcode;
@@ -524,11 +530,11 @@ public class ScenarioSimulationEditorPresenter {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
         scenarioSimulationEditorWrapper.addBackgroundPage(scenarioGridBackground);
+        scenarioGridBackground.setContent(model.getSimulation().cloneSimulation());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
         view.setContent(model.getSimulation());
-        scenarioGridBackground.setContent(model.getSimulation().cloneSimulation());
         focusedContext.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
@@ -542,7 +548,14 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         focusedContext.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
+        /* CRITICAL: How to populate the BackGround model ?
+        * Model is required to populate dataObjectsInstancesName && simpleJavaTypeInstancesName.  */
         dataManagementStrategy.populateTestTools(presenter, scenarioMainGridPanel.getScenarioGrid().getModel());
+        /* Temporary workaround */
+        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().setDataObjectsInstancesName(
+            scenarioMainGridPanel.getScenarioGrid().getModel().getDataObjectsInstancesName());
+        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().setSimpleJavaTypeInstancesName(
+                scenarioMainGridPanel.getScenarioGrid().getModel().getSimpleJavaTypeInstancesName());
     }
 
     protected void clearTestToolsStatus() {

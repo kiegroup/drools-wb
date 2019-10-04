@@ -46,4 +46,9 @@ public class ScenarioGridBackground extends ResizeComposite {
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
     }
+
+    public void refreshContent(Simulation simulation) {
+            scenarioGridPanel.getScenarioGrid().getModel().bindContent(simulation);
+            scenarioGridPanel.getScenarioGrid().getModel().refreshErrors();
+    }
 }

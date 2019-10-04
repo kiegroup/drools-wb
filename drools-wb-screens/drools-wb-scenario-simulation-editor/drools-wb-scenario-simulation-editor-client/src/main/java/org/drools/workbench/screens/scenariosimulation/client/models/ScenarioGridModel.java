@@ -826,6 +826,16 @@ public class ScenarioGridModel extends BaseGridData {
         this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
+    /* TEMP WORKAROUND FOR BACKGROUND */
+    public Set<String> getSimpleJavaTypeInstancesName() {
+        return simpleJavaTypeInstancesName;
+    }
+
+    /* TEMP WORKAROUND FOR BACKGROUND */
+    public Set<String> getDataObjectsInstancesName() {
+        return dataObjectsInstancesName;
+    }
+
     /**
      * Check validity of given <b>instanceHeaderCellValue</b>
      * @param instanceHeaderCellValue
