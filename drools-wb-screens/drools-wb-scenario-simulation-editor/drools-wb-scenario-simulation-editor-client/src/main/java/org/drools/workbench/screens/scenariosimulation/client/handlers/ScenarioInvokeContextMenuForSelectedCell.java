@@ -79,6 +79,7 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
         return false;
     }
 
+    // Indirection for tests
     protected Point2D getMiddleXYCell(GridWidget gridWidget, GridColumn column, boolean isHeader, int uiRowIndex, GridLayer gridLayer) {
         return ScenarioSimulationUtils.getMiddleXYCell(gridWidget, column, isHeader, uiRowIndex, gridLayer);
     }
