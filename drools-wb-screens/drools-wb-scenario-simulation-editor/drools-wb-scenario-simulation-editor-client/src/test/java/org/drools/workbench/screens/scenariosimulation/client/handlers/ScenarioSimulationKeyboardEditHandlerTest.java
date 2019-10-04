@@ -15,9 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Arrays;
 import java.util.Collections;
 
-import com.google.gwt.dev.util.collect.Lists;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -29,8 +29,8 @@ import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyInt;
@@ -74,7 +74,7 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
             }
         });
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
-        when(scenarioGridModelMock.getColumns()).thenReturn(Lists.create(gridColumnMock, gridColumnMock2));
+        when(scenarioGridModelMock.getColumns()).thenReturn(Arrays.asList(gridColumnMock, gridColumnMock2));
     }
 
     @Test
@@ -86,14 +86,14 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
 
     @Test
     public void isExecutable_CellSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell));
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.emptyList());
         assertTrue(handler.isExecutable(scenarioGridMock));
     }
 
     @Test
     public void isExecutable_CellsSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell, selectedCell2));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell, selectedCell2));
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.emptyList());
         assertFalse(handler.isExecutable(scenarioGridMock));
     }
@@ -101,21 +101,21 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
     @Test
     public void isExecutable_HeaderCellSelected() {
         when(scenarioGridModelMock.getSelectedCells()).thenReturn(Collections.emptyList());
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell, selectedCell2));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell, selectedCell2));
         assertTrue(handler.isExecutable(scenarioGridMock));
     }
 
     @Test
     public void isExecutable_HeaderCellsSelected() {
         when(scenarioGridModelMock.getSelectedCells()).thenReturn(Collections.emptyList());
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell, selectedCell2));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell));
         assertTrue(handler.isExecutable(scenarioGridMock));
     }
 
     @Test
     public void isExecutable_CellsAndHeaderCellsSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell));
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell2));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell2));
         assertFalse(handler.isExecutable(scenarioGridMock));
     }
 
@@ -129,7 +129,7 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
 
     @Test
     public void perform_CellSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell));
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.emptyList());
         when(scenarioGridModelMock.getSelectedCellsOrigin()).thenReturn(selectedCell);
         handler.perform(scenarioGridMock, false, false);
@@ -138,7 +138,7 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
 
     @Test
     public void perform_CellsSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell, selectedCell2));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell, selectedCell2));
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.emptyList());
         when(scenarioGridModelMock.getSelectedCellsOrigin()).thenReturn(selectedCell);
         assertFalse(handler.perform(scenarioGridMock, false, false));
@@ -148,7 +148,7 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
     @Test
     public void perform_HeaderCellSelected() {
         when(scenarioGridModelMock.getSelectedCells()).thenReturn(Collections.emptyList());
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell));
         handler.perform(scenarioGridMock, false, false);
         verify(handler, times(1)).startEdit(eq(scenarioGridMock), eq(0), eq(0), eq(gridColumnMock), eq(true));
     }
@@ -156,15 +156,15 @@ public class ScenarioSimulationKeyboardEditHandlerTest {
     @Test
     public void perform_HeaderCellsSelected() {
         when(scenarioGridModelMock.getSelectedCells()).thenReturn(Collections.emptyList());
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell, selectedCell2));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell, selectedCell2));
         handler.perform(scenarioGridMock, false, false);
         verify(handler, times(1)).startEdit(eq(scenarioGridMock), eq(0), eq(0), eq(gridColumnMock), eq(true));
     }
 
     @Test
     public void perform_CellAndHeaderCellsSelected() {
-        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Lists.create(selectedCell));
-        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Lists.create(selectedCell2));
+        when(scenarioGridModelMock.getSelectedCells()).thenReturn(Arrays.asList(selectedCell));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Arrays.asList(selectedCell2));
         assertFalse(handler.perform(scenarioGridMock, false, false));
         verify(handler, never()).startEdit(any(), anyInt(), anyInt(), any(), anyBoolean());
     }
