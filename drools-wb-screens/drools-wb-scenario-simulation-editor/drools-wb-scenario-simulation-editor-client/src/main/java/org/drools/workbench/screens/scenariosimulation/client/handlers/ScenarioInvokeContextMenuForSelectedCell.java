@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -26,8 +27,6 @@ import org.uberfire.ext.wires.core.grids.client.util.ColumnIndexUtilities;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.KeyboardOperationInvokeContextMenuForSelectedCell;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
-
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getMiddleXYCell;
 
 public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationInvokeContextMenuForSelectedCell {
 
@@ -49,12 +48,16 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
     @Override
     public boolean perform(final GridWidget gridWidget, final boolean isShiftKeyDown, final boolean isControlKeyDown) {
         final GridData model = gridWidget.getModel();
+        if (!model.getSelectedHeaderCells().isEmpty()
+                && !model.getSelectedCells().isEmpty()) {
+            return false;
+        }
         GridData.SelectedCell origin = null;
         boolean isHeader = false;
         if (!model.getSelectedHeaderCells().isEmpty()) {
             origin = model.getSelectedHeaderCells().get(0);
             isHeader = true;
-        } else if (!model.getSelectedCells().isEmpty()) {
+        } else if (model.getSelectedCells().size() == 1) {
             origin = model.getSelectedCellsOrigin();
         }
         if (origin == null) {
@@ -65,7 +68,7 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
                                                                          origin.getColumnIndex());
         final GridColumn<?> column = model.getColumns().get(uiColumnIndex);
         if (column instanceof ScenarioGridColumn) {
-            final Point2D middleXYCell = getMiddleXYCell(gridWidget, column, isHeader, uiRowIndex, gridLayer);
+            final Point2D middleXYCell = this.getMiddleXYCell(gridWidget, column, isHeader, uiRowIndex, gridLayer);
             return scenarioContextMenuRegistry.manageRightClick((ScenarioGrid) gridWidget,
                                                                 (int) middleXYCell.getX(),
                                                                 (int) middleXYCell.getY(),
@@ -74,5 +77,9 @@ public class ScenarioInvokeContextMenuForSelectedCell extends KeyboardOperationI
                                                                 isHeader);
         }
         return false;
+    }
+
+    protected Point2D getMiddleXYCell(GridWidget gridWidget, GridColumn column, boolean isHeader, int uiRowIndex, GridLayer gridLayer) {
+        return ScenarioSimulationUtils.getMiddleXYCell(gridWidget, column, isHeader, uiRowIndex, gridLayer);
     }
 }

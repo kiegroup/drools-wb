@@ -44,11 +44,15 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
         ScenarioGrid scenarioGrid = (ScenarioGrid) gridWidget;
         final ScenarioGridModel scenarioGridModel = scenarioGrid.getModel();
         // Allows editing only if a single cell is selected
+        if (!scenarioGridModel.getSelectedHeaderCells().isEmpty()
+                && !scenarioGridModel.getSelectedCells().isEmpty()) {
+            return false;
+        }
         GridData.SelectedCell selectedCell = null;
         boolean isHeader = true;
         if (!scenarioGridModel.getSelectedHeaderCells().isEmpty()) {
             selectedCell = scenarioGridModel.getSelectedHeaderCells().get(0);
-        } else if (!scenarioGridModel.getSelectedCells().isEmpty()) {
+        } else if (scenarioGridModel.getSelectedCells().size() == 1) {
             selectedCell = scenarioGridModel.getSelectedCellsOrigin();
             isHeader = false;
         }
@@ -62,6 +66,11 @@ public class ScenarioSimulationKeyboardEditHandler extends KeyboardOperationEdit
         if (scenarioGridColumn == null) {
             return false;
         }
-        return CommonEditHandler.startEdit(scenarioGrid, uiColumnIndex, scenarioGridColumn, uiRowIndex, isHeader);
+        return startEdit(scenarioGrid, uiColumnIndex, uiRowIndex, scenarioGridColumn, isHeader);
+    }
+
+    // Indirection for tests
+    protected boolean startEdit(ScenarioGrid scenarioGrid, int uiColumnIndex, int uiRowIndex, ScenarioGridColumn column, boolean isHeader) {
+        return CommonEditHandler.startEdit(scenarioGrid, uiColumnIndex, column, uiRowIndex, isHeader);
     }
 }
