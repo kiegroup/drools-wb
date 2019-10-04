@@ -16,12 +16,13 @@
 
 package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -86,21 +87,9 @@ public class AttributeColumnPageTest {
                                    Attribute.AGENDA_GROUP.getAttributeName());
 
         final List<String> result = page.getAttributes();
-        final List<String> expected = new ArrayList<String>() {{
-            add(Attribute.ENABLED.getAttributeName());
-            add(Attribute.DATE_EFFECTIVE.getAttributeName());
-            add(Attribute.DATE_EXPIRES.getAttributeName());
-            add(Attribute.NO_LOOP.getAttributeName());
-            add(Attribute.ACTIVATION_GROUP.getAttributeName());
-            add(Attribute.DURATION.getAttributeName());
-            add(Attribute.TIMER.getAttributeName());
-            add(Attribute.CALENDARS.getAttributeName());
-            add(Attribute.AUTO_FOCUS.getAttributeName());
-            add(Attribute.LOCK_ON_ACTIVE.getAttributeName());
-            add(Attribute.RULEFLOW_GROUP.getAttributeName());
-            add(Attribute.DIALECT.getAttributeName());
-            add(Attribute.NEGATE_RULE.getAttributeName());
-        }};
+        final List<String> expected = attributesList();
+        expected.remove(Attribute.AGENDA_GROUP.getAttributeName());
+        expected.remove(Attribute.SALIENCE.getAttributeName());
 
         assertEquals(expected,
                      result);
@@ -111,7 +100,7 @@ public class AttributeColumnPageTest {
         reservedAttributeNamesMock();
 
         final List<String> result = page.getAttributes();
-        final List<String> expected = fakeRawAttributesList();
+        final List<String> expected = attributesList();
 
         assertEquals(expected,
                      result);
@@ -192,23 +181,7 @@ public class AttributeColumnPageTest {
         when(presenter.getReservedAttributeNames()).thenReturn(reservedAttributeNames);
     }
 
-    private List<String> fakeRawAttributesList() {
-        return new ArrayList<String>() {{
-            add(Attribute.SALIENCE.getAttributeName());
-            add(Attribute.ENABLED.getAttributeName());
-            add(Attribute.DATE_EFFECTIVE.getAttributeName());
-            add(Attribute.DATE_EXPIRES.getAttributeName());
-            add(Attribute.NO_LOOP.getAttributeName());
-            add(Attribute.AGENDA_GROUP.getAttributeName());
-            add(Attribute.ACTIVATION_GROUP.getAttributeName());
-            add(Attribute.DURATION.getAttributeName());
-            add(Attribute.TIMER.getAttributeName());
-            add(Attribute.CALENDARS.getAttributeName());
-            add(Attribute.AUTO_FOCUS.getAttributeName());
-            add(Attribute.LOCK_ON_ACTIVE.getAttributeName());
-            add(Attribute.RULEFLOW_GROUP.getAttributeName());
-            add(Attribute.DIALECT.getAttributeName());
-            add(Attribute.NEGATE_RULE.getAttributeName());
-        }};
+    private List<String> attributesList() {
+        return Stream.of(Attribute.values()).map(Attribute::getAttributeName).collect(Collectors.toList());
     }
 }
