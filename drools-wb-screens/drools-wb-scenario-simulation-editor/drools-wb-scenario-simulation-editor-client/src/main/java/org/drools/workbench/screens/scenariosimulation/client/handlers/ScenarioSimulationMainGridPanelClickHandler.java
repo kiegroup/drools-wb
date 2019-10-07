@@ -62,7 +62,6 @@ public class ScenarioSimulationMainGridPanelClickHandler extends AbstractScenari
         final int canvasY = getRelativeYOfEvent(event);
         scenarioContextMenuRegistry.hideMenus();
         scenarioContextMenuRegistry.hideErrorReportPopover();
-        scenarioGrid.clearSelections();
         if (!manageCoordinates(canvasX, canvasY)) { // It was not a grid click
             eventBus.fireEvent(new DisableTestToolsEvent());
         }
