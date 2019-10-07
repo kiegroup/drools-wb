@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,8 +97,7 @@ public class ScenarioSimulationMainGridPanelClickHandler extends AbstractScenari
                                                          ScenarioGridColumn scenarioGridColumn,
                                                          String group,
                                                          Integer uiColumnIndex) {
-        scenarioGrid.setSelectedColumnAndHeader(scenarioGridColumn.getHeaderMetaData().indexOf(clickedScenarioHeaderMetadata), uiColumnIndex);
-
+        scenarioGrid.setSelectedColumn(uiColumnIndex);
         if (scenarioGridColumn.isInstanceAssigned() && clickedScenarioHeaderMetadata.getMetadataType().equals(ScenarioHeaderMetaData.MetadataType.INSTANCE)) {
             eventBus.fireEvent(new ReloadTestToolsEvent(true, true));
         } else {

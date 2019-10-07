@@ -581,17 +581,12 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Select all the cells of the given column
+     * It puts the column present in the given columnIndex as the current selected one.
      * @param columnIndex
      */
     public void selectColumn(int columnIndex) {
-        if (columnIndex > getColumnCount() - 1) {
-            return;
-        }
-        if (!selectedHeaderCells.isEmpty()) {
-            final SelectedCell selectedHeaderCell = selectedHeaderCells.get(0);
-            selectedHeaderCells.clear();
-            selectHeaderCell(selectedHeaderCell.getRowIndex(), columnIndex);
+        if (columnIndex > getColumnCount() - 1 || columnIndex < 0) {
+            throw new IllegalArgumentException("Wrong column index: " + columnIndex);
         }
         selectedColumn = getColumns().get(columnIndex);
     }
@@ -1000,12 +995,12 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify the given value is not already used as instance header name <b>between different groups</b>
      * @param instanceHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>instanceHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
-     * inside the <b>group (GIVEN/EXPECT)</b> of the given column
+     * @throws IllegalArgumentException if the given <b>instanceHeaderCellValue</b> contains a <i>dot</i> <b>OR</b>
+     * it has already been used inside the <b>group (GIVEN/EXPECT)</b> of the given column
      */
-    protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) {
         if (instanceHeaderCellValue.contains(".")) {
-            throw new Exception("An instance alias cannot contain periods!");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleWithPeriodsError());
         }
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
@@ -1017,7 +1012,8 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(elem -> elem.getInformationHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getInformationHeaderMetaData)
                 .anyMatch(elem -> Objects.equals(elem.getTitle(), instanceHeaderCellValue))) {
-            throw new Exception(instanceHeaderCellValue + " has already been used inside the current group");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.
+                    instanceTitleAssignedError(instanceHeaderCellValue));
         }
     }
 
@@ -1025,12 +1021,12 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify if the given value is not already used as property header name <b>inside the same instance</b>
      * @param propertyHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>propertyHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
-     * inside the <b>instance</b> of the given column
+     * @throws IllegalArgumentException if the given <b>propertyHeaderCellValue</b> contains a <i>dot</i> <b>OR</b>
+     * it has already been used inside the <b>instance</b> of the given column
      */
-    protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
         if (propertyHeaderCellValue.contains(".")) {
-            throw new Exception("A property alias cannot contain periods!");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleWithPeriodsError());
         }
         checkUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
     }
@@ -1039,10 +1035,10 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify if the given value is not already used as property header name <b>inside the same instance</b>
      * @param propertyHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>propertyHeaderCellValue</b> has already been used
+     * @throws IllegalArgumentException if the given <b>propertyHeaderCellValue</b> has already been used
      * inside the <b>instance</b> of the given column
      */
-    protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         if (IntStream.range(0, getColumnCount())
@@ -1052,7 +1048,8 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getPropertyHeaderMetaData)
                 .anyMatch(elem -> Objects.equals(elem.getTitle(), propertyHeaderCellValue))) {
-            throw new Exception(propertyHeaderCellValue + " has already been used inside the current instance");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.
+                    propertyTitleAssignedError(propertyHeaderCellValue));
         }
     }
 

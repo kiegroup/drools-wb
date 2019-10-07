@@ -111,12 +111,21 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     /**
+     * Set the current <b>selectedColumn</b> given its columnIndex
+     * @param columnIndex
+     */
+    public void setSelectedColumn(int columnIndex) {
+        ((ScenarioGridModel) model).selectColumn(columnIndex);
+    }
+
+    /**
      * Set the <b>selectedColumn</b> status of the model and select the header cell actually clicked
+     * This should be used when header cells selection is NOT handled natively by the extended widget
      * @param columnIndex
      */
     public void setSelectedColumnAndHeader(int headerRowIndex, int columnIndex) {
-        ((ScenarioGridModel) model).selectColumn(columnIndex);
-        model.selectHeaderCell(headerRowIndex, columnIndex);
+        selectHeaderCell(headerRowIndex, columnIndex, false, false);
+        setSelectedColumn(columnIndex);
         getLayer().batch();
     }
 
@@ -286,7 +295,7 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                              cell.getColumnIndex());
             final int uiRowIndex = cell.getRowIndex();
 
-            setSelectedColumnAndHeader(uiRowIndex, uiColumnIndex);
+            setSelectedColumn(uiColumnIndex);
 
             final GridColumn column = model.getColumns().get(uiColumnIndex);
             if (uiRowIndex > 0 && column instanceof ScenarioGridColumn) {

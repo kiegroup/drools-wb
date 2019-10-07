@@ -38,6 +38,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.UI_ROW_INDEX;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
@@ -83,6 +84,7 @@ public class ScenarioSimulationMainGridPanelClickHandlerTest extends AbstractSce
     @Test
     public void setEventBus() {
         scenarioSimulationMainGridPanelClickHandler.setEventBus(eventBusMock);
+        assertSame(scenarioSimulationMainGridPanelClickHandler.eventBus, eventBusMock);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class ScenarioSimulationMainGridPanelClickHandlerTest extends AbstractSce
         assertTrue("Click to readonly header cell.",
                    scenarioSimulationMainGridPanelClickHandler.manageCoordinates((int) CLICK_POINT_X,
                                                                                  (int) CLICK_POINT_Y));
-        verify(scenarioGridMock, times(1)).setSelectedColumnAndHeader(anyInt(), anyInt());
+        verify(scenarioGridMock, times(1)).setSelectedColumn(anyInt());
         verify(eventBusMock, times(1)).fireEvent(any(EnableTestToolsEvent.class));
     }
 
@@ -205,11 +207,11 @@ public class ScenarioSimulationMainGridPanelClickHandlerTest extends AbstractSce
         String message = group + "Group fail";
         if (assertExpected) {
             assertTrue(message, scenarioSimulationMainGridPanelClickHandler.manageCoordinates((int) CLICK_POINT_X, (int) CLICK_POINT_Y));
-            verify(scenarioGridMock, times(1)).setSelectedColumnAndHeader(eq(0), eq(0));
+            verify(scenarioGridMock, times(1)).setSelectedColumn(eq(0));
             verify(eventBusMock, times(1)).fireEvent(isA(GwtEvent.class));
         } else {
             assertFalse(message, scenarioSimulationMainGridPanelClickHandler.manageCoordinates((int) CLICK_POINT_X, (int) CLICK_POINT_Y));
-            verify(scenarioGridMock, never()).setSelectedColumnAndHeader(eq(0), eq(0));
+            verify(scenarioGridMock, never()).setSelectedColumn(anyInt());
             verify(eventBusMock, never()).fireEvent(any());
             return;
         }
