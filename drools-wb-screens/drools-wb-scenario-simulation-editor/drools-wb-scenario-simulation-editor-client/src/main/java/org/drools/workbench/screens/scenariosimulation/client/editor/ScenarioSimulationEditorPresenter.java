@@ -46,6 +46,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioMenuItemFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
@@ -118,6 +119,7 @@ public class ScenarioSimulationEditorPresenter {
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
+    private ScenarioMenuItemFactory scenarioMenuItemFactory;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -130,7 +132,8 @@ public class ScenarioSimulationEditorPresenter {
                                              final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final TextFileExport textFileExport,
-                                             final ConfirmPopupPresenter confirmPopupPresenter) {
+                                             final ConfirmPopupPresenter confirmPopupPresenter,
+                                             final ScenarioMenuItemFactory scenarioMenuItemFactory) {
         this.view = scenarioSimulationProducer.getScenarioSimulationView();
         this.testRunnerReportingPanel = testRunnerReportingPanel;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -139,6 +142,7 @@ public class ScenarioSimulationEditorPresenter {
         this.eventBus = scenarioSimulationProducer.getEventBus();
         this.textFileExport = textFileExport;
         this.confirmPopupPresenter = confirmPopupPresenter;
+        this.scenarioMenuItemFactory = scenarioMenuItemFactory;
         scenarioMainGridPanel = view.getScenarioGridPanel();
         scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext()
                 .setScenarioSimulationEditorPresenter(this);
@@ -146,7 +150,6 @@ public class ScenarioSimulationEditorPresenter {
         scenarioGridBackground = scenarioSimulationProducer.getScenarioGridBackground();
         scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext()
                 .setScenarioSimulationEditorPresenter(this);
-        setMainContextFocused();
         scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         view.init(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
@@ -159,12 +162,8 @@ public class ScenarioSimulationEditorPresenter {
         testRunnerReportingPanel.reset();
     }
 
-    public void setMainContextFocused() {
-        focusedContext = scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext();
-    }
-
-    public void setBackgroundContextFocused() {
-        focusedContext = scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext();
+    public void setFocusedContext(ScenarioSimulationContext scenarioSimulationContext) {
+        this.focusedContext = scenarioSimulationContext;
     }
 
     public void setPackageName(String packageName) {
@@ -264,15 +263,15 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void setUndoButtonEnabledStatus(boolean enabled) {
-        view.getUndoMenuItem().setEnabled(enabled);
+        scenarioMenuItemFactory.getUndoMenuItem().setEnabled(enabled);
     }
 
     public void setRedoButtonEnabledStatus(boolean enabled) {
-        view.getRedoMenuItem().setEnabled(enabled);
+        scenarioMenuItemFactory.getRedoMenuItem().setEnabled(enabled);
     }
 
     public void addDownloadMenuItem(FileMenuBuilder fileMenuBuilder, Supplier<Path> pathSupplier) {
-        fileMenuBuilder.addNewTopLevelMenu(view.getDownloadMenuItem(pathSupplier));
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getDownloadMenuItem(pathSupplier));
     }
 
     public DataManagementStrategy getDataManagementStrategy() {
@@ -365,13 +364,13 @@ public class ScenarioSimulationEditorPresenter {
      */
     public void makeMenuBar(FileMenuBuilder fileMenuBuilder) {
         fileMenuBuilder.addValidate(getValidateCommand());
-        fileMenuBuilder.addNewTopLevelMenu(view.getRunScenarioMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(view.getUndoMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(view.getRedoMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(view.getExportToCsvMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(view.getImportMenuItem());
-        view.getUndoMenuItem().setEnabled(false);
-        view.getRedoMenuItem().setEnabled(false);
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getRunScenarioMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getUndoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getRedoMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getExportToCsvMenuItem());
+        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getImportMenuItem());
+        scenarioMenuItemFactory.getUndoMenuItem().setEnabled(false);
+        scenarioMenuItemFactory.getRedoMenuItem().setEnabled(false);
     }
 
     public Supplier<ScenarioSimulationModel> getContentSupplier() {
@@ -399,7 +398,7 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
-    protected void onDownload(final Supplier<Path> pathSupplier) {
+    public void onDownload(final Supplier<Path> pathSupplier) {
         final String downloadURL = getFileDownloadURL(pathSupplier);
         open(downloadURL);
     }
@@ -408,11 +407,11 @@ public class ScenarioSimulationEditorPresenter {
         DomGlobal.window.open(downloadURL);
     }
 
-    protected void showImportDialog() {
+    public void showImportDialog() {
         eventBus.fireEvent(new ImportEvent());
     }
 
-    protected void onExportToCsv() {
+    public void onExportToCsv() {
         scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), focusedContext.getStatus().getSimulation());
     }
 

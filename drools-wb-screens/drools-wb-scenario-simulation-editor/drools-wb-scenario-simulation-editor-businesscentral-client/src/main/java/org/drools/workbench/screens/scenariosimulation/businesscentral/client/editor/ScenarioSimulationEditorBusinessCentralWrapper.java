@@ -352,7 +352,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
      */
     @Override
     public void onEditTabSelected() {
-        scenarioSimulationEditorPresenter.setMainContextFocused();
+        super.onEditTabSelected();
+        scenarioSimulationEditorPresenter.setFocusedContext(
+                scenarioSimulationEditorPresenter.getView().getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext());
     }
 
     /**
@@ -360,11 +362,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
      * @param scenarioGridBackground
      */
     @Override
-    public void addBackgroundPage(ScenarioGridBackground scenarioGridBackground) {
+    public void addBackgroundPage(final ScenarioGridBackground scenarioGridBackground) {
         addPage(new PageImpl(scenarioGridBackground, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
-                scenarioSimulationEditorPresenter.setBackgroundContextFocused();
+                scenarioSimulationEditorPresenter.setFocusedContext(
+                        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext());
             }
         });
     }
