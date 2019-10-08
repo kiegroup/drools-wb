@@ -55,7 +55,7 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGrid.getModel()).thenReturn(scenarioGridModel);
 
         scenarioView = new ScenarioSimulationViewImpl();
-        scenarioView.setScenarioGridPanel(scenarioGridPanel);
+        //scenarioView.setScenarioGridPanel(scenarioGridPanel);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGridModel.getColumnCount()).thenReturn(1);
         when(scenarioGridModel.getRowCount()).thenReturn(1);
 
-        scenarioView.setContent(simulationModel);
+        //scenarioView.setContent(simulationModel);
 
         verify(scenarioGrid).setContent(simulationModel);
         verify(scenarioGridPanel).setFocus(true);
@@ -76,7 +76,7 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGridModel.getColumnCount()).thenReturn(0);
         when(scenarioGridModel.getRowCount()).thenReturn(0);
 
-        scenarioView.setContent(simulationModel);
+        //scenarioView.setContent(simulationModel);
 
         verify(scenarioGrid).setContent(simulationModel);
         verify(scenarioGridPanel).setFocus(true);

@@ -113,7 +113,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
             if (toRestore != null) {
                 final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
                 context.getModel().clearSelections();
-                context.getScenarioSimulationEditorPresenter().getView().setContent(toRestore);
+                context.getScenarioGridPanel().getScenarioGrid().setContent(toRestore);
                 context.getScenarioSimulationEditorPresenter().getModel().setSimulation(toRestore);
                 context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
                 context.setStatus(restorableStatus);

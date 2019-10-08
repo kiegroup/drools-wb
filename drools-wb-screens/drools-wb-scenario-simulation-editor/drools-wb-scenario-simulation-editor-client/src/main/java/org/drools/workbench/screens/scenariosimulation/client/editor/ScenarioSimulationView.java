@@ -18,21 +18,16 @@ package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
-import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorView;
 
 public interface ScenarioSimulationView extends KieEditorView,
                                                 IsWidget,
                                                 RequiresResize {
 
-    void init(final ScenarioSimulationEditorPresenter presenter);
+    void init();
 
-    void setContent(final Simulation simulation);
+    ScenarioGridWidget getScenarioGridWidget();
 
-    void refreshContent(final Simulation simulation);
-
-    void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel);
-
-    ScenarioGridPanel getScenarioGridPanel();
+    void setScenarioGridWidget(ScenarioGridWidget scenarioMainGridWidget);
 }

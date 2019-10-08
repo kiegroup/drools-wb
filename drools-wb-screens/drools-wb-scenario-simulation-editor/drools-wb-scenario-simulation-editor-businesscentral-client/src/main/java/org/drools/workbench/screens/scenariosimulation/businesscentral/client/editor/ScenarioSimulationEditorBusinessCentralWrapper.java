@@ -40,7 +40,7 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -279,7 +279,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     protected void synchronizeColumnsDimension() {
-        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView()
+        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getFocusedContext()
                 .getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid().getModel();
         scenarioGridModel.synchronizeFactMappingsWidths();
     }
@@ -354,20 +354,19 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     public void onEditTabSelected() {
         super.onEditTabSelected();
         scenarioSimulationEditorPresenter.setFocusedContext(
-                scenarioSimulationEditorPresenter.getView().getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext());
+                scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioSimulationContext());
     }
 
     /**
      * This method adds specifically the Background grid and its related onFocus behavior
-     * @param scenarioGridBackground
+     * @param scenarioGridWidget
      */
     @Override
-    public void addBackgroundPage(final ScenarioGridBackground scenarioGridBackground) {
-        addPage(new PageImpl(scenarioGridBackground, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+    public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
+        addPage(new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
-                scenarioSimulationEditorPresenter.setFocusedContext(
-                        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext());
+                scenarioSimulationEditorPresenter.setFocusedContext(scenarioGridWidget.getScenarioSimulationContext());
             }
         });
     }

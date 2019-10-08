@@ -65,8 +65,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -103,8 +102,8 @@ public class ScenarioSimulationEditorPresenter {
     protected String packageName = "";
     protected ObservablePath path;
     protected EventBus eventBus;
-    protected ScenarioGridPanel scenarioMainGridPanel;
-    protected ScenarioGridBackground scenarioGridBackground;
+    protected ScenarioGridWidget scenarioMainGridWidget;
+    protected ScenarioGridWidget scenarioBackgroundGridWidget;
     protected PlaceManager placeManager;
     protected DataManagementStrategy dataManagementStrategy;
     protected ScenarioSimulationContext focusedContext;
@@ -119,7 +118,8 @@ public class ScenarioSimulationEditorPresenter {
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
-    private ScenarioMenuItemFactory scenarioMenuItemFactory;
+    private MenuItem undoMenuItem;
+    private MenuItem redoMenuItem;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -132,8 +132,7 @@ public class ScenarioSimulationEditorPresenter {
                                              final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
                                              final ScenarioSimulationDocksHandler scenarioSimulationDocksHandler,
                                              final TextFileExport textFileExport,
-                                             final ConfirmPopupPresenter confirmPopupPresenter,
-                                             final ScenarioMenuItemFactory scenarioMenuItemFactory) {
+                                             final ConfirmPopupPresenter confirmPopupPresenter) {
         this.view = scenarioSimulationProducer.getScenarioSimulationView();
         this.testRunnerReportingPanel = testRunnerReportingPanel;
         this.scenarioSimulationDocksHandler = scenarioSimulationDocksHandler;
@@ -142,16 +141,14 @@ public class ScenarioSimulationEditorPresenter {
         this.eventBus = scenarioSimulationProducer.getEventBus();
         this.textFileExport = textFileExport;
         this.confirmPopupPresenter = confirmPopupPresenter;
-        this.scenarioMenuItemFactory = scenarioMenuItemFactory;
-        scenarioMainGridPanel = view.getScenarioGridPanel();
-        scenarioMainGridPanel.getScenarioGrid().getScenarioSimulationContext()
-                .setScenarioSimulationEditorPresenter(this);
-        scenarioMainGridPanel.select();
-        scenarioGridBackground = scenarioSimulationProducer.getScenarioGridBackground();
-        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getScenarioSimulationContext()
-                .setScenarioSimulationEditorPresenter(this);
+        view.init();
+        undoMenuItem = ScenarioMenuItemFactory.getUndoMenuItem(this::onUndo);
+        redoMenuItem = ScenarioMenuItemFactory.getRedoMenuItem(this::onRedo);
+        scenarioMainGridWidget = view.getScenarioGridWidget();
+        scenarioMainGridWidget.getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
+        scenarioBackgroundGridWidget = scenarioSimulationProducer.getScenarioBackgroundGridWidget();
+        scenarioBackgroundGridWidget.getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
         scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
-        view.init(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
         scenarioPresenterId = SCENARIO_PRESENTER_COUNTER.getAndIncrement();
     }
@@ -171,8 +168,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onClose() {
-        scenarioMainGridPanel.unregister();
-        scenarioGridBackground.getScenarioGridPanel().unregister();
+        scenarioMainGridWidget.unregister();
+        scenarioBackgroundGridWidget.unregister();
     }
 
     /**
@@ -192,8 +189,8 @@ public class ScenarioSimulationEditorPresenter {
 
     public void hideDocks() {
         scenarioSimulationDocksHandler.removeDocks();
-        scenarioMainGridPanel.getScenarioGridLayer().getScenarioGrid().clearSelections();
-        scenarioGridBackground.getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid().clearSelections();
+        scenarioMainGridWidget.clearSelections();
+        scenarioBackgroundGridWidget.clearSelections();
         unRegisterTestToolsCallback();
         clearTestToolsStatus();
     }
@@ -239,10 +236,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
-        scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
-        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().resetErrors();
-        /* Background note: Here, the data from both grids should be merged (in the model) and send to the RunScenario
-        * Data are stored in 2 different context  */
+        scenarioMainGridWidget.resetErrors();
+        scenarioBackgroundGridWidget.resetErrors();
         model.setSimulation(focusedContext.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
@@ -263,15 +258,15 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void setUndoButtonEnabledStatus(boolean enabled) {
-        scenarioMenuItemFactory.getUndoMenuItem().setEnabled(enabled);
+        undoMenuItem.setEnabled(enabled);
     }
 
     public void setRedoButtonEnabledStatus(boolean enabled) {
-        scenarioMenuItemFactory.getRedoMenuItem().setEnabled(enabled);
+        redoMenuItem.setEnabled(enabled);
     }
 
     public void addDownloadMenuItem(FileMenuBuilder fileMenuBuilder, Supplier<Path> pathSupplier) {
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getDownloadMenuItem(pathSupplier));
+        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getDownloadMenuItem(() -> onDownload(pathSupplier)));
     }
 
     public DataManagementStrategy getDataManagementStrategy() {
@@ -331,9 +326,9 @@ public class ScenarioSimulationEditorPresenter {
             int index = scenarioWithIndex.getIndex() - 1;
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
-        view.refreshContent(simulation);
+       scenarioMainGridWidget.refreshContent(simulation);
         /* Temporary: this is wrong, because it updates but grid with same scenario, every time it changes */
-        scenarioGridBackground.refreshContent(simulation);
+        scenarioBackgroundGridWidget.refreshContent(simulation);
         focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
@@ -364,13 +359,13 @@ public class ScenarioSimulationEditorPresenter {
      */
     public void makeMenuBar(FileMenuBuilder fileMenuBuilder) {
         fileMenuBuilder.addValidate(getValidateCommand());
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getRunScenarioMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getUndoMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getRedoMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getExportToCsvMenuItem());
-        fileMenuBuilder.addNewTopLevelMenu(scenarioMenuItemFactory.getImportMenuItem());
-        scenarioMenuItemFactory.getUndoMenuItem().setEnabled(false);
-        scenarioMenuItemFactory.getRedoMenuItem().setEnabled(false);
+        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario));
+        fileMenuBuilder.addNewTopLevelMenu(undoMenuItem);
+        fileMenuBuilder.addNewTopLevelMenu(redoMenuItem);
+        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv));
+        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog));
+        undoMenuItem.setEnabled(false);
+        redoMenuItem.setEnabled(false);
     }
 
     public Supplier<ScenarioSimulationModel> getContentSupplier() {
@@ -389,8 +384,8 @@ public class ScenarioSimulationEditorPresenter {
 
     public boolean isDirty() {
         try {
-            /* How to handle background here ? */
-            scenarioMainGridPanel.getScenarioGrid().getModel().resetErrors();
+            scenarioMainGridWidget.resetErrors();
+            scenarioBackgroundGridWidget.resetErrors();
             int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
             return scenarioSimulationEditorWrapper.getOriginalHash() != currentHashcode;
         } catch (Exception ignored) {
@@ -427,9 +422,9 @@ public class ScenarioSimulationEditorPresenter {
         return simulation -> {
             cleanReadOnlyColumn(simulation);
             model.setSimulation(simulation);
-            view.setContent(model.getSimulation());
+            scenarioMainGridWidget.setContent(model.getSimulation());
             focusedContext.getStatus().setSimulation(model.getSimulation());
-            view.onResize();
+            scenarioMainGridWidget.onResize();
         };
     }
 
@@ -528,12 +523,12 @@ public class ScenarioSimulationEditorPresenter {
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
-        scenarioSimulationEditorWrapper.addBackgroundPage(scenarioGridBackground);
-        scenarioGridBackground.setContent(model.getSimulation().cloneSimulation());
+        scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
+        scenarioBackgroundGridWidget.setContent(model.getSimulation().cloneSimulation());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
-        view.setContent(model.getSimulation());
+        scenarioMainGridWidget.setContent(model.getSimulation());
         focusedContext.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
@@ -549,12 +544,12 @@ public class ScenarioSimulationEditorPresenter {
         presenter.setEventBus(eventBus);
         /* CRITICAL: How to populate the BackGround model ?
         * Model is required to populate dataObjectsInstancesName && simpleJavaTypeInstancesName.  */
-        dataManagementStrategy.populateTestTools(presenter, scenarioMainGridPanel.getScenarioGrid().getModel());
+        dataManagementStrategy.populateTestTools(presenter, scenarioMainGridWidget.getModel());
         /* Temporary workaround */
-        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().setDataObjectsInstancesName(
-            scenarioMainGridPanel.getScenarioGrid().getModel().getDataObjectsInstancesName());
-        scenarioGridBackground.getScenarioGridPanel().getScenarioGrid().getModel().setSimpleJavaTypeInstancesName(
-                scenarioMainGridPanel.getScenarioGrid().getModel().getSimpleJavaTypeInstancesName());
+        scenarioBackgroundGridWidget.getModel().setDataObjectsInstancesName(
+                scenarioMainGridWidget.getModel().getDataObjectsInstancesName());
+        scenarioBackgroundGridWidget.getModel().setSimpleJavaTypeInstancesName(
+                scenarioMainGridWidget.getModel().getSimpleJavaTypeInstancesName());
     }
 
     protected void clearTestToolsStatus() {

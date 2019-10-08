@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopup
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridBackground;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.uberfire.workbench.events.NotificationEvent;
 
 /**
@@ -94,8 +94,8 @@ public class ScenarioSimulationProducer {
         return scenarioSimulationViewProducer.getScenarioSimulationView(getEventBus());
     }
 
-    public ScenarioGridBackground getScenarioGridBackground() {
-        return scenarioSimulationViewProducer.getScenarioGridBackground(getEventBus());
+    public ScenarioGridWidget getScenarioBackgroundGridWidget() {
+        return scenarioSimulationViewProducer.getScenarioBackgroundGridWidget(getEventBus());
     }
 
     public void setScenarioSimulationEditorPresenter(ScenarioSimulationEditorPresenter presenter) {

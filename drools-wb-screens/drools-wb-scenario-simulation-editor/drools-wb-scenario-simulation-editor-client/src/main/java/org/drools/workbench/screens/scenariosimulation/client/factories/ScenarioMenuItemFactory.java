@@ -15,72 +15,35 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
-import java.util.function.Supplier;
-
-import javax.enterprise.context.Dependent;
-
+import com.google.gwt.user.client.Command;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
-import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.uberfire.backend.vfs.Path;
 import org.uberfire.workbench.model.menu.MenuItem;
 
-@Dependent
 public class ScenarioMenuItemFactory {
 
-    private ScenarioMenuItem runMenuItem;
-    private ScenarioMenuItem undoMenuItem;
-    private ScenarioMenuItem redoMenuItem;
-    private ScenarioMenuItem downloadMenuItem;
-    private ScenarioMenuItem importMenuItem;
-    private ScenarioMenuItem exportToCsvMenuItem;
-    private ScenarioSimulationEditorPresenter presenter;
-
-    void init(final ScenarioSimulationEditorPresenter presenter) {
-        this.presenter = presenter;
+    public static MenuItem getRunScenarioMenuItem(final Command command) {
+        return new ScenarioMenuItem(IconType.PLAY, command);
     }
 
-    public MenuItem getRunScenarioMenuItem() {
-        if (runMenuItem == null) {
-            runMenuItem = new ScenarioMenuItem(IconType.PLAY, () -> presenter.onRunScenario());
-        }
-        return runMenuItem;
+    public static MenuItem getUndoMenuItem(final Command command) {
+        return new ScenarioMenuItem(IconType.UNDO, command);
     }
 
-    public MenuItem getUndoMenuItem() {
-        if (undoMenuItem == null) {
-            undoMenuItem = new ScenarioMenuItem(IconType.UNDO,  () -> presenter.onUndo());
-        }
-        return undoMenuItem;
+    public static MenuItem getRedoMenuItem(final Command command) {
+        return new ScenarioMenuItem(IconType.REPEAT, command);
     }
 
-    public MenuItem getRedoMenuItem() {
-        if (redoMenuItem == null) {
-            redoMenuItem = new ScenarioMenuItem(IconType.REPEAT, () -> presenter.onRedo());
-        }
-        return redoMenuItem;
+    public static MenuItem getDownloadMenuItem(final Command command) {
+        return new ScenarioMenuItem(IconType.DOWNLOAD, command);
     }
 
-    public MenuItem getDownloadMenuItem(final Supplier<Path> pathSupplier) {
-        if (downloadMenuItem == null) {
-            downloadMenuItem = new ScenarioMenuItem(IconType.DOWNLOAD, () -> presenter.onDownload(pathSupplier));
-        }
-        return downloadMenuItem;
+    public static MenuItem getExportToCsvMenuItem(final Command command) {
+        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.export(), command);
     }
 
-    public MenuItem getExportToCsvMenuItem() {
-        if (exportToCsvMenuItem == null) {
-            exportToCsvMenuItem = new ScenarioMenuItem("Export", () -> presenter.onExportToCsv());
-        }
-        return exportToCsvMenuItem;
-    }
-
-    public MenuItem getImportMenuItem() {
-        if (importMenuItem == null) {
-            importMenuItem = new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.importLabel(),
-                                                  () -> presenter.showImportDialog());
-        }
-        return importMenuItem;
+    public static MenuItem getImportMenuItem(final Command command) {
+        return new ScenarioMenuItem(ScenarioSimulationEditorConstants.INSTANCE.importLabel(), command);
     }
 }
