@@ -161,6 +161,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void setFocusedContext(ScenarioSimulationContext scenarioSimulationContext) {
         this.focusedContext = scenarioSimulationContext;
+        populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void setPackageName(String packageName) {
@@ -326,8 +327,7 @@ public class ScenarioSimulationEditorPresenter {
             int index = scenarioWithIndex.getIndex() - 1;
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
-       scenarioMainGridWidget.refreshContent(simulation);
-        /* Temporary: this is wrong, because it updates but grid with same scenario, every time it changes */
+        scenarioMainGridWidget.refreshContent(simulation);
         scenarioBackgroundGridWidget.refreshContent(simulation);
         focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
@@ -542,14 +542,10 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         focusedContext.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
-        /* CRITICAL: How to populate the BackGround model ?
-        * Model is required to populate dataObjectsInstancesName && simpleJavaTypeInstancesName.  */
-        dataManagementStrategy.populateTestTools(presenter, scenarioMainGridWidget.getModel());
+        dataManagementStrategy.populateTestTools(presenter, focusedContext.getModel());
         /* Temporary workaround */
-        scenarioBackgroundGridWidget.getModel().setDataObjectsInstancesName(
-                scenarioMainGridWidget.getModel().getDataObjectsInstancesName());
-        scenarioBackgroundGridWidget.getModel().setSimpleJavaTypeInstancesName(
-                scenarioMainGridWidget.getModel().getSimpleJavaTypeInstancesName());
+        scenarioBackgroundGridWidget.getScenarioSimulationContext().setDataObjectFieldsMap(
+                scenarioMainGridWidget.getScenarioSimulationContext().getDataObjectFieldsMap());
     }
 
     protected void clearTestToolsStatus() {
