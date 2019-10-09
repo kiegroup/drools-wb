@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -40,9 +39,7 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
                                                    final ScenarioGridModel scenarioGridModel,
                                                    String dmnFilePath);
 
-    public AbstractDMNDataManagementStrategy(ScenarioSimulationContext scenarioSimulationContext,
-                                             EventBus eventBus) {
-        this.scenarioSimulationContext = scenarioSimulationContext;
+    public AbstractDMNDataManagementStrategy(EventBus eventBus) {
         this.eventBus = eventBus;
     }
 

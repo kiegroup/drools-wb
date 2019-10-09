@@ -31,7 +31,6 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -44,7 +43,6 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 public abstract class AbstractDataManagementStrategy implements DataManagementStrategy {
 
     protected ScenarioSimulationModel model;
-    protected ScenarioSimulationContext scenarioSimulationContext;
     protected ResultHolder factModelTreeHolder = new ResultHolder();
 
     @Override
@@ -145,12 +143,11 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
 
         testToolsPresenter.setHiddenFieldsMap(factModelTuple.getHiddenFacts());
         testToolsPresenter.hideProperties(propertiesToHide);
-        // Update context
-        SortedMap<String, FactModelTree> context = new TreeMap<>();
-        context.putAll(visibleFacts);
-        context.putAll(factModelTuple.getHiddenFacts());
-        scenarioSimulationContext.setDataObjectFieldsMap(context);
         // Update model
+        SortedMap<String, FactModelTree> dataObjectFieldsMap = new TreeMap<>();
+        dataObjectFieldsMap.putAll(visibleFacts);
+        dataObjectFieldsMap.putAll(factModelTuple.getHiddenFacts());
+        scenarioGridModel.setDataObjectFieldsMap(dataObjectFieldsMap);
         Set<String> dataObjectsInstancesName = new HashSet<>(visibleFacts.keySet());
         dataObjectsInstancesName.addAll(instanceFieldsMap.keySet());
         scenarioGridModel.setDataObjectsInstancesName(dataObjectsInstancesName);

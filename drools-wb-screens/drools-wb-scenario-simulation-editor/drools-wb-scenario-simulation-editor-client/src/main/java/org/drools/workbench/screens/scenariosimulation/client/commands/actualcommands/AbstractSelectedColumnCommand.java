@@ -256,7 +256,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @param fullPropertyPathElements This is the <code>List</code> of all the elements pointing to the final property (ex. Book.author.books)
      */
     protected void manageCollectionProperty(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String className, int columnIndex, List<String> fullPropertyPathElements) {
-        final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
+        final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getModel().getDataObjectFieldMap();
         if (className.contains(".")) {
             className = className.substring(className.lastIndexOf(".") + 1);
         }

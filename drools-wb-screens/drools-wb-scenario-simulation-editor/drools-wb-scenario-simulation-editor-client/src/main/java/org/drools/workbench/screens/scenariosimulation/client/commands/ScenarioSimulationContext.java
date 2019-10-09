@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
-import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -28,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mvp.PlaceRequest;
 
@@ -45,7 +43,6 @@ public class ScenarioSimulationContext {
     protected ScenarioGridLayer scenarioGridLayer;
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
-    protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
 
     protected Status status = new Status();
 
@@ -100,14 +97,6 @@ public class ScenarioSimulationContext {
 
     public void setTestToolsPresenter(TestToolsView.Presenter testToolsPresenter) {
         this.testToolsPresenter = testToolsPresenter;
-    }
-
-    public SortedMap<String, FactModelTree> getDataObjectFieldsMap() {
-        return dataObjectFieldsMap;
-    }
-
-    public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
-        this.dataObjectFieldsMap = dataObjectFieldsMap;
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

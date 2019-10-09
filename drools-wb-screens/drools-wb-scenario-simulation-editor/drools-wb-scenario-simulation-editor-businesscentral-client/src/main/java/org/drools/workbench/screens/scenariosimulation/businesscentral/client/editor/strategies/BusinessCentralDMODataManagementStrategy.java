@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.SortedMap;
 
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -36,9 +35,8 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     private AsyncPackageDataModelOracleFactory oracleFactory;
     protected AsyncPackageDataModelOracle oracle;
 
-    public BusinessCentralDMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory, final ScenarioSimulationContext scenarioSimulationContext) {
+    public BusinessCentralDMODataManagementStrategy(final AsyncPackageDataModelOracleFactory oracleFactory) {
         this.oracleFactory = oracleFactory;
-        this.scenarioSimulationContext = scenarioSimulationContext;
     }
 
     @Override

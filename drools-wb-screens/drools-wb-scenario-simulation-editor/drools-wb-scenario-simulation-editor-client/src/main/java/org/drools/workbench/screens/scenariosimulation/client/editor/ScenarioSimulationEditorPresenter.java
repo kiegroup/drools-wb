@@ -543,9 +543,6 @@ public class ScenarioSimulationEditorPresenter {
         focusedContext.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
         dataManagementStrategy.populateTestTools(presenter, focusedContext.getModel());
-        /* Temporary workaround */
-        scenarioBackgroundGridWidget.getScenarioSimulationContext().setDataObjectFieldsMap(
-                scenarioMainGridWidget.getScenarioSimulationContext().getDataObjectFieldsMap());
     }
 
     protected void clearTestToolsStatus() {

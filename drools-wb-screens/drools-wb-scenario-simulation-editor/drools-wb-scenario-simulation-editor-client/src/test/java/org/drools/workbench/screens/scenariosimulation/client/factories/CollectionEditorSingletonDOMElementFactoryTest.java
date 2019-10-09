@@ -32,7 +32,7 @@ import org.mockito.Mock;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
+//import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2;
@@ -47,7 +47,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+//import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
@@ -99,22 +99,22 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         factMappingMock.getGenericTypes().add(STRING_CLASS_NAME);
         factMappingMock.getGenericTypes().add(NUMBER_CLASS_NAME);
         when(factMappingMock.getFactAlias()).thenReturn(FULL_CLASS_NAME);
-        when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(any())).thenReturn(factModelTreeMock);
+       // when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(any())).thenReturn(factModelTreeMock);
         /* This FactModelTree is used to test setCollectionEditorStructureData() method (return null in any case) */
         when(factModelTreeMock.getSimpleProperties()).thenReturn(new HashMap<>());
         when(factModelTreeMock.getExpandableProperties()).thenReturn(new HashMap<>());
         /* This FactModelTree is used to test manageList and manageMap methods*/
         when(factModelTreeMock1.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE);
         when(factModelTreeMock1.getExpandableProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1);
-        when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_CLASS_NAME)).thenReturn(factModelTreeMock1);
+       // when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_CLASS_NAME)).thenReturn(factModelTreeMock1);
         EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE.put("x", "y");
         EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1.put("a", "b");
-        when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get("testclass")).thenReturn(factModelTreeMock2);
+       // when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get("testclass")).thenReturn(factModelTreeMock2);
         when(factModelTreeMock2.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
         when(factModelTreeMock2.getExpandableProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1);
         EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2.put("z", "w");
-        when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_FACT_CLASSNAME)).thenReturn(factModelTreeMock3);
-        when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(CLASS_NAME)).thenReturn(factModelTreeMock3);
+       // when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_FACT_CLASSNAME)).thenReturn(factModelTreeMock3);
+       // when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(CLASS_NAME)).thenReturn(factModelTreeMock3);
         when(factModelTreeMock3.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
         when(factModelTreeMock3.getExpandableProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_3);
         EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_3.put("a", FULL_CLASS_NAME);

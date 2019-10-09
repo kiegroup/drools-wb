@@ -86,7 +86,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
         when(oracleMock.getFQCNByFactName(TestProperties.FACT_NAME)).thenReturn(TestProperties.FULL_FACT_CLASSNAME);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, modelLocal, content.getDataModel())).thenReturn(oracleMock);
-        this.businessCentralDmoDataManagementStrategy = spy(new BusinessCentralDMODataManagementStrategy(oracleFactoryMock, scenarioSimulationContextLocal) {
+        this.businessCentralDmoDataManagementStrategy = spy(new BusinessCentralDMODataManagementStrategy(oracleFactoryMock) {
             {
                 this.oracle = oracleMock;
                 this.factModelTreeHolder = factModelTreeHolderlocal;
