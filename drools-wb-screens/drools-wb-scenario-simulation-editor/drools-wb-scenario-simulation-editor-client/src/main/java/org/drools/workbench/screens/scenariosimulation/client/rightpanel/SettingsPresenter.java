@@ -50,6 +50,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     protected SettingsScenarioSimulationDropdown settingsScenarioSimulationDropdown;
 
+    private boolean saveEnabled = true;
+
     public SettingsPresenter() {
         //Zero argument constructor for CDI
         title = ScenarioSimulationEditorConstants.INSTANCE.settings();
@@ -93,22 +95,34 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     @Override
-    public void onSaveButton(String scenarioType) {
-        simulationDescriptor.setSkipFromBuild(view.getSkipFromBuild().isChecked());
-        switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
-            case RULE:
-                saveRuleSettings();
-                break;
-            case DMN:
-                saveDMNSettings();
-                break;
+    public void setSaveEnabled(boolean toSet) {
+        saveEnabled = toSet;
+        view.getSaveButton().setDisabled(!saveEnabled);
+        if (!saveEnabled) {
+            saveCommand = null;
         }
-        saveCommand.execute();
+    }
+
+    @Override
+    public void onSaveButton(String scenarioType) {
+        if (saveCommand != null) {
+            simulationDescriptor.setSkipFromBuild(view.getSkipFromBuild().isChecked());
+            switch (ScenarioSimulationModel.Type.valueOf(scenarioType)) {
+                case RULE:
+                    saveRuleSettings();
+                    break;
+                case DMN:
+                    saveDMNSettings();
+                    break;
+            }
+            saveCommand.execute();
+        }
     }
 
     @Override
     public void reset() {
         view.reset();
+        view.getSaveButton().setDisabled(!saveEnabled);
         settingsScenarioSimulationDropdown.clear();
     }
 

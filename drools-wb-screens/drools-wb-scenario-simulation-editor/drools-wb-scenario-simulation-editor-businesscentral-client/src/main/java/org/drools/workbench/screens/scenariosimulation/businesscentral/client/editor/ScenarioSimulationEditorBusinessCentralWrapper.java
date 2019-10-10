@@ -125,6 +125,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                    place,
                    type);
         scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
+        workbenchContext.getActiveWorkspaceProject()
+                .ifPresent(activeProject -> projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
+            scenarioSimulationEditorPresenter.setSaveEnabled(canUpdateProject);
+            return promises.resolve();
+        }));
     }
 
     @OnClose
