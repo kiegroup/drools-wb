@@ -18,8 +18,8 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -36,7 +36,7 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
     protected Path currentPath;
 
     protected abstract void retrieveFactModelTuple(final TestToolsView.Presenter testToolsPresenter,
-                                                   final ScenarioGridModel scenarioGridModel,
+                                                   final ScenarioSimulationContext context,
                                                    String dmnFilePath);
 
     public AbstractDMNDataManagementStrategy(EventBus eventBus) {
@@ -44,12 +44,13 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
     }
 
     @Override
-    public void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
+    public void populateTestTools(final TestToolsView.Presenter testToolsPresenter,
+                                  final ScenarioSimulationContext context) {
         String dmnFilePath = model.getSimulation().getSimulationDescriptor().getDmnFilePath();
         if (factModelTreeHolder.getFactModelTuple() != null) {
-            getSuccessCallback(testToolsPresenter, scenarioGridModel).callback(factModelTreeHolder.getFactModelTuple());
+            getSuccessCallback(testToolsPresenter, context).callback(factModelTreeHolder.getFactModelTuple());
         } else {
-            retrieveFactModelTuple(testToolsPresenter, scenarioGridModel, dmnFilePath);
+            retrieveFactModelTuple(testToolsPresenter, context, dmnFilePath);
         }
     }
 
@@ -64,14 +65,17 @@ public abstract class AbstractDMNDataManagementStrategy extends AbstractDataMana
         return factModelTreeHolder.factModelTuple.getHiddenFacts().keySet().contains(value) || factModelTreeHolder.factModelTuple.getVisibleFacts().keySet().contains(value);
     }
 
-    public RemoteCallback<FactModelTuple> getSuccessCallback(TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
-        return factMappingTuple -> getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, scenarioGridModel);
+    public RemoteCallback<FactModelTuple> getSuccessCallback(final TestToolsView.Presenter testToolsPresenter,
+                                                             final ScenarioSimulationContext context) {
+        return factMappingTuple -> getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, context);
     }
 
-    public void getSuccessCallbackMethod(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
+    public void getSuccessCallbackMethod(final FactModelTuple factModelTuple,
+                                         final TestToolsView.Presenter testToolsPresenter,
+                                         final ScenarioSimulationContext context) {
         // Instantiate a map of already assigned properties
         factModelTreeHolder.setFactModelTuple(factModelTuple);
-        storeData(factModelTuple, testToolsPresenter, scenarioGridModel);
+        storeData(factModelTuple, testToolsPresenter, context);
         showErrorsAndCleanupState(factModelTuple);
     }
 

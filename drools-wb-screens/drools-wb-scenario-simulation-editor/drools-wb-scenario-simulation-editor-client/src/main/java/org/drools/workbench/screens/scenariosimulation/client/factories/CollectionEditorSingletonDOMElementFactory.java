@@ -149,7 +149,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             toReturn = new HashMap<>();
             toReturn.put("value", typeName);
         } else {
-            toReturn = scenarioSimulationContext.getModel().getDataObjectFieldMap().get(typeName).getSimpleProperties();
+            toReturn = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties();
         }
         return toReturn;
     }
@@ -161,7 +161,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             return toReturn;
         }
         boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
-        final Map<String, String> expandableProperties = scenarioSimulationContext.getModel().getDataObjectFieldMap().get(typeName).getExpandableProperties();
+        final Map<String, String> expandableProperties = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getExpandableProperties();
         expandableProperties.forEach((key, nestedTypeName) -> {
             if (isRule) {
                 nestedTypeName = nestedTypeName.substring(nestedTypeName.lastIndexOf(".") + 1);

@@ -58,7 +58,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
 
     protected void validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
         List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
-        boolean isADataType = !headerCellValue.endsWith(".") && instanceNameElements.size() == 1 && context.getModel().getDataObjectFieldMap().containsKey(instanceNameElements.get(0));
+        boolean isADataType = !headerCellValue.endsWith(".") && instanceNameElements.size() == 1 && context.getDataObjectFieldsMap().containsKey(instanceNameElements.get(0));
         context.getModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
@@ -66,7 +66,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
         List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         final FactMapping factMappingByIndex = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();
-        final FactModelTree factModelTree = context.getModel().getDataObjectFieldMap().get(className);
+        final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
         boolean isPropertyType = !headerCellValue.endsWith(".") && factModelTree != null && recursivelyFindIsPropertyType(context, factModelTree, propertyNameElements);
         context.getModel().validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
     }
@@ -78,7 +78,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
             if (factModelTree.getExpandableProperties().containsKey(propertyParent)) {
                 List<String> nestedPropertyNameElements = propertyNameElements.subList(1, propertyNameElements.size());
                 String className = factModelTree.getExpandableProperties().get(propertyParent);
-                final FactModelTree nestedFactModelTree = context.getModel().getDataObjectFieldMap().get(className);
+                final FactModelTree nestedFactModelTree = context.getDataObjectFieldsMap().get(className);
                 toReturn = recursivelyFindIsPropertyType(context, nestedFactModelTree, nestedPropertyNameElements);
             }
         }

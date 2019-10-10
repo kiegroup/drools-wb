@@ -299,7 +299,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void synchronizeColumnsDimension() {
         scenarioSimulationEditorBusinessClientWrapper.synchronizeColumnsDimension();
-        verify(scenarioGridModelMock, times(1)).synchronizeFactMappingsWidths();
+        verify(scenarioGridPanelMock, times(1)).synchronizeFactMappingsWidths();
     }
 
     @Test
@@ -318,7 +318,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onEditTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
-      //  verify(scenarioSimulationEditorPresenterMock, times(1)).setMainContextFocused();
+        //verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext();
     }
 
     @Test

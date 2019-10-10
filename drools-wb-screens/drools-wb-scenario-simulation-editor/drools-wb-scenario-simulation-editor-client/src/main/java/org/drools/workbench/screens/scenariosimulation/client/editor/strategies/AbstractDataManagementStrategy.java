@@ -31,6 +31,7 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -125,9 +126,11 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     /**
      * Store data in required target objects
      */
-    public void storeData(final FactModelTuple factModelTuple, final TestToolsView.Presenter testToolsPresenter, final ScenarioGridModel scenarioGridModel) {
+    public void storeData(final FactModelTuple factModelTuple,
+                          final TestToolsView.Presenter testToolsPresenter,
+                          final ScenarioSimulationContext context) {
         // Instantiate a map of already assigned properties
-        final Map<String, List<List<String>>> propertiesToHide = getPropertiesToHide(scenarioGridModel);
+        final Map<String, List<List<String>>> propertiesToHide = getPropertiesToHide(context.getModel());
         final SortedMap<String, FactModelTree> visibleFacts = factModelTuple.getVisibleFacts();
         final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
                 .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
@@ -143,17 +146,17 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
 
         testToolsPresenter.setHiddenFieldsMap(factModelTuple.getHiddenFacts());
         testToolsPresenter.hideProperties(propertiesToHide);
-        // Update model
+        // Update context
         SortedMap<String, FactModelTree> dataObjectFieldsMap = new TreeMap<>();
         dataObjectFieldsMap.putAll(visibleFacts);
         dataObjectFieldsMap.putAll(factModelTuple.getHiddenFacts());
-        scenarioGridModel.setDataObjectFieldsMap(dataObjectFieldsMap);
+        context.setDataObjectFieldsMap(dataObjectFieldsMap);
         Set<String> dataObjectsInstancesName = new HashSet<>(visibleFacts.keySet());
         dataObjectsInstancesName.addAll(instanceFieldsMap.keySet());
-        scenarioGridModel.setDataObjectsInstancesName(dataObjectsInstancesName);
+        context.setDataObjectsInstancesName(dataObjectsInstancesName);
         Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleDataObjects.keySet());
         simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
-        scenarioGridModel.setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
+        context.setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
     }
 
     /**

@@ -811,32 +811,6 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Set the names of already existing Data Objects/Instances, used inside updateHeaderValidation
-     * @param dataObjectsInstancesName
-     */
-    public void setDataObjectsInstancesName(Set<String> dataObjectsInstancesName) {
-        this.dataObjectsInstancesName = dataObjectsInstancesName;
-    }
-
-    /**
-     * Set the names of already existing Simple Java Types/Instances, used inside updateHeaderValidation
-     * @param simpleJavaTypeInstancesName
-     */
-    public void setSimpleJavaTypeInstancesName(Set<String> simpleJavaTypeInstancesName) {
-        this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
-    }
-
-    /* TEMP WORKAROUND FOR BACKGROUND */
-    public Set<String> getSimpleJavaTypeInstancesName() {
-        return simpleJavaTypeInstancesName;
-    }
-
-    /* TEMP WORKAROUND FOR BACKGROUND */
-    public Set<String> getDataObjectsInstancesName() {
-        return dataObjectsInstancesName;
-    }
-
-    /**
      * Check validity of given <b>instanceHeaderCellValue</b>
      * @param instanceHeaderCellValue
      * @param columnIndex
@@ -1096,13 +1070,5 @@ public class ScenarioGridModel extends BaseGridData {
             return Optional.empty();
         }
         return Optional.ofNullable(gridCell.getValue().getValue());
-    }
-
-    public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
-        this.dataObjectFieldMap = dataObjectFieldsMap;
-    }
-
-    public SortedMap<String, FactModelTree> getDataObjectFieldMap() {
-        return dataObjectFieldMap;
     }
 }

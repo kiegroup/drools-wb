@@ -542,7 +542,7 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         focusedContext.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
-        dataManagementStrategy.populateTestTools(presenter, focusedContext.getModel());
+        dataManagementStrategy.populateTestTools(presenter, focusedContext);
     }
 
     protected void clearTestToolsStatus() {
