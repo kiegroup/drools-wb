@@ -16,8 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +112,7 @@ public class DMNTypeServiceImpl
      * @throws WrongDMNTypeException
      */
     protected FactModelTree createTopLevelFactModelTree(String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        return isToBeManagedAsCollection((BaseDMNTypeImpl) type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType);
+        return isToBeManagedAsCollection((BaseDMNTypeImpl) type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
     }
 
     /**
@@ -122,14 +124,18 @@ public class DMNTypeServiceImpl
      * @return
      * @throws WrongDMNTypeException if <code>DMNType.isCollection()</code> != <code>true</code>
      */
-    protected FactModelTree createFactModelTreeForCollection(Map<String, List<String>> genericTypeInfoMap, String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
+    protected FactModelTree createFactModelTreeForCollection(Map<String, List<String>> genericTypeInfoMap, String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> visitedTypes) throws WrongDMNTypeException {
         if (!type.isCollection() && !isToBeManagedAsCollection((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
-        populateGeneric(genericTypeInfoMap, "value", type.getName());
+        String typeName = type.getName();
+        populateGeneric(genericTypeInfoMap, "value", typeName);
         FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
-        FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), type.getName(), type.getName(), type.getName(), type, hiddenFacts, fmType);
-        hiddenFacts.put(type.getName(), genericFactModelTree);
+        if (!hiddenFacts.containsKey(typeName) && !visitedTypes.contains(typeName)) {
+            visitedTypes.add(typeName);
+            FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), typeName, typeName, typeName, type, hiddenFacts, fmType, visitedTypes);
+            hiddenFacts.put(typeName, genericFactModelTree);
+        }
         return toReturn;
     }
 
@@ -143,11 +149,11 @@ public class DMNTypeServiceImpl
      * @return
      * @throws WrongDMNTypeException if <code>DMNType.isCollection()</code> == <code>true</code>
      */
-    protected FactModelTree createFactModelTreeForNoCollection(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
+    protected FactModelTree createFactModelTreeForNoCollection(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> visitedTypes) throws WrongDMNTypeException {
         if (type.isCollection() && isToBeManagedAsCollection((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
-        return isToBeManagedAsComposite((BaseDMNTypeImpl) type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return isToBeManagedAsComposite((BaseDMNTypeImpl) type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, visitedTypes) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -159,8 +165,8 @@ public class DMNTypeServiceImpl
      * @param fmType
      * @return
      */
-    protected FactModelTree createFactModelTreeForGenericType(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
-        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+    protected FactModelTree createFactModelTreeForGenericType(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> visitedTypes) throws WrongDMNTypeException {
+        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, visitedTypes) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -189,7 +195,7 @@ public class DMNTypeServiceImpl
      * @param fmType
      * @throws WrongDMNTypeException if <code>DMNType.isComposite()</code> != <code>true</code>
      */
-    protected FactModelTree createFactModelTreeForComposite(Map<String, List<String>> genericTypeInfoMap, String name, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws WrongDMNTypeException {
+    protected FactModelTree createFactModelTreeForComposite(Map<String, List<String>> genericTypeInfoMap, String name, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> visitedTypes) throws WrongDMNTypeException {
         if (!type.isComposite() && !isToBeManagedAsComposite((BaseDMNTypeImpl) type)) {
             throw new WrongDMNTypeException();
         }
@@ -198,16 +204,20 @@ public class DMNTypeServiceImpl
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (isToBeManagedAsCollection((BaseDMNTypeImpl) entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
-                FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
+                FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, visitedTypes);
                 simpleFields.put(entry.getKey(), List.class.getCanonicalName());
                 genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo("value"));
             } else {
+                String typeName = entry.getValue().getName();
                 if (entry.getValue().isComposite()) { // a complex type needs the expandable property and then in the hidden map, its fact model tree
-                    FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), "value", expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED);
-                    hiddenFacts.put(entry.getValue().getName(), fact);
-                    toReturn.addExpandableProperty(entry.getKey(), entry.getValue().getName());
+                    if (!hiddenFacts.containsKey(typeName) && !visitedTypes.contains(typeName)) {
+                        visitedTypes.add(typeName);
+                        FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), "value", expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, visitedTypes);
+                        hiddenFacts.put(typeName, fact);
+                    }
+                    toReturn.addExpandableProperty(entry.getKey(), typeName);
                 } else {  // a simple type is just name -> type
-                    simpleFields.put(entry.getKey(), entry.getValue().getName());
+                    simpleFields.put(entry.getKey(), typeName);
                 }
             }
         }
@@ -275,6 +285,15 @@ public class DMNTypeServiceImpl
                                     boolean alreadyInCollection,
                                     ErrorHolder errorHolder,
                                     String fullPropertyPath) {
+        internalCheckTypeSupport(type, alreadyInCollection, errorHolder, fullPropertyPath, new HashSet<>());
+    }
+
+    protected void internalCheckTypeSupport(DMNType type,
+                                            boolean alreadyInCollection,
+                                            ErrorHolder errorHolder,
+                                            String fullPropertyPath,
+                                            Set<String> alreadyVisited) {
+        alreadyVisited.add(type.getName());
         if (type.isComposite()) {
             for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
                 String name = entry.getKey();
@@ -286,10 +305,12 @@ public class DMNTypeServiceImpl
                 if (alreadyInCollection && nestedType.isComposite()) {
                     errorHolder.getMultipleNestedObject().add(nestedPath);
                 }
-                checkTypeSupport(nestedType,
-                                 alreadyInCollection || nestedType.isCollection(),
-                                 errorHolder,
-                                 nestedPath);
+                if (!alreadyVisited.contains(nestedType.getName())) {
+                    checkTypeSupport(nestedType,
+                                     alreadyInCollection || nestedType.isCollection(),
+                                     errorHolder,
+                                     nestedPath);
+                }
             }
         }
     }

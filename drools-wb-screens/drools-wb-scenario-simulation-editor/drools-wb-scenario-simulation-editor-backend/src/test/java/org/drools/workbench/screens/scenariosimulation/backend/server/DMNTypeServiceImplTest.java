@@ -167,6 +167,25 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
     }
 
     @Test
+    public void createTopLevelFactModelTreeRecursiveTypes() throws WrongDMNTypeException {
+        SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
+        FactModelTree person = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(false), hiddenFacts, FactModelTree.Type.DECISION);
+        assertNotNull(person);
+        assertTrue(person.getExpandableProperties().containsKey("parent"));
+        assertEquals("tPerson", person.getExpandableProperties().get("parent"));
+        assertTrue(hiddenFacts.containsKey("tPerson"));
+
+        hiddenFacts = new TreeMap<>();
+        FactModelTree personCollection = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(true), hiddenFacts, FactModelTree.Type.DECISION);
+
+        assertNotNull(personCollection);
+        assertTrue(personCollection.getGenericTypesMap().containsKey("value"));
+        assertEquals("tPerson", personCollection.getGenericTypeInfo("value").get(0));
+        assertTrue(hiddenFacts.containsKey("tPerson"));
+        assertTrue(hiddenFacts.containsKey("tPersonList"));
+    }
+
+    @Test
     public void checkTypeSimpleTopLevelCollection() {
         // top level collection
         SimpleTypeImpl topLevelCollection = getSimpleCollection();
@@ -200,6 +219,19 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals(1, errorHolder.getMultipleNestedObject().size());
         assertEquals(0, errorHolder.getMultipleNestedCollection().size());
         assertTrue(errorHolder.getMultipleNestedObject().contains("fieldName.phoneNumbers.complexNumbers"));
+    }
+
+    @Test
+    public void checkTypeRecursive() {
+        DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
+        dmnTypeServiceImpl.checkTypeSupport(getRecursivePersonComposite(false), false, errorHolder, "");
+        assertTrue(errorHolder.getMultipleNestedCollection().isEmpty());
+        assertTrue(errorHolder.getMultipleNestedObject().isEmpty());
+
+        errorHolder = new DMNTypeServiceImpl.ErrorHolder();
+        dmnTypeServiceImpl.checkTypeSupport(getRecursivePersonComposite(true), false, errorHolder, "");
+        assertTrue(errorHolder.getMultipleNestedCollection().isEmpty());
+        assertTrue(errorHolder.getMultipleNestedObject().isEmpty());
     }
 
     /**
