@@ -393,7 +393,7 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
-    public void onDownload(final Supplier<Path> pathSupplier) {
+    protected void onDownload(final Supplier<Path> pathSupplier) {
         final String downloadURL = getFileDownloadURL(pathSupplier);
         open(downloadURL);
     }
@@ -402,11 +402,11 @@ public class ScenarioSimulationEditorPresenter {
         DomGlobal.window.open(downloadURL);
     }
 
-    public void showImportDialog() {
+    protected void showImportDialog() {
         eventBus.fireEvent(new ImportEvent());
     }
 
-    public void onExportToCsv() {
+    protected void onExportToCsv() {
         scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), focusedContext.getStatus().getSimulation());
     }
 
