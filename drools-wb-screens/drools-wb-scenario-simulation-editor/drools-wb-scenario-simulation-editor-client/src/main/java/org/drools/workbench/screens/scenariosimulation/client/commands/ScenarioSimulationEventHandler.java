@@ -183,7 +183,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         this.notificationEvent = notificationEvent;
     }
 
-
     public void setScenarioSimulationPresenter(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter) {
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
     }

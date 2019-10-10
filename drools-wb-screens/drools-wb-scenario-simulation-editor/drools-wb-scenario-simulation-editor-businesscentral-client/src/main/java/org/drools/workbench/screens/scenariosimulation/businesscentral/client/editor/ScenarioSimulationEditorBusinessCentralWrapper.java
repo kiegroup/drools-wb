@@ -36,7 +36,6 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -279,9 +278,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     protected void synchronizeColumnsDimension() {
-        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getFocusedContext()
-                .getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid().getModel();
-        scenarioGridModel.synchronizeFactMappingsWidths();
+        scenarioSimulationEditorPresenter.getFocusedContext().getScenarioGridPanel().synchronizeFactMappingsWidths();
     }
 
     @Override
