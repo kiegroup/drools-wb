@@ -371,7 +371,7 @@ public class ScenarioGridModel extends BaseGridData {
             FactIdentifier factIdentifier = factMappingByIndex.getFactIdentifier();
             ExpressionIdentifier expressionIdentifier = factMappingByIndex.getExpressionIdentifier();
             scenarioByIndex.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, cellValue);
-        } catch (Throwable t) {
+        } catch (Exception e) {
             toReturn = super.deleteCell(rowIndex, columnIndex);
             eventBus.fireEvent(new ScenarioGridReloadEvent());
         }
@@ -406,9 +406,9 @@ public class ScenarioGridModel extends BaseGridData {
      * @return
      */
     public Range getInstanceLimits(int columnIndex) {
-        final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) columns.get(columnIndex);
-        final String originalColumnGroup = selectedColumn.getInformationHeaderMetaData().getColumnGroup();
-        final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+        final ScenarioGridColumn column = (ScenarioGridColumn) columns.get(columnIndex);
+        final String originalColumnGroup = column.getInformationHeaderMetaData().getColumnGroup();
+        final ScenarioHeaderMetaData selectedInformationHeaderMetaData = column.getInformationHeaderMetaData();
         String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
         int leftPosition = columnIndex;
         while (leftPosition > 1 && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getColumnGroup().equals(originalColumnGroup) && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
@@ -556,7 +556,7 @@ public class ScenarioGridModel extends BaseGridData {
      * It synchronizes all columns related <code>factMapping</code> columnnWidths
      */
     public void synchronizeFactMappingsWidths() {
-        getColumns().forEach(column -> synchronizeFactMappingWidth(column));
+        getColumns().forEach(this::synchronizeFactMappingWidth);
     }
 
     /**
@@ -802,7 +802,7 @@ public class ScenarioGridModel extends BaseGridData {
         Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMapping);
-        factMappingValue.ifPresent(fmv -> fmv.resetStatus());
+        factMappingValue.ifPresent(FactMappingValue::resetStatus);
         refreshErrors();
     }
 
@@ -918,8 +918,8 @@ public class ScenarioGridModel extends BaseGridData {
             IntStream.range(instanceLimits.getMinRowIndex(), instanceLimits.getMaxRowIndex() + 1)
                     .filter(currentIndex -> currentIndex != columnIndex)
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
-        } catch (Throwable t) {
-            eventBus.fireEvent(new ScenarioNotificationEvent("Error during column creation: " + t.getMessage(), NotificationEvent.NotificationType.ERROR));
+        } catch (Exception e) {
+            eventBus.fireEvent(new ScenarioNotificationEvent("Error during column creation: " + e.getMessage(), NotificationEvent.NotificationType.ERROR));
             eventBus.fireEvent(new ScenarioGridReloadEvent());
             return;
         }

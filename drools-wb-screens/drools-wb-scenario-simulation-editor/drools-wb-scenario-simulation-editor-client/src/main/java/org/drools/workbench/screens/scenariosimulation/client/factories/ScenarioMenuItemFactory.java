@@ -23,6 +23,10 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 public class ScenarioMenuItemFactory {
 
+    private ScenarioMenuItemFactory() {
+        /* Class with static methods - not instantiable */
+    }
+
     public static MenuItem getRunScenarioMenuItem(final Command command) {
         return new ScenarioMenuItem(IconType.PLAY, command);
     }

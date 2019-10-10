@@ -56,7 +56,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         Map<String, String> simpleProperties = new HashMap<>();
         String fullName = canonicalName;
         simpleProperties.put("value", fullName);
-        String packageName = fullName.substring(0, fullName.lastIndexOf("."));
+        String packageName = fullName.substring(0, fullName.lastIndexOf('.'));
         FactModelTree toReturn = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
         toReturn.setSimple(true);
         return toReturn;
@@ -77,10 +77,8 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
     public Map<String, List<List<String>>> getPropertiesToHide(ScenarioGridModel scenarioGridModel) {
         final Map<String, List<List<String>>> toReturn = new HashMap<>();
         final ScenarioGridColumn selectedColumn = (ScenarioGridColumn) scenarioGridModel.getSelectedColumn();
-        if (selectedColumn != null) {
-            if (selectedColumn.isInstanceAssigned()) {
-                toReturn.put(selectedColumn.getInformationHeaderMetaData().getTitle(), getPropertiesToHide(selectedColumn, scenarioGridModel));
-            }
+        if (selectedColumn != null && selectedColumn.isInstanceAssigned()) {
+            toReturn.put(selectedColumn.getInformationHeaderMetaData().getTitle(), getPropertiesToHide(selectedColumn, scenarioGridModel));
         }
         return toReturn;
     }
@@ -186,7 +184,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         return toReturn;
     }
 
-    static public class ResultHolder {
+    public static class ResultHolder {
 
         FactModelTuple factModelTuple;
 

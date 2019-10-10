@@ -127,7 +127,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
     }
 
-    protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
+    protected abstract void internalExecute(ScenarioSimulationContext context);
 
     /**
      * Returns a <code>ScenarioGridColumn</code> with the following default values:
