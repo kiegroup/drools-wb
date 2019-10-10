@@ -169,9 +169,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
-        //when(scenarioSimulationViewMock.getScenarioGridPanel()).thenReturn(scenarioGridPanelMock);
+        when(scenarioSimulationEditorPresenterMock.getFocusedContext()).thenReturn(scenarioSimulationContextLocal);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
+        when(scenarioGridWidgetMock.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
     }
 
     @Test
@@ -318,7 +319,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onEditTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
-        //verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(scenarioSimulationContextLocal));
     }
 
     @Test

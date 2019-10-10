@@ -20,6 +20,7 @@ import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelMouseMoveHandler;
+//import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
     public void setUp() {
         super.setup();
         when(scenarioGridPanelProducerMock.getScenarioBackgroundGridPanel()).thenReturn(scenarioGridPanelMock);
-        //when(scenarioGridPanelProducerMock.getScenarioSimulationMainGridPanelClickHandler()).thenReturn(scenarioSimulationMainGridPanelClickHandlerMock);
+       // when(scenarioGridPanelProducerMock.getScenarioSimulationMainGridPanelClickHandler()).thenReturn(scenarioSimulationMainGridPanelClickHandlerMock);
         when(scenarioGridPanelProducerMock.getScenarioContextMenuRegistry()).thenReturn(scenarioContextMenuRegistryMock);
         scenarioSimulationViewProducer = spy(new ScenarioSimulationViewProducer() {
             {
@@ -80,7 +81,12 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         verify(scenarioContextMenuRegistryMock, times(1)).setErrorReportPopoverPresenter(errorReportPopupPresenterMock);
         verify(commonOnMoveHandlerMock, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
         verify(commonOnMoveHandlerMock, times(1)).setErrorReportPopupPresenter(eq(errorReportPopupPresenterMock));
-        //verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationMainGridPanelClickHandlerMock), eq(commonOnMoveHandlerMock));
+        verify(scenarioGridPanelMock, times(1)).addHandlers(eq(scenarioSimulationMainGridPanelClickHandlerMock), eq(commonOnMoveHandlerMock));
         //verify(retrieved, times(1)).setScenarioGridPanel(eq(scenarioGridPanelMock));
+    }
+
+    @Test
+    public void getScenarioContextMenuRegistry() {
+        verify(scenarioGridPanelProducerMock, times(1)).getScenarioContextMenuRegistry();
     }
 }
