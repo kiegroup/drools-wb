@@ -230,7 +230,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = IntStream.range(0, focusedContext.getStatus().getSimulation().getUnmodifiableScenarios().size())
+        List<Integer> indexes = IntStream.range(0, scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation().getUnmodifiableScenarios().size())
                 .boxed()
                 .collect(Collectors.toList());
         onRunScenario(indexes);
