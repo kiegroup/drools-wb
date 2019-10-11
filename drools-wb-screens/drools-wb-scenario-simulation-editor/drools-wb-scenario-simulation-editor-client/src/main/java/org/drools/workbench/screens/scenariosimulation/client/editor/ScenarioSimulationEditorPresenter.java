@@ -109,6 +109,7 @@ public class ScenarioSimulationEditorPresenter {
     protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
     protected long scenarioPresenterId;
+    protected boolean saveEnabled = true;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
@@ -116,7 +117,6 @@ public class ScenarioSimulationEditorPresenter {
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
-    private boolean saveEnabled = true;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -156,10 +156,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void setSaveEnabled(boolean toSet) {
         saveEnabled = toSet;
-        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(presenter -> {
-            setSettings(presenter);
-            presenter.setSaveEnabled(toSet);
-        });
+        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(presenter -> presenter.setSaveEnabled(toSet));
     }
 
     public void setPackageName(String packageName) {
@@ -548,6 +545,9 @@ public class ScenarioSimulationEditorPresenter {
         presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
         if (saveEnabled) {
             presenter.setSaveCommand(getSaveCommand());
+            presenter.setSaveEnabled(true);
+        } else {
+            presenter.setSaveEnabled(false);
         }
     }
 

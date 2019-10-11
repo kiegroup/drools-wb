@@ -125,11 +125,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                    place,
                    type);
         scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
-        workbenchContext.getActiveWorkspaceProject()
-                .ifPresent(activeProject -> projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
-            scenarioSimulationEditorPresenter.setSaveEnabled(canUpdateProject);
-            return promises.resolve();
-        }));
+        setSaveEnabled();
     }
 
     @OnClose
@@ -172,7 +168,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void showDocks() {
         super.showDocks();
-
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         scenarioSimulationEditorPresenter.showDocks(placeManager.getStatus(placeRequest));
         registerTestToolsCallback();
@@ -247,6 +242,18 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     protected void unRegisterTestToolsCallback() {
         placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(scenarioSimulationEditorPresenter.getPopulateTestToolsCommand());
+    }
+
+    protected void setSaveEnabled() {
+        workbenchContext.getActiveWorkspaceProject()
+                .ifPresent(activeProject -> projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
+                    setSaveEnabled(canUpdateProject);
+                    return promises.resolve();
+                }));
+    }
+
+    protected void setSaveEnabled(boolean toSet) {
+        scenarioSimulationEditorPresenter.setSaveEnabled(toSet);
     }
 
     /**

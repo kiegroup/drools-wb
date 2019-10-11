@@ -225,6 +225,20 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void setSaveEnabledTrue() {
+        presenter.setSaveEnabled(true);
+        assertTrue(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
+    }
+
+    @Test
+    public void setSaveEnabledFalse() {
+        presenter.setSaveEnabled(false);
+        assertFalse(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
+    }
+
+    @Test
     public void onClose() {
         presenter.onClose();
         verify(scenarioGridPanelMock, times(1)).unregister();

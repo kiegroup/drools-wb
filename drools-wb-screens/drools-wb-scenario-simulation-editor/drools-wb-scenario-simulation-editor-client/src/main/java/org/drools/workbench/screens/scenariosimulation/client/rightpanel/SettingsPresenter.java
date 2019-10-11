@@ -50,7 +50,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     protected SettingsScenarioSimulationDropdown settingsScenarioSimulationDropdown;
 
-    private boolean saveEnabled = true;
+    protected boolean saveEnabled = true;
 
     public SettingsPresenter() {
         //Zero argument constructor for CDI
@@ -97,9 +97,10 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void setSaveEnabled(boolean toSet) {
         saveEnabled = toSet;
-        view.getSaveButton().setDisabled(!saveEnabled);
         if (!saveEnabled) {
-            saveCommand = null;
+            view.removeSaveButton();
+        } else {
+            view.restoreSaveButton();
         }
     }
 
@@ -122,7 +123,9 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void reset() {
         view.reset();
-        view.getSaveButton().setDisabled(!saveEnabled);
+        if (!saveEnabled) {
+            view.getSaveButton().removeFromParent();
+        }
         settingsScenarioSimulationDropdown.clear();
     }
 

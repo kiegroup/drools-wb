@@ -79,4 +79,8 @@ public interface SettingsView
     InputElement getStateless();
 
     ButtonElement getSaveButton();
+
+    void removeSaveButton();
+
+    void restoreSaveButton();
 }

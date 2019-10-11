@@ -35,6 +35,9 @@ import static org.mockito.Mockito.when;
 abstract class AbstractSettingsTest {
 
     @Mock
+    protected DivElement kieSettingsContentMock;
+
+    @Mock
     protected LabelElement nameLabelMock;
 
     @Mock

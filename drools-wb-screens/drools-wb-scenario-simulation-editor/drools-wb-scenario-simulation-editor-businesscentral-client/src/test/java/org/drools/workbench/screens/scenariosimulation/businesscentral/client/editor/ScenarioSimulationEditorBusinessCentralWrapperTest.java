@@ -121,6 +121,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Mock
     private Supplier<ScenarioSimulationModel> contentSupplierMock;
 
+
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
     private CallerMock<RunnerReportService> runnerReportServiceCaller;
@@ -178,6 +179,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void onStartup() {
         scenarioSimulationEditorBusinessClientWrapper.onStartup(observablePathMock, placeRequestMock);
         verify(scenarioSimulationEditorPresenterMock, times(1)).init(eq(scenarioSimulationEditorBusinessClientWrapper), eq(observablePathMock));
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).setSaveEnabled();
     }
 
     @Test
@@ -273,6 +275,19 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(placeManagerMock, times(1)).getOnOpenCallbacks(eq(request));
         assertFalse(commands.contains(populateTestToolsCommand));
     }
+
+    @Test
+    public void setSaveEnabledTrue() {
+        scenarioSimulationEditorBusinessClientWrapper.setSaveEnabled(true);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(true));
+    }
+
+    @Test
+    public void setSaveEnabledFalse() {
+        scenarioSimulationEditorBusinessClientWrapper.setSaveEnabled(false);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(false));
+    }
+
 
     @Test
     public void makeMenuBar() {

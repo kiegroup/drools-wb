@@ -38,6 +38,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.RULE_FLOW_GROUP;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.reset;
@@ -113,6 +115,20 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test
     public void getTitle() {
         assertEquals(ScenarioSimulationEditorConstants.INSTANCE.settings(), settingsPresenter.getTitle());
+    }
+
+    @Test
+    public void setSaveEnabledTrue() {
+        settingsPresenter.setSaveEnabled(true);
+        assertTrue(settingsPresenter.saveEnabled);
+        verify(settingsViewMock, times(1)).restoreSaveButton();
+    }
+
+    @Test
+    public void setSaveEnabledFalse() {
+        settingsPresenter.setSaveEnabled(false);
+        assertFalse(settingsPresenter.saveEnabled);
+        verify(settingsViewMock, times(1)).removeSaveButton();
     }
 
     @Test
