@@ -16,69 +16,56 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationViewImplTest {
+public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationTest {
+
+    public static final int WIDTH = 44;
+    public static final int HEIGHT = 82;
 
     @Mock
-    private ScenarioGrid scenarioGrid;
+    private Widget parentWidget;
 
-    @Mock
-    private ScenarioGridModel scenarioGridModel;
-
-    @Mock
-    private ScenarioGridLayer scenarioGridLayer;
-
-    @Mock
-    private ScenarioGridPanel scenarioGridPanel;
-
-    private ScenarioSimulationViewImpl scenarioView;
+    private ScenarioSimulationViewImpl scenarioViewImpl;
 
     @Before
-    public void setUp() throws Exception {
-        when(scenarioGridPanel.getScenarioGridLayer()).thenReturn(scenarioGridLayer);
-        when(scenarioGridPanel.getScenarioGrid()).thenReturn(scenarioGrid);
-        when(scenarioGrid.getModel()).thenReturn(scenarioGridModel);
-
-        scenarioView = new ScenarioSimulationViewImpl();
-        //scenarioView.setScenarioGridPanel(scenarioGridPanel);
+    public void setup() {
+        super.setup();
+        scenarioViewImpl = spy(new ScenarioSimulationViewImpl() {
+            {
+                this.scenarioGridWidget = scenarioGridWidgetMock;
+            }
+        });
+        when(scenarioViewImpl.getParent()).thenReturn(parentWidget);
+        when(parentWidget.getOffsetHeight()).thenReturn(HEIGHT);
+        when(parentWidget.getOffsetWidth()).thenReturn(WIDTH);
     }
 
     @Test
-    public void testKeyboardNavigationPrepared() {
-        final Simulation simulationModel = mock(Simulation.class);
-        when(scenarioGridModel.getColumnCount()).thenReturn(1);
-        when(scenarioGridModel.getRowCount()).thenReturn(1);
-
-        //scenarioView.setContent(simulationModel);
-
-        verify(scenarioGrid).setContent(simulationModel);
-        verify(scenarioGridPanel).setFocus(true);
+    public void init() {
+        scenarioViewImpl.init();
+        verify(scenarioGridWidgetMock, times(1)).enterPinnedMode(eq(scenarioGridMock), isA(Command.class));
     }
 
     @Test
-    public void testKeyboardNavigationPrepared_noDataInScenario() {
-        final Simulation simulationModel = mock(Simulation.class);
-        when(scenarioGridModel.getColumnCount()).thenReturn(0);
-        when(scenarioGridModel.getRowCount()).thenReturn(0);
-
-        //scenarioView.setContent(simulationModel);
-
-        verify(scenarioGrid).setContent(simulationModel);
-        verify(scenarioGridPanel).setFocus(true);
+    public void onResize() {
+        scenarioViewImpl.onResize();
+        verify(scenarioViewImpl, times(1)).setPixelSize(eq(WIDTH), eq(HEIGHT));
+        verify(scenarioGridWidgetMock, times(1)).onResize();
     }
 }
