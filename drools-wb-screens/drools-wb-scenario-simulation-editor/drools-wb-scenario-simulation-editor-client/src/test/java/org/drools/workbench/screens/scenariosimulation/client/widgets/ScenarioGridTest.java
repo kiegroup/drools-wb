@@ -132,9 +132,9 @@ public class ScenarioGridTest {
         simulation = getSimulation();
 
         scenarioGrid = spy(new ScenarioGrid(scenarioGridModelMock,
-                                                scenarioGridLayerMock,
-                                                scenarioGridRendererMock,
-                                                scenarioContextMenuRegistryMock) {
+                                            scenarioGridLayerMock,
+                                            scenarioGridRendererMock,
+                                            scenarioContextMenuRegistryMock) {
 
             @Override
             protected void appendRow(int rowIndex, Scenario scenario) {

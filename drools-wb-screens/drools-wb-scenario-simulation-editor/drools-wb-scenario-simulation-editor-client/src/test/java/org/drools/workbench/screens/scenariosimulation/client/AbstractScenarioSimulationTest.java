@@ -304,7 +304,7 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
-       // scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
+        scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
