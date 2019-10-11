@@ -25,7 +25,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -55,7 +54,6 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -76,10 +74,6 @@ public class ScenarioGridModel extends BaseGridData {
     protected AtomicInteger columnCounter = new AtomicInteger(0);
 
     protected GridColumn<?> selectedColumn = null;
-
-    protected Set<String> dataObjectsInstancesName;
-
-    protected SortedMap<String, FactModelTree> dataObjectFieldMap;
 
     protected Set<String> simpleJavaTypeInstancesName;
 
@@ -808,6 +802,14 @@ public class ScenarioGridModel extends BaseGridData {
 
     public void refreshErrors() {
         IntStream.range(0, getRowCount()).forEach(this::refreshErrorsRow);
+    }
+
+    /**
+     * Set the names of already existing Simple Java Types/Instances, used inside updateHeaderValidation
+     * @param simpleJavaTypeInstancesName
+     */
+    public void setSimpleJavaTypeInstancesName(Set<String> simpleJavaTypeInstancesName) {
+        this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
     /**

@@ -154,7 +154,8 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         context.setDataObjectsInstancesName(dataObjectsInstancesName);
         Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleDataObjects.keySet());
         simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
-        context.setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
+        // Update model
+        context.getModel().setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
     }
 
     /**

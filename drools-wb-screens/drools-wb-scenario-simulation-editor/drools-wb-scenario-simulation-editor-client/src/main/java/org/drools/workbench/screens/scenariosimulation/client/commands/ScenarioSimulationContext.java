@@ -47,10 +47,9 @@ public class ScenarioSimulationContext {
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
+    protected Set<String> dataObjectsInstancesName;
 
     protected Status status = new Status();
-    protected Set<String> dataObjectsInstancesName;
-    protected Set<String> simpleJavaTypeInstancesName;
 
     /**
      * Get the current <code>Status</code>
@@ -119,14 +118,6 @@ public class ScenarioSimulationContext {
      */
     public void setDataObjectsInstancesName(Set<String> dataObjectsInstancesName) {
         this.dataObjectsInstancesName = dataObjectsInstancesName;
-    }
-
-    /**
-     * Set the names of already existing Simple Java Types/Instances, used inside updateHeaderValidation
-     * @param simpleJavaTypeInstancesName
-     */
-    public void setSimpleJavaTypeInstancesName(Set<String> simpleJavaTypeInstancesName) {
-        this.simpleJavaTypeInstancesName = simpleJavaTypeInstancesName;
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

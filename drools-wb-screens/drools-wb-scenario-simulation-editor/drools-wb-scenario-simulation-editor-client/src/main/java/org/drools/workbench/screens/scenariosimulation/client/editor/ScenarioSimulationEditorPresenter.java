@@ -120,6 +120,10 @@ public class ScenarioSimulationEditorPresenter {
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
     private MenuItem undoMenuItem;
     private MenuItem redoMenuItem;
+    private MenuItem runScenarioMenuItem;
+    private MenuItem exportToCSVMenuItem;
+    private MenuItem importMenuItem;
+    private MenuItem downloadMenuItem;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -144,11 +148,14 @@ public class ScenarioSimulationEditorPresenter {
         view.init();
         undoMenuItem = ScenarioMenuItemFactory.getUndoMenuItem(this::onUndo);
         redoMenuItem = ScenarioMenuItemFactory.getRedoMenuItem(this::onRedo);
+        runScenarioMenuItem = ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario);
+        exportToCSVMenuItem = ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv);
+        importMenuItem = ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog);
+        scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         scenarioMainGridWidget = view.getScenarioGridWidget();
         scenarioMainGridWidget.getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
         scenarioBackgroundGridWidget = scenarioSimulationProducer.getScenarioBackgroundGridWidget();
         scenarioBackgroundGridWidget.getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
-        scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         populateTestToolsCommand = createPopulateTestToolsCommand();
         scenarioPresenterId = SCENARIO_PRESENTER_COUNTER.getAndIncrement();
     }
@@ -230,7 +237,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = IntStream.range(0, scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation().getUnmodifiableScenarios().size())
+        List<Integer> indexes = IntStream.range(0, focusedContext.getStatus().getSimulation().getUnmodifiableScenarios().size())
                 .boxed()
                 .collect(Collectors.toList());
         onRunScenario(indexes);
@@ -238,7 +245,6 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridWidget.resetErrors();
-        scenarioBackgroundGridWidget.resetErrors();
         model.setSimulation(focusedContext.getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
@@ -266,8 +272,18 @@ public class ScenarioSimulationEditorPresenter {
         redoMenuItem.setEnabled(enabled);
     }
 
+    public void setItemMenuForMainGridEnabled(boolean enabled) {
+        runScenarioMenuItem.setEnabled(enabled);
+        importMenuItem.setEnabled(enabled);
+        exportToCSVMenuItem.setEnabled(enabled);
+        if (downloadMenuItem != null) {
+            downloadMenuItem.setEnabled(enabled);
+        }
+    }
+
     public void addDownloadMenuItem(FileMenuBuilder fileMenuBuilder, Supplier<Path> pathSupplier) {
-        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getDownloadMenuItem(() -> onDownload(pathSupplier)));
+        downloadMenuItem = ScenarioMenuItemFactory.getDownloadMenuItem(() -> onDownload(pathSupplier));
+        fileMenuBuilder.addNewTopLevelMenu(downloadMenuItem);
     }
 
     public DataManagementStrategy getDataManagementStrategy() {
@@ -359,11 +375,11 @@ public class ScenarioSimulationEditorPresenter {
      */
     public void makeMenuBar(FileMenuBuilder fileMenuBuilder) {
         fileMenuBuilder.addValidate(getValidateCommand());
-        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario));
+        fileMenuBuilder.addNewTopLevelMenu(runScenarioMenuItem);
         fileMenuBuilder.addNewTopLevelMenu(undoMenuItem);
         fileMenuBuilder.addNewTopLevelMenu(redoMenuItem);
-        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv));
-        fileMenuBuilder.addNewTopLevelMenu(ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog));
+        fileMenuBuilder.addNewTopLevelMenu(exportToCSVMenuItem);
+        fileMenuBuilder.addNewTopLevelMenu(importMenuItem);
         undoMenuItem.setEnabled(false);
         redoMenuItem.setEnabled(false);
     }
@@ -385,7 +401,6 @@ public class ScenarioSimulationEditorPresenter {
     public boolean isDirty() {
         try {
             scenarioMainGridWidget.resetErrors();
-            scenarioBackgroundGridWidget.resetErrors();
             int currentHashcode = MarshallingWrapper.toJSON(model).hashCode();
             return scenarioSimulationEditorWrapper.getOriginalHash() != currentHashcode;
         } catch (Exception ignored) {

@@ -352,6 +352,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         super.onEditTabSelected();
         scenarioSimulationEditorPresenter.setFocusedContext(
                 scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioSimulationContext());
+        scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(true);
     }
 
     /**
@@ -364,6 +365,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
             @Override
             public void onFocus() {
                 scenarioSimulationEditorPresenter.setFocusedContext(scenarioGridWidget.getScenarioSimulationContext());
+                scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(false);
             }
         });
     }
