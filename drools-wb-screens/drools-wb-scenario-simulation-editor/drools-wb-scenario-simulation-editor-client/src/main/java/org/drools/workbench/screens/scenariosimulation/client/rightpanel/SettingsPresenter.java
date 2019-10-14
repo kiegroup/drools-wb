@@ -86,6 +86,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
             case DMN:
                 setDMNSettings(simulationDescriptor);
                 break;
+            default:
+                // nop
         }
     }
 
@@ -115,6 +117,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
                 case DMN:
                     saveDMNSettings();
                     break;
+                default:
+                    // nop
             }
             saveCommand.execute();
         }
@@ -124,10 +128,19 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public void reset() {
         view.reset();
         if (!saveEnabled) {
-            view.getSaveButton().removeFromParent();
+            view.removeSaveButton();
         }
         settingsScenarioSimulationDropdown.clear();
     }
+
+    public boolean isSaveEnabled() {
+        return saveEnabled;
+    }
+
+    public SettingsView getView() {
+        return view;
+    }
+
 
     protected void setRuleSettings(SimulationDescriptor simulationDescriptor) {
         view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
