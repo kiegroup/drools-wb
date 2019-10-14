@@ -225,13 +225,13 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
     public void checkTypeRecursive() {
         DMNTypeServiceImpl.ErrorHolder errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(getRecursivePersonComposite(false), false, errorHolder, "");
-        assertTrue(errorHolder.getMultipleNestedCollection().isEmpty());
-        assertTrue(errorHolder.getMultipleNestedObject().isEmpty());
+        assertEquals(1, errorHolder.getMultipleNestedCollection().size());
+        assertEquals(2, errorHolder.getMultipleNestedObject().size());
 
         errorHolder = new DMNTypeServiceImpl.ErrorHolder();
         dmnTypeServiceImpl.checkTypeSupport(getRecursivePersonComposite(true), false, errorHolder, "");
-        assertTrue(errorHolder.getMultipleNestedCollection().isEmpty());
-        assertTrue(errorHolder.getMultipleNestedObject().isEmpty());
+        assertEquals(2, errorHolder.getMultipleNestedCollection().size());
+        assertEquals(2, errorHolder.getMultipleNestedObject().size());
     }
 
     /**

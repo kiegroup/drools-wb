@@ -306,10 +306,11 @@ public class DMNTypeServiceImpl
                     errorHolder.getMultipleNestedObject().add(nestedPath);
                 }
                 if (!alreadyVisited.contains(nestedType.getName())) {
-                    checkTypeSupport(nestedType,
-                                     alreadyInCollection || nestedType.isCollection(),
-                                     errorHolder,
-                                     nestedPath);
+                    internalCheckTypeSupport(nestedType,
+                                             alreadyInCollection || nestedType.isCollection(),
+                                             errorHolder,
+                                             nestedPath,
+                                             alreadyVisited);
                 }
             }
         }
