@@ -111,6 +111,12 @@ public class ScenarioSimulationEditorPresenter {
     protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
     protected long scenarioPresenterId;
+    protected MenuItem undoMenuItem;
+    protected MenuItem redoMenuItem;
+    protected MenuItem runScenarioMenuItem;
+    protected MenuItem exportToCSVMenuItem;
+    protected MenuItem importMenuItem;
+    protected MenuItem downloadMenuItem;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
@@ -118,12 +124,6 @@ public class ScenarioSimulationEditorPresenter {
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
-    private MenuItem undoMenuItem;
-    private MenuItem redoMenuItem;
-    private MenuItem runScenarioMenuItem;
-    private MenuItem exportToCSVMenuItem;
-    private MenuItem importMenuItem;
-    private MenuItem downloadMenuItem;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
