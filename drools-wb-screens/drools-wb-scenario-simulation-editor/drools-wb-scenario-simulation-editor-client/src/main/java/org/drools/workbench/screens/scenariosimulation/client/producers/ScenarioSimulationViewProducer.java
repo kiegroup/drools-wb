@@ -67,7 +67,7 @@ public class ScenarioSimulationViewProducer {
         return scenarioSimulationView;
     }
 
-    public ScenarioGridWidget getScenarioMainGridWidget(final EventBus eventBus) {
+    protected ScenarioGridWidget getScenarioMainGridWidget(final EventBus eventBus) {
         initGridWidget(scenarioMainGridWidget,
                        scenarioGridPanelProducer.getScenarioMainGridPanel(),
                        scenarioMainGridPanelClickHandler,
@@ -85,7 +85,7 @@ public class ScenarioSimulationViewProducer {
         return scenarioBackgroundGridWidget;
     }
 
-    private void initGridWidget(final ScenarioGridWidget scenarioGridWidget,
+    protected void initGridWidget(final ScenarioGridWidget scenarioGridWidget,
                                 final ScenarioGridPanel scenarioGridPanel,
                                 final ScenarioSimulationGridPanelClickHandler clickHandler,
                                 final ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler,

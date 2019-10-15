@@ -69,7 +69,7 @@ public class ScenarioGridPanelProducer {
         initializeGrid(scenarioBackgroundGridLayer, scenarioBackgroundGridPanel);
     }
 
-    private void initializeGrid(ScenarioGridLayer scenarioGridLayer, ScenarioGridPanel scenarioGridPanel) {
+    protected void initializeGrid(ScenarioGridLayer scenarioGridLayer, ScenarioGridPanel scenarioGridPanel) {
         ScenarioGridModel scenarioGridModel = new ScenarioGridModel(false);
         final ScenarioGrid scenarioGrid = new ScenarioGrid(scenarioGridModel,
                                                            scenarioGridLayer,
