@@ -35,7 +35,9 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
@@ -92,6 +94,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -238,6 +241,67 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setFocusedContext() {
         presenter.setFocusedContext(contextMock);
         verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+    }
+
+    @Test
+    public void setSaveEnabledTrue() {
+        presenter.setSaveEnabled(true);
+        assertTrue(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
+    }
+
+    @Test
+    public void setSaveEnabledFalse() {
+        presenter.setSaveEnabled(false);
+        assertFalse(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
+    }
+
+    @Test
+    public void setSaveEnabledPopulateSettingsCombinedTrue() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.setSaveEnabled(true);
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertTrue(presenter.saveEnabled);
+        assertTrue(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
+    }
+
+    @Test
+    public void setSaveEnabledPopulateSettingsCombinedFalse() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.setSaveEnabled(false);
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertFalse(presenter.saveEnabled);
+        assertFalse(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).restoreSaveButton();
+    }
+
+    @Test
+    public void setPopulateSettingsSaveEnabledCombinedTrue() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenter.setSaveEnabled(true);
+        assertTrue(presenter.saveEnabled);
+        assertTrue(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
+    }
+
+    @Test
+    public void setPopulateSettingsSaveEnabledCombinedFalse() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenter.setSaveEnabled(false);
+        assertFalse(presenter.saveEnabled);
+        assertFalse(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
     }
 
     @Test
@@ -753,5 +817,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.getValidationCallback().callback(validationErrors);
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorId));
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorMessage));
+    }
+
+    private SettingsPresenter getSettingsPresenterSpy() {
+        return spy(new SettingsPresenter(mock(SettingsScenarioSimulationDropdown.class), MockProducer.getSettingsViewMock()));
     }
 }

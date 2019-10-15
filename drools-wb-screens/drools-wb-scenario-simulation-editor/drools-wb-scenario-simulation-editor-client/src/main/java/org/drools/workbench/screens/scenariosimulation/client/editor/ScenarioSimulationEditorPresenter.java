@@ -111,6 +111,7 @@ public class ScenarioSimulationEditorPresenter {
     protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
     protected long scenarioPresenterId;
+    protected boolean saveEnabled = true;
     protected MenuItem undoMenuItem;
     protected MenuItem redoMenuItem;
     protected MenuItem runScenarioMenuItem;
@@ -169,6 +170,11 @@ public class ScenarioSimulationEditorPresenter {
     public void setFocusedContext(ScenarioSimulationContext scenarioSimulationContext) {
         this.focusedContext = scenarioSimulationContext;
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
+    }
+
+    public void setSaveEnabled(boolean toSet) {
+        saveEnabled = toSet;
+        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(presenter -> presenter.setSaveEnabled(toSet));
     }
 
     public void setPackageName(String packageName) {
@@ -572,7 +578,12 @@ public class ScenarioSimulationEditorPresenter {
     protected void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setScenarioType(modelType, model.getSimulation().getSimulationDescriptor(), path.getFileName());
-        presenter.setSaveCommand(getSaveCommand());
+        if (saveEnabled) {
+            presenter.setSaveCommand(getSaveCommand());
+            presenter.setSaveEnabled(true);
+        } else {
+            presenter.setSaveEnabled(false);
+        }
     }
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
@@ -580,7 +591,7 @@ public class ScenarioSimulationEditorPresenter {
         SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
         presenter.populateCoverageReport(modelType, simulationRunMetadata);
         if (simulationRunMetadata != null && simulationRunMetadata.getAuditLog() != null) {
-            presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditLog() ));
+            presenter.setDownloadReportCommand(getDownloadReportCommand(simulationRunMetadata.getAuditLog()));
         }
     }
 
