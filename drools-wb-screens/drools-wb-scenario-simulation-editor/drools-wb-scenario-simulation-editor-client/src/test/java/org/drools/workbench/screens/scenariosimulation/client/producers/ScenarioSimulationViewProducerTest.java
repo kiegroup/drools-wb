@@ -21,6 +21,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationMainGridPanelMouseMoveHandler;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -76,6 +77,14 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         final ScenarioSimulationView retrieved = scenarioSimulationViewProducer.getScenarioSimulationView(eventBusMock);
         assertEquals(scenarioSimulationViewMock, retrieved);
         verify(scenarioSimulationViewProducer, times(1)).getScenarioMainGridWidget(eq(eventBusMock));
+        verify(scenarioSimulationViewMock, times(1)).setScenarioGridWidget(scenarioGridWidgetMock);
+    }
+
+    @Test
+    public void getScenarioBackgroundGridWidget() {
+        ScenarioGridWidget retrieved = scenarioSimulationViewProducer.getScenarioBackgroundGridWidget(eventBusMock);
+        assertEquals(scenarioGridWidgetMock, retrieved);
+        verify(scenarioSimulationViewProducer, times(1)).initGridWidget(eq(scenarioGridWidgetMock), eq(scenarioGridPanelMock), eq(clickHandlerMock), eq(mouseMoveHandlerMock), eq(eventBusMock));
         verify(scenarioSimulationViewMock, times(1)).setScenarioGridWidget(scenarioGridWidgetMock);
     }
 

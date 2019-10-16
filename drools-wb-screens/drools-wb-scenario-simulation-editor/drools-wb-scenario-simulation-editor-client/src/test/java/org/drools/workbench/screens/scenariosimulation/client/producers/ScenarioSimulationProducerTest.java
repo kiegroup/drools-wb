@@ -88,4 +88,10 @@ public class ScenarioSimulationProducerTest extends AbstractProducerTest {
         scenarioSimulationProducer.getScenarioBackgroundGridWidget();
         verify(scenarioSimulationViewProducerMock, times(1)).getScenarioBackgroundGridWidget(eq(eventBusMock));
     }
+
+    @Test
+    public void setScenarioSimulationEditorPresenter() {
+        scenarioSimulationProducer.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
+        verify(scenarioSimulationEventHandlerMock, times(1)).setScenarioSimulationPresenter(eq(scenarioSimulationEditorPresenterMock));
+    }
 }
