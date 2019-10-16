@@ -147,11 +147,7 @@ public class ScenarioSimulationEditorPresenter {
         this.textFileExport = textFileExport;
         this.confirmPopupPresenter = confirmPopupPresenter;
         view.init();
-        undoMenuItem = ScenarioMenuItemFactory.getUndoMenuItem(this::onUndo);
-        redoMenuItem = ScenarioMenuItemFactory.getRedoMenuItem(this::onRedo);
-        runScenarioMenuItem = ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario);
-        exportToCSVMenuItem = ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv);
-        importMenuItem = ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog);
+        initMenuItems();
         scenarioSimulationProducer.setScenarioSimulationEditorPresenter(this);
         scenarioMainGridWidget = view.getScenarioGridWidget();
         scenarioMainGridWidget.getScenarioSimulationContext().setScenarioSimulationEditorPresenter(this);
@@ -165,6 +161,14 @@ public class ScenarioSimulationEditorPresenter {
         this.scenarioSimulationEditorWrapper = scenarioSimulationEditorWrapper;
         this.path = path;
         testRunnerReportingPanel.reset();
+    }
+
+    private void initMenuItems() {
+        undoMenuItem = ScenarioMenuItemFactory.getUndoMenuItem(this::onUndo);
+        redoMenuItem = ScenarioMenuItemFactory.getRedoMenuItem(this::onRedo);
+        runScenarioMenuItem = ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario);
+        exportToCSVMenuItem = ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv);
+        importMenuItem = ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog);
     }
 
     public void setFocusedContext(ScenarioSimulationContext scenarioSimulationContext) {
@@ -536,7 +540,7 @@ public class ScenarioSimulationEditorPresenter {
                     });
                     break;
                 default:
-                    break;
+                    throw new IllegalStateException("Invalid identifier");
             }
         }
     }

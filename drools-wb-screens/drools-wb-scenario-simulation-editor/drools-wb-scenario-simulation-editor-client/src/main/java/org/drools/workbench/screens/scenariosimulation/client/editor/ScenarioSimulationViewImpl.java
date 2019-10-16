@@ -22,9 +22,9 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.kie.workbench.common.widgets.metadata.client.KieEditorViewImpl;
 
 /**
- * Implementation of the main view for the ScenarioSimulation editor.
+ * Implementation of the main tab view for the ScenarioSimulation editor.
  * <p>
- * This view contains a <code>ScenarioGridPanel</code>.
+ * This class acts as a wrapper class which holds the main <code>ScenarioGridWidget</code>
  */
 @Dependent
 public class ScenarioSimulationViewImpl extends KieEditorViewImpl implements ScenarioSimulationView {
