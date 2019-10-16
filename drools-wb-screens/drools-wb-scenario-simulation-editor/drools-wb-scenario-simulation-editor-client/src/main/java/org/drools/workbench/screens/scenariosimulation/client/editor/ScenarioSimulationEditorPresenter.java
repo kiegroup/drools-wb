@@ -540,7 +540,7 @@ public class ScenarioSimulationEditorPresenter {
                     });
                     break;
                 default:
-                    throw new IllegalStateException("Invalid identifier");
+                    throw new IllegalArgumentException("Invalid identifier");
             }
         }
     }
