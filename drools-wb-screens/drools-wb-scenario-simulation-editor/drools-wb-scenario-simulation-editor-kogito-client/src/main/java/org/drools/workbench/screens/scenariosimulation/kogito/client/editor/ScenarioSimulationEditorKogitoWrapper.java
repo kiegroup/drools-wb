@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -124,8 +125,18 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
+    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AuditLog auditLog) {
+        //
+    }
+
+    @Override
+    public void validate(Simulation simulation, RemoteCallback<?> callback) {
+        //
+    }
+
+    @Override
     public void resetContentHash() {
-       //
+        //
     }
 
     public void onStartup(final PlaceRequest place) {
@@ -173,6 +184,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
      */
     @Override
     protected void makeMenuBar() {
+        // TODO {gcardosi* verify/align with BusinessCentralWrapper for new "background" tab
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
     }
 
@@ -183,12 +195,12 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     protected void marshallContent(ScenarioSimulationModel scenarioSimulationModel) {
         final JSIScenarioSimulationModelType jsiScenarioSimulationModelType = getJSIScenarioSimulationModelType(scenarioSimulationModel);
-        scesimContainer.setValue(jsiScenarioSimulationModelType);
-        MainJs.marshall(scesimContainer, getJSInteropMarshallConvert());
+        scesimContainer.setScenarioSimulationModel(jsiScenarioSimulationModelType);
+        MainJs.marshall(scesimContainer, "scesim", getJSInteropMarshallConvert());
     }
 
     protected void unmarshallContent(String toUnmarshal) {
-        MainJs.unmarshall(toUnmarshal, getJSInteropUnmarshallConvert());
+        MainJs.unmarshall(toUnmarshal,"scesim", getJSInteropUnmarshallConvert());
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallConvert() {
@@ -200,7 +212,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected SCESIMUnmarshallCallback getJSInteropUnmarshallConvert() {
         return scesim -> {
             this.scesimContainer = scesim;
-            final JSIScenarioSimulationModelType scenarioSimulationModelType = scesim.getValue();
+            final JSIScenarioSimulationModelType scenarioSimulationModelType = scesim.getScenarioSimulationModel();
             final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
             getModelSuccessCallbackMethod(scenarioSimulationModel);
         };
@@ -218,5 +230,4 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
-
 }

@@ -108,6 +108,7 @@
               <args>
                 <arg>-Xgwtjsonix</arg>
                 <arg>-jsid=${project.build.sourceDirectory}</arg>
+                <arg>-jsmpkg=org.drools.workbench.scenariosimulation.kogito.marshaller.mapper</arg>
               </args>
               <plugins>
                 <plugin>

@@ -15,7 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.converters;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jsinterop.base.Js;
 import jsinterop.base.JsArrayLike;
@@ -55,7 +57,7 @@ import org.kie.soup.project.datamodel.imports.Imports;
 public class ApiJSInteropConverter {
 
     public static JSIScenarioSimulationModelType getJSIScenarioSimulationModelType(ScenarioSimulationModel source) {
-        JSIScenarioSimulationModelType toReturn = JSIScenarioSimulationModelType.newInstance();
+        JSIScenarioSimulationModelType toReturn = new JSIScenarioSimulationModelType();
         toReturn.setVersion(source.getVersion());
         toReturn.setImports(getImports(source.getImports()));
         toReturn.setSimulation(getSimulation(source.getSimulation()));
@@ -63,57 +65,67 @@ public class ApiJSInteropConverter {
     }
 
     protected static JSIImportsType getImports(Imports source) {
-        JSIImportsType toReturn = JSIImportsType.newInstance();
+        JSIImportsType toReturn = new JSIImportsType();
         final List<Import> imports = source.getImports();
-        JSIWrappedImportsType jsiWrappedImportsType = JSIWrappedImportsType.newInstance();
+        JSIWrappedImportsType jsiWrappedImportsType = new JSIWrappedImportsType();
         toReturn.setImports(jsiWrappedImportsType);
         if (imports != null) {
-            JsArrayLike<JSIImportType> jsiImportTypeJsArrayLike = getNativeArray();
-            jsiImportTypeJsArrayLike.setLength(imports.size());
-            for (int i = 0; i < imports.size(); i++) {
-                JSIImportType toAdd = getImport(imports.get(i));
-                jsiImportTypeJsArrayLike.setAt(i, toAdd);
-            }
-            jsiWrappedImportsType.setImport(jsiImportTypeJsArrayLike);
+            List<JSIImportType> toSet =imports.stream().map(ApiJSInteropConverter::getImport).collect(Collectors.toList());
+            jsiWrappedImportsType.setImport(toSet);
+//            JsArrayLike<JSIImportType> jsiImportTypeJsArrayLike = getNativeArray();
+//            jsiImportTypeJsArrayLike.setLength(imports.size());
+//
+//            for (int i = 0; i < imports.size(); i++) {
+//                JSIImportType toAdd = getImport(imports.get(i));
+//                jsiImportTypeJsArrayLike.setAt(i, toAdd);
+//            }
+//            jsiWrappedImportsType.setImport(jsiImportTypeJsArrayLike);
         }
         return toReturn;
     }
 
     protected static JSIImportType getImport(Import source) {
-        JSIImportType toReturn = JSIImportType.newInstance();
+        JSIImportType toReturn = new JSIImportType();
         toReturn.setType(source.getType());
         return toReturn;
     }
 
     protected static JSISimulationType getSimulation(Simulation source) {
-        JSISimulationType toReturn = JSISimulationType.newInstance();
+        JSISimulationType toReturn = new JSISimulationType();
         JSISimulationDescriptorType jsiSimulationDescriptorType = getSimulationDescriptor(source.getSimulationDescriptor());
         toReturn.setSimulationDescriptor(jsiSimulationDescriptorType);
         final List<Scenario> unmodifiableScenarios = source.getUnmodifiableScenarios();
-        JSIScenariosType jsiScenariosType = JSIScenariosType.newInstance();
+        JSIScenariosType jsiScenariosType = new JSIScenariosType();
         toReturn.setScenarios(jsiScenariosType);
-        JsArrayLike<JSIScenarioType> jsiScenarioTypes = getNativeArray();
-        jsiScenarioTypes.setLength(unmodifiableScenarios.size());
-        jsiScenariosType.setScenario(jsiScenarioTypes);
-        for (int i = 0; i < unmodifiableScenarios.size(); i++) {
-            JSIScenarioType jsiScenarioType = Js.uncheckedCast(getScenario(unmodifiableScenarios.get(i)));
-            jsiScenarioTypes.setAt(i, jsiScenarioType);
-        }
+        List<JSIScenarioType> toSet =unmodifiableScenarios.stream()
+                .map(ApiJSInteropConverter::getScenario).collect(Collectors.toList());
+        jsiScenariosType.setScenario(toSet);
+//        JsArrayLike<JSIScenarioType> jsiScenarioTypes = getNativeArray();
+//        jsiScenarioTypes.setLength(unmodifiableScenarios.size());
+//        jsiScenariosType.setScenario(jsiScenarioTypes);
+//        for (int i = 0; i < unmodifiableScenarios.size(); i++) {
+//            JSIScenarioType jsiScenarioType = Js.uncheckedCast(getScenario(unmodifiableScenarios.get(i)));
+//            jsiScenarioTypes.setAt(i, jsiScenarioType);
+//        }
         return toReturn;
     }
 
     protected static JSISimulationDescriptorType getSimulationDescriptor(SimulationDescriptor source) {
-        JSISimulationDescriptorType toReturn = JSISimulationDescriptorType.newInstance();
+        JSISimulationDescriptorType toReturn = new JSISimulationDescriptorType();
         final List<FactMapping> factMappings = source.getFactMappings();
-        JSIFactMappingsType jsiFactMappingsType = JSIFactMappingsType.newInstance();
+        JSIFactMappingsType jsiFactMappingsType = new JSIFactMappingsType();
         toReturn.setFactMappings(jsiFactMappingsType);
-        JsArrayLike<JSIFactMappingType> jsiFactMappingTypes = getNativeArray();
-        jsiFactMappingTypes.setLength(factMappings.size());
-        jsiFactMappingsType.setFactMapping(jsiFactMappingTypes);
-        for (int i = 0; i < factMappings.size(); i++) {
-            JSIFactMappingType jsiFactMappingType = Js.uncheckedCast(getFactMapping(factMappings.get(i)));
-            jsiFactMappingTypes.setAt(i, jsiFactMappingType);
-        }
+        List<JSIFactMappingType> toSet =factMappings.stream()
+                .map(ApiJSInteropConverter::getFactMapping).collect(Collectors.toList());
+        jsiFactMappingsType.setFactMapping(toSet);
+//
+//        JsArrayLike<JSIFactMappingType> jsiFactMappingTypes = getNativeArray();
+//        jsiFactMappingTypes.setLength(factMappings.size());
+//        jsiFactMappingsType.setFactMapping(jsiFactMappingTypes);
+//        for (int i = 0; i < factMappings.size(); i++) {
+//            JSIFactMappingType jsiFactMappingType = Js.uncheckedCast(getFactMapping(factMappings.get(i)));
+//            jsiFactMappingTypes.setAt(i, jsiFactMappingType);
+//        }
         toReturn.setDmoSession(source.getDmoSession());
         toReturn.setDmnFilePath(source.getDmnFilePath());
         toReturn.setType(source.getType().name());
@@ -128,24 +140,26 @@ public class ApiJSInteropConverter {
     }
 
     protected static JSIScenarioType getScenario(Scenario source) {
-        JSIScenarioType toReturn = JSIScenarioType.newInstance();
-        JSIFactMappingValuesType factMappingValuesType = JSIFactMappingValuesType.newInstance();
+        JSIScenarioType toReturn = new JSIScenarioType();
+        JSIFactMappingValuesType factMappingValuesType = new JSIFactMappingValuesType();
         toReturn.setFactMappingValues(factMappingValuesType);
         final List<FactMappingValue> unmodifiableFactMappingValues = source.getUnmodifiableFactMappingValues();
-        JsArrayLike<JSIFactMappingValueType> jsiFactMappingValueTypes = getNativeArray();
-        jsiFactMappingValueTypes.setLength(unmodifiableFactMappingValues.size());
-        factMappingValuesType.setFactMappingValue(jsiFactMappingValueTypes);
+        List<JSIFactMappingValueType> toSet = new ArrayList<>();
+//        JsArrayLike<JSIFactMappingValueType> jsiFactMappingValueTypes = getNativeArray();
+//        jsiFactMappingValueTypes.setLength(unmodifiableFactMappingValues.size());
+//        factMappingValuesType.setFactMappingValue(jsiFactMappingValueTypes);
         for (int i = 0; i < unmodifiableFactMappingValues.size(); i++) {
             FactMappingValue factMappingValue = unmodifiableFactMappingValues.get(i);
-            final JSIFactMappingValueType factMappingValueType = Js.uncheckedCast(getFactMappingValue(factMappingValue, i > 0));
-            jsiFactMappingValueTypes.setAt(i, factMappingValueType);
+            toSet.add(Js.uncheckedCast(getFactMappingValue(factMappingValue, i > 0)));
+//            final JSIFactMappingValueType factMappingValueType = Js.uncheckedCast(getFactMappingValue(factMappingValue, i > 0));
+//            jsiFactMappingValueTypes.setAt(i, factMappingValueType);
         }
         return toReturn;
     }
 
 
     protected static JSIFactMappingValueType getFactMappingValue(FactMappingValue source, boolean withRawValue) {
-        JSIFactMappingValueType toReturn = JSIFactMappingValueType.newInstance();
+        JSIFactMappingValueType toReturn = new JSIFactMappingValueType();
         final JSIExpressionIdentifierType expressionIdentifierType = Js.uncheckedCast(getExpressionIdentifier(source.getExpressionIdentifier()));
         toReturn.setExpressionIdentifier(expressionIdentifierType);
         final JSIFactIdentifierType jsiFactIdentifierReferenceType = Js.uncheckedCast(getFactIdentifier(source.getFactIdentifier()));
@@ -161,14 +175,14 @@ public class ApiJSInteropConverter {
     }
 
     protected static JSIRawValueType getRawValueReference(Object rawValue) {
-        JSIRawValueType toReturn = JSIRawValueType.newInstance();
+        JSIRawValueType toReturn = new JSIRawValueType();
         toReturn.setClazz("string");
         toReturn.setValue(rawValue.toString());
         return toReturn;
     }
 
     protected static JSIFactMappingType getFactMapping(FactMapping source) {
-        JSIFactMappingType toReturn = JSIFactMappingType.newInstance();
+        JSIFactMappingType toReturn = new JSIFactMappingType();
         toReturn.setClassName(source.getClassName());
         toReturn.setExpressionAlias(source.getExpressionAlias());
         JSIExpressionElementsType jsiExpressionElementsType = Js.uncheckedCast(getExpressionElements(source.getExpressionElements()));
@@ -180,46 +194,46 @@ public class ApiJSInteropConverter {
         toReturn.setFactIdentifier(jsiFactIdentifierType);
         List<String> genericTypes = source.getGenericTypes();
         if (genericTypes != null) {
-            JSIGenericTypes toSet = JSIGenericTypes.newInstance();
-            toSet.setString(genericTypes.toArray(new String[genericTypes.size()]));
+            JSIGenericTypes toSet = new JSIGenericTypes();
+            toSet.setString(genericTypes);
             toReturn.setGenericTypes(toSet);
         }
         return toReturn;
     }
 
     protected static JSIExpressionElementsType getExpressionElements(List<ExpressionElement> expressionElements) {
-        JSIExpressionElementsType toReturn = JSIExpressionElementsType.newInstance();
-        JsArrayLike<JSIExpressionElementType> jsiExpressionElementTypes = getNativeArray();
-        jsiExpressionElementTypes.setLength(expressionElements.size());
-        toReturn.setExpressionElement(jsiExpressionElementTypes);
-        for (int i = 0; i < jsiExpressionElementTypes.getLength(); i++) {
-            JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(getExpressionElement(expressionElements.get(i)));
-            jsiExpressionElementTypes.setAt(i, jsiExpressionElementType);
-        }
+        JSIExpressionElementsType toReturn = new JSIExpressionElementsType();
+        List<JSIExpressionElementType> toSet =expressionElements.stream()
+                .map(ApiJSInteropConverter::getExpressionElement).collect(Collectors.toList());
+        toReturn.setExpressionElement(toSet);
+//        JsArrayLike<JSIExpressionElementType> jsiExpressionElementTypes = getNativeArray();
+//        jsiExpressionElementTypes.setLength(expressionElements.size());
+//        toReturn.setExpressionElement(jsiExpressionElementTypes);
+//        for (int i = 0; i < jsiExpressionElementTypes.getLength(); i++) {
+//            JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(getExpressionElement(expressionElements.get(i)));
+//            jsiExpressionElementTypes.setAt(i, jsiExpressionElementType);
+//        }
         return toReturn;
     }
 
     protected static JSIExpressionElementType getExpressionElement(ExpressionElement expressionElement) {
-        JSIExpressionElementType toReturn = JSIExpressionElementType.newInstance();
+        JSIExpressionElementType toReturn = new JSIExpressionElementType();
         toReturn.setStep(expressionElement.getStep());
         return toReturn;
     }
 
     protected static JSIExpressionIdentifierType getExpressionIdentifier(ExpressionIdentifier source) {
-        JSIExpressionIdentifierType toReturn = JSIExpressionIdentifierType.newInstance();
+        JSIExpressionIdentifierType toReturn = new JSIExpressionIdentifierType();
         toReturn.setName(source.getName());
         toReturn.setType(source.getType().name());
         return toReturn;
     }
 
     protected static JSIFactIdentifierType getFactIdentifier(FactIdentifier factIdentifier) {
-        JSIFactIdentifierType toReturn = JSIFactIdentifierType.newInstance();
+        JSIFactIdentifierType toReturn = new JSIFactIdentifierType();
         toReturn.setName(factIdentifier.getName());
         toReturn.setClassName(factIdentifier.getClassName());
         return toReturn;
     }
 
-    protected static native JsArrayLike getNativeArray() /*-{
-        return [];
-    }-*/;
 }
