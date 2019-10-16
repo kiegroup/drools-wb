@@ -31,6 +31,7 @@ import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResour
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResult;
 import org.guvnor.common.services.project.categories.Decision;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
@@ -39,6 +40,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.imports.Imports;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.search.common.SearchPerformedEvent;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -49,6 +51,7 @@ import org.uberfire.ext.editor.commons.client.menu.BasicFileMenuBuilder;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
+import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuItem;
@@ -81,8 +84,12 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
     @Mock
     protected AuthoringWorkbenchDocks docks;
 
+    @Mock
+    private EventSourceMock<SearchPerformedEvent> searchPerformedEvent;
+
     @Override
     protected GuidedDecisionTableEditorPresenter getPresenter() {
+
         return new GuidedDecisionTableEditorPresenter(view,
                                                       dtServiceCaller,
                                                       docks,
@@ -104,7 +111,8 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
                                                       downloadMenuItemBuilder,
                                                       editorSearchIndex,
                                                       searchBarComponent,
-                                                      searchableElementFactory) {
+                                                      searchableElementFactory,
+                                                      searchPerformedEvent) {
             {
                 workbenchContext = GuidedDecisionTableEditorPresenterTest.this.workbenchContext;
                 projectController = GuidedDecisionTableEditorPresenterTest.this.projectController;
@@ -122,18 +130,34 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
     public void testInit() {
 
         final Supplier<Boolean> isDirty = () -> true;
+        final Supplier<Integer> currentHashCode = () -> 123;
         final Command noResultsFoundCallback = () -> {/* Nothing. */};
 
         doReturn(isDirty).when(presenter).getIsDirtySupplier();
         doReturn(noResultsFoundCallback).when(presenter).getNoResultsFoundCallback();
+        doReturn(currentHashCode).when(presenter).getCurrentHashCodeSupplier();
 
-        // init is called on @Before
+        presenter.init();
 
-        editorSearchIndex.setNoResultsFoundCallback(noResultsFoundCallback);
-        editorSearchIndex.setIsDirtySupplier(isDirty);
-        verify(editorSearchIndex).registerSubIndex(presenter);
-        verify(searchBarComponent).init(editorSearchIndex);
-        verify(multiPageEditor).addTabBarWidget(searchBarComponentWidget);
+        verify(editorSearchIndex).setNoResultsFoundCallback(noResultsFoundCallback);
+        verify(editorSearchIndex).setCurrentAssetHashcodeSupplier(currentHashCode);
+        verify(editorSearchIndex, times(2)).registerSubIndex(presenter);
+        verify(searchBarComponent, times(2)).init(editorSearchIndex);
+        verify(multiPageEditor, times(2)).addTabBarWidget(searchBarComponentWidget);
+    }
+
+    @Test
+    public void testGetCurrentHashCode() {
+
+        final GuidedDecisionTableView.Presenter activeDocument = mock(GuidedDecisionTableView.Presenter.class);
+        final Integer expectedHashcode = 123;
+
+        doReturn(activeDocument).when(presenter).getActiveDocument();
+        doReturn(expectedHashcode).when(presenter).currentHashCode(activeDocument);
+
+        final Integer actualHashcode = presenter.getCurrentHashCodeSupplier().get();
+
+        assertEquals(expectedHashcode, actualHashcode);
     }
 
     @Test
@@ -149,6 +173,21 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
 
         verify(gridData).clearSelections();
         verify(gridWidget).draw();
+    }
+
+    @Test
+    public void testGetSearchPerformedCallback() {
+
+        final ArgumentCaptor<SearchPerformedEvent> captor = ArgumentCaptor.forClass(SearchPerformedEvent.class);
+        final GuidedDecisionTableSearchableElement currentResult = mock(GuidedDecisionTableSearchableElement.class);
+        when(editorSearchIndex.getCurrentResult()).thenReturn(Optional.of(currentResult));
+
+        presenter.getSearchPerformedCallback().execute();
+
+        verify(searchPerformedEvent).fire(captor.capture());
+
+        final SearchPerformedEvent value = captor.getValue();
+        assertEquals(value.getCurrentElement(), currentResult);
     }
 
     @Test
@@ -390,5 +429,25 @@ public class GuidedDecisionTableEditorPresenterTest extends BaseGuidedDecisionTa
         final AsyncPackageDataModelOracle oracle = dtDocument.getDataModelOracle();
         final Imports imports = dtDocument.getModel().getImports();
         verify(importsWidget).setContent(same(oracle), same(imports), eq(false));
+    }
+
+    @Test
+    public void showConversionSuccess() {
+        doReturn(new XLSConversionResult()).when(dtService).convert(any());
+
+        presenter.onConvert();
+
+        verify(view).showConversionSuccess();
+        verify(view, never()).showConversionMessage(any());
+    }
+
+    @Test
+    public void showConversionMessage() {
+        doReturn(new XLSConversionResult("failed")).when(dtService).convert(any());
+
+        presenter.onConvert();
+
+        verify(view, never()).showConversionSuccess();
+        verify(view).showConversionMessage("failed");
     }
 }

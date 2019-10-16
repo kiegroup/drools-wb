@@ -148,6 +148,8 @@ public interface ScenarioSimulationEditorConstants
 
     String deleteColumn();
 
+    String deleteInstance();
+
     String duplicateInstance();
 
     String insertRowBelow();
@@ -312,5 +314,21 @@ public interface ScenarioSimulationEditorConstants
 
     String noRulesAvailable();
 
+    String headerTitleEmptyError();
+
     String instanceTitleAssignedError(String title);
+
+    String instanceTitleWithPeriodsError();
+
+    String propertyTitleAssignedError(String title);
+
+    String propertyTitleWithPeriodsError();
+
+    String validationErrorTitle();
+
+    String validationErrorMessage();
+
+    String validationFailedNotification();
+
+    String validationSucceed();
 }

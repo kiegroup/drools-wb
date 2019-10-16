@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-screens</artifactId>
-    <version>7.26.0-SNAPSHOT</version>
+    <version>7.29.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-guided-rule-editor</artifactId>
@@ -36,5 +36,12 @@
     <module>drools-wb-guided-rule-editor-client</module>
     <module>drools-wb-guided-rule-editor-backend</module>
   </modules>
+
+  <properties>
+    <code.coverage.disabled>true</code.coverage.disabled>
+    <sonar.skip>true</sonar.skip>
+  </properties>
+
+
 
 </project>

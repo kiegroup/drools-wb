@@ -26,11 +26,6 @@ public interface ExtendedDecisionTableXLSService extends DecisionTableXLSService
     InputStream load( final Path path,
                       final String sessionId );
 
-    Path create( final Path resource,
-                 final InputStream content,
-                 final String sessionId,
-                 final String comment );
-
     Path save( final Path resource,
                final InputStream content,
                final String sessionId,

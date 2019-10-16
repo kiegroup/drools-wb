@@ -20,7 +20,7 @@
   <parent>
     <artifactId>drools-wb-screens</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.26.0-SNAPSHOT</version>
+    <version>7.29.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -33,5 +33,12 @@
     <module>drools-wb-pmml-text-editor-api</module>
     <module>drools-wb-pmml-text-editor-client</module>
   </modules>
+
+  <properties>
+    <code.coverage.disabled>true</code.coverage.disabled>
+    <sonar.skip>true</sonar.skip>
+  </properties>
+
+
 
 </project>

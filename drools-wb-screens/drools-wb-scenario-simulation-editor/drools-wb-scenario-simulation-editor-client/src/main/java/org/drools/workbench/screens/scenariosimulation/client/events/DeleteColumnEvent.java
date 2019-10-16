@@ -23,14 +23,22 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteCol
  */
 public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
 
-    public static Type<DeleteColumnEventHandler> TYPE = new Type<>();
+    public static final Type<DeleteColumnEventHandler> TYPE = new Type<>();
 
     private int columnIndex;
     private String columnGroup;
+    private boolean asProperty;
 
-    public DeleteColumnEvent(int columnIndex, String columnGroup) {
+    /**
+     *
+     * @param columnIndex
+     * @param columnGroup
+     * @param asProperty when <code>true</code> it delete only the column, when <code>false</code> it deletes the whole instance
+     */
+    public DeleteColumnEvent(int columnIndex, String columnGroup, boolean asProperty) {
         this.columnIndex = columnIndex;
         this.columnGroup = columnGroup;
+        this.asProperty = asProperty;
     }
 
     @Override
@@ -44,6 +52,10 @@ public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
 
     public String getColumnGroup() {
         return columnGroup;
+    }
+
+    public boolean isAsProperty() {
+        return asProperty;
     }
 
     @Override

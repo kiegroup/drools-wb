@@ -19,7 +19,9 @@ package org.drools.workbench.screens.guided.dtable.client.editor.search;
 import javax.inject.Inject;
 
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
+import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.CellUtilities;
 import org.drools.workbench.screens.guided.rule.client.util.GWTDateConverter;
 import org.kie.soup.project.datamodel.oracle.DateConverter;
@@ -39,9 +41,15 @@ public class SearchableElementFactory {
         CellUtilities.injectDateConvertor(getDateConverter());
     }
 
-    public GuidedDecisionTableSearchableElement makeSearchableElement(final Integer row,
-                                                                      final Integer column,
+    private DateConverter getDateConverter() {
+        return GWTDateConverter.getInstance();
+    }
+
+    public GuidedDecisionTableSearchableElement makeSearchableElement(final int row,
+                                                                      final int column,
                                                                       final DTCellValue52 cellValue52,
+                                                                      final GuidedDecisionTableView widget,
+                                                                      final GuidedDecisionTable52 model,
                                                                       final GuidedDecisionTableModellerView.Presenter modeller) {
 
         final GuidedDecisionTableSearchableElement searchableElement = new GuidedDecisionTableSearchableElement();
@@ -51,11 +59,9 @@ public class SearchableElementFactory {
         searchableElement.setValue(cellUtilities.asString(cellValue52));
         searchableElement.setRow(row);
         searchableElement.setColumn(column);
+        searchableElement.setWidget(widget);
+        searchableElement.setModel(model);
 
         return searchableElement;
-    }
-
-    private DateConverter getDateConverter() {
-        return GWTDateConverter.getInstance();
     }
 }

@@ -51,6 +51,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_COLUMN_TITLE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_PROPERTY_TITLE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_ROWS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.HEADER_META_DATA;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
@@ -301,6 +302,24 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     }
 
     @Test
+    public void setSelectedColumn() {
+        scenarioGridModel.selectColumn(COLUMN_INDEX);
+        assertEquals(gridColumnMock, scenarioGridModel.getSelectedColumn());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setSelectedColumn_NegativeIndex() {
+        int columnIndex = -1;
+        scenarioGridModel.selectColumn(columnIndex);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setSelectedColumn_OverflowIndex() {
+        int columnIndex = 7;
+        scenarioGridModel.selectColumn(columnIndex);
+    }
+
+    @Test
     public void getInstancesCount() {
         long count = scenarioGridModel.getInstancesCount(FULL_CLASS_NAME);
         assertEquals(1, count);
@@ -548,14 +567,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private void commonValidateInstanceHeaderUpdate(int columnIndex, boolean isADataType, boolean isSameInstanceHeader, boolean isUnique, boolean expectedValid) throws Exception {
         if (isSameInstanceHeader) {
-            doThrow(new Exception("isSameInstanceHeader")).when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
+            doThrow(new IllegalArgumentException("isSameInstanceHeader")).when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
         } else {
             doNothing().when(scenarioGridModel).checkSameInstanceHeader(columnIndex, MULTIPART_VALUE_ELEMENTS.get(MULTIPART_VALUE_ELEMENTS.size() - 1));
         }
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniqueInstanceHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validateInstanceHeaderUpdate(MULTIPART_VALUE, columnIndex, isADataType);
@@ -569,14 +588,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     private void commonValidatePropertyUpdate(int columnIndex, boolean isPropertyType, boolean isSamePropertyHeader, boolean isUnique, boolean expectedValid) throws Exception {
         if (isSamePropertyHeader) {
-            doThrow(new Exception("isSamePropertyHeader")).when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
+            doThrow(new IllegalArgumentException("isSamePropertyHeader")).when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
         } else {
             doNothing().when(scenarioGridModel).checkSamePropertyHeader(columnIndex, MULTIPART_VALUE_ELEMENTS);
         }
         if (isUnique) {
             doNothing().when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         } else {
-            doThrow(new Exception("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
+            doThrow(new IllegalArgumentException("isUnique")).when(scenarioGridModel).checkValidAndUniquePropertyHeaderTitle(MULTIPART_VALUE, columnIndex);
         }
         try {
             scenarioGridModel.validatePropertyHeaderUpdate(MULTIPART_VALUE, columnIndex, isPropertyType);
@@ -586,6 +605,11 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             }
         }
         reset(eventBusMock);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void checkUniquePropertyHeaderTitle_AssignedLabel() {
+        scenarioGridModel.checkUniquePropertyHeaderTitle(GRID_PROPERTY_TITLE, COLUMN_INDEX);
     }
 
     @Test
@@ -620,4 +644,42 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         verify(scenarioGridModel, times(1)).refreshErrors();
     }
 
+    @Test
+    public void synchronizeFactMappingsWidths() {
+        scenarioGridModel.synchronizeFactMappingsWidths();
+        verify(scenarioGridModel, times(gridColumns.size())).synchronizeFactMappingWidth(isA(GridColumn.class));
+    }
+
+    @Test
+    public void synchronizeFactMappingWidth() {
+        when(gridColumnMock.isVisible()).thenReturn(true);
+        scenarioGridModel.synchronizeFactMappingWidth(gridColumnMock);
+        verify(factMappingMock, times(1)).setColumnWidth(eq(gridColumnMock.getWidth()));
+    }
+
+    @Test
+    public void synchronizeFactMappingWidth_NotVisibleColumn() {
+        when(gridColumnMock.isVisible()).thenReturn(false);
+        scenarioGridModel.synchronizeFactMappingWidth(gridColumnMock);
+        verify(factMappingMock, never()).setColumnWidth(any());
+    }
+
+    @Test
+    public void loadFactMappingsWidth_FactMappingWithoutWidth() {
+        when(factMappingMock.getColumnWidth()).thenReturn(null);
+        gridColumns.clear();
+        gridColumns.add(gridColumnMock);
+        scenarioGridModel.loadFactMappingsWidth();
+        verify(gridColumnMock, never()).setWidth(anyDouble());
+    }
+
+    @Test
+    public void loadFactMappingsWidth_FactMappingWithWidth() {
+        when(factMappingMock.getColumnWidth()).thenReturn(54.32);
+        gridColumns.clear();
+        gridColumns.add(gridColumnMock);
+        scenarioGridModel.loadFactMappingsWidth();
+        verify(factMappingMock, never()).setColumnWidth(anyDouble());
+        verify(gridColumnMock, times(1)).setWidth(eq(factMappingMock.getColumnWidth()));
+    }
 }

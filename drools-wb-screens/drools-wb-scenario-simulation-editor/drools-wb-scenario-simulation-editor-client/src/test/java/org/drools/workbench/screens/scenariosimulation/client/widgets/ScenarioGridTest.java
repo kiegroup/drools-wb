@@ -18,8 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
+import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
@@ -44,6 +46,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimu
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
@@ -69,6 +72,7 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
@@ -119,6 +123,7 @@ public class ScenarioGridTest {
     @Before
     public void setup() {
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
+        when(scenarioGridModelMock.getSimulation()).thenReturn(Optional.of(simulation));
         factIdentifierGiven = new FactIdentifier("GIVEN", "GIVEN");
         factIdentifierInteger = new FactIdentifier("Integer", "java.lang.Integer");
         factMappingDescription = new FactMapping(EXPRESSION_ALIAS_DESCRIPTION, FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
@@ -172,6 +177,10 @@ public class ScenarioGridTest {
                 return new EnableTestToolsEvent();
             }
 
+            @Override
+            public Layer getLayer() {
+                return scenarioGridLayerMock;
+            }
         });
         when(rendererHelperMock.getRenderingInformation()).thenReturn(renderingInformationMock);
         when(renderingInformationMock.getHeaderRowsHeight()).thenReturn(HEADER_ROWS_HEIGHT);
@@ -201,11 +210,48 @@ public class ScenarioGridTest {
 
     @Test
     public void setContent() {
+        InOrder callsOrder = inOrder(scenarioGridModelMock, scenarioGrid);
         scenarioGrid.setContent(simulation);
-        verify(scenarioGridModelMock, times(1)).clear();
-        verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
-        verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
-        verify(scenarioGrid, times(1)).appendRows(eq(simulation));
+        callsOrder.verify(scenarioGridModelMock, times(1)).clear();
+        callsOrder.verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
+        callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
+        callsOrder.verify(scenarioGrid, times(1)).appendRows(eq(simulation));
+        callsOrder.verify(scenarioGridModelMock, times(1)).loadFactMappingsWidth();
+        callsOrder.verify(scenarioGridModelMock, times(1)).forceRefreshWidth();
+    }
+
+    @Test
+    public void clearSelections() {
+        scenarioGrid.clearSelections();
+        verify(scenarioGridModelMock, times(1)).clearSelections();
+        verify(scenarioGridLayerMock, times(1)).batch();
+    }
+
+    @Test
+    public void setSelectedColumn() {
+        int columnIndex = 1;
+        scenarioGrid.setSelectedColumn(columnIndex);
+        verify(scenarioGridModelMock, times(1)).selectColumn(eq(columnIndex));
+    }
+
+    @Test
+    public void setSelectedColumnAndHeader() {
+        int headerRowIndex = 1;
+        int columnIndex = 1;
+        scenarioGrid.setSelectedColumnAndHeader(headerRowIndex, columnIndex);
+        InOrder callsOrder = inOrder(scenarioGrid, scenarioGridLayerMock);
+        callsOrder.verify(scenarioGrid, times(1)).selectHeaderCell(eq(headerRowIndex), eq(columnIndex), eq(false), eq(false));
+        callsOrder.verify(scenarioGrid, times(1)).setSelectedColumn(eq(columnIndex));
+        callsOrder.verify(scenarioGridLayerMock, times(1)).batch();
+    }
+
+    @Test
+    public void setSelectedCell() {
+        int rowIndex = 1;
+        int columnIndex = 1;
+        scenarioGrid.setSelectedCell(rowIndex, columnIndex);
+        verify(scenarioGrid, times(1)).selectCell(eq(rowIndex), eq(columnIndex), eq(false), eq(false));
+        verify(scenarioGridLayerMock, times(1)).batch();
     }
 
     @Test
@@ -331,7 +377,7 @@ public class ScenarioGridTest {
         scenarioGrid.adjustSelection(mock(SelectionExtension.class), false);
 
         verify(scenarioGrid).signalTestTools();
-        verify(scenarioGrid).setSelectedColumnAndHeader(uiRowIndex, uiColumnIndex);
+        verify(scenarioGrid).setSelectedColumn(eq(uiColumnIndex));
         verify(eventBusMock).fireEvent(any(EnableTestToolsEvent.class));
 
         // context menus could be shown

@@ -34,7 +34,9 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
@@ -53,6 +55,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
+import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -86,9 +89,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -147,6 +152,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private DataManagementStrategy dataManagementStrategyMock;
     @Mock
     private TextFileExport textFileExportMock;
+    @Mock
+    private ConfirmPopupPresenter confirmPopupPresenterMock;
     @Captor
     private ArgumentCaptor<List<ScenarioWithIndex>> scenarioWithIndexCaptor;
 
@@ -179,7 +186,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                                                    testRunnerReportingPanelMock,
                                                                    scenarioSimulationDocksHandlerMock,
                                                                    textFileExportMock,
-                                                                   mock(ConfirmPopupPresenter.class)) {
+                                                                   confirmPopupPresenterMock) {
             {
                 this.path = pathMock;
                 this.scenarioGridPanel = scenarioGridPanelMock;
@@ -218,6 +225,67 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void init() {
         presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
         verify(testRunnerReportingPanelMock, times(1)).reset();
+    }
+
+    @Test
+    public void setSaveEnabledTrue() {
+        presenter.setSaveEnabled(true);
+        assertTrue(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
+    }
+
+    @Test
+    public void setSaveEnabledFalse() {
+        presenter.setSaveEnabled(false);
+        assertFalse(presenter.saveEnabled);
+        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
+    }
+
+    @Test
+    public void setSaveEnabledPopulateSettingsCombinedTrue() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.setSaveEnabled(true);
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertTrue(presenter.saveEnabled);
+        assertTrue(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
+    }
+
+    @Test
+    public void setSaveEnabledPopulateSettingsCombinedFalse() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.setSaveEnabled(false);
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertFalse(presenter.saveEnabled);
+        assertFalse(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).restoreSaveButton();
+    }
+
+    @Test
+    public void setPopulateSettingsSaveEnabledCombinedTrue() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenter.setSaveEnabled(true);
+        assertTrue(presenter.saveEnabled);
+        assertTrue(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
+        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
+    }
+
+    @Test
+    public void setPopulateSettingsSaveEnabledCombinedFalse() {
+        SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
+        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenter.setSaveEnabled(false);
+        assertFalse(presenter.saveEnabled);
+        assertFalse(settingsPresenterSpy.isSaveEnabled());
+        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
     }
 
     @Test
@@ -546,6 +614,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void makeMenuBar() {
         presenter.makeMenuBar(fileMenuBuilderMock);
+        verify(fileMenuBuilderMock, times(1)).addValidate(any());
+        verify(presenter, times(1)).getValidateCommand();
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
@@ -569,7 +639,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenter, times(1)).getFileDownloadURL(eq(pathSupplierMock));
         verify(presenter, times(1)).open(eq(DOWNLOAD_URL));
     }
-
 
     @Test
     public void showImportDialog() {
@@ -669,11 +738,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void getModelSuccessCallbackMethod() {
+        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
         presenter.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
         verify(presenter, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
         verify(presenter, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
         verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
+        verify(presenter, times(1)).getValidateCommand();
     }
 
     @Test
@@ -703,5 +774,26 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         assertNotNull(scenario.getFactMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier()).get().getRawValue());
         assertNull(scenario.getFactMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier()).get().getRawValue());
+    }
+
+    @Test
+    public void getValidationCallback() {
+        presenter.getValidationCallback().callback(null);
+        verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
+
+        List<FactMappingValidationError> validationErrors = new ArrayList<>();
+        presenter.getValidationCallback().callback(validationErrors);
+        verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
+
+        String errorMessage = "errorMessage";
+        String errorId = "errorId";
+        validationErrors.add(new FactMappingValidationError(errorId, errorMessage));
+        presenter.getValidationCallback().callback(validationErrors);
+        verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorId));
+        verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorMessage));
+    }
+
+    private SettingsPresenter getSettingsPresenterSpy() {
+        return spy(new SettingsPresenter(mock(SettingsScenarioSimulationDropdown.class), MockProducer.getSettingsViewMock()));
     }
 }

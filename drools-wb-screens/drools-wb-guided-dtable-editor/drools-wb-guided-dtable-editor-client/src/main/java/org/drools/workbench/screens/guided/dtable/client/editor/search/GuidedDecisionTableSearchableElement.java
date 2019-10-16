@@ -16,7 +16,9 @@
 
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
+import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.kie.workbench.common.widgets.client.search.common.Searchable;
 import org.uberfire.mvp.Command;
 
@@ -32,6 +34,10 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
 
     private GuidedDecisionTableGridHighlightHelper highlightHelper;
 
+    private GuidedDecisionTableView widget;
+
+    private GuidedDecisionTable52 model;
+
     @Override
     public boolean matches(final String text) {
         return getValue().toUpperCase().contains(text.toUpperCase());
@@ -39,7 +45,7 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
 
     @Override
     public Command onFound() {
-        return () -> highlightHelper.highlight(getRow(), getColumn(), getModeller());
+        return () -> highlightHelper.highlight(getRow(), getColumn(), getWidget(), getModeller());
     }
 
     @Override
@@ -111,5 +117,21 @@ public class GuidedDecisionTableSearchableElement implements Searchable {
 
     public GuidedDecisionTableModellerView.Presenter getModeller() {
         return modeller;
+    }
+
+    public GuidedDecisionTable52 getModel() {
+        return model;
+    }
+
+    public void setModel(final GuidedDecisionTable52 model) {
+        this.model = model;
+    }
+
+    public void setWidget(final GuidedDecisionTableView widget) {
+        this.widget = widget;
+    }
+
+    public GuidedDecisionTableView getWidget() {
+        return widget;
     }
 }

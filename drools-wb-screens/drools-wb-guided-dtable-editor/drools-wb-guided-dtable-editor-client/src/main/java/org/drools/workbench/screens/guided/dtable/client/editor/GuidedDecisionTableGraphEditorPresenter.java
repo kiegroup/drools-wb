@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -34,13 +35,18 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.dom.HTMLElement;
 import elemental2.promise.Promise;
+import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.EditMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.InsertMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.RadarMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.menu.ViewMenuBuilder;
 import org.drools.workbench.screens.guided.dtable.client.editor.page.ColumnsPage;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableEditorSearchIndex;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.SearchableElementFactory;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableGraphResourceType;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter;
@@ -68,6 +74,9 @@ import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallb
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
+import org.kie.workbench.common.widgets.client.search.common.HasSearchableElements;
+import org.kie.workbench.common.widgets.client.search.common.SearchPerformedEvent;
+import org.kie.workbench.common.widgets.client.search.component.SearchBarComponent;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
 import org.kie.workbench.common.workbench.client.docks.AuthoringWorkbenchDocks;
@@ -92,6 +101,10 @@ import org.uberfire.ext.editor.commons.client.resources.i18n.CommonConstants;
 import org.uberfire.ext.editor.commons.version.events.RestoreEvent;
 import org.uberfire.ext.widgets.common.client.callbacks.DefaultErrorCallback;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
+import org.uberfire.ext.wires.core.grids.client.util.GridHighlightHelper;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRenderer;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnFocus;
 import org.uberfire.lifecycle.OnMayClose;
@@ -116,7 +129,7 @@ import static org.uberfire.ext.widgets.common.client.common.ConcurrentChangePopu
  */
 @Dependent
 @WorkbenchEditor(identifier = "GuidedDecisionTableGraphEditor", supportedTypes = {GuidedDTableGraphResourceType.class}, lockingStrategy = EDITOR_PROVIDED)
-public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionTableEditorPresenter {
+public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionTableEditorPresenter implements HasSearchableElements<GuidedDecisionTableSearchableElement> {
 
     private final Caller<GuidedDecisionTableGraphEditorService> graphService;
     private final Caller<KieModuleService> moduleService;
@@ -124,6 +137,9 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     private final Event<SaveInProgressEvent> saveInProgressEvent;
     private final LockManager lockManager;
     private final SaveAndRenameCommandBuilder<List<GuidedDecisionTableEditorContent>, Metadata> saveAndRenameCommandBuilder;
+    private final GuidedDecisionTableEditorSearchIndex editorSearchIndex;
+    private final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent;
+    private final SearchableElementFactory searchableElementFactory;
     protected ObservablePath.OnConcurrentUpdateEvent concurrentUpdateSessionInfo = null;
     protected Access access = new Access();
     protected Integer originalGraphHash;
@@ -131,6 +147,7 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     private LoadGraphLatch loadGraphLatch = null;
     private SaveGraphLatch saveGraphLatch = null;
     private NewGuidedDecisionTableWizardHelper helper;
+    private final Event<SearchPerformedEvent> searchPerformedEvent;
 
     @Inject
     public GuidedDecisionTableGraphEditorPresenter(final View view,
@@ -157,7 +174,11 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final ColumnsPage columnsPage,
                                                    final SaveAndRenameCommandBuilder<List<GuidedDecisionTableEditorContent>, Metadata> saveAndRenameCommandBuilder,
                                                    final AlertsButtonMenuItemBuilder alertsButtonMenuItemBuilder,
-                                                   final DownloadMenuItemBuilder downloadMenuItem) {
+                                                   final DownloadMenuItemBuilder downloadMenuItem,
+                                                   final GuidedDecisionTableEditorSearchIndex editorSearchIndex,
+                                                   final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent,
+                                                   final SearchableElementFactory searchableElementFactory,
+                                                   final Event<SearchPerformedEvent> searchPerformedEvent) {
         super(view,
               service,
               docks,
@@ -183,6 +204,10 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         this.lockManager = lockManager;
         this.graphSaveAndRenameService = graphSaveAndRenameService;
         this.saveAndRenameCommandBuilder = saveAndRenameCommandBuilder;
+        this.editorSearchIndex = editorSearchIndex;
+        this.searchBarComponent = searchBarComponent;
+        this.searchableElementFactory = searchableElementFactory;
+        this.searchPerformedEvent = searchPerformedEvent;
     }
 
     @PostConstruct
@@ -204,6 +229,132 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         });
 
         registeredDocumentsMenuBuilder.setNewDocumentCommand(this::onNewDocument);
+        editorSearchIndex.setCurrentAssetHashcodeSupplier(getCurrentHashCodeSupplier());
+        editorSearchIndex.setNoResultsFoundCallback(getNoResultsFoundCallback());
+        editorSearchIndex.setSearchClosedCallback(getSearchClosedCallback());
+        editorSearchIndex.setClearCurrentResultsCallback(getClearCurrentResultsCallback());
+        editorSearchIndex.setSearchPerformedCallback(getSearchPerformedCallback());
+        editorSearchIndex.registerSubIndex(this);
+        searchBarComponent.init(editorSearchIndex);
+
+        setupSearchComponent();
+    }
+
+    private Command getSearchPerformedCallback() {
+        return () -> {
+            final Optional<GuidedDecisionTableSearchableElement> current = editorSearchIndex.getCurrentResult();
+
+            GuidedDecisionTableSearchableElement value = null;
+            if (current.isPresent()) {
+                value = current.get();
+            }
+
+            final SearchPerformedEvent event = new SearchPerformedEvent(value);
+            searchPerformedEvent.fire(event);
+        };
+    }
+
+    Supplier<Integer> getCurrentHashCodeSupplier() {
+        return () -> combineHashCodes(getAvailableDecisionTables()
+                                              .stream()
+                                              .map(this::currentHashCode)
+                                              .collect(Collectors.toList()));
+    }
+
+    // TODO: Use HashUtil here when https://issues.jboss.org/browse/DROOLS-4442 is done.
+    int combineHashCodes(final List<Integer> hashcodes) {
+        int out = 0;
+        for (int hashcode : hashcodes) {
+            int seed = 1500450271;
+            seed = ~~(~~(out * seed) + ~~(hashcode & seed));
+            seed = ~~(out ^ seed - hashcode);
+            out = ~~(hashcode ^ seed - out);
+        }
+        return out;
+    }
+
+    private Command getClearCurrentResultsCallback() {
+        return () -> {
+            final GuidedDecisionTableModellerView view = modeller.getView();
+            for (GridWidget gridWidget : view.getGridWidgets()) {
+                gridWidget.getModel().clearSelections();
+            }
+        };
+    }
+
+    private void setupSearchComponent() {
+        final HTMLElement element = searchBarComponent.getView().getElement();
+
+        searchBarComponent.init(editorSearchIndex);
+        getKieEditorWrapperMultiPage().addTabBarWidget(getWidget(element));
+    }
+
+    Command getSearchClosedCallback() {
+        return () -> clearAllHighlights();
+    }
+
+    Command getNoResultsFoundCallback() {
+        return () -> {
+            highlightHelper().clearSelections();
+            highlightHelper().clearHighlight();
+        };
+    }
+
+    void clearAllHighlights() {
+        final GuidedDecisionTableModellerView view = modeller.getView();
+        final Set<GridWidget> widgets = view.getGridWidgets();
+        for (GridWidget gridWidget : widgets) {
+            final GridRenderer renderer = gridWidget.getRenderer();
+            if (renderer instanceof BaseGridRenderer) {
+                ((BaseGridRenderer) renderer).clearCellHighlight();
+            }
+        }
+
+        view.getGridLayerView().draw();
+    }
+
+    private GridHighlightHelper highlightHelper() {
+
+        final GuidedDecisionTableModellerView view = modeller.getView();
+        final GridWidget gridWidget = view.getGridWidgets().iterator().next();
+
+        return new GridHighlightHelper(view.getGridPanel(), gridWidget);
+    }
+
+    @Override
+    public List<GuidedDecisionTableSearchableElement> getSearchableElements() {
+        final List<GuidedDecisionTableSearchableElement> searchableElements = new ArrayList<>();
+        final List<GuidedDecisionTableEditorContent> contentSupplier = getContentSupplier().get();
+
+        for (final GuidedDecisionTableEditorContent table : contentSupplier) {
+            final GuidedDecisionTable52 model = table.getModel();
+            final List<List<DTCellValue52>> data = model.getData();
+            final GuidedDecisionTableView widget = getWidgetToModel(model);
+
+            for (int row = 0, dataSize = data.size(); row < dataSize; row++) {
+                for (int line = 0; line < data.get(row).size(); line++) {
+
+                    final DTCellValue52 cellValue52 = data.get(row).get(line);
+                    final GuidedDecisionTableSearchableElement searchableElement = searchableElementFactory.makeSearchableElement(row, line, cellValue52, widget, model, modeller);
+
+                    searchableElement.setWidget(widget);
+                    searchableElements.add(searchableElement);
+                }
+            }
+        }
+        return searchableElements;
+    }
+
+    GuidedDecisionTableView getWidgetToModel(final GuidedDecisionTable52 model) {
+
+        return modeller.getView()
+                .getGridWidgets()
+                .stream()
+                .filter(w -> w instanceof GuidedDecisionTableView)
+                .map(w -> (GuidedDecisionTableView) w)
+                .filter(w -> Objects.equals(w.getPresenter().getModel(), model))
+                .findFirst()
+                .get();
     }
 
     void onNewDocument() {

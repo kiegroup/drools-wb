@@ -73,6 +73,8 @@ public class ScenarioGrid extends BaseGridWidget {
         ((ScenarioGridModel) model).bindContent(simulation);
         setHeaderColumns(simulation);
         appendRows(simulation);
+        ((ScenarioGridModel) model).loadFactMappingsWidth();
+        ((ScenarioGridModel) model).forceRefreshWidth();
     }
 
     public EventBus getEventBus() {
@@ -95,15 +97,35 @@ public class ScenarioGrid extends BaseGridWidget {
      */
     public void clearSelections() {
         model.clearSelections();
+        getLayer().batch();
+    }
+
+    /**
+     * Set the current <b>selectedColumn</b> given its columnIndex
+     * @param columnIndex
+     */
+    public void setSelectedColumn(int columnIndex) {
+        ((ScenarioGridModel) model).selectColumn(columnIndex);
     }
 
     /**
      * Set the <b>selectedColumn</b> status of the model and select the header cell actually clicked
+     * This should be used when header cells selection is NOT handled natively by the extended widget
      * @param columnIndex
      */
     public void setSelectedColumnAndHeader(int headerRowIndex, int columnIndex) {
-        ((ScenarioGridModel) model).selectColumn(columnIndex);
-        model.selectHeaderCell(headerRowIndex, columnIndex);
+        selectHeaderCell(headerRowIndex, columnIndex, false, false);
+        setSelectedColumn(columnIndex);
+        getLayer().batch();
+    }
+
+    /**
+     * Select body cell on the model
+     * @param columnIndex
+     */
+    public void setSelectedCell(int rowIndex, int columnIndex) {
+        selectCell(rowIndex, columnIndex, false, false);
+        getLayer().batch();
     }
 
     @Override
@@ -258,14 +280,14 @@ public class ScenarioGrid extends BaseGridWidget {
     protected void signalTestTools() {
         eventBus.fireEvent(new DisableTestToolsEvent());
 
-        if (model.getSelectedHeaderCells().size() > 0) {
+        if (!model.getSelectedHeaderCells().isEmpty()) {
             final GridData.SelectedCell cell = model.getSelectedHeaderCells().get(0);
 
             final int uiColumnIndex = ColumnIndexUtilities.findUiColumnIndex(model.getColumns(),
                                                                              cell.getColumnIndex());
             final int uiRowIndex = cell.getRowIndex();
 
-            setSelectedColumnAndHeader(uiRowIndex, uiColumnIndex);
+            setSelectedColumn(uiColumnIndex);
 
             final GridColumn column = model.getColumns().get(uiColumnIndex);
             if (uiRowIndex > 0 && column instanceof ScenarioGridColumn) {
@@ -307,9 +329,9 @@ public class ScenarioGrid extends BaseGridWidget {
                                                            int uiColumnIndex,
                                                            String group) {
         return ScenarioSimulationGridHeaderUtilities.getEnableTestToolsEvent(scenarioGrid,
-                                                                      scenarioGridColumn,
-                                                                      scenarioHeaderMetaData,
-                                                                      uiColumnIndex,
-                                                                      group);
+                                                                             scenarioGridColumn,
+                                                                             scenarioHeaderMetaData,
+                                                                             uiColumnIndex,
+                                                                             group);
     }
 }

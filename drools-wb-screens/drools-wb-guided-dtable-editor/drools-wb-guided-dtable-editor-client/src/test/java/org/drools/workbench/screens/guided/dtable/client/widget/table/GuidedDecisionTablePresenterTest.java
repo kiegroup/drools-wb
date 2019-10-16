@@ -34,6 +34,7 @@ import org.drools.verifier.api.reporting.Issue;
 import org.drools.verifier.api.reporting.Severity;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
 import org.drools.workbench.models.datamodel.rule.ActionInsertFact;
+import org.drools.workbench.models.datamodel.rule.Attribute;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.AttributeCol52;
@@ -45,6 +46,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableColumnSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectionsChangedEvent;
@@ -56,7 +58,6 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.DependentEnumsUtilities;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableLinkManager.LinkFoundCallback;
-import org.drools.workbench.screens.guided.rule.client.widget.attribute.RuleAttributeWidget;
 import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +66,7 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
 import org.kie.workbench.common.services.verifier.reporting.client.panel.IssueSelectedEvent;
+import org.kie.workbench.common.widgets.client.search.common.SearchPerformedEvent;
 import org.kie.workbench.common.workbench.client.authz.WorkbenchFeatures;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -794,7 +796,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
     @Test
     public void hasColumnDefinitionsWithAttributeColumn() {
         final AttributeCol52 attribute = new AttributeCol52();
-        attribute.setAttribute("attribute");
+        attribute.setAttribute(Attribute.SALIENCE.getAttributeName());
 
         dtPresenter.getModel().getAttributeCols().add(attribute);
 
@@ -898,7 +900,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
     @Test
     public void getValueListLookups() {
         final AttributeCol52 attribute = new AttributeCol52();
-        attribute.setAttribute(RuleAttributeWidget.ENABLED_ATTR);
+        attribute.setAttribute(Attribute.ENABLED.getAttributeName());
 
         final Map<String, String> valueList = dtPresenter.getValueListLookups(attribute);
 
@@ -1137,7 +1139,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
     @Test
     public void deleteAttributeColumn() throws Exception {
         final AttributeCol52 column = new AttributeCol52();
-        column.setAttribute("salience");
+        column.setAttribute(Attribute.SALIENCE.getAttributeName());
         dtPresenter.appendColumn(column);
         reset(modellerPresenter);
 
@@ -1335,7 +1337,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         final AttributeCol52 column = new AttributeCol52() {
 
             {
-                setAttribute(RuleAttributeWidget.ENABLED_ATTR);
+                setAttribute(Attribute.ENABLED.getAttributeName());
             }
         };
         dtPresenter.appendColumn(column);
@@ -1357,7 +1359,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         final AttributeCol52 column = new AttributeCol52() {
 
             {
-                setAttribute(RuleAttributeWidget.ENABLED_ATTR);
+                setAttribute(Attribute.ENABLED.getAttributeName());
             }
         };
         dtPresenter.appendColumn(column);
@@ -1410,7 +1412,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         final AttributeCol52 column = new AttributeCol52() {
 
             {
-                setAttribute("attribute1");
+                setAttribute(Attribute.SALIENCE.getAttributeName());
             }
         };
         dtPresenter.appendColumn(column);
@@ -1691,6 +1693,33 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         dtPresenter.refreshMenus();
 
         verify(refreshMenusEvent).fire(any(RefreshMenusEvent.class));
+    }
+
+    @Test
+    public void testOnSearchPerformed() {
+        final GuidedDecisionTableSearchableElement element = mock(GuidedDecisionTableSearchableElement.class);
+        when(element.getModel()).thenReturn(model);
+        final SearchPerformedEvent event = new SearchPerformedEvent(element);
+
+        dtPresenter.onSearchPerformed(event);
+
+        verify(renderer, never()).clearCellHighlight();
+        verify(view).draw();
+    }
+
+    @Test
+    public void testOnSearchPerformedModelNotFromThisTable() {
+        // This test is for GDT Graphs
+        final GuidedDecisionTableSearchableElement element = mock(GuidedDecisionTableSearchableElement.class);
+        final GuidedDecisionTable52 anotherModel = mock(GuidedDecisionTable52.class);
+        when(element.getModel()).thenReturn(anotherModel);
+        when(element.getColumn()).thenReturn(0);
+        when(element.getRow()).thenReturn(0);
+        final SearchPerformedEvent event = new SearchPerformedEvent(element);
+
+        dtPresenter.onSearchPerformed(event);
+
+        verify(renderer).clearCellHighlight();
     }
 
     /*

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -269,6 +270,18 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
+     * This method <i>delete</i> the <b>whole instance</b> of the column at the given index from both the grid <b>and</b> the underlying model
+     * @param columnIndex
+     */
+    public void deleteInstance(int columnIndex) {
+        checkSimulation();
+        Range instanceRange = getInstanceLimits(columnIndex);
+        IntStream.iterate(instanceRange.getMaxRowIndex(), i -> i - 1)
+                .limit(instanceRange.getMaxRowIndex() - instanceRange.getMinRowIndex() + 1L)
+                .forEach(this::deleteColumn);
+    }
+
+    /**
      * This method update the instance mapped inside a given column
      * @param columnIndex
      * @param column
@@ -318,6 +331,7 @@ public class ScenarioGridModel extends BaseGridData {
         String columnId = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getColumnId();
         ExpressionIdentifier ei = ExpressionIdentifier.create(columnId, FactMappingType.valueOf(group));
         commonAddColumn(columnIndex, column, ei);
+        /* Restoring the expected columns dimension, overriding the automatic resizing */
         IntStream.range(0, widthsToRestore.size())
                 .forEach(index -> getColumns().get(index).setWidth(widthsToRestore.get(index)));
     }
@@ -406,16 +420,27 @@ public class ScenarioGridModel extends BaseGridData {
      * This methods returns the <code>List&lt;ScenarioGridColumn&gt;</code> of a <b>single</b> block of columns of the same instance/data object.
      * A <code>single</code> block contains the selected column and all the columns immediately to the left and right of it with the same "label".
      * If there is another column with the same "label" but separated by a different column, it is not part of the group.
-     * @param selectedColumn
+     * @param columnIndex
      * @return
      */
-    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn) {
-        int columnIndex = columns.indexOf(selectedColumn);
+    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(int columnIndex) {
         Range instanceRange = getInstanceLimits(columnIndex);
         return columns.subList(instanceRange.getMinRowIndex(), instanceRange.getMaxRowIndex() + 1)
                 .stream()
                 .map(gridColumn -> (ScenarioGridColumn) gridColumn)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * This methods returns the <code>List&lt;ScenarioGridColumn&gt;</code> of a <b>single</b> block of columns of the same instance/data object.
+     * A <code>single</code> block contains the selected column and all the columns immediately to the left and right of it with the same "label".
+     * If there is another column with the same "label" but separated by a different column, it is not part of the group.
+     * @param selectedColumn
+     * @return
+     */
+    public List<ScenarioGridColumn> getInstanceScenarioGridColumns(ScenarioGridColumn selectedColumn) {
+        int columnIndex = columns.indexOf(selectedColumn);
+        return getInstanceScenarioGridColumns(columnIndex);
     }
 
     /**
@@ -516,17 +541,52 @@ public class ScenarioGridModel extends BaseGridData {
     }
 
     /**
-     * Select all the cells of the given column
+     * It forces a <code>internalRefreshWidth</code> refresh
+     */
+    public boolean forceRefreshWidth() {
+        return internalRefreshWidth(true, OptionalDouble.empty());
+    }
+
+    /**
+     * It synchronizes all columns related <code>factMapping</code> columnnWidths
+     */
+    public void synchronizeFactMappingsWidths() {
+        getColumns().forEach(column -> synchronizeFactMappingWidth(column));
+    }
+
+    /**
+     * It updates a column related <code>factMapping</code> columnWidth
+     * @param column
+     */
+    public void synchronizeFactMappingWidth(final GridColumn<?> column) {
+        if (!column.isVisible()) {
+            return;
+        }
+        final int columnIndex = getColumns().indexOf(column);
+        final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        factMapping.setColumnWidth(column.getWidth());
+    }
+
+    /**
+     * It retrieves the stored columnWidths and assigns them to every grid column.
+     */
+    public void loadFactMappingsWidth() {
+        for (final GridColumn<?> column : getColumns()) {
+            final int columnIndex = getColumns().indexOf(column);
+            final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            if (factMapping.getColumnWidth() != null) {
+                column.setWidth(factMapping.getColumnWidth());
+            }
+        }
+    }
+
+    /**
+     * It puts the column present in the given columnIndex as the current selected one.
      * @param columnIndex
      */
     public void selectColumn(int columnIndex) {
-        if (columnIndex > getColumnCount() - 1) {
-            return;
-        }
-        if (!selectedHeaderCells.isEmpty()) {
-            final SelectedCell selectedHeaderCell = selectedHeaderCells.get(0);
-            selectedHeaderCells.clear();
-            selectHeaderCell(selectedHeaderCell.getRowIndex(), columnIndex);
+        if (columnIndex > getColumnCount() - 1 || columnIndex < 0) {
+            throw new IllegalArgumentException("Wrong column index: " + columnIndex);
         }
         selectedColumn = getColumns().get(columnIndex);
     }
@@ -671,7 +731,7 @@ public class ScenarioGridModel extends BaseGridData {
         return selectedColumn == null || isSameInstanceType(getColumns().indexOf(selectedColumn), className);
     }
 
-     /**
+    /**
      * Check if given <b>headerName</b> is the same as the <b>Fact</b> mapped to the
      * column at given index
      * @param columnIndex
@@ -682,7 +742,6 @@ public class ScenarioGridModel extends BaseGridData {
         if (!isSameInstanceType(columnIndex, headerName)) {
             throw new Exception(headerName + " is not the class of the current column.");
         }
-
     }
 
     /**
@@ -926,12 +985,12 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify the given value is not already used as instance header name <b>between different groups</b>
      * @param instanceHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>instanceHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
-     * inside the <b>group (GIVEN/EXPECT)</b> of the given column
+     * @throws IllegalArgumentException if the given <b>instanceHeaderCellValue</b> contains a <i>dot</i> <b>OR</b>
+     * it has already been used inside the <b>group (GIVEN/EXPECT)</b> of the given column
      */
-    protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkValidAndUniqueInstanceHeaderTitle(String instanceHeaderCellValue, int columnIndex) {
         if (instanceHeaderCellValue.contains(".")) {
-            throw new Exception("An instance alias cannot contain periods!");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleWithPeriodsError());
         }
         Range instanceLimits = getInstanceLimits(columnIndex);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
@@ -943,7 +1002,8 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(elem -> elem.getInformationHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getInformationHeaderMetaData)
                 .anyMatch(elem -> Objects.equals(elem.getTitle(), instanceHeaderCellValue))) {
-            throw new Exception(instanceHeaderCellValue + " has already been used inside the current group");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.
+                    instanceTitleAssignedError(instanceHeaderCellValue));
         }
     }
 
@@ -951,12 +1011,12 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify if the given value is not already used as property header name <b>inside the same instance</b>
      * @param propertyHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>propertyHeaderCellValue</b> contains a <i>dot</i> <b>OR</b> it has already been used
-     * inside the <b>instance</b> of the given column
+     * @throws IllegalArgumentException if the given <b>propertyHeaderCellValue</b> contains a <i>dot</i> <b>OR</b>
+     * it has already been used inside the <b>instance</b> of the given column
      */
-    protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkValidAndUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
         if (propertyHeaderCellValue.contains(".")) {
-            throw new Exception("A property alias cannot contain periods!");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.propertyTitleWithPeriodsError());
         }
         checkUniquePropertyHeaderTitle(propertyHeaderCellValue, columnIndex);
     }
@@ -965,10 +1025,10 @@ public class ScenarioGridModel extends BaseGridData {
      * Verify if the given value is not already used as property header name <b>inside the same instance</b>
      * @param propertyHeaderCellValue
      * @param columnIndex
-     * @throws Exception if the given <b>propertyHeaderCellValue</b> has already been used
+     * @throws IllegalArgumentException if the given <b>propertyHeaderCellValue</b> has already been used
      * inside the <b>instance</b> of the given column
      */
-    protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) throws Exception {
+    protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         if (IntStream.range(0, getColumnCount())
@@ -978,7 +1038,8 @@ public class ScenarioGridModel extends BaseGridData {
                 .filter(elem -> elem.getPropertyHeaderMetaData() != null)
                 .map(ScenarioGridColumn::getPropertyHeaderMetaData)
                 .anyMatch(elem -> Objects.equals(elem.getTitle(), propertyHeaderCellValue))) {
-            throw new Exception(propertyHeaderCellValue + " has already been used inside the current instance");
+            throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.
+                    propertyTitleAssignedError(propertyHeaderCellValue));
         }
     }
 

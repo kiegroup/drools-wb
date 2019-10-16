@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb</artifactId>
-    <version>7.26.0-SNAPSHOT</version>
+    <version>7.29.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-extensions</artifactId>
@@ -13,7 +13,13 @@
   <description>Drools Workbench - Extensions</description>
 
   <modules>
-   <module>drools-wb-drl-extension</module>
+    <module>drools-wb-drl-extension</module>
   </modules>
+
+  <properties>
+    <code.coverage.disabled>true</code.coverage.disabled>
+    <sonar.skip>true</sonar.skip>
+  </properties>
+
 
 </project>
