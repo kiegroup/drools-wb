@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
+import com.google.gwt.user.client.Command;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -86,7 +87,8 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
     public void initializeGrid() {
         scenarioGridPanelProducer.initializeGrid(scenarioGridLayerMock, scenarioGridPanelMock);
         verify(scenarioGridLayerMock, times(1)).addScenarioGrid(isA(ScenarioGrid.class));
-        verify(scenarioGridLayerMock).addScenarioGrid(scenarioGridArgumentCaptor.capture());
+        verify(scenarioGridLayerMock, times(1)).addScenarioGrid(scenarioGridArgumentCaptor.capture());
+        verify(scenarioGridLayerMock, times(1)).enterPinnedMode(eq(scenarioGridArgumentCaptor.getValue()), isA(Command.class));
         verify(scenarioGridPanelMock, times(1)).add(eq(scenarioGridLayerMock));
         verify(scenarioGridPanelMock, times(1)).addKeyDownHandler(isA(BaseGridWidgetKeyboardHandler.class));
         assertFalse(scenarioGridArgumentCaptor.getValue().isDraggable());
@@ -95,7 +97,6 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
         assertNotNull(scenarioGridArgumentCaptor.getValue().getModel().getCollectionEditorSingletonDOMElementFactory());
         assertNotNull(scenarioGridArgumentCaptor.getValue().getModel().getScenarioCellTextAreaSingletonDOMElementFactory());
         assertNotNull(scenarioGridArgumentCaptor.getValue().getModel().getScenarioHeaderTextBoxSingletonDOMElementFactory());
-
     }
 
     @Test

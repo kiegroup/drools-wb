@@ -33,9 +33,6 @@ public class ScenarioSimulationViewImpl extends KieEditorViewImpl implements Sce
 
     @Override
     public void init() {
-        scenarioGridWidget.enterPinnedMode(
-                scenarioGridWidget.getScenarioGridPanel().getScenarioGridLayer().getScenarioGrid(),
-                () -> {});  // Hack to overcome default implementation
         initWidget(scenarioGridWidget);
     }
 

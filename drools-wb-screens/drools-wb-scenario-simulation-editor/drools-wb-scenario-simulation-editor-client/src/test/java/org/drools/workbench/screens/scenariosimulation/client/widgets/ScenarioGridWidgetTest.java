@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 
@@ -24,10 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -86,13 +83,5 @@ public class ScenarioGridWidgetTest extends AbstractScenarioSimulationTest {
     public void resetErrors() {
         scenarioGridWidget.resetErrors();
         verify(scenarioGridModelMock, times(1)).resetErrors();
-    }
-
-    @Test
-    public void enterPinnedMode() {
-        GridWidget widget = mock(GridWidget.class);
-        Command command = mock(Command.class);
-        scenarioGridWidget.enterPinnedMode(widget, command);
-        verify(scenarioGridLayerMock, times(1)).enterPinnedMode(eq(widget), eq(command));
     }
 }

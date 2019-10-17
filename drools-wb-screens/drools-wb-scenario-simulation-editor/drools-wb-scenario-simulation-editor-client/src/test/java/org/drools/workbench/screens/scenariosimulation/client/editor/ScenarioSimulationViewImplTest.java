@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -54,12 +52,6 @@ public class ScenarioSimulationViewImplTest extends AbstractScenarioSimulationTe
         when(scenarioViewImpl.getParent()).thenReturn(parentWidget);
         when(parentWidget.getOffsetHeight()).thenReturn(HEIGHT);
         when(parentWidget.getOffsetWidth()).thenReturn(WIDTH);
-    }
-
-    @Test
-    public void init() {
-        scenarioViewImpl.init();
-        verify(scenarioGridWidgetMock, times(1)).enterPinnedMode(eq(scenarioGridMock), isA(Command.class));
     }
 
     @Test

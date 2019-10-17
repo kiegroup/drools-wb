@@ -15,13 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 
 public class ScenarioGridWidget extends ResizeComposite {
 
@@ -75,9 +73,5 @@ public class ScenarioGridWidget extends ResizeComposite {
 
     public ScenarioGridModel getModel() {
         return scenarioGridPanel.getScenarioGrid().getModel();
-    }
-
-    public void enterPinnedMode(GridWidget widget, Command command) {
-        scenarioGridPanel.getScenarioGridLayer().enterPinnedMode(widget, command);
     }
 }
