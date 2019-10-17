@@ -959,7 +959,7 @@ public class GuidedDecisionTableGraphEditorPresenterTest extends BaseGuidedDecis
                                             setup.getDecisionTableGraphPlaceRequest());
                     },
                     () -> verify(versionRecordManager,
-                                 times(1)).restoreToCurrentVersion(any()));
+                                 times(1)).restoreToCurrentVersion(any(Boolean.class)));
     }
 
     @Test
