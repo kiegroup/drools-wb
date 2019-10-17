@@ -189,7 +189,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
         }
     }
 
-    static public class FactMappingExtractor {
+    public static class FactMappingExtractor {
 
         private final FactIdentifier factIdentifier;
         private final int row;

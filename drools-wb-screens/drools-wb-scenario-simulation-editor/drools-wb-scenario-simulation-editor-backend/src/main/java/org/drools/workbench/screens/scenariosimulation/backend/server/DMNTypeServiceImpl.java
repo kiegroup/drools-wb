@@ -48,6 +48,7 @@ import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.uberfire.backend.vfs.Path;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 import static org.drools.workbench.screens.scenariosimulation.backend.server.util.DMNUtils.getRootType;
 
 @Service
@@ -129,7 +130,7 @@ public class DMNTypeServiceImpl
             throw new WrongDMNTypeException();
         }
         String typeName = type.getName();
-        populateGeneric(genericTypeInfoMap, "value", typeName);
+        populateGeneric(genericTypeInfoMap, VALUE, typeName);
         FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
         if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
             alreadyVisited.add(typeName);
@@ -171,7 +172,7 @@ public class DMNTypeServiceImpl
 
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isComposite()</code> != <code>true</code>.
-     * Returned <code>FactModelTree</code> will have only one single property, whose name is <b>"value"</b> and whose value is the given <b>propertyClass</b>
+     * Returned <code>FactModelTree</code> will have only one single property, whose name is <b>VALUE</b> and whose value is the given <b>propertyClass</b>
      * @param genericTypeInfoMap
      * @param factName
      * @param propertyClass
@@ -181,7 +182,7 @@ public class DMNTypeServiceImpl
     protected FactModelTree createFactModelTreeForSimple(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyClass, FactModelTree.Type fmType) {
         Map<String, String> simpleProperties = new HashMap<>();
         FactModelTree simpleFactModelTree = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, fmType);
-        simpleFactModelTree.addSimpleProperty("value", propertyClass);
+        simpleFactModelTree.addSimpleProperty(VALUE, propertyClass);
         simpleFactModelTree.setSimple(true);
         return simpleFactModelTree;
     }
@@ -206,13 +207,13 @@ public class DMNTypeServiceImpl
             if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
                 FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);
                 simpleFields.put(entry.getKey(), List.class.getCanonicalName());
-                genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo("value"));
+                genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo(VALUE));
             } else {
                 String typeName = entry.getValue().getName();
                 if (entry.getValue().isComposite()) { // a complex type needs the expandable property and then in the hidden map, its fact model tree
                     if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
                         alreadyVisited.add(typeName);
-                        FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), "value", expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);
+                        FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), VALUE, expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);
                         hiddenFacts.put(typeName, fact);
                     }
                     toReturn.addExpandableProperty(entry.getKey(), typeName);
