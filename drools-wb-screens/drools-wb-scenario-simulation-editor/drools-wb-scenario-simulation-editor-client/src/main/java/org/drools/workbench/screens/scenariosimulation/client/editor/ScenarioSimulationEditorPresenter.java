@@ -255,7 +255,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridWidget.resetErrors();
-        model.setSimulation(focusedContext.getStatus().getSimulation());
+        model.setSimulation(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
@@ -354,7 +354,7 @@ public class ScenarioSimulationEditorPresenter {
             simulation.replaceScenario(index, scenarioWithIndex.getScenario());
         }
         scenarioMainGridWidget.refreshContent(simulation);
-        scenarioBackgroundGridWidget.refreshContent(simulation);
+        scenarioBackgroundGridWidget.refreshContent(simulation.cloneSimulation());
         focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
