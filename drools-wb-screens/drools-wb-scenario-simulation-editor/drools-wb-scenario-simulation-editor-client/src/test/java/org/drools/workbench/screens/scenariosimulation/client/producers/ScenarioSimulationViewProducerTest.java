@@ -85,7 +85,6 @@ public class ScenarioSimulationViewProducerTest extends AbstractProducerTest {
         ScenarioGridWidget retrieved = scenarioSimulationViewProducer.getScenarioBackgroundGridWidget(eventBusMock);
         assertEquals(scenarioGridWidgetMock, retrieved);
         verify(scenarioSimulationViewProducer, times(1)).initGridWidget(eq(scenarioGridWidgetMock), eq(scenarioGridPanelMock), eq(clickHandlerMock), eq(mouseMoveHandlerMock), eq(eventBusMock));
-        verify(scenarioSimulationViewMock, times(1)).setScenarioGridWidget(scenarioGridWidgetMock);
     }
 
     @Test

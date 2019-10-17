@@ -63,7 +63,9 @@ import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -164,6 +166,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ScenarioGridWidget scenarioBackgroundGridWidgetMock;
     @Captor
     private ArgumentCaptor<List<ScenarioWithIndex>> scenarioWithIndexCaptor;
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -484,6 +488,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
         when(targetDockMock.getIdentifier()).thenReturn("UNKNOWN");
+        exceptionRule.expect(IllegalArgumentException.class);
         presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock();
@@ -543,6 +548,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        exceptionRule.expect(IllegalArgumentException.class);
         when(targetDockMock.getIdentifier()).thenReturn("UNKNOWN");
         presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
         verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
