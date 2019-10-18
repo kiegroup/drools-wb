@@ -24,6 +24,7 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.AbstractScenarioRunner;
@@ -75,8 +76,12 @@ public class ScenarioRunnerServiceImplTest {
     @InjectMocks
     private ScenarioRunnerServiceImpl scenarioRunnerService = new ScenarioRunnerServiceImpl();
 
+    private Settings settingsLocal;
+
     @Before
     public void setup() {
+        settingsLocal = new Settings();
+        settingsLocal.setType(Type.RULE);
         when(classLoaderHelperMock.getModuleClassLoader(any())).thenReturn(ClassLoader.getSystemClassLoader());
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
@@ -99,24 +104,27 @@ public class ScenarioRunnerServiceImplTest {
     @Test
     public void runTest() throws Exception {
         Simulation simulation = new Simulation();
-        simulation.getSimulationDescriptor().setType(Type.RULE);
+        Settings settings = new Settings();
+        settings.setType(Type.RULE);
 
         SimulationRunResult test = scenarioRunnerService.runTest("test",
                                                                  mock(Path.class),
                                                                  simulation.getSimulationDescriptor(),
-                                                                 simulation.getScenarioWithIndex());
+                                                                 simulation.getScenarioWithIndex(),
+                                                                 settings);
 
         assertNotNull(test.getTestResultMessage());
         assertNotNull(test.getScenarioWithIndex());
         assertNotNull(test.getSimulationRunMetadata());
 
         when(runnerMock.getLastRunResultMetadata()).thenReturn(Optional.empty());
-        scenarioRunnerService.setRunnerSupplier((kieContainer, simulationDescriptor, scenarios) -> runnerMock);
+        scenarioRunnerService.setRunnerSupplier((kieContainer, simulationDescriptor, scenarios, settings1) -> runnerMock);
 
         assertThatThrownBy(() -> scenarioRunnerService.runTest("test",
                                                                mock(Path.class),
                                                                simulation.getSimulationDescriptor(),
-                                                               simulation.getScenarioWithIndex()))
+                                                               simulation.getScenarioWithIndex(),
+                                                               settings))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("SimulationRunMetadata should be available after a run");
     }
@@ -126,13 +134,15 @@ public class ScenarioRunnerServiceImplTest {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
-        simulationDescriptor.setType(Type.RULE);
+        Settings settings = new Settings();
+        settings.setType(Type.RULE);
         List<ScenarioWithIndex> scenarios = new ArrayList<>();
 
         SimulationRunResult test = scenarioRunnerService.runTest("test",
                                                                  mock(Path.class),
                                                                  simulationDescriptor,
-                                                                 scenarios);
+                                                                 scenarios,
+                                                                 settings);
 
         assertNotNull(test.getTestResultMessage());
         assertNotNull(test.getScenarioWithIndex());
@@ -150,18 +160,19 @@ public class ScenarioRunnerServiceImplTest {
         String errorMessage = "Test Error";
 
         scenarioRunnerService.setRunnerSupplier(
-                (kieContainer, simulationDescriptor, scenarios) ->
-                        new RuleScenarioRunner(kieContainer, simulationDescriptor, scenarios, "") {
+                (kieContainer, simulationDescriptor, scenarios, settings) ->
+                        new RuleScenarioRunner(kieContainer, simulationDescriptor, scenarios, "", settings) {
 
                             @Override
-                            protected void internalRunScenario(ScenarioWithIndex scenarioWithIndex, ScenarioRunnerData scenarioRunnerData) {
+                            protected void internalRunScenario(ScenarioWithIndex scenarioWithIndex, ScenarioRunnerData scenarioRunnerData, Settings settings) {
                                 throw new ScenarioException(errorMessage);
                             }
                         });
         SimulationRunResult test = scenarioRunnerService.runTest("test",
                                                                  mock(Path.class),
                                                                  simulation.getSimulationDescriptor(),
-                                                                 simulation.getScenarioWithIndex());
+                                                                 simulation.getScenarioWithIndex(),
+                                                                 settingsLocal);
         TestResultMessage value = test.getTestResultMessage();
         List<org.guvnor.common.services.shared.test.Failure> failures = value.getFailures();
         assertEquals(1, failures.size());
@@ -186,10 +197,12 @@ public class ScenarioRunnerServiceImplTest {
 
     private ScenarioSimulationModel makeScenarioSimulationModel(boolean toSkip) {
         Simulation simulation = new Simulation();
-        simulation.getSimulationDescriptor().setType(Type.RULE);
-        simulation.getSimulationDescriptor().setSkipFromBuild(toSkip);
+        Settings settings = new Settings();
+        settings.setType(Type.RULE);
+        settings.setSkipFromBuild(toSkip);
         ScenarioSimulationModel scenarioSimulationModel = new ScenarioSimulationModel();
         scenarioSimulationModel.setSimulation(simulation);
+        scenarioSimulationModel.setSettings(settings);
         return scenarioSimulationModel;
     }
 }

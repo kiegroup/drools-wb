@@ -25,6 +25,8 @@ import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.junit.After;
@@ -54,8 +56,12 @@ public class DMNScenarioValidationTest {
 
     private Map<String, DecisionNode> mapOfMockDecisions = new HashMap<>();
 
+    private Settings settingsLocal;
+
     @Before
     public void init() {
+        settingsLocal = new Settings();
+        settingsLocal.setType(ScenarioSimulationModel.Type.DMN);
         when(dmnModelMock.getDecisionByName(anyString()))
                 .thenAnswer(invocation -> mapOfMockDecisions.get(invocation.getArguments()[0]));
     }
@@ -83,7 +89,7 @@ public class DMNScenarioValidationTest {
                 FactIdentifier.EMPTY,
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
 
-        List<FactMappingValidationError> errorsTest0 = validationSpy.validate(test0, null);
+        List<FactMappingValidationError> errorsTest0 = validationSpy.validate(test0, settingsLocal, null);
         checkResult(errorsTest0);
 
         // Test 1 - simple type
@@ -94,7 +100,7 @@ public class DMNScenarioValidationTest {
 
         createDMNType("mySimpleType", "mySimpleType");
 
-        List<FactMappingValidationError> errorsTest1 = validationSpy.validate(test1, null);
+        List<FactMappingValidationError> errorsTest1 = validationSpy.validate(test1, settingsLocal,null);
         checkResult(errorsTest1);
 
         // Test 2 - nested field
@@ -118,12 +124,12 @@ public class DMNScenarioValidationTest {
 
         createDMNType("myComplexType", "myComplexType", "parent");
 
-        List<FactMappingValidationError> errorsTest2 = validationSpy.validate(test2, null);
+        List<FactMappingValidationError> errorsTest2 = validationSpy.validate(test2, settingsLocal,null);
         checkResult(errorsTest2);
 
         // parentFM is not valid anymore
         parentFM.addExpressionElement("notExisting", "notExisting");
-        errorsTest2 = validationSpy.validate(test2, null);
+        errorsTest2 = validationSpy.validate(test2, settingsLocal,null);
         checkResult(errorsTest2, "Impossible to find field 'notExisting' in type 'tPARENT'");
 
         // nameWrongTypeFM has a wrong type
@@ -132,7 +138,7 @@ public class DMNScenarioValidationTest {
                 ExpressionIdentifier.create("parent2", FactMappingType.EXPECT));
         nameWrongTypeFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
         nameWrongTypeFM.addExpressionElement("name", Integer.class.getCanonicalName());
-        errorsTest2 = validationSpy.validate(test2, null);
+        errorsTest2 = validationSpy.validate(test2, settingsLocal,null);
         checkResult(errorsTest2,
                     "Impossible to find field 'notExisting' in type 'tPARENT'",
                     "Field type has changed: old 'java.lang.Integer', current 'tNAME'");
@@ -160,7 +166,7 @@ public class DMNScenarioValidationTest {
         createDMNType("myComplexObject", "myComplexObject", "addresses");
         when(mapOfMockDecisions.get("myComplexObject").getResultType().getFields().get("addresses").isCollection()).thenReturn(true);
 
-        List<FactMappingValidationError> errorsTest3 = validationSpy.validate(test3, null);
+        List<FactMappingValidationError> errorsTest3 = validationSpy.validate(test3, settingsLocal,null);
         checkResult(errorsTest3);
 
         // Test 4 - complex type changed
@@ -172,7 +178,7 @@ public class DMNScenarioValidationTest {
 
         createDMNType("mySimpleType", "mySimpleType", "name");
 
-        List<FactMappingValidationError> errorsTest4 = validationSpy.validate(test4, null);
+        List<FactMappingValidationError> errorsTest4 = validationSpy.validate(test4, settingsLocal,null);
         checkResult(errorsTest4, "Node type has changed: old 'tMYSIMPLETYPE', current 'tMYSIMPLETYPE'");
 
         // Test 5 - not existing node
@@ -183,7 +189,7 @@ public class DMNScenarioValidationTest {
         factMappingNodeRemoved.addExpressionElement("tMYSIMPLETYPE", "tMYSIMPLETYPE");
 
         when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
-        List<FactMappingValidationError> errorsTest5 = validationSpy.validate(test5, null);
+        List<FactMappingValidationError> errorsTest5 = validationSpy.validate(test5, settingsLocal,null);
         checkResult(errorsTest5, "Node type has changed: old 'tMYSIMPLETYPE', current 'node not found'");
     }
 

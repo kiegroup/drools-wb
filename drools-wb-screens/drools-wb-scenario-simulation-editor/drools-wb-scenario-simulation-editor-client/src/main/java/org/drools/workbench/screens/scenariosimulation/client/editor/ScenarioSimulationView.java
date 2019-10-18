@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.RequiresResize;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
@@ -33,7 +34,7 @@ public interface ScenarioSimulationView extends KieEditorView,
 
     void init(final ScenarioSimulationEditorPresenter presenter);
 
-    void setContent(final Simulation simulation);
+    void setContent(final Simulation simulation, ScenarioSimulationModel.Type type);
 
     void refreshContent(final Simulation simulation);
 

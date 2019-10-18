@@ -21,16 +21,19 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.uberfire.backend.vfs.Path;
 
 /**
- * <b>Strategy</b> that actually builds the required <code>Simulation</code> based on <code>ScenarioSimulationModel.Type</code>
+ * <b>Strategy</b> that actually builds the required <code>Simulation</code> and <code>Settings</code> based on <code>ScenarioSimulationModel.Type</code>
  */
-public interface SimulationCreationStrategy {
+public interface SimulationSettingsCreationStrategy {
 
     Simulation createSimulation(Path context, String value) throws Exception;
+
+    Settings createSettings(String value) throws Exception;
 
     default ScenarioWithIndex createScenario(Simulation simulation, SimulationDescriptor simulationDescriptor) {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);

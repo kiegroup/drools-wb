@@ -36,6 +36,7 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
@@ -171,9 +172,11 @@ public abstract class AbstractScenarioSimulationTest {
     protected final List<FactMapping> factMappingLocal = new ArrayList<>();
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     protected List<GridColumn<?>> gridColumns = new ArrayList<>();
+    protected Settings settingsLocal;
 
     @Before
     public void setup() {
+        settingsLocal = new Settings();
         scenarioWithIndexLocal = new ArrayList<>();
         when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
@@ -286,6 +289,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridMock.getLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioGridMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         final Point2D computedLocation = mock(Point2D.class);
         when(computedLocation.getX()).thenReturn(0.0);
@@ -302,6 +306,7 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
+        scenarioSimulationContextLocal.setSettings(settingsLocal);
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
@@ -342,7 +347,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
         when(gridColumnMock.getFactIdentifier()).thenReturn(factIdentifierMock);
-        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
         IntStream.range(0, COLUMN_NUMBER).forEach(columnIndex -> {
             gridColumns.add(gridColumnMock);
             factMappingValuesLocal.add(factMappingValueMock);

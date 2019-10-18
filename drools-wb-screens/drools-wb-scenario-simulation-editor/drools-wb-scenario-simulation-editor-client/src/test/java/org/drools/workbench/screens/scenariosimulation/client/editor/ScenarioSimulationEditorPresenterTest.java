@@ -176,6 +176,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(contextMock.getStatus()).thenReturn(statusMock);
+        when(contextMock.getSettings()).thenReturn(scenarioSimulationContextLocal.getSettings());
         when(statusMock.getSimulation()).thenReturn(simulationMock);
         when(simulationMock.getUnmodifiableScenarios()).thenReturn(Arrays.asList(new Scenario()));
         when(testRunnerReportingPanelMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
@@ -367,7 +368,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridModelMock, times(1)).resetErrors();
         verify(scenarioSimulationModelMock, times(1)).setSimulation(simulationMock);
         verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
-        verify(scenarioSimulationEditorWrapper, times(1)).onRunScenario(any(), any(), any(), scenarioWithIndexCaptor.capture());
+        verify(scenarioSimulationEditorWrapper, times(1)).onRunScenario(any(), any(), any(), eq(settingsLocal), scenarioWithIndexCaptor.capture());
 
         List<ScenarioWithIndex> capturedValue = scenarioWithIndexCaptor.getValue();
         assertEquals(2, capturedValue.size());
@@ -742,7 +743,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
         verify(presenter, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
         verify(presenter, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
-        verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()));
+        verify(scenarioSimulationViewMock, times(1)).setContent(eq(content.getModel().getSimulation()), eq(scenarioSimulationContextLocal.getSettings().getType()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
         verify(presenter, times(1)).getValidateCommand();
     }

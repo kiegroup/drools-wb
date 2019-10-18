@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
@@ -56,9 +57,9 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
      * @return
      */
     @Override
-    public List<FactMappingValidationError> validate(Simulation simulation, KieContainer kieContainer) {
+    public List<FactMappingValidationError> validate(Simulation simulation, Settings settings, KieContainer kieContainer) {
         List<FactMappingValidationError> errors = new ArrayList<>();
-        String dmnFilePath = simulation.getSimulationDescriptor().getDmnFilePath();
+        String dmnFilePath = settings.getDmnFilePath();
         DMNModel dmnModel = getDMNModel(kieContainer, dmnFilePath);
 
         for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {

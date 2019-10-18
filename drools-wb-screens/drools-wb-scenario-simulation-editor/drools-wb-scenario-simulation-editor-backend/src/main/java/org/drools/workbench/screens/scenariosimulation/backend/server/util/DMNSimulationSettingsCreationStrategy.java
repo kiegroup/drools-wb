@@ -31,6 +31,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
@@ -44,7 +45,7 @@ import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
 import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.Type;
 
 @ApplicationScoped
-public class DMNSimulationCreationStrategy implements SimulationCreationStrategy {
+public class DMNSimulationSettingsCreationStrategy implements SimulationSettingsCreationStrategy {
 
     @Inject
     protected DMNTypeService dmnTypeService;
@@ -53,10 +54,7 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
     public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Simulation toReturn = new Simulation();
-        dmnTypeService.initializeNameAndNamespace(toReturn, context, dmnFilePath);
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        simulationDescriptor.setType(ScenarioSimulationModel.Type.DMN);
-        simulationDescriptor.setDmnFilePath(dmnFilePath);
         ScenarioWithIndex scenarioWithIndex = createScenario(toReturn, simulationDescriptor);
 
         AtomicInteger id = new AtomicInteger(1);
@@ -75,6 +73,14 @@ public class DMNSimulationCreationStrategy implements SimulationCreationStrategy
 
         addEmptyColumnsIfNeeded(toReturn, scenarioWithIndex);
 
+        return toReturn;
+    }
+
+    @Override
+    public Settings createSettings(String dmnFilePath) throws Exception {
+        Settings toReturn = new Settings();
+        toReturn.setType(ScenarioSimulationModel.Type.DMN);
+        toReturn.setDmnFilePath(dmnFilePath);
         return toReturn;
     }
 

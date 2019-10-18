@@ -26,7 +26,9 @@ import java.util.TreeMap;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.backend.server.AbstractDMNTest;
@@ -55,14 +57,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
+public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
-    private DMNSimulationCreationStrategy dmnSimulationCreationStrategy;
+    private DMNSimulationSettingsCreationStrategy dmnSimulationCreationStrategy;
 
     @Mock
     protected DMNTypeService dmnTypeServiceMock;
@@ -70,7 +72,7 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
     @Before
     public void init() {
         super.init();
-        dmnSimulationCreationStrategy = spy(new DMNSimulationCreationStrategy() {
+        dmnSimulationCreationStrategy = spy(new DMNSimulationSettingsCreationStrategy() {
             {
                 this.dmnTypeService = dmnTypeServiceMock;
             }
@@ -86,10 +88,20 @@ public class DMNSimulationCreationStrategyTest extends AbstractDMNTest {
         final Simulation retrieved = dmnSimulationCreationStrategy.createSimulation(pathMock, dmnFilePath);
 
         assertNotNull(retrieved);
-        verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(
-                any(Simulation.class),
+        verify(dmnTypeServiceMock, never()).initializeNameAndNamespace(
+                any(Settings.class),
                 eq(pathMock),
                 eq(dmnFilePath));
+    }
+
+    @Test
+    public void createSettings() throws Exception {
+        final String dmnFilePath = "test";
+        final Settings retrieved = dmnSimulationCreationStrategy.createSettings(dmnFilePath);
+
+        assertNotNull(retrieved);
+        assertEquals(ScenarioSimulationModel.Type.DMN, retrieved.getType());
+        assertEquals(dmnFilePath, retrieved.getDmnFilePath());
     }
 
     @Test

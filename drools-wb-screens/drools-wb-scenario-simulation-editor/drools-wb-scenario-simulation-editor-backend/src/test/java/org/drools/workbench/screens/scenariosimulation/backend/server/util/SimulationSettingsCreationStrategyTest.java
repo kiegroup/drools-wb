@@ -20,9 +20,12 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
+import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
 import static org.junit.Assert.assertEquals;
@@ -32,7 +35,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class SimulationCreationStrategyTest {
+public class SimulationSettingsCreationStrategyTest {
 
     @Test
     public void createEmptyColumn() {
@@ -40,12 +43,22 @@ public class SimulationCreationStrategyTest {
         ArgumentCaptor<ExpressionIdentifier> expressionIdentifierCaptor2 = ArgumentCaptor.forClass(ExpressionIdentifier.class);
         int placeholderId = 1;
         int columnIndex = 0;
-        SimulationCreationStrategy simulationCreationStrategy = (context, value) -> null;
+        SimulationSettingsCreationStrategy simulationSettingsCreationStrategy = new SimulationSettingsCreationStrategy() {
+            @Override
+            public Simulation createSimulation(Path context, String value) throws Exception {
+                return null;
+            }
+
+            @Override
+            public Settings createSettings(String value) throws Exception {
+                return null;
+            }
+        };
         SimulationDescriptor simulationDescriptorSpy = spy(new SimulationDescriptor());
         Scenario scenarioSpy = spy(new Scenario());
         ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, scenarioSpy);
 
-        simulationCreationStrategy.createEmptyColumn(simulationDescriptorSpy, scenarioWithIndex, placeholderId, GIVEN, columnIndex);
+        simulationSettingsCreationStrategy.createEmptyColumn(simulationDescriptorSpy, scenarioWithIndex, placeholderId, GIVEN, columnIndex);
 
         verify(simulationDescriptorSpy, times(1)).addFactMapping(
                 eq(columnIndex),

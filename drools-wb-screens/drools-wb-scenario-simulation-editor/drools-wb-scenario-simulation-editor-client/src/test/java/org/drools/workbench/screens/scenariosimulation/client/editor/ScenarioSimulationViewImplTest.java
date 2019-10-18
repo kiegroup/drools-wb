@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -64,9 +65,9 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGridModel.getColumnCount()).thenReturn(1);
         when(scenarioGridModel.getRowCount()).thenReturn(1);
 
-        scenarioView.setContent(simulationModel);
+        scenarioView.setContent(simulationModel, ScenarioSimulationModel.Type.RULE);
 
-        verify(scenarioGrid).setContent(simulationModel);
+        verify(scenarioGrid).setContent(simulationModel, ScenarioSimulationModel.Type.RULE);
         verify(scenarioGridPanel).setFocus(true);
     }
 
@@ -76,9 +77,9 @@ public class ScenarioSimulationViewImplTest {
         when(scenarioGridModel.getColumnCount()).thenReturn(0);
         when(scenarioGridModel.getRowCount()).thenReturn(0);
 
-        scenarioView.setContent(simulationModel);
+        scenarioView.setContent(simulationModel, ScenarioSimulationModel.Type.DMN);
 
-        verify(scenarioGrid).setContent(simulationModel);
+        verify(scenarioGrid).setContent(simulationModel, ScenarioSimulationModel.Type.DMN);
         verify(scenarioGridPanel).setFocus(true);
     }
 }

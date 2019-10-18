@@ -211,10 +211,10 @@ public class ScenarioGridTest {
     @Test
     public void setContent() {
         InOrder callsOrder = inOrder(scenarioGridModelMock, scenarioGrid);
-        scenarioGrid.setContent(simulation);
+        scenarioGrid.setContent(simulation, ScenarioSimulationModel.Type.RULE);
         callsOrder.verify(scenarioGridModelMock, times(1)).clear();
         callsOrder.verify(scenarioGridModelMock, times(1)).bindContent(eq(simulation));
-        callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation));
+        callsOrder.verify(scenarioGrid, times(1)).setHeaderColumns(eq(simulation), eq(ScenarioSimulationModel.Type.RULE));
         callsOrder.verify(scenarioGrid, times(1)).appendRows(eq(simulation));
         callsOrder.verify(scenarioGridModelMock, times(1)).loadFactMappingsWidth();
         callsOrder.verify(scenarioGridModelMock, times(1)).forceRefreshWidth();
@@ -256,7 +256,7 @@ public class ScenarioGridTest {
 
     @Test
     public void setHeaderColumns() {
-        scenarioGrid.setHeaderColumns(simulation);
+        scenarioGrid.setHeaderColumns(simulation, ScenarioSimulationModel.Type.RULE);
         verify(scenarioGrid, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(true));
     }
 
@@ -435,7 +435,7 @@ public class ScenarioGridTest {
     private Simulation getSimulation() {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
+//        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
 
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);

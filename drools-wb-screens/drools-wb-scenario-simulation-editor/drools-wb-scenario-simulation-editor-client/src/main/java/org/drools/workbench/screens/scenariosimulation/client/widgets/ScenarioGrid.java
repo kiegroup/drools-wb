@@ -57,6 +57,7 @@ public class ScenarioGrid extends BaseGridWidget {
 
     private ScenarioContextMenuRegistry scenarioContextMenuRegistry;
     private EventBus eventBus;
+    private ScenarioSimulationModel.Type type;
 
     public ScenarioGrid(ScenarioGridModel model,
                         ScenarioGridLayer scenarioGridLayer,
@@ -68,10 +69,11 @@ public class ScenarioGrid extends BaseGridWidget {
         setEventPropagationMode(EventPropagationMode.NO_ANCESTORS);
     }
 
-    public void setContent(Simulation simulation) {
+    public void setContent(Simulation simulation, ScenarioSimulationModel.Type type) {
+        this.type = type;
         ((ScenarioGridModel) model).clear();
         ((ScenarioGridModel) model).bindContent(simulation);
-        setHeaderColumns(simulation);
+        setHeaderColumns(simulation, type);
         appendRows(simulation);
         ((ScenarioGridModel) model).loadFactMappingsWidth();
         ((ScenarioGridModel) model).forceRefreshWidth();
@@ -90,6 +92,10 @@ public class ScenarioGrid extends BaseGridWidget {
     @Override
     public ScenarioGridModel getModel() {
         return (ScenarioGridModel) model;
+    }
+
+    public ScenarioSimulationModel.Type getType() {
+        return type;
     }
 
     /**
@@ -143,9 +149,9 @@ public class ScenarioGrid extends BaseGridWidget {
         return handlers;
     }
 
-    protected void setHeaderColumns(Simulation simulation) {
+    protected void setHeaderColumns(Simulation simulation, ScenarioSimulationModel.Type type) {
         final List<FactMapping> factMappings = simulation.getSimulationDescriptor().getUnmodifiableFactMappings();
-        boolean editableHeaders = !simulation.getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.DMN);
+        boolean editableHeaders = !type.equals(ScenarioSimulationModel.Type.DMN);
         IntStream.range(0, factMappings.size())
                 .forEach(columnIndex -> {
                     setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders);

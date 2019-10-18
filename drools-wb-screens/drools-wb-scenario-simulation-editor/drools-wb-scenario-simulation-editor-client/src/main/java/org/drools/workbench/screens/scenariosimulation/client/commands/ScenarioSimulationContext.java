@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
@@ -46,6 +47,7 @@ public class ScenarioSimulationContext {
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
+    protected Settings settings;
 
     protected Status status = new Status();
 
@@ -108,6 +110,14 @@ public class ScenarioSimulationContext {
 
     public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
         this.dataObjectFieldsMap = dataObjectFieldsMap;
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

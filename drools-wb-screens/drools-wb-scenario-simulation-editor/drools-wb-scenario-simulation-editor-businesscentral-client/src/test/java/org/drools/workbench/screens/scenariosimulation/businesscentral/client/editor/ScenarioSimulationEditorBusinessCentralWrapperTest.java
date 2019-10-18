@@ -70,6 +70,8 @@ import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -252,9 +254,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioWithIndexLocal.add(new ScenarioWithIndex(3, new Scenario()));
         RemoteCallback<SimulationRunResult> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
-        scenarioSimulationEditorBusinessClientWrapper.onRunScenario(remoteCallback, errorCallback, simulationDescriptorMock, scenarioWithIndexLocal);
+        scenarioSimulationEditorBusinessClientWrapper.onRunScenario(remoteCallback, errorCallback, simulationDescriptorMock, settingsLocal, scenarioWithIndexLocal);
         verify(scenarioSimulationCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
-        verify(scenarioSimulationServiceMock, times(1)).runScenario(eq(observablePathMock), eq(simulationDescriptorMock), eq(scenarioWithIndexLocal));
+        verify(scenarioSimulationServiceMock, times(1)).runScenario(eq(observablePathMock), eq(simulationDescriptorMock), eq(scenarioWithIndexLocal), eq(settingsLocal));
     }
 
     @Test
@@ -350,7 +352,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void getModelSuccessCallBackMethod_Rule() {
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, null));
+        modelLocal.setSimulation(getSimulation());
+        modelLocal.getSettings().setType(RULE);
+        modelLocal.getSettings().setDmoSession(null);
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */
@@ -364,7 +368,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void getModelSuccessCallBackMethod_DMN() {
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.DMN, null));
+        modelLocal.setSimulation(getSimulation());
+        modelLocal.getSettings().setType(DMN);
+        modelLocal.getSettings().setDmnFilePath(null);
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */

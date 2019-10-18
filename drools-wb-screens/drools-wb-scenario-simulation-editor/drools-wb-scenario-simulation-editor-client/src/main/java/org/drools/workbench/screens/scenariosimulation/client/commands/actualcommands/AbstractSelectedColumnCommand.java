@@ -141,7 +141,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      * @return
      */
     protected FactIdentifier setEditableHeadersAndGetFactIdentifier(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String aliasName, String canonicalClassName) {
-        final ScenarioSimulationModel.Type simulationModelType = context.getModel().getSimulation().get().getSimulationDescriptor().getType();
+        final ScenarioSimulationModel.Type simulationModelType = context.getSettings().getType();
         selectedColumn.setEditableHeaders(!simulationModelType.equals(ScenarioSimulationModel.Type.DMN));
         String nameToUseForCreation = simulationModelType.equals(ScenarioSimulationModel.Type.DMN) ? aliasName : selectedColumn.getInformationHeaderMetaData().getColumnId();
         return getFactIdentifierByColumnTitle(aliasName, context).orElseGet(() -> FactIdentifier.create(nameToUseForCreation, canonicalClassName));

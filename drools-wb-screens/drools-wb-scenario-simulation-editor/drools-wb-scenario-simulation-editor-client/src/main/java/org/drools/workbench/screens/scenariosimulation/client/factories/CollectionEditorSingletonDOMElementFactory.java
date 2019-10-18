@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -100,8 +99,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         }
         String key = className + "#" + propertyName;
         String genericTypeName0 = genericTypes.get(0);
-        Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
-        boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
+        boolean isRule = RULE.equals(scenarioSimulationContext.getSettings().getType());
         if (isRule && !isSimpleJavaType(genericTypeName0)) {
             genericTypeName0 = getRuleComplexType(genericTypeName0);
         }
@@ -156,11 +154,10 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     protected Map<String, Map<String, String>> getExpandablePropertiesMap(String typeName) {
         final Map<String, Map<String, String>> toReturn = new HashMap<>();
-        Optional<Simulation> simulation = scenarioSimulationContext.getModel().getSimulation();
         if (isSimpleJavaType(typeName)) {
             return toReturn;
         }
-        boolean isRule = RULE.equals(simulation.get().getSimulationDescriptor().getType());
+        boolean isRule = RULE.equals(scenarioSimulationContext.getSettings().getType());
         final Map<String, String> expandableProperties = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getExpandableProperties();
         expandableProperties.forEach((key, nestedTypeName) -> {
             if (isRule) {

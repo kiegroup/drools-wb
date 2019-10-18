@@ -116,7 +116,10 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
         when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
         this.modelLocal = new ScenarioSimulationModel();
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, null));
+        modelLocal.setSimulation(getSimulation());
+        modelLocal.setSettings(settingsLocal);
+        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
+        settingsLocal.setDmoSession(null);
         this.content = new ScenarioSimulationModelContent(modelLocal,
                                                           overviewMock,
                                                           packageDataModelOracleBaselinePayload);
@@ -124,19 +127,9 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(scenarioSimulationServiceMock.loadContent(observablePathMock)).thenReturn(content);
     }
 
-    protected Simulation getSimulation(ScenarioSimulationModel.Type selectedType, String value) {
+    protected Simulation getSimulation() {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        simulationDescriptor.setType(selectedType);
-        switch (selectedType) {
-            case DMN:
-                simulationDescriptor.setDmnFilePath(value);
-                break;
-            case RULE:
-            default:
-                simulationDescriptor.setDmoSession(value);
-        }
-
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 

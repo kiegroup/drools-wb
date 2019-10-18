@@ -127,7 +127,7 @@ public class ScenarioSimulationGridHeaderUtilities {
                                                                final String columnGroup) {
         if (!scenarioGridColumn.isInstanceAssigned()) {
             String complexSearch = getExistingInstances(columnGroup,
-                                                        scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getType(),
+                                                        scenarioGrid.getType(),
                                                         scenarioGrid.getModel().getColumns());
             return new EnableTestToolsEvent(complexSearch, true);
         } else if (Objects.equals(clickedScenarioHeaderMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY)) {

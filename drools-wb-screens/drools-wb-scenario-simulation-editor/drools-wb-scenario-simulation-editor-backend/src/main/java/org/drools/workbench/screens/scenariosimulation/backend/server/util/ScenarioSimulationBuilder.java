@@ -19,6 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.uberfire.backend.vfs.Path;
 
@@ -26,10 +27,10 @@ import org.uberfire.backend.vfs.Path;
 public class ScenarioSimulationBuilder {
 
     @Inject
-    protected RULESimulationCreationStrategy ruleSimulationCreationStrategy;
+    protected RULESimulationSettingsCreationStrategy ruleSimulationCreationStrategy;
 
     @Inject
-    protected DMNSimulationCreationStrategy dmnSimulationCreationStrategy;
+    protected DMNSimulationSettingsCreationStrategy dmnSimulationCreationStrategy;
 
     public Simulation createSimulation(Path context, ScenarioSimulationModel.Type type, String value) throws Exception {
         switch (type) {
@@ -37,6 +38,17 @@ public class ScenarioSimulationBuilder {
                 return ruleSimulationCreationStrategy.createSimulation(context, value);
             case DMN:
                 return dmnSimulationCreationStrategy.createSimulation(context, value);
+            default:
+                return null;
+        }
+    }
+
+    public Settings createSettings(ScenarioSimulationModel.Type type, String value) throws Exception {
+        switch (type) {
+            case RULE:
+                return ruleSimulationCreationStrategy.createSettings(value);
+            case DMN:
+                return dmnSimulationCreationStrategy.createSettings(value);
             default:
                 return null;
         }

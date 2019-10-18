@@ -76,7 +76,7 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
         } catch (Exception e) {
             e.printStackTrace();
         }
-        modelLocal.getSimulation().getSimulationDescriptor().setDmnFilePath("dmn_file_path");
+        modelLocal.getSettings().setDmnFilePath("dmn_file_path");
         businessCentralDmnDataManagementStrategySpy = spy(new BusinessCentralDMNDataManagementStrategy(new CallerMock<>(dmnTypeServiceMock),
                                                                                                        scenarioSimulationContextLocal,
                                                                                                        mock(EventBus.class)) {

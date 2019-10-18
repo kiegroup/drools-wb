@@ -20,6 +20,7 @@ import java.util.List;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
@@ -29,7 +30,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 
 public interface ScenarioSimulationEditorWrapper {
 
-    void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun);
+    void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun);
 
     void wrappedSave(final String commitMessage);
 
@@ -43,5 +44,5 @@ public interface ScenarioSimulationEditorWrapper {
 
     void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AuditLog auditLog);
 
-    void validate(Simulation simulation, RemoteCallback<?> callback);
+    void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback);
 }

@@ -28,6 +28,7 @@ import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
@@ -205,11 +206,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun) {
+    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun) {
         service.call(refreshModelCallback, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulationDescriptor,
-                             toRun);
+                             toRun,
+                             settings);
     }
 
     @Override
@@ -228,12 +230,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void validate(Simulation simulation, RemoteCallback<?> callback) {
+    public void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback) {
         scenarioSimulationEditorPresenter.getView().showLoading();
         service.call(
                 callback,
                 scenarioSimulationEditorPresenter.getValidationFailedCallback())
-                .validate(simulation, versionRecordManager.getCurrentPath());
+                .validate(simulation, settings, versionRecordManager.getCurrentPath());
     }
 
     protected void registerTestToolsCallback() {
@@ -345,7 +347,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.setPackageName(content.getDataModel().getPackageName());
         resetEditorPages(content.getOverview());
         DataManagementStrategy dataManagementStrategy;
-        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
+        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSettings().getType())) {
             dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getContext());
         } else {
             dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());

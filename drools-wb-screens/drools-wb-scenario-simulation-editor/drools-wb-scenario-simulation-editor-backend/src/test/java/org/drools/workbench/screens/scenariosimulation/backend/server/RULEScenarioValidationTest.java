@@ -23,6 +23,8 @@ import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.junit.Before;
@@ -42,8 +44,12 @@ public class RULEScenarioValidationTest {
     @Mock
     private KieContainer kieContainerMock;
 
+    private Settings settingsLocal;
+
     @Before
     public void init() {
+        settingsLocal = new Settings();
+        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
         when(kieContainerMock.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
         when(kieContainerMock.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     }
@@ -61,7 +67,7 @@ public class RULEScenarioValidationTest {
                 FactIdentifier.EMPTY,
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
 
-        List<FactMappingValidationError> errorsTest0 = validation.validate(test0, kieContainerMock);
+        List<FactMappingValidationError> errorsTest0 = validation.validate(test0, settingsLocal, kieContainerMock);
         checkResult(errorsTest0);
 
         // Test 1 - simple type
@@ -70,7 +76,7 @@ public class RULEScenarioValidationTest {
                 FactIdentifier.create("mySimpleType", int.class.getCanonicalName()),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
 
-        List<FactMappingValidationError> errorsTest1 = validation.validate(test1, kieContainerMock);
+        List<FactMappingValidationError> errorsTest1 = validation.validate(test1, settingsLocal, kieContainerMock);
         checkResult(errorsTest1);
 
         FactMapping mySimpleType = test1.getSimulationDescriptor().addFactMapping(
@@ -78,7 +84,7 @@ public class RULEScenarioValidationTest {
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
         mySimpleType.addExpressionElement("notValidClass", "notValidClass");
 
-        errorsTest1 = validation.validate(test1, kieContainerMock);
+        errorsTest1 = validation.validate(test1, settingsLocal, kieContainerMock);
         checkResult(errorsTest1, "Impossible to load class notValidClass");
 
         // Test 2 - nested field
@@ -98,12 +104,12 @@ public class RULEScenarioValidationTest {
         parentFM.addExpressionElement("SampleBean", SampleBean.class.getCanonicalName());
         parentFM.addExpressionElement("parent", SampleBean.class.getCanonicalName());
 
-        List<FactMappingValidationError> errorsTest2 = validation.validate(test2, kieContainerMock);
+        List<FactMappingValidationError> errorsTest2 = validation.validate(test2, settingsLocal, kieContainerMock);
         checkResult(errorsTest2);
 
         // parentFM is not valid anymore
         parentFM.addExpressionElement("notExisting", String.class.getCanonicalName());
-        errorsTest2 = validation.validate(test2, kieContainerMock);
+        errorsTest2 = validation.validate(test2, settingsLocal, kieContainerMock);
         checkResult(errorsTest2, "Impossible to find field with name 'notExisting' in class org.drools.workbench.screens.scenariosimulation.backend.server.SampleBean");
 
         // nameWrongTypeFM has a wrong type
@@ -112,7 +118,7 @@ public class RULEScenarioValidationTest {
                 ExpressionIdentifier.create("parent2", FactMappingType.EXPECT));
         nameWrongTypeFM.addExpressionElement("SampleBean", Integer.class.getCanonicalName());
         nameWrongTypeFM.addExpressionElement("name", Integer.class.getCanonicalName());
-        errorsTest2 = validation.validate(test2, kieContainerMock);
+        errorsTest2 = validation.validate(test2, settingsLocal, kieContainerMock);
         checkResult(errorsTest2,
                     "Impossible to find field with name 'notExisting' in class org.drools.workbench.screens.scenariosimulation.backend.server.SampleBean",
                     "Field type has changed: old 'java.lang.Integer', current 'java.lang.String'");
@@ -134,7 +140,7 @@ public class RULEScenarioValidationTest {
         addressesFM.addExpressionElement("addresses", List.class.getCanonicalName());
         addressesFM.setGenericTypes(Collections.singletonList(String.class.getCanonicalName()));
 
-        List<FactMappingValidationError> errorsTest3 = validation.validate(test3, kieContainerMock);
+        List<FactMappingValidationError> errorsTest3 = validation.validate(test3, settingsLocal, kieContainerMock);
         checkResult(errorsTest3);
     }
 

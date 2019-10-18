@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -77,8 +78,8 @@ public class ScenarioSimulationViewImpl
     }
 
     @Override
-    public void setContent(Simulation simulation) {
-        scenarioGridPanel.getScenarioGrid().setContent(simulation);
+    public void setContent(Simulation simulation, ScenarioSimulationModel.Type type) {
+        scenarioGridPanel.getScenarioGrid().setContent(simulation, type);
 
         // prepare grid for keyboard navigation
         scenarioGridPanel.setFocus(true);

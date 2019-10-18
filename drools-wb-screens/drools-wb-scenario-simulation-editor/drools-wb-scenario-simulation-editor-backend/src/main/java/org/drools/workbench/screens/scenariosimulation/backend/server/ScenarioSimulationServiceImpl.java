@@ -33,6 +33,7 @@ import javax.inject.Named;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
@@ -86,61 +87,43 @@ public class ScenarioSimulationServiceImpl
         extends KieService<ScenarioSimulationModelContent>
         implements ScenarioSimulationService {
 
+    private static final String KIE_VERSION = "kie.version";
+    private static final String junitActivatorPackageName = "testscenario";
+    @Inject
+    protected ScenarioSimulationBuilder scenarioSimulationBuilder;
+    @Inject
+    protected DMNTypeService dmnTypeService;
+    @Inject
+    protected ScenarioValidationService scenarioValidationService;
     @Inject
     @Named("ioStrategy")
     private IOService ioService;
-
     @Inject
     private CopyService copyService;
-
     @Inject
     private DeleteService deleteService;
-
     @Inject
     private RenameService renameService;
-
     @Inject
     private Event<ResourceOpenedEvent> resourceOpenedEvent;
-
     @Inject
     private ScenarioSimulationResourceTypeDefinition resourceTypeDefinition;
-
     @Inject
     private CommentedOptionFactory commentedOptionFactory;
-
     @Inject
     private SaveAndRenameServiceImpl<ScenarioSimulationModel, Metadata> saveAndRenameService;
-
     @Inject
     private DataModelService dataModelService;
-
     @Inject
     private ScenarioRunnerService scenarioRunnerService;
-
     @Inject
     private User user;
-
     @Inject
     private POMService pomService;
-
     @Inject
     private KieModuleService kieModuleService;
-
-    @Inject
-    protected ScenarioSimulationBuilder scenarioSimulationBuilder;
-
-    @Inject
-    protected DMNTypeService dmnTypeService;
-
-    @Inject
-    protected ScenarioValidationService scenarioValidationService;
-
     private SafeSessionInfo safeSessionInfo;
-
     private Properties props = new Properties();
-
-    private static final String KIE_VERSION = "kie.version";
-    private static final String junitActivatorPackageName = "testscenario";
 
     {
         String propertyFileName = "kie.properties";
@@ -167,11 +150,13 @@ public class ScenarioSimulationServiceImpl
     @Override
     public SimulationRunResult runScenario(final Path path,
                                            final SimulationDescriptor simulationDescriptor,
-                                           final List<ScenarioWithIndex> scenarios) {
+                                           final List<ScenarioWithIndex> scenarios,
+                                           final Settings settings) {
         return scenarioRunnerService.runTest(user.getIdentifier(),
                                              path,
                                              simulationDescriptor,
-                                             scenarios);
+                                             scenarios,
+                                             settings);
     }
 
     @Override
@@ -186,6 +171,7 @@ public class ScenarioSimulationServiceImpl
     public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, Type type, String value) {
         try {
             content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
+            content.setSettings(scenarioSimulationBuilder.createSettings(type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);
 
@@ -210,13 +196,14 @@ public class ScenarioSimulationServiceImpl
         try {
             final String content = ioService.readAllString(Paths.convert(path));
 
-            ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
-            Simulation simulation = scenarioSimulationModel.getSimulation();
-            if (simulation != null && DMN.equals(simulation.getSimulationDescriptor().getType())) {
+            final ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
+            final Simulation simulation = scenarioSimulationModel.getSimulation();
+            final Settings settings = scenarioSimulationModel.getSettings();
+            if (simulation != null && DMN.equals(settings.getType())) {
                 try {
-                    dmnTypeService.initializeNameAndNamespace(simulation,
+                    dmnTypeService.initializeNameAndNamespace(settings,
                                                               path,
-                                                              simulation.getSimulationDescriptor().getDmnFilePath());
+                                                              settings.getDmnFilePath());
                 } catch (ImpossibleToFindDMNException e) {
                     // this error is not thrown so user can fix the file path manually
                     logger.error(e.getMessage(), e);
@@ -344,8 +331,8 @@ public class ScenarioSimulationServiceImpl
     }
 
     @Override
-    public List<FactMappingValidationError> validate(Simulation simulation, Path path) {
-        return scenarioValidationService.validateSimulationStructure(simulation, path);
+    public List<FactMappingValidationError> validate(Simulation simulation, Settings settings, Path path) {
+        return scenarioValidationService.validateSimulationStructure(simulation, settings, path);
     }
 
     protected void createActivatorIfNotExist(Path context) {

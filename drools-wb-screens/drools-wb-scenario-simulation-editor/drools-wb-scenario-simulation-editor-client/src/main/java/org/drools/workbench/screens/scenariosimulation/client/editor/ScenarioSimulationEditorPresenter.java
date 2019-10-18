@@ -239,6 +239,7 @@ public class ScenarioSimulationEditorPresenter {
         view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getSimulationDescriptor(),
+                                                      context.getSettings(),
                                                       toRun);
     }
 
@@ -412,21 +413,21 @@ public class ScenarioSimulationEditorPresenter {
         return simulation -> {
             cleanReadOnlyColumn(simulation);
             model.setSimulation(simulation);
-            view.setContent(model.getSimulation());
+            view.setContent(model.getSimulation(), context.getSettings().getType());
             context.getStatus().setSimulation(model.getSimulation());
             view.onResize();
         };
     }
 
     protected Command getValidateCommand() {
-        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), getValidationCallback());
+        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), context.getSettings(), getValidationCallback());
     }
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
         return result -> {
             view.hideBusyIndicator();
 
-            if (result != null && result.size() > 0) {
+            if (result != null && !result.isEmpty()) {
                 StringBuilder errorMessage = new StringBuilder(ScenarioSimulationEditorConstants.INSTANCE.validationErrorMessage());
                 errorMessage.append(":<br/>");
                 for (FactMappingValidationError validationError : result) {
@@ -514,7 +515,7 @@ public class ScenarioSimulationEditorPresenter {
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
-        view.setContent(model.getSimulation());
+        view.setContent(model.getSimulation(), context.getSettings().getType());
         context.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
@@ -542,7 +543,7 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void setSettings(SettingsView.Presenter presenter) {
         Type type = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        presenter.setScenarioType(type, model.getSimulation().getSimulationDescriptor(), path.getFileName());
+        presenter.setScenarioType(type, context.getSettings(), path.getFileName());
         if (saveEnabled) {
             presenter.setSaveCommand(getSaveCommand());
             presenter.setSaveEnabled(true);

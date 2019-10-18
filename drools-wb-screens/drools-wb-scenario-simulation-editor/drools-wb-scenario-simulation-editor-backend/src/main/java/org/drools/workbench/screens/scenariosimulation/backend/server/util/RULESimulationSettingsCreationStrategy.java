@@ -19,6 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.uberfire.backend.vfs.Path;
@@ -27,15 +28,12 @@ import static org.drools.scenariosimulation.api.model.FactMappingType.EXPECT;
 import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
 
 @ApplicationScoped
-public class RULESimulationCreationStrategy implements SimulationCreationStrategy {
+public class RULESimulationSettingsCreationStrategy implements SimulationSettingsCreationStrategy {
 
     @Override
     public Simulation createSimulation(Path context, String value) throws Exception {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
-        simulationDescriptor.setDmoSession(value);
-
         ScenarioWithIndex scenarioWithIndex = createScenario(toReturn, simulationDescriptor);
 
         // Add GIVEN Fact
@@ -51,6 +49,14 @@ public class RULESimulationCreationStrategy implements SimulationCreationStrateg
                           2,
                           EXPECT,
                           simulationDescriptor.getFactMappings().size());
+        return toReturn;
+    }
+
+    @Override
+    public Settings createSettings(String dmoSession) throws Exception {
+        Settings toReturn = new Settings();
+        toReturn.setType(ScenarioSimulationModel.Type.RULE);
+        toReturn.setDmoSession(dmoSession);
         return toReturn;
     }
 }

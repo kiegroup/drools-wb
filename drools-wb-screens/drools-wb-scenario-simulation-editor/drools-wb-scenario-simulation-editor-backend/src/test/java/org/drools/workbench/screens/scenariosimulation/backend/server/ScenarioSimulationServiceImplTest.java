@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.inject.Named;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
 import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
@@ -150,9 +151,11 @@ public class ScenarioSimulationServiceImplTest {
         @Override
         protected ScenarioSimulationModel unmarshalInternal(String content) {
             Simulation simulation = new Simulation();
-            simulation.getSimulationDescriptor().setType(Type.DMN);
+            Settings settings = new Settings();
+            settings.setType(Type.DMN);
             ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
             toReturn.setSimulation(simulation);
+            toReturn.setSettings(settings);
             return toReturn;
         }
     };
@@ -315,13 +318,15 @@ public class ScenarioSimulationServiceImplTest {
 
         final Path path = mock(Path.class);
         Simulation simulation = new Simulation();
+        Settings settings = new Settings();
 
-        service.runScenario(path, simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex());
+        service.runScenario(path, simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex(), settings);
 
         verify(scenarioRunnerServiceMock).runTest("test userMock",
                                                   path,
                                                   simulation.getSimulationDescriptor(),
-                                                  simulation.getScenarioWithIndex());
+                                                  simulation.getScenarioWithIndex(),
+                                                  settings);
     }
 
     @Test
@@ -429,7 +434,7 @@ public class ScenarioSimulationServiceImplTest {
     public void load() {
         ScenarioSimulationModel model = service.load(path);
 
-        assertEquals(Type.DMN, model.getSimulation().getSimulationDescriptor().getType());
+        assertEquals(Type.DMN, model.getSettings().getType());
         verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
 
         doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), anyString());
