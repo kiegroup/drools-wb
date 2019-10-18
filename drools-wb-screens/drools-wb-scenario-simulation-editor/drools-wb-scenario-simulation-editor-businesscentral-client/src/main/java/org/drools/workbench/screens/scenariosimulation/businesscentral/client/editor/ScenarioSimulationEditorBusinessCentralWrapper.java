@@ -371,7 +371,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         super.onEditTabSelected();
         scenarioSimulationEditorPresenter.setFocusedContext(
                 scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioSimulationContext());
-        scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(true);
     }
 
     /**
@@ -381,10 +380,18 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
         addPage(new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+
             @Override
             public void onFocus() {
+                super.onFocus();
                 scenarioSimulationEditorPresenter.setFocusedContext(scenarioGridWidget.getScenarioSimulationContext());
                 scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(false);
+            }
+
+            @Override
+            public void onLostFocus() {
+                super.onLostFocus();
+                scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(true);
             }
         });
     }

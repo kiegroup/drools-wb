@@ -84,17 +84,17 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
      * This <code>Callback</code> will receive data from other callbacks and when the retrieved results get to the
      * expected ones it will recursively elaborate the map
      * @param testToolsPresenter
-     * @param expectedElements
+     * @param expectedElementsCounts
      * @param factTypeFieldsMap
      * @param context
      * @return
      */
     protected Callback<FactModelTree> aggregatorCallback(final TestToolsView.Presenter testToolsPresenter,
-                                                         final int expectedElements,
+                                                         final int expectedElementsCounts,
                                                          final SortedMap<String, FactModelTree> factTypeFieldsMap,
                                                          final ScenarioSimulationContext context,
                                                          final List<String> simpleJavaTypes) {
-        return result -> aggregatorCallbackMethod(testToolsPresenter, expectedElements, factTypeFieldsMap, context, result, simpleJavaTypes);
+        return result -> aggregatorCallbackMethod(testToolsPresenter, expectedElementsCounts, factTypeFieldsMap, context, result, simpleJavaTypes);
     }
 
     @Override
