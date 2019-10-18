@@ -375,6 +375,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().clearSelections();
     }
 
+    @Override
+    public void onOverviewSelected() {
+        super.onOverviewSelected();
+        scenarioSimulationEditorPresenter.setFocusedContext(
+                scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioSimulationContext());
+        scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(true);
+    }
+
     /**
      * This method adds specifically the Background grid and its related onFocus behavior
      * @param scenarioGridWidget

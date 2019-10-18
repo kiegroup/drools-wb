@@ -357,6 +357,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioGridWidgetMock, times(1)).clearSelections();
     }
 
+    @Test
+    public void onOverviewSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onOverviewSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(scenarioSimulationContextLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setItemMenuForMainGridEnabled(true);
+    }
 
     @Test
     public void onBackGroundTabSelected() {
