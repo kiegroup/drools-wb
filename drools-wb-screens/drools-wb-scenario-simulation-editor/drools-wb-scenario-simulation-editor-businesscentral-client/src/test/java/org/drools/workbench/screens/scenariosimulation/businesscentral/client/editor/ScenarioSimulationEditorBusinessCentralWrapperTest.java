@@ -353,6 +353,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void onEditTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
         verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(scenarioSimulationContextLocal));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setItemMenuForMainGridEnabled(true);
     }
 
     @Test
