@@ -515,6 +515,7 @@ public class ScenarioSimulationEditorPresenter {
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
+        context.setSettings(model.getSettings());
         view.setContent(model.getSimulation(), context.getSettings().getType());
         context.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
