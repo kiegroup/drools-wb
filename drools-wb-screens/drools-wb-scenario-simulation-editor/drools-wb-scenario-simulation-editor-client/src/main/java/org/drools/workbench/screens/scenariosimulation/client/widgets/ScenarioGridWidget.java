@@ -48,17 +48,6 @@ public class ScenarioGridWidget extends ResizeComposite {
         onResize();
     }
 
-    @Override
-    public void onResize() {
-        final Widget parent = getParent();
-        if (parent != null) {
-            final double w = parent.getOffsetWidth();
-            final double h = parent.getOffsetHeight();
-            setPixelSize((int) w, (int) h);
-        }
-        scenarioGridPanel.onResize();
-    }
-
     public void unregister() {
         scenarioGridPanel.unregister();
     }
@@ -73,5 +62,24 @@ public class ScenarioGridWidget extends ResizeComposite {
 
     public ScenarioGridModel getModel() {
         return scenarioGridPanel.getScenarioGrid().getModel();
+    }
+
+    public void select() {
+        scenarioGridPanel.getScenarioGrid().select();
+    }
+
+    public void deselect() {
+        scenarioGridPanel.getScenarioGrid().deselect();
+    }
+
+    @Override
+    public void onResize() {
+        final Widget parent = getParent();
+        if (parent != null) {
+            final double w = parent.getOffsetWidth();
+            final double h = parent.getOffsetHeight();
+            setPixelSize((int) w, (int) h);
+        }
+        scenarioGridPanel.onResize();
     }
 }

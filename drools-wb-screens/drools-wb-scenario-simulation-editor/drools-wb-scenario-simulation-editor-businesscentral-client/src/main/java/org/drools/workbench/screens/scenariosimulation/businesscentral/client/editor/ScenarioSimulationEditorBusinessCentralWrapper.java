@@ -369,12 +369,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void onEditTabSelected() {
         super.onEditTabSelected();
-        scenarioSimulationEditorPresenter.setFocusedContext(
-                scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioSimulationContext());
+        ScenarioGridWidget scenarioGridWidget = scenarioSimulationEditorPresenter.getView().getScenarioGridWidget();
+        scenarioSimulationEditorPresenter.setFocusedContext(scenarioGridWidget.getScenarioSimulationContext());
         scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(true);
-        scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().clearSelections();
-        scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioGridPanel().getScenarioGrid().select();
-        scenarioSimulationEditorPresenter.getBackgroundGridWidget().getScenarioGridPanel().getScenarioGrid().deselect();
+        scenarioGridWidget.clearSelections();
+        scenarioGridWidget.select();
+        scenarioSimulationEditorPresenter.getBackgroundGridWidget().deselect();
     }
 
     @Override
@@ -405,9 +405,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.setFocusedContext(backgroundWidget.getScenarioSimulationContext());
         scenarioSimulationEditorPresenter.setItemMenuForMainGridEnabled(false);
         backgroundWidget.clearSelections();
-
-        backgroundWidget.getScenarioGridPanel().getScenarioGrid().select();
-        scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().getScenarioGridPanel().getScenarioGrid().deselect();
+        backgroundWidget.select();
+        scenarioSimulationEditorPresenter.getView().getScenarioGridWidget().deselect();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {
