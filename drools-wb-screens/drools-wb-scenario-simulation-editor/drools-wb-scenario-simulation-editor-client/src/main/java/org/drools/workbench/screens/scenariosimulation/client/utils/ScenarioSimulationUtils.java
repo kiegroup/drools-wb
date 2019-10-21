@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
@@ -36,6 +37,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.DMN_DATE;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
 
 public class ScenarioSimulationUtils {
@@ -273,13 +275,21 @@ public class ScenarioSimulationUtils {
     }
 
     public static String getPlaceholder(String canonicalClassName) {
-        return isLocalDate(canonicalClassName) ?
-                ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder() :
-                ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+        if (isLocalDate(canonicalClassName)) {
+            return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
+        } else if (isDMNDate(canonicalClassName)) {
+            return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
+        } else {
+            return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+        }
     }
 
     public static boolean isLocalDate(String canonicalClassName) {
         return LOCALDATE_CANONICAL_NAME.equals(canonicalClassName);
+    }
+
+    public static boolean isDMNDate(String canonicalClassName) {
+        return Objects.equals(DMN_DATE, canonicalClassName);
     }
 
     protected static double getColumnWidth(String columnId) {
