@@ -689,4 +689,8 @@ public class ScenarioSimulationEditorPresenter {
     private Command createPopulateTestToolsCommand() {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
+
+    public ScenarioGridWidget getBackgroundGridWidget() {
+        return scenarioBackgroundGridWidget;
+    }
 }
