@@ -19,9 +19,12 @@ package org.drools.workbench.screens.scenariosimulation.client.domelements;
 import java.util.Objects;
 
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Focusable;
+import org.drools.workbench.screens.scenariosimulation.client.events.InputEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.InputHandler;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.gwtbootstrap3.client.ui.TextArea;
@@ -68,6 +71,18 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
                                                              Style.Unit.PX);
         getContainer().getElement().getStyle().setPaddingBottom(5,
                                                                 Style.Unit.PX);
+        widget.addHandler(new InputHandler() {
+            @Override
+            public void onInput(InputEvent event) {
+                String value = getValue();
+                if (!value.startsWith("#")) {
+                    widget.setValue("#" + value.trim());
+                }
+            }
+        }, InputEvent.getType());
+
+        DOM.sinkBitlessEvent(widget.getElement(), "input");
+
         getContainer().setWidget(widget);
     }
 

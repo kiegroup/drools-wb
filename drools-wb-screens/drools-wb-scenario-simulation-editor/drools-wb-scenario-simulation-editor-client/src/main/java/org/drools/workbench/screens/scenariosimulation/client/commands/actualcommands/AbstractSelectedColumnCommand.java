@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
-import static org.drools.scenariosimulation.api.model.FactMapping.getPropertyPlaceHolder;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getColumnSubGroup;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
 
@@ -102,9 +102,17 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
+        List<String> propertyNameElements = new ArrayList<>();
+        propertyNameElements.add(alias);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        setPropertyMetaData(propertyHeaderMetaData, getPropertyPlaceHolder(columnIndex), false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
-        context.getModel().updateColumnInstance(columnIndex, selectedColumn);
+        propertyHeaderMetaData.setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
+        setPropertyMetaData(propertyHeaderMetaData, "Expression </>", false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertExpression());
+        selectedColumn.setPropertyAssigned(true);
+        context.getModel().updateColumnProperty(columnIndex,
+                                                selectedColumn,
+                                                propertyNameElements,
+                                                fullClassName, context.getStatus().isKeepData());
+        selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }

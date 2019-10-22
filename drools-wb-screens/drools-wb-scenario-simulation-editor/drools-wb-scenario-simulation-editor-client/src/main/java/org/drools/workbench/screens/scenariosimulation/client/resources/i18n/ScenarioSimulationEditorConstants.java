@@ -208,6 +208,8 @@ public interface ScenarioSimulationEditorConstants
 
     String defineValidType();
 
+    String insertExpression();
+
     String changeType();
 
     String changeTypeMainTitle();
