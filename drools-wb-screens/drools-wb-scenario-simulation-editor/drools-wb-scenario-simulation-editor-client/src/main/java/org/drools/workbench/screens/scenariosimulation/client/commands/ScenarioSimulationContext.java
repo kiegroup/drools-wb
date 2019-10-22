@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -47,6 +48,7 @@ public class ScenarioSimulationContext {
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
+    protected Set<String> dataObjectsInstancesName;
     protected Settings settings;
 
     protected Status status = new Status();
@@ -118,6 +120,14 @@ public class ScenarioSimulationContext {
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    /**
+     * Set the names of already existing Data Objects/Instances, used inside updateHeaderValidation
+     * @param dataObjectsInstancesName
+     */
+    public void setDataObjectsInstancesName(Set<String> dataObjectsInstancesName) {
+        this.dataObjectsInstancesName = dataObjectsInstancesName;
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {

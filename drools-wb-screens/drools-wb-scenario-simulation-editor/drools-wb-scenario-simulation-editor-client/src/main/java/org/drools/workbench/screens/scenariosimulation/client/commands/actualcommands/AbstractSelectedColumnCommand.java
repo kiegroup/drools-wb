@@ -258,10 +258,10 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     protected void manageCollectionProperty(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String className, int columnIndex, List<String> fullPropertyPathElements) {
         final SortedMap<String, FactModelTree> dataObjectFieldsMap = context.getDataObjectFieldsMap();
         if (className.contains(".")) {
-            className = className.substring(className.lastIndexOf(".") + 1);
+            className = className.substring(className.lastIndexOf('.') + 1);
         }
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
-        final FactMapping factMapping = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactMapping factMapping = context.getModel().getSimulation().orElseThrow(IllegalArgumentException::new).getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
         if (factModelTree.isSimple()) {
             factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(ConstantHolder.VALUE));

@@ -111,7 +111,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     protected String getRuleComplexType(String genericTypeName0) {
-        return genericTypeName0.substring(genericTypeName0.lastIndexOf(".") + 1);
+        return genericTypeName0.substring(genericTypeName0.lastIndexOf('.') + 1);
     }
 
     protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0) {
@@ -161,7 +161,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         final Map<String, String> expandableProperties = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getExpandableProperties();
         expandableProperties.forEach((key, nestedTypeName) -> {
             if (isRule) {
-                nestedTypeName = nestedTypeName.substring(nestedTypeName.lastIndexOf(".") + 1);
+                nestedTypeName = nestedTypeName.substring(nestedTypeName.lastIndexOf('.') + 1);
             }
             toReturn.put(key, getSimplePropertiesMap(nestedTypeName));
         });
@@ -177,10 +177,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
-
-        widget.addCloseCompositeEventHandler(event -> {
-            commonCloseHandling(widgetDomElement);
-        });
+        widget.addCloseCompositeEventHandler(event -> commonCloseHandling(widgetDomElement));
         widget.addSaveEditorEventHandler(event -> flush());
     }
 }
