@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
@@ -273,15 +274,17 @@ public class ScenarioSimulationUtils {
         return new Point2D(cellXMiddle, cellYMiddle);
     }
 
-    public static String getPlaceholder(String canonicalClassName) {
-        switch (canonicalClassName) {
-            case LOCALDATE_CANONICAL_NAME:
-                return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
-            case DMN_DATE:
-                return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
-            default:
-                return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+    public static String getPlaceholder(final String canonicalClassName) {
+
+        if (Objects.equals(LOCALDATE_CANONICAL_NAME, canonicalClassName)) {
+            return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
         }
+
+        if (Objects.equals(DMN_DATE, canonicalClassName)) {
+            return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
+        }
+
+        return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
     }
 
     protected static double getColumnWidth(String columnId) {
