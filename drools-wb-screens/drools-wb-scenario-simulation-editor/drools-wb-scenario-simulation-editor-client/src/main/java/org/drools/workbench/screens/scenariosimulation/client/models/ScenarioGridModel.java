@@ -204,7 +204,7 @@ public class ScenarioGridModel extends BaseGridData {
     public Range deleteRow(int rowIndex) {
         checkSimulation();
         Range toReturn = super.deleteRow(rowIndex);
-        simulation.removeScenarioByIndex(rowIndex);
+        simulation.removeScesimDataByIndex(rowIndex);
         updateIndexColumn();
         return toReturn;
     }
@@ -217,7 +217,7 @@ public class ScenarioGridModel extends BaseGridData {
     public void duplicateRow(int rowIndex, GridRow row) {
         checkSimulation();
         int newRowIndex = rowIndex + 1;
-        final Scenario toDuplicate = simulation.cloneScenario(rowIndex, newRowIndex);
+        final Scenario toDuplicate = simulation.cloneScesimData(rowIndex, newRowIndex);
         insertRowGridOnly(newRowIndex, row, toDuplicate);
     }
 
@@ -360,7 +360,7 @@ public class ScenarioGridModel extends BaseGridData {
             Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
             Object rawValue = optionalValue.orElse(null);
             String cellValue = (rawValue instanceof String) ? (String) rawValue : null;
-            Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+            Scenario scenarioByIndex = simulation.getScesimDataByIndex(rowIndex);
             FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
             FactIdentifier factIdentifier = factMappingByIndex.getFactIdentifier();
             ExpressionIdentifier expressionIdentifier = factMappingByIndex.getExpressionIdentifier();
@@ -387,7 +387,7 @@ public class ScenarioGridModel extends BaseGridData {
     @Override
     public Range deleteCell(int rowIndex, int columnIndex) {
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        simulation.getScenarioByIndex(rowIndex)
+        simulation.getScesimDataByIndex(rowIndex)
                 .removeFactMappingValueByIdentifiers(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
         return super.deleteCell(rowIndex, columnIndex);
     }
@@ -782,7 +782,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param rowIndex
      */
     public void resetErrors(int rowIndex) {
-        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        Scenario scenarioByIndex = simulation.getScesimDataByIndex(rowIndex);
         scenarioByIndex.resetErrors();
         refreshErrors();
     }
@@ -793,7 +793,7 @@ public class ScenarioGridModel extends BaseGridData {
      * @param columnIndex
      */
     public void resetError(int rowIndex, int columnIndex) {
-        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        Scenario scenarioByIndex = simulation.getScesimDataByIndex(rowIndex);
         FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
         Optional<FactMappingValue> factMappingValue = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValue.ifPresent(FactMappingValue::resetStatus);
@@ -926,14 +926,14 @@ public class ScenarioGridModel extends BaseGridData {
             return;
         }
 
-        final List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
+        final List<Scenario> scenarios = simulation.getUnmodifiableScesimData();
         String placeHolder = ((ScenarioGridColumn) column).getPlaceHolder();
         IntStream.range(0, scenarios.size())
                 .forEach(rowIndex -> setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder))));
     }
 
     protected void commonAddRow(int rowIndex) {
-        Scenario scenario = simulation.addScenario(rowIndex);
+        Scenario scenario = simulation.addScesimData(rowIndex);
         final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
@@ -1050,7 +1050,7 @@ public class ScenarioGridModel extends BaseGridData {
 
     protected void refreshErrorsRow(int rowIndex) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-        Scenario scenarioByIndex = simulation.getScenarioByIndex(rowIndex);
+        Scenario scenarioByIndex = simulation.getScesimDataByIndex(rowIndex);
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {
             ScenarioGridCell cell = (ScenarioGridCell) getCell(rowIndex, columnIndex);
             if (cell == null) {

@@ -304,7 +304,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(false));
     }
 
-
     @Test
     public void makeMenuBarCanUpdateProjectTrue() {
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContextMock).getActiveWorkspaceProject();
@@ -361,28 +360,19 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onEditTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(scenarioSimulationContextLocal));
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setItemMenuForMainGridEnabled(eq(true));
-        verify(scenarioGridWidgetMock, times(1)).clearSelections();
-        verify(scenarioGridWidgetMock, times(1)).select();
-        verify(backgroundGridWidgetMock, times(1)).deselect();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onEditTabSelected();
     }
 
     @Test
     public void onOverviewSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onOverviewSelected();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(scenarioSimulationContextLocal));
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setItemMenuForMainGridEnabled(eq(true));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onOverviewSelected();
     }
 
     @Test
     public void onBackGroundTabSelected() {
-        scenarioSimulationEditorBusinessClientWrapper.enableBackgroundTab();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setFocusedContext(eq(backgroundContextMock));
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setItemMenuForMainGridEnabled(eq(false));
-        verify(backgroundGridWidgetMock, times(1)).clearSelections();
-        verify(backgroundGridWidgetMock, times(1)).select();
-        verify(scenarioGridWidgetMock, times(1)).deselect();
+        scenarioSimulationEditorBusinessClientWrapper.onBackGroundTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onBackGroundTabSelected();
     }
 
     @Test
@@ -416,5 +406,4 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationEditorPresenterMock, times(1)).getJsonModel(eq(modelLocal));
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
     }
-
 }

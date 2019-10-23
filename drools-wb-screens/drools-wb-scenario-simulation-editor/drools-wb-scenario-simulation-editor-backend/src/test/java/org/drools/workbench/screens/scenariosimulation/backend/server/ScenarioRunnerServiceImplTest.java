@@ -154,8 +154,8 @@ public class ScenarioRunnerServiceImplTest {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         Simulation simulation = new Simulation();
-        simulation.addScenario();
-        Scenario scenario = simulation.getScenarioByIndex(0);
+        simulation.addScesimData();
+        Scenario scenario = simulation.getScesimDataByIndex(0);
         scenario.setDescription("Test Scenario");
         String errorMessage = "Test Error";
 

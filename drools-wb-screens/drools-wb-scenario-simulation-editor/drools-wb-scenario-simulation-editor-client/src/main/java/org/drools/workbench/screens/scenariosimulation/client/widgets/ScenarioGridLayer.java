@@ -48,7 +48,7 @@ public class ScenarioGridLayer extends DefaultGridLayer {
      * @param scenarioGrid ScenarioGrid to add to the Layer
      * @return The Layer
      */
-    public Layer addScenarioGrid(final ScenarioGrid scenarioGrid) {
+    public Layer addScesimDataGrid(final ScenarioGrid scenarioGrid) {
         this.scenarioGrid = scenarioGrid;
         return super.add(scenarioGrid);
     }

@@ -41,7 +41,7 @@ public class TestUtils {
         });
         // generate scenarios
         IntStream.range(0, numberOfRows).forEach(rowIndex -> {
-            final Scenario scenario = simulation.addScenario();
+            final Scenario scenario = simulation.addScesimData();
             scenario.setDescription(getRowName(rowIndex));
             IntStream.range(0, numberOfColumns).forEach( columnIndex -> {
                 scenario.addMappingValue(FactIdentifier.create(getFactName(columnIndex), String.class.getCanonicalName()),

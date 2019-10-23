@@ -86,8 +86,8 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
     @Test
     public void initializeGrid() {
         scenarioGridPanelProducer.initializeGrid(scenarioGridLayerMock, scenarioGridPanelMock);
-        verify(scenarioGridLayerMock, times(1)).addScenarioGrid(isA(ScenarioGrid.class));
-        verify(scenarioGridLayerMock, times(1)).addScenarioGrid(scenarioGridArgumentCaptor.capture());
+        verify(scenarioGridLayerMock, times(1)).addScesimDataGrid(isA(ScenarioGrid.class));
+        verify(scenarioGridLayerMock, times(1)).addScesimDataGrid(scenarioGridArgumentCaptor.capture());
         verify(scenarioGridLayerMock, times(1)).enterPinnedMode(eq(scenarioGridArgumentCaptor.getValue()), isA(Command.class));
         verify(scenarioGridPanelMock, times(1)).add(eq(scenarioGridLayerMock));
         verify(scenarioGridPanelMock, times(1)).addKeyDownHandler(isA(BaseGridWidgetKeyboardHandler.class));

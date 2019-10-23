@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
@@ -25,17 +26,17 @@ public class ScenarioGridWidget extends ResizeComposite {
 
     private ScenarioGridPanel scenarioGridPanel;
 
-    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
-        initWidget(scenarioGridPanel);
-    }
-
-    public void setContent(Simulation simulation) {
-        scenarioGridPanel.getScenarioGrid().setContent(simulation);
+    public void setContent(Simulation simulation, ScenarioSimulationModel.Type type) {
+        scenarioGridPanel.getScenarioGrid().setContent(simulation, type);
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
+    }
+
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
+        initWidget(scenarioGridPanel);
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {

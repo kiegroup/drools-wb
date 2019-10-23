@@ -316,7 +316,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioSimulationEditorPresenterMock.getDataManagementStrategy()).thenReturn(dataManagementStrategyMock);
         when(scenarioSimulationEditorPresenterMock.getFocusedContext()).thenReturn(scenarioSimulationContextLocal);
 
-        when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
+        when(simulationMock.cloneScesimModel()).thenReturn(clonedSimulationMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);

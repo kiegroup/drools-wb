@@ -119,7 +119,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     @Test
     public void addEmptyColumnIfNeeded() {
         Simulation simulation = new Simulation();
-        ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScenario());
+        ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScesimData());
         ExpressionIdentifier givenExpressionIdentifier = ExpressionIdentifier.create("given1", GIVEN);
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
@@ -130,7 +130,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
                            .anyMatch(elem -> EXPECT.equals(elem.getExpressionIdentifier().getType())));
 
         simulation = new Simulation();
-        scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScenario());
+        scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScesimData());
         ExpressionIdentifier expectExpressionIdentifier = ExpressionIdentifier.create("expect1", EXPECT);
         simulationDescriptor = simulation.getSimulationDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);

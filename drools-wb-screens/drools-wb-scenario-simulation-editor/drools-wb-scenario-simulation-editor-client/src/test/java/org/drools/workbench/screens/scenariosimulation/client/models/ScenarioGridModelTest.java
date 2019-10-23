@@ -132,14 +132,14 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         when(scenarioMock.getUnmodifiableFactMappingValues()).thenReturn(factMappingValuesLocal);
         GRID_ROWS.clear();
         IntStream.range(0, ROW_COUNT).forEach(rowIndex -> {
-            when(simulationMock.addScenario(rowIndex)).thenReturn(scenarioMock);
-            when(simulationMock.getScenarioByIndex(rowIndex)).thenReturn(scenarioMock);
-            when(simulationMock.cloneScenario(rowIndex, rowIndex + 1)).thenReturn(scenarioMock);
+            when(simulationMock.addScesimData(rowIndex)).thenReturn(scenarioMock);
+            when(simulationMock.getScesimDataByIndex(rowIndex)).thenReturn(scenarioMock);
+            when(simulationMock.cloneScesimData(rowIndex, rowIndex + 1)).thenReturn(scenarioMock);
             GRID_ROWS.add(gridRowMock);
         });
-        when(simulationMock.addScenario(ROW_COUNT)).thenReturn(scenarioMock);
-        when(simulationMock.getScenarioByIndex(ROW_COUNT)).thenReturn(scenarioMock);
-        when(simulationMock.cloneScenario(ROW_COUNT, ROW_COUNT + 1)).thenReturn(scenarioMock);
+        when(simulationMock.addScesimData(ROW_COUNT)).thenReturn(scenarioMock);
+        when(simulationMock.getScesimDataByIndex(ROW_COUNT)).thenReturn(scenarioMock);
+        when(simulationMock.cloneScesimData(ROW_COUNT, ROW_COUNT + 1)).thenReturn(scenarioMock);
 
         when(scenarioMock.getFactMappingValue(any(), any())).thenReturn(Optional.of(factMappingValueMock));
         when(scenarioMock.getFactMappingValue(isA(FactMapping.class))).thenReturn(Optional.of(factMappingValueMock));
@@ -218,7 +218,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     public void deleteRow() {
         scenarioGridModel.deleteRow(ROW_INDEX);
         verify(scenarioGridModel, atLeast(1)).checkSimulation();
-        verify(simulationMock, times(1)).removeScenarioByIndex(eq(ROW_INDEX));
+        verify(simulationMock, times(1)).removeScesimDataByIndex(eq(ROW_INDEX));
         verify(scenarioGridModel, times(1)).updateIndexColumn();
     }
 
@@ -226,7 +226,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     public void duplicateRow() {
         scenarioGridModel.duplicateRow(ROW_INDEX, gridRowMock);
         verify(scenarioGridModel, atLeast(1)).checkSimulation();
-        verify(simulationMock, times(1)).cloneScenario(eq(ROW_INDEX), eq(ROW_INDEX + 1));
+        verify(simulationMock, times(1)).cloneScesimData(eq(ROW_INDEX), eq(ROW_INDEX + 1));
         verify(scenarioGridModel, times(1)).insertRowGridOnly(eq(ROW_INDEX + 1), eq(gridRowMock), isA(Scenario.class));
         verify(scenarioGridModel, never()).insertRow(eq(ROW_INDEX), eq(gridRowMock));
         verify(scenarioGridModel, times(1)).updateIndexColumn();
@@ -637,7 +637,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
             }
         });
         scenarioGridModel.resetError(ROW_INDEX, COLUMN_INDEX);
-        verify(simulationMock, times(1)).getScenarioByIndex(eq(ROW_INDEX));
+        verify(simulationMock, times(1)).getScesimDataByIndex(eq(ROW_INDEX));
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(factMappingValueMock, times(1)).resetStatus();

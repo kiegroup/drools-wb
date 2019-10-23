@@ -133,8 +133,8 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
-        Scenario scenario = toReturn.addScenario();
-        int row = toReturn.getUnmodifiableScenarios().indexOf(scenario);
+        Scenario scenario = toReturn.addScesimData();
+        int row = toReturn.getUnmodifiableScesimData().indexOf(scenario);
         scenario.setDescription(null);
 
         // Add GIVEN Fact

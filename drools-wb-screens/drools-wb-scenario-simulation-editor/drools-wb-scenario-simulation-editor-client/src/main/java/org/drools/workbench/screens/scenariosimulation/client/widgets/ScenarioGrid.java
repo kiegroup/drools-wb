@@ -272,7 +272,7 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected void appendRows(Simulation simulation) {
-        List<Scenario> scenarios = simulation.getUnmodifiableScenarios();
+        List<Scenario> scenarios = simulation.getUnmodifiableScesimData();
         IntStream.range(0, scenarios.size()).forEach(rowIndex -> appendRow(rowIndex, scenarios.get(rowIndex)));
     }
 

@@ -75,7 +75,7 @@ public class ScenarioGridPanelProducer {
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false),
                                                            scenarioContextMenuRegistry);
-        scenarioGridLayer.addScenarioGrid(scenarioGrid);
+        scenarioGridLayer.addScesimDataGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
         ScenarioSimulationContext scenarioSimulationContext = new ScenarioSimulationContext(scenarioGridPanel);
         scenarioGrid.setScenarioSimulationContext(scenarioSimulationContext);

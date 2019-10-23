@@ -44,7 +44,7 @@ public class ScenarioCsvImportExport {
 
         generateHeader(factMappings, printer);
 
-        for (Scenario scenario : simulation.getUnmodifiableScenarios()) {
+        for (Scenario scenario : simulation.getUnmodifiableScesimData()) {
             List<Object> values = new ArrayList<>();
             for (FactMapping factMapping : factMappings) {
                 Optional<FactMappingValue> factMappingValue = scenario.getFactMappingValue(factMapping.getFactIdentifier(),
@@ -63,8 +63,8 @@ public class ScenarioCsvImportExport {
 
         CSVParser csvParser = CSVFormat.DEFAULT.parse(new StringReader(raw));
 
-        Simulation toReturn = originalSimulation.cloneSimulation();
-        toReturn.clearScenarios();
+        Simulation toReturn = originalSimulation.cloneScesimModel();
+        toReturn.clearScesimDatas();
 
         List<FactMapping> factMappings = toReturn.getSimulationDescriptor().getUnmodifiableFactMappings();
 
@@ -75,7 +75,7 @@ public class ScenarioCsvImportExport {
         csvRecords = csvRecords.subList(HEADER_SIZE, csvRecords.size());
 
         for (CSVRecord csvRecord : csvRecords) {
-            Scenario scenarioToFill = toReturn.addScenario();
+            Scenario scenarioToFill = toReturn.addScesimData();
             if (csvRecord.size() != factMappings.size()) {
                 throw new IllegalArgumentException("Malformed row " + csvRecord);
             }

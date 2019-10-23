@@ -247,7 +247,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = IntStream.range(0, focusedContext.getStatus().getSimulation().getUnmodifiableScenarios().size())
+        List<Integer> indexes = IntStream.range(0, focusedContext.getStatus().getSimulation().getUnmodifiableScesimData().size())
                 .boxed()
                 .collect(Collectors.toList());
         onRunScenario(indexes);
@@ -263,7 +263,7 @@ public class ScenarioSimulationEditorPresenter {
         view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getSimulationDescriptor(),
-                                                      context.getSettings(),
+                                                      focusedContext.getSettings(),
                                                       toRun);
     }
 
@@ -352,10 +352,10 @@ public class ScenarioSimulationEditorPresenter {
         Simulation simulation = this.model.getSimulation();
         for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
             int index = scenarioWithIndex.getIndex() - 1;
-            simulation.replaceScenario(index, scenarioWithIndex.getScenario());
+            simulation.replaceScesimData(index, scenarioWithIndex.getScesimData());
         }
         scenarioMainGridWidget.refreshContent(simulation);
-        scenarioBackgroundGridWidget.refreshContent(simulation.cloneSimulation());
+        scenarioBackgroundGridWidget.refreshContent(simulation.cloneScesimModel());
         focusedContext.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
@@ -419,6 +419,33 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
+    public ScenarioGridWidget getBackgroundGridWidget() {
+        return scenarioBackgroundGridWidget;
+    }
+
+    public void onEditTabSelected() {
+        ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
+        setFocusedContext(scenarioGridWidget.getScenarioSimulationContext());
+        setItemMenuForMainGridEnabled(true);
+        scenarioGridWidget.clearSelections();
+        scenarioGridWidget.select();
+        getBackgroundGridWidget().deselect();
+    }
+
+    public void onOverviewSelected() {
+        setFocusedContext(getView().getScenarioGridWidget().getScenarioSimulationContext());
+        setItemMenuForMainGridEnabled(true);
+    }
+
+    public void onBackGroundTabSelected() {
+        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
+        setFocusedContext(backgroundWidget.getScenarioSimulationContext());
+        setItemMenuForMainGridEnabled(false);
+        backgroundWidget.clearSelections();
+        backgroundWidget.select();
+        getView().getScenarioGridWidget().deselect();
+    }
+
     protected void onDownload(final Supplier<Path> pathSupplier) {
         final String downloadURL = getFileDownloadURL(pathSupplier);
         open(downloadURL);
@@ -448,14 +475,14 @@ public class ScenarioSimulationEditorPresenter {
         return simulation -> {
             cleanReadOnlyColumn(simulation);
             model.setSimulation(simulation);
-            scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
+            scenarioMainGridWidget.setContent(model.getSimulation(), focusedContext.getSettings().getType());
             focusedContext.getStatus().setSimulation(model.getSimulation());
             scenarioMainGridWidget.onResize();
         };
     }
 
     protected Command getValidateCommand() {
-        return () -> scenarioSimulationEditorWrapper.validate(focusedContext.getStatus().getSimulation(), context.getSettings(), getValidationCallback());
+        return () -> scenarioSimulationEditorWrapper.validate(focusedContext.getStatus().getSimulation(), focusedContext.getSettings(), getValidationCallback());
     }
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
@@ -496,8 +523,8 @@ public class ScenarioSimulationEditorPresenter {
      */
     protected void cleanReadOnlyColumn(Simulation simulation) {
         SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-        for (int i = 0; i < simulation.getUnmodifiableScenarios().size(); i += 1) {
-            Scenario scenario = simulation.getScenarioByIndex(i);
+        for (int i = 0; i < simulation.getUnmodifiableScesimData().size(); i += 1) {
+            Scenario scenario = simulation.getScesimDataByIndex(i);
             for (FactMapping factMapping : simulationDescriptor.getUnmodifiableFactMappings()) {
                 if (isColumnReadOnly(factMapping)) {
                     scenario.getFactMappingValue(factMapping.getFactIdentifier(),
@@ -550,12 +577,13 @@ public class ScenarioSimulationEditorPresenter {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
         scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
-        scenarioBackgroundGridWidget.setContent(model.getSimulation().cloneSimulation());
+        focusedContext.setSettings(model.getSettings());
+        // TODO {gcardosi} update scenarioBackgroundGridWidget.setContent to accept Background
+//        scenarioBackgroundGridWidget.setContent(model.getBackground(), focusedContext.getSettings().getType());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
-        context.setSettings(model.getSettings());
-        scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
+        scenarioMainGridWidget.setContent(model.getSimulation(), focusedContext.getSettings().getType());
         focusedContext.getStatus().setSimulation(model.getSimulation());
         CustomBusyPopup.close();
         // check if structure is valid
@@ -583,7 +611,7 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());
+        presenter.setScenarioType(modelType, focusedContext.getSettings(), path.getFileName());
         if (saveEnabled) {
             presenter.setSaveCommand(getSaveCommand());
             presenter.setSaveEnabled(true);
@@ -692,7 +720,4 @@ public class ScenarioSimulationEditorPresenter {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
-    public ScenarioGridWidget getBackgroundGridWidget() {
-        return scenarioBackgroundGridWidget;
-    }
 }

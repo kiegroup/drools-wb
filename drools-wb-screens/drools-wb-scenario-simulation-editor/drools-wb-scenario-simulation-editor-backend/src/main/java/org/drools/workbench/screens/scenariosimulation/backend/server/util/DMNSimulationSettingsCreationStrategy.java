@@ -67,7 +67,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
             return aType.equals(bType) ? 0 : (Type.INPUT.equals(aType) ? -1 : 1);
         }).forEach(factModelTree -> {
             FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
-            FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, scenarioWithIndex.getIndex(), id, convert(factModelTree.getType()), simulationDescriptor, scenarioWithIndex.getScenario());
+            FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, scenarioWithIndex.getIndex(), id, convert(factModelTree.getType()), simulationDescriptor, scenarioWithIndex.getScesimData());
             addToScenario(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
         });
 

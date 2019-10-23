@@ -419,7 +419,7 @@ public class ScenarioSimulationContext {
             toReturn.keepData = this.keepData;
             toReturn.gridCellValue = this.gridCellValue;
             toReturn.rowIndex = this.rowIndex;
-            toReturn.simulation = this.simulation.cloneSimulation();
+            toReturn.simulation = this.simulation.cloneScesimModel();
             return toReturn;
         }
     }

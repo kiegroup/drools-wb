@@ -38,9 +38,9 @@ public interface SimulationSettingsCreationStrategy {
     default ScenarioWithIndex createScenario(Simulation simulation, SimulationDescriptor simulationDescriptor) {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-        Scenario scenario = simulation.addScenario();
+        Scenario scenario = simulation.addScesimData();
         scenario.setDescription(null);
-        int index = simulation.getUnmodifiableScenarios().indexOf(scenario) + 1;
+        int index = simulation.getUnmodifiableScesimData().indexOf(scenario) + 1;
         return new ScenarioWithIndex(index, scenario);
     }
 
@@ -67,6 +67,6 @@ public interface SimulationSettingsCreationStrategy {
                         FactIdentifier.EMPTY,
                         expressionIdentifier);
         factMapping.setExpressionAlias(FactMapping.getPropertyPlaceHolder(placeholderId));
-        scenarioWithIndex.getScenario().addMappingValue(FactIdentifier.EMPTY, expressionIdentifier, null);
+        scenarioWithIndex.getScesimData().addMappingValue(FactIdentifier.EMPTY, expressionIdentifier, null);
     }
 }

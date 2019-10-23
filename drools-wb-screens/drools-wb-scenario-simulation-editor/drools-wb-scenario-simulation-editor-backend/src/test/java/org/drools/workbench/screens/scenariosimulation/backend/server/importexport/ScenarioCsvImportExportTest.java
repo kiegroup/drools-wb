@@ -69,7 +69,7 @@ public class ScenarioCsvImportExportTest {
     public void importData() throws IOException {
         Simulation originalSimulation = createDummySimulation(3, 1);
 
-        assertEquals(1, originalSimulation.getUnmodifiableScenarios().size());
+        assertEquals(1, originalSimulation.getUnmodifiableScesimData().size());
 
         String rawCSV = "OTHER,OTHER,GIVEN,GIVEN,GIVEN\r\n" +
                 "#,Scenario description,instance1,instance2,instance3\r\n" +
@@ -78,11 +78,11 @@ public class ScenarioCsvImportExportTest {
 
         Simulation simulation = scenarioCsvImportExport.importData(rawCSV, originalSimulation);
 
-        assertEquals(1, simulation.getUnmodifiableScenarios().size());
+        assertEquals(1, simulation.getUnmodifiableScesimData().size());
 
-        assertEquals("value1", simulation.getScenarioByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(2)).get().getRawValue());
-        assertEquals("value2", simulation.getScenarioByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(3)).get().getRawValue());
-        assertNull(simulation.getScenarioByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(4)).get().getRawValue());
+        assertEquals("value1", simulation.getScesimDataByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(2)).get().getRawValue());
+        assertEquals("value2", simulation.getScesimDataByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(3)).get().getRawValue());
+        assertNull(simulation.getScesimDataByIndex(0).getFactMappingValue(simulation.getSimulationDescriptor().getFactMappingByIndex(4)).get().getRawValue());
 
         assertThatThrownBy(() -> scenarioCsvImportExport.importData("", originalSimulation))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -128,7 +128,7 @@ public class ScenarioCsvImportExportTest {
         }
 
         for (int row = 0; row < numberOfRow; row += 1) {
-            Scenario scenario = simulation.addScenario();
+            Scenario scenario = simulation.addScesimData();
             scenario.addMappingValue(FactIdentifier.INDEX, ExpressionIdentifier.INDEX, row);
             scenario.setDescription("My scenario " + row);
             for (int col = 2; col < numberOfColumn + 2; col += 1) {

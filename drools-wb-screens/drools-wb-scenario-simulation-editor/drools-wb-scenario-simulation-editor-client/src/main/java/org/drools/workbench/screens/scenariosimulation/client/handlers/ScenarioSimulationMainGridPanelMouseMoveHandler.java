@@ -86,7 +86,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
             return true;
         }
         final Simulation simulation = scenarioGrid.getModel().getSimulation().orElseThrow(IllegalStateException::new);
-        final Scenario scenarioByIndex = simulation.getScenarioByIndex(uiRowIndex);
+        final Scenario scenarioByIndex = simulation.getScesimDataByIndex(uiRowIndex);
         final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
