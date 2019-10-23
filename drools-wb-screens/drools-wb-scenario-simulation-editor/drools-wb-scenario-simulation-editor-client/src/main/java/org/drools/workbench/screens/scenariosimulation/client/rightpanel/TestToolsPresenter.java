@@ -224,9 +224,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void hideProperties(Map<String, List<List<String>>> propertiesToHide) {
         listGroupItemPresenter.showAll();
         propertiesToHide.entrySet().stream().forEach(
-                stringListEntry -> stringListEntry.getValue().forEach(propertyParts -> {
-                    listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts);
-                })
+                stringListEntry -> stringListEntry.getValue().forEach(propertyParts ->
+                    listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts)
+                )
         );
     }
 
@@ -359,7 +359,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), false)) {
+        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned())) {
             view.disableAddButton();
         } else {
             view.enableAddButton();

@@ -399,12 +399,13 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
         ScenarioSimulationContext context = getFocusedContext();
-        if (context.getModel().isSameInstanceType(event.getClassName())) {
+        ScenarioGridColumn column = ((ScenarioGridColumn) context.getModel().getSelectedColumn());
+        if (context.getModel().isSameInstanceType(event.getClassName()) && column.isPropertyAssigned()) {
             return;
         }
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
-        if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
+        if (column.isInstanceAssigned() && !context.getModel().isSameInstanceType(event.getClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context,
                                                                                new SetInstanceHeaderCommand(),
                                                                                true);
