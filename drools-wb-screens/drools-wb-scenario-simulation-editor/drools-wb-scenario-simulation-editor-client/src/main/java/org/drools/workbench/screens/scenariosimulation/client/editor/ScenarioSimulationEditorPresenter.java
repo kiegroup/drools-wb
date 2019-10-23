@@ -432,11 +432,6 @@ public class ScenarioSimulationEditorPresenter {
         getBackgroundGridWidget().deselect();
     }
 
-    public void onOverviewSelected() {
-        setFocusedContext(getView().getScenarioGridWidget().getScenarioSimulationContext());
-        setItemMenuForMainGridEnabled(true);
-    }
-
     public void onBackGroundTabSelected() {
         ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setFocusedContext(backgroundWidget.getScenarioSimulationContext());

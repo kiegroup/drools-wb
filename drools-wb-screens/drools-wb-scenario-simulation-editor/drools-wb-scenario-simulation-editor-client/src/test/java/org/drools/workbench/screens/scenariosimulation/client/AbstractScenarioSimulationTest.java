@@ -110,6 +110,9 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioGridWidget scenarioGridWidgetMock;
     @Mock
+    protected ScenarioGridWidget backgroundGridWidgetMock;
+
+    @Mock
     protected EventBus eventBusMock;
     @Mock
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;

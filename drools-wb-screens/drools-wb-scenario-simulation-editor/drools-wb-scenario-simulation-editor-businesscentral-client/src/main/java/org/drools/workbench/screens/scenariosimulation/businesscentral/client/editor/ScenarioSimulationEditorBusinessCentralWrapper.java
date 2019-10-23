@@ -252,7 +252,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void onOverviewSelected() {
         super.onOverviewSelected();
-        scenarioSimulationEditorPresenter.onOverviewSelected();
+        scenarioSimulationEditorPresenter.onEditTabSelected();
     }
 
     /**
