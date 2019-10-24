@@ -548,7 +548,7 @@ public class ScenarioSimulationEditorPresenter {
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
-        scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
+        //scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
         scenarioBackgroundGridWidget.setContent(model.getSimulation().cloneSimulation());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
