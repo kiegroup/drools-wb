@@ -24,6 +24,7 @@ import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -172,6 +173,10 @@ public class ScenarioSimulationContext {
 
     public ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
         return model.getScenarioHeaderTextBoxSingletonDOMElementFactory();
+    }
+
+    public ScenarioExpressionCellTextAreaSingletonDOMElementFactory getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
+        return model.getScenarioExpressionCellTextAreaSingletonDOMElementFactory();
     }
 
     /**

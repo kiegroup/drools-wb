@@ -47,6 +47,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGri
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -80,6 +81,7 @@ public class ScenarioGridModel extends BaseGridData {
     protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory;
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactory;
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory;
+    protected ScenarioExpressionCellTextAreaSingletonDOMElementFactory scenarioExpressionCellTextAreaSingletonDOMElementFactory;
 
     public ScenarioGridModel() {
     }
@@ -141,6 +143,14 @@ public class ScenarioGridModel extends BaseGridData {
 
     public void setScenarioHeaderTextBoxSingletonDOMElementFactory(ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactory) {
         this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactory;
+    }
+
+    public ScenarioExpressionCellTextAreaSingletonDOMElementFactory getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
+        return scenarioExpressionCellTextAreaSingletonDOMElementFactory;
+    }
+
+    public void setScenarioExpressionCellTextAreaSingletonDOMElementFactory(ScenarioExpressionCellTextAreaSingletonDOMElementFactory scenarioExpressionCellTextAreaSingletonDOMElementFactory) {
+        this.scenarioExpressionCellTextAreaSingletonDOMElementFactory = scenarioExpressionCellTextAreaSingletonDOMElementFactory;
     }
 
     /**

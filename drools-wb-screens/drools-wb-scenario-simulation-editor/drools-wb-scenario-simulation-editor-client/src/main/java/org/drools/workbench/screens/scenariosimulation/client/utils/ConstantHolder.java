@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.utils;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.MVEL_ESCAPE_SYMBOL;
+
 /**
  * Class used to store constants used throughout the code
  */
@@ -28,6 +30,7 @@ public class ConstantHolder {
     public static final String SAVE = "Save";
 
     public static final String EXPRESSION_INSTANCE_PLACEHOLDER = "Expression </>";
+    public static final String EXPRESSION_VALUE_PREFIX = MVEL_ESCAPE_SYMBOL + " ";
 
     // GWT doesn't support Java 8 LocalDate
     public static final String LOCALDATE_SIMPLE_NAME = "LocalDate";

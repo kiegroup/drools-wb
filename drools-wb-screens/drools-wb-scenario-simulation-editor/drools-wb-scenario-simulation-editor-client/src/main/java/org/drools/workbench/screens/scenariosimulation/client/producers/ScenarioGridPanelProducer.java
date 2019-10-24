@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioInvokeContextMenuForSelectedCell;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationKeyboardEditHandler;
@@ -93,6 +94,10 @@ public class ScenarioGridPanelProducer {
                 new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanel,
                                                                     scenarioGridLayer,
                                                                     scenarioGridLayer.getScenarioGrid()));
+        scenarioGridModel.setScenarioExpressionCellTextAreaSingletonDOMElementFactory(
+                new ScenarioExpressionCellTextAreaSingletonDOMElementFactory(scenarioGridPanel,
+                                                                             scenarioGridLayer,
+                                                                             scenarioGridLayer.getScenarioGrid()));
 
         final ScenarioSimulationKeyboardEditHandler scenarioSimulationKeyboardEditHandler =
                 new ScenarioSimulationKeyboardEditHandler(scenarioGridLayer);
