@@ -15,7 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -102,11 +102,10 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
-        List<String> propertyNameElements = new ArrayList<>();
-        propertyNameElements.add(alias);
+        List<String> propertyNameElements = Arrays.asList(alias);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
         propertyHeaderMetaData.setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        setPropertyMetaData(propertyHeaderMetaData, "Expression </>", false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertExpression());
+        setPropertyMetaData(propertyHeaderMetaData, ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER, false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertExpression());
         selectedColumn.setPropertyAssigned(true);
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,

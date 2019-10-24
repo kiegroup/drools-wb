@@ -24,7 +24,6 @@ import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Focusable;
 import org.drools.workbench.screens.scenariosimulation.client.events.InputEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.InputHandler;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.gwtbootstrap3.client.ui.TextArea;
@@ -69,21 +68,26 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
                                                                Style.Unit.PX);
         getContainer().getElement().getStyle().setPaddingTop(5,
                                                              Style.Unit.PX);
-        getContainer().getElement().getStyle().setPaddingBottom(5,
-                                                                Style.Unit.PX);
-        widget.addHandler(new InputHandler() {
-            @Override
-            public void onInput(InputEvent event) {
-                String value = getValue();
-                if (!value.startsWith("#")) {
-                    widget.setValue("#" + value.trim());
-                }
-            }
-        }, InputEvent.getType());
+        getContainer().getElement().getStyle().setPaddingBottom(5, Style.Unit.PX);
 
         DOM.sinkBitlessEvent(widget.getElement(), "input");
+        widget.addHandler(inputEvent -> checkExpressionSyntax(), InputEvent.getType());
+        widget.addFocusHandler(focusEvent -> this.checkExpressionSyntax());
 
         getContainer().setWidget(widget);
+    }
+
+    protected void checkExpressionSyntax() {
+        String value = getValue();
+        if (!value.startsWith("# ")) {
+            if (value.startsWith("#")) {
+                widget.setValue(value.replaceFirst("#", "# "));
+            } else if (value.startsWith(" ")) {
+                widget.setValue(value.replaceFirst(" ", "# "));
+            } else {
+                widget.setValue("# " + value);
+            }
+        }
     }
 
     public void setScenarioGridCell(ScenarioGridCell scenarioGridCell) {
