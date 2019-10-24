@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.factories;
 
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.DOM;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.ScenarioCellTextAreaDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.events.InputEvent;
@@ -48,6 +50,8 @@ public class ScenarioExpressionCellTextAreaSingletonDOMElementFactory extends Ab
         DOM.sinkBitlessEvent(textArea.getElement(), "input");
         textArea.addHandler(inputEvent -> checkExpressionSyntax(), InputEvent.getType());
         textArea.addFocusHandler(focusEvent -> checkExpressionSyntax());
+        textArea.addBlurHandler(blurEvent -> checkEmptyExpression());
+        textArea.addKeyDownHandler(this::checkEmptyExpression);
         return textArea;
     }
 
@@ -64,4 +68,15 @@ public class ScenarioExpressionCellTextAreaSingletonDOMElementFactory extends Ab
         }
     }
 
+    protected void checkEmptyExpression(KeyDownEvent event) {
+        if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+            checkEmptyExpression();
+        }
+    }
+
+    protected void checkEmptyExpression() {
+        if (getValue().trim().equals(MVEL_ESCAPE_SYMBOL)) {
+            widget.setValue(null);
+        }
+    }
 }
