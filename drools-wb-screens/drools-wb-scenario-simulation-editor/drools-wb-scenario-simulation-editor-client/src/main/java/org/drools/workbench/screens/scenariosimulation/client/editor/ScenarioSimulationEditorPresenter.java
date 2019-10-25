@@ -352,7 +352,6 @@ public class ScenarioSimulationEditorPresenter {
             simulation.replaceScesimData(index, scenarioWithIndex.getScesimData());
         }
         scenarioMainGridWidget.refreshContent(simulation);
-        scenarioBackgroundGridWidget.refreshContent(simulation.cloneScesimModel());
         context.getStatus().setSimulation(simulation);
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());

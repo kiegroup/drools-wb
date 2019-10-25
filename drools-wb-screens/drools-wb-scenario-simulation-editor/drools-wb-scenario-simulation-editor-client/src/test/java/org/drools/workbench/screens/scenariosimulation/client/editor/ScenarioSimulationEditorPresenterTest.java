@@ -633,7 +633,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(simulationMock, times(1)).replaceScesimData(eq(scenarioIndex), eq(scenario));
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioGridWidgetSpy, times(1)).refreshContent(eq(simulationMock));
-        verify(backgroundGridWidgetSpy, times(1)).refreshContent(isA(Simulation.class));
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandTestResultsDock();
         verify(dataManagementStrategyMock, times(1)).setModel(eq(scenarioSimulationModelMock));
         verify(testRunnerReportingPanelMock, times(1)).onTestRun(eq(testResultMessage));

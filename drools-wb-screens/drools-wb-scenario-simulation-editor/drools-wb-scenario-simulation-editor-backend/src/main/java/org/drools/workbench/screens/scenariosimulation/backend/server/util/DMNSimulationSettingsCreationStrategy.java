@@ -17,8 +17,10 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -174,7 +176,24 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         return dmnTypeService.retrieveFactModelTuple(context, dmnFilePath);
     }
 
-    private void addFactMapping(FactMappingExtractor factMappingExtractor, FactModelTree factModelTree, List<String> previousSteps, Map<String, FactModelTree> hiddenValues) {
+    protected void addFactMapping(FactMappingExtractor factMappingExtractor,
+                                 FactModelTree factModelTree,
+                                 List<String> previousSteps,
+                                 Map<String, FactModelTree> hiddenValues) {
+        internalAddToScenario(factMappingExtractor,
+                              factModelTree,
+                              previousSteps,
+                              hiddenValues,
+                              new HashSet<>());
+    }
+
+    protected void internalAddToScenario(FactMappingExtractor factMappingExtractor,
+                                         FactModelTree factModelTree,
+                                         List<String> readOnlyPreviousSteps,
+                                         Map<String, FactModelTree> hiddenValues,
+                                         Set<String> alreadyVisited) {
+
+        List<String> previousSteps = new ArrayList<>(readOnlyPreviousSteps);
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
 
@@ -203,12 +222,16 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
                     previousSteps.add(factModelTree.getFactName());
                 }
                 previousSteps.add(entry.getKey());
-                addFactMapping(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues);
+
+                if (!alreadyVisited.contains(nestedModelTree.getFactName())) {
+                    alreadyVisited.add(factModelTree.getFactName());
+                    internalAddToScenario(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues, alreadyVisited);
+                }
             }
         }
     }
 
-    static private class FactMappingExtractor {
+    public static class FactMappingExtractor {
 
         private final FactIdentifier factIdentifier;
         private final int row;
@@ -250,6 +273,17 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
             abstractScesimData.addMappingValue(factIdentifier, expressionIdentifier, null);
 
             return factMapping;
+        }
+    }
+
+    static private FactMappingType convert(Type modelTreeType) {
+        switch (modelTreeType) {
+            case INPUT:
+                return GIVEN;
+            case DECISION:
+                return EXPECT;
+            default:
+                throw new IllegalArgumentException("Impossible to map");
         }
     }
 }
