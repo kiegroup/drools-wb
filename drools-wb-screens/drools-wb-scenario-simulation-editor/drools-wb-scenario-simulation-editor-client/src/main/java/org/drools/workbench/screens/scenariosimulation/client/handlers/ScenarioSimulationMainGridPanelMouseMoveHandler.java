@@ -21,11 +21,11 @@ import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.types.Point2D;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
-import org.drools.scenariosimulation.api.model.Scenario;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
@@ -85,8 +85,9 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
                 errorReportPopupPresenter.isShown()) {
             return true;
         }
-        final Simulation simulation = scenarioGrid.getModel().getSimulation().orElseThrow(IllegalStateException::new);
-        final Scenario scenarioByIndex = simulation.getScesimDataByIndex(uiRowIndex);
+        final Optional<AbstractScesimModel<? extends AbstractScesimData>> abstractScesimModel = scenarioGrid.getModel().getAbstractScesimModel();
+        final AbstractScesimModel<? extends AbstractScesimData> simulation = abstractScesimModel.orElseThrow(IllegalStateException::new);
+        final AbstractScesimData scenarioByIndex = simulation.getScesimDataByIndex(uiRowIndex);
         final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {

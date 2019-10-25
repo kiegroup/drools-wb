@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -86,6 +87,21 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
         final String dmnFilePath = "test";
         doReturn(factModelTuple).when(dmnSimulationCreationStrategy).getFactModelTuple(any(), any());
         final Simulation retrieved = dmnSimulationCreationStrategy.createSimulation(pathMock, dmnFilePath);
+
+        assertNotNull(retrieved);
+        verify(dmnTypeServiceMock, never()).initializeNameAndNamespace(
+                any(Settings.class),
+                eq(pathMock),
+                eq(dmnFilePath));
+    }
+
+    @Test
+    public void createBackground() throws Exception {
+        FactModelTuple factModelTuple = getFactModelTuple();
+        final Path pathMock = mock(Path.class);
+        final String dmnFilePath = "test";
+        doReturn(factModelTuple).when(dmnSimulationCreationStrategy).getFactModelTuple(any(), any());
+        final Background retrieved = dmnSimulationCreationStrategy.createBackground(pathMock, dmnFilePath);
 
         assertNotNull(retrieved);
         verify(dmnTypeServiceMock, never()).initializeNameAndNamespace(

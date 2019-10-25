@@ -45,6 +45,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.PrependRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ReloadTestToolsCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.RunSingleScenarioCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.ScenarioGridWidgetFocusCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetGridCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetInstanceHeaderCommand;
@@ -67,6 +68,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridWidgetFocusEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetHeaderCellValueEvent;
@@ -91,6 +93,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.RedoEvent
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ReloadTestToolsEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.RunSingleScenarioEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridReloadEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioGridWidgetFocusEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioNotificationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetGridCellValueEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetHeaderCellValueEventHandler;
@@ -133,6 +136,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        ReloadTestToolsEventHandler,
                                                        RunSingleScenarioEventHandler,
                                                        ScenarioGridReloadEventHandler,
+                                                       ScenarioGridWidgetFocusEventHandler,
                                                        ScenarioNotificationEventHandler,
                                                        SetGridCellValueEventHandler,
                                                        SetHeaderCellValueEventHandler,
@@ -157,6 +161,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     protected ScenarioCommandRegistry scenarioCommandRegistry;
 
     protected ScenarioCommandManager scenarioCommandManager;
+
+    protected ScenarioSimulationContext context;
 
     public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -195,8 +201,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         this.scenarioCommandManager = scenarioCommandManager;
     }
 
-    private ScenarioSimulationContext getFocusedContext() {
-        return scenarioSimulationEditorPresenter.getFocusedContext();
+    public void setContext(ScenarioSimulationContext context) {
+        this.context = context;
     }
 
     @PreDestroy
@@ -206,82 +212,60 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(AppendColumnEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
-        commonExecution(context,
-                        new AppendColumnCommand(),
-                        true);
+        commonExecution(new AppendColumnCommand(), true);
     }
 
     @Override
     public void onEvent(AppendRowEvent event) {
-        commonExecution(getFocusedContext(),
-                        new AppendRowCommand(),
-                        true);
+        commonExecution( new AppendRowCommand(), true);
     }
 
     @Override
     public void onEvent(DeleteColumnEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setColumnGroup(event.getColumnGroup());
         context.getStatus().setDisable(true);
         context.getStatus().setOpenDock(false);
         context.getStatus().setAsProperty(event.isAsProperty());
-        commonExecution(context,
-                        new DeleteColumnCommand(),
-                        true);
+        commonExecution( new DeleteColumnCommand(), true);
     }
 
     @Override
     public void onEvent(DeleteRowEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context,
-                        new DeleteRowCommand(),
-                        true);
+        commonExecution( new DeleteRowCommand(), true);
     }
 
     @Override
     public void onEvent(DisableTestToolsEvent event) {
-        commonExecution(getFocusedContext(),
-                        new DisableTestToolsCommand(),
-                        false);
+        commonExecution( new DisableTestToolsCommand(), false);
     }
 
     @Override
     public void onEvent(DuplicateInstanceEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(true);
         context.getStatus().setAsProperty(false);
         context.getStatus().setFullPackage(
-                ((ScenarioGridColumn) context.getModel().getSelectedColumn()).getFactIdentifier().getPackageWithoutClassName());
-        commonExecution(context,
-                        new DuplicateInstanceCommand(),
-                        true);
+                ((ScenarioGridColumn) context.getSelectedScenarioGridModel().getSelectedColumn()).getFactIdentifier().getPackageWithoutClassName());
+        commonExecution( new DuplicateInstanceCommand(), true);
     }
 
     @Override
     public void onEvent(DuplicateRowEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context,
-                        new DuplicateRowCommand(),
-                        true);
+        commonExecution(new DuplicateRowCommand(), true);
     }
 
     @Override
     public void onEvent(EnableTestToolsEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setFilterTerm(event.getFilterTerm());
         context.getStatus().setPropertyNameElements(event.getPropertyNameElements());
         context.getStatus().setNotEqualsSearch(event.isNotEqualsSearch());
-        commonExecution(context,
-                        new EnableTestToolsCommand(),
-                        false);
+        commonExecution(new EnableTestToolsCommand(), false);
     }
 
     @Override
@@ -289,9 +273,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         org.uberfire.mvp.Command okImportCommand = () -> {
             ImportCommand importCommand = new ImportCommand();
             importCommand.setFileContent(fileUploadPopupPresenter.getFileContents());
-            commonExecution(getFocusedContext(),
-                            importCommand,
-                            false);
+            commonExecution( importCommand, false);
         };
         fileUploadPopupPresenter.show(Collections.singletonList(CSV.getExtension()),
                                       ScenarioSimulationEditorConstants.INSTANCE.selectImportFile(),
@@ -301,45 +283,34 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(InsertColumnEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setRight(event.isRight());
         context.getStatus().setAsProperty(event.isAsProperty());
-        commonExecution(context,
-                        new InsertColumnCommand(),
-                        true);
+        commonExecution(new InsertColumnCommand(), true);
     }
 
     @Override
     public void onEvent(InsertRowEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context,
-                        new InsertRowCommand(),
-                        true);
+        commonExecution( new InsertRowCommand(),true);
     }
 
     @Override
     public void onEvent(PrependColumnEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setColumnId(String.valueOf(new Date().getTime()));
         context.getStatus().setColumnGroup(event.getColumnGroup());
-        commonExecution(context,
-                        new PrependColumnCommand(),
-                        true);
+        commonExecution(new PrependColumnCommand(),true);
     }
 
     @Override
     public void onEvent(PrependRowEvent event) {
-        commonExecution(getFocusedContext(),
-                        new PrependRowCommand(),
-                        true);
+        commonExecution(new PrependRowCommand(), true);
     }
 
     @Override
     public void onEvent(RedoEvent event) {
-        final CommandResult<ScenarioSimulationViolation> status = scenarioCommandRegistry.redo(getFocusedContext());
+        final CommandResult<ScenarioSimulationViolation> status = scenarioCommandRegistry.redo(context);
         if (Objects.equals(CommandResult.Type.ERROR, status.getType())) {
             commonNotifyError(status, ScenarioSimulationEditorConstants.INSTANCE.redo());
         }
@@ -347,26 +318,25 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(ReloadTestToolsEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setDisable(event.isDisable());
         context.getStatus().setOpenDock(event.isOpenDock());
-        commonExecution(context,
-                        new ReloadTestToolsCommand(),
-                        false);
+        commonExecution( new ReloadTestToolsCommand(), false);
     }
 
     @Override
     public void onEvent(RunSingleScenarioEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
-        commonExecution(context,
-                        new RunSingleScenarioCommand(),
-                        false);
+        commonExecution(new RunSingleScenarioCommand(), false);
     }
 
     @Override
     public void handle(ScenarioGridReloadEvent event) {
-        getFocusedContext().getScenarioGridPanel().onResize();
+        context.getSelectedScenarioGridPanel().onResize();
+    }
+
+    @Override
+    public void onEvent(ScenarioGridWidgetFocusEvent event) {
+        commonExecution(new ScenarioGridWidgetFocusCommand(event.getFocused(), event.getUnFocused()), false);
     }
 
     @Override
@@ -376,38 +346,31 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetGridCellValueEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setGridCellValue(event.getCellValue());
-        commonExecution(context,
-                        new SetGridCellValueCommand(),
-                        false);
+        commonExecution(new SetGridCellValueCommand(),false);
     }
 
     @Override
     public void onEvent(SetHeaderCellValueEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
         context.getStatus().setRowIndex(event.getRowIndex());
         context.getStatus().setColumnIndex(event.getColumnIndex());
         context.getStatus().setHeaderCellValue(event.getHeaderCellValue());
-        commonExecution(context,
-                        new SetHeaderCellValueCommand(event.isInstanceHeader(), event.isPropertyHeader()),
-                        false);
+        commonExecution(new SetHeaderCellValueCommand(event.isInstanceHeader(), event.isPropertyHeader()),false);
     }
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
-        if (context.getModel().isSameInstanceType(event.getClassName())) {
+        if (context.getSelectedScenarioGridModel().isSameInstanceType(event.getClassName())) {
             return;
         }
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
-        if (((ScenarioGridColumn) context.getModel().getSelectedColumn()).isInstanceAssigned()) {
-            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context,
-                                                                               new SetInstanceHeaderCommand(),
-                                                                               true);
+        if (((ScenarioGridColumn) context.getSelectedScenarioGridModel().getSelectedColumn()).isInstanceAssigned()) {
+            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(
+                    new SetInstanceHeaderCommand(),
+                    true);
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1(),
@@ -416,19 +379,16 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.changeType(),
                                       okPreserveCommand);
         } else {
-            commonExecution(context,
-                            new SetInstanceHeaderCommand(),
-                            true);
+            commonExecution(new SetInstanceHeaderCommand(),true);
         }
     }
 
     @Override
     public void onEvent(SetPropertyHeaderEvent event) {
-        ScenarioSimulationContext context = getFocusedContext();
-        if (context.getModel().getSelectedColumn() == null) {
+        if (context.getSelectedScenarioGridModel().getSelectedColumn() == null) {
             return;
         }
-        if (context.getModel().isAlreadyAssignedProperty(event.getPropertyNameElements())) {
+        if (context.getSelectedScenarioGridModel().isAlreadyAssignedProperty(event.getPropertyNameElements())) {
             String value = String.join(".", event.getPropertyNameElements());
             onEvent(new ScenarioNotificationEvent("Property \"" + value + "\" already assigned", NotificationEvent.NotificationType.ERROR));
             return;
@@ -436,24 +396,18 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setPropertyNameElements(event.getPropertyNameElements());
         context.getStatus().setValueClassName(event.getValueClassName());
-        if (context.getModel().isSelectedColumnEmpty()) {
-            commonExecution(context,
-                            new SetPropertyHeaderCommand(),
-                            true);
-        } else if (context.getModel().isSameSelectedColumnProperty(event.getPropertyNameElements())) {
+        if (context.getSelectedScenarioGridModel().isSelectedColumnEmpty()) {
+            commonExecution(new SetPropertyHeaderCommand(),true);
+        } else if (context.getSelectedScenarioGridModel().isSameSelectedColumnProperty(event.getPropertyNameElements())) {
             return;
-        } else if (context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
+        } else if (context.getSelectedScenarioGridModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okDeleteCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(context,
-                                new SetPropertyHeaderCommand(),
-                                true);
+                commonExecution(new SetPropertyHeaderCommand(),true);
             };
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(true);
-                commonExecution(context,
-                                new SetPropertyHeaderCommand(),
-                                true);
+                commonExecution(new SetPropertyHeaderCommand(),true);
             };
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
@@ -465,12 +419,10 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                               ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                               okPreserveCommand,
                                               okDeleteCommand);
-        } else if (!context.getModel().isSameSelectedColumnType(event.getValueClassName())) {
+        } else if (!context.getSelectedScenarioGridModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(context,
-                                new SetPropertyHeaderCommand(),
-                                true);
+                commonExecution(new SetPropertyHeaderCommand(),true);
             };
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
@@ -484,7 +436,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(UndoEvent event) {
-        final CommandResult<ScenarioSimulationViolation> status = scenarioCommandRegistry.undo(getFocusedContext());
+        final CommandResult<ScenarioSimulationViolation> status = scenarioCommandRegistry.undo(context);
         if (Objects.equals(CommandResult.Type.ERROR, status.getType())) {
             commonNotifyError(status, ScenarioSimulationEditorConstants.INSTANCE.undo());
         }
@@ -499,11 +451,10 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
      * Common method to execute the given <code>Command</code> inside the given <code>ScenarioSimulationContext</code>
      * If successful, it adds the command to the <code>ScenarioCommandRegistry</code>, otherwise it fire a new <code>ScenarioNotificationEvent</code>
      * with error details
-     * @param context
      * @param command
+     * @param focusGridAfterExecution
      */
-    protected void commonExecution(final ScenarioSimulationContext context,
-                                   final AbstractScenarioSimulationCommand command,
+    protected void commonExecution(final AbstractScenarioSimulationCommand command,
                                    final boolean focusGridAfterExecution) {
         final CommandResult<ScenarioSimulationViolation> status = scenarioCommandManager.execute(context, command);
         if (Objects.equals(CommandResult.Type.ERROR, status.getType())) {
@@ -516,7 +467,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else if (Objects.equals(CommandResultBuilder.SUCCESS, status) && command.isUndoable()) {
             scenarioCommandRegistry.register(context, command);
             if (focusGridAfterExecution) {
-                context.getScenarioGridPanel().setFocus(true);
+                context.getSelectedScenarioGridPanel().setFocus(true);
             }
         }
     }
@@ -551,6 +502,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(ReloadTestToolsEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(RunSingleScenarioEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioGridReloadEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ScenarioGridWidgetFocusEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ScenarioNotificationEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetGridCellValueEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(SetHeaderCellValueEvent.TYPE, this));

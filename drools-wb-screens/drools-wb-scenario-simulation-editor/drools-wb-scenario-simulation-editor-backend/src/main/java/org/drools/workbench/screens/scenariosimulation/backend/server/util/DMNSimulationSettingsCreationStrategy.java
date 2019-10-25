@@ -24,11 +24,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Settings;
@@ -50,12 +52,23 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     @Inject
     protected DMNTypeService dmnTypeService;
 
+    static private FactMappingType convert(Type modelTreeType) {
+        switch (modelTreeType) {
+            case INPUT:
+                return GIVEN;
+            case DECISION:
+                return EXPECT;
+            default:
+                throw new IllegalArgumentException("Impossible to map");
+        }
+    }
+
     @Override
     public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        ScenarioWithIndex scenarioWithIndex = createScenario(toReturn, simulationDescriptor);
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
 
         AtomicInteger id = new AtomicInteger(1);
         final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
@@ -68,11 +81,34 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         }).forEach(factModelTree -> {
             FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
             FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, scenarioWithIndex.getIndex(), id, convert(factModelTree.getType()), simulationDescriptor, scenarioWithIndex.getScesimData());
-            addToScenario(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
+            addFactMapping(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
         });
 
         addEmptyColumnsIfNeeded(toReturn, scenarioWithIndex);
 
+        return toReturn;
+    }
+
+    @Override
+    public Background createBackground(Path context, String dmnFilePath) throws Exception {
+        final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
+        Background toReturn = new Background();
+        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
+
+        AtomicInteger id = new AtomicInteger(1);
+        final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
+        final Map<String, FactModelTree> hiddenValues = factModelTuple.getHiddenFacts();
+
+        visibleFactTrees.stream().sorted((a, b) -> {
+            Type aType = a.getType();
+            Type bType = b.getType();
+            return aType.equals(bType) ? 0 : (Type.INPUT.equals(aType) ? -1 : 1);
+        }).forEach(factModelTree -> {
+            FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
+            FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, backgroundDataWithIndex.getIndex(), id, convert(factModelTree.getType()), simulationDescriptor, backgroundDataWithIndex.getScesimData());
+            addFactMapping(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
+        });
         return toReturn;
     }
 
@@ -138,7 +174,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         return dmnTypeService.retrieveFactModelTuple(context, dmnFilePath);
     }
 
-    private void addToScenario(FactMappingExtractor factMappingExtractor, FactModelTree factModelTree, List<String> previousSteps, Map<String, FactModelTree> hiddenValues) {
+    private void addFactMapping(FactMappingExtractor factMappingExtractor, FactModelTree factModelTree, List<String> previousSteps, Map<String, FactModelTree> hiddenValues) {
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
 
@@ -167,7 +203,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
                     previousSteps.add(factModelTree.getFactName());
                 }
                 previousSteps.add(entry.getKey());
-                addToScenario(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues);
+                addFactMapping(factMappingExtractor, nestedModelTree, previousSteps, hiddenValues);
             }
         }
     }
@@ -179,15 +215,15 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         private final AtomicInteger id;
         private final FactMappingType type;
         private final SimulationDescriptor simulationDescriptor;
-        private final Scenario scenario;
+        private final AbstractScesimData abstractScesimData;
 
-        public FactMappingExtractor(FactIdentifier factIdentifier, int row, AtomicInteger id, FactMappingType type, SimulationDescriptor simulationDescriptor, Scenario scenario) {
+        public FactMappingExtractor(FactIdentifier factIdentifier, int row, AtomicInteger id, FactMappingType type, SimulationDescriptor simulationDescriptor, AbstractScesimData abstractScesimData) {
             this.factIdentifier = factIdentifier;
             this.row = row;
             this.id = id;
             this.type = type;
             this.simulationDescriptor = simulationDescriptor;
-            this.scenario = scenario;
+            this.abstractScesimData = abstractScesimData;
         }
 
         public FactMapping getFactMapping(FactModelTree factModelTree, String propertyName, List<String> previousSteps, String factType) {
@@ -211,20 +247,9 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
             if (previousSteps.isEmpty()) {
                 factMapping.addExpressionElement(factModelTree.getFactName(), factType);
             }
-            scenario.addMappingValue(factIdentifier, expressionIdentifier, null);
+            abstractScesimData.addMappingValue(factIdentifier, expressionIdentifier, null);
 
             return factMapping;
-        }
-    }
-
-    static private FactMappingType convert(Type modelTreeType) {
-        switch (modelTreeType) {
-            case INPUT:
-                return GIVEN;
-            case DECISION:
-                return EXPECT;
-            default:
-                throw new IllegalArgumentException("Impossible to map");
         }
     }
 }

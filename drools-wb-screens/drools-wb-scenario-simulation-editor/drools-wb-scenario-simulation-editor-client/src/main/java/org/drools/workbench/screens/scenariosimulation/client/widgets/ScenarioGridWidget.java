@@ -15,19 +15,22 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import com.google.gwt.user.client.ui.ResizeComposite;
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 
-public class ScenarioGridWidget extends ResizeComposite {
+public class ScenarioGridWidget extends FocusWidget implements RequiresResize /*ResizeComposite implements FocusHandler*/ {
 
-    private ScenarioGridPanel scenarioGridPanel;
+    protected ScenarioGridPanel scenarioGridPanel;
 
-    public void setContent(Simulation simulation, ScenarioSimulationModel.Type type) {
-        scenarioGridPanel.getScenarioGrid().setContent(simulation, type);
+    protected boolean selected;
+
+    public void setContent(AbstractScesimModel abstractScesimModel, ScenarioSimulationModel.Type type) {
+        scenarioGridPanel.getScenarioGrid().setContent(abstractScesimModel, type);
     }
 
     public ScenarioGridPanel getScenarioGridPanel() {
@@ -36,15 +39,14 @@ public class ScenarioGridWidget extends ResizeComposite {
 
     public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
         this.scenarioGridPanel = scenarioGridPanel;
-        initWidget(scenarioGridPanel);
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {
         return scenarioGridPanel.getScenarioGrid().getScenarioSimulationContext();
     }
 
-    public void refreshContent(Simulation simulation) {
-        scenarioGridPanel.getScenarioGrid().getModel().bindContent(simulation);
+    public void refreshContent(AbstractScesimModel abstractScesimModel) {
+        scenarioGridPanel.getScenarioGrid().getModel().bindContent(abstractScesimModel);
         scenarioGridPanel.getScenarioGrid().getModel().refreshErrors();
         onResize();
     }
@@ -61,16 +63,22 @@ public class ScenarioGridWidget extends ResizeComposite {
         scenarioGridPanel.getScenarioGrid().getModel().resetErrors();
     }
 
-    public ScenarioGridModel getModel() {
+    public AbstractScesimGridModel getModel() {
         return scenarioGridPanel.getScenarioGrid().getModel();
     }
 
     public void select() {
         scenarioGridPanel.getScenarioGrid().select();
+        selected = true;
     }
 
     public void deselect() {
         scenarioGridPanel.getScenarioGrid().deselect();
+        selected = false;
+    }
+
+    public boolean isSelected() {
+        return selected;
     }
 
     @Override
@@ -83,4 +91,9 @@ public class ScenarioGridWidget extends ResizeComposite {
         }
         scenarioGridPanel.onResize();
     }
+//
+//    protected FocusHandler getFocusHandler(EventBus eventBus, ScenarioGridWidget scenarioGridWidget) {
+//        return event -> eventBus.fireEvent(new ScenarioGridWidgetFocusEvent(scenarioGridWidget));
+//    }
+
 }

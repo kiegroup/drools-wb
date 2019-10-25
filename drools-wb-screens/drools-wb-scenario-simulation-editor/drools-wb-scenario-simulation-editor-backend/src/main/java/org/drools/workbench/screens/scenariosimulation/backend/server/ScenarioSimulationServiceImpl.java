@@ -171,6 +171,7 @@ public class ScenarioSimulationServiceImpl
     public Path create(Path context, String fileName, ScenarioSimulationModel content, String comment, Type type, String value) {
         try {
             content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
+            content.setBackground(scenarioSimulationBuilder.createBackground(context, type, value));
             content.setSettings(scenarioSimulationBuilder.createSettings(type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);

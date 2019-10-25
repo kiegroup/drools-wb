@@ -148,7 +148,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
         gridCellSupplier = () -> gridCellMock;
         scenarioGridModel = spy(new ScenarioGridModel(false) {
             {
-                this.simulation = simulationMock;
+                this.abstractScesimModel = simulationMock;
                 this.eventBus = eventBusMock;
                 this.rows = GRID_ROWS;
                 this.columns = gridColumns;
@@ -171,7 +171,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void bindContent() {
-        assertTrue(scenarioGridModel.getSimulation().isPresent());
+        assertTrue(scenarioGridModel.getAbstractScesimModel().isPresent());
     }
 
     @Test
@@ -616,7 +616,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
     public void resetError() {
         scenarioGridModel = spy(new ScenarioGridModel(false) {
             {
-                this.simulation = simulationMock;
+                this.abstractScesimModel = simulationMock;
                 this.eventBus = eventBusMock;
                 this.rows = GRID_ROWS;
                 this.columns = gridColumns;

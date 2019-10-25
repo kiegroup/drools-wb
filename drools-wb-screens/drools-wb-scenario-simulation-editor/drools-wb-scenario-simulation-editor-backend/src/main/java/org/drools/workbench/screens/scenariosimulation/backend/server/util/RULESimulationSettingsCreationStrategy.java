@@ -17,6 +17,8 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.Settings;
@@ -34,7 +36,7 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
     public Simulation createSimulation(Path context, String value) throws Exception {
         Simulation toReturn = new Simulation();
         SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
-        ScenarioWithIndex scenarioWithIndex = createScenario(toReturn, simulationDescriptor);
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
 
         // Add GIVEN Fact
         createEmptyColumn(simulationDescriptor,
@@ -48,6 +50,21 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
                           scenarioWithIndex,
                           2,
                           EXPECT,
+                          simulationDescriptor.getFactMappings().size());
+        return toReturn;
+    }
+
+    @Override
+    public Background createBackground(Path context, String dmnFilePath) throws Exception {
+        Background toReturn = new Background();
+        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
+
+        // Add GIVEN Fact
+        createEmptyColumn(simulationDescriptor,
+                          backgroundDataWithIndex,
+                          1,
+                          GIVEN,
                           simulationDescriptor.getFactMappings().size());
         return toReturn;
     }

@@ -115,9 +115,9 @@ public abstract class AbstractDataManagementStrategyTest extends AbstractScenari
         List<List<String>> retrieved = abstractDataManagementStrategySpy.getPropertiesToHide(gridColumnMock, scenarioGridModelMock);
         if (isPropertyAssigned) {
             assertTrue(retrieved.isEmpty());
-            verify(scenarioGridModelMock, never()).getSimulation();
+            verify(scenarioGridModelMock, never()).getAbstractScesimModel();
         } else {
-            verify(scenarioGridModelMock, times(1)).getSimulation();
+            verify(scenarioGridModelMock, times(1)).getAbstractScesimModel();
             verify(scenarioGridModelMock, times(1)).getInstanceScenarioGridColumns(eq(gridColumnMock));
         }
         reset(scenarioGridModelMock);

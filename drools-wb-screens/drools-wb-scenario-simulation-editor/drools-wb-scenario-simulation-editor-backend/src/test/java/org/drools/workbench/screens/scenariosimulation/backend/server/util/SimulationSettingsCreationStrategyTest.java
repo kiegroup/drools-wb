@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -46,6 +47,11 @@ public class SimulationSettingsCreationStrategyTest {
         SimulationSettingsCreationStrategy simulationSettingsCreationStrategy = new SimulationSettingsCreationStrategy() {
             @Override
             public Simulation createSimulation(Path context, String value) throws Exception {
+                return null;
+            }
+
+            @Override
+            public Background createBackground(Path context, String dmnFilePath) throws Exception {
                 return null;
             }
 

@@ -41,6 +41,7 @@ import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsS
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridWidgetFocusEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
@@ -169,14 +170,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setup() {
         super.setup();
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-        when(scenarioSimulationViewMock.getScenarioGridWidget()).thenReturn(scenarioGridWidgetMock);
+        when(scenarioSimulationViewMock.getScenarioGridWidget()).thenReturn(scenarioGridWidgetSpy);
         when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioSimulationProducerMock.getScenarioSimulationView()).thenReturn(scenarioSimulationViewMock);
-        when(scenarioSimulationProducerMock.getScenarioBackgroundGridWidget()).thenReturn(backgroundGridWidgetMock);
-        when(backgroundGridWidgetMock.getScenarioSimulationContext()).thenReturn(contextMock);
-        when(scenarioGridWidgetMock.getScenarioSimulationContext()).thenReturn(contextMock);
-        when(backgroundGridWidgetMock.getScenarioSimulationContext()).thenReturn(contextMock);
+        when(scenarioSimulationProducerMock.getScenarioBackgroundGridWidget()).thenReturn(backgroundGridWidgetSpy);
+        when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(contextMock);
+        when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(contextMock);
+        when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(contextMock);
         when(placeRequestMock.getIdentifier()).thenReturn(ScenarioSimulationEditorPresenter.IDENTIFIER);
         when(testToolsViewMock.getPresenter()).thenReturn(testToolsPresenterMock);
         when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
@@ -198,7 +199,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.path = pathMock;
                 this.packageName = SCENARIO_PACKAGE;
                 this.eventBus = eventBusMock;
-                this.focusedContext = contextMock;
+                this.context = contextMock;
                 this.dataManagementStrategy = dataManagementStrategyMock;
                 this.model = scenarioSimulationModelMock;
                 this.testRunnerReportingPanel = testRunnerReportingPanelMock;
@@ -239,11 +240,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(testRunnerReportingPanelMock, times(1)).reset();
     }
 
-    @Test
-    public void setFocusedContext() {
-        presenter.setFocusedContext(contextMock);
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
-    }
+//    @Test
+//    public void setFocusedContext() {
+//        presenter.setFocusedContext(contextMock);
+//        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+//    }
 
     @Test
     public void setSaveEnabledTrue() {
@@ -309,8 +310,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onClose() {
         presenter.onClose();
-        verify(scenarioGridWidgetMock, times(1)).unregister();
-        verify(backgroundGridWidgetMock, times(1)).unregister();
+        verify(scenarioGridWidgetSpy, times(1)).unregister();
+        verify(backgroundGridWidgetSpy, times(1)).unregister();
     }
 
     @Test
@@ -343,8 +344,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void hideDocks() {
         presenter.hideDocks();
         verify(scenarioSimulationDocksHandlerMock).removeDocks();
-        verify(scenarioGridWidgetMock, times(1)).clearSelections();
-        verify(backgroundGridWidgetMock, times(1)).clearSelections();
+        verify(scenarioGridWidgetSpy, times(1)).clearSelections();
+        verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(presenter).unRegisterTestToolsCallback();
         verify(presenter).clearTestToolsStatus();
     }
@@ -384,7 +385,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
         presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
         presenter.onRunScenario(indexList);
-        verify(scenarioGridWidgetMock, times(1)).resetErrors();
+        verify(scenarioGridWidgetSpy, times(1)).resetErrors();
         verify(scenarioSimulationModelMock, times(1)).setSimulation(simulationMock);
         verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
         verify(scenarioSimulationEditorWrapper, times(1)).onRunScenario(any(), any(), any(), eq(settingsLocal), scenarioWithIndexCaptor.capture());
@@ -631,8 +632,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(simulationMock, times(1)).replaceScesimData(eq(scenarioIndex), eq(scenario));
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
-        verify(scenarioGridWidgetMock, times(1)).refreshContent(eq(simulationMock));
-        verify(backgroundGridWidgetMock, times(1)).refreshContent(isA(Simulation.class));
+        verify(scenarioGridWidgetSpy, times(1)).refreshContent(eq(simulationMock));
+        verify(backgroundGridWidgetSpy, times(1)).refreshContent(isA(Simulation.class));
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandTestResultsDock();
         verify(dataManagementStrategyMock, times(1)).setModel(eq(scenarioSimulationModelMock));
         verify(testRunnerReportingPanelMock, times(1)).onTestRun(eq(testResultMessage));
@@ -661,21 +662,23 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onEditTabSelected() {
         presenter.onEditTabSelected();
-        verify(presenter, times(1)).setFocusedContext(eq(contextMock));
+        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(true));
-        verify(scenarioGridWidgetMock, times(1)).clearSelections();
-        verify(scenarioGridWidgetMock, times(1)).select();
-        verify(backgroundGridWidgetMock, times(1)).deselect();
+        verify(scenarioGridWidgetSpy, times(1)).clearSelections();
+        verify(scenarioGridWidgetSpy, times(1)).select();
+        verify(backgroundGridWidgetSpy, times(1)).deselect();
+        verify(eventBusMock, times(1)).fireEvent(isA(ScenarioGridWidgetFocusEvent.class));
     }
 
     @Test
     public void onBackGroundTabSelected() {
         presenter.onBackGroundTabSelected();
-        verify(presenter, times(1)).setFocusedContext(eq(contextMock));
+        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
-        verify(backgroundGridWidgetMock, times(1)).clearSelections();
-        verify(backgroundGridWidgetMock, times(1)).select();
-        verify(scenarioGridWidgetMock, times(1)).deselect();
+        verify(backgroundGridWidgetSpy, times(1)).clearSelections();
+        verify(backgroundGridWidgetSpy, times(1)).select();
+        verify(scenarioGridWidgetSpy, times(1)).deselect();
+        verify(eventBusMock, times(1)).fireEvent(isA(ScenarioGridWidgetFocusEvent.class));
     }
 
     @Test
@@ -790,8 +793,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
         verify(presenter, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
         verify(presenter, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
-        verify(scenarioGridWidgetMock, times(1)).setContent(eq(content.getModel().getSimulation()), eq(scenarioSimulationContextLocal.getSettings().getType()));
-        verify(scenarioSimulationEditorWrapper, times(1)).addBackgroundPage(eq(backgroundGridWidgetMock));
+        verify(scenarioGridWidgetSpy, times(1)).setContent(eq(content.getModel().getSimulation()), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(scenarioSimulationEditorWrapper, times(1)).addBackgroundPage(eq(backgroundGridWidgetSpy));
         // TODO {gcardosi} restore after correction on presenter
 //        verify(scenarioBackgroundGridWidgetMock, times(1)).setContent(isA(Simulation.class), eq(scenarioSimulationContextLocal.getSettings().getType()));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));

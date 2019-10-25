@@ -20,6 +20,7 @@ import java.util.Set;
 
 import javax.inject.Named;
 
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -182,6 +183,8 @@ public class ScenarioSimulationServiceImplTest {
         when(ioServiceMock.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(false);
         when(packageMock.getPackageTestSrcPath()).thenReturn(path);
         when(scenarioSimulationBuilderMock.createSimulation(any(), any(), any())).thenReturn(new Simulation());
+        when(scenarioSimulationBuilderMock.createBackground(any(), any(), any())).thenReturn(new Background());
+        when(scenarioSimulationBuilderMock.createSettings(any(), any())).thenReturn(new Settings());
         service.scenarioSimulationBuilder = scenarioSimulationBuilderMock;
     }
 
@@ -269,6 +272,8 @@ public class ScenarioSimulationServiceImplTest {
         doReturn(false).when(ioServiceMock).exists(any());
         ScenarioSimulationModel model = new ScenarioSimulationModel();
         assertNull(model.getSimulation());
+        assertNull(model.getBackground());
+        assertNull(model.getSettings());
         final Path returnPath = service.create(this.path,
                                                "test.scesim",
                                                model,
@@ -278,6 +283,8 @@ public class ScenarioSimulationServiceImplTest {
 
         assertNotNull(returnPath);
         assertNotNull(model.getSimulation());
+        assertNotNull(model.getBackground());
+        assertNotNull(model.getSettings());
         verify(ioServiceMock, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
                                               anyString(),
                                               any(CommentedOption.class));
@@ -288,6 +295,8 @@ public class ScenarioSimulationServiceImplTest {
         doReturn(false).when(ioServiceMock).exists(any());
         ScenarioSimulationModel model = new ScenarioSimulationModel();
         assertNull(model.getSimulation());
+        assertNull(model.getBackground());
+        assertNull(model.getSettings());
         final Path returnPath = service.create(this.path,
                                                "test.scesim",
                                                model,
@@ -297,6 +306,8 @@ public class ScenarioSimulationServiceImplTest {
 
         assertNotNull(returnPath);
         assertNotNull(model.getSimulation());
+        assertNotNull(model.getBackground());
+        assertNotNull(model.getSettings());
         verify(ioServiceMock, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
                                               anyString(),
                                               any(CommentedOption.class));

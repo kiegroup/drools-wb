@@ -36,7 +36,7 @@ public interface ScenarioSimulationEditorConstants
 
     String contextColumnHeader();
 
-    String addScesimDataSimulation();
+    String addScenarioSimulation();
 
     String scenarioSimulationEditorTitle();
 

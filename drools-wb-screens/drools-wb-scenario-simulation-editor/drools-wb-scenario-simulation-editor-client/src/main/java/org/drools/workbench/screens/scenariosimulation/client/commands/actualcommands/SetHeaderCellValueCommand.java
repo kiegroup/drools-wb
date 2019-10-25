@@ -53,13 +53,13 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
         } else if (isPropertyHeader) {
             validatePropertyHeader(context, headerCellValue, status.getColumnIndex());
         }
-        context.getModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
+        context.getSelectedScenarioGridModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
     }
 
     protected void validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
         List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean isADataType = !headerCellValue.endsWith(".") && instanceNameElements.size() == 1 && context.getDataObjectFieldsMap().containsKey(instanceNameElements.get(0));
-        context.getModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
+        context.getSelectedScenarioGridModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
     protected void validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
@@ -68,7 +68,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();
         final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
         boolean isPropertyType = !headerCellValue.endsWith(".") && factModelTree != null && recursivelyFindIsPropertyType(context, factModelTree, propertyNameElements);
-        context.getModel().validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
+        context.getSelectedScenarioGridModel().validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
     }
 
     protected boolean recursivelyFindIsPropertyType(ScenarioSimulationContext context, FactModelTree factModelTree, List<String> propertyNameElements) {

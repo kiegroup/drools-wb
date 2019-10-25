@@ -123,7 +123,7 @@ public class ScenarioGridTest {
     @Before
     public void setup() {
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
-        when(scenarioGridModelMock.getSimulation()).thenReturn(Optional.of(simulation));
+        when(scenarioGridModelMock.getAbstractScesimModel()).thenReturn(Optional.of(simulation));
         factIdentifierGiven = new FactIdentifier("GIVEN", "GIVEN");
         factIdentifierInteger = new FactIdentifier("Integer", "java.lang.Integer");
         factMappingDescription = new FactMapping(EXPRESSION_ALIAS_DESCRIPTION, FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);

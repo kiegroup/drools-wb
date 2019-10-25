@@ -16,20 +16,25 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.mvp.PlaceRequest;
@@ -42,9 +47,8 @@ public class ScenarioSimulationContext {
     private static final AtomicLong COUNTER_ID = new AtomicLong();
     private static final AtomicLong STATUS_COUNTER_ID = new AtomicLong();
 
-    protected ScenarioGridModel model;
-    protected ScenarioGridPanel scenarioGridPanel;
-    protected ScenarioGridLayer scenarioGridLayer;
+    final protected ScenarioGridWidget simulationGridWidget;
+    final protected ScenarioGridWidget backgroundGridWidget;
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
@@ -79,14 +83,13 @@ public class ScenarioSimulationContext {
     private final long id;
 
     /**
-     * This constructor set <code>ScenarioGridPanel</code>, <code>ScenarioGridLayer</code> and <code>ScenarioGridModel</code>
-     * from the give <code>ScenarioGridPanel</code>
-     * @param scenarioGridPanel
+     * This constructor set the <b>Simulation</b> and <b>Background</b> <code>ScenarioGridWidget</code>s
+     * @param simulationGridWidget
+     * @param backgroundGridWidget
      */
-    public ScenarioSimulationContext(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
-        this.scenarioGridLayer = scenarioGridPanel.getScenarioGridLayer();
-        this.model = scenarioGridLayer.getScenarioGrid().getModel();
+    public ScenarioSimulationContext(ScenarioGridWidget simulationGridWidget, ScenarioGridWidget backgroundGridWidget) {
+        this.simulationGridWidget = simulationGridWidget;
+        this.backgroundGridWidget = backgroundGridWidget;
         id = COUNTER_ID.getAndIncrement();
     }
 
@@ -130,16 +133,36 @@ public class ScenarioSimulationContext {
         this.dataObjectsInstancesName = dataObjectsInstancesName;
     }
 
-    public ScenarioGridPanel getScenarioGridPanel() {
-        return scenarioGridPanel;
+    public ScenarioGridWidget getSelectedScenarioGridWidget() {
+        if (backgroundGridWidget.isSelected() && simulationGridWidget.isSelected()) {
+            throw new IllegalStateException("Simulation and Background grids can not be selected at the same time");
+        }
+        if (!backgroundGridWidget.isSelected() && !simulationGridWidget.isSelected()) {
+            // let set the simulation grid as default
+            return simulationGridWidget;
+        }
+        // return the actually selected grid
+        return backgroundGridWidget.isSelected() ? backgroundGridWidget : simulationGridWidget;
     }
 
-    public ScenarioGridModel getModel() {
-        return model;
+    public ScenarioGrid getSimulationGrid() {
+        return simulationGridWidget.getScenarioGridPanel().getScenarioGrid();
     }
 
-    public ScenarioGridLayer getScenarioGridLayer() {
-        return scenarioGridLayer;
+    public ScenarioGrid getBackgroundGrid() {
+        return backgroundGridWidget.getScenarioGridPanel().getScenarioGrid();
+    }
+
+    public ScenarioGridPanel getSelectedScenarioGridPanel() {
+        return getSelectedScenarioGridWidget().getScenarioGridPanel();
+    }
+
+    public AbstractScesimGridModel getSelectedScenarioGridModel() {
+        return getSelectedScenarioGridLayer().getScenarioGrid().getModel();
+    }
+
+    public ScenarioGridLayer getSelectedScenarioGridLayer() {
+        return getSelectedScenarioGridPanel().getScenarioGridLayer();
     }
 
     public PlaceManager getPlaceManager() {
@@ -162,9 +185,14 @@ public class ScenarioSimulationContext {
      * Method to verify that <code>Status</code>' <b>simulation</b> is populated, since <code>Simulation</code>
      * is set inside the model <b>after</b> the creation ot the current instance
      */
-    public void setStatusSimulationIfEmpty() {
+    public void setStatusSimulationIfEmpty() throws IllegalStateException {
         if (status.getSimulation() == null) {
-            status.setSimulation(model.getSimulation().orElseThrow(IllegalStateException::new));
+            final Optional<AbstractScesimModel> abstractScesimModel = simulationGridWidget.getModel().getAbstractScesimModel();
+            status.setSimulation((Simulation)abstractScesimModel.orElseThrow(IllegalStateException::new));
+        }
+        if (status.getBackground() == null) {
+            final Optional<AbstractScesimModel> abstractScesimModel = backgroundGridWidget.getModel().getAbstractScesimModel();
+            status.setBackground((Background) abstractScesimModel.orElseThrow(IllegalStateException::new));
         }
     }
 
@@ -173,15 +201,15 @@ public class ScenarioSimulationContext {
     }
 
     public CollectionEditorSingletonDOMElementFactory getCollectionEditorSingletonDOMElementFactory() {
-        return model.getCollectionEditorSingletonDOMElementFactory();
+        return getSelectedScenarioGridModel().getCollectionEditorSingletonDOMElementFactory();
     }
 
     public ScenarioCellTextAreaSingletonDOMElementFactory getScenarioCellTextAreaSingletonDOMElementFactory() {
-        return model.getScenarioCellTextAreaSingletonDOMElementFactory();
+        return getSelectedScenarioGridModel().getScenarioCellTextAreaSingletonDOMElementFactory();
     }
 
     public ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory() {
-        return model.getScenarioHeaderTextBoxSingletonDOMElementFactory();
+        return getSelectedScenarioGridModel().getScenarioHeaderTextBoxSingletonDOMElementFactory();
     }
 
     /**
@@ -213,6 +241,8 @@ public class ScenarioSimulationContext {
         protected int rowIndex;
 
         protected Simulation simulation;
+
+        protected Background background;
 
         /**
          * The string to use for filtering in right panel
@@ -405,6 +435,14 @@ public class ScenarioSimulationContext {
             this.simulation = simulation;
         }
 
+        public Background getBackground() {
+            return background;
+        }
+
+        public void setBackground(Background background) {
+            this.background = background;
+        }
+
         public Status cloneStatus() {
             Status toReturn = new Status();
             toReturn.columnId = this.columnId;
@@ -420,6 +458,7 @@ public class ScenarioSimulationContext {
             toReturn.gridCellValue = this.gridCellValue;
             toReturn.rowIndex = this.rowIndex;
             toReturn.simulation = this.simulation.cloneScesimModel();
+            toReturn.background = this.background.cloneScesimModel();
             return toReturn;
         }
     }

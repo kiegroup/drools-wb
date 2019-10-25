@@ -252,7 +252,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void onOverviewSelected() {
         super.onOverviewSelected();
-        scenarioSimulationEditorPresenter.onEditTabSelected();
+        scenarioSimulationEditorPresenter.onOverviewSelected();
     }
 
     /**
@@ -329,7 +329,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     protected void synchronizeColumnsDimension() {
-        scenarioSimulationEditorPresenter.getFocusedContext().getScenarioGridPanel().synchronizeFactMappingsWidths();
+        scenarioSimulationEditorPresenter.getContext().getSelectedScenarioGridPanel().synchronizeFactMappingsWidths();
     }
 
     @Override

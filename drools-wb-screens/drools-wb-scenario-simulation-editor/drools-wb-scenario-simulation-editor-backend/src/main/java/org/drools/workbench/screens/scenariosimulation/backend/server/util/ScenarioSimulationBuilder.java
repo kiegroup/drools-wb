@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
@@ -38,6 +39,17 @@ public class ScenarioSimulationBuilder {
                 return ruleSimulationCreationStrategy.createSimulation(context, value);
             case DMN:
                 return dmnSimulationCreationStrategy.createSimulation(context, value);
+            default:
+                return null;
+        }
+    }
+
+    public Background createBackground(Path context, ScenarioSimulationModel.Type type, String value) throws Exception {
+        switch (type) {
+            case RULE:
+                return ruleSimulationCreationStrategy.createBackground(context, value);
+            case DMN:
+                return dmnSimulationCreationStrategy.createBackground(context, value);
             default:
                 return null;
         }

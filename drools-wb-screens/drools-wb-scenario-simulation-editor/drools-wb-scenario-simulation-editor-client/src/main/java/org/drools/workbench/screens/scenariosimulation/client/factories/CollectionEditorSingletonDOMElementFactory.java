@@ -21,12 +21,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
@@ -65,19 +67,19 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     public CollectionEditorDOMElement createDomElement(final GridLayer gridLayer,
-                                                       final GridWidget gridWidget) {
+                                                                                                                     final GridWidget gridWidget) {
         if (this.widget != null) {
             this.widget.close();
         }
         this.widget = createWidget();
-        final ScenarioGridModel model = ((ScenarioGrid) gridWidget).getModel();
+        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData>  model = ((ScenarioGrid) gridWidget).getModel();
         final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
         final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
                 .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
                 .findFirst();
         selectedColumn.ifPresent(col -> {
             final int actualIndex = model.getColumns().indexOf(col);
-            final FactMapping factMapping = model.getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
+            final FactMapping factMapping = model.getAbstractScesimModel().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             this.e = createDomElementInternal(widget, gridLayer, gridWidget);
         });

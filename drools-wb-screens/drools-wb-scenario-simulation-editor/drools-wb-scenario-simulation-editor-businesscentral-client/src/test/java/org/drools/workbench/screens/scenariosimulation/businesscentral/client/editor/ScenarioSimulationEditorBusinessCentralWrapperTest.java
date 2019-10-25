@@ -182,12 +182,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
-        when(scenarioSimulationEditorPresenterMock.getFocusedContext()).thenReturn(scenarioSimulationContextLocal);
+        when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
 //        when(scenarioSimulationEditorPresenterMock.getBackgroundGridWidget()).thenReturn(backgroundGridWidgetMock);
 //        when(backgroundGridWidgetMock.getScenarioSimulationContext()).thenReturn(backgroundContextMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
-        when(scenarioGridWidgetMock.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+        when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
     }
 
     @Test
@@ -364,7 +364,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onOverviewSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onOverviewSelected();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).onEditTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onOverviewSelected();
     }
 
     @Test
