@@ -69,7 +69,7 @@ public class RULEScenarioValidation extends AbstractScenarioValidation {
 
                 if (steps.isEmpty() || steps.contains(ConstantsHolder.PROPERTY_EXPRESSION)) {
                     /* in case of top level simple types or PROPERTY_EXPRESSION is present in the steps
-                    (i.e. it's an expression type FactMapping) just try to load the class */
+                       (i.e. it's an expression type FactMapping) just try to load the class */
                     loadClass(instanceClassName, kieContainer.getClassLoader());
                 } else {
                     Object bean = beanInstanceMap.computeIfAbsent(
