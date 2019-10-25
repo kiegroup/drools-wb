@@ -17,8 +17,10 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 
@@ -37,12 +39,14 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
         final ScenarioSimulationContext.Status status = context.getStatus();
         SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
         int columnIndex = status.getColumnIndex();
-        String className = simulationDescriptor.getFactMappingByIndex(columnIndex).getClassName();
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(className);
+        FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        String placeholder = factMapping.isExpressionType() ?
+                ScenarioSimulationEditorConstants.INSTANCE.insertExpression() :
+                ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
         context.getModel().setCellValue(status.getRowIndex(),
                                         columnIndex,
                                         new ScenarioGridCellValue(status.getGridCellValue(),
-                                                                  editableCellPlaceholder));
+                                                                  placeholder));
         context.getModel().resetError(status.getRowIndex(), columnIndex);
     }
 }

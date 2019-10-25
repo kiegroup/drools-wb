@@ -179,7 +179,7 @@ public class ScenarioGrid extends BaseGridWidget {
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
         if (isPropertyAssigned) {
-            setDOMElementFactory(scenarioGridColumn, factMapping.getClassName());
+            setDOMElementFactory(scenarioGridColumn, factMapping);
         }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
     }
@@ -187,11 +187,14 @@ public class ScenarioGrid extends BaseGridWidget {
     /**
      * Set the correct <b>DOMElement</b> factory to the given <code>ScenarioGridColumn</code>
      * @param scenarioGridColumn
-     * @param className
+     * @param factMapping
      */
-    protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, String className) {
-        if (ScenarioSimulationSharedUtils.isCollection(className)) {
+    protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, FactMapping factMapping) {
+        if (ScenarioSimulationSharedUtils.isCollection(factMapping.getClassName())) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
+        } else if (factMapping.isExpressionType()) {
+            scenarioGridColumn.setFactory(((ScenarioGridModel) model)
+                                                  .getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
         }
     }
 
@@ -246,8 +249,15 @@ public class ScenarioGrid extends BaseGridWidget {
      * @return
      */
     protected String getPlaceholder(boolean isPropertyAssigned, FactMapping factMapping) {
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
-        return isPropertyAssigned ? editableCellPlaceholder : ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        if (isPropertyAssigned) {
+            if (factMapping.isExpressionType()) {
+                return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
+            } else {
+                return ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
+            }
+        } else {
+            return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        }
     }
 
     protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String

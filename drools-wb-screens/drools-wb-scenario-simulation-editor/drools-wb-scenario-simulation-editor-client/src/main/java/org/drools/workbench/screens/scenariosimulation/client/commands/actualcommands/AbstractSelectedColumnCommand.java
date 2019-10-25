@@ -30,6 +30,7 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.utils.ConstantsHolder;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -102,7 +103,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         int columnIndex = context.getModel().getColumns().indexOf(selectedColumn);
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
-        List<String> propertyNameElements = Arrays.asList(alias);
+        List<String> propertyNameElements = Arrays.asList(alias, ConstantsHolder.PROPERTY_EXPRESSION);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
         propertyHeaderMetaData.setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
         setPropertyMetaData(propertyHeaderMetaData, ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER, false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.insertExpression());
