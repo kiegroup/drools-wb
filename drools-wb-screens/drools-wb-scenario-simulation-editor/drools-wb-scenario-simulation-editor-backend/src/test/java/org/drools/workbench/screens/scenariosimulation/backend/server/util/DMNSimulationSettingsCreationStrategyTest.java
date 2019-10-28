@@ -64,6 +64,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -140,7 +141,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     @Test
     public void addToScenarioRecursive() {
         FactMapping factMappingMock = mock(FactMapping.class);
-        DMNSimulationCreationStrategy.FactMappingExtractor factMappingExtractorMock = mock(DMNSimulationCreationStrategy.FactMappingExtractor.class);
+        DMNSimulationSettingsCreationStrategy.FactMappingExtractor factMappingExtractorMock = mock(DMNSimulationSettingsCreationStrategy.FactMappingExtractor.class);
         when(factMappingExtractorMock.getFactMapping(any(), anyString(), any(), anyString())).thenReturn(factMappingMock);
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
@@ -153,7 +154,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
         hiddenFacts.put("recursive", factModelTree);
 
-        dmnSimulationCreationStrategy.addToScenario(factMappingExtractorMock,
+        dmnSimulationCreationStrategy.addFactMapping(factMappingExtractorMock,
                                                     factModelTree,
                                                     new ArrayList<>(),
                                                     hiddenFacts);

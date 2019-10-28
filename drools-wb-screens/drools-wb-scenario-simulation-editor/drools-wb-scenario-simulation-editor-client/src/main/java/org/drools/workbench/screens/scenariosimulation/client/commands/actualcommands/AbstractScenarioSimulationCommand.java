@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -25,6 +26,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
@@ -112,6 +114,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         try {
             final Simulation simulationToRestore = restorableStatus.getSimulation();
             final Background backgroundToRestore = restorableStatus.getBackground();
+            GRID_WIDGET previousGrid = restorableStatus.getCurrentGrid();
             if (simulationToRestore != null || backgroundToRestore != null) {
                 final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
                 context.getSimulationGrid().getModel().clearSelections();
@@ -127,7 +130,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
                 context.setStatus(restorableStatus);
                 restorableStatus = originalStatus;
-                return commonExecution(context);
+                return commonExecution(context, previousGrid);
             } else {
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
             }
@@ -183,6 +186,25 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     }
 
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
+        context.getSelectedScenarioGridPanel().onResize();
+        context.getSelectedScenarioGridPanel().select();
+        return CommandResultBuilder.SUCCESS;
+    }
+
+    protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context, final GRID_WIDGET previousGrid) {
+        // TODO {gcardosi}
+        // move this logic soon before registry "pop"  - before "popping" verify if the command should switch the tab and - in case - switch it before proceeding with normal undo/redo
+        // that way, it would be "like" the presence of a change tab command
+        boolean toSwitch = !context.getSelectedGRID_WIDGET().isPresent() || !Objects.equals(context.getSelectedGRID_WIDGET().get(), previousGrid);
+        if (toSwitch) {
+            switch (previousGrid) {
+                case SIMULATION:
+                    context.getScenarioSimulationEditorPresenter().selectSimulationTab();
+                    break;
+                case BACKGROUND:
+                    context.getScenarioSimulationEditorPresenter().selectBackgroundTab();
+            }
+        }
         context.getSelectedScenarioGridPanel().onResize();
         context.getSelectedScenarioGridPanel().select();
         return CommandResultBuilder.SUCCESS;

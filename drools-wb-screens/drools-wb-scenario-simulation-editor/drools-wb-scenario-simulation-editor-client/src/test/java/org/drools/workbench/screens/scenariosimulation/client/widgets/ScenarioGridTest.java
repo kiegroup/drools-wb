@@ -25,6 +25,7 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -137,7 +138,7 @@ public class ScenarioGridTest {
                                             scenarioContextMenuRegistryMock) {
 
             @Override
-            protected void appendRow(int rowIndex, Scenario scenario) {
+            protected <T extends AbstractScesimData> void appendRow(int rowIndex, T scesimData) {
                 // do nothing
             }
 

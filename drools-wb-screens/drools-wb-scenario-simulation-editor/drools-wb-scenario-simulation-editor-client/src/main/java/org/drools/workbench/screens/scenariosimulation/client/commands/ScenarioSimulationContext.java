@@ -26,10 +26,13 @@ import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.models.BackgroundGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
@@ -165,6 +168,16 @@ public class ScenarioSimulationContext {
         return getSelectedScenarioGridPanel().getScenarioGridLayer();
     }
 
+    public Optional<GRID_WIDGET> getSelectedGRID_WIDGET() {
+        if (getSelectedScenarioGridModel() instanceof ScenarioGridModel) {
+            return Optional.of(GRID_WIDGET.SIMULATION);
+        } else if (getSelectedScenarioGridModel() instanceof BackgroundGridModel) {
+            return Optional.of(GRID_WIDGET.BACKGROUND);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public PlaceManager getPlaceManager() {
         return placeManager;
     }
@@ -243,6 +256,8 @@ public class ScenarioSimulationContext {
         protected Simulation simulation;
 
         protected Background background;
+
+        protected GRID_WIDGET currentGrid;
 
         /**
          * The string to use for filtering in right panel
@@ -443,6 +458,14 @@ public class ScenarioSimulationContext {
             this.background = background;
         }
 
+        public GRID_WIDGET getCurrentGrid() {
+            return currentGrid;
+        }
+
+        public void setCurrentGrid(GRID_WIDGET currentGrid) {
+            this.currentGrid = currentGrid;
+        }
+
         public Status cloneStatus() {
             Status toReturn = new Status();
             toReturn.columnId = this.columnId;
@@ -459,6 +482,7 @@ public class ScenarioSimulationContext {
             toReturn.rowIndex = this.rowIndex;
             toReturn.simulation = this.simulation.cloneScesimModel();
             toReturn.background = this.background.cloneScesimModel();
+            toReturn.currentGrid = this.currentGrid;
             return toReturn;
         }
     }

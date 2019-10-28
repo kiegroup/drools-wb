@@ -44,7 +44,6 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridWidgetFocusEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioMenuItemFactory;
@@ -426,7 +425,6 @@ public class ScenarioSimulationEditorPresenter {
         scenarioGridWidget.select();
         getBackgroundGridWidget().deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
-        eventBus.fireEvent(new ScenarioGridWidgetFocusEvent(scenarioGridWidget, getBackgroundGridWidget()));
     }
 
     public void onBackGroundTabSelected() {
@@ -436,7 +434,6 @@ public class ScenarioSimulationEditorPresenter {
         backgroundWidget.select();
         getView().getScenarioGridWidget().deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
-        eventBus.fireEvent(new ScenarioGridWidgetFocusEvent(backgroundWidget, getView().getScenarioGridWidget()));
     }
 
     public void onOverviewSelected() {
@@ -446,6 +443,14 @@ public class ScenarioSimulationEditorPresenter {
         scenarioGridWidget.select();
         getBackgroundGridWidget().deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
+    }
+
+    public void selectSimulationTab() {
+        scenarioSimulationEditorWrapper.selectSimulationTab();
+    }
+
+    public void selectBackgroundTab() {
+        scenarioSimulationEditorWrapper.selectBackgroundTab();
     }
 
     protected void onDownload(final Supplier<Path> pathSupplier) {

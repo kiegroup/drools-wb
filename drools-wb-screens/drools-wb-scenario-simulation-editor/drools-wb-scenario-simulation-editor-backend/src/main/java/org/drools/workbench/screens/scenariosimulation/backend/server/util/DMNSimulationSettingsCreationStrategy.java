@@ -54,17 +54,6 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     @Inject
     protected DMNTypeService dmnTypeService;
 
-    static private FactMappingType convert(Type modelTreeType) {
-        switch (modelTreeType) {
-            case INPUT:
-                return GIVEN;
-            case DECISION:
-                return EXPECT;
-            default:
-                throw new IllegalArgumentException("Impossible to map");
-        }
-    }
-
     @Override
     public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);

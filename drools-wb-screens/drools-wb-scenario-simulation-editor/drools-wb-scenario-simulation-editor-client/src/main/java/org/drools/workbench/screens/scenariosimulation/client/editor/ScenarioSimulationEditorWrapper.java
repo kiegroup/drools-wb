@@ -31,6 +31,9 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 
 public interface ScenarioSimulationEditorWrapper {
 
+    int SIMULATION_TAB_INDEX = 0;
+    int BACKGROUND_TAB_INDEX = 1;
+
     void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun);
 
     void wrappedSave(final String commitMessage);
@@ -48,4 +51,8 @@ public interface ScenarioSimulationEditorWrapper {
     void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback);
 
     void addBackgroundPage(ScenarioGridWidget scenarioGridWidget);
+
+    void selectSimulationTab();
+
+    void selectBackgroundTab();
 }

@@ -15,19 +15,23 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
-import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.user.client.ui.RequiresResize;
+import com.google.gwt.user.client.ui.ResizeComposite;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 
-public class ScenarioGridWidget extends FocusWidget implements RequiresResize /*ResizeComposite implements FocusHandler*/ {
+public class ScenarioGridWidget extends ResizeComposite {
 
     protected ScenarioGridPanel scenarioGridPanel;
 
     protected boolean selected;
+
+    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
+        this.scenarioGridPanel = scenarioGridPanel;
+        initWidget(scenarioGridPanel);
+    }
 
     public void setContent(AbstractScesimModel abstractScesimModel, ScenarioSimulationModel.Type type) {
         scenarioGridPanel.getScenarioGrid().setContent(abstractScesimModel, type);
@@ -35,10 +39,6 @@ public class ScenarioGridWidget extends FocusWidget implements RequiresResize /*
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
-    }
-
-    public void setScenarioGridPanel(ScenarioGridPanel scenarioGridPanel) {
-        this.scenarioGridPanel = scenarioGridPanel;
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {
@@ -91,9 +91,4 @@ public class ScenarioGridWidget extends FocusWidget implements RequiresResize /*
         }
         scenarioGridPanel.onResize();
     }
-//
-//    protected FocusHandler getFocusHandler(EventBus eventBus, ScenarioGridWidget scenarioGridWidget) {
-//        return event -> eventBus.fireEvent(new ScenarioGridWidgetFocusEvent(scenarioGridWidget));
-//    }
-
 }

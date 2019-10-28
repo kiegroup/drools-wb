@@ -20,19 +20,20 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
+import org.uberfire.mvp.Command;
 
 /**
  * <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
  */
 public class ScenarioGridWidgetFocusCommand extends AbstractScenarioSimulationCommand {
 
-    private final ScenarioGridWidget focused;
-    private final ScenarioGridWidget unFocused;
+    private final Command redoCommand;
+    private final Command undoCommand;
 
-    public ScenarioGridWidgetFocusCommand(ScenarioGridWidget focused, ScenarioGridWidget unFocused) {
+    public ScenarioGridWidgetFocusCommand(Command redoCommand, Command undoCommand) {
         super(true);
-        this.focused = focused;
-        this.unFocused = unFocused;
+        this.redoCommand = redoCommand;
+        this.undoCommand = undoCommand;
     }
 
     @Override
@@ -41,16 +42,19 @@ public class ScenarioGridWidgetFocusCommand extends AbstractScenarioSimulationCo
     }
 
     @Override
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        return commonExecution(context);
+    }
+
+    @Override
     public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext context) {
-        unFocused.setFocus(false);
-        focused.setFocus(true);
+        redoCommand.execute();
         return CommandResultBuilder.SUCCESS;
     }
 
     @Override
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
-        focused.setFocus(false);
-        unFocused.setFocus(true);
+        undoCommand.execute();
         return CommandResultBuilder.SUCCESS;
     }
 }

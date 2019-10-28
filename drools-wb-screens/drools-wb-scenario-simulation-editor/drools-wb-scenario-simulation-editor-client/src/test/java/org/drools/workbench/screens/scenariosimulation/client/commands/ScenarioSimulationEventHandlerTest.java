@@ -58,7 +58,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridWidgetFocusEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetHeaderCellValueEvent;
@@ -78,7 +77,6 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -103,7 +101,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
@@ -151,8 +148,6 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private HandlerRegistration scenarioGridReloadHandlerRegistrationMock;
     @Mock
-    private HandlerRegistration scenarioGridWidgetFocusEventHandlerRegistrationMock;
-    @Mock
     private HandlerRegistration setGridCellValueEventHandlerMock;
     @Mock
     private HandlerRegistration setHeaderCellValueEventHandlerMock;
@@ -195,7 +190,6 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(eventBusMock.addHandler(eq(ReloadTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadTestToolsHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class))).thenReturn(runSingleScenarioHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(ScenarioGridWidgetFocusEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridWidgetFocusEventHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class))).thenReturn(setGridCellValueEventHandlerMock);
         when(eventBusMock.addHandler(eq(SetHeaderCellValueEvent.TYPE), isA(SetHeaderCellValueEventHandler.class))).thenReturn(setHeaderCellValueEventHandlerMock);
         when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(setInstanceHeaderEventHandlerMock);
@@ -354,14 +348,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Test
     public void onScenarioGridReloadEvent() {
         ScenarioGridReloadEvent event = new ScenarioGridReloadEvent();
-        scenarioSimulationEventHandler.handle(event);
-        verify(scenarioGridPanelMock, times(1)).onResize();
-    }
-
-    @Test
-    public void onScenarioGridWidgetFocusEvent() {
-        ScenarioGridWidgetFocusEvent event = new ScenarioGridWidgetFocusEvent(mock(ScenarioGridWidget.class), mock(ScenarioGridWidget.class));
-        scenarioSimulationEventHandler.handle(event);
+        scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioGridPanelMock, times(1)).onResize();
     }
 
@@ -539,8 +526,6 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(runSingleScenarioHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(scenarioGridReloadHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridWidgetFocusEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
-        verify(handlerRegistrationListMock, times(1)).add(eq(scenarioGridWidgetFocusEventHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(setGridCellValueEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetHeaderCellValueEvent.TYPE), isA(SetHeaderCellValueEventHandler.class));

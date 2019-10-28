@@ -49,6 +49,7 @@ import org.drools.workbench.screens.scenariosimulation.service.RunnerReportServi
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -64,6 +65,7 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
@@ -261,13 +263,29 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
      */
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
-        addPage(new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+        kieView.getMultiPage().addPage(BACKGROUND_TAB_INDEX, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
                 super.onFocus();
                 onBackGroundTabSelected();
             }
         });
+    }
+
+    @Override
+    public void selectSimulationTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
+    }
+
+    @Override
+    public void selectBackgroundTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(BACKGROUND_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
     }
 
     protected void registerTestToolsCallback() {
