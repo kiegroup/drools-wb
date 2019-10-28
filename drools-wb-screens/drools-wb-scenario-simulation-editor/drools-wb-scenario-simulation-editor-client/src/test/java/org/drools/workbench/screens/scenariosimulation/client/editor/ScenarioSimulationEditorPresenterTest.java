@@ -113,7 +113,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public ExpectedException exceptionRule = ExpectedException.none();
     private ScenarioSimulationEditorPresenter presenter;
     @Mock
-    private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
+    private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapperMock;
     @Mock
     private ScenarioGrid scenarioGridMock;
     @Mock
@@ -208,6 +208,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 this.runScenarioMenuItem = runScenarioMenuItemMock;
                 this.exportToCSVMenuItem = exportToCsvMenuItemMock;
                 this.importMenuItem = importMenuItemMock;
+                this.scenarioSimulationEditorWrapper = scenarioSimulationEditorWrapperMock;
             }
 
             @Override
@@ -231,19 +232,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(Optional.of(settingsPresenterMock)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
         doReturn(Optional.of(coverageReportPresenterMock)).when(presenter).getCoverageReportPresenter(eq(placeRequestMock));
         when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+//        when(kieViewMock.getMultiPage()).thenReturn(multiPageEditorMock);
+//        when(multiPageEditorMock.getView()).thenReturn(multiPageEditorViewMock);
+//        when(multiPageEditorViewMock.getTabBar()).thenReturn(navTabsMock);
+//        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
+//        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
     }
 
     @Test
     public void init() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         verify(testRunnerReportingPanelMock, times(1)).reset();
     }
-
-//    @Test
-//    public void setFocusedContext() {
-//        presenter.setFocusedContext(contextMock);
-//        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
-//    }
 
     @Test
     public void setSaveEnabledTrue() {
@@ -315,9 +315,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void showDocks_PlaceStatusOpen() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.showDocks(PlaceStatus.OPEN);
-        verify(scenarioSimulationEditorWrapper, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
+        verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).addDocks();
         verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenter.scenarioPresenterId)));
         verify(presenter, never()).expandToolsDock();
@@ -328,9 +328,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void showDocks_PlaceStatusClose() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.showDocks(PlaceStatus.CLOSE);
-        verify(scenarioSimulationEditorWrapper, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
+        verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).addDocks();
         verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenter.scenarioPresenterId)));
         verify(presenter, times(1)).expandToolsDock();
@@ -369,7 +369,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onRunTest() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.onRunScenario();
         verify(presenter, times(1)).onRunScenario(eq(Arrays.asList(0)));
     }
@@ -382,12 +382,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(simulationMock.getScesimDataByIndex(anyInt())).thenReturn(mock(Scenario.class));
         List<Integer> indexList = Arrays.asList(0, 2);
 
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.onRunScenario(indexList);
         verify(scenarioGridWidgetSpy, times(1)).resetErrors();
         verify(scenarioSimulationModelMock, times(1)).setSimulation(simulationMock);
         verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
-        verify(scenarioSimulationEditorWrapper, times(1)).onRunScenario(any(), any(), any(), eq(settingsLocal), scenarioWithIndexCaptor.capture());
+        verify(scenarioSimulationEditorWrapperMock, times(1)).onRunScenario(any(), any(), any(), eq(settingsLocal), scenarioWithIndexCaptor.capture());
 
         List<ScenarioWithIndex> capturedValue = scenarioWithIndexCaptor.getValue();
         assertEquals(2, capturedValue.size());
@@ -447,9 +447,9 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onImport() {
         String FILE_CONTENT = "FILE_CONTENT";
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.onImport(FILE_CONTENT);
-        verify(scenarioSimulationEditorWrapper, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(simulationMock));
+        verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(simulationMock));
     }
 
     @Test
@@ -670,11 +670,43 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onBackGroundTabSelected() {
         presenter.onBackGroundTabSelected();
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
-        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
+        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+    }
+
+    @Test
+    public void onOverviewSelected() {
+        presenter.onOverviewSelected();
+        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(scenarioGridWidgetSpy, times(1)).clearSelections();
+        verify(backgroundGridWidgetSpy, times(1)).clearSelections();
+        verify(scenarioGridWidgetSpy, times(1)).deselect();
+        verify(backgroundGridWidgetSpy, times(1)).deselect();
+    }
+
+    @Test
+    public void onImportsTabSelected() {
+        presenter.onImportsTabSelected();
+        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(scenarioGridWidgetSpy, times(1)).clearSelections();
+        verify(backgroundGridWidgetSpy, times(1)).clearSelections();
+        verify(scenarioGridWidgetSpy, times(1)).deselect();
+        verify(backgroundGridWidgetSpy, times(1)).deselect();
+    }
+
+    @Test
+    public void selectSimulationTab() {
+        presenter.selectSimulationTab();
+        verify(scenarioSimulationEditorWrapperMock, times(1)).selectSimulationTab();
+    }
+
+    @Test
+    public void selectBackgroundTab() {
+        presenter.selectBackgroundTab();
+        verify(scenarioSimulationEditorWrapperMock, times(1)).selectBackgroundTab();
     }
 
     @Test
@@ -785,23 +817,21 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void getModelSuccessCallbackMethod() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
         verify(presenter, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
         verify(presenter, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
         verify(scenarioGridWidgetSpy, times(1)).setContent(eq(content.getModel().getSimulation()), eq(scenarioSimulationContextLocal.getSettings().getType()));
-        verify(scenarioSimulationEditorWrapper, times(1)).addBackgroundPage(eq(backgroundGridWidgetSpy));
-        // TODO {gcardosi} restore after correction on presenter
-//        verify(scenarioBackgroundGridWidgetMock, times(1)).setContent(isA(Simulation.class), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(scenarioSimulationEditorWrapperMock, times(1)).addBackgroundPage(eq(backgroundGridWidgetSpy));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
         verify(presenter, times(1)).getValidateCommand();
     }
 
     @Test
     public void onExportToCsv() {
-        presenter.init(scenarioSimulationEditorWrapper, observablePathMock);
+        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenter.onExportToCsv();
-        verify(scenarioSimulationEditorWrapper, times(1)).onExportToCsv(isA(RemoteCallback.class), isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class), eq(simulationMock));
+        verify(scenarioSimulationEditorWrapperMock, times(1)).onExportToCsv(isA(RemoteCallback.class), isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class), eq(simulationMock));
     }
 
     @Test

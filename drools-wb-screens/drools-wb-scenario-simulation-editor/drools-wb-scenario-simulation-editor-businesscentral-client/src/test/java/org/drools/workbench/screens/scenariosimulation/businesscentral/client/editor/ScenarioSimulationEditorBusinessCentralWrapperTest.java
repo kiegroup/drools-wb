@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -42,6 +43,8 @@ import org.guvnor.common.services.project.client.security.ProjectController;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
+import org.gwtbootstrap3.client.ui.NavTabs;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
@@ -58,6 +61,9 @@ import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.promise.Promises;
+import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
+import org.uberfire.client.views.pfly.multipage.PageImpl;
+import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
@@ -72,6 +78,8 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
+import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper.BACKGROUND_TAB_INDEX;
+import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper.SIMULATION_TAB_INDEX;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -128,10 +136,16 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private Supplier<ScenarioSimulationModel> contentSupplierMock;
     @Mock
     private ProjectController projectControllerMock;
-//    @Mock
-//    private ScenarioGridWidget backgroundGridWidgetMock;
-//    @Mock
-//    private ScenarioSimulationContext backgroundContextMock;
+    @Mock
+    private MultiPageEditor multiPageEditorMock;
+    @Mock
+    private MultiPageEditorViewImpl multiPageEditorViewMock;
+    @Mock
+    private NavTabs navTabsMock;
+    @Mock
+    private TabListItem simulationTabListItemMock;
+    @Mock
+    private TabListItem backgroundTabListItemMock;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
@@ -183,11 +197,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
         when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
-//        when(scenarioSimulationEditorPresenterMock.getBackgroundGridWidget()).thenReturn(backgroundGridWidgetMock);
-//        when(backgroundGridWidgetMock.getScenarioSimulationContext()).thenReturn(backgroundContextMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+        when(kieViewMock.getMultiPage()).thenReturn(multiPageEditorMock);
+        when(multiPageEditorMock.getView()).thenReturn(multiPageEditorViewMock);
+        when(multiPageEditorViewMock.getTabBar()).thenReturn(navTabsMock);
+        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
+        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
     }
 
     @Test
@@ -371,6 +388,36 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void onBackGroundTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onBackGroundTabSelected();
         verify(scenarioSimulationEditorPresenterMock, times(1)).onBackGroundTabSelected();
+    }
+
+    @Test
+    public void onImportsTabSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onImportsTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onImportsTabSelected();
+    }
+
+    @Test
+    public void addBackgroundPage() {
+        scenarioSimulationEditorBusinessClientWrapper.addBackgroundPage(scenarioGridWidgetSpy);
+        verify(multiPageEditorMock, times(1)).addPage(eq(BACKGROUND_TAB_INDEX), isA(PageImpl.class));
+    }
+
+    @Test
+    public void addImportsTab() {
+        scenarioSimulationEditorBusinessClientWrapper.addImportsTab(mock(IsWidget.class));
+        verify(multiPageEditorMock, times(1)).addPage(isA(PageImpl.class));
+    }
+
+    @Test
+    public void selectSimulationTab() {
+        scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
+        verify(simulationTabListItemMock, times(1)).showTab(eq(false));
+    }
+
+    @Test
+    public void selectBackgroundTab() {
+        scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
+        verify(backgroundTabListItemMock, times(1)).showTab(eq(false));
     }
 
     @Test

@@ -124,7 +124,7 @@ public class ScenarioSimulationEditorPresenter {
     private TextFileExport textFileExport;
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
-    private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
+    protected ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -438,16 +438,19 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onOverviewSelected() {
         ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
+        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
+        backgroundWidget.clearSelections();
         scenarioGridWidget.clearSelections();
         scenarioGridWidget.deselect();
         getBackgroundGridWidget().deselect();
-        populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void onImportsTabSelected() {
         ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
+        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
+        backgroundWidget.clearSelections();
         scenarioGridWidget.clearSelections();
         scenarioGridWidget.deselect();
         getBackgroundGridWidget().deselect();
