@@ -41,7 +41,6 @@ import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsS
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridWidgetFocusEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
@@ -666,7 +665,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).select();
         verify(backgroundGridWidgetSpy, times(1)).deselect();
-        verify(eventBusMock, times(1)).fireEvent(isA(ScenarioGridWidgetFocusEvent.class));
     }
 
     @Test
@@ -677,7 +675,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
-        verify(eventBusMock, times(1)).fireEvent(isA(ScenarioGridWidgetFocusEvent.class));
     }
 
     @Test

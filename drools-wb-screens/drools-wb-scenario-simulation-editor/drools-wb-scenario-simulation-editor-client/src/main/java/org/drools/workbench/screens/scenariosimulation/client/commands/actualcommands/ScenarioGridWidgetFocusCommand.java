@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.uberfire.mvp.Command;

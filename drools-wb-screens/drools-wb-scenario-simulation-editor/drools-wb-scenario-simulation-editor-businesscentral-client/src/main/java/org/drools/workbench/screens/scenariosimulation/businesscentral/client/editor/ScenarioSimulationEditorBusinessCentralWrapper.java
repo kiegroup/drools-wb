@@ -55,6 +55,7 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
@@ -273,6 +274,17 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
+    protected void addImportsTab(IsWidget importsWidget) {
+        kieView.getMultiPage().addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
+            @Override
+            public void onFocus() {
+                super.onFocus();
+                onImportsTabSelected();
+            }
+        });
+    }
+
+    @Override
     public void selectSimulationTab() {
         final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
         if (item != null) {
@@ -415,6 +427,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     protected void onBackGroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackGroundTabSelected();
+    }
+
+    protected void onImportsTabSelected() {
+        scenarioSimulationEditorPresenter.onImportsTabSelected();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

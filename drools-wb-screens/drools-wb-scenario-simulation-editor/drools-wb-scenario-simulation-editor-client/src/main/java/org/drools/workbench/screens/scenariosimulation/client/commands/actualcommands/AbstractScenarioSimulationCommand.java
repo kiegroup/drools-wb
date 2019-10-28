@@ -110,11 +110,58 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
     }
 
+    /**
+     * Method called soon before actual <b>undo</b> and <b>redo</b> operations to preliminary execute a tab switch <b>without</b>
+     * altering the call stack.
+     * If the command change the status of a not shown grid, this switches the tab
+     * @param context
+     * @return <code>Optional&lt;CommandResult&lt;ScenarioSimulationViolation&gt;&gt;</code> of <code>CommandResultBuilder.SUCCESS</code>
+     * if a tab switch happened, otherwise <code>Optional.empty()</code>
+     */
+    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext context) {
+        Optional<CommandResult<ScenarioSimulationViolation>> toReturn;
+        Optional<GRID_WIDGET> previousGrid = getPreviousGrid(context);
+        if (previousGrid.isPresent()) {
+            toReturn = Optional.of(CommandResultBuilder.SUCCESS);
+            switch (previousGrid.get()) {
+                case SIMULATION:
+                    context.getScenarioSimulationEditorPresenter().selectSimulationTab();
+                    break;
+                case BACKGROUND:
+                    context.getScenarioSimulationEditorPresenter().selectBackgroundTab();
+                    break;
+                default:
+                    // noop
+            }
+            context.getSelectedScenarioGridPanel().onResize();
+            context.getSelectedScenarioGridPanel().select();
+        } else {
+            toReturn = Optional.empty();
+        }
+        return toReturn;
+    }
+
+    /**
+     * Method to retrieve the <code>GRID_WIDGET</code> to be switched to, wrapped inside an <code>Optional</code>
+     * <p>
+     * It returns <code>Optional.empty()</code> if the switch must not be executed
+     * @param context
+     * @return
+     */
+    protected Optional<GRID_WIDGET> getPreviousGrid(final ScenarioSimulationContext context) {
+        GRID_WIDGET previousGrid = restorableStatus.getCurrentGrid();
+        boolean toSwitch = previousGrid != null && (!context.getSelectedGRID_WIDGET().isPresent() || !Objects.equals(context.getSelectedGRID_WIDGET().get(), previousGrid));
+        if (toSwitch) {
+            return Optional.of(previousGrid);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
         try {
             final Simulation simulationToRestore = restorableStatus.getSimulation();
             final Background backgroundToRestore = restorableStatus.getBackground();
-            GRID_WIDGET previousGrid = restorableStatus.getCurrentGrid();
             if (simulationToRestore != null || backgroundToRestore != null) {
                 final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
                 context.getSimulationGrid().getModel().clearSelections();
@@ -130,7 +177,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
                 context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
                 context.setStatus(restorableStatus);
                 restorableStatus = originalStatus;
-                return commonExecution(context, previousGrid);
+                return commonExecution(context);
             } else {
                 return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
             }
@@ -186,25 +233,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     }
 
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
-        context.getSelectedScenarioGridPanel().onResize();
-        context.getSelectedScenarioGridPanel().select();
-        return CommandResultBuilder.SUCCESS;
-    }
-
-    protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context, final GRID_WIDGET previousGrid) {
-        // TODO {gcardosi}
-        // move this logic soon before registry "pop"  - before "popping" verify if the command should switch the tab and - in case - switch it before proceeding with normal undo/redo
-        // that way, it would be "like" the presence of a change tab command
-        boolean toSwitch = !context.getSelectedGRID_WIDGET().isPresent() || !Objects.equals(context.getSelectedGRID_WIDGET().get(), previousGrid);
-        if (toSwitch) {
-            switch (previousGrid) {
-                case SIMULATION:
-                    context.getScenarioSimulationEditorPresenter().selectSimulationTab();
-                    break;
-                case BACKGROUND:
-                    context.getScenarioSimulationEditorPresenter().selectBackgroundTab();
-            }
-        }
         context.getSelectedScenarioGridPanel().onResize();
         context.getSelectedScenarioGridPanel().select();
         return CommandResultBuilder.SUCCESS;

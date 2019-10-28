@@ -467,15 +467,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                     .toString();
             commonNotifyError(status, operation);
         } else if (Objects.equals(CommandResultBuilder.SUCCESS, status) && command.isUndoable()) {
-//
-//            final List<AbstractScenarioSimulationCommand> commandHistory = scenarioCommandRegistry.getCommandHistory();
-//            if (currentGrid != null && !commandHistory.isEmpty()) {
-//                conditionalAddScenarioGridWidgetFocusCommand(context.getScenarioSimulationEditorPresenter(),
-//                                                             commandHistory.get(commandHistory.size() - 1).getRestorableStatus(),
-//                                                             context.getStatus(),
-//                                                             currentGrid)
-//                        .ifPresent(scenarioGridWidgetFocusCommand -> scenarioCommandRegistry.register(context, scenarioGridWidgetFocusCommand));
-//            }
             scenarioCommandRegistry.register(context, command);
             if (focusGridAfterExecution) {
                 context.getSelectedScenarioGridPanel().setFocus(true);

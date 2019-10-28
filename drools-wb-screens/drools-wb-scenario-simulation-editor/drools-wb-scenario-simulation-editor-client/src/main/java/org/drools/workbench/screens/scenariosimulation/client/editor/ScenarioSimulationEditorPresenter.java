@@ -438,11 +438,19 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onOverviewSelected() {
         ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
-        setItemMenuForMainGridEnabled(true);
+        setItemMenuForMainGridEnabled(false);
         scenarioGridWidget.clearSelections();
-        scenarioGridWidget.select();
+        scenarioGridWidget.deselect();
         getBackgroundGridWidget().deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
+    }
+
+    public void onImportsTabSelected() {
+        ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
+        setItemMenuForMainGridEnabled(false);
+        scenarioGridWidget.clearSelections();
+        scenarioGridWidget.deselect();
+        getBackgroundGridWidget().deselect();
     }
 
     public void selectSimulationTab() {
