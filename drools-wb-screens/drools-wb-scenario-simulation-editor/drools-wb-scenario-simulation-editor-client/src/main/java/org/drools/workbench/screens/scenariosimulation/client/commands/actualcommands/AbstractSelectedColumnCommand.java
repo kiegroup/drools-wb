@@ -104,7 +104,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        final boolean isDMNScenario = Objects.equals(context.getModel().getSimulation().get().getSimulationDescriptor().getType(),
+        final boolean isDMNScenario = Objects.equals(context.getModel().getSimulation().orElseThrow(IllegalStateException::new).getSimulationDescriptor().getType(),
                                                      ScenarioSimulationModel.Type.DMN);
         if (isDMNScenario || ScenarioSimulationUtils.isSimpleJavaType(factIdentifier.getClassName())) {
             setPropertyMetaData(propertyHeaderMetaData,
@@ -126,8 +126,8 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                                     Arrays.asList(alias),
                                                     fullClassName,
                                                     context.getStatus().isKeepData());
+            selectedColumn.setFactory(context.getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
         }
-        selectedColumn.setFactory(context.getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
