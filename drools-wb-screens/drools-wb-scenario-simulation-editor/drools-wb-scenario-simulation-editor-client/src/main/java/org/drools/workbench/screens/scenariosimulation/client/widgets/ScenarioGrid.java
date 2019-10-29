@@ -192,7 +192,7 @@ public class ScenarioGrid extends BaseGridWidget {
     protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, FactMapping factMapping) {
         if (ScenarioSimulationSharedUtils.isCollection(factMapping.getClassName())) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
-        } else if (factMapping.isExpressionType()) {
+        } else if (ScenarioSimulationUtils.isExpressionType(factMapping)) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model)
                                                   .getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
         }
@@ -250,7 +250,7 @@ public class ScenarioGrid extends BaseGridWidget {
      */
     protected String getPlaceholder(boolean isPropertyAssigned, FactMapping factMapping) {
         if (isPropertyAssigned) {
-            if (factMapping.isExpressionType()) {
+            if (ScenarioSimulationUtils.isExpressionType(factMapping)) {
                 return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
             } else {
                 return ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());

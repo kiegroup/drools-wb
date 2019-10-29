@@ -35,5 +35,4 @@ public class InputEvent extends DomEvent<InputHandler> {
     protected void dispatch(InputHandler handler) {
         handler.onInput(this);
     }
-
 }

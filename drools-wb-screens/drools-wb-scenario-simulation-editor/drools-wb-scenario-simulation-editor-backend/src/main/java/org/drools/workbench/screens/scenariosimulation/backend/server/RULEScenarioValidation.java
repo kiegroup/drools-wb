@@ -25,7 +25,6 @@ import java.util.Objects;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.utils.ConstantsHolder;
 import org.drools.scenariosimulation.backend.runner.ScenarioException;
 import org.drools.scenariosimulation.backend.util.ScenarioBeanWrapper;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
@@ -67,9 +66,8 @@ public class RULEScenarioValidation extends AbstractScenarioValidation {
             try {
                 String instanceClassName = factMapping.getFactIdentifier().getClassName();
 
-                if (steps.isEmpty() || steps.contains(ConstantsHolder.PROPERTY_EXPRESSION)) {
-                    /* in case of top level simple types or PROPERTY_EXPRESSION is present in the steps
-                       (i.e. it's an expression type FactMapping) just try to load the class */
+                if (steps.isEmpty()) {
+                    // in case of top level simple types just try to load the class
                     loadClass(instanceClassName, kieContainer.getClassLoader());
                 } else {
                     Object bean = beanInstanceMap.computeIfAbsent(

@@ -40,7 +40,7 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
         SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
         int columnIndex = status.getColumnIndex();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        String placeholder = factMapping.isExpressionType() ?
+        String placeholder = ScenarioSimulationUtils.isExpressionType(factMapping) ?
                 ScenarioSimulationEditorConstants.INSTANCE.insertExpression() :
                 ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
         context.getModel().setCellValue(status.getRowIndex(),

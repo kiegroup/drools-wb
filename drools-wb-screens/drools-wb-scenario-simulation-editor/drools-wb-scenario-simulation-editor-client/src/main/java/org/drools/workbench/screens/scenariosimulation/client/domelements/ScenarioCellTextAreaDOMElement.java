@@ -68,7 +68,6 @@ public class ScenarioCellTextAreaDOMElement extends BaseDOMElement<String, TextA
                                                              Style.Unit.PX);
         getContainer().getElement().getStyle().setPaddingBottom(5,
                                                                 Style.Unit.PX);
-
         getContainer().setWidget(widget);
     }
 

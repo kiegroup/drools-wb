@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SimpleClassEntry;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
@@ -73,6 +74,11 @@ public class ScenarioSimulationUtils {
                 .stream()
                 .map(SimpleClassEntry::getCanonicalName)
                 .anyMatch(className::equals);
+    }
+
+    public static boolean isExpressionType(FactMapping factMapping) {
+        return !isSimpleJavaType(factMapping.getFactIdentifier().getClassName()) &&
+                factMapping.getExpressionElements().size() == 1;
     }
 
     /**
