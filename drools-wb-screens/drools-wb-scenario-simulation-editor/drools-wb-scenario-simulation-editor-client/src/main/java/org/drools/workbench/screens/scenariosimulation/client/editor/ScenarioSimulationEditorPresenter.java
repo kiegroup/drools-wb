@@ -440,28 +440,20 @@ public class ScenarioSimulationEditorPresenter {
         ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
         ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
-        backgroundWidget.clearSelections();
         scenarioGridWidget.clearSelections();
         scenarioGridWidget.deselect();
-        getBackgroundGridWidget().deselect();
+        backgroundWidget.clearSelections();
+        backgroundWidget.deselect();
     }
 
     public void onImportsTabSelected() {
         ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
         ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
-        backgroundWidget.clearSelections();
         scenarioGridWidget.clearSelections();
         scenarioGridWidget.deselect();
-        getBackgroundGridWidget().deselect();
-    }
-
-    public void selectSimulationTab() {
-        scenarioSimulationEditorWrapper.selectSimulationTab();
-    }
-
-    public void selectBackgroundTab() {
-        scenarioSimulationEditorWrapper.selectBackgroundTab();
+        backgroundWidget.clearSelections();
+        backgroundWidget.deselect();
     }
 
     protected void onDownload(final Supplier<Path> pathSupplier) {

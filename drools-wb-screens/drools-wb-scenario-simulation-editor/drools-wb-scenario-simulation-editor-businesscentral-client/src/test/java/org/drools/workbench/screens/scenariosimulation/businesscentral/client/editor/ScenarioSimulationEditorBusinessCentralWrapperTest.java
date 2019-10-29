@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -391,33 +390,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     }
 
     @Test
-    public void onImportsTabSelected() {
-        scenarioSimulationEditorBusinessClientWrapper.onImportsTabSelected();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).onImportsTabSelected();
-    }
-
-    @Test
     public void addBackgroundPage() {
         scenarioSimulationEditorBusinessClientWrapper.addBackgroundPage(scenarioGridWidgetSpy);
         verify(multiPageEditorMock, times(1)).addPage(eq(BACKGROUND_TAB_INDEX), isA(PageImpl.class));
-    }
-
-    @Test
-    public void addImportsTab() {
-        scenarioSimulationEditorBusinessClientWrapper.addImportsTab(mock(IsWidget.class));
-        verify(multiPageEditorMock, times(1)).addPage(isA(PageImpl.class));
-    }
-
-    @Test
-    public void selectSimulationTab() {
-        scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
-        verify(simulationTabListItemMock, times(1)).showTab(eq(false));
-    }
-
-    @Test
-    public void selectBackgroundTab() {
-        scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
-        verify(backgroundTabListItemMock, times(1)).showTab(eq(false));
     }
 
     @Test

@@ -49,13 +49,11 @@ import org.drools.workbench.screens.scenariosimulation.service.RunnerReportServi
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
-import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
@@ -66,7 +64,6 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
@@ -273,33 +270,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         });
     }
 
-    @Override
-    protected void addImportsTab(IsWidget importsWidget) {
-        kieView.getMultiPage().addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
-            @Override
-            public void onFocus() {
-                super.onFocus();
-                onImportsTabSelected();
-            }
-        });
-    }
-
-    @Override
-    public void selectSimulationTab() {
-        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
-        if (item != null) {
-            item.showTab(false);
-        }
-    }
-
-    @Override
-    public void selectBackgroundTab() {
-        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(BACKGROUND_TAB_INDEX);
-        if (item != null) {
-            item.showTab(false);
-        }
-    }
-
     protected void registerTestToolsCallback() {
         placeManager.registerOnOpenCallback(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER), scenarioSimulationEditorPresenter.getPopulateTestToolsCommand());
     }
@@ -427,10 +397,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     protected void onBackGroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackGroundTabSelected();
-    }
-
-    protected void onImportsTabSelected() {
-        scenarioSimulationEditorPresenter.onImportsTabSelected();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

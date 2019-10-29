@@ -142,7 +142,7 @@ public class ScenarioGridPanelProducer {
                                                            scenarioGridLayer,
                                                            new ScenarioGridRenderer(false),
                                                            scenarioContextMenuRegistry);
-        scenarioGridLayer.addScesimDataGrid(scenarioGrid);
+        scenarioGridLayer.addScenarioGrid(scenarioGrid);
         scenarioGridPanel.add(scenarioGridLayer);
         scenarioGrid.setScenarioSimulationContext(scenarioSimulationContext);
         abstractScesimGridModel.setCollectionEditorSingletonDOMElementFactory(

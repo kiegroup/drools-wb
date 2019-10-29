@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -26,7 +25,6 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
@@ -107,54 +105,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
-        }
-    }
-
-    /**
-     * Method called soon before actual <b>undo</b> and <b>redo</b> operations to preliminary execute a tab switch <b>without</b>
-     * altering the call stack.
-     * If the command change the status of a not shown grid, this switches the tab
-     * @param context
-     * @return <code>Optional&lt;CommandResult&lt;ScenarioSimulationViolation&gt;&gt;</code> of <code>CommandResultBuilder.SUCCESS</code>
-     * if a tab switch happened, otherwise <code>Optional.empty()</code>
-     */
-    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext context) {
-        Optional<CommandResult<ScenarioSimulationViolation>> toReturn;
-        Optional<GRID_WIDGET> previousGrid = getPreviousGrid(context);
-        if (previousGrid.isPresent()) {
-            toReturn = Optional.of(CommandResultBuilder.SUCCESS);
-            switch (previousGrid.get()) {
-                case SIMULATION:
-                    context.getScenarioSimulationEditorPresenter().selectSimulationTab();
-                    break;
-                case BACKGROUND:
-                    context.getScenarioSimulationEditorPresenter().selectBackgroundTab();
-                    break;
-                default:
-                    // noop
-            }
-            context.getSelectedScenarioGridPanel().onResize();
-            context.getSelectedScenarioGridPanel().select();
-        } else {
-            toReturn = Optional.empty();
-        }
-        return toReturn;
-    }
-
-    /**
-     * Method to retrieve the <code>GRID_WIDGET</code> to be switched to, wrapped inside an <code>Optional</code>
-     * <p>
-     * It returns <code>Optional.empty()</code> if the switch must not be executed
-     * @param context
-     * @return
-     */
-    protected Optional<GRID_WIDGET> getPreviousGrid(final ScenarioSimulationContext context) {
-        GRID_WIDGET previousGrid = restorableStatus.getCurrentGrid();
-        boolean toSwitch = previousGrid != null && (!context.getSelectedGRID_WIDGET().isPresent() || !Objects.equals(context.getSelectedGRID_WIDGET().get(), previousGrid));
-        if (toSwitch) {
-            return Optional.of(previousGrid);
-        } else {
-            return Optional.empty();
         }
     }
 

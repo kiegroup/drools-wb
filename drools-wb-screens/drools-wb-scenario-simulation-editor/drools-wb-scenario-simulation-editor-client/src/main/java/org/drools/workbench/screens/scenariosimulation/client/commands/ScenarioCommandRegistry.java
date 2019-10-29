@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 
@@ -58,17 +57,11 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
         if (!getCommandHistory().isEmpty()) {
-            // to restore to implement tab switching
-//            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, peek());
-//            if (optionalPreexecuted.isPresent()) {
-//                return optionalPreexecuted.get();
-//            } else {
-                final AbstractScenarioSimulationCommand toUndo = pop();
-                toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
-                if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    undoneCommands.push(toUndo);
-                }
-//            }
+            final AbstractScenarioSimulationCommand toUndo = pop();
+            toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
+            if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
+                undoneCommands.push(toUndo);
+            }
         } else {
             toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(new ScenarioSimulationViolation("No commands to undo")));
         }
@@ -84,33 +77,16 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
     public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
         if (!undoneCommands.isEmpty()) {
-            // to restore to implement tab switching
-//            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, undoneCommands.peek());
-//            if (optionalPreexecuted.isPresent()) {
-//                return optionalPreexecuted.get();
-//            } else {
-                final AbstractScenarioSimulationCommand toRedo = undoneCommands.pop();
-                toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
-                if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    register(toRedo);
-                }
-//            }
+            final AbstractScenarioSimulationCommand toRedo = undoneCommands.pop();
+            toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
+            if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
+                register(toRedo);
+            }
         } else {
             toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(new ScenarioSimulationViolation("No commands to redo")));
         }
         setUndoRedoButtonStatus(scenarioSimulationContext);
         return toReturn;
-    }
-
-    /**
-     * Method called soon before actual <b>undo</b> and <b>redo</b> operations to preliminary execute a tab switch <b>without</b>
-     * altering the call stack.
-     * If the command change the status of a not shown grid, this switches the tab and returns without removing now executing the actual command.
-     * @param scenarioSimulationContext
-     * @param command
-     */
-    protected Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext scenarioSimulationContext, final AbstractScenarioSimulationCommand command) {
-        return command.commonUndoRedoPreexecution(scenarioSimulationContext);
     }
 
     /**

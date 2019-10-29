@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import java.util.Optional;
-
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.junit.Before;
@@ -32,7 +30,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest {
@@ -57,60 +54,12 @@ public class ScenarioCommandRegistryTest extends AbstractScenarioSimulationTest 
     }
 
     @Test
-    public void undoNotEmptySameGrid() {
-        int currentSize = scenarioCommandRegistry.undoneCommands.size();
-        scenarioCommandRegistry.register(scenarioSimulationContextLocal, appendRowCommandMock);
-        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-        when(appendRowCommandMock.commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal))).thenReturn(Optional.empty());
-        scenarioCommandRegistry.undo(scenarioSimulationContextLocal);
-        assertEquals(currentSize + 1, scenarioCommandRegistry.undoneCommands.size());
-        verify(scenarioCommandRegistry, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-        verify(scenarioCommandRegistry, times(2)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-    }
-
-    // to restore when implement tab switching
-//    @Test
-//    public void undoNotEmptyDifferentGrid() {
-//        int currentSize = scenarioCommandRegistry.undoneCommands.size();
-//        scenarioCommandRegistry.register(scenarioSimulationContextLocal, appendRowCommandMock);
-//        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-//        when(appendRowCommandMock.commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal))).thenReturn(Optional.of(CommandResultBuilder.SUCCESS));
-//        scenarioCommandRegistry.undo(scenarioSimulationContextLocal);
-//        assertEquals(currentSize, scenarioCommandRegistry.undoneCommands.size());
-//        verify(scenarioCommandRegistry, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-//        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-//    }
-
-    @Test
     public void redoEmpty() {
         scenarioCommandRegistry.undoneCommands.clear();
         scenarioCommandRegistry.redo(scenarioSimulationContextLocal);
         verify(scenarioCommandRegistry, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
         verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
-
-    @Test
-    public void redoNotEmptySameGrid() {
-        scenarioCommandRegistry.undoneCommands.push(appendRowCommandMock);
-        when(appendRowCommandMock.commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal))).thenReturn(Optional.empty());
-        int currentSize = scenarioCommandRegistry.undoneCommands.size();
-        scenarioCommandRegistry.redo(scenarioSimulationContextLocal);
-        assertEquals(currentSize - 1, scenarioCommandRegistry.undoneCommands.size());
-        verify(scenarioCommandRegistry, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(false));
-        verify(scenarioCommandRegistry, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-    }
-
-    // to restore when implement tab switching
-//    @Test
-//    public void redoNotEmptyDifferentGrid() {
-//        scenarioCommandRegistry.undoneCommands.push(appendRowCommandMock);
-//        when(appendRowCommandMock.commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal))).thenReturn(Optional.of(CommandResultBuilder.SUCCESS));
-//        int currentSize = scenarioCommandRegistry.undoneCommands.size();
-//        scenarioCommandRegistry.redo(scenarioSimulationContextLocal);
-//        assertEquals(currentSize, scenarioCommandRegistry.undoneCommands.size());
-//        verify(scenarioCommandRegistry, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(false));
-//        verify(scenarioCommandRegistry, never()).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-//    }
 
     @Test
     public void setUndoRedoButtonStatus() {
