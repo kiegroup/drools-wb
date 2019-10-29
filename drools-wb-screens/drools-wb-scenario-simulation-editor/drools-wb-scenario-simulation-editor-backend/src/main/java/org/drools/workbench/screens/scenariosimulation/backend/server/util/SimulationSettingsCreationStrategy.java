@@ -23,9 +23,9 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScesimDataWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.uberfire.backend.vfs.Path;
 
 /**
@@ -39,12 +39,12 @@ public interface SimulationSettingsCreationStrategy {
 
     Settings createSettings(String value) throws Exception;
 
-    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, SimulationDescriptor simulationDescriptor, Class<E> toInstantiate) throws Exception {
+    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, Class<E> toInstantiate) throws Exception {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-        T scenario = abstractScesimModel.addScesimData();
+        T scenario = abstractScesimModel.addData();
         scenario.setDescription(null);
-        int index = abstractScesimModel.getUnmodifiableScesimData().indexOf(scenario) + 1;
+        int index = abstractScesimModel.getUnmodifiableData().indexOf(scenario) + 1;
         return toInstantiate.getConstructor(int.class, scenario.getClass()).newInstance(index, scenario)/*   new E(index, scenario)*/;
     }
 
@@ -56,7 +56,7 @@ public interface SimulationSettingsCreationStrategy {
      * @param placeholderId
      * @param factMappingType
      */
-    default void createEmptyColumn(SimulationDescriptor simulationDescriptor,
+    default void createEmptyColumn(ScesimModelDescriptor simulationDescriptor,
                                    ScesimDataWithIndex scesimDataWithIndex,
                                    int placeholderId,
                                    FactMappingType factMappingType,

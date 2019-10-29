@@ -20,9 +20,9 @@ import java.util.List;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -47,7 +47,7 @@ public interface ScenarioSimulationService
     ScenarioSimulationModelContent loadContent(final Path path);
 
     SimulationRunResult runScenario(Path path,
-                                    SimulationDescriptor simulationDescriptor,
+                                    ScesimModelDescriptor simulationDescriptor,
                                     List<ScenarioWithIndex> scenarios,
                                     Settings settings);
 

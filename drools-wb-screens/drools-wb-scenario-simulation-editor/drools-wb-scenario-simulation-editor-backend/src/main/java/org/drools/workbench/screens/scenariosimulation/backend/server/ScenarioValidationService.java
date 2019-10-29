@@ -45,7 +45,7 @@ public class ScenarioValidationService
      */
     public List<FactMappingValidationError> validateSimulationStructure(Simulation simulation, Settings settings, Path path) {
         // skip validation (and compilation) if there are no columns to validate
-        List<FactMapping> factMappings = simulation.getSimulationDescriptor().getFactMappings();
+        List<FactMapping> factMappings = simulation.getScesimModelDescriptor().getFactMappings();
         if (factMappings.stream().allMatch(AbstractScenarioValidation::isToSkip)) {
             return Collections.emptyList();
         }

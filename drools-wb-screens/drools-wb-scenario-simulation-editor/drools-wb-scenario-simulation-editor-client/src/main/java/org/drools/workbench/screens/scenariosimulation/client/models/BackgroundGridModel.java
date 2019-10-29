@@ -48,8 +48,8 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
             ExpressionIdentifier expressionIdentifier = value.getExpressionIdentifier();
             if (value.getRawValue() == null || value.getRawValue() instanceof String) { // Let' put a placeholder
                 String stringValue = (String) value.getRawValue();
-                int columnIndex = abstractScesimModel.getSimulationDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
-                final FactMapping factMappingByIndex = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+                int columnIndex = abstractScesimModel.getScesimModelDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
+                final FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
                 String placeHolder = ((ScenarioGridColumn) columns.get(columnIndex)).getPlaceHolder();
                 setCell(rowIndex, columnIndex, () -> {
                     ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(stringValue, placeHolder));

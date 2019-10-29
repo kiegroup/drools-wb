@@ -21,9 +21,9 @@ import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.model.FactMappingType.EXPECT;
@@ -35,7 +35,7 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
     @Override
     public Simulation createSimulation(Path context, String value) throws Exception {
         Simulation toReturn = new Simulation();
-        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
 
         // Add GIVEN Fact
@@ -57,7 +57,7 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
     @Override
     public Background createBackground(Path context, String dmnFilePath) throws Exception {
         Background toReturn = new Background();
-        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
 
         // Add GIVEN Fact

@@ -40,7 +40,7 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
@@ -99,7 +99,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     public void bindContent(T abstractScesimModel) {
         this.abstractScesimModel = abstractScesimModel;
         checkSimulation();
-        columnCounter.set(abstractScesimModel.getSimulationDescriptor().getUnmodifiableFactMappings().size());
+        columnCounter.set(abstractScesimModel.getScesimModelDescriptor().getUnmodifiableFactMappings().size());
     }
 
     public void setEventBus(EventBus eventBus) {
@@ -193,7 +193,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     public Range deleteRow(int rowIndex) {
         checkSimulation();
         Range toReturn = super.deleteRow(rowIndex);
-        abstractScesimModel.removeScesimDataByIndex(rowIndex);
+        abstractScesimModel.removeDataByIndex(rowIndex);
         updateIndexColumn();
         return toReturn;
     }
@@ -206,7 +206,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     public void duplicateRow(int rowIndex, GridRow row) {
         checkSimulation();
         int newRowIndex = rowIndex + 1;
-        final E toDuplicate = abstractScesimModel.cloneScesimData(rowIndex, newRowIndex);
+        final E toDuplicate = abstractScesimModel.cloneData(rowIndex, newRowIndex);
         insertRowGridOnly(newRowIndex, row, toDuplicate);
     }
 
@@ -295,7 +295,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                     .forEach(rowIndex -> originalValues.add(getCell(rowIndex, columnIndex).getValue()));
         }
         replaceColumn(columnIndex, column);
-        final FactMapping factMappingByIndex = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factMappingByIndex.getFactIdentifier());
         // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
@@ -349,8 +349,8 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             Optional<?> optionalValue = getCellValue(getCell(rowIndex, columnIndex));
             Object rawValue = optionalValue.orElse(null);
             String cellValue = (rawValue instanceof String) ? (String) rawValue : null;
-            E scenarioByIndex = abstractScesimModel.getScesimDataByIndex(rowIndex);
-            FactMapping factMappingByIndex = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            E scenarioByIndex = abstractScesimModel.getDataByIndex(rowIndex);
+            FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             FactIdentifier factIdentifier = factMappingByIndex.getFactIdentifier();
             ExpressionIdentifier expressionIdentifier = factMappingByIndex.getExpressionIdentifier();
             scenarioByIndex.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, cellValue);
@@ -365,7 +365,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     public Range setCellValue(int rowIndex, int columnIndex, GridCellValue<?> value) {
         return setCell(rowIndex, columnIndex, () -> {
             ScenarioGridCell newCell = new ScenarioGridCell((ScenarioGridCellValue) value);
-            FactMapping factMappingByIndex = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                 newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
             }
@@ -375,8 +375,8 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
 
     @Override
     public Range deleteCell(int rowIndex, int columnIndex) {
-        FactMapping factMapping = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
-        abstractScesimModel.getScesimDataByIndex(rowIndex)
+        FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
+        abstractScesimModel.getDataByIndex(rowIndex)
                 .removeFactMappingValueByIdentifiers(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier());
         return super.deleteCell(rowIndex, columnIndex);
     }
@@ -486,7 +486,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @return
      */
     public int getInstancesCount(String className) {
-        return abstractScesimModel.getSimulationDescriptor().getUnmodifiableFactMappings()
+        return abstractScesimModel.getScesimModelDescriptor().getUnmodifiableFactMappings()
                 .stream()
                 .filter(factMapping -> factMapping.getFactIdentifier().getClassName().equals(className))
                 .collect(Collectors.groupingBy(FactMapping::getFactAlias))
@@ -499,7 +499,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
         if (Objects.equals(editedMetadata.getTitle(), headerCellValue)) {
             return;
         }
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         FactMapping factMappingToEdit = simulationDescriptor.getFactMappingByIndex(columnIndex);
         ScenarioHeaderMetaData.MetadataType metadataType = editedMetadata.getMetadataType();
         IntStream.range(0, getColumnCount()).forEach(index -> updateFactMapping(simulationDescriptor, factMappingToEdit, index, headerCellValue, metadataType));
@@ -551,7 +551,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             return;
         }
         final int columnIndex = getColumns().indexOf(column);
-        final FactMapping factMapping = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         factMapping.setColumnWidth(column.getWidth());
     }
 
@@ -561,7 +561,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     public void loadFactMappingsWidth() {
         for (final GridColumn<?> column : getColumns()) {
             final int columnIndex = getColumns().indexOf(column);
-            final FactMapping factMapping = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            final FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             if (factMapping.getColumnWidth() != null) {
                 column.setWidth(factMapping.getColumnWidth());
             }
@@ -648,7 +648,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      */
     public void checkAlreadyAssignedProperty(int columnIndex, List<String> propertyNameElements) throws Exception {
         Range instanceLimits = getInstanceLimits(columnIndex);
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         List<String> propertyNameElementsClone = new ArrayList<>(); // We have to keep the original List unmodified
         propertyNameElementsClone.add(factIdentifier.getClassNameWithoutPackage());
@@ -684,7 +684,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      */
     public boolean isSameSelectedColumnProperty(int columnIndex, List<String> propertyNameElements) {
         String propertyName = String.join(".", propertyNameElements);
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
         return factMappingByIndex.getExpressionAlias().equals(propertyName);
     }
@@ -705,7 +705,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @return
      */
     public boolean isSameSelectedColumnType(int columnIndex, String className) {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
         return factMappingByIndex.getClassName().equals(className);
     }
@@ -739,7 +739,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @return
      */
     public boolean isSameInstanceType(int columnIndex, String headerName) {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         final FactIdentifier factIdentifierByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         return Objects.equals(factIdentifierByIndex.getClassNameWithoutPackage(), headerName);
     }
@@ -751,7 +751,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @throws Exception if the given <b>propertyNameElements</b> (corrected for the class name) represents the <b>element steps</b> of the given column
      */
     public void checkSamePropertyHeader(int columnIndex, List<String> propertyNameElements) throws Exception {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
         List<String> columnPropertyName = factMapping.getExpressionElementsWithoutClass().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
         if (!Objects.equals(columnPropertyName, propertyNameElements)) {
@@ -771,7 +771,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param rowIndex
      */
     public void resetErrors(int rowIndex) {
-        E scesimDataByIndex = abstractScesimModel.getScesimDataByIndex(rowIndex);
+        E scesimDataByIndex = abstractScesimModel.getDataByIndex(rowIndex);
         scesimDataByIndex.resetErrors();
         refreshErrors();
     }
@@ -782,8 +782,8 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param columnIndex
      */
     public void resetError(int rowIndex, int columnIndex) {
-        E scesimDataByIndex = abstractScesimModel.getScesimDataByIndex(rowIndex);
-        FactMapping factMapping = abstractScesimModel.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        E scesimDataByIndex = abstractScesimModel.getDataByIndex(rowIndex);
+        FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         Optional<FactMappingValue> factMappingValue = scesimDataByIndex.getFactMappingValue(factMapping);
         factMappingValue.ifPresent(FactMappingValue::resetStatus);
         refreshErrors();
@@ -847,7 +847,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param index
      * @param value
      */
-    protected void updateFactMapping(SimulationDescriptor simulationDescriptor, FactMapping factMappingReference, int index, String value, ScenarioHeaderMetaData.MetadataType metadataType) {
+    protected void updateFactMapping(ScesimModelDescriptor simulationDescriptor, FactMapping factMappingReference, int index, String value, ScenarioHeaderMetaData.MetadataType metadataType) {
         final FactIdentifier factIdentifierReference = factMappingReference.getFactIdentifier();
         FactMapping factMappingToCheck = simulationDescriptor.getFactMappingByIndex(index);
         final FactIdentifier factIdentifierToCheck = factMappingToCheck.getFactIdentifier();
@@ -893,7 +893,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param ei
      */
     protected void commonAddColumn(final int index, final GridColumn<?> column, ExpressionIdentifier ei) {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         String instanceTitle = ((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle();
         String propertyTitle = ((ScenarioGridColumn) column).getPropertyHeaderMetaData().getTitle();
         final int columnIndex = index == -1 ? getColumnCount() : index;
@@ -915,15 +915,15 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             return;
         }
 
-        final List<E> unmodifiableScesimData = abstractScesimModel.getUnmodifiableScesimData();
+        final List<E> unmodifiableScesimData = abstractScesimModel.getUnmodifiableData();
         String placeHolder = ((ScenarioGridColumn) column).getPlaceHolder();
         IntStream.range(0, unmodifiableScesimData.size())
                 .forEach(rowIndex -> setCell(rowIndex, columnIndex, () -> new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder))));
     }
 
     protected void commonAddRow(int rowIndex) {
-        E scesimData = abstractScesimModel.addScesimData(rowIndex);
-        final SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        E scesimData = abstractScesimModel.addData(rowIndex);
+        final ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             scesimData.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
@@ -973,7 +973,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             throw new IllegalArgumentException(ScenarioSimulationEditorConstants.INSTANCE.instanceTitleWithPeriodsError());
         }
         Range instanceLimits = getInstanceLimits(columnIndex);
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         if (IntStream.range(0, getColumnCount())
                 .filter(index -> index < instanceLimits.getMinRowIndex() || index > instanceLimits.getMaxRowIndex())
@@ -1009,7 +1009,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * inside the <b>instance</b> of the given column
      */
     protected void checkUniquePropertyHeaderTitle(String propertyHeaderCellValue, int columnIndex) {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         FactIdentifier factIdentifier = simulationDescriptor.getFactMappingByIndex(columnIndex).getFactIdentifier();
         if (IntStream.range(0, getColumnCount())
                 .filter(index -> index != columnIndex)
@@ -1038,8 +1038,8 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     }
 
     protected void refreshErrorsRow(int rowIndex) {
-        SimulationDescriptor simulationDescriptor = abstractScesimModel.getSimulationDescriptor();
-        E scesimDataByIndex = abstractScesimModel.getScesimDataByIndex(rowIndex);
+        ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
+        E scesimDataByIndex = abstractScesimModel.getDataByIndex(rowIndex);
         IntStream.range(0, getColumnCount()).forEach(columnIndex -> {
             ScenarioGridCell cell = (ScenarioGridCell) getCell(rowIndex, columnIndex);
             if (cell == null) {

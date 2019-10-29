@@ -161,11 +161,11 @@ public class ScenarioSimulationGridHeaderUtilities {
     public static List<String> getPropertyNameElements(final AbstractScesimGridModel abstractScesimGridModel, final int columnIndex) {
         final Optional<Simulation> optionalSimulation = abstractScesimGridModel.getAbstractScesimModel();
         return optionalSimulation.map(simulation -> {
-            final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+            final FactMapping factMapping = simulation.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             if (abstractScesimGridModel.isSimpleType(factMapping.getFactAlias())) {
                 return Arrays.asList(ConstantHolder.VALUE);
             } else {
-                return Collections.unmodifiableList(simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
+                return Collections.unmodifiableList(simulation.getScesimModelDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()
                                                             .stream()
                                                             .map(ExpressionElement::getStep)
                                                             .collect(Collectors.toList()));

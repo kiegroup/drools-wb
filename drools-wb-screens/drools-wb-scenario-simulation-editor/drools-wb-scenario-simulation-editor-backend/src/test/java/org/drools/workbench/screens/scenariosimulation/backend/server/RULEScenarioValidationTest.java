@@ -60,10 +60,10 @@ public class RULEScenarioValidationTest {
 
         // Test 0 - skip empty or not GIVEN/EXPECT columns
         Simulation test0 = new Simulation();
-        test0.getSimulationDescriptor().addFactMapping(
+        test0.getScesimModelDescriptor().addFactMapping(
                 FactIdentifier.DESCRIPTION,
                 ExpressionIdentifier.create("value", FactMappingType.OTHER));
-        test0.getSimulationDescriptor().addFactMapping(
+        test0.getScesimModelDescriptor().addFactMapping(
                 FactIdentifier.EMPTY,
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
 
@@ -72,14 +72,14 @@ public class RULEScenarioValidationTest {
 
         // Test 1 - simple type
         Simulation test1 = new Simulation();
-        test1.getSimulationDescriptor().addFactMapping(
+        test1.getScesimModelDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", int.class.getCanonicalName()),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
 
         List<FactMappingValidationError> errorsTest1 = validation.validate(test1, settingsLocal, kieContainerMock);
         checkResult(errorsTest1);
 
-        FactMapping mySimpleType = test1.getSimulationDescriptor().addFactMapping(
+        FactMapping mySimpleType = test1.getScesimModelDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", "notValidClass"),
                 ExpressionIdentifier.create("value", FactMappingType.GIVEN));
         mySimpleType.addExpressionElement("notValidClass", "notValidClass");
@@ -91,14 +91,14 @@ public class RULEScenarioValidationTest {
         Simulation test2 = new Simulation();
         // nameFM is valid
         FactIdentifier myFactIdentifier = FactIdentifier.create("mySimpleType", SampleBean.class.getCanonicalName());
-        FactMapping nameFM = test2.getSimulationDescriptor().addFactMapping(
+        FactMapping nameFM = test2.getScesimModelDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
         nameFM.addExpressionElement("SampleBean", String.class.getCanonicalName());
         nameFM.addExpressionElement("name", String.class.getCanonicalName());
 
         // parentFM is valid
-        FactMapping parentFM = test2.getSimulationDescriptor().addFactMapping(
+        FactMapping parentFM = test2.getScesimModelDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("parent", FactMappingType.EXPECT));
         parentFM.addExpressionElement("SampleBean", SampleBean.class.getCanonicalName());
@@ -113,7 +113,7 @@ public class RULEScenarioValidationTest {
         checkResult(errorsTest2, "Impossible to find field with name 'notExisting' in class org.drools.workbench.screens.scenariosimulation.backend.server.SampleBean");
 
         // nameWrongTypeFM has a wrong type
-        FactMapping nameWrongTypeFM = test2.getSimulationDescriptor().addFactMapping(
+        FactMapping nameWrongTypeFM = test2.getScesimModelDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("parent2", FactMappingType.EXPECT));
         nameWrongTypeFM.addExpressionElement("SampleBean", Integer.class.getCanonicalName());
@@ -126,14 +126,14 @@ public class RULEScenarioValidationTest {
         // Test 3 - list
         Simulation test3 = new Simulation();
         // topLevelListFM is valid
-        FactMapping topLevelListFM = test3.getSimulationDescriptor().addFactMapping(
+        FactMapping topLevelListFM = test3.getScesimModelDescriptor().addFactMapping(
                 FactIdentifier.create("mySimpleType", List.class.getCanonicalName()),
                 ExpressionIdentifier.create("name", FactMappingType.GIVEN));
         topLevelListFM.addExpressionElement("List", List.class.getCanonicalName());
         topLevelListFM.setGenericTypes(Collections.singletonList(String.class.getCanonicalName()));
 
         // addressesFM is valid
-        FactMapping addressesFM = test3.getSimulationDescriptor().addFactMapping(
+        FactMapping addressesFM = test3.getScesimModelDescriptor().addFactMapping(
                 myFactIdentifier,
                 ExpressionIdentifier.create("addresses", FactMappingType.EXPECT));
         addressesFM.addExpressionElement("SampleBean", List.class.getCanonicalName());

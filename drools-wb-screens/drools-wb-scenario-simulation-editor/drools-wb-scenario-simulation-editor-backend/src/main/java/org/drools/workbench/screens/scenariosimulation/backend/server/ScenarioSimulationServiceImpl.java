@@ -33,9 +33,9 @@ import javax.inject.Named;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.ScenarioJunitActivator;
 import org.drools.scenariosimulation.backend.util.ImpossibleToFindDMNException;
 import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
@@ -149,7 +149,7 @@ public class ScenarioSimulationServiceImpl
 
     @Override
     public SimulationRunResult runScenario(final Path path,
-                                           final SimulationDescriptor simulationDescriptor,
+                                           final ScesimModelDescriptor simulationDescriptor,
                                            final List<ScenarioWithIndex> scenarios,
                                            final Settings settings) {
         return scenarioRunnerService.runTest(user.getIdentifier(),

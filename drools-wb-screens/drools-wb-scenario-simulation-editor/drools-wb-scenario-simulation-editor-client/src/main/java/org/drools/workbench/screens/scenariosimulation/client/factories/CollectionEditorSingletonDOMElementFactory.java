@@ -79,7 +79,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                 .findFirst();
         selectedColumn.ifPresent(col -> {
             final int actualIndex = model.getColumns().indexOf(col);
-            final FactMapping factMapping = model.getAbstractScesimModel().get().getSimulationDescriptor().getFactMappingByIndex(actualIndex);
+            final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
             setCollectionEditorStructureData(this.widget, factMapping);
             this.e = createDomElementInternal(widget, gridLayer, gridWidget);
         });

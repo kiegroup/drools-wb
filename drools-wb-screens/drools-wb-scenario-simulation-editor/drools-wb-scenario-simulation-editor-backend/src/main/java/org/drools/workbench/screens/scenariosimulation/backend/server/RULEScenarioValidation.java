@@ -57,7 +57,7 @@ public class RULEScenarioValidation extends AbstractScenarioValidation {
     public List<FactMappingValidationError> validate(Simulation simulation, Settings settings, KieContainer kieContainer) {
         List<FactMappingValidationError> errors = new ArrayList<>();
         Map<String, Object> beanInstanceMap = new HashMap<>();
-        for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {
+        for (FactMapping factMapping : simulation.getScesimModelDescriptor().getFactMappings()) {
             if (isToSkip(factMapping)) {
                 continue;
             }

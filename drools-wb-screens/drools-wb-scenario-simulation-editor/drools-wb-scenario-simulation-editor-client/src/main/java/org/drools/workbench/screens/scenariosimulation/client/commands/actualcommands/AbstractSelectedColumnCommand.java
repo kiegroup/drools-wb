@@ -266,7 +266,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         if (!selectedScenarioGridModel.isPresent()) {
             throw new IllegalArgumentException();
         }
-        final FactMapping factMapping = selectedScenarioGridModel.get().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactMapping factMapping = selectedScenarioGridModel.get().getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
         if (factModelTree.isSimple()) {
             factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(ConstantHolder.VALUE));
@@ -306,7 +306,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     }
 
     protected Optional<String> getMatchingExpressionAlias(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        final List<FactMapping> factMappingsByFactName = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingsByFactName(factIdentifier.getName());
+        final List<FactMapping> factMappingsByFactName = context.getStatus().getSimulation().getScesimModelDescriptor().getFactMappingsByFactName(factIdentifier.getName());
         return factMappingsByFactName.stream()
                 .filter(factMapping -> {
                     List<String> expressionElements = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.toList());

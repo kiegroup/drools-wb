@@ -32,8 +32,8 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -184,7 +184,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(contextMock.getStatus()).thenReturn(statusMock);
         when(contextMock.getSettings()).thenReturn(scenarioSimulationContextLocal.getSettings());
         when(statusMock.getSimulation()).thenReturn(simulationMock);
-        when(simulationMock.getUnmodifiableScesimData()).thenReturn(Arrays.asList(new Scenario()));
+        when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
         when(testRunnerReportingPanelMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
 
         this.presenter = spy(new ScenarioSimulationEditorPresenter(scenarioSimulationProducerMock,
@@ -379,7 +379,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         scenarioWithIndexLocal.add(new ScenarioWithIndex(1, new Scenario()));
         scenarioWithIndexLocal.add(new ScenarioWithIndex(2, new Scenario()));
         scenarioWithIndexLocal.add(new ScenarioWithIndex(3, new Scenario()));
-        when(simulationMock.getScesimDataByIndex(anyInt())).thenReturn(mock(Scenario.class));
+        when(simulationMock.getDataByIndex(anyInt())).thenReturn(mock(Scenario.class));
         List<Integer> indexList = Arrays.asList(0, 2);
 
         presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
@@ -629,7 +629,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         TestResultMessage testResultMessage = mock(TestResultMessage.class);
         presenter.refreshModelContent(new SimulationRunResult(entries, new SimulationRunMetadata(), testResultMessage));
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
-        verify(simulationMock, times(1)).replaceScesimData(eq(scenarioIndex), eq(scenario));
+        verify(simulationMock, times(1)).replaceData(eq(scenarioIndex), eq(scenario));
         assertEquals(scenarioSimulationModelMock, presenter.getModel());
         verify(scenarioGridWidgetSpy, times(1)).refreshContent(eq(simulationMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandTestResultsDock();
@@ -837,7 +837,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void cleanReadOnlyColumn() {
         Simulation simulation = new Simulation();
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
         FactMapping test1 = simulationDescriptor
                 .addFactMapping(FactIdentifier.create("test1", String.class.getCanonicalName()),
                                 ExpressionIdentifier.create("", FactMappingType.GIVEN));
@@ -846,7 +846,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                                 ExpressionIdentifier.create("", FactMappingType.GIVEN));
 
         test1.addExpressionElement("test", String.class.getCanonicalName());
-        Scenario scenario = simulation.addScesimData();
+        Scenario scenario = simulation.addData();
         scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), LOWER_CASE_VALUE);
         scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), LOWER_CASE_VALUE);
 

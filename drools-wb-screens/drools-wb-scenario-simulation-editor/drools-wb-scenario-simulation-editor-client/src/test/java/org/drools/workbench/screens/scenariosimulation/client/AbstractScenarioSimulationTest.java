@@ -37,9 +37,9 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -105,7 +105,7 @@ public abstract class AbstractScenarioSimulationTest {
     protected Simulation clonedSimulationMock;
 
     @Mock
-    protected SimulationDescriptor simulationDescriptorMock;
+    protected ScesimModelDescriptor simulationDescriptorMock;
     @Mock
     protected ScenarioGridColumn gridColumnMock;
     @Mock
@@ -225,7 +225,7 @@ public abstract class AbstractScenarioSimulationTest {
 
 
 
-        when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
+        when(simulationMock.getScesimModelDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
@@ -369,8 +369,8 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioSimulationEditorPresenterMock.getDataManagementStrategy()).thenReturn(dataManagementStrategyMock);
         when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
 
-        when(simulationMock.cloneScesimModel()).thenReturn(clonedSimulationMock);
-        when(backgroundMock.cloneScesimModel()).thenReturn(clonedBackgroundMock);
+        when(simulationMock.cloneModel()).thenReturn(clonedSimulationMock);
+        when(backgroundMock.cloneModel()).thenReturn(clonedBackgroundMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);

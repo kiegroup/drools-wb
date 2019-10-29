@@ -331,11 +331,11 @@ public class ScenarioSimulationServiceImplTest {
         Simulation simulation = new Simulation();
         Settings settings = new Settings();
 
-        service.runScenario(path, simulation.getSimulationDescriptor(), simulation.getScenarioWithIndex(), settings);
+        service.runScenario(path, simulation.getScesimModelDescriptor(), simulation.getScenarioWithIndex(), settings);
 
         verify(scenarioRunnerServiceMock).runTest("test userMock",
                                                   path,
-                                                  simulation.getSimulationDescriptor(),
+                                                  simulation.getScesimModelDescriptor(),
                                                   simulation.getScenarioWithIndex(),
                                                   settings);
     }

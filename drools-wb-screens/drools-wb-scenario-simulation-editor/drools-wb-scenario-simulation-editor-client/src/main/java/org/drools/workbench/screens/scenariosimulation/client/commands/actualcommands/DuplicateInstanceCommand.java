@@ -58,7 +58,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                         if (originalColumn.isPropertyAssigned()) {
                             int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
                             int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
-                            final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().get().getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+                            final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);

@@ -25,9 +25,9 @@ import javax.inject.Inject;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.AbstractScenarioRunner;
 import org.drools.scenariosimulation.backend.runner.ScenarioRunnerProvider;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -64,7 +64,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
 
                 testResultMessages.add(runTest(identifier,
                                                entry.getKey(),
-                                               simulation.getSimulationDescriptor(),
+                                               simulation.getScesimModelDescriptor(),
                                                simulation.getScenarioWithIndex(),
                                                settings)
                                                .getTestResultMessage());
@@ -77,7 +77,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
     @Override
     public SimulationRunResult runTest(final String identifier,
                                        final Path path,
-                                       final SimulationDescriptor simulationDescriptor,
+                                       final ScesimModelDescriptor simulationDescriptor,
                                        final List<ScenarioWithIndex> scenarios,
                                        final Settings settings) {
         final KieContainer kieContainer = getKieContainer(path);
@@ -100,11 +100,11 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                                                failures));
     }
 
-    public ScenarioRunnerProvider getOrCreateRunnerSupplier(SimulationDescriptor simulationDescriptor, ScenarioSimulationModel.Type type) {
+    public ScenarioRunnerProvider getOrCreateRunnerSupplier(ScesimModelDescriptor simulationDescriptor, ScenarioSimulationModel.Type type) {
         if (runnerSupplier != null) {
             return runnerSupplier;
         }
-        return AbstractScenarioRunner.getSpecificRunnerProvider(simulationDescriptor, type);
+        return AbstractScenarioRunner.getSpecificRunnerProvider(type);
     }
 
     public void setRunnerSupplier(ScenarioRunnerProvider runnerSupplier) {

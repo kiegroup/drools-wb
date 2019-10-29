@@ -162,7 +162,7 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected void setHeaderColumns(AbstractScesimModel abstractScesimModel, ScenarioSimulationModel.Type type) {
-        final List<FactMapping> factMappings = abstractScesimModel.getSimulationDescriptor().getUnmodifiableFactMappings();
+        final List<FactMapping> factMappings = abstractScesimModel.getScesimModelDescriptor().getUnmodifiableFactMappings();
         boolean editableHeaders = !type.equals(ScenarioSimulationModel.Type.DMN);
         IntStream.range(0, factMappings.size())
                 .forEach(columnIndex -> setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders));
@@ -274,7 +274,7 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     protected <T extends AbstractScesimData> void appendRows(AbstractScesimModel<T> abstractScesimModel) {
-        List<T> scesimData = abstractScesimModel.getUnmodifiableScesimData();
+        List<T> scesimData = abstractScesimModel.getUnmodifiableData();
         IntStream.range(0, scesimData.size()).forEach(rowIndex -> appendRow(rowIndex, scesimData.get(rowIndex)));
     }
 

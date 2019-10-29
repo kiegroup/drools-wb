@@ -24,9 +24,9 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.backend.runner.AbstractScenarioRunner;
 import org.drools.scenariosimulation.backend.runner.RuleScenarioRunner;
 import org.drools.scenariosimulation.backend.runner.ScenarioException;
@@ -109,7 +109,7 @@ public class ScenarioRunnerServiceImplTest {
 
         SimulationRunResult test = scenarioRunnerService.runTest("test",
                                                                  mock(Path.class),
-                                                                 simulation.getSimulationDescriptor(),
+                                                                 simulation.getScesimModelDescriptor(),
                                                                  simulation.getScenarioWithIndex(),
                                                                  settings);
 
@@ -122,7 +122,7 @@ public class ScenarioRunnerServiceImplTest {
 
         assertThatThrownBy(() -> scenarioRunnerService.runTest("test",
                                                                mock(Path.class),
-                                                               simulation.getSimulationDescriptor(),
+                                                               simulation.getScesimModelDescriptor(),
                                                                simulation.getScenarioWithIndex(),
                                                                settings))
                 .isInstanceOf(IllegalStateException.class)
@@ -133,7 +133,7 @@ public class ScenarioRunnerServiceImplTest {
     public void runTestWithScenarios() throws Exception {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
-        SimulationDescriptor simulationDescriptor = new SimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = new ScesimModelDescriptor();
         Settings settings = new Settings();
         settings.setType(Type.RULE);
         List<ScenarioWithIndex> scenarios = new ArrayList<>();
@@ -154,8 +154,8 @@ public class ScenarioRunnerServiceImplTest {
         when(buildInfoServiceMock.getBuildInfo(any())).thenReturn(buildInfoMock);
         when(buildInfoMock.getKieContainer()).thenReturn(kieContainerMock);
         Simulation simulation = new Simulation();
-        simulation.addScesimData();
-        Scenario scenario = simulation.getScesimDataByIndex(0);
+        simulation.addData();
+        Scenario scenario = simulation.getDataByIndex(0);
         scenario.setDescription("Test Scenario");
         String errorMessage = "Test Error";
 
@@ -170,7 +170,7 @@ public class ScenarioRunnerServiceImplTest {
                         });
         SimulationRunResult test = scenarioRunnerService.runTest("test",
                                                                  mock(Path.class),
-                                                                 simulation.getSimulationDescriptor(),
+                                                                 simulation.getScesimModelDescriptor(),
                                                                  simulation.getScenarioWithIndex(),
                                                                  settingsLocal);
         TestResultMessage value = test.getTestResultMessage();

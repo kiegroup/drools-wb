@@ -36,8 +36,8 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
@@ -243,7 +243,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onRunScenario() {
-        List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableScesimData().size())
+        List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableData().size())
                 .boxed()
                 .collect(Collectors.toList());
         onRunScenario(indexes);
@@ -258,7 +258,7 @@ public class ScenarioSimulationEditorPresenter {
                 .collect(Collectors.toList());
         view.showBusyIndicator(ScenarioSimulationEditorConstants.INSTANCE.running());
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
-                                                      simulation.getSimulationDescriptor(),
+                                                      simulation.getScesimModelDescriptor(),
                                                       context.getSettings(),
                                                       toRun);
     }
@@ -348,7 +348,7 @@ public class ScenarioSimulationEditorPresenter {
         Simulation simulation = this.model.getSimulation();
         for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
             int index = scenarioWithIndex.getIndex() - 1;
-            simulation.replaceScesimData(index, scenarioWithIndex.getScesimData());
+            simulation.replaceData(index, scenarioWithIndex.getScesimData());
         }
         scenarioMainGridWidget.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
@@ -540,9 +540,9 @@ public class ScenarioSimulationEditorPresenter {
      * @param simulation
      */
     protected void cleanReadOnlyColumn(Simulation simulation) {
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
-        for (int i = 0; i < simulation.getUnmodifiableScesimData().size(); i += 1) {
-            Scenario scenario = simulation.getScesimDataByIndex(i);
+        ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
+        for (int i = 0; i < simulation.getUnmodifiableData().size(); i += 1) {
+            Scenario scenario = simulation.getDataByIndex(i);
             for (FactMapping factMapping : simulationDescriptor.getUnmodifiableFactMappings()) {
                 if (isColumnReadOnly(factMapping)) {
                     scenario.getFactMappingValue(factMapping.getFactIdentifier(),

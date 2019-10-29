@@ -32,7 +32,7 @@ import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -102,7 +102,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         List<List<String>> toReturn = new ArrayList<>();
         if (!selectedColumn.isPropertyAssigned()) {
             abstractScesimGridModel.getAbstractScesimModel().ifPresent(simulation -> {
-                final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+                final ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
                 List<ScenarioGridColumn> instanceColumns = abstractScesimGridModel.getInstanceScenarioGridColumns(selectedColumn);
                 toReturn.addAll(instanceColumns.stream()
                                         .filter(ScenarioGridColumn::isPropertyAssigned)
@@ -169,7 +169,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
         // map instance name to base class
         if (model != null) {
-            final SimulationDescriptor simulationDescriptor = model.getSimulation().getSimulationDescriptor();
+            final ScesimModelDescriptor simulationDescriptor = model.getSimulation().getScesimModelDescriptor();
             simulationDescriptor.getUnmodifiableFactMappings()
                     .stream()
                     .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))

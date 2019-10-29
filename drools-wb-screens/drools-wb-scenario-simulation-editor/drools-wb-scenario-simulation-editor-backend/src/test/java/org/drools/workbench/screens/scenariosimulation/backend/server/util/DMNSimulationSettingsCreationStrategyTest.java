@@ -32,9 +32,9 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.backend.server.AbstractDMNTest;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -177,9 +177,9 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     @Test
     public void addEmptyColumnIfNeeded() {
         Simulation simulation = new Simulation();
-        ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScesimData());
+        ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, simulation.addData());
         ExpressionIdentifier givenExpressionIdentifier = ExpressionIdentifier.create("given1", GIVEN);
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
 
         dmnSimulationCreationStrategy.addEmptyColumnsIfNeeded(simulation, scenarioWithIndex);
@@ -188,9 +188,9 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
                            .anyMatch(elem -> EXPECT.equals(elem.getExpressionIdentifier().getType())));
 
         simulation = new Simulation();
-        scenarioWithIndex = new ScenarioWithIndex(1, simulation.addScesimData());
+        scenarioWithIndex = new ScenarioWithIndex(1, simulation.addData());
         ExpressionIdentifier expectExpressionIdentifier = ExpressionIdentifier.create("expect1", EXPECT);
-        simulationDescriptor = simulation.getSimulationDescriptor();
+        simulationDescriptor = simulation.getScesimModelDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);
 
         dmnSimulationCreationStrategy.addEmptyColumnsIfNeeded(simulation, scenarioWithIndex);
@@ -201,19 +201,19 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
     @Test
     public void findNewIndexOfGroup() {
-        SimulationDescriptor simulationDescriptorGiven = new SimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptorGiven = new ScesimModelDescriptor();
         ExpressionIdentifier givenExpressionIdentifier = ExpressionIdentifier.create("given1", GIVEN);
         simulationDescriptorGiven.addFactMapping(FactIdentifier.EMPTY, givenExpressionIdentifier);
         assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorGiven, GIVEN));
         assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorGiven, EXPECT));
 
-        SimulationDescriptor simulationDescriptorExpect = new SimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptorExpect = new ScesimModelDescriptor();
         ExpressionIdentifier expectExpressionIdentifier = ExpressionIdentifier.create("expect1", EXPECT);
         simulationDescriptorExpect.addFactMapping(FactIdentifier.EMPTY, expectExpressionIdentifier);
         assertEquals(0, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorExpect, GIVEN));
         assertEquals(1, dmnSimulationCreationStrategy.findNewIndexOfGroup(simulationDescriptorExpect, EXPECT));
 
-        assertThatThrownBy(() -> dmnSimulationCreationStrategy.findNewIndexOfGroup(new SimulationDescriptor(), OTHER))
+        assertThatThrownBy(() -> dmnSimulationCreationStrategy.findNewIndexOfGroup(new ScesimModelDescriptor(), OTHER))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("This method can be invoked only with GIVEN or EXPECT as FactMappingType");
     }
@@ -227,7 +227,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
         Simulation simulation = dmnSimulationCreationStrategy.createSimulation(pathMock, dmnFilePath);
 
         assertNotNull(simulation);
-        List<FactMapping> factMappings = simulation.getSimulationDescriptor().getFactMappings();
+        List<FactMapping> factMappings = simulation.getScesimModelDescriptor().getFactMappings();
         if (hasInput) {
             assertTrue(factMappings.stream().anyMatch(elem -> GIVEN.equals(elem.getExpressionIdentifier().getType())));
         } else {

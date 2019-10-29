@@ -35,9 +35,9 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -58,7 +58,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     public Simulation createSimulation(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Simulation toReturn = new Simulation();
-        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
 
         AtomicInteger id = new AtomicInteger(1);
@@ -84,7 +84,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     public Background createBackground(Path context, String dmnFilePath) throws Exception {
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Background toReturn = new Background();
-        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
 
         AtomicInteger id = new AtomicInteger(1);
@@ -119,7 +119,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     protected void addEmptyColumnsIfNeeded(Simulation simulation, ScenarioWithIndex scenarioWithIndex) {
         boolean hasGiven = false;
         boolean hasExpect = false;
-        SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
         for (FactMapping factMapping : simulationDescriptor.getFactMappings()) {
             FactMappingType factMappingType = factMapping.getExpressionIdentifier().getType();
             if (!hasGiven && GIVEN.equals(factMappingType)) {
@@ -144,7 +144,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         }
     }
 
-    protected int findNewIndexOfGroup(SimulationDescriptor simulationDescriptor, FactMappingType factMappingType) {
+    protected int findNewIndexOfGroup(ScesimModelDescriptor simulationDescriptor, FactMappingType factMappingType) {
         List<FactMapping> factMappings = simulationDescriptor.getFactMappings();
         if (GIVEN.equals(factMappingType)) {
             for (int i = 0; i < factMappings.size(); i += 1) {
@@ -226,10 +226,10 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         private final int row;
         private final AtomicInteger id;
         private final FactMappingType type;
-        private final SimulationDescriptor simulationDescriptor;
+        private final ScesimModelDescriptor simulationDescriptor;
         private final AbstractScesimData abstractScesimData;
 
-        public FactMappingExtractor(FactIdentifier factIdentifier, int row, AtomicInteger id, FactMappingType type, SimulationDescriptor simulationDescriptor, AbstractScesimData abstractScesimData) {
+        public FactMappingExtractor(FactIdentifier factIdentifier, int row, AtomicInteger id, FactMappingType type, ScesimModelDescriptor simulationDescriptor, AbstractScesimData abstractScesimData) {
             this.factIdentifier = factIdentifier;
             this.row = row;
             this.id = id;

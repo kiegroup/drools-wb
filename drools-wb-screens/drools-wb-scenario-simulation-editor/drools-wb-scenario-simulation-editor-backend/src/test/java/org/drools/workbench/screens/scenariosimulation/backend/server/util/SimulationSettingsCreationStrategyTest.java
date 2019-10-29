@@ -21,9 +21,9 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.uberfire.backend.vfs.Path;
@@ -60,7 +60,7 @@ public class SimulationSettingsCreationStrategyTest {
                 return null;
             }
         };
-        SimulationDescriptor simulationDescriptorSpy = spy(new SimulationDescriptor());
+        ScesimModelDescriptor simulationDescriptorSpy = spy(new ScesimModelDescriptor());
         Scenario scenarioSpy = spy(new Scenario());
         ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(1, scenarioSpy);
 

@@ -33,8 +33,8 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
@@ -435,14 +435,14 @@ public class ScenarioGridTest {
 
     private Simulation getSimulation() {
         Simulation toReturn = new Simulation();
-        SimulationDescriptor simulationDescriptor = toReturn.getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
 //        simulationDescriptor.setType(ScenarioSimulationModel.Type.RULE);
 
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
 
-        Scenario scenario = toReturn.addScesimData();
-        int row = toReturn.getUnmodifiableScesimData().indexOf(scenario);
+        Scenario scenario = toReturn.addData();
+        int row = toReturn.getUnmodifiableData().indexOf(scenario);
         scenario.setDescription(null);
 
         // Add GIVEN Facts

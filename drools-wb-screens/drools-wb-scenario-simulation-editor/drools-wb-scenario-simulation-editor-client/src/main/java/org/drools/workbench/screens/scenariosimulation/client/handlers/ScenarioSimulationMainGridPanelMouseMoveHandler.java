@@ -87,8 +87,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         }
         final Optional<AbstractScesimModel<? extends AbstractScesimData>> abstractScesimModel = scenarioGrid.getModel().getAbstractScesimModel();
         final AbstractScesimModel<? extends AbstractScesimData> simulation = abstractScesimModel.orElseThrow(IllegalStateException::new);
-        final AbstractScesimData scenarioByIndex = simulation.getScesimDataByIndex(uiRowIndex);
-        final FactMapping factMapping = simulation.getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
+        final AbstractScesimData scenarioByIndex = simulation.getDataByIndex(uiRowIndex);
+        final FactMapping factMapping = simulation.getScesimModelDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */

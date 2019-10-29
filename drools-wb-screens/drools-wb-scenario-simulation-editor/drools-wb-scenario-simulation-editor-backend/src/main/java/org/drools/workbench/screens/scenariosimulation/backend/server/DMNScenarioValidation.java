@@ -62,7 +62,7 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
         String dmnFilePath = settings.getDmnFilePath();
         DMNModel dmnModel = getDMNModel(kieContainer, dmnFilePath);
 
-        for (FactMapping factMapping : simulation.getSimulationDescriptor().getFactMappings()) {
+        for (FactMapping factMapping : simulation.getScesimModelDescriptor().getFactMappings()) {
             if (isToSkip(factMapping)) {
                 continue;
             }

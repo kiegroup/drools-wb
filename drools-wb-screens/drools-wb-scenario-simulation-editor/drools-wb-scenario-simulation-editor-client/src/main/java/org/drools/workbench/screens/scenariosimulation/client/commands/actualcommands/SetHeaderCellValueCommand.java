@@ -64,7 +64,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand
 
     protected void validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
         List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
-        final FactMapping factMappingByIndex = context.getStatus().getSimulation().getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        final FactMapping factMappingByIndex = context.getStatus().getSimulation().getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();
         final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
         boolean isPropertyType = !headerCellValue.endsWith(".") && factModelTree != null && recursivelyFindIsPropertyType(context, factModelTree, propertyNameElements);

@@ -77,7 +77,7 @@ public class ScenarioValidationServiceTest {
         verify(scenarioValidationServiceSpy, never()).validateRULE(eq(simulation), eq(settings), eq(kieContainerMock));
 
         reset(scenarioValidationServiceSpy);
-        FactMapping sampleFactMapping = simulation.getSimulationDescriptor()
+        FactMapping sampleFactMapping = simulation.getScesimModelDescriptor()
                 .addFactMapping(FactIdentifier.create("sample", String.class.getCanonicalName()),
                                 ExpressionIdentifier.create("sample", FactMappingType.GIVEN));
         sampleFactMapping.addExpressionElement("sample", String.class.getCanonicalName());
