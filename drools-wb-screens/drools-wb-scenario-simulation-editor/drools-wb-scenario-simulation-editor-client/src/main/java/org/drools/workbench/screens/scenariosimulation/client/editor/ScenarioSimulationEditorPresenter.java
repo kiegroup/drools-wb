@@ -566,7 +566,7 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         focusedContext.setTestToolsPresenter(presenter);
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
-        presenter.setEventBus(eventBus);
+        presenter.initTestTools(eventBus, modelType);
         dataManagementStrategy.populateTestTools(presenter, focusedContext);
     }
 
