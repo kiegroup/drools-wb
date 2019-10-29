@@ -359,7 +359,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned())) {
+        boolean notEqualSearch = !isSimple(selected.getFactName()) && selected.isInstanceAssigned();
+        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), notEqualSearch)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
