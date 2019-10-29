@@ -29,6 +29,7 @@ import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -320,9 +321,10 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
-    public void setEventBus() {
-        testToolsPresenter.setEventBus(eventBusMock);
+    public void initTestTools() {
+        testToolsPresenter.initTestTools(eventBusMock, ScenarioSimulationModel.Type.DMN);
         assertEquals(eventBusMock, testToolsPresenter.eventBus);
+        assertEquals(ScenarioSimulationModel.Type.DMN, testToolsPresenter.modelType);
     }
 
     @Test

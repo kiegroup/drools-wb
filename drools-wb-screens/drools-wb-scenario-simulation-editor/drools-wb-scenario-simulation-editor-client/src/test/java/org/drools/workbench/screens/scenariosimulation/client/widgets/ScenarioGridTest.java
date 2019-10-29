@@ -36,6 +36,8 @@ import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
+import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridWidgetMouseEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -110,6 +112,11 @@ public class ScenarioGridTest {
     private Viewport viewportMock;
     @Mock
     private ScenarioContextMenuRegistry scenarioContextMenuRegistryMock;
+    @Mock
+    private ScenarioExpressionCellTextAreaSingletonDOMElementFactory expressionCellTextAreaSingletonDOMElementFactoryMock;
+    @Mock
+    private CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactory;
+
 
     private FactMapping factMappingDescription;
     private FactMapping factMappingGiven;
@@ -124,6 +131,8 @@ public class ScenarioGridTest {
     public void setup() {
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
         when(scenarioGridModelMock.getSimulation()).thenReturn(Optional.of(simulation));
+        when(scenarioGridModelMock.getScenarioExpressionCellTextAreaSingletonDOMElementFactory()).thenReturn(expressionCellTextAreaSingletonDOMElementFactoryMock);
+        when(scenarioGridModelMock.getCollectionEditorSingletonDOMElementFactory()).thenReturn(collectionEditorSingletonDOMElementFactory);
         factIdentifierGiven = new FactIdentifier("GIVEN", "GIVEN");
         factIdentifierInteger = new FactIdentifier("Integer", "java.lang.Integer");
         factMappingDescription = new FactMapping(EXPRESSION_ALIAS_DESCRIPTION, FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
@@ -338,6 +347,15 @@ public class ScenarioGridTest {
 
     @Test
     public void getPlaceholder() {
+        FactMapping expressionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("Test", "com.Test");
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.insertExpression(),
+                     scenarioGrid.getPlaceholder(true, expressionFactMapping));
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(),
+                     scenarioGrid.getPlaceholder(false, expressionFactMapping));
+
         FactMapping stringFactMapping = new FactMapping(
                 FactIdentifier.create("test", String.class.getCanonicalName()),
                 ExpressionIdentifier.create("test", FactMappingType.GIVEN));
@@ -493,5 +511,28 @@ public class ScenarioGridTest {
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(Collections.singletonList(selectedHeaderCell));
         scenarioGrid.signalTestToolsHeaderCellSelected(columnMock, selectedHeaderCell, uiColumnIndex);
         verify(eventBusMock, times(1)).fireEvent(isA(ReloadTestToolsEvent.class));
+    }
+
+    @Test
+    public void setDOMElementFactory() {
+        FactMapping expressionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("Test", "com.Test");
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, expressionFactMapping);
+        verify(scenarioGridColumnMock, times(1)).setFactory(eq(expressionCellTextAreaSingletonDOMElementFactoryMock));
+        //
+        FactMapping collectionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        collectionFactMapping.addExpressionElement("Test", "java.util.List");
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, collectionFactMapping);
+        verify(scenarioGridColumnMock, times(1)).setFactory(eq(collectionEditorSingletonDOMElementFactory));
+    }
+
+    @Test
+    public void setDOMElementFactory_NotExpressionNotCollection() {
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, factMappingInteger);
+        verify(scenarioGridColumnMock, never()).setFactory(any());
     }
 }

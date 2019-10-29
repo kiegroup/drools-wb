@@ -24,6 +24,8 @@ import java.util.List;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
+import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.junit.Test;
@@ -57,7 +59,7 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
     @Test
     public void getOriginalColumnGroup() {
         String subGroup = ScenarioSimulationUtils.getOriginalColumnGroup(COLUMN_GROUP + "-3");
-        assertEquals(subGroup, COLUMN_GROUP);
+        assertEquals(COLUMN_GROUP, subGroup);
     }
 
     @Test
@@ -97,6 +99,34 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
     public void isSimpleJavaType() {
         SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertTrue(ScenarioSimulationUtils.isSimpleJavaType(clazz.getCanonicalName())));
         assertFalse(ScenarioSimulationUtils.isSimpleJavaType("com.TestBean"));
+    }
+
+    @Test
+    public void isExpressionType() {
+        FactMapping expressionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("Test", "com.Test");
+        assertTrue(ScenarioSimulationUtils.isExpressionType(expressionFactMapping));
+        //
+        FactMapping collectionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        collectionFactMapping.addExpressionElement("Test", "java.util.Map");
+        assertFalse(ScenarioSimulationUtils.isExpressionType(collectionFactMapping));
+        //
+        FactMapping simpleTypeMapping = new FactMapping(
+                FactIdentifier.create("test", String.class.getCanonicalName()),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        simpleTypeMapping.addExpressionElement("String", "java.lang.String");
+        assertFalse(ScenarioSimulationUtils.isExpressionType(simpleTypeMapping));
+        //
+        FactMapping complexFactMapping = new FactMapping(
+                FactIdentifier.create("Foo", "com.Foo"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        complexFactMapping.addExpressionElement("Test", "com.Test");
+        complexFactMapping.addExpressionElement("Foo", "com.Foo");
+        assertFalse(ScenarioSimulationUtils.isExpressionType(complexFactMapping ));
     }
 
     @Test

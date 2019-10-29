@@ -78,7 +78,9 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPo
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
@@ -167,6 +169,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     private ConfirmPopupPresenter confirmPopupPresenterMock;
     @Mock
     private FileUploadPopupPresenter fileUploadPopupPresenterMock;
+    @Rule
+    public ExpectedException exceptionRule = ExpectedException.none();
 
     private ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
@@ -410,6 +414,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     public void onSetInstanceHeaderEvent() {
         SetInstanceHeaderEvent event = new SetInstanceHeaderEvent(FULL_PACKAGE, FULL_CLASS_NAME);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
+        exceptionRule.expect(NullPointerException.class);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
                                                                         isA(SetInstanceHeaderCommand.class),
@@ -417,6 +422,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         //
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
+        when(gridColumnMock.isPropertyAssigned()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
                                                                         isA(SetInstanceHeaderCommand.class),
@@ -436,9 +442,16 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
                                                                         isA(SetInstanceHeaderCommand.class),
                                                                         anyBoolean());
-
+        //
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
+                                                               isA(SetInstanceHeaderCommand.class),
+                                                               eq(true));
+        //
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
                                                                isA(SetInstanceHeaderCommand.class),

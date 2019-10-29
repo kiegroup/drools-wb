@@ -45,6 +45,10 @@ public class ScenarioSimulationUtils {
 
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
 
+    private ScenarioSimulationUtils() {
+        // Not instantiable
+    }
+
     /**
      * Given a columnGroup, it creates a new subGroup with the following format: 'columnGroupName-x'.
      * @param columnGroup
@@ -76,6 +80,13 @@ public class ScenarioSimulationUtils {
                 .anyMatch(className::equals);
     }
 
+    /**
+     * It defines if a set <code>FactMapping</code> represents an <b>Expression type</b>.
+     * This is TRUE if: the Fact class is NOT simple and there is ONLY ONE step into
+     * ExpressionElements list (which is the Fact).
+     * @param factMapping
+     * @return
+     */
     public static boolean isExpressionType(FactMapping factMapping) {
         return !isSimpleJavaType(factMapping.getFactIdentifier().getClassName()) &&
                 factMapping.getExpressionElements().size() == 1;
