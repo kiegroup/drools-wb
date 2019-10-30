@@ -40,7 +40,7 @@ public class ScenarioSimulationBuilder {
             case DMN:
                 return dmnSimulationCreationStrategy.createSimulation(context, value);
             default:
-                return null;
+                throw new IllegalStateException("Unknown ScenarioSimulationModel.Type " + type);
         }
     }
 
@@ -51,7 +51,7 @@ public class ScenarioSimulationBuilder {
             case DMN:
                 return dmnSimulationCreationStrategy.createBackground(context, value);
             default:
-                return null;
+                throw new IllegalStateException("Unknown ScenarioSimulationModel.Type " + type);
         }
     }
 

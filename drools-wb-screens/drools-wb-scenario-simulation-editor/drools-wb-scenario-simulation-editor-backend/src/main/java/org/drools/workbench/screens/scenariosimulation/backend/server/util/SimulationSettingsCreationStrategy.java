@@ -51,10 +51,12 @@ public interface SimulationSettingsCreationStrategy {
     /**
      * Create an empty column using factMappingType defined. The new column will be added as last column of
      * the group (GIVEN/EXPECT) (see findLastIndexOfGroup)
+     *
      * @param simulationDescriptor
      * @param scesimDataWithIndex
      * @param placeholderId
      * @param factMappingType
+     * @param columnIndex
      */
     default void createEmptyColumn(ScesimModelDescriptor simulationDescriptor,
                                    ScesimDataWithIndex scesimDataWithIndex,

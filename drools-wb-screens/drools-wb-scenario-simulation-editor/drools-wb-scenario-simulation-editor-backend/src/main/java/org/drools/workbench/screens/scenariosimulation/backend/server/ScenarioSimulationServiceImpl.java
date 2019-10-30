@@ -88,7 +88,7 @@ public class ScenarioSimulationServiceImpl
         implements ScenarioSimulationService {
 
     private static final String KIE_VERSION = "kie.version";
-    private static final String junitActivatorPackageName = "testscenario";
+    private static final String JUNIT_ACTIVATOR_PACKAGE_NAME = "testscenario";
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
     @Inject
@@ -350,7 +350,7 @@ public class ScenarioSimulationServiceImpl
             removeOldActivatorIfExists(activatorPath, kieModule);
 
             ioService.write(activatorPath,
-                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(junitActivatorPackageName),
+                            ScenarioJunitActivator.ACTIVATOR_CLASS_CODE.apply(JUNIT_ACTIVATOR_PACKAGE_NAME),
                             commentedOptionFactory.makeCommentedOption(""));
         }
     }
@@ -360,7 +360,7 @@ public class ScenarioSimulationServiceImpl
         Path junitActivatorPackagePath = Paths.convert(getJunitActivatorPackagePath(rootPackage));
         Package junitActivatorPackage = kieModuleService.resolvePackage(junitActivatorPackagePath);
         if (junitActivatorPackage == null) {
-            junitActivatorPackage = kieModuleService.newPackage(rootPackage, junitActivatorPackageName);
+            junitActivatorPackage = kieModuleService.newPackage(rootPackage, JUNIT_ACTIVATOR_PACKAGE_NAME);
         }
         return junitActivatorPackage;
     }
@@ -444,7 +444,7 @@ public class ScenarioSimulationServiceImpl
     }
 
     protected org.uberfire.java.nio.file.Path getJunitActivatorPackagePath(Package rootModulePackage) {
-        return internalGetPath(rootModulePackage, junitActivatorPackageName);
+        return internalGetPath(rootModulePackage, JUNIT_ACTIVATOR_PACKAGE_NAME);
     }
 
     protected List<GAV> getOldDependencies() {
