@@ -24,7 +24,7 @@ import java.util.TreeMap;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDataManagementStrategyTest;
+import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -53,7 +53,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataManagementStrategyTest {
+public class BusinessCentralDMNDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
     @Mock
     private DMNTypeService dmnTypeServiceMock;
@@ -85,7 +85,6 @@ public class BusinessCentralDMNDataManagementStrategyTest extends AbstractDataMa
                 this.factModelTreeHolder = factModelTreeHolderlocal;
             }
         });
-        abstractDataManagementStrategySpy = businessCentralDmnDataManagementStrategySpy;
     }
 
     @Test

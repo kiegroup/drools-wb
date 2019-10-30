@@ -223,10 +223,9 @@ public abstract class AbstractScenarioSimulationTest {
             }
         });
 
-
-
         when(simulationMock.getScesimModelDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
+        when(backgroundMock.getScesimModelDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
