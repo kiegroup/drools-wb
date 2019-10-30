@@ -84,6 +84,9 @@ public class TestToolsViewImpl
     @DataField("conditionsButton")
     protected ButtonElement conditionsButton = Document.get().createButtonElement();
 
+    @DataField("addButtonLabel")
+    protected LabelElement addButtonLabel = Document.get().createLabelElement();
+
     @DataField("addButton")
     protected ButtonElement addButton = Document.get().createButtonElement();
 
@@ -101,6 +104,8 @@ public class TestToolsViewImpl
         this.presenter = presenter;
         disableEditorTab();
         addButton.setDisabled(true);
+        addButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButton());
+        addButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButtonLabel());
         dataObjectListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.complexTypes());
         simpleJavaTypeListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.simpleTypes());
         instanceListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.complexCustomInstances());

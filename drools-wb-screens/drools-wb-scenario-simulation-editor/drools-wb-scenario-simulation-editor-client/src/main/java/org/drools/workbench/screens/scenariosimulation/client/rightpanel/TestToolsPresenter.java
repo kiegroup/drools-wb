@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -31,7 +30,6 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -60,12 +58,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
 
     protected EventBus eventBus;
-    protected ScenarioSimulationModel.Type modelType;
+
     protected boolean editingColumnEnabled = false;
 
     protected ListGroupItemView selectedListGroupItemView;
     protected FieldItemView selectedFieldItemView;
-
 
     public TestToolsPresenter() {
         //Zero argument constructor for CDI
@@ -239,9 +236,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void initTestTools(EventBus eventBus, ScenarioSimulationModel.Type modelType) {
+    public void setEventBus(EventBus eventBus) {
         this.eventBus = eventBus;
-        this.modelType = modelType;
     }
 
     @Override
@@ -363,13 +359,23 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        boolean isDMNScenario = (Objects.equals(modelType, ScenarioSimulationModel.Type.DMN));
-        boolean toBeDisabled = selected.isInstanceAssigned() && (isDMNScenario || isSimple(selected.getFactName())) ;
-        if (toBeDisabled || filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned())) {
+        if (hasSelectedFactDisableAddButton(selected)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
         }
+    }
+
+    /**
+     * It determines if a selected Fact can be inserted or not in the model.
+     * It can be inserted if the Fact class is Not of Simple type and already assigned to related selected column
+     * OR filterTerm() return a TRUE, which means selected Fact is still not assigned
+     * @param selected
+     * @return
+     */
+    protected boolean hasSelectedFactDisableAddButton(ListGroupItemView selected) {
+        return selected.isInstanceAssigned() && isSimple(selected.getFactName()) || 
+                filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned());
     }
 
     @Override

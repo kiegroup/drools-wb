@@ -16,23 +16,23 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.dom.client.DomEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.InputHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioInputHandler;
 
-public class InputEvent extends DomEvent<InputHandler> {
+public class ScenarioInputEvent extends DomEvent<ScenarioInputHandler> {
 
-    public static final Type<InputHandler> TYPE = new Type<>("input", new InputEvent());
+    public static final Type<ScenarioInputHandler> TYPE = new Type<>("input", new ScenarioInputEvent());
 
-    public static Type<InputHandler> getType() {
+    public static Type<ScenarioInputHandler> getType() {
         return TYPE;
     }
 
     @Override
-    public final Type<InputHandler> getAssociatedType() {
+    public final Type<ScenarioInputHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(InputHandler handler) {
+    protected void dispatch(ScenarioInputHandler handler) {
         handler.onInput(this);
     }
 }

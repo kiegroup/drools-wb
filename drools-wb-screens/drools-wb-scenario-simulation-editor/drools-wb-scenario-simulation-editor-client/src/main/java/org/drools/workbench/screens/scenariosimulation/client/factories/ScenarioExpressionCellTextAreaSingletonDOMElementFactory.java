@@ -19,7 +19,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.user.client.DOM;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.ScenarioCellTextAreaDOMElement;
-import org.drools.workbench.screens.scenariosimulation.client.events.InputEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioInputEvent;
 import org.gwtbootstrap3.client.ui.TextArea;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.impl.BaseDOMElement;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
@@ -48,7 +48,7 @@ public class ScenarioExpressionCellTextAreaSingletonDOMElementFactory extends Ab
     public TextArea createWidget() {
         TextArea textArea = super.createWidget();
         DOM.sinkBitlessEvent(textArea.getElement(), "input");
-        textArea.addHandler(inputEvent -> checkExpressionSyntax(), InputEvent.getType());
+        textArea.addHandler(scenarioInputEvent -> checkExpressionSyntax(), ScenarioInputEvent.getType());
         textArea.addFocusHandler(focusEvent -> checkExpressionSyntax());
         textArea.addBlurHandler(blurEvent -> checkEmptyExpression());
         textArea.addKeyDownHandler(this::checkEmptyExpression);

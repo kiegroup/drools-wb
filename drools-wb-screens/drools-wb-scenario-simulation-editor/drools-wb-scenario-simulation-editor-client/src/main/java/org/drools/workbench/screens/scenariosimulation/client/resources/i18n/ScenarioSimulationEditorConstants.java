@@ -52,6 +52,10 @@ public interface ScenarioSimulationEditorConstants
 
     String testEditor();
 
+    String testToolsAddButton();
+
+    String testToolsAddButtonLabel();
+
     String scenarioCheatSheet();
 
     String ruleCheatSheet1();

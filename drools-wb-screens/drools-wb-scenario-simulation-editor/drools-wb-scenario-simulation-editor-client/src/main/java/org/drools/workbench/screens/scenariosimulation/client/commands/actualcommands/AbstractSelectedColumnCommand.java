@@ -43,6 +43,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import static org.drools.scenariosimulation.api.model.FactMapping.getPropertyPlaceHolder;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getColumnSubGroup;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isExpressionColumnType;
 
 /**
  * <b>Abstract</b> <code>Command</code> class which assures that a <code>ScenarioColumn</code> is selected.
@@ -104,29 +105,30 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        final boolean isDMNScenario = Objects.equals(context.getModel().getSimulation().orElseThrow(IllegalStateException::new).getSimulationDescriptor().getType(),
-                                                     ScenarioSimulationModel.Type.DMN);
-        if (isDMNScenario || ScenarioSimulationUtils.isSimpleJavaType(factIdentifier.getClassName())) {
-            setPropertyMetaData(propertyHeaderMetaData,
-                                getPropertyPlaceHolder(columnIndex),
-                                false,
-                                selectedColumn,
-                                ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
-            context.getModel().updateColumnInstance(columnIndex, selectedColumn);
-        } else {
+        if (isExpressionColumnType(fullClassName)) {
             propertyHeaderMetaData.setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
             setPropertyMetaData(propertyHeaderMetaData,
                                 ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER,
                                 false,
                                 selectedColumn,
-                                ScenarioSimulationEditorConstants.INSTANCE.insertExpression());
-            selectedColumn.setPropertyAssigned(true);
+                                ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                       selectedColumn.isPropertyAssigned(),
+                                                                       fullClassName));
             context.getModel().updateColumnProperty(columnIndex,
                                                     selectedColumn,
                                                     Arrays.asList(alias),
                                                     fullClassName,
                                                     context.getStatus().isKeepData());
             selectedColumn.setFactory(context.getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
+        } else {
+            setPropertyMetaData(propertyHeaderMetaData,
+                                getPropertyPlaceHolder(columnIndex),
+                                false,
+                                selectedColumn,
+                                ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                       selectedColumn.isPropertyAssigned(),
+                                                                       fullClassName));
+            context.getModel().updateColumnInstance(columnIndex, selectedColumn);
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
@@ -240,9 +242,13 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                     }
                 });
         selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(propertyClass);
-        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyTitle, false, selectedColumn, editableCellPlaceholder);
-        selectedColumn.setPropertyAssigned(true);
+        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(),
+                            propertyTitle,
+                            false,
+                            selectedColumn,
+                            ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                   selectedColumn.isPropertyAssigned(),
+                                                                   propertyClass));
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 propertyNameElements,
@@ -268,6 +274,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     protected void setPropertyMetaData(ScenarioHeaderMetaData propertyHeaderMetaData, String title, boolean readOnly, ScenarioGridColumn selectedColumn, String placeHolder) {
         propertyHeaderMetaData.setTitle(title);
         propertyHeaderMetaData.setReadOnly(readOnly);
+        selectedColumn.setPropertyAssigned(true);
         selectedColumn.setPlaceHolder(placeHolder);
     }
 

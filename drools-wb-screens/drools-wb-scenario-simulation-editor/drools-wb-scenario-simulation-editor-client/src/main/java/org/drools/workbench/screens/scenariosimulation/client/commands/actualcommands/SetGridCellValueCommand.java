@@ -20,9 +20,9 @@ import javax.enterprise.context.Dependent;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
 /**
  * <code>Command</code> to set the <i>value</i> of a grid' cell
@@ -40,9 +40,10 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
         SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
         int columnIndex = status.getColumnIndex();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        String placeholder = ScenarioSimulationUtils.isExpressionType(factMapping) ?
-                ScenarioSimulationEditorConstants.INSTANCE.insertExpression() :
-                ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getSelectedColumn();
+        String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                    selectedColumn.isPropertyAssigned(),
+                                                                    factMapping.getClassName());
         context.getModel().setCellValue(status.getRowIndex(),
                                         columnIndex,
                                         new ScenarioGridCellValue(status.getGridCellValue(),

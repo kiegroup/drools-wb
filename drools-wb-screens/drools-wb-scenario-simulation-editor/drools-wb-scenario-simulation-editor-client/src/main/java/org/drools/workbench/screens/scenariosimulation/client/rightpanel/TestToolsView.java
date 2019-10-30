@@ -24,7 +24,6 @@ import java.util.SortedMap;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
 public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
@@ -146,7 +145,7 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
-        void initTestTools(EventBus eventBus, ScenarioSimulationModel.Type modelType);
+        void setEventBus(EventBus eventBus);
 
         Optional<FactModelTree> getFactModelTreeFromFactTypeMap(String factName);
 

@@ -679,7 +679,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setTestTools() {
         presenter.setTestTools(testToolsPresenterMock);
         verify(contextMock, times(1)).setTestToolsPresenter(testToolsPresenterMock);
-        verify(testToolsPresenterMock, times(1)).initTestTools(eq(eventBusMock), isA(ScenarioSimulationModel.Type.class));
+        verify(testToolsPresenterMock, times(1)).setEventBus(eq(eventBusMock));
         verify(dataManagementStrategyMock, times(1)).populateTestTools(eq(testToolsPresenterMock), eq(contextMock));
     }
 

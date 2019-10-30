@@ -16,10 +16,10 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.InputEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioInputEvent;
 
-public interface InputHandler extends EventHandler {
+public interface ScenarioInputHandler extends EventHandler {
 
-    void onInput(InputEvent event);
+    void onInput(ScenarioInputEvent event);
 
 }

@@ -948,10 +948,10 @@ public class ScenarioGridModel extends BaseGridData {
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
             final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
             scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
-            String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(factMappingByIndex.getClassName());
-            String placeHolder = ((ScenarioGridColumn) columns.get(columnIndex)).isPropertyAssigned() ?
-                    editableCellPlaceholder :
-                    ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+            ScenarioGridColumn column = ((ScenarioGridColumn) columns.get(columnIndex));
+            String placeHolder = ScenarioSimulationUtils.getPlaceHolder(column.isInstanceAssigned(),
+                                                                        column.isPropertyAssigned(),
+                                                                        factMappingByIndex.getClassName());
             setCell(rowIndex, columnIndex, () -> {
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
                 if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {

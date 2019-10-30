@@ -37,7 +37,6 @@ import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioConte
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.renderers.ScenarioGridRenderer;
-import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
@@ -168,7 +167,7 @@ public class ScenarioGrid extends BaseGridWidget {
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
         boolean isInstanceAssigned = isInstanceAssigned(factIdentifier);
         boolean isPropertyAssigned = isPropertyAssigned(isInstanceAssigned, factMapping);
-        String placeHolder = getPlaceholder(isPropertyAssigned, factMapping);
+        String placeHolder = ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned, isPropertyAssigned, factMapping.getClassName());
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), placeHolder);
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
@@ -192,7 +191,7 @@ public class ScenarioGrid extends BaseGridWidget {
     protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, FactMapping factMapping) {
         if (ScenarioSimulationSharedUtils.isCollection(factMapping.getClassName())) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
-        } else if (ScenarioSimulationUtils.isExpressionType(factMapping)) {
+        } else if (ScenarioSimulationUtils.isExpressionColumnType(factMapping.getClassName())) {
             scenarioGridColumn.setFactory(((ScenarioGridModel) model)
                                                   .getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
         }
@@ -240,23 +239,6 @@ public class ScenarioGrid extends BaseGridWidget {
             return true;
         } else {
             return instanceAssigned && (isSimpleJavaType(factMapping.getClassName()) || !factMapping.getExpressionElements().isEmpty());
-        }
-    }
-
-    /**
-     * Returns <code>ScenarioSimulationEditorConstants.INSTANCE.insertValue()</code> if <code>isPropertyAssigned == true</code>, <code>ScenarioSimulationEditorConstants.INSTANCE.defineValidType()</code> otherwise
-     * @param isPropertyAssigned
-     * @return
-     */
-    protected String getPlaceholder(boolean isPropertyAssigned, FactMapping factMapping) {
-        if (isPropertyAssigned) {
-            if (ScenarioSimulationUtils.isExpressionType(factMapping)) {
-                return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
-            } else {
-                return ScenarioSimulationUtils.getPlaceholder(factMapping.getClassName());
-            }
-        } else {
-            return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         }
     }
 
