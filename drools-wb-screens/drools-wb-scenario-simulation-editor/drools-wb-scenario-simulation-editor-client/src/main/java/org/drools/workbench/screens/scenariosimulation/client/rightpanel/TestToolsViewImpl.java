@@ -33,6 +33,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -46,10 +47,10 @@ public class TestToolsViewImpl
     protected Presenter presenter;
 
     @DataField("clearSearchButton")
-    protected ButtonElement clearSearchButton = Document.get().createButtonElement();
+    protected ButtonElement clearSearchButton = Document.get().createPushButtonElement();
 
     @DataField("searchButton")
-    protected ButtonElement searchButton = Document.get().createButtonElement();
+    protected ButtonElement searchButton = Document.get().createPushButtonElement();
 
     @DataField("inputSearch")
     protected InputElement inputSearch = Document.get().createTextInputElement();
@@ -82,13 +83,13 @@ public class TestToolsViewImpl
     protected DivElement simpleJavaInstanceListContainer = Document.get().createDivElement();
 
     @DataField("conditionsButton")
-    protected ButtonElement conditionsButton = Document.get().createButtonElement();
+    protected ButtonElement conditionsButton = Document.get().createPushButtonElement();
 
     @DataField("addButtonLabel")
-    protected LabelElement addButtonLabel = Document.get().createLabelElement();
+    protected DivElement addButtonLabel = Document.get().createDivElement();
 
     @DataField("addButton")
-    protected ButtonElement addButton = Document.get().createButtonElement();
+    protected ButtonElement addButton = Document.get().createPushButtonElement();
 
     @DataField("kieTestToolsContent")
     protected DivElement kieTestToolsContent = Document.get().createDivElement();
@@ -260,19 +261,19 @@ public class TestToolsViewImpl
         conditionsButton.setDisabled(disabled);
         setContainersDisabledStatus(disabled);
         if (disabled) {
-            kieTestToolsContent.addClassName("disabled");
+            kieTestToolsContent.addClassName(ConstantHolder.DISABLED);
             disableSearch();
             disableAddButton();
         } else {
-            kieTestToolsContent.removeClassName("disabled");
+            kieTestToolsContent.removeClassName(ConstantHolder.DISABLED);
         }
     }
 
     protected void setContainersDisabledStatus(boolean disabled) {
         if (disabled) {
-            managedDivElements.forEach(divElement -> divElement.addClassName("disabled"));
+            managedDivElements.forEach(divElement -> divElement.addClassName(ConstantHolder.DISABLED));
         } else {
-            managedDivElements.forEach(divElement -> divElement.removeClassName("disabled"));
+            managedDivElements.forEach(divElement -> divElement.removeClassName(ConstantHolder.DISABLED));
         }
     }
 }
