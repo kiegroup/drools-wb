@@ -35,7 +35,7 @@ public interface SimulationSettingsCreationStrategy {
 
     Simulation createSimulation(Path context, String value) throws Exception;
 
-    Background createBackground(Path context, String dmnFilePath) throws Exception;
+    Background createBackground(Path context, String value) throws Exception;
 
     Settings createSettings(String value) throws Exception;
 

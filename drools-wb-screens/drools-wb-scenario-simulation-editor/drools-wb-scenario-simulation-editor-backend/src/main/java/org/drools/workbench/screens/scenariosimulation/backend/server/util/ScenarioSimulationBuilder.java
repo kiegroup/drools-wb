@@ -62,7 +62,7 @@ public class ScenarioSimulationBuilder {
             case DMN:
                 return dmnSimulationCreationStrategy.createSettings(value);
             default:
-                return null;
+                throw new IllegalStateException("Unknown ScenarioSimulationModel.Type " + type);
         }
     }
 }
