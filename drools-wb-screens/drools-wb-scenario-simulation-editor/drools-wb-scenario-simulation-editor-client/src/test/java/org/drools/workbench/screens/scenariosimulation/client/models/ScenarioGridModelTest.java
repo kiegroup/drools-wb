@@ -58,7 +58,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE_ELEMENTS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_COUNT;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
+//import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -264,7 +264,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void updateColumnTypeFalse() {
-        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, false);
+        //scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, false);
         verify(scenarioGridModel, times(2)).checkSimulation();
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
@@ -272,7 +272,7 @@ public class ScenarioGridModelTest extends AbstractScenarioSimulationTest {
 
     @Test
     public void updateColumnTypeTrue() {
-        scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, true);
+        //scenarioGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, true);
         verify(scenarioGridModel, atLeast(2)).checkSimulation();
         verify(scenarioGridModel, atLeast(ROW_COUNT - 1)).getCell(anyInt(), eq(COLUMN_INDEX));
         verify(scenarioGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));

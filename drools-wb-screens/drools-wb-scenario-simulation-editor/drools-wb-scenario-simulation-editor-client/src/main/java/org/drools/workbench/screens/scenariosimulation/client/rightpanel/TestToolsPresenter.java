@@ -396,7 +396,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
+                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
+                        new SetInstanceHeaderEvent(fullPackage, className, isSimple(className))));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?

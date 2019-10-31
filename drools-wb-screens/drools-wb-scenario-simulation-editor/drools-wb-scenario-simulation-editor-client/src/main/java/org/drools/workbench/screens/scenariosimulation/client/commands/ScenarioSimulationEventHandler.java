@@ -405,6 +405,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         }
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
+        context.getStatus().setSimpleType(event.isSimpleType());
         if (column.isInstanceAssigned() && !context.getModel().isSameInstanceType(event.getClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context,
                                                                                new SetInstanceHeaderCommand(),

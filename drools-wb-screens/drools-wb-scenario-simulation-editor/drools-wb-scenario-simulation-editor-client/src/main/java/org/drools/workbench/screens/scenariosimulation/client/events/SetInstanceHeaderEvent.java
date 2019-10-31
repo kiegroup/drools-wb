@@ -27,6 +27,7 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
 
     private String fullPackage;
     private String className;
+    private boolean simpleType;
 
     /**
      * Use this constructor to modify the <i>instance</i> level header
@@ -34,9 +35,10 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
      * @param fullPackage
      * @param className
      */
-    public SetInstanceHeaderEvent(String fullPackage, String className) {
+    public SetInstanceHeaderEvent(String fullPackage, String className, boolean simpleType) {
         this.fullPackage = fullPackage;
         this.className = className;
+        this.simpleType = simpleType;
     }
 
     @Override
@@ -51,6 +53,8 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
     public String getClassName() {
         return className;
     }
+
+    public boolean isSimpleType() {return simpleType; }
 
     @Override
     protected void dispatch(SetInstanceHeaderEventHandler handler) {

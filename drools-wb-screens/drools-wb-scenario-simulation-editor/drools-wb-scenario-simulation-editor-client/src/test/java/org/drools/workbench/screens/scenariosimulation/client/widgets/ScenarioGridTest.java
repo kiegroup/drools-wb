@@ -512,7 +512,7 @@ public class ScenarioGridTest {
         verify(eventBusMock, times(1)).fireEvent(isA(ReloadTestToolsEvent.class));
     }
 
-    @Test
+    /*@Test
     public void setDOMElementFactory() {
         FactMapping expressionFactMapping = new FactMapping(
                 FactIdentifier.create("Test", "com.Test"),
@@ -533,5 +533,5 @@ public class ScenarioGridTest {
     public void setDOMElementFactory_NotExpressionNotCollection() {
         scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, factMappingInteger);
         verify(scenarioGridColumnMock, never()).setFactory(any());
-    }
+    }*/
 }

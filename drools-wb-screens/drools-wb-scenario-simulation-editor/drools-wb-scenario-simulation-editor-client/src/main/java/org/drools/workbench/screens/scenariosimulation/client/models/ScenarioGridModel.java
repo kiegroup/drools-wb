@@ -35,10 +35,12 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingClassType;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
 import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
@@ -60,6 +62,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
+import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias;
@@ -307,8 +310,9 @@ public class ScenarioGridModel extends BaseGridData {
      * @param propertyNameElements
      * @param lastLevelClassName
      * @param keepData
+     * @param isSimple
      */
-    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, List<String> propertyNameElements, String lastLevelClassName, boolean keepData) {
+    public void updateColumnProperty(int columnIndex, final GridColumn<?> column, List<String> propertyNameElements, String lastLevelClassName, boolean keepData, boolean isSimple) {
         checkSimulation();
         List<GridCellValue<?>> originalValues = new ArrayList<>();
         if (keepData) {
@@ -317,6 +321,7 @@ public class ScenarioGridModel extends BaseGridData {
         }
         replaceColumn(columnIndex, column);
         final FactMapping factMappingByIndex = simulation.getSimulationDescriptor().getFactMappingByIndex(columnIndex);
+        factMappingByIndex.setFactClassType(isSimple ? FactMappingClassType.SIMPLE : FactMappingClassType.EXPRESSION);
         List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factMappingByIndex.getFactIdentifier());
         // This is because the value starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
@@ -946,16 +951,18 @@ public class ScenarioGridModel extends BaseGridData {
         Scenario scenario = simulation.addScenario(rowIndex);
         final SimulationDescriptor simulationDescriptor = simulation.getSimulationDescriptor();
         IntStream.range(1, getColumnCount()).forEach(columnIndex -> {
-            final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
-            scenario.addMappingValue(factMappingByIndex.getFactIdentifier(), factMappingByIndex.getExpressionIdentifier(), null);
+            final FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
+            scenario.addMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier(), null);
             ScenarioGridColumn column = ((ScenarioGridColumn) columns.get(columnIndex));
+            boolean isSimpleType = Objects.equals(FactMappingClassType.SIMPLE, factMapping.getFactClassType());
             String placeHolder = ScenarioSimulationUtils.getPlaceHolder(column.isInstanceAssigned(),
                                                                         column.isPropertyAssigned(),
-                                                                        factMappingByIndex.getClassName());
+                                                                        isSimpleType,
+                                                                        factMapping.getClassName());
             setCell(rowIndex, columnIndex, () -> {
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
-                if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
-                    newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
+                if (ScenarioSimulationSharedUtils.isCollection((factMapping.getClassName()))) {
+                    newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMapping.getClassName())));
                 }
                 return newCell;
             });
@@ -1082,5 +1089,21 @@ public class ScenarioGridModel extends BaseGridData {
             return Optional.empty();
         }
         return Optional.ofNullable(gridCell.getValue().getValue());
+    }
+
+    /**
+     * Set the correct <b>DOMElement</b> factory to the given <code>ScenarioGridColumn</code>
+     * @param className
+     * @param isSimpleType
+     */
+    public BaseSingletonDOMElementFactory getDOMElementFactory(String className, boolean isSimpleType) {
+        boolean isRuleScenario = Objects.equals(ScenarioSimulationModel.Type.RULE,
+                                                simulation.getSimulationDescriptor().getType());
+        if (ScenarioSimulationSharedUtils.isCollection(className)) {
+            return collectionEditorSingletonDOMElementFactory;
+        } if (!isSimpleType && isRuleScenario) {
+            return scenarioExpressionCellTextAreaSingletonDOMElementFactory;
+        }
+        return scenarioCellTextAreaSingletonDOMElementFactory;
     }
 }

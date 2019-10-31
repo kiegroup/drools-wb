@@ -24,7 +24,6 @@ import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SimpleClassEntry;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -81,46 +80,34 @@ public class ScenarioSimulationUtils {
     }
 
     /**
-     * It defines if a column should be set to handle an <b>Expression type</b> and should be used ONLY under this condition.
-     * In details, it doesn't determine if a FactMapping is <b>Expression type</b> at all, but a rule to infer from
-     * FactMapping data if, on front end side, it should be managed as a Expression.
-     * This is TRUE if the FactMapping class is NOT a simple type nor Collection.
+     * It provides the correct <b>PlaceHolder</b> value to be assigned to an empty cell given its parameters
+     * status.
+     * @param isInstanceAssigned
+     * @param isPropertyAssigned
+     * @param isSimple
      * @param className
      * @return
      */
-    public static boolean isExpressionColumnType(String className) {
-        return !(isSimpleJavaType(className) || ScenarioSimulationSharedUtils.isCollection(className));
-    }
-
     public static String getPlaceHolder(final boolean isInstanceAssigned,
                                         final boolean isPropertyAssigned,
+                                        final boolean isSimple,
                                         final String className) {
         if (!isInstanceAssigned) {
             return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         }
         if (isPropertyAssigned) {
-            if (ScenarioSimulationUtils.isExpressionColumnType(className)) {
+            if (!isSimple) {
                 return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
-            } else {
-                if (Objects.equals(LOCALDATE_CANONICAL_NAME, className)) {
-                    return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
-                }
-                if (Objects.equals(DMN_DATE, className)) {
-                    return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
-                }
-                return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
             }
-        } else {
-            return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+            if (Objects.equals(LOCALDATE_CANONICAL_NAME, className)) {
+                return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
+            }
+            if (Objects.equals(DMN_DATE, className)) {
+                return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
+            }
+            return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
         }
-
-/*
-        if (factMapping == null) {
-            return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
-        } else if (isExpressionColumnType(factMapping)) {
-            return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
-        }
-        return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();*/
+        return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
     }
 
     /**

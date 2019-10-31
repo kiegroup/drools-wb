@@ -98,14 +98,6 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
     }
 
     @Test
-    public void isExpressionColumnType() {
-        SIMPLE_CLASSES_MAP.values().forEach(clazz -> assertFalse(ScenarioSimulationUtils.isExpressionColumnType(clazz.getCanonicalName())));
-        assertFalse(ScenarioSimulationUtils.isExpressionColumnType("java.util.List"));
-        assertFalse(ScenarioSimulationUtils.isExpressionColumnType("java.util.Map"));
-        assertTrue(ScenarioSimulationUtils.isExpressionColumnType("com.TestBean"));
-    }
-
-    @Test
     public void getPropertyNameElementsWithoutAlias() {
         FactIdentifier factIdentifierMock = mock(FactIdentifier.class);
         String packageName = "com.package";

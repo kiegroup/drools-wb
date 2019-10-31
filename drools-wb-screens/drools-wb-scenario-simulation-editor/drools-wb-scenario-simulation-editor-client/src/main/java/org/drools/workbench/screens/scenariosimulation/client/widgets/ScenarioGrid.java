@@ -17,17 +17,18 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingClassType;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
@@ -44,6 +45,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn.ColumnWidthMode;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.util.ColumnIndexUtilities;
+import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.DefaultGridWidgetCellSelectorMouseEventHandler;
@@ -165,9 +167,13 @@ public class ScenarioGrid extends BaseGridWidget {
         String instanceTitle = factMapping.getFactAlias();
         String propertyTitle = factMapping.getExpressionAlias();
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
+        boolean isSimpleType = Objects.equals(FactMappingClassType.SIMPLE, factMapping.getFactClassType());
         boolean isInstanceAssigned = isInstanceAssigned(factIdentifier);
         boolean isPropertyAssigned = isPropertyAssigned(isInstanceAssigned, factMapping);
-        String placeHolder = ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned, isPropertyAssigned, factMapping.getClassName());
+        String placeHolder = ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned,
+                                                                    isPropertyAssigned,
+                                                                    isSimpleType,
+                                                                    factMapping.getClassName());
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), placeHolder);
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
@@ -178,23 +184,10 @@ public class ScenarioGrid extends BaseGridWidget {
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
         if (isPropertyAssigned) {
-            setDOMElementFactory(scenarioGridColumn, factMapping);
+            BaseSingletonDOMElementFactory factory = ((ScenarioGridModel) model).getDOMElementFactory(factMapping.getClassName(), isSimpleType);
+            scenarioGridColumn.setFactory(factory);
         }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
-    }
-
-    /**
-     * Set the correct <b>DOMElement</b> factory to the given <code>ScenarioGridColumn</code>
-     * @param scenarioGridColumn
-     * @param factMapping
-     */
-    protected void setDOMElementFactory(ScenarioGridColumn scenarioGridColumn, FactMapping factMapping) {
-        if (ScenarioSimulationSharedUtils.isCollection(factMapping.getClassName())) {
-            scenarioGridColumn.setFactory(((ScenarioGridModel) model).getCollectionEditorSingletonDOMElementFactory());
-        } else if (ScenarioSimulationUtils.isExpressionColumnType(factMapping.getClassName())) {
-            scenarioGridColumn.setFactory(((ScenarioGridModel) model)
-                                                  .getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
-        }
     }
 
     /**
