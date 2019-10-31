@@ -668,8 +668,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void onBackGroundTabSelected() {
-        presenter.onBackGroundTabSelected();
+    public void onBackgroundTabSelected() {
+        presenter.onBackgroundTabSelected();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();

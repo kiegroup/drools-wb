@@ -385,8 +385,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void onBackGroundTabSelected() {
-        scenarioSimulationEditorBusinessClientWrapper.onBackGroundTabSelected();
-        verify(scenarioSimulationEditorPresenterMock, times(1)).onBackGroundTabSelected();
+        scenarioSimulationEditorBusinessClientWrapper.onBackgroundTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onBackgroundTabSelected();
     }
 
     @Test

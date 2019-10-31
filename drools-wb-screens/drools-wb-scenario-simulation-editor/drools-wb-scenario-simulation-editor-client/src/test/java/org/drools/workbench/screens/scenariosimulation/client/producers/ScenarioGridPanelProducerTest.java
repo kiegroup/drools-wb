@@ -119,13 +119,13 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
     }
 
     @Test
-    public void getScenarioMainGridPanel() {
+    public void getSimulationGridPanel() {
         final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getSimulationGridPanel();
         assertEquals(scenarioGridPanelMock, retrieved);
     }
 
     @Test
-    public void getScenarioBackgroundGridPanel() {
+    public void getBackgroundGridPanel() {
         final ScenarioGridPanel retrieved = scenarioGridPanelProducer.getBackgroundGridPanel();
         assertEquals(backgroundGridPanelMock, retrieved);
     }
@@ -139,7 +139,7 @@ public class ScenarioGridPanelProducerTest extends AbstractProducerTest {
     }
 
     @Test
-    public void getScenarioBackgroundGridWidget() {
+    public void getBackgroundGridWidget() {
         ScenarioGridWidget retrieved = scenarioGridPanelProducer.getBackgroundGridWidget(eventBusMock);
         assertEquals(backgroundGridWidgetSpy, retrieved);
         verify(scenarioGridPanelProducer, times(1)).initGridWidget(eq(backgroundGridWidgetSpy), eq(backgroundGridPanelMock), eq(clickHandlerMock), eq(mouseMoveHandlerMock), eq(eventBusMock));

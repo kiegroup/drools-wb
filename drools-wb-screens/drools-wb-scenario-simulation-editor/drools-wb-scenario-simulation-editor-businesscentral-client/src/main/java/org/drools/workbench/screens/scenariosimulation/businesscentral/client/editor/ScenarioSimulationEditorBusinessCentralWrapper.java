@@ -265,7 +265,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
             @Override
             public void onFocus() {
                 super.onFocus();
-                onBackGroundTabSelected();
+                onBackgroundTabSelected();
             }
         });
     }
@@ -395,8 +395,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 
-    protected void onBackGroundTabSelected() {
-        scenarioSimulationEditorPresenter.onBackGroundTabSelected();
+    protected void onBackgroundTabSelected() {
+        scenarioSimulationEditorPresenter.onBackgroundTabSelected();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

@@ -427,7 +427,7 @@ public class ScenarioSimulationEditorPresenter {
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
-    public void onBackGroundTabSelected() {
+    public void onBackgroundTabSelected() {
         ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
         backgroundWidget.clearSelections();

@@ -264,7 +264,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactModelTree factModelTree = dataObjectFieldsMap.get(className);
         final Optional<AbstractScesimModel> selectedScenarioGridModel = context.getSelectedScenarioGridModel().getAbstractScesimModel();
         if (!selectedScenarioGridModel.isPresent()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("SelectedGrid not found");
         }
         final FactMapping factMapping = selectedScenarioGridModel.get().getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         selectedColumn.setFactory(context.getCollectionEditorSingletonDOMElementFactory());
