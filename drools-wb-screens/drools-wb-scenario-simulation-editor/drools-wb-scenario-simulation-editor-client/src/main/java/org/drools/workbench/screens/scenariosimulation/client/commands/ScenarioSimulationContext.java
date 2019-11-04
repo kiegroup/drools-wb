@@ -26,7 +26,7 @@ import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -179,11 +179,11 @@ public class ScenarioSimulationContext {
         return getSelectedScenarioGridPanel().getScenarioGridLayer();
     }
 
-    public Optional<GRID_WIDGET> getSelectedGRID_WIDGET() {
+    public Optional<GridWidget> getSelectedGRID_WIDGET() {
         if (getSelectedScenarioGridModel() instanceof ScenarioGridModel) {
-            return Optional.of(GRID_WIDGET.SIMULATION);
+            return Optional.of(GridWidget.SIMULATION);
         } else if (getSelectedScenarioGridModel() instanceof BackgroundGridModel) {
-            return Optional.of(GRID_WIDGET.BACKGROUND);
+            return Optional.of(GridWidget.BACKGROUND);
         } else {
             return Optional.empty();
         }
@@ -268,7 +268,7 @@ public class ScenarioSimulationContext {
 
         protected Background background;
 
-        protected GRID_WIDGET currentGrid;
+        protected GridWidget currentGrid;
 
         /**
          * The string to use for filtering in right panel
@@ -469,11 +469,11 @@ public class ScenarioSimulationContext {
             this.background = background;
         }
 
-        public GRID_WIDGET getCurrentGrid() {
+        public GridWidget getCurrentGrid() {
             return currentGrid;
         }
 
-        public void setCurrentGrid(GRID_WIDGET currentGrid) {
+        public void setCurrentGrid(GridWidget currentGrid) {
             this.currentGrid = currentGrid;
         }
 

@@ -55,8 +55,6 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedM
 
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.isSimpleJavaType;
 
-//import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
-
 public class ScenarioGrid extends BaseGridWidget {
 
     private ScenarioContextMenuRegistry scenarioContextMenuRegistry;

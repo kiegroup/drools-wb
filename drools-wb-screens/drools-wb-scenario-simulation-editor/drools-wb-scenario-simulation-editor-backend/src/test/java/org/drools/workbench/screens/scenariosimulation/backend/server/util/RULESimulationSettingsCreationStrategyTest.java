@@ -46,7 +46,7 @@ public class RULESimulationSettingsCreationStrategyTest {
 
     @Test
     public void createSettings() throws Exception {
-        final Settings retrieved = ruleSimulationSettingsCreationStrategy.createSettings(value);
+        final Settings retrieved = ruleSimulationSettingsCreationStrategy.createSettings(pathMock, value);
         assertNotNull(retrieved);
     }
 }

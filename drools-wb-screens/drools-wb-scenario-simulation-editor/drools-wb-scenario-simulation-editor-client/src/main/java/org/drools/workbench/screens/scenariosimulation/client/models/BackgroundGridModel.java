@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2019 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,12 +47,13 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
      */
     @Override
     public void insertRowGridOnly(final int rowIndex,
-                                  final GridRow row, final BackgroundData abstractScesimData) {
+                                  final GridRow row,
+                                  final BackgroundData abstractScesimData) {
         insertRowGridOnly(rowIndex, row);
         abstractScesimData.getUnmodifiableFactMappingValues().forEach(value -> {
             FactIdentifier factIdentifier = value.getFactIdentifier();
             ExpressionIdentifier expressionIdentifier = value.getExpressionIdentifier();
-            if (value.getRawValue() == null || value.getRawValue() instanceof String) { // Let' put a placeholder
+            if (value.getRawValue() == null || value.getRawValue() instanceof String) {
                 String stringValue = (String) value.getRawValue();
                 int columnIndex = abstractScesimModel.getScesimModelDescriptor().getIndexByIdentifier(factIdentifier, expressionIdentifier);
                 final FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);

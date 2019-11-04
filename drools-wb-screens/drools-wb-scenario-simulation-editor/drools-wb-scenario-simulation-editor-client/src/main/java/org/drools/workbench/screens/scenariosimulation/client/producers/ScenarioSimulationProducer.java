@@ -41,9 +41,6 @@ import org.uberfire.workbench.events.NotificationEvent;
 @Dependent
 public class ScenarioSimulationProducer {
 
-//    @Inject
-//    protected ScenarioSimulationViewProducer scenarioSimulationViewProducer;
-
     @Inject
     protected ScenarioGridPanelProducer scenarioGridPanelProducer;
 

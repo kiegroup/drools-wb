@@ -172,7 +172,7 @@ public class ScenarioSimulationServiceImpl
         try {
             content.setSimulation(scenarioSimulationBuilder.createSimulation(context, type, value));
             content.setBackground(scenarioSimulationBuilder.createBackground(context, type, value));
-            content.setSettings(scenarioSimulationBuilder.createSettings(type, value));
+            content.setSettings(scenarioSimulationBuilder.createSettings(context, type, value));
             final org.uberfire.java.nio.file.Path nioPath = Paths.convert(context).resolve(fileName);
             final Path newPath = Paths.convert(nioPath);
 
@@ -198,9 +198,8 @@ public class ScenarioSimulationServiceImpl
             final String content = ioService.readAllString(Paths.convert(path));
 
             final ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
-            final Simulation simulation = scenarioSimulationModel.getSimulation();
             final Settings settings = scenarioSimulationModel.getSettings();
-            if (simulation != null && DMN.equals(settings.getType())) {
+            if (settings != null && DMN.equals(settings.getType())) {
                 try {
                     dmnTypeService.initializeNameAndNamespace(settings,
                                                               path,

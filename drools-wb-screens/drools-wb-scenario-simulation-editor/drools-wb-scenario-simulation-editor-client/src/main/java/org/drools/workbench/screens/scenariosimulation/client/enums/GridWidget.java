@@ -15,7 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.enums;
 
-public enum GRID_WIDGET {
+public enum GridWidget {
     SIMULATION,
     BACKGROUND;
 }

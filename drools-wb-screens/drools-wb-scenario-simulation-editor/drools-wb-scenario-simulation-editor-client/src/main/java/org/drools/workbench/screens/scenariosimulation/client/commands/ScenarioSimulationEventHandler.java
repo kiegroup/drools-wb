@@ -51,7 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetInstanceHeaderCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetPropertyHeaderCommand;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
@@ -450,11 +450,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
      */
     protected void commonExecution(final AbstractScenarioSimulationCommand command,
                                    final boolean focusGridAfterExecution) {
-        GRID_WIDGET currentGrid = null;
+        GridWidget currentGrid = null;
         if (context.getSelectedScenarioGridModel() instanceof ScenarioGridModel) {
-            currentGrid = GRID_WIDGET.SIMULATION;
+            currentGrid = GridWidget.SIMULATION;
         } else if (context.getSelectedScenarioGridModel() instanceof BackgroundGridModel) {
-            currentGrid = GRID_WIDGET.BACKGROUND;
+            currentGrid = GridWidget.BACKGROUND;
         }
         context.getStatus().setCurrentGrid(currentGrid);
         final CommandResult<ScenarioSimulationViolation> status = scenarioCommandManager.execute(context, command);
@@ -484,36 +484,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                 .toString();
         notificationEvent.fire(new NotificationEvent(message, NotificationEvent.NotificationType.ERROR));
     }
-
-//    /**
-//     * This method insert a <code>ScenarioGridWidgetFocusCommand</code> in the registry if the modification of the current <code>Command</code> happen on a different
-//     * <code>ScenarioGridWidget</code> then the previous one
-//     */
-//    protected Optional<ScenarioGridWidgetFocusCommand> conditionalAddScenarioGridWidgetFocusCommand(ScenarioSimulationEditorPresenter presenter, ScenarioSimulationContext.Status previousStatus, ScenarioSimulationContext.Status currentStatus, GRID_WIDGET currentWidget) {
-//        Optional<GRID_WIDGET> changedGridWidget = getEditedWidget(previousStatus, currentStatus);
-//        if (changedGridWidget.isPresent()) {
-//            switch (changedGridWidget.get()) {
-//                case BACKGROUND:
-//                    return Objects.equals(currentWidget, GRID_WIDGET.BACKGROUND) ? Optional.empty() : Optional.of(new ScenarioGridWidgetFocusCommand(presenter::selectBackgroundTab, presenter::selectSimulationTab));
-//                case SIMULATION:
-//                    return Objects.equals(currentWidget, GRID_WIDGET.SIMULATION) ? Optional.empty() : Optional.of(new ScenarioGridWidgetFocusCommand(presenter::selectSimulationTab, presenter::selectBackgroundTab));
-//                default:
-//                    return Optional.empty();
-//            }
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
-
-//    protected Optional<GRID_WIDGET> getEditedWidget(ScenarioSimulationContext.Status previousStatus, ScenarioSimulationContext.Status currentStatus) {
-//        if (!previousStatus.getBackground().equals(currentStatus.getBackground())) {
-//            return Optional.of(GRID_WIDGET.BACKGROUND);
-//        } else if (!previousStatus.getSimulation().equals(currentStatus.getSimulation())) {
-//            return Optional.of(GRID_WIDGET.SIMULATION);
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
 
     protected void registerHandlers() {
         handlerRegistrationList.add(eventBus.addHandler(AppendColumnEvent.TYPE, this));

@@ -232,11 +232,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         doReturn(Optional.of(settingsPresenterMock)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
         doReturn(Optional.of(coverageReportPresenterMock)).when(presenter).getCoverageReportPresenter(eq(placeRequestMock));
         when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
-//        when(kieViewMock.getMultiPage()).thenReturn(multiPageEditorMock);
-//        when(multiPageEditorMock.getView()).thenReturn(multiPageEditorViewMock);
-//        when(multiPageEditorViewMock.getTabBar()).thenReturn(navTabsMock);
-//        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
-//        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
     }
 
     @Test
