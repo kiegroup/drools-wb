@@ -86,7 +86,9 @@ import org.junit.runner.RunWith;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
@@ -97,6 +99,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyObject;
@@ -421,14 +425,6 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                                                                         isA(SetInstanceHeaderCommand.class),
                                                                         anyBoolean());
         //
-        doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
-        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
-        when(gridColumnMock.isPropertyAssigned()).thenReturn(true);
-        scenarioSimulationEventHandler.onEvent(event);
-        verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
-                                                                        isA(SetInstanceHeaderCommand.class),
-                                                                        anyBoolean());
-        //
         when(scenarioGridModelMock.isSameInstanceType(anyString())).thenReturn(false);
         when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
@@ -440,9 +436,29 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextDanger()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.changeType()),
                       isA(org.uberfire.mvp.Command.class));
-        verify(scenarioSimulationEventHandler, never()).commonExecution(eq(scenarioSimulationContextLocal),
-                                                                        isA(SetInstanceHeaderCommand.class),
-                                                                        anyBoolean());
+        verify(scenarioSimulationEventHandler, never()).commonExecution(any(),
+                                                                        any(),
+                                                                        any());
+        //
+        when(scenarioGridModelMock.isSameInstanceType(anyString())).thenReturn(false);
+        when(gridColumnMock.isInstanceAssigned()).thenReturn(true);
+        scenarioSimulationEventHandler.onEvent(event);
+        ArgumentCaptor<SetInstanceHeaderCommand> setInstanceHeaderCaptor = ArgumentCaptor.forClass(SetInstanceHeaderCommand.class);
+        ArgumentCaptor<Command> okPreserveCommand = ArgumentCaptor.forClass(Command.class);
+        verify(deletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.changeTypeTextDanger()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.changeType()),
+                      okPreserveCommand.capture());
+        // It simulates the click on ok button
+        okPreserveCommand.getValue().execute();
+        verify(scenarioSimulationEventHandler).commonExecution(eq(scenarioSimulationContextLocal),
+                                                               setInstanceHeaderCaptor.capture(),
+                                                               eq(true));
+        assertTrue(setInstanceHeaderCaptor.getValue().isUndoable());
         //
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         when(gridColumnMock.isInstanceAssigned()).thenReturn(false);
