@@ -52,4 +52,7 @@ public interface ScenarioSimulationEditorWrapper {
 
     void addBackgroundPage(ScenarioGridWidget scenarioGridWidget);
 
+    void selectSimulationTab();
+
+    void selectBackgroundTab();
 }

@@ -22,16 +22,21 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 
 /**
  * <code>Command</code> to <b>delete</b> a column. <b>Eventually</b> add a ne column if the deleted one is the last of its group.
  */
 @Dependent
-public class DeleteColumnCommand extends AbstractScenarioSimulationCommand {
+public class DeleteColumnCommand extends AbstractScenarioGridCommand {
 
-    public DeleteColumnCommand() {
-        super(true);
+    public DeleteColumnCommand(GRID_WIDGET gridWidget) {
+        super(gridWidget);
+    }
+
+    private DeleteColumnCommand() {
+        // CDI
     }
 
     @Override

@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 
@@ -49,8 +50,12 @@ public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter 
         HEADERCONTEXTMENU_PREPEND_ROW = HEADEREXPECTCONTEXTMENU_INSERT_ROW_ABOVE;
         HEADERCONTEXTMENU_LABEL = constants.expect().toUpperCase();
         HEADERCONTEXTMENU_I18N = "expect";
-        appendColumnEvent = new AppendColumnEvent("EXPECT");
-        prependColumnEvent = new PrependColumnEvent("EXPECT");
         super.initMenu();
+    }
+
+    public void show(final GRID_WIDGET gridWidget, int mx, int my) {
+        super.show(gridWidget, mx, my);
+        appendColumnEvent = new AppendColumnEvent(gridWidget, "EXPECT");
+        prependColumnEvent = new PrependColumnEvent(gridWidget, "EXPECT");
     }
 }

@@ -698,6 +698,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void selectSimulationTab() {
+        presenter.selectSimulationTab();
+        verify(scenarioSimulationEditorWrapperMock, times(1)).selectSimulationTab();
+    }
+
+    @Test
+    public void selectBackgroundTab() {
+        presenter.selectBackgroundTab();
+        verify(scenarioSimulationEditorWrapperMock, times(1)).selectBackgroundTab();
+    }
+
+    @Test
     public void onDownload() {
         String DOWNLOAD_URL = "DOWNLOAD_URL";
         Supplier<Path> pathSupplierMock = mock(Supplier.class);

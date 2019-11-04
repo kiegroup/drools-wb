@@ -32,6 +32,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
@@ -47,10 +48,13 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 /**
  * <b>Abstract</b> <code>Command</code> class which assures that a <code>ScenarioColumn</code> is selected.
  */
-public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimulationCommand {
+public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGridCommand {
 
-    public AbstractSelectedColumnCommand() {
-        super(true);
+    protected AbstractSelectedColumnCommand(GRID_WIDGET gridWidget) {
+        super(gridWidget);
+    }
+
+    protected AbstractSelectedColumnCommand() {
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);

@@ -18,16 +18,21 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
  * <code>Command</code> to <b>delete</b> a row.
  */
 @Dependent
-public class DeleteRowCommand extends AbstractScenarioSimulationCommand {
+public class DeleteRowCommand extends AbstractScenarioGridCommand {
 
-    public DeleteRowCommand() {
-        super(true);
+    public DeleteRowCommand(GRID_WIDGET gridWidget) {
+        super(gridWidget);
+    }
+
+    private DeleteRowCommand() {
+        // CDI
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -49,7 +50,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_1;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandTest {
+public class DuplicateInstanceCommandTest extends AbstractScenarioGridCommandTest {
 
 
 
@@ -106,7 +106,7 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
     @Before
     public void setup() {
         super.setup();
-        command = spy(new DuplicateInstanceCommand() {
+        command = spy(new DuplicateInstanceCommand(GRID_WIDGET.SIMULATION) {
             @Override
             protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String fullClassName) {
                 //Do nothing
@@ -118,7 +118,6 @@ public class DuplicateInstanceCommandTest extends AbstractSelectedColumnCommandT
                 return gridColumnMock;
             }
         });
-        assertTrue(command.isUndoable());
         addNewColumn(scenarioGridColumnMock1, headerMetaDatasMock1, informationHeaderMetaDataMock1, propertyHeaderMetaDataMock1, factIdentifierMock1, factMappingMock1,
                           factMappingValueMock1, COLUMN_NUMBER, COLUMN_NUMBER, COLUMN_NUMBER, VALUE_1, GRID_PROPERTY_TITLE_1, GRID_COLUMN_ID_1, FACT_ALIAS_1, VALUE_CLASS_NAME,
                           "test", FULL_CLASS_NAME_1, FACT_IDENTIFIER_NAME_1);

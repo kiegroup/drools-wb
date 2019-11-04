@@ -16,15 +16,20 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
  * <code>Command</code> to <b>append</b> (i.e. put in the last position) a row
  */
-public class AppendRowCommand extends AbstractScenarioSimulationCommand {
+public class AppendRowCommand extends AbstractScenarioGridCommand {
 
-    public AppendRowCommand() {
-        super(true);
+    public AppendRowCommand(GRID_WIDGET gridWidget) {
+        super(gridWidget);
+    }
+
+    private AppendRowCommand() {
+        // CDI
     }
 
     @Override

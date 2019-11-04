@@ -23,25 +23,26 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
 /**
  * <code>Command</code> to to set the <i>value</i> of a header' cell
  */
 @Dependent
-public class SetHeaderCellValueCommand extends AbstractScenarioSimulationCommand {
+public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
 
     protected boolean isInstanceHeader;
     protected boolean isPropertyHeader;
 
-    public SetHeaderCellValueCommand() {
-        this(false, false);
-    }
-
-    public SetHeaderCellValueCommand(boolean isInstanceHeader, boolean isPropertyHeader) {
-        super(true);
+    public SetHeaderCellValueCommand(GRID_WIDGET gridWidget, boolean isInstanceHeader, boolean isPropertyHeader) {
+        super(gridWidget);
         this.isInstanceHeader = isInstanceHeader;
         this.isPropertyHeader = isPropertyHeader;
+    }
+
+    private SetHeaderCellValueCommand() {
+        // CDI
     }
 
     @Override

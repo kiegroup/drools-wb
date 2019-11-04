@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -34,8 +35,6 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
     protected String HEADERCONTEXTMENU_SCENARIO;
     protected String HEADERCONTEXTMENU_PREPEND_ROW;
 
-    protected PrependRowEvent prependRowEvent = new PrependRowEvent();
-
     /**
      * The <b>Insert row below</b> menu element in the <b>header</b> contextual menu
      */
@@ -51,6 +50,13 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
     public void initMenu() {
         // SCENARIO
         addMenuItem(HEADERCONTEXTMENU_SCENARIO, constants.scenario(), "scenario");
-        insertRowBelowElement = addExecutableMenuItem(HEADERCONTEXTMENU_PREPEND_ROW, constants.insertRowBelow(), "insertRowBelow", prependRowEvent);
+        insertRowBelowElement = addExecutableMenuItem(HEADERCONTEXTMENU_PREPEND_ROW, constants.insertRowBelow(), "insertRowBelow");
     }
+
+    public void show(final GRID_WIDGET gridWidget, final int mx, final int my) {
+        super.show(mx, my);
+        mapEvent(insertRowBelowElement, new PrependRowEvent(gridWidget));
+    }
+
+
 }

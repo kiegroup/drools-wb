@@ -18,18 +18,20 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 
 @Dependent
-public class ImportCommand extends AbstractScenarioSimulationCommand {
+public class ImportCommand extends AbstractScenarioGridCommand {
 
     protected String fileContent;
 
-    public ImportCommand() {
-        super(true);
+    public ImportCommand(GRID_WIDGET gridWidget, String fileContent) {
+        super(gridWidget);
+        this.fileContent = fileContent;
     }
 
-    public void setFileContent(String fileContent) {
-        this.fileContent = fileContent;
+    private ImportCommand() {
+        // CDI
     }
 
     @Override

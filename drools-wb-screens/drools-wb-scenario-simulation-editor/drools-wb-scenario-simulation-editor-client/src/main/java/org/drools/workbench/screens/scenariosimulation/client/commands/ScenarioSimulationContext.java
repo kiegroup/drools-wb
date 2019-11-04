@@ -160,6 +160,17 @@ public class ScenarioSimulationContext {
         return getSelectedScenarioGridWidget().getScenarioGridPanel();
     }
 
+    public ScenarioGridPanel getScenarioGridPanelByGridWidget(GRID_WIDGET gridWidget) {
+        switch (gridWidget) {
+            case SIMULATION:
+                return simulationGridWidget.getScenarioGridPanel();
+            case BACKGROUND:
+                return backgroundGridWidget.getScenarioGridPanel();
+            default:
+                throw new IllegalArgumentException("Illegal GRID_WIDGET " + gridWidget);
+        }
+    }
+
     public AbstractScesimGridModel getSelectedScenarioGridModel() {
         return getSelectedScenarioGridLayer().getScenarioGrid().getModel();
     }

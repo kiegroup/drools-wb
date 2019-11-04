@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -58,6 +59,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
 
     protected EventBus eventBus;
+
+    protected GRID_WIDGET gridWidget;
 
     protected boolean editingColumnEnabled = false;
 
@@ -241,6 +244,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
+    public void setGridWidget(GRID_WIDGET gridWidget) {
+        this.gridWidget = gridWidget;
+    }
+
+    @Override
     public void onSearchedEvent(String search) {
         clearLists();
         dataObjectFieldsMap
@@ -384,14 +392,14 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(fullPackage, className)));
+                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(gridWidget, fullPackage, className)));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
-                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
+                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(gridWidget, fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
             }
         }
     }

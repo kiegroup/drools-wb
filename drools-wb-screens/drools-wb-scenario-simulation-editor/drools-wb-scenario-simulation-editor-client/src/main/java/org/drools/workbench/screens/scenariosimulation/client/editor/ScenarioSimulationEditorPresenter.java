@@ -456,6 +456,14 @@ public class ScenarioSimulationEditorPresenter {
         backgroundWidget.deselect();
     }
 
+    public void selectSimulationTab() {
+        scenarioSimulationEditorWrapper.selectSimulationTab();
+    }
+
+    public void selectBackgroundTab() {
+        scenarioSimulationEditorWrapper.selectBackgroundTab();
+    }
+
     protected void onDownload(final Supplier<Path> pathSupplier) {
         final String downloadURL = getFileDownloadURL(pathSupplier);
         open(downloadURL);
@@ -466,7 +474,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void showImportDialog() {
-        eventBus.fireEvent(new ImportEvent());
+        context.getSelectedGRID_WIDGET().ifPresent(gridWidget -> eventBus.fireEvent(new ImportEvent(gridWidget)));
     }
 
     protected void onExportToCsv() {

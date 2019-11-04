@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 
@@ -36,7 +37,6 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
     private final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
     private final String HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE = "headergivencontextmenu-insert-row-above";
 
-
     @PostConstruct
     @Override
     public void initMenu() {
@@ -48,8 +48,12 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
         HEADERCONTEXTMENU_PREPEND_ROW = HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE;
         HEADERCONTEXTMENU_LABEL = constants.given().toUpperCase();
         HEADERCONTEXTMENU_I18N = "given";
-        appendColumnEvent = new AppendColumnEvent("GIVEN");
-        prependColumnEvent = new PrependColumnEvent("GIVEN");
         super.initMenu();
+    }
+
+    public void show(final GRID_WIDGET gridWidget, int mx, int my) {
+        super.show(gridWidget, mx, my);
+        appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");
+        prependColumnEvent = new PrependColumnEvent(gridWidget, "GIVEN");
     }
 }

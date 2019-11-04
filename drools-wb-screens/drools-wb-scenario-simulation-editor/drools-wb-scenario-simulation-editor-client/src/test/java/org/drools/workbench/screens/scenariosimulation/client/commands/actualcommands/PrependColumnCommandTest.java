@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -29,7 +30,6 @@ import org.junit.runner.RunWith;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FIRST_INDEX_LEFT;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -37,19 +37,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class PrependColumnCommandTest extends AbstractScenarioSimulationCommandTest {
+public class PrependColumnCommandTest extends AbstractScenarioGridCommandTest {
 
     @Before
     public void setup() {
         super.setup();
-        command = spy(new PrependColumnCommand() {
+        command = spy(new PrependColumnCommand(GRID_WIDGET.SIMULATION) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
                 return gridColumnMock;
             }
         });
-        assertTrue(command.isUndoable());
     }
 
     @Test

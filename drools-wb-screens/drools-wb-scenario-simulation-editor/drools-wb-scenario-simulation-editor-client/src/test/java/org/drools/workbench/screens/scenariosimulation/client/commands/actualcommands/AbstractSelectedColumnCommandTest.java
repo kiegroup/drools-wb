@@ -69,7 +69,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public abstract class AbstractSelectedColumnCommandTest extends AbstractScenarioSimulationCommandTest {
+public abstract class AbstractSelectedColumnCommandTest extends AbstractScenarioGridCommandTest {
 
     @Mock
     protected List<GridColumn<?>> gridColumnsMock;

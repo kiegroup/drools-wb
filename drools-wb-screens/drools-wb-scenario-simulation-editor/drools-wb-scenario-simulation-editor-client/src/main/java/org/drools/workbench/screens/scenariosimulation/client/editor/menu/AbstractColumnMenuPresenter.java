@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
@@ -54,22 +55,22 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         super.initMenu();
     }
 
-    public void show(final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
+    public void show(final GRID_WIDGET gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
         if(!showDuplicateInstance && duplicateInstanceLIElement != null) {
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;
         }
-        mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(columnIndex, false, asProperty));
-        mapEvent(insertColumnRightLIElement, new InsertColumnEvent(columnIndex, true, asProperty));
+        mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(gridWidget, columnIndex, false, asProperty));
+        mapEvent(insertColumnRightLIElement, new InsertColumnEvent(gridWidget, columnIndex, true, asProperty));
         if (asProperty) {
             updateMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
-            mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(columnIndex, group, true));
+            mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, true));
         } else {
             updateMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
-            mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(columnIndex, group, false));
+            mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
         }
         if (duplicateInstanceLIElement != null) {
-            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(columnIndex));
+            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
         callSuperShow(mx, my);
     }

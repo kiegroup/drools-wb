@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.LIElement;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
@@ -53,15 +54,14 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
         duplicateRowLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
         deleteRowLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow");
         runSingleScenarioElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
-
     }
 
-    public void show(final int mx, final int my, int rowIndex) {
-        super.show(mx, my);
-        mapEvent(insertRowAboveLIElement, new InsertRowEvent(rowIndex));
-        mapEvent(insertRowBelowLIElement, new InsertRowEvent(rowIndex + 1));
-        mapEvent(duplicateRowLIElement, new DuplicateRowEvent(rowIndex));
-        mapEvent(deleteRowLIElement, new DeleteRowEvent(rowIndex));
+    public void show(final GRID_WIDGET gridWidget, final int mx, final int my, int rowIndex) {
+        super.show(gridWidget, mx, my);
+        mapEvent(insertRowAboveLIElement, new InsertRowEvent(gridWidget, rowIndex));
+        mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
+        mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
+        mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
         mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
     }
 }

@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
 /**
@@ -25,6 +26,14 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  */
 @Dependent
 public class SetPropertyHeaderCommand extends AbstractSelectedColumnCommand {
+
+    public SetPropertyHeaderCommand(GRID_WIDGET gridWidget) {
+        super(gridWidget);
+    }
+
+    private SetPropertyHeaderCommand() {
+        // CDI
+    }
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
