@@ -22,6 +22,10 @@ import static org.drools.scenariosimulation.api.utils.ConstantsHolder.MVEL_ESCAP
  */
 public class ConstantHolder {
 
+    private ConstantHolder() {
+        // Not instantiable
+    }
+
     public static final String FA_ANGLE_DOWN = "fa-angle-down";
     public static final String FA_ANGLE_RIGHT = "fa-angle-right";
     public static final String HIDDEN = "hidden";
@@ -36,10 +40,5 @@ public class ConstantHolder {
     // GWT doesn't support Java 8 LocalDate
     public static final String LOCALDATE_SIMPLE_NAME = "LocalDate";
     public static final String LOCALDATE_CANONICAL_NAME = "java.time.LocalDate";
-
-    private ConstantHolder() {
-        // Not instantiable
-    }
-
     public static final String DMN_DATE = "date";
 }
