@@ -464,7 +464,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void showImportDialog() {
-        context.getSelectedGRID_WIDGET().ifPresent(gridWidget -> eventBus.fireEvent(new ImportEvent(gridWidget)));
+        context.getSelectedGridWidget().ifPresent(gridWidget -> eventBus.fireEvent(new ImportEvent(gridWidget)));
     }
 
     protected void onExportToCsv() {

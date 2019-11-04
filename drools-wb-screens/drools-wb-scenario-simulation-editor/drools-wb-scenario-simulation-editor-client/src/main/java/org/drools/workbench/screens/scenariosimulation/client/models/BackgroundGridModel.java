@@ -21,7 +21,7 @@ import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -37,8 +37,8 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
     }
 
     @Override
-    public GRID_WIDGET getGridWidget() {
-        return GRID_WIDGET.BACKGROUND;
+    public GridWidget getGridWidget() {
+        return GridWidget.BACKGROUND;
     }
 
     /**

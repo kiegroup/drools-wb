@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.dom.client.LIElement;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
@@ -57,7 +57,7 @@ public class GridContextMenu extends AbstractHeaderMenuPresenter {
         runSingleScenarioElement = addExecutableMenuItem(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
     }
 
-    public void show(final GRID_WIDGET gridWidget, final int mx, final int my, int rowIndex) {
+    public void show(final GridWidget gridWidget, final int mx, final int my, int rowIndex) {
         super.show(gridWidget, mx, my);
         mapEvent(insertRowAboveLIElement, new InsertRowEvent(gridWidget, rowIndex));
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));

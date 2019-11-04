@@ -29,7 +29,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.EnableTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
@@ -82,7 +82,7 @@ public class ScenarioGrid extends BaseGridWidget {
         ((AbstractScesimGridModel) model).forceRefreshWidth();
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return ((AbstractScesimGridModel) model).getGridWidget();
     }
 

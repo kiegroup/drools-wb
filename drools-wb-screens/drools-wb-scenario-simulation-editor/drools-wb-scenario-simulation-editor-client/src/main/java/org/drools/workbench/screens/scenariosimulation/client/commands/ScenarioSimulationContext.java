@@ -160,14 +160,25 @@ public class ScenarioSimulationContext {
         return getSelectedScenarioGridWidget().getScenarioGridPanel();
     }
 
-    public ScenarioGridPanel getScenarioGridPanelByGridWidget(GRID_WIDGET gridWidget) {
+    public ScenarioGridPanel getScenarioGridPanelByGridWidget(GridWidget gridWidget) {
         switch (gridWidget) {
             case SIMULATION:
                 return simulationGridWidget.getScenarioGridPanel();
             case BACKGROUND:
                 return backgroundGridWidget.getScenarioGridPanel();
             default:
-                throw new IllegalArgumentException("Illegal GRID_WIDGET " + gridWidget);
+                throw new IllegalArgumentException("Illegal GridWidget " + gridWidget);
+        }
+    }
+
+    public AbstractScesimGridModel getSelectedScenarioGridModelByGridWidget(GridWidget gridWidget) {
+        switch (gridWidget) {
+            case SIMULATION:
+                return simulationGridWidget.getModel();
+            case BACKGROUND:
+                return backgroundGridWidget.getModel();
+            default:
+                throw new IllegalArgumentException("Illegal GridWidget " + gridWidget);
         }
     }
 
@@ -179,7 +190,7 @@ public class ScenarioSimulationContext {
         return getSelectedScenarioGridPanel().getScenarioGridLayer();
     }
 
-    public Optional<GridWidget> getSelectedGRID_WIDGET() {
+    public Optional<GridWidget> getSelectedGridWidget() {
         if (getSelectedScenarioGridModel() instanceof ScenarioGridModel) {
             return Optional.of(GridWidget.SIMULATION);
         } else if (getSelectedScenarioGridModel() instanceof BackgroundGridModel) {

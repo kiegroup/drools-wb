@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class SetGridCellValueCommandTest extends AbstractScenarioGridCommandTest
     @Before
     public void setup() {
         super.setup();
-        command = spy(new SetGridCellValueCommand(GRID_WIDGET.SIMULATION));
+        command = spy(new SetGridCellValueCommand(GridWidget.SIMULATION));
     }
 
     @Test

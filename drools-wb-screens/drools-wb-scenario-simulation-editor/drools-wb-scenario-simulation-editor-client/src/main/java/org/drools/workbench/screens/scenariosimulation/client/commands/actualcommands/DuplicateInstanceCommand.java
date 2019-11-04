@@ -27,7 +27,7 @@ import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
@@ -39,7 +39,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
     public final static String COPY_LABEL = "_copy_";
 
-    public DuplicateInstanceCommand(GRID_WIDGET gridWidget) {
+    public DuplicateInstanceCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

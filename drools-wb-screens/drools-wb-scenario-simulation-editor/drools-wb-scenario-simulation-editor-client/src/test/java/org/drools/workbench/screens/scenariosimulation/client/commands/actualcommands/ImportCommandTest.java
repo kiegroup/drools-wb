@@ -17,7 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +34,7 @@ public class ImportCommandTest extends AbstractScenarioSimulationCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new ImportCommand(GRID_WIDGET.SIMULATION, FILE_CONTENT));
+        command = spy(new ImportCommand(GridWidget.SIMULATION, FILE_CONTENT));
     }
 
     @Test

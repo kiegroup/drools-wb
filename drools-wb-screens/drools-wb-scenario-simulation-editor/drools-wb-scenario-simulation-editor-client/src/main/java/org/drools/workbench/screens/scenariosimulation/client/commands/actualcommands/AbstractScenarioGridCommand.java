@@ -24,7 +24,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationBuilders;
@@ -38,7 +38,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
 
 public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimulationCommand {
 
-    protected GRID_WIDGET gridWidget;
+    protected GridWidget gridWidget;
 
     /**
      * The <code>ScenarioSimulationContext.Status</code> to restore when calling <b>undo/redo</b>.
@@ -47,10 +47,10 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
     protected ScenarioSimulationContext.Status restorableStatus = null;
 
     /**
-     * Calling this constructor will set the target <code>GRID_WIDGET</code>
+     * Calling this constructor will set the target <code>GridWidget</code>
      * @param gridWidget
      */
-    protected AbstractScenarioGridCommand(final GRID_WIDGET gridWidget) {
+    protected AbstractScenarioGridCommand(final GridWidget gridWidget) {
         this.gridWidget = gridWidget;
     }
 
@@ -120,7 +120,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
                 context.getScenarioSimulationEditorPresenter().selectBackgroundTab();
                 break;
             default:
-                throw new IllegalStateException("Illegal GRID_WIDGET " + gridWidget);
+                throw new IllegalStateException("Illegal GridWidget " + gridWidget);
         }
         context.getScenarioGridPanelByGridWidget(gridWidget).onResize();
         context.getScenarioGridPanelByGridWidget(gridWidget).select();
@@ -165,7 +165,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
 
-        return context.getSelectedScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
+        return context.getSelectedScenarioGridModel().getColumns().stream()
                 .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))
                 .findFirst()
                 .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());

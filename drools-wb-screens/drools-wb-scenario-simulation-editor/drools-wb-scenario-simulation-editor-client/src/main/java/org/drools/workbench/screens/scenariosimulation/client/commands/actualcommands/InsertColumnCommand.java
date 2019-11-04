@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
@@ -28,7 +28,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridData;
 @Dependent
 public class InsertColumnCommand extends AbstractSelectedColumnCommand {
 
-    public InsertColumnCommand(GRID_WIDGET gridWidget) {
+    public InsertColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

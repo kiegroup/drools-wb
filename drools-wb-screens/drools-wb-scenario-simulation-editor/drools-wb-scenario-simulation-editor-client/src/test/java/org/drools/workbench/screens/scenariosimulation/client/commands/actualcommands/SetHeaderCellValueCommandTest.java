@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.SortedMap;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class SetHeaderCellValueCommandTest extends AbstractScenarioGridCommandTe
     @Before
     public void setup() {
         super.setup();
-        command = spy(new SetHeaderCellValueCommand(GRID_WIDGET.SIMULATION, false, false));
+        command = spy(new SetHeaderCellValueCommand(GridWidget.SIMULATION, false, false));
         scenarioSimulationContextLocal.getStatus().setRowIndex(ROW_INDEX);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContextLocal.getStatus().setGridCellValue(MULTIPART_VALUE);

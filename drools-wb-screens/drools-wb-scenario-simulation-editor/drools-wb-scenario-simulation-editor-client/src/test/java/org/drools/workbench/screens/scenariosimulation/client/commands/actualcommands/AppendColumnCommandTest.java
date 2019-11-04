@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -42,7 +42,7 @@ public class AppendColumnCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new AppendColumnCommand(GRID_WIDGET.SIMULATION) {
+        command = spy(new AppendColumnCommand(GridWidget.SIMULATION) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {

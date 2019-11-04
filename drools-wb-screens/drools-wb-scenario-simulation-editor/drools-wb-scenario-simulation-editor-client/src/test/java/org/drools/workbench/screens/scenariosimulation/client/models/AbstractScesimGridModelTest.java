@@ -30,6 +30,7 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -172,6 +173,11 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
                     return null;
                 }
                 return gridCellMock;
+            }
+
+            @Override
+            public GridWidget getGridWidget() {
+                return GridWidget.SIMULATION;
             }
         });
     }

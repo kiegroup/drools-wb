@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetGridCellValueEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class SetGridCellValueEvent extends GwtEvent<SetGridCellValueEventHandler
 
     public static final Type<SetGridCellValueEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final int rowIndex;
     private final int columnIndex;
     private final String cellValue;
@@ -38,7 +38,7 @@ public class SetGridCellValueEvent extends GwtEvent<SetGridCellValueEventHandler
      * @param columnIndex
      * @param cellValue
      */
-    public SetGridCellValueEvent(GRID_WIDGET gridWidget, int rowIndex, int columnIndex, String cellValue) {
+    public SetGridCellValueEvent(GridWidget gridWidget, int rowIndex, int columnIndex, String cellValue) {
         this.gridWidget = gridWidget;
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
@@ -50,7 +50,7 @@ public class SetGridCellValueEvent extends GwtEvent<SetGridCellValueEventHandler
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

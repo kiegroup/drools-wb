@@ -32,7 +32,7 @@ import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
@@ -50,7 +50,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGridCommand {
 
-    protected AbstractSelectedColumnCommand(GRID_WIDGET gridWidget) {
+    protected AbstractSelectedColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

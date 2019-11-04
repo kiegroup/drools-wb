@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
@@ -27,7 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DuplicateRowCommand extends AbstractScenarioGridCommand {
 
-    public DuplicateRowCommand(GRID_WIDGET gridWidget) {
+    public DuplicateRowCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

@@ -25,7 +25,7 @@ import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -106,7 +106,7 @@ public class DuplicateInstanceCommandTest extends AbstractScenarioGridCommandTes
     @Before
     public void setup() {
         super.setup();
-        command = spy(new DuplicateInstanceCommand(GRID_WIDGET.SIMULATION) {
+        command = spy(new DuplicateInstanceCommand(GridWidget.SIMULATION) {
             @Override
             protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String fullClassName) {
                 //Do nothing

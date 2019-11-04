@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
@@ -55,7 +55,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         super.initMenu();
     }
 
-    public void show(final GRID_WIDGET gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
+    public void show(final GridWidget gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
         if(!showDuplicateInstance && duplicateInstanceLIElement != null) {
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;

@@ -19,7 +19,7 @@ import java.util.Map;
 
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
@@ -29,7 +29,7 @@ public abstract class AbstractInsertColumnCommand extends AbstractScenarioGridCo
         // CDI
     }
 
-    public AbstractInsertColumnCommand(GRID_WIDGET gridWidget) {
+    public AbstractInsertColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

@@ -18,14 +18,14 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 
 @Dependent
 public class ImportCommand extends AbstractScenarioGridCommand {
 
     protected String fileContent;
 
-    public ImportCommand(GRID_WIDGET gridWidget, String fileContent) {
+    public ImportCommand(GridWidget gridWidget, String fileContent) {
         super(gridWidget);
         this.fileContent = fileContent;
     }

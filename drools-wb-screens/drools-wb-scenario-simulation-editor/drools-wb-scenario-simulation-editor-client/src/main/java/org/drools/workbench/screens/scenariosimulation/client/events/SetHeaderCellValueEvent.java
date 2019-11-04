@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetHeaderCellValueEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
 
     public static final Type<SetHeaderCellValueEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final int rowIndex;
     private final int columnIndex;
     private final String headerCellValue;
@@ -40,7 +40,7 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
      * @param headerCellValue
      * @param isPropertyHeader set to <code>true</code> if the edited cell is inside the header
      */
-    public SetHeaderCellValueEvent(GRID_WIDGET gridWidget, int rowIndex, int columnIndex, String headerCellValue, boolean isInstanceHeader, boolean isPropertyHeader) {
+    public SetHeaderCellValueEvent(GridWidget gridWidget, int rowIndex, int columnIndex, String headerCellValue, boolean isInstanceHeader, boolean isPropertyHeader) {
         this.gridWidget = gridWidget;
         this.rowIndex = rowIndex;
         this.columnIndex = columnIndex;
@@ -54,7 +54,7 @@ public class SetHeaderCellValueEvent extends GwtEvent<SetHeaderCellValueEventHan
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

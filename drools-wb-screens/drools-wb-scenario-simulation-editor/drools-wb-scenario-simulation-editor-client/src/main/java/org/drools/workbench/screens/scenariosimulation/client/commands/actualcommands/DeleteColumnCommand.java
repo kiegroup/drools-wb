@@ -22,7 +22,7 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 
 /**
@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 @Dependent
 public class DeleteColumnCommand extends AbstractScenarioGridCommand {
 
-    public DeleteColumnCommand(GRID_WIDGET gridWidget) {
+    public DeleteColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

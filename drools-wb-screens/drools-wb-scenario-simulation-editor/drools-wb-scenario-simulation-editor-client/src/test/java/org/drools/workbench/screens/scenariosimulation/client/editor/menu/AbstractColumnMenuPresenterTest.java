@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
@@ -87,7 +87,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         abstractColumnMenuPresenterSpy.initMenu();
         final LIElement duplicateInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.duplicateInstanceLIElement;
         final LIElement deleteColumnInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement;
-        abstractColumnMenuPresenterSpy.show(GRID_WIDGET.SIMULATION, mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
+        abstractColumnMenuPresenterSpy.show(GridWidget.SIMULATION, mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
         if (!showDuplicateInstance) {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).removeMenuItem(eq(duplicateInstanceLIElementOriginal));
             assertNull(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement);

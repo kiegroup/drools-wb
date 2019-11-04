@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DuplicateRowEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class DuplicateRowEvent extends GwtEvent<DuplicateRowEventHandler> {
 
     public static final Type<DuplicateRowEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final int rowIndex;
 
     /**
@@ -34,7 +34,7 @@ public class DuplicateRowEvent extends GwtEvent<DuplicateRowEventHandler> {
      * @param gridWidget
      * @param rowIndex
      */
-    public DuplicateRowEvent(GRID_WIDGET gridWidget, int rowIndex) {
+    public DuplicateRowEvent(GridWidget gridWidget, int rowIndex) {
         this.gridWidget = gridWidget;
         this.rowIndex = rowIndex;
     }
@@ -44,7 +44,7 @@ public class DuplicateRowEvent extends GwtEvent<DuplicateRowEventHandler> {
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

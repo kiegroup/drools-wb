@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
 
     public static final Type<SetInstanceHeaderEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final String fullPackage;
     private final String className;
 
@@ -36,7 +36,7 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
      * @param fullPackage
      * @param className
      */
-    public SetInstanceHeaderEvent(GRID_WIDGET gridWidget, String fullPackage, String className) {
+    public SetInstanceHeaderEvent(GridWidget gridWidget, String fullPackage, String className) {
         this.gridWidget = gridWidget;
         this.fullPackage = fullPackage;
         this.className = className;
@@ -47,7 +47,7 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

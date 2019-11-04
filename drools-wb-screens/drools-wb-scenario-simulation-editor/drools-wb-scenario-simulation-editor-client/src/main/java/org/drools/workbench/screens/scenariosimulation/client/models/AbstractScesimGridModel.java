@@ -42,7 +42,7 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGridReloadEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -93,7 +93,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
         setHeaderRowCount(HEADER_ROW_COUNT);
     }
 
-    public abstract GRID_WIDGET getGridWidget();
+    public abstract GridWidget getGridWidget();
 
     /**
      * Method to bind the data serialized inside backend <code>AbstractScesimModel</code>

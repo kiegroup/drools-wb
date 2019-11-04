@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
 
     public static final Type<DeleteColumnEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final int columnIndex;
     private final String columnGroup;
     private final boolean asProperty;
@@ -38,7 +38,7 @@ public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
      * @param columnGroup
      * @param asProperty asProperty when <code>true</code> it delete only the column, when <code>false</code> it deletes the whole instance
      */
-    public DeleteColumnEvent(GRID_WIDGET gridWidget, int columnIndex, String columnGroup, boolean asProperty) {
+    public DeleteColumnEvent(GridWidget gridWidget, int columnIndex, String columnGroup, boolean asProperty) {
         this.gridWidget = gridWidget;
         this.columnIndex = columnIndex;
         this.columnGroup = columnGroup;
@@ -50,7 +50,7 @@ public class DeleteColumnEvent extends GwtEvent<DeleteColumnEventHandler> {
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

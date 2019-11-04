@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.InsertColumnEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class InsertColumnEvent extends GwtEvent<InsertColumnEventHandler> {
 
     public static final Type<InsertColumnEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final int columnIndex;
     private final boolean isRight;
     private final boolean asProperty;
@@ -37,7 +37,7 @@ public class InsertColumnEvent extends GwtEvent<InsertColumnEventHandler> {
      * @param isRight when <code>true</code>, column will be inserted to the right of the given index (i.e. at position columnIndex +1), otherwise to the left (i.e. at position columnIndex)
      * @param asProperty when <code>true</code>, column will use the <b>instance</b> header of the original one, so to create a new "property" header under the same instance
      */
-    public InsertColumnEvent(GRID_WIDGET gridWidget, int columnIndex, boolean isRight, boolean asProperty) {
+    public InsertColumnEvent(GridWidget gridWidget, int columnIndex, boolean isRight, boolean asProperty) {
         this.gridWidget = gridWidget;
         this.columnIndex = columnIndex;
         this.isRight = isRight;
@@ -49,7 +49,7 @@ public class InsertColumnEvent extends GwtEvent<InsertColumnEventHandler> {
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

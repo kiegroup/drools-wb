@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
 
 /**
@@ -26,13 +26,13 @@ public class AppendRowEvent extends GwtEvent<AppendRowEventHandler> {
 
     public static final Type<AppendRowEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
 
     /**
      *
      * @param gridWidget
      */
-    public AppendRowEvent(GRID_WIDGET gridWidget) {
+    public AppendRowEvent(GridWidget gridWidget) {
         this.gridWidget = gridWidget;
     }
 
@@ -46,7 +46,7 @@ public class AppendRowEvent extends GwtEvent<AppendRowEventHandler> {
         handler.onEvent(this);
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 }

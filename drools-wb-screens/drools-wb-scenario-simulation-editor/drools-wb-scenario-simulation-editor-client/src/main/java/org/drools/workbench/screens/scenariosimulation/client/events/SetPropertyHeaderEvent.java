@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.events;
 import java.util.List;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 
 /**
@@ -28,7 +28,7 @@ public class SetPropertyHeaderEvent extends GwtEvent<SetPropertyHeaderEventHandl
 
     public static final Type<SetPropertyHeaderEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final String fullPackage;
     private final List<String> propertyNameElements;
     private final String valueClassName;
@@ -41,7 +41,7 @@ public class SetPropertyHeaderEvent extends GwtEvent<SetPropertyHeaderEventHandl
      * @param propertyNameElements
      * @param valueClassName
      */
-    public SetPropertyHeaderEvent(GRID_WIDGET gridWidget, String fullPackage, List<String> propertyNameElements, String valueClassName) {
+    public SetPropertyHeaderEvent(GridWidget gridWidget, String fullPackage, List<String> propertyNameElements, String valueClassName) {
         this.gridWidget = gridWidget;
         this.fullPackage = fullPackage;
         this.propertyNameElements = propertyNameElements;
@@ -53,7 +53,7 @@ public class SetPropertyHeaderEvent extends GwtEvent<SetPropertyHeaderEventHandl
         return TYPE;
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

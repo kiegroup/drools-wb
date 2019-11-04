@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
 
 /**
@@ -26,7 +26,7 @@ public class AppendColumnEvent extends GwtEvent<AppendColumnEventHandler> {
 
     public static final Type<AppendColumnEventHandler> TYPE = new Type<>();
 
-    private final GRID_WIDGET gridWidget;
+    private final GridWidget gridWidget;
     private final String columnGroup;
 
     /**
@@ -34,7 +34,7 @@ public class AppendColumnEvent extends GwtEvent<AppendColumnEventHandler> {
      * @param gridWidget
      * @param columnGroup
      */
-    public AppendColumnEvent(GRID_WIDGET gridWidget, String columnGroup) {
+    public AppendColumnEvent(GridWidget gridWidget, String columnGroup) {
         this.gridWidget = gridWidget;
         this.columnGroup = columnGroup;
     }
@@ -49,7 +49,7 @@ public class AppendColumnEvent extends GwtEvent<AppendColumnEventHandler> {
         handler.onEvent(this);
     }
 
-    public GRID_WIDGET getGridWidget() {
+    public GridWidget getGridWidget() {
         return gridWidget;
     }
 

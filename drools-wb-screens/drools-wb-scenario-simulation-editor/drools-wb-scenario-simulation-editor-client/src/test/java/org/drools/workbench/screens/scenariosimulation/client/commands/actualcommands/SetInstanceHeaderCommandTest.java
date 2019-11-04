@@ -24,7 +24,7 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -56,7 +56,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioGridCommandTes
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        command = spy(new SetInstanceHeaderCommand(GRID_WIDGET.SIMULATION) {
+        command = spy(new SetInstanceHeaderCommand(GridWidget.SIMULATION) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader, ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {

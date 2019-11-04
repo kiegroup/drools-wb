@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 
 /**
  * <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
@@ -26,7 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
 @Dependent
 public class AppendColumnCommand extends AbstractInsertColumnCommand {
 
-    public AppendColumnCommand(GRID_WIDGET gridWidget) {
+    public AppendColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

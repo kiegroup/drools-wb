@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -60,7 +60,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     protected EventBus eventBus;
 
-    protected GRID_WIDGET gridWidget;
+    protected GridWidget gridWidget;
 
     protected boolean editingColumnEnabled = false;
 
@@ -244,7 +244,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void setGridWidget(GRID_WIDGET gridWidget) {
+    public void setGridWidget(GridWidget gridWidget) {
         this.gridWidget = gridWidget;
     }
 

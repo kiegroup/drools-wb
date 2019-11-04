@@ -24,7 +24,7 @@ import java.util.SortedMap;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
 public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
@@ -148,7 +148,7 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void setEventBus(EventBus eventBus);
 
-        void setGridWidget(GRID_WIDGET gridWidget);
+        void setGridWidget(GridWidget gridWidget);
 
         Optional<FactModelTree> getFactModelTreeFromFactTypeMap(String factName);
 

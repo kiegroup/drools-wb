@@ -39,6 +39,7 @@ import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
@@ -111,7 +112,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
-    private ScenarioSimulationEditorPresenter presenter;
+    private ScenarioSimulationEditorPresenter presenterSpy;
     @Mock
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapperMock;
     @Mock
@@ -187,13 +188,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
         when(testRunnerReportingPanelMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
 
-        this.presenter = spy(new ScenarioSimulationEditorPresenter(scenarioSimulationProducerMock,
-                                                                   mock(ScenarioSimulationResourceType.class),
-                                                                   placeManagerMock,
-                                                                   testRunnerReportingPanelMock,
-                                                                   scenarioSimulationDocksHandlerMock,
-                                                                   textFileExportMock,
-                                                                   confirmPopupPresenterMock) {
+        this.presenterSpy = spy(new ScenarioSimulationEditorPresenter(scenarioSimulationProducerMock,
+                                                                      mock(ScenarioSimulationResourceType.class),
+                                                                      placeManagerMock,
+                                                                      testRunnerReportingPanelMock,
+                                                                      scenarioSimulationDocksHandlerMock,
+                                                                      textFileExportMock,
+                                                                      confirmPopupPresenterMock) {
             {
                 this.path = pathMock;
                 this.packageName = SCENARIO_PACKAGE;
@@ -227,40 +228,40 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
         });
 
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenter).getCheatSheetPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(testToolsPresenterMock)).when(presenter).getTestToolsPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(settingsPresenterMock)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(coverageReportPresenterMock)).when(presenter).getCoverageReportPresenter(eq(placeRequestMock));
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        doReturn(Optional.of(coverageReportPresenterMock)).when(presenterSpy).getCoverageReportPresenter(eq(placeRequestMock));
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
     }
 
     @Test
     public void init() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         verify(testRunnerReportingPanelMock, times(1)).reset();
     }
 
     @Test
     public void setSaveEnabledTrue() {
-        presenter.setSaveEnabled(true);
-        assertTrue(presenter.saveEnabled);
+        presenterSpy.setSaveEnabled(true);
+        assertTrue(presenterSpy.saveEnabled);
         verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
     }
 
     @Test
     public void setSaveEnabledFalse() {
-        presenter.setSaveEnabled(false);
-        assertFalse(presenter.saveEnabled);
+        presenterSpy.setSaveEnabled(false);
+        assertFalse(presenterSpy.saveEnabled);
         verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
     }
 
     @Test
     public void setSaveEnabledPopulateSettingsCombinedTrue() {
         SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
-        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        presenter.setSaveEnabled(true);
-        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
-        assertTrue(presenter.saveEnabled);
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        presenterSpy.setSaveEnabled(true);
+        presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertTrue(presenterSpy.saveEnabled);
         assertTrue(settingsPresenterSpy.isSaveEnabled());
         verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
         verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
@@ -269,10 +270,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void setSaveEnabledPopulateSettingsCombinedFalse() {
         SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
-        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        presenter.setSaveEnabled(false);
-        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
-        assertFalse(presenter.saveEnabled);
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        presenterSpy.setSaveEnabled(false);
+        presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        assertFalse(presenterSpy.saveEnabled);
         assertFalse(settingsPresenterSpy.isSaveEnabled());
         verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
         verify(settingsPresenterSpy.getView(), never()).restoreSaveButton();
@@ -281,10 +282,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void setPopulateSettingsSaveEnabledCombinedTrue() {
         SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
-        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
-        presenter.setSaveEnabled(true);
-        assertTrue(presenter.saveEnabled);
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenterSpy.setSaveEnabled(true);
+        assertTrue(presenterSpy.saveEnabled);
         assertTrue(settingsPresenterSpy.isSaveEnabled());
         verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
         verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
@@ -293,80 +294,80 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void setPopulateSettingsSaveEnabledCombinedFalse() {
         SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
-        doReturn(Optional.of(settingsPresenterSpy)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
-        presenter.setSaveEnabled(false);
-        assertFalse(presenter.saveEnabled);
+        doReturn(Optional.of(settingsPresenterSpy)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenterSpy.setSaveEnabled(false);
+        assertFalse(presenterSpy.saveEnabled);
         assertFalse(settingsPresenterSpy.isSaveEnabled());
         verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
     }
 
     @Test
     public void onClose() {
-        presenter.onClose();
+        presenterSpy.onClose();
         verify(scenarioGridWidgetSpy, times(1)).unregister();
         verify(backgroundGridWidgetSpy, times(1)).unregister();
     }
 
     @Test
     public void showDocks_PlaceStatusOpen() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.showDocks(PlaceStatus.OPEN);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.showDocks(PlaceStatus.OPEN);
         verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).addDocks();
-        verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenter.scenarioPresenterId)));
-        verify(presenter, never()).expandToolsDock();
-        verify(presenter, times(1)).registerTestToolsCallback();
-        verify(presenter, times(1)).resetDocks();
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+        verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
+        verify(presenterSpy, never()).expandToolsDock();
+        verify(presenterSpy, times(1)).registerTestToolsCallback();
+        verify(presenterSpy, times(1)).resetDocks();
+        verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
 
     @Test
     public void showDocks_PlaceStatusClose() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.showDocks(PlaceStatus.CLOSE);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.showDocks(PlaceStatus.CLOSE);
         verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(ScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).addDocks();
-        verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenter.scenarioPresenterId)));
-        verify(presenter, times(1)).expandToolsDock();
-        verify(presenter, times(1)).registerTestToolsCallback();
-        verify(presenter, times(1)).resetDocks();
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+        verify(scenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
+        verify(presenterSpy, times(1)).expandToolsDock();
+        verify(presenterSpy, times(1)).registerTestToolsCallback();
+        verify(presenterSpy, times(1)).resetDocks();
+        verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
 
     @Test
     public void hideDocks() {
-        presenter.hideDocks();
+        presenterSpy.hideDocks();
         verify(scenarioSimulationDocksHandlerMock).removeDocks();
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
-        verify(presenter).unRegisterTestToolsCallback();
-        verify(presenter).clearTestToolsStatus();
+        verify(presenterSpy).unRegisterTestToolsCallback();
+        verify(presenterSpy).clearTestToolsStatus();
     }
 
     @Test
     public void expandToolsDock() {
-        presenter.expandToolsDock();
+        presenterSpy.expandToolsDock();
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandToolsDock();
     }
 
     @Test
     public void reloadTestTools_NotDisable() {
-        presenter.reloadTestTools(false);
-        verify(presenter, never()).getTestToolsPresenter(any());
+        presenterSpy.reloadTestTools(false);
+        verify(presenterSpy, never()).getTestToolsPresenter(any());
     }
 
     @Test
     public void reloadTestTools_Disable() {
-        presenter.reloadTestTools(true);
-        verify(presenter, times(1)).getTestToolsPresenter(eq(placeRequestMock));
+        presenterSpy.reloadTestTools(true);
+        verify(presenterSpy, times(1)).getTestToolsPresenter(eq(placeRequestMock));
     }
 
     @Test
     public void onRunTest() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.onRunScenario();
-        verify(presenter, times(1)).onRunScenario(eq(Arrays.asList(0)));
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onRunScenario();
+        verify(presenterSpy, times(1)).onRunScenario(eq(Arrays.asList(0)));
     }
 
     @Test
@@ -377,8 +378,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(simulationMock.getDataByIndex(anyInt())).thenReturn(mock(Scenario.class));
         List<Integer> indexList = Arrays.asList(0, 2);
 
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.onRunScenario(indexList);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onRunScenario(indexList);
         verify(scenarioGridWidgetSpy, times(1)).resetErrors();
         verify(scenarioSimulationModelMock, times(1)).setSimulation(simulationMock);
         verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
@@ -394,45 +395,45 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onUndo() {
-        presenter.onUndo();
+        presenterSpy.onUndo();
         verify(eventBusMock, times(1)).fireEvent(isA(UndoEvent.class));
     }
 
     @Test
     public void onRedo() {
-        presenter.onRedo();
+        presenterSpy.onRedo();
         verify(eventBusMock, times(1)).fireEvent(isA(RedoEvent.class));
     }
 
     @Test
     public void setUndoButtonEnabledStatus() {
-        presenter.setUndoButtonEnabledStatus(true);
+        presenterSpy.setUndoButtonEnabledStatus(true);
         verify(undoMenuItemMock, times(1)).setEnabled(eq(true));
         //
         reset(undoMenuItemMock);
-        presenter.setUndoButtonEnabledStatus(false);
+        presenterSpy.setUndoButtonEnabledStatus(false);
         verify(undoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
     @Test
     public void setRedoButtonEnabledStatus() {
-        presenter.setRedoButtonEnabledStatus(true);
+        presenterSpy.setRedoButtonEnabledStatus(true);
         verify(redoMenuItemMock, times(1)).setEnabled(eq(true));
         //
         reset(redoMenuItemMock);
-        presenter.setRedoButtonEnabledStatus(false);
+        presenterSpy.setRedoButtonEnabledStatus(false);
         verify(redoMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
     @Test
     public void setItemMenuForMainGridEnabled() {
-        presenter.setItemMenuForMainGridEnabled(false);
+        presenterSpy.setItemMenuForMainGridEnabled(false);
         verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
         verify(importMenuItemMock, times(1)).setEnabled(eq(false));
         verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(false));
         verify(downloadMenuItemMock, times(1)).setEnabled(eq(false));
         //
-        presenter.setItemMenuForMainGridEnabled(true);
+        presenterSpy.setItemMenuForMainGridEnabled(true);
         verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(true));
         verify(importMenuItemMock, times(1)).setEnabled(eq(true));
         verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(true));
@@ -442,173 +443,173 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onImport() {
         String FILE_CONTENT = "FILE_CONTENT";
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.onImport(FILE_CONTENT);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onImport(FILE_CONTENT);
         verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(simulationMock));
     }
 
     @Test
     public void resetDocks() {
-        presenter.resetDocks();
-        verify(presenter, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
+        presenterSpy.resetDocks();
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
         verify(cheatSheetPresenterMock, times(1)).reset();
-        verify(presenter, times(1)).getTestToolsPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).getTestToolsPresenter(eq(placeRequestMock));
         verify(testToolsPresenterMock, times(1)).reset();
-        verify(presenter, times(1)).getSettingsPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
         verify(settingsPresenterMock, times(1)).reset();
-        verify(presenter, times(1)).getCoverageReportPresenter(eq(placeRequestMock));
+        verify(presenterSpy, times(1)).getCoverageReportPresenter(eq(placeRequestMock));
         verify(coverageReportPresenterMock, times(1)).reset();
     }
 
     @Test
     public void onUberfireDocksInteractionEventCheatSheet() {
         UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
-        doReturn(false).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        doReturn(false).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, never()).getTargetDock();
         //
-        reset(presenter);
-        presenter.dataManagementStrategy = null;
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
-        verify(presenter, never()).getCheatSheetPresenter(any());
+        reset(presenterSpy);
+        presenterSpy.dataManagementStrategy = null;
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
         //
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
         when(targetDockMock.getIdentifier()).thenReturn("UNKNOWN");
         exceptionRule.expect(IllegalArgumentException.class);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock();
-        verify(presenter, never()).getCheatSheetPresenter(any());
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
         //
         PlaceRequest cheatSheetPlaceRequestMock = mock(PlaceRequest.class);
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(cheatSheetPlaceRequestMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(cheatSheetPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.empty()).when(presenter).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.empty()).when(presenterSpy).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenter, times(1)).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
-        verify(presenter, never()).setCheatSheet(eq(cheatSheetPresenterMock));
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
+        verify(presenterSpy, never()).setCheatSheet(eq(cheatSheetPresenterMock));
         //
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(cheatSheetPlaceRequestMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(cheatSheetPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenter).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(CheatSheetPresenter.IDENTIFIER);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenter, times(1)).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
-        verify(presenter, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
+        verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(cheatSheetPlaceRequestMock));
+        verify(presenterSpy, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
     }
 
     @Test
     public void onUberfireDocksInteractionEventSettings() {
         UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
-        doReturn(false).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        doReturn(false).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, never()).getTargetDock();
         //
-        reset(presenter);
-        presenter.dataManagementStrategy = null;
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
-        verify(presenter, never()).getCheatSheetPresenter(any());
+        reset(presenterSpy);
+        presenterSpy.dataManagementStrategy = null;
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
         //
         PlaceRequest settingsPlaceRequestMock = mock(PlaceRequest.class);
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
         exceptionRule.expect(IllegalArgumentException.class);
         when(targetDockMock.getIdentifier()).thenReturn("UNKNOWN");
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock();
-        verify(presenter, never()).getCheatSheetPresenter(any());
+        verify(presenterSpy, never()).getCheatSheetPresenter(any());
         //
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.empty()).when(presenter).getSettingsPresenter(eq(settingsPlaceRequestMock));
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.empty()).when(presenterSpy).getSettingsPresenter(eq(settingsPlaceRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(SettingsPresenter.IDENTIFIER);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenter, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
-        verify(presenter, never()).setSettings(eq(settingsPresenterMock));
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
+        verify(presenterSpy, never()).setSettings(eq(settingsPresenterMock));
         //
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(settingsPlaceRequestMock);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.of(settingsPresenterMock)).when(presenter).getSettingsPresenter(eq(settingsPlaceRequestMock));
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(settingsPlaceRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(SettingsPresenter.IDENTIFIER);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenter, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
-        verify(presenter, times(1)).getSaveCommand();
-        verify(presenter, times(1)).setSettings(eq(settingsPresenterMock));
+        verify(presenterSpy, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
+        verify(presenterSpy, times(1)).getSaveCommand();
+        verify(presenterSpy, times(1)).setSettings(eq(settingsPresenterMock));
         //
         PlaceRequest coverageReportPlaceRequestMock = mock(PlaceRequest.class);
-        reset(presenter);
+        reset(presenterSpy);
         reset(uberfireDocksInteractionEventMock);
-        presenter.dataManagementStrategy = dataManagementStrategyMock;
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(coverageReportPlaceRequestMock);
+        presenterSpy.dataManagementStrategy = dataManagementStrategyMock;
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(coverageReportPlaceRequestMock);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
-        doReturn(true).when(presenter).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
-        doReturn(Optional.of(coverageReportPresenterMock)).when(presenter).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
+        doReturn(true).when(presenterSpy).isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock);
+        doReturn(Optional.of(coverageReportPresenterMock)).when(presenterSpy).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
         when(targetDockMock.getIdentifier()).thenReturn(CoverageReportPresenter.IDENTIFIER);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
-        presenter.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
-        verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
+        presenterSpy.onUberfireDocksInteractionEvent(uberfireDocksInteractionEventMock);
+        verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
-        verify(presenter, times(1)).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
-        verify(presenter, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
+        verify(presenterSpy, times(1)).getCoverageReportPresenter(eq(coverageReportPlaceRequestMock));
+        verify(presenterSpy, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
     }
 
     @Test
     public void isUberfireDocksInteractionEventToManage() {
         UberfireDocksInteractionEvent uberfireDocksInteractionEventMock = mock(UberfireDocksInteractionEvent.class);
         doReturn(null).when(uberfireDocksInteractionEventMock).getTargetDock();
-        assertFalse(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
+        assertFalse(presenterSpy.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
         //
         UberfireDock targetDockMock = mock(UberfireDock.class);
         when(uberfireDocksInteractionEventMock.getTargetDock()).thenReturn(targetDockMock);
         when(targetDockMock.getPlaceRequest()).thenReturn(placeRequestMock);
         when(placeRequestMock.getParameter(eq(SCESIMEDITOR_ID), eq(""))).thenReturn("UNKNOWN");
-        assertFalse(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
-        doReturn(String.valueOf(presenter.scenarioPresenterId)).when(placeRequestMock).getParameter(eq(SCESIMEDITOR_ID), eq(""));
-        assertTrue(presenter.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
+        assertFalse(presenterSpy.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
+        doReturn(String.valueOf(presenterSpy.scenarioPresenterId)).when(placeRequestMock).getParameter(eq(SCESIMEDITOR_ID), eq(""));
+        assertTrue(presenterSpy.isUberfireDocksInteractionEventToManage(uberfireDocksInteractionEventMock));
     }
 
     @Test
@@ -620,24 +621,24 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         Scenario scenario = mock(Scenario.class);
         entries.add(new ScenarioWithIndex(scenarioNumber, scenario));
 
-        assertNull(presenter.lastRunResult);
+        assertNull(presenterSpy.lastRunResult);
         TestResultMessage testResultMessage = mock(TestResultMessage.class);
-        presenter.refreshModelContent(new SimulationRunResult(entries, new SimulationRunMetadata(), testResultMessage));
+        presenterSpy.refreshModelContent(new SimulationRunResult(entries, new SimulationRunMetadata(), testResultMessage));
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(simulationMock, times(1)).replaceData(eq(scenarioIndex), eq(scenario));
-        assertEquals(scenarioSimulationModelMock, presenter.getModel());
+        assertEquals(scenarioSimulationModelMock, presenterSpy.getModel());
         verify(scenarioGridWidgetSpy, times(1)).refreshContent(eq(simulationMock));
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandTestResultsDock();
         verify(dataManagementStrategyMock, times(1)).setModel(eq(scenarioSimulationModelMock));
         verify(testRunnerReportingPanelMock, times(1)).onTestRun(eq(testResultMessage));
-        assertNotNull(presenter.lastRunResult);
+        assertNotNull(presenterSpy.lastRunResult);
     }
 
     @Test
     public void makeMenuBar() {
-        presenter.makeMenuBar(fileMenuBuilderMock);
+        presenterSpy.makeMenuBar(fileMenuBuilderMock);
         verify(fileMenuBuilderMock, times(1)).addValidate(any());
-        verify(presenter, times(1)).getValidateCommand();
+        verify(presenterSpy, times(1)).getValidateCommand();
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(runScenarioMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(undoMenuItemMock);
         verify(fileMenuBuilderMock, times(1)).addNewTopLevelMenu(redoMenuItemMock);
@@ -649,14 +650,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void isDirty() {
         when(scenarioSimulationViewMock.getScenarioGridWidget()).thenThrow(new RuntimeException());
-        assertFalse(presenter.isDirty());
+        assertFalse(presenterSpy.isDirty());
     }
 
     @Test
     public void onEditTabSelected() {
-        presenter.onEditTabSelected();
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
-        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(true));
+        presenterSpy.onEditTabSelected();
+        verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(true));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).select();
         verify(backgroundGridWidgetSpy, times(1)).deselect();
@@ -664,18 +665,18 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onBackgroundTabSelected() {
-        presenter.onBackgroundTabSelected();
+        presenterSpy.onBackgroundTabSelected();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
-        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
-        verify(presenter, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
+        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
 
     @Test
     public void onOverviewSelected() {
-        presenter.onOverviewSelected();
-        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        presenterSpy.onOverviewSelected();
+        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
@@ -684,8 +685,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void onImportsTabSelected() {
-        presenter.onImportsTabSelected();
-        verify(presenter, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        presenterSpy.onImportsTabSelected();
+        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
@@ -694,13 +695,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void selectSimulationTab() {
-        presenter.selectSimulationTab();
+        presenterSpy.selectSimulationTab();
         verify(scenarioSimulationEditorWrapperMock, times(1)).selectSimulationTab();
     }
 
     @Test
     public void selectBackgroundTab() {
-        presenter.selectBackgroundTab();
+        presenterSpy.selectBackgroundTab();
         verify(scenarioSimulationEditorWrapperMock, times(1)).selectBackgroundTab();
     }
 
@@ -708,21 +709,22 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onDownload() {
         String DOWNLOAD_URL = "DOWNLOAD_URL";
         Supplier<Path> pathSupplierMock = mock(Supplier.class);
-        doReturn(DOWNLOAD_URL).when(presenter).getFileDownloadURL(eq(pathSupplierMock));
-        presenter.onDownload(pathSupplierMock);
-        verify(presenter, times(1)).getFileDownloadURL(eq(pathSupplierMock));
-        verify(presenter, times(1)).open(eq(DOWNLOAD_URL));
+        doReturn(DOWNLOAD_URL).when(presenterSpy).getFileDownloadURL(eq(pathSupplierMock));
+        presenterSpy.onDownload(pathSupplierMock);
+        verify(presenterSpy, times(1)).getFileDownloadURL(eq(pathSupplierMock));
+        verify(presenterSpy, times(1)).open(eq(DOWNLOAD_URL));
     }
 
     @Test
     public void showImportDialog() {
-        presenter.showImportDialog();
+        when(contextMock.getSelectedGridWidget()).thenReturn(Optional.of(GridWidget.SIMULATION));
+        presenterSpy.showImportDialog();
         verify(eventBusMock, times(1)).fireEvent(isA(ImportEvent.class));
     }
 
     @Test
     public void setTestTools() {
-        presenter.setTestTools(testToolsPresenterMock);
+        presenterSpy.setTestTools(testToolsPresenterMock);
         verify(contextMock, times(1)).setTestToolsPresenter(testToolsPresenterMock);
         verify(testToolsPresenterMock, times(1)).setEventBus(eventBusMock);
         verify(dataManagementStrategyMock, times(1)).populateTestTools(eq(testToolsPresenterMock), eq(contextMock));
@@ -730,102 +732,102 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setCheatSheet() {
-        presenter.setCheatSheet(cheatSheetPresenterMock);
+        presenterSpy.setCheatSheet(cheatSheetPresenterMock);
         verify(cheatSheetPresenterMock, times(1)).initCheatSheet(any());
     }
 
     @Test
     public void setSettings() {
         Command saveCommandMock = mock(Command.class);
-        when(presenter.getSaveCommand()).thenReturn(saveCommandMock);
-        presenter.setSettings(settingsPresenterMock);
+        when(presenterSpy.getSaveCommand()).thenReturn(saveCommandMock);
+        presenterSpy.setSettings(settingsPresenterMock);
         verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
         verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
     @Test
     public void populateRightDocks_Settings() {
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
-        doReturn(Optional.of(settingsPresenterMock)).when(presenter).getSettingsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
-        verify(presenter, times(1)).setSettings(eq(settingsPresenterMock));
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
+        verify(presenterSpy, times(1)).setSettings(eq(settingsPresenterMock));
         verify(settingsPresenterMock, times(1)).setCurrentPath(eq(pathMock));
-        verify(presenter, never()).setTestTools(any());
-        verify(presenter, never()).setCoverageReport(any());
+        verify(presenterSpy, never()).setTestTools(any());
+        verify(presenterSpy, never()).setCoverageReport(any());
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
     }
 
     @Test
     public void populateRightDocks_TestTools() {
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
-        doReturn(Optional.of(testToolsPresenterMock)).when(presenter).getTestToolsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(TestToolsPresenter.IDENTIFIER);
-        verify(presenter, never()).setSettings(any());
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(TestToolsPresenter.IDENTIFIER);
+        verify(presenterSpy, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, times(1)).setTestTools(eq(testToolsPresenterMock));
+        verify(presenterSpy, times(1)).setTestTools(eq(testToolsPresenterMock));
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setCheatSheet(any());
-        verify(presenter, never()).setCoverageReport(any());
+        verify(presenterSpy, never()).setCheatSheet(any());
+        verify(presenterSpy, never()).setCoverageReport(any());
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
     }
 
     @Test
     public void populateRightDocks_CheatSheetPresenter_NotShown() {
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
-        doReturn(Optional.of(testToolsPresenterMock)).when(presenter).getTestToolsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(CheatSheetPresenter.IDENTIFIER);
-        verify(presenter, never()).setSettings(any());
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(CheatSheetPresenter.IDENTIFIER);
+        verify(presenterSpy, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setTestTools(any());
+        verify(presenterSpy, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, times(1)).setCurrentPath(pathMock);
-        verify(presenter, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
-        verify(presenter, never()).setCoverageReport(any());
+        verify(presenterSpy, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
+        verify(presenterSpy, never()).setCoverageReport(any());
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
     }
 
     @Test
     public void populateRightDocks_CheatSheetPresenter_IsShown() {
         when(cheatSheetPresenterMock.isCurrentlyShow(pathMock)).thenReturn(true);
-        when(presenter.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
-        doReturn(Optional.of(testToolsPresenterMock)).when(presenter).getTestToolsPresenter(eq(placeRequestMock));
-        presenter.populateRightDocks(CheatSheetPresenter.IDENTIFIER);
-        verify(presenter, never()).setSettings(any());
+        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
+        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
+        presenterSpy.populateRightDocks(CheatSheetPresenter.IDENTIFIER);
+        verify(presenterSpy, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setTestTools(any());
+        verify(presenterSpy, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setCheatSheet(any());
-        verify(presenter, never()).setCoverageReport(any());
+        verify(presenterSpy, never()).setCheatSheet(any());
+        verify(presenterSpy, never()).setCoverageReport(any());
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
     }
 
     @Test
     public void populateRightDocks_CoverageReportPresenter() {
-        presenter.populateRightDocks(CoverageReportPresenter.IDENTIFIER);
-        verify(presenter, never()).setSettings(any());
+        presenterSpy.populateRightDocks(CoverageReportPresenter.IDENTIFIER);
+        verify(presenterSpy, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setTestTools(any());
+        verify(presenterSpy, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
-        verify(presenter, never()).setCheatSheet(any());
-        verify(presenter, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
+        verify(presenterSpy, never()).setCheatSheet(any());
+        verify(presenterSpy, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
         verify(coverageReportPresenterMock, times(1)).setCurrentPath(eq(pathMock));
     }
 
     @Test
     public void getModelSuccessCallbackMethod() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
-        verify(presenter, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
-        verify(presenter, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.getModelSuccessCallbackMethod(dataManagementStrategyMock, modelLocal);
+        verify(presenterSpy, times(1)).populateRightDocks(TestToolsPresenter.IDENTIFIER);
+        verify(presenterSpy, times(1)).populateRightDocks(SettingsPresenter.IDENTIFIER);
         verify(scenarioGridWidgetSpy, times(1)).setContent(eq(content.getModel().getSimulation()), eq(scenarioSimulationContextLocal.getSettings().getType()));
         verify(scenarioSimulationEditorWrapperMock, times(1)).addBackgroundPage(eq(backgroundGridWidgetSpy));
         verify(statusMock, times(1)).setSimulation(eq(content.getModel().getSimulation()));
-        verify(presenter, times(1)).getValidateCommand();
+        verify(presenterSpy, times(1)).getValidateCommand();
     }
 
     @Test
     public void onExportToCsv() {
-        presenter.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenter.onExportToCsv();
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onExportToCsv();
         verify(scenarioSimulationEditorWrapperMock, times(1)).onExportToCsv(isA(RemoteCallback.class), isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class), eq(simulationMock));
     }
 
@@ -845,7 +847,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         scenario.addMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier(), LOWER_CASE_VALUE);
         scenario.addMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier(), LOWER_CASE_VALUE);
 
-        presenter.cleanReadOnlyColumn(simulation);
+        presenterSpy.cleanReadOnlyColumn(simulation);
 
         assertNotNull(scenario.getFactMappingValue(test1.getFactIdentifier(), test1.getExpressionIdentifier()).get().getRawValue());
         assertNull(scenario.getFactMappingValue(test2.getFactIdentifier(), test2.getExpressionIdentifier()).get().getRawValue());
@@ -853,17 +855,17 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void getValidationCallback() {
-        presenter.getValidationCallback().callback(null);
+        presenterSpy.getValidationCallback().callback(null);
         verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
 
         List<FactMappingValidationError> validationErrors = new ArrayList<>();
-        presenter.getValidationCallback().callback(validationErrors);
+        presenterSpy.getValidationCallback().callback(validationErrors);
         verify(confirmPopupPresenterMock, never()).show(anyString(), anyString());
 
         String errorMessage = "errorMessage";
         String errorId = "errorId";
         validationErrors.add(new FactMappingValidationError(errorId, errorMessage));
-        presenter.getValidationCallback().callback(validationErrors);
+        presenterSpy.getValidationCallback().callback(validationErrors);
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorId));
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorMessage));
     }

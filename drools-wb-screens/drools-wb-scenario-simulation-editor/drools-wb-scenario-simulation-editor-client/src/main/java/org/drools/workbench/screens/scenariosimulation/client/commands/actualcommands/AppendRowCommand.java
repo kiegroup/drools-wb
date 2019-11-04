@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridRow;
 
 /**
@@ -24,7 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  */
 public class AppendRowCommand extends AbstractScenarioGridCommand {
 
-    public AppendRowCommand(GRID_WIDGET gridWidget) {
+    public AppendRowCommand(GridWidget gridWidget) {
         super(gridWidget);
     }
 

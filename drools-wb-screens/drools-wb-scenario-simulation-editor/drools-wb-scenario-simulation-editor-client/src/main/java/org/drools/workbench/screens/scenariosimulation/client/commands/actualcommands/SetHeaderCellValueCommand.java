@@ -23,7 +23,7 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 
 /**
@@ -35,7 +35,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
     protected boolean isInstanceHeader;
     protected boolean isPropertyHeader;
 
-    public SetHeaderCellValueCommand(GRID_WIDGET gridWidget, boolean isInstanceHeader, boolean isPropertyHeader) {
+    public SetHeaderCellValueCommand(GridWidget gridWidget, boolean isInstanceHeader, boolean isPropertyHeader) {
         super(gridWidget);
         this.isInstanceHeader = isInstanceHeader;
         this.isPropertyHeader = isPropertyHeader;

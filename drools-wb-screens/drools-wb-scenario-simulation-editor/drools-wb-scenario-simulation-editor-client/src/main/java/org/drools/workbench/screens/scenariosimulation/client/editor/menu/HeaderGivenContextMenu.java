@@ -19,7 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
-import org.drools.workbench.screens.scenariosimulation.client.enums.GRID_WIDGET;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
 
@@ -51,7 +51,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
         super.initMenu();
     }
 
-    public void show(final GRID_WIDGET gridWidget, int mx, int my) {
+    public void show(final GridWidget gridWidget, int mx, int my) {
         super.show(gridWidget, mx, my);
         appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");
         prependColumnEvent = new PrependColumnEvent(gridWidget, "GIVEN");
