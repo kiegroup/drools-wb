@@ -29,42 +29,31 @@ import org.uberfire.backend.vfs.Path;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScenarioSimulationBuilderTest {
 
+    private final String VALUE = "VALUE";
     @Mock
     private Simulation dmnSimulationMock;
-
     @Mock
     private Simulation ruleSimulationMock;
-
     @Mock
     private Background dmnBackgroundMock;
-
     @Mock
     private Background ruleBackgroundMock;
-
     @Mock
     private Settings dmnSettingsMock;
-
     @Mock
     private Settings ruleSettingsMock;
-
     @Mock
     private RULESimulationSettingsCreationStrategy ruleSimulationCreationStrategyMock;
-
     @Mock
     private DMNSimulationSettingsCreationStrategy dmnSimulationCreationStrategyMock;
-
     @Mock
     private Path contextMock;
-
-    private final String VALUE = "VALUE";
-
     private ScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Before
@@ -76,50 +65,37 @@ public class ScenarioSimulationBuilderTest {
         doReturn(dmnBackgroundMock).when(dmnSimulationCreationStrategyMock).createBackground(eq(contextMock), eq(VALUE));
         doReturn(ruleSimulationMock).when(ruleSimulationCreationStrategyMock).createSimulation(eq(contextMock), eq(VALUE));
         doReturn(dmnSimulationMock).when(dmnSimulationCreationStrategyMock).createSimulation(eq(contextMock), eq(VALUE));
-        doReturn(ruleSettingsMock).when(ruleSimulationCreationStrategyMock).createSettings(eq(VALUE));
-        doReturn(dmnSettingsMock).when(dmnSimulationCreationStrategyMock).createSettings(eq(VALUE));
-    }
-
-
-    @Test
-    public void createSimulation() {
-        try {
-            Simulation simulationRetrieved = scenarioSimulationBuilder.createSimulation(contextMock, ScenarioSimulationModel.Type.RULE, VALUE);
-            assertNotNull(simulationRetrieved);
-            assertEquals(ruleSimulationMock, simulationRetrieved);
-            simulationRetrieved = scenarioSimulationBuilder.createSimulation(contextMock, ScenarioSimulationModel.Type.DMN, VALUE);
-            assertNotNull(simulationRetrieved);
-            assertEquals(dmnSimulationMock, simulationRetrieved);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+        doReturn(ruleSettingsMock).when(ruleSimulationCreationStrategyMock).createSettings(eq(contextMock), eq(VALUE));
+        doReturn(dmnSettingsMock).when(dmnSimulationCreationStrategyMock).createSettings(eq(contextMock), eq(VALUE));
     }
 
     @Test
-    public void createBackground() {
-        try {
-            Background backgroundRetrieved = scenarioSimulationBuilder.createBackground(contextMock, ScenarioSimulationModel.Type.RULE, VALUE);
-            assertNotNull(backgroundRetrieved);
-            assertEquals(ruleBackgroundMock, backgroundRetrieved);
-            backgroundRetrieved = scenarioSimulationBuilder.createBackground(contextMock, ScenarioSimulationModel.Type.DMN, VALUE);
-            assertNotNull(backgroundRetrieved);
-            assertEquals(dmnBackgroundMock, backgroundRetrieved);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    public void createSimulation() throws Exception {
+        Simulation simulationRetrieved = scenarioSimulationBuilder.createSimulation(contextMock, ScenarioSimulationModel.Type.RULE, VALUE);
+        assertNotNull(simulationRetrieved);
+        assertEquals(ruleSimulationMock, simulationRetrieved);
+        simulationRetrieved = scenarioSimulationBuilder.createSimulation(contextMock, ScenarioSimulationModel.Type.DMN, VALUE);
+        assertNotNull(simulationRetrieved);
+        assertEquals(dmnSimulationMock, simulationRetrieved);
     }
 
     @Test
-    public void createSettings() {
-        try {
-            Settings settingsRetrieved = scenarioSimulationBuilder.createSettings(ScenarioSimulationModel.Type.RULE, VALUE);
-            assertNotNull(settingsRetrieved);
-            assertEquals(ruleSettingsMock, settingsRetrieved);
-            settingsRetrieved = scenarioSimulationBuilder.createSettings(ScenarioSimulationModel.Type.DMN, VALUE);
-            assertNotNull(settingsRetrieved);
-            assertEquals(dmnSettingsMock, settingsRetrieved);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+    public void createBackground() throws Exception {
+        Background backgroundRetrieved = scenarioSimulationBuilder.createBackground(contextMock, ScenarioSimulationModel.Type.RULE, VALUE);
+        assertNotNull(backgroundRetrieved);
+        assertEquals(ruleBackgroundMock, backgroundRetrieved);
+        backgroundRetrieved = scenarioSimulationBuilder.createBackground(contextMock, ScenarioSimulationModel.Type.DMN, VALUE);
+        assertNotNull(backgroundRetrieved);
+        assertEquals(dmnBackgroundMock, backgroundRetrieved);
+    }
+
+    @Test
+    public void createSettings() throws Exception {
+        Settings settingsRetrieved = scenarioSimulationBuilder.createSettings(contextMock, ScenarioSimulationModel.Type.RULE, VALUE);
+        assertNotNull(settingsRetrieved);
+        assertEquals(ruleSettingsMock, settingsRetrieved);
+        settingsRetrieved = scenarioSimulationBuilder.createSettings(contextMock, ScenarioSimulationModel.Type.DMN, VALUE);
+        assertNotNull(settingsRetrieved);
+        assertEquals(dmnSettingsMock, settingsRetrieved);
     }
 }

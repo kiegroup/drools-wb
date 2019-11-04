@@ -56,7 +56,7 @@ public class SimulationSettingsCreationStrategyTest {
             }
 
             @Override
-            public Settings createSettings(String value) throws Exception {
+            public Settings createSettings(Path context, String value) throws Exception {
                 return null;
             }
         };

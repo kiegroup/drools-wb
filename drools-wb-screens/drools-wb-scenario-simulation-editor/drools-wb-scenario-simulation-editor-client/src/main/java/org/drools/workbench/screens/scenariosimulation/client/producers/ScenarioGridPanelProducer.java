@@ -73,7 +73,6 @@ public class ScenarioGridPanelProducer {
     @Inject
     protected ViewsProvider viewsProvider;
 
-    //------------/
     @Inject
     protected ScenarioSimulationView scenarioSimulationView;
 

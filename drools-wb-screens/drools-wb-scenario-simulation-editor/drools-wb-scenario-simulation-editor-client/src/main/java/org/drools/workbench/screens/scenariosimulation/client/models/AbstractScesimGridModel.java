@@ -163,14 +163,14 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param row
      */
     public abstract void insertRowGridOnly(final int rowIndex,
-                                           final GridRow row, final E abstractScesimData);
+                                           final GridRow row,
+                                           final E abstractScesimData);
 
     /**
      * This method <i>insert</i> a row to the grid
      * @param row
      */
-    public void insertRowGridOnly(final int rowIndex,
-                                           final GridRow row) {
+    public void insertRowGridOnly(final int rowIndex, final GridRow row) {
         checkSimulation();
         super.insertRow(rowIndex, row);
     }

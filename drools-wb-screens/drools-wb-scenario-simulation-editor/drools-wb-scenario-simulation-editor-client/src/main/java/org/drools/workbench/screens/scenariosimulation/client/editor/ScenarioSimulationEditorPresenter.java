@@ -414,46 +414,36 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
-    public ScenarioGridWidget getBackgroundGridWidget() {
-        return scenarioBackgroundGridWidget;
-    }
-
     public void onEditTabSelected() {
-        ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
         setItemMenuForMainGridEnabled(true);
-        scenarioGridWidget.clearSelections();
-        scenarioGridWidget.select();
-        getBackgroundGridWidget().deselect();
+        scenarioMainGridWidget.clearSelections();
+        scenarioMainGridWidget.select();
+        scenarioBackgroundGridWidget.deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void onBackgroundTabSelected() {
-        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
-        backgroundWidget.clearSelections();
-        backgroundWidget.select();
-        getView().getScenarioGridWidget().deselect();
+        scenarioBackgroundGridWidget.clearSelections();
+        scenarioBackgroundGridWidget.select();
+        scenarioMainGridWidget.deselect();
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void onOverviewSelected() {
-        ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
-        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
-        scenarioGridWidget.clearSelections();
-        scenarioGridWidget.deselect();
-        backgroundWidget.clearSelections();
-        backgroundWidget.deselect();
+        scenarioMainGridWidget.clearSelections();
+        scenarioMainGridWidget.deselect();
+        scenarioBackgroundGridWidget.clearSelections();
+        scenarioBackgroundGridWidget.deselect();
     }
 
     public void onImportsTabSelected() {
-        ScenarioGridWidget scenarioGridWidget = getView().getScenarioGridWidget();
-        ScenarioGridWidget backgroundWidget = getBackgroundGridWidget();
         setItemMenuForMainGridEnabled(false);
-        scenarioGridWidget.clearSelections();
-        scenarioGridWidget.deselect();
-        backgroundWidget.clearSelections();
-        backgroundWidget.deselect();
+        scenarioMainGridWidget.clearSelections();
+        scenarioMainGridWidget.deselect();
+        scenarioBackgroundGridWidget.clearSelections();
+        scenarioBackgroundGridWidget.deselect();
     }
 
     protected void onDownload(final Supplier<Path> pathSupplier) {

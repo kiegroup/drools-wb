@@ -84,24 +84,18 @@ import static org.mockito.Mockito.when;
 public class ScenarioSimulationServiceImplTest {
 
     @Mock
-    @Named("ioStrategy")
-    private IOService ioServiceMock;
-
-    @Mock
-    private CommentedOptionFactory commentedOptionFactoryMock;
-
-    @Mock
-    private SaveAndRenameServiceImpl<ScenarioSimulationModel, Metadata> saveAndRenameServiceMock;
-
-    @Mock
-    private PathResolver pathResolverMock;
-
-    @Mock
     protected KieServiceOverviewLoader overviewLoaderMock;
-
     @Mock
     protected MetadataServerSideService metadataServiceMock;
-
+    @Mock
+    @Named("ioStrategy")
+    private IOService ioServiceMock;
+    @Mock
+    private CommentedOptionFactory commentedOptionFactoryMock;
+    @Mock
+    private SaveAndRenameServiceImpl<ScenarioSimulationModel, Metadata> saveAndRenameServiceMock;
+    @Mock
+    private PathResolver pathResolverMock;
     @Mock
     private DeleteService deleteServiceMock;
 
@@ -184,7 +178,7 @@ public class ScenarioSimulationServiceImplTest {
         when(packageMock.getPackageTestSrcPath()).thenReturn(path);
         when(scenarioSimulationBuilderMock.createSimulation(any(), any(), any())).thenReturn(new Simulation());
         when(scenarioSimulationBuilderMock.createBackground(any(), any(), any())).thenReturn(new Background());
-        when(scenarioSimulationBuilderMock.createSettings(any(), any())).thenReturn(new Settings());
+        when(scenarioSimulationBuilderMock.createSettings(any(), any(), any())).thenReturn(new Settings());
         service.scenarioSimulationBuilder = scenarioSimulationBuilderMock;
     }
 

@@ -55,12 +55,12 @@ public class ScenarioSimulationBuilder {
         }
     }
 
-    public Settings createSettings(ScenarioSimulationModel.Type type, String value) throws Exception {
+    public Settings createSettings(Path context, ScenarioSimulationModel.Type type, String value) throws Exception {
         switch (type) {
             case RULE:
-                return ruleSimulationCreationStrategy.createSettings(value);
+                return ruleSimulationCreationStrategy.createSettings(context,value);
             case DMN:
-                return dmnSimulationCreationStrategy.createSettings(value);
+                return dmnSimulationCreationStrategy.createSettings( context,value);
             default:
                 throw new IllegalStateException("Unknown ScenarioSimulationModel.Type " + type);
         }

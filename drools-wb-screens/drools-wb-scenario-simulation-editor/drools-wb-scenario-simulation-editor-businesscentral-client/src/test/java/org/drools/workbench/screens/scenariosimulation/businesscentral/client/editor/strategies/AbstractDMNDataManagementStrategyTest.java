@@ -75,11 +75,7 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
         factModelTupleLocal = new FactModelTuple(visibleFactsLocal, hiddenFactsLocal);
         factModelTreeHolderlocal = new BusinessCentralDMNDataManagementStrategy.ResultHolder();
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
-        try {
-            when(dmnTypeServiceMock.retrieveFactModelTuple(any(), anyString())).thenReturn(factModelTupleLocal);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        when(dmnTypeServiceMock.retrieveFactModelTuple(any(), anyString())).thenReturn(factModelTupleLocal);
         modelLocal.getSettings().setDmnFilePath(DMN_FILE_PATH);
         abstractDMNDataManagementStrategySpy = spy(new AbstractDMNDataManagementStrategy(mock(EventBus.class)) {
             @Override

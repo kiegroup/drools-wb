@@ -17,8 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.scenariosimulation.api.model.Background;
-import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
@@ -55,22 +53,7 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
     }
 
     @Override
-    public Background createBackground(Path context, String dmnFilePath) throws Exception {
-        Background toReturn = new Background();
-        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
-        BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
-
-        // Add GIVEN Fact
-        createEmptyColumn(simulationDescriptor,
-                          backgroundDataWithIndex,
-                          1,
-                          GIVEN,
-                          simulationDescriptor.getFactMappings().size());
-        return toReturn;
-    }
-
-    @Override
-    public Settings createSettings(String dmoSession) throws Exception {
+    public Settings createSettings(Path context, String dmoSession) throws Exception {
         Settings toReturn = new Settings();
         toReturn.setType(ScenarioSimulationModel.Type.RULE);
         toReturn.setDmoSession(dmoSession);

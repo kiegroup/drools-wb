@@ -27,8 +27,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
-import org.drools.scenariosimulation.api.model.Background;
-import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -81,33 +79,11 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
     }
 
     @Override
-    public Background createBackground(Path context, String dmnFilePath) throws Exception {
-        final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
-        Background toReturn = new Background();
-        ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
-        BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
-
-        AtomicInteger id = new AtomicInteger(1);
-        final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();
-        final Map<String, FactModelTree> hiddenValues = factModelTuple.getHiddenFacts();
-
-        visibleFactTrees.stream().sorted((a, b) -> {
-            Type aType = a.getType();
-            Type bType = b.getType();
-            return aType.equals(bType) ? 0 : (Type.INPUT.equals(aType) ? -1 : 1);
-        }).forEach(factModelTree -> {
-            FactIdentifier factIdentifier = new FactIdentifier(factModelTree.getFactName(), factModelTree.getFactName());
-            FactMappingExtractor factMappingExtractor = new FactMappingExtractor(factIdentifier, backgroundDataWithIndex.getIndex(), id, convert(factModelTree.getType()), simulationDescriptor, backgroundDataWithIndex.getScesimData());
-            addFactMapping(factMappingExtractor, factModelTree, new ArrayList<>(), hiddenValues);
-        });
-        return toReturn;
-    }
-
-    @Override
-    public Settings createSettings(String dmnFilePath) throws Exception {
+    public Settings createSettings(Path context, String dmnFilePath) throws Exception {
         Settings toReturn = new Settings();
         toReturn.setType(ScenarioSimulationModel.Type.DMN);
         toReturn.setDmnFilePath(dmnFilePath);
+        dmnTypeService.initializeNameAndNamespace(toReturn, context, dmnFilePath);
         return toReturn;
     }
 

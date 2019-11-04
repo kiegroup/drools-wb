@@ -119,7 +119,8 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     @Test
     public void createSettings() throws Exception {
         final String dmnFilePath = "test";
-        final Settings retrieved = dmnSimulationCreationStrategy.createSettings(dmnFilePath);
+        final Path pathMock = mock(Path.class);
+        final Settings retrieved = dmnSimulationCreationStrategy.createSettings(pathMock, dmnFilePath);
 
         assertNotNull(retrieved);
         assertEquals(ScenarioSimulationModel.Type.DMN, retrieved.getType());

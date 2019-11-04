@@ -378,7 +378,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         resetEditorPages(content.getOverview());
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSettings().getType())) {
-            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory/*, scenarioSimulationEditorPresenter.getFocusedContext()*/);
+            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory);
         } else {
             dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getEventBus());
         }
