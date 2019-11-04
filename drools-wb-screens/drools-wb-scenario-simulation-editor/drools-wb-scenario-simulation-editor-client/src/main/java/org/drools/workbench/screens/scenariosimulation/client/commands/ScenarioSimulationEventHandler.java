@@ -400,12 +400,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     public void onEvent(SetInstanceHeaderEvent event) {
         ScenarioSimulationContext context = getFocusedContext();
         ScenarioGridColumn column = ((ScenarioGridColumn) context.getModel().getSelectedColumn());
-        if (context.getModel().isSameInstanceType(event.getClassName()) && column.isPropertyAssigned()) {
-            return;
-        }
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
-        context.getStatus().setSimpleType(event.isSimpleType());
         if (column.isInstanceAssigned() && !context.getModel().isSameInstanceType(event.getClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(context,
                                                                                new SetInstanceHeaderCommand(),
@@ -419,7 +415,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                       okPreserveCommand);
         } else {
             commonExecution(context,
-                            new SetInstanceHeaderCommand(),
+                            new SetInstanceHeaderCommand(event.getFactMappingValueType()),
                             true);
         }
     }

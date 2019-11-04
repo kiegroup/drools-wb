@@ -198,7 +198,6 @@ public class ScenarioSimulationContext {
 
         protected String fullPackage;
         protected String className;
-        protected boolean simpleType;
 
         protected String value;
         protected String valueClassName;
@@ -399,14 +398,6 @@ public class ScenarioSimulationContext {
 
         public void setSimulation(Simulation simulation) {
             this.simulation = simulation;
-        }
-
-        public boolean isSimpleType() {
-            return simpleType;
-        }
-
-        public void setSimpleType(boolean simpleType) {
-            this.simpleType = simpleType;
         }
 
         public Status cloneStatus() {

@@ -29,6 +29,7 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -49,8 +50,15 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimulationCommand {
 
+    protected FactMappingValueType factMappingValueType = FactMappingValueType.RAW;
+
     public AbstractSelectedColumnCommand() {
         super(true);
+    }
+
+    public AbstractSelectedColumnCommand(FactMappingValueType factMappingValueType) {
+        super(true);
+        this.factMappingValueType = factMappingValueType;
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);
@@ -104,14 +112,14 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        if (context.getStatus().isSimpleType()) {
+        if (Objects.equals(FactMappingValueType.RAW, factMappingValueType)) {
             setPropertyMetaData(propertyHeaderMetaData,
                                 getPropertyPlaceHolder(columnIndex),
                                 false,
                                 selectedColumn,
                                 ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                        selectedColumn.isPropertyAssigned(),
-                                                                       context.getStatus().isSimpleType(),
+                                                                       factMappingValueType,
                                                                        fullClassName));
             context.getModel().updateColumnInstance(columnIndex, selectedColumn);
         } else {
@@ -123,16 +131,16 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                 selectedColumn,
                                 ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                        selectedColumn.isPropertyAssigned(),
-                                                                       context.getStatus().isSimpleType(),
+                                                                       factMappingValueType,
                                                                        fullClassName));
             context.getModel().updateColumnProperty(columnIndex,
                                                     selectedColumn,
                                                     Arrays.asList(alias),
                                                     fullClassName,
                                                     context.getStatus().isKeepData(),
-                                                    context.getStatus().isSimpleType());
+                                                    factMappingValueType);
         }
-        selectedColumn.setFactory(context.getModel().getDOMElementFactory(fullClassName, context.getStatus().isSimpleType()));
+        selectedColumn.setFactory(context.getModel().getDOMElementFactory(fullClassName, factMappingValueType));
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
@@ -252,13 +260,13 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                             selectedColumn,
                             ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                    selectedColumn.isPropertyAssigned(),
-                                                                   true,
+                                                                   factMappingValueType,
                                                                    propertyClass));
         context.getModel().updateColumnProperty(columnIndex,
                                                 selectedColumn,
                                                 propertyNameElements,
                                                 propertyClass, context.getStatus().isKeepData(),
-                                                true);
+                                                factMappingValueType);
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {

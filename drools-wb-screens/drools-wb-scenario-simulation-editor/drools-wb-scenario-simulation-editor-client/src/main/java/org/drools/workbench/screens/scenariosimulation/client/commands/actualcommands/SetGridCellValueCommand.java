@@ -15,12 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.Objects;
-
 import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.FactMappingClassType;
 import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
@@ -44,10 +41,9 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
         int columnIndex = status.getColumnIndex();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
         ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getColumns().get(columnIndex);
-        boolean isSimpleType = Objects.equals(FactMappingClassType.SIMPLE, factMapping.getFactClassType());
         String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                     selectedColumn.isPropertyAssigned(),
-                                                                    isSimpleType,
+                                                                    factMapping.getFactMappingValueType(),
                                                                     factMapping.getClassName());
         context.getModel().setCellValue(status.getRowIndex(),
                                         columnIndex,

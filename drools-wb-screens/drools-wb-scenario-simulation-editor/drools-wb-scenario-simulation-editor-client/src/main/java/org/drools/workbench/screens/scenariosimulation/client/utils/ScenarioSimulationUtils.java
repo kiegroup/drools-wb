@@ -24,6 +24,7 @@ import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SimpleClassEntry;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -84,19 +85,19 @@ public class ScenarioSimulationUtils {
      * status.
      * @param isInstanceAssigned
      * @param isPropertyAssigned
-     * @param isSimple
+     * @param valueType
      * @param className
      * @return
      */
     public static String getPlaceHolder(final boolean isInstanceAssigned,
                                         final boolean isPropertyAssigned,
-                                        final boolean isSimple,
+                                        final FactMappingValueType valueType,
                                         final String className) {
         if (!isInstanceAssigned) {
             return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
         }
         if (isPropertyAssigned) {
-            if (!isSimple) {
+            if (Objects.equals(FactMappingValueType.EXPRESSION, valueType)) {
                 return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
             }
             if (Objects.equals(LOCALDATE_CANONICAL_NAME, className)) {
@@ -308,19 +309,6 @@ public class ScenarioSimulationUtils {
                 gridLayer.getDomElementContainer().getAbsoluteTop());
         return new Point2D(cellXMiddle, cellYMiddle);
     }
-    /*
-    public static String getPlaceholder(final String canonicalClassName) {
-
-        if (Objects.equals(LOCALDATE_CANONICAL_NAME, canonicalClassName)) {
-            return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
-        }
-
-        if (Objects.equals(DMN_DATE, canonicalClassName)) {
-            return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
-        }
-
-        return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
-    }*/
 
     protected static double getColumnWidth(String columnId) {
         ExpressionIdentifier.NAME expressionName = ExpressionIdentifier.NAME.Other;

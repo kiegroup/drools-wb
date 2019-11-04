@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
@@ -33,7 +35,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
-    public final static String COPY_LABEL = "_copy_";
+    public static final String COPY_LABEL = "_copy_";
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
@@ -49,12 +51,14 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                 originalColumn -> {
                     ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
                     if (originalColumn.isInstanceAssigned()) {
+                        int originalColumnIndex = context.getModel().getColumns().indexOf(originalColumn);
+                        final FactMapping originalFactMapping = context.getModel().getSimulation().orElseThrow(IllegalStateException::new).getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+                        factMappingValueType = originalFactMapping.getFactMappingValueType();
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
 
-                        if (originalColumn.isPropertyAssigned()) {
-                            int originalColumnIndex = context.getModel().getColumns().indexOf(originalColumn);
-                            int createdColumnIndex = context.getModel().getColumns().indexOf(createdColumn);
-                            final FactMapping originalFactMapping = context.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+                        /* Assigning the property, if the original column has a <code>FactMappingValueType.RAW</code> property
+                         * assigned. If is an expression, it's managed in the previous setInstanceHeader method. */
+                        if (originalColumn.isPropertyAssigned() && Objects.equals(FactMappingValueType.RAW, factMappingValueType)) {
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);
@@ -66,6 +70,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                                               originalColumn.getPropertyHeaderMetaData().getTitle());
 
                             /* It copies the properties values */
+                            int createdColumnIndex = context.getModel().getColumns().indexOf(createdColumn);
                             context.getModel().duplicateColumnValues(originalColumnIndex, createdColumnIndex);
                         }
                     }

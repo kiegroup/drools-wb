@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -396,8 +397,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
+                FactMappingValueType valueType = isSimple(className) ? FactMappingValueType.RAW : FactMappingValueType.EXPRESSION;
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                        new SetInstanceHeaderEvent(fullPackage, className, isSimple(className))));
+                        new SetInstanceHeaderEvent(fullPackage, className, valueType)));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?
@@ -446,6 +448,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         return Optional.ofNullable(getFactModelTreeFromSimpleJavaTypeMap(key))
                 .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key))
                 .isPresent();
+    }
+
+    protected boolean isSimpleJavaInstance(String key) {
+        return getFactModelTreeFromSimpleJavaInstanceMap(key).isPresent();
     }
 
     protected void clearLists() {

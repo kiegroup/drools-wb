@@ -17,14 +17,12 @@ package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.IntStream;
 
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.FactMappingClassType;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -167,12 +165,11 @@ public class ScenarioGrid extends BaseGridWidget {
         String instanceTitle = factMapping.getFactAlias();
         String propertyTitle = factMapping.getExpressionAlias();
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
-        boolean isSimpleType = Objects.equals(FactMappingClassType.SIMPLE, factMapping.getFactClassType());
         boolean isInstanceAssigned = isInstanceAssigned(factIdentifier);
         boolean isPropertyAssigned = isPropertyAssigned(isInstanceAssigned, factMapping);
         String placeHolder = ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned,
                                                                     isPropertyAssigned,
-                                                                    isSimpleType,
+                                                                    factMapping.getFactMappingValueType(),
                                                                     factMapping.getClassName());
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), placeHolder);
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
@@ -184,7 +181,9 @@ public class ScenarioGrid extends BaseGridWidget {
             scenarioGridColumn.setMinimumWidth(scenarioGridColumn.getWidth());
         }
         if (isPropertyAssigned) {
-            BaseSingletonDOMElementFactory factory = ((ScenarioGridModel) model).getDOMElementFactory(factMapping.getClassName(), isSimpleType);
+            BaseSingletonDOMElementFactory factory = ((ScenarioGridModel) model).getDOMElementFactory(
+                    factMapping.getClassName(),
+                    factMapping.getFactMappingValueType());
             scenarioGridColumn.setFactory(factory);
         }
         ((ScenarioGridModel) model).insertColumnGridOnly(columnIndex, scenarioGridColumn);
