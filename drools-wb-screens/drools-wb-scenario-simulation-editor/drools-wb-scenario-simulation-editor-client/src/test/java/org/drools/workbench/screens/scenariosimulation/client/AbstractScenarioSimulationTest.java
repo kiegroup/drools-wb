@@ -129,7 +129,6 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioHeaderMetaData propertyHeaderMetaDataMock;
 
-
     // Background tab
     @Mock
     protected BackgroundGridModel backgroundGridModelMock;
@@ -205,10 +204,12 @@ public abstract class AbstractScenarioSimulationTest {
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     protected List<GridColumn<?>> gridColumns = new ArrayList<>();
     protected Settings settingsLocal;
+    protected Background backgroundLocal;
 
     @Before
     public void setup() {
         settingsLocal = new Settings();
+        backgroundLocal = new Background();
         scenarioWithIndexLocal = new ArrayList<>();
 
         scenarioGridWidgetSpy = spy(new ScenarioGridWidget() {
@@ -353,8 +354,6 @@ public abstract class AbstractScenarioSimulationTest {
         when(computedLocation.getY()).thenReturn(0.0);
         when(scenarioGridMock.getComputedLocation()).thenReturn(computedLocation);
 
-
-
         scenarioSimulationContextLocal = new ScenarioSimulationContext(scenarioGridWidgetSpy, backgroundGridWidgetSpy);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
@@ -373,6 +372,7 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
+        when(scenarioSimulationModelMock.getBackground()).thenReturn(backgroundMock);
 
         when(scenarioCommandRegistryMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
