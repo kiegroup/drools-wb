@@ -42,6 +42,7 @@ import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
@@ -604,6 +605,11 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         context.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
+        if (scenarioBackgroundGridWidget.isSelected()) {
+            presenter.setGridWidget(GridWidget.BACKGROUND);
+        } else {
+            presenter.setGridWidget(GridWidget.SIMULATION);
+        }
         dataManagementStrategy.populateTestTools(presenter, context);
     }
 

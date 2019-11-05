@@ -37,17 +37,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
      */
     private final long id;
 
-//    /**
-//     * Flag that indicates if the command is <b>undoable</b>. Default is <code>false</code>
-//     */
-//    private final boolean undoable;
-//
-//    /**
-//     * The <code>ScenarioSimulationContext.Status</code> to restore when calling <b>undo/redo</b>.
-//     * Needed only for <b>undoable</b> commands.
-//     */
-//    protected ScenarioSimulationContext.Status restorableStatus = null;
-
 
     protected AbstractScenarioSimulationCommand() {
         this.id = COUNTER_ID.getAndIncrement();
