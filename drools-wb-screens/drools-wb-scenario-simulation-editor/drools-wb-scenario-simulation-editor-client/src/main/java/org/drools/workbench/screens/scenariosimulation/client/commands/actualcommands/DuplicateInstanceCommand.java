@@ -58,7 +58,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
                         /* Assigning the property, if the original column has a <code>FactMappingValueType.RAW</code> property
                          * assigned. If is an expression, it's managed in the previous setInstanceHeader method. */
-                        if (originalColumn.isPropertyAssigned() && Objects.equals(FactMappingValueType.RAW, factMappingValueType)) {
+                        if (originalColumn.isPropertyAssigned() && Objects.equals(FactMappingValueType.NOT_EXPRESSION, factMappingValueType)) {
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);

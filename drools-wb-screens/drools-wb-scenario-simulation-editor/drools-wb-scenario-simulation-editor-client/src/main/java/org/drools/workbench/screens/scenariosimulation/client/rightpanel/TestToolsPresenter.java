@@ -397,7 +397,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                FactMappingValueType valueType = isSimple(className) ? FactMappingValueType.RAW : FactMappingValueType.EXPRESSION;
+                FactMappingValueType valueType = isSimple(className) ? FactMappingValueType.NOT_EXPRESSION : FactMappingValueType.EXPRESSION;
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
                         new SetInstanceHeaderEvent(fullPackage, className, valueType)));
             } else if (selectedFieldItemView != null) {

@@ -50,7 +50,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimulationCommand {
 
-    protected FactMappingValueType factMappingValueType = FactMappingValueType.RAW;
+    protected FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
 
     public AbstractSelectedColumnCommand() {
         super(true);
@@ -112,7 +112,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        if (Objects.equals(FactMappingValueType.RAW, factMappingValueType)) {
+        if (Objects.equals(FactMappingValueType.NOT_EXPRESSION, factMappingValueType)) {
             setPropertyMetaData(propertyHeaderMetaData,
                                 getPropertyPlaceHolder(columnIndex),
                                 false,

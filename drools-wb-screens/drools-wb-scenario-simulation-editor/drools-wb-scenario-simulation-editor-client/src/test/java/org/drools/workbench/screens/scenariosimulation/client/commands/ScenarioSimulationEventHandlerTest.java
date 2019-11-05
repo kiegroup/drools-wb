@@ -417,7 +417,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onSetInstanceHeaderEvent() {
-        SetInstanceHeaderEvent event = new SetInstanceHeaderEvent(FULL_PACKAGE, FULL_CLASS_NAME, FactMappingValueType.RAW);
+        SetInstanceHeaderEvent event = new SetInstanceHeaderEvent(FULL_PACKAGE, FULL_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         exceptionRule.expect(NullPointerException.class);
         scenarioSimulationEventHandler.onEvent(event);
