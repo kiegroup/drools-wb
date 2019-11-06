@@ -670,4 +670,28 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         verify(factMappingMock, never()).setColumnWidth(anyDouble());
         verify(gridColumnMock, times(1)).setWidth(eq(factMappingMock.getColumnWidth()));
     }
+
+
+    /*@Test
+    public void setDOMElementFactory() {
+        FactMapping expressionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        expressionFactMapping.addExpressionElement("Test", "com.Test");
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, expressionFactMapping);
+        verify(scenarioGridColumnMock, times(1)).setFactory(eq(expressionCellTextAreaSingletonDOMElementFactoryMock));
+        //
+        FactMapping collectionFactMapping = new FactMapping(
+                FactIdentifier.create("Test", "com.Test"),
+                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
+        collectionFactMapping.addExpressionElement("Test", "java.util.List");
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, collectionFactMapping);
+        verify(scenarioGridColumnMock, times(1)).setFactory(eq(collectionEditorSingletonDOMElementFactory));
+    }
+
+    @Test
+    public void setDOMElementFactory_NotExpressionNotCollection() {
+        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, factMappingInteger);
+        verify(scenarioGridColumnMock, never()).setFactory(any());
+    }*/
 }

@@ -117,16 +117,4 @@ public class ScenarioSimulationUtilsTest extends AbstractUtilsTest {
         retrieved = ScenarioSimulationUtils.getPropertyNameElementsWithoutAlias(Arrays.asList(aliasName, propertyName), factIdentifierMock);
         assertEquals(Arrays.asList(className, propertyName), retrieved);
     }
-
-    /*@Test
-    public void getPlaceholder() {
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.insertValue(),
-                     ScenarioSimulationUtils.getPlaceholder(String.class.getCanonicalName()));
-
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder(),
-                     ScenarioSimulationUtils.getPlaceholder(LocalDate.class.getCanonicalName()));
-
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder(),
-                     ScenarioSimulationUtils.getPlaceholder(ConstantHolder.DMN_DATE));
-    }*/
 }

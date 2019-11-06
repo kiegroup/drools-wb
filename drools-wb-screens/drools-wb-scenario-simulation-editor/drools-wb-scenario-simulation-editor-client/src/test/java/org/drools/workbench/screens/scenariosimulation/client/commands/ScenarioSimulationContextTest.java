@@ -71,5 +71,4 @@ public class ScenarioSimulationContextTest extends AbstractScenarioSimulationTes
         assertEquals(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock,
                      scenarioSimulationContextLocal.getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
     }
-
 }
