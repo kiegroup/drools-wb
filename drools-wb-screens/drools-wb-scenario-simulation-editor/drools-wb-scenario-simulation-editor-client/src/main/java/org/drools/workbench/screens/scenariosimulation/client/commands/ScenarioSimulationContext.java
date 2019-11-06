@@ -50,8 +50,8 @@ public class ScenarioSimulationContext {
     private static final AtomicLong COUNTER_ID = new AtomicLong();
     private static final AtomicLong STATUS_COUNTER_ID = new AtomicLong();
 
-    final protected ScenarioGridWidget simulationGridWidget;
-    final protected ScenarioGridWidget backgroundGridWidget;
+    protected final ScenarioGridWidget simulationGridWidget;
+    protected final ScenarioGridWidget backgroundGridWidget;
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;

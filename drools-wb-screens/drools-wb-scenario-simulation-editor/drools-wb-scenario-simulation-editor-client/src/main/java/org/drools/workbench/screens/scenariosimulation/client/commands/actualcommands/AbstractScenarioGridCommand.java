@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.drools.scenariosimulation.api.model.Background;
@@ -56,6 +57,12 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
 
     protected AbstractScenarioGridCommand() {
         // CDI
+    }
+
+    @Override
+    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+        restorableStatus = context.getStatus().cloneStatus();
+        return super.execute(context);
     }
 
     @Override
@@ -112,6 +119,10 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
      * if a tab switch happened, otherwise <code>Optional.empty()</code>
      */
     public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext context) {
+        final Optional<GridWidget> selectedGridWidgetOptional = context.getSelectedGridWidget();
+        if (selectedGridWidgetOptional.isPresent() && Objects.equals(gridWidget, selectedGridWidgetOptional.get())) {
+            return Optional.empty();
+        }
         switch (gridWidget) {
             case SIMULATION:
                 context.getScenarioSimulationEditorPresenter().selectSimulationTab();

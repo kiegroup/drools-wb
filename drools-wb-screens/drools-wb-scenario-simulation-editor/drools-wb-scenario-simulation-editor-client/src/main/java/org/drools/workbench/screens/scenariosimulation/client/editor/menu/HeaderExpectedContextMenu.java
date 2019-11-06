@@ -31,13 +31,13 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String HEADEREXPECTCONTEXTMENU_EXPECT = "headerexpectcontextmenu-expect";
-    private final String HEADEREXPECTCONTEXTMENU_SCENARIO = "headerexpectcontextmenu-scenario";
-    private final String HEADEREXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "headerexpectcontextmenu-insert-column-left";
-    private final String HEADEREXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "headerexpectcontextmenu-insert-column-right";
-    private final String HEADEREXPECTCONTEXTMENU_DELETE_COLUMN = "headerexpectcontextmenu-delete-column";
-    private final String HEADEREXPECTCONTEXTMENU_INSERT_ROW_ABOVE = "headerexpectcontextmenu-insert-row-above";
-    private final String HEADEREXPECTCONTEXTMENU_INSERT_ROW_BELOW = "headerexpectcontextmenu-insert-row-below";
+    private static final String HEADEREXPECTCONTEXTMENU_EXPECT = "headerexpectcontextmenu-expect";
+    private static final String HEADEREXPECTCONTEXTMENU_SCENARIO = "headerexpectcontextmenu-scenario";
+    private static final String HEADEREXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "headerexpectcontextmenu-insert-column-left";
+    private static final String HEADEREXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "headerexpectcontextmenu-insert-column-right";
+    private static final String HEADEREXPECTCONTEXTMENU_DELETE_COLUMN = "headerexpectcontextmenu-delete-column";
+    private static final String HEADEREXPECTCONTEXTMENU_INSERT_ROW_ABOVE = "headerexpectcontextmenu-insert-row-above";
+    private static final String HEADEREXPECTCONTEXTMENU_INSERT_ROW_BELOW = "headerexpectcontextmenu-insert-row-below";
 
     @PostConstruct
     @Override
@@ -53,6 +53,7 @@ public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter 
         super.initMenu();
     }
 
+    @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
         super.show(gridWidget, mx, my);
         appendColumnEvent = new AppendColumnEvent(gridWidget, "EXPECT");

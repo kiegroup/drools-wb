@@ -26,8 +26,8 @@ import javax.enterprise.context.Dependent;
 public class OtherContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String OTHERCONTEXTMENU_SCENARIO = "othercontextmenu-scenario";
-    private final String OTHERCONTEXTMENU_INSERT_ROW_ABOVE = "othercontextmenu-insert-row-above";
+    private static final String OTHERCONTEXTMENU_SCENARIO = "othercontextmenu-scenario";
+    private static final String OTHERCONTEXTMENU_INSERT_ROW_ABOVE = "othercontextmenu-insert-row-above";
 
     @PostConstruct
     @Override

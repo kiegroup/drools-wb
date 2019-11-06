@@ -38,6 +38,7 @@ public abstract class AbstractHeaderGroupMenuPresenter extends AbstractHeaderMen
     /**
      * This method set <b>group-specific</b> menu items and common <b>SCENARIO</b> menu items
      */
+    @Override
     public void initMenu() {
         addMenuItem(HEADERCONTEXTMENU_GROUP, HEADERCONTEXTMENU_LABEL, HEADERCONTEXTMENU_I18N);
         addExecutableMenuItem(HEADERCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertLeftmostColumn(), "insertLeftmostColumn", prependColumnEvent);

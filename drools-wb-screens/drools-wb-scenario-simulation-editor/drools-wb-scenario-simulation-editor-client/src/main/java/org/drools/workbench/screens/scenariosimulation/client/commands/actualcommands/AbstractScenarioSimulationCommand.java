@@ -67,50 +67,6 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
 
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
 
-//   /* *//**
-//     * Returns a <code>ScenarioGridColumn</code> with the following default values:
-//     * <p>
-//     * width: 150
-//     * </p>
-//     * <p>
-//     * isMovable: <code>false</code>;
-//     * </p>
-//     * <p>
-//     * isPropertyAssigned: <code>false</code>;
-//     * </p>
-//     * <p>
-//     * columnRenderer: new ScenarioGridColumnRenderer()
-//     * </p>
-//     * @param instanceTitle
-//     * @param propertyTitle
-//     * @param columnId
-//     * @param columnGroup
-//     * @param factMappingType
-//     * @param factoryHeader
-//     * @param factoryCell
-//     * @param placeHolder
-//     * @return
-//     *//*
-//    protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle,
-//                                                            String propertyTitle,
-//                                                            String columnId,
-//                                                            String columnGroup,
-//                                                            FactMappingType factMappingType,
-//                                                            ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
-//                                                            ScenarioCellTextAreaSingletonDOMElementFactory factoryCell,
-//                                                            String placeHolder) {
-//        ScenarioSimulationBuilders.HeaderBuilder headerBuilder = getHeaderBuilder(instanceTitle, propertyTitle, columnId, columnGroup, factMappingType, factoryHeader);
-//        return getScenarioGridColumn(headerBuilder, factoryCell, placeHolder);
-//    }
-//
-//    protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
-//
-//        return context.getSelectedScenarioGridLayer().getScenarioGrid().getModel().getColumns().stream()
-//                .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))
-//                .findFirst()
-//                .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());
-//    }*/
-
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
         context.getSelectedScenarioGridPanel().onResize();
         context.getSelectedScenarioGridPanel().select();

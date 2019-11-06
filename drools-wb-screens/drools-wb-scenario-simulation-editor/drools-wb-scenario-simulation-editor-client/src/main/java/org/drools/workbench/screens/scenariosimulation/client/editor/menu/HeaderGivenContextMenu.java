@@ -30,12 +30,12 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 @Dependent
 public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
-    private final String HEADERGIVENCONTEXTMENU_GIVEN = "headergivencontextmenu-given";
-    private final String HEADERGIVENCONTEXTMENU_SCENARIO = "headergivencontextmenu-scenario";
-    private final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "headergivencontextmenu-insert-column-left";
-    private final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "headergivencontextmenu-insert-column-right";
-    private final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
-    private final String HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE = "headergivencontextmenu-insert-row-above";
+    private static final String HEADERGIVENCONTEXTMENU_GIVEN = "headergivencontextmenu-given";
+    private static final String HEADERGIVENCONTEXTMENU_SCENARIO = "headergivencontextmenu-scenario";
+    private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "headergivencontextmenu-insert-column-left";
+    private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "headergivencontextmenu-insert-column-right";
+    private static final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
+    private static final String HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE = "headergivencontextmenu-insert-row-above";
 
     @PostConstruct
     @Override
@@ -51,6 +51,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
         super.initMenu();
     }
 
+    @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
         super.show(gridWidget, mx, my);
         appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");

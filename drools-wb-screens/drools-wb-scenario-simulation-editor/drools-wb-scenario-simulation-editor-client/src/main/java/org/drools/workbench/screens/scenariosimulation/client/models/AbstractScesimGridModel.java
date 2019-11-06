@@ -618,10 +618,8 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @return
      */
     public boolean isColumnEmpty(int columnIndex) {
-        return !IntStream.range(0, getRowCount())
-                .filter(rowIndex -> getCellValue(getCell(rowIndex, columnIndex)).isPresent())
-                .findFirst()
-                .isPresent();
+        return IntStream.range(0, getRowCount())
+                .noneMatch(rowIndex -> getCellValue(getCell(rowIndex, columnIndex)).isPresent());
     }
 
     /**

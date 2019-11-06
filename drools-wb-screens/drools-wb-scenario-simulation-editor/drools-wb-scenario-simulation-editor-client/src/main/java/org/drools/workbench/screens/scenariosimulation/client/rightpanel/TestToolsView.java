@@ -202,5 +202,6 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
          * @param selected
          */
         void setSelectedElement(FieldItemView selected);
+
     }
 }

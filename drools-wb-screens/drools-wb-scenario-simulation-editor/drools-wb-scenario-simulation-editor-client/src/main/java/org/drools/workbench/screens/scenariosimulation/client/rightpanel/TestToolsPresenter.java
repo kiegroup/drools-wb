@@ -45,27 +45,17 @@ import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.
 public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> implements TestToolsView.Presenter {
 
     public static final String IDENTIFIER = "org.drools.scenariosimulation.TestTools";
-
-    private ListGroupItemPresenter listGroupItemPresenter;
-
     protected Map<String, FactModelTree> dataObjectFieldsMap = new TreeMap<>();
-
     protected Map<String, FactModelTree> simpleJavaTypeFieldsMap = new TreeMap<>();
-
     protected Map<String, FactModelTree> instanceFieldsMap = new TreeMap<>();
-
     protected Map<String, FactModelTree> simpleJavaInstanceFieldsMap = new TreeMap<>();
-
     protected Map<String, FactModelTree> hiddenFieldsMap = new TreeMap<>();
-
     protected EventBus eventBus;
-
     protected GridWidget gridWidget;
-
     protected boolean editingColumnEnabled = false;
-
     protected ListGroupItemView selectedListGroupItemView;
     protected FieldItemView selectedFieldItemView;
+    private ListGroupItemPresenter listGroupItemPresenter;
 
     public TestToolsPresenter() {
         //Zero argument constructor for CDI
@@ -145,7 +135,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void updateInstanceListSeparator() {
-        if (view.getInstanceListContainer().getChildCount() == 0) {
+        if (view.getInstanceListContainer().getChildCount() < 1 || GridWidget.BACKGROUND.equals(gridWidget)) {
             view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         } else {
             view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
@@ -154,7 +144,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void updateSimpleJavaInstanceFieldListSeparator() {
-        if (view.getSimpleJavaInstanceListContainer().getChildCount() == 0) {
+        if (view.getSimpleJavaInstanceListContainer().getChildCount() < 1 || GridWidget.BACKGROUND.equals(gridWidget)) {
             view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         } else {
             view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
@@ -227,9 +217,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void hideProperties(Map<String, List<List<String>>> propertiesToHide) {
         listGroupItemPresenter.showAll();
         propertiesToHide.entrySet().stream().forEach(
-                stringListEntry -> stringListEntry.getValue().forEach(propertyParts -> {
-                    listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts);
-                })
+                stringListEntry -> stringListEntry.getValue()
+                        .forEach(propertyParts ->
+                                         listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts))
         );
     }
 
@@ -246,6 +236,16 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     @Override
     public void setGridWidget(GridWidget gridWidget) {
         this.gridWidget = gridWidget;
+        switch (gridWidget) {
+            case BACKGROUND:
+                hideInstances();
+                break;
+            case SIMULATION:
+                showInstances();
+                break;
+            default:
+                // noop
+        }
     }
 
     @Override
@@ -408,6 +408,26 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void reset() {
         listGroupItemPresenter.reset();
         view.reset();
+    }
+
+    /**
+     * Method to hide all the <b>instance-related</b> html
+     */
+    protected void hideInstances() {
+        view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
+        view.getInstanceListContainer().getStyle().setDisplay(Style.Display.NONE);
+        view.getSimpleJavaInstanceListContainer().getStyle().setDisplay(Style.Display.NONE);
+    }
+
+    /**
+     * Method to show all the <b>instance-related</b> html
+     */
+    protected void showInstances() {
+        view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
+        view.getInstanceListContainer().getStyle().setDisplay(Style.Display.BLOCK);
+        view.getSimpleJavaInstanceListContainer().getStyle().setDisplay(Style.Display.BLOCK);
     }
 
     /**

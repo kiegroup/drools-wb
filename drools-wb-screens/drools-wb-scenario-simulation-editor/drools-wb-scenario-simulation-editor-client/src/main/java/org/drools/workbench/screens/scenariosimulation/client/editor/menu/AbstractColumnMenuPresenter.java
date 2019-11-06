@@ -46,6 +46,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     /**
      * This method set <b>column-specific</b> menu items and common <b>SCENARIO</b> menu items
      */
+    @Override
     public void initMenu() {
         columnContextLIElement = addMenuItem(COLUMNCONTEXTMENU_COLUMN, COLUMNCONTEXTMENU_LABEL, COLUMNCONTEXTMENU_I18N);
         insertColumnLeftLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT, constants.insertColumnLeft(), "insertColumnLeft");

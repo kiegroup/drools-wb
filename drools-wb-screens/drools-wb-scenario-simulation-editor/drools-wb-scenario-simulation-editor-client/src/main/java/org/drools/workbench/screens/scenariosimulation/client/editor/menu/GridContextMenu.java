@@ -33,11 +33,11 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleSc
 public class GridContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "gridcontextmenu-insert-row-above";
-    private final String GRIDCONTEXTMENU_INSERT_ROW_BELOW = "gridcontextmenu-insert-row-below";
-    private final String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
-    private final String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
-    private final String GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "gridcontextmenu-run-single-scenario";
+    private static final  String GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "gridcontextmenu-insert-row-above";
+    private static final  String GRIDCONTEXTMENU_INSERT_ROW_BELOW = "gridcontextmenu-insert-row-below";
+    private static final  String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
+    private static final  String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
+    private static final  String GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "gridcontextmenu-run-single-scenario";
 
     private LIElement insertRowAboveLIElement;
     private LIElement insertRowBelowLIElement;

@@ -605,12 +605,9 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         context.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
-        if (scenarioBackgroundGridWidget.isSelected()) {
-            presenter.setGridWidget(GridWidget.BACKGROUND);
-        } else {
-            presenter.setGridWidget(GridWidget.SIMULATION);
-        }
-        dataManagementStrategy.populateTestTools(presenter, context);
+        GridWidget gridWidget = scenarioBackgroundGridWidget.isSelected() ? GridWidget.BACKGROUND : GridWidget.SIMULATION;
+        presenter.setGridWidget(gridWidget);
+        dataManagementStrategy.populateTestTools(presenter, context, gridWidget);
     }
 
     protected void clearTestToolsStatus() {
