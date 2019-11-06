@@ -56,7 +56,7 @@ public class ScenarioExpressionCellTextAreaSingletonDOMElementFactory extends Ab
     }
 
     protected void checkExpressionSyntax() {
-        String value = getValue();
+        final String value = getValue();
         if (!value.startsWith(EXPRESSION_VALUE_PREFIX)) {
             if (value.startsWith(MVEL_ESCAPE_SYMBOL)) {
                 widget.setValue(value.replaceFirst(MVEL_ESCAPE_SYMBOL, EXPRESSION_VALUE_PREFIX));

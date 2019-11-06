@@ -107,6 +107,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupP
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
@@ -386,7 +387,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         if (context.getSelectedScenarioGridModel().isAlreadyAssignedProperty(event.getPropertyNameElements())) {
             String value;
             if (Objects.equals(FactMappingValueType.EXPRESSION, event.getFactMappingValueType())) {
-                value = "expression";
+                value = ConstantHolder.EXPRESSION;
             } else {
                 value = String.join(".", event.getPropertyNameElements());
             }
