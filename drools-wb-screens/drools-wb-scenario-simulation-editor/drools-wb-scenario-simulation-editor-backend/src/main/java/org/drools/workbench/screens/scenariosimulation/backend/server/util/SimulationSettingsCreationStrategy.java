@@ -39,11 +39,11 @@ import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
  */
 public interface SimulationSettingsCreationStrategy {
 
-    Simulation createSimulation(Path context, String value) throws Exception;
+    Simulation createSimulation(Path context, String value);
 
-    Settings createSettings(Path context, String value) throws Exception;
+    Settings createSettings(Path context, String value);
 
-    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, BiFunction<Integer, T, E> producer) throws Exception {
+    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, BiFunction<Integer, T, E> producer) {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
         T scenario = abstractScesimModel.addData();
@@ -52,7 +52,7 @@ public interface SimulationSettingsCreationStrategy {
         return producer.apply(index, scenario);
     }
 
-    default Background createBackground(Path context, String dmnFilePath) throws Exception {
+    default Background createBackground(Path context, String dmnFilePath) {
         Background toReturn = new Background();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         int index = toReturn.getUnmodifiableData().size() + 1;

@@ -86,7 +86,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                                        final Background background) {
         final KieContainer kieContainer = getKieContainer(path);
         final ScenarioRunnerDTO scenarioRunnerDTO = new ScenarioRunnerDTO(simulationDescriptor, scenarios, null, settings, background);
-        final AbstractScenarioRunner scenarioRunner = getOrCreateRunnerSupplier(simulationDescriptor, settings.getType())
+        final AbstractScenarioRunner scenarioRunner = getOrCreateRunnerSupplier(settings.getType())
                 .create(kieContainer, scenarioRunnerDTO);
 
         final List<Failure> failures = new ArrayList<>();
@@ -106,7 +106,7 @@ public class ScenarioRunnerServiceImpl extends AbstractKieContainerService
                                                failures));
     }
 
-    public ScenarioRunnerProvider getOrCreateRunnerSupplier(ScesimModelDescriptor simulationDescriptor, ScenarioSimulationModel.Type type) {
+    public ScenarioRunnerProvider getOrCreateRunnerSupplier(ScenarioSimulationModel.Type type) {
         if (runnerSupplier != null) {
             return runnerSupplier;
         }
