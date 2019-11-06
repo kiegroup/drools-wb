@@ -402,7 +402,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                             new SetInstanceHeaderEvent(fullPackage, className)));
                 } else {
                     getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                            new SetPropertyHeaderEvent(fullPackage, Arrays.asList(className), className, FactMappingValueType.EXPRESSION)));
+                            new SetPropertyHeaderEvent(fullPackage,
+                                                       Arrays.asList(className),
+                                                       fullPackage + "." + className,
+                                                       FactMappingValueType.EXPRESSION)));
                 }
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];

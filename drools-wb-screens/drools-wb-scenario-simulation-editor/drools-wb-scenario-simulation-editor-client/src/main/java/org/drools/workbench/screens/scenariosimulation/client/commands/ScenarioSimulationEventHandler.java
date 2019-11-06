@@ -29,6 +29,7 @@ import javax.enterprise.event.Event;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
@@ -383,7 +384,12 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
             return;
         }
         if (context.getSelectedScenarioGridModel().isAlreadyAssignedProperty(event.getPropertyNameElements())) {
-            String value = String.join(".", event.getPropertyNameElements());
+            String value;
+            if (Objects.equals(FactMappingValueType.EXPRESSION, event.getFactMappingValueType())) {
+                value = "expression";
+            } else {
+                value = String.join(".", event.getPropertyNameElements());
+            }
             onEvent(new ScenarioNotificationEvent("Property \"" + value + "\" already assigned", NotificationEvent.NotificationType.ERROR));
             return;
         }
