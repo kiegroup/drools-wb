@@ -218,7 +218,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
 
         public FactMapping getFactMapping(FactModelTree factModelTree, String propertyName, List<String> previousSteps, String factType) {
 
-            String factAlias = previousSteps.isEmpty() ? previousSteps.get(0) : factModelTree.getFactName();
+            String factAlias = !previousSteps.isEmpty() ? previousSteps.get(0) : factModelTree.getFactName();
 
             ExpressionIdentifier expressionIdentifier = ExpressionIdentifier.create(row + "|" + id.getAndIncrement(), type);
             final FactMapping factMapping = simulationDescriptor.addFactMapping(factAlias, factIdentifier, expressionIdentifier);
