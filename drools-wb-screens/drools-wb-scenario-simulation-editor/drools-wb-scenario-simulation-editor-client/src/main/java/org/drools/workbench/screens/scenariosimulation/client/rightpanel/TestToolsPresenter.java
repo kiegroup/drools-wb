@@ -369,13 +369,14 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     /**
      * It determines if a selected Fact can be inserted or not in the model.
-     * It can be inserted if the Fact class is Not of Simple type and already assigned to related selected column
-     * OR filterTerm() return a TRUE, which means selected Fact is still not assigned
+     * It can't be inserted if the Fact class is Simple type and already assigned to related selected column
+     * OR filterTerm(..) return a TRUE, which means selected Fact is already Assigned. Check with filterTerm is required
+     * to handle facts selected through SearchBox
      * @param selected
      * @return
      */
     protected boolean hasSelectedFactDisableAddButton(ListGroupItemView selected) {
-        return selected.isInstanceAssigned() && isSimple(selected.getFactName()) || 
+        return selected.isInstanceAssigned() && isSimple(selected.getFactName()) ||
                 filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned());
     }
 

@@ -45,6 +45,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_PACKAGE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FILTER_TERM;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.PROPERTY_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -480,7 +481,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME), eq(FILTER_TERM), eq(false));
+        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
         verify(testToolsViewMock, times(1)).disableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
@@ -491,10 +492,18 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME_2);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME_2), eq(FILTER_TERM), eq(false));
+        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
         verify(testToolsViewMock, times(1)).enableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
+    }
+
+    @Test
+    public void hasSelectedFactDisableAddButton() {
+        when(selectedListGroupItemViewMock.getFactName()).thenReturn(VALUE_CLASS_NAME);
+        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
+        testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock);
+
     }
 
     @Test
