@@ -397,16 +397,23 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                FactMappingValueType valueType = isSimple(className) ? FactMappingValueType.NOT_EXPRESSION : FactMappingValueType.EXPRESSION;
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                        new SetInstanceHeaderEvent(fullPackage, className, valueType)));
+                if (isSimple(className)) {
+                    getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
+                            new SetInstanceHeaderEvent(fullPackage, className)));
+                } else {
+                    getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
+                            new SetPropertyHeaderEvent(fullPackage, Arrays.asList(className), className, FactMappingValueType.EXPRESSION)));
+                }
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
-                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage, propertyNameElements, selectedFieldItemView.getClassName())));
+                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(fullPackage,
+                                                                                                                 propertyNameElements,
+                                                                                                                 selectedFieldItemView.getClassName(),
+                                                                                                                 FactMappingValueType.NOT_EXPRESSION)));
             }
         }
     }

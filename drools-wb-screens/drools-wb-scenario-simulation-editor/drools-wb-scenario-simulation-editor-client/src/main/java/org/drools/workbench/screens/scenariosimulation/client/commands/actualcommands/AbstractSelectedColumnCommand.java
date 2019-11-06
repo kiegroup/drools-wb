@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +78,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      */
     protected ScenarioGridColumn insertNewColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, int columnPosition, boolean cloneInstance) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
+        final FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
         final FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
@@ -113,34 +113,15 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        if (Objects.equals(FactMappingValueType.NOT_EXPRESSION, factMappingValueType)) {
-            setPropertyMetaData(propertyHeaderMetaData,
-                                getPropertyPlaceHolder(columnIndex),
-                                false,
-                                selectedColumn,
-                                ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
-                                                                       selectedColumn.isPropertyAssigned(),
-                                                                       factMappingValueType,
-                                                                       fullClassName));
-            context.getSelectedScenarioGridModel().updateColumnInstance(columnIndex, selectedColumn);
-        } else {
-            propertyHeaderMetaData.setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-            selectedColumn.setPropertyAssigned(true);
-            setPropertyMetaData(propertyHeaderMetaData,
-                                ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER,
-                                false,
-                                selectedColumn,
-                                ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
-                                                                       selectedColumn.isPropertyAssigned(),
-                                                                       factMappingValueType,
-                                                                       fullClassName));
-            context.getSelectedScenarioGridModel().updateColumnProperty(columnIndex,
-                                                    selectedColumn,
-                                                    Arrays.asList(alias),
-                                                    fullClassName,
-                                                    context.getStatus().isKeepData(),
-                                                    factMappingValueType);
-        }
+        setPropertyMetaData(propertyHeaderMetaData,
+                            getPropertyPlaceHolder(columnIndex),
+                            false,
+                            selectedColumn,
+                            ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                   selectedColumn.isPropertyAssigned(),
+                                                                   factMappingValueType,
+                                                                   fullClassName));
+        context.getSelectedScenarioGridModel().updateColumnInstance(columnIndex, selectedColumn);
         selectedColumn.setFactory(context.getSelectedScenarioGridModel().getDOMElementFactory(fullClassName,
                                                                                               context.getSettings().getType(),
                                                                                               factMappingValueType));
@@ -273,7 +254,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
-            selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory());
+            selectedColumn.setFactory(context.getSelectedScenarioGridModel().getDOMElementFactory(className,
+                                                                                                  context.getSettings().getType(),
+                                                                                                  factMappingValueType));
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
@@ -342,6 +325,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     }
 
     protected String getPropertyHeaderTitle(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
+        if (Objects.equals(FactMappingValueType.EXPRESSION, factMappingValueType)) {
+            return ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER;
+        }
         String propertyPathPart = propertyNameElements.size() > 1 ?
                 String.join(".", propertyNameElements.subList(1, propertyNameElements.size())) : "value";
         List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factIdentifier);

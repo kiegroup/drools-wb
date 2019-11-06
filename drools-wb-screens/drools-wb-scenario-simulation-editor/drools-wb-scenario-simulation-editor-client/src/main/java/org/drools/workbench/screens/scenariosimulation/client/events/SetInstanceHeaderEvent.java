@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstanceHeaderEventHandler;
 
 /**
@@ -28,7 +27,6 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
 
     private String fullPackage;
     private String className;
-    private FactMappingValueType factMappingValueType;
 
     /**
      * Use this constructor to modify the <i>instance</i> level header
@@ -36,10 +34,9 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
      * @param fullPackage
      * @param className
      */
-    public SetInstanceHeaderEvent(String fullPackage, String className, FactMappingValueType factMappingValueType) {
+    public SetInstanceHeaderEvent(String fullPackage, String className) {
         this.fullPackage = fullPackage;
         this.className = className;
-        this.factMappingValueType = factMappingValueType;
     }
 
     @Override
@@ -53,14 +50,6 @@ public class SetInstanceHeaderEvent extends GwtEvent<SetInstanceHeaderEventHandl
 
     public String getClassName() {
         return className;
-    }
-
-    public FactMappingValueType getFactMappingValueType() {
-        return factMappingValueType;
-    }
-
-    public void setFactMappingValueType(FactMappingValueType factMappingValueType) {
-        this.factMappingValueType = factMappingValueType;
     }
 
     @Override

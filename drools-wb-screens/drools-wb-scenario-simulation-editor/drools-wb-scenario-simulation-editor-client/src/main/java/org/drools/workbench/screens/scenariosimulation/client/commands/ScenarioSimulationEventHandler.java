@@ -357,11 +357,13 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(SetInstanceHeaderEvent event) {
-        ScenarioGridColumn column = ((ScenarioGridColumn) context.getSelectedScenarioGridModel().getSelectedColumn());
+        if (context.getSelectedScenarioGridModel().isSameInstanceType(event.getClassName())) {
+            return;
+        }
         context.getStatus().setFullPackage(event.getFullPackage());
         context.getStatus().setClassName(event.getClassName());
-        if (column.isInstanceAssigned() && !context.getSelectedScenarioGridModel().isSameInstanceType(event.getClassName())) {
-            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(new SetInstanceHeaderCommand(event.getFactMappingValueType()),
+        if (((ScenarioGridColumn) context.getSelectedScenarioGridModel().getSelectedColumn()).isInstanceAssigned()) {
+            org.uberfire.mvp.Command okPreserveCommand = () -> commonExecution(new SetInstanceHeaderCommand(),
                                                                                true);
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.changeTypeMainQuestion(),
@@ -371,7 +373,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                       ScenarioSimulationEditorConstants.INSTANCE.changeType(),
                                       okPreserveCommand);
         } else {
-            commonExecution(new SetInstanceHeaderCommand(event.getFactMappingValueType()), true);
+            commonExecution(new SetInstanceHeaderCommand(), true);
         }
     }
 
@@ -389,17 +391,17 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setPropertyNameElements(event.getPropertyNameElements());
         context.getStatus().setValueClassName(event.getValueClassName());
         if (context.getSelectedScenarioGridModel().isSelectedColumnEmpty()) {
-            commonExecution(new SetPropertyHeaderCommand(), true);
+            commonExecution(new SetPropertyHeaderCommand(event.getFactMappingValueType()), true);
         } else if (context.getSelectedScenarioGridModel().isSameSelectedColumnProperty(event.getPropertyNameElements())) {
             return;
         } else if (context.getSelectedScenarioGridModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okDeleteCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(new SetPropertyHeaderCommand(), true);
+                commonExecution(new SetPropertyHeaderCommand(event.getFactMappingValueType()), true);
             };
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(true);
-                commonExecution(new SetPropertyHeaderCommand(), true);
+                commonExecution(new SetPropertyHeaderCommand(event.getFactMappingValueType()), true);
             };
             preserveDeletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle(),
                                               ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion(),
@@ -414,7 +416,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         } else if (!context.getSelectedScenarioGridModel().isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okPreserveCommand = () -> {
                 context.getStatus().setKeepData(false);
-                commonExecution(new SetPropertyHeaderCommand(), true);
+                commonExecution(new SetPropertyHeaderCommand(event.getFactMappingValueType()), true);
             };
             deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
                                       ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),

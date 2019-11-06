@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
@@ -26,14 +25,6 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
  */
 @Dependent
 public class SetInstanceHeaderCommand extends AbstractSelectedColumnCommand {
-
-    public SetInstanceHeaderCommand() {
-        super();
-    }
-
-    public SetInstanceHeaderCommand(FactMappingValueType factMappingValueType) {
-        super(factMappingValueType);
-    }
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
