@@ -30,6 +30,7 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.events.ReloadTestToolsEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
@@ -45,6 +46,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
+import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
@@ -64,6 +66,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
@@ -150,16 +153,21 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
 
         gridCellSupplier = () -> gridCellMock;
         abstractScesimGridModel = spy(new AbstractScesimGridModel(false) {
-            @Override
-            public void insertRowGridOnly(int rowIndex, GridRow row, AbstractScesimData abstractScesimData) {
-
-            }
 
             {
                 this.abstractScesimModel = simulationMock;
                 this.eventBus = eventBusMock;
                 this.rows = GRID_ROWS;
                 this.columns = gridColumns;
+                this.scenarioExpressionCellTextAreaSingletonDOMElementFactory = scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock;
+                this.collectionEditorSingletonDOMElementFactory = collectionEditorSingletonDOMElementFactoryTest;
+                this.scenarioCellTextAreaSingletonDOMElementFactory = scenarioCellTextAreaSingletonDOMElementFactoryTest;
+                this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
+            }
+
+            @Override
+            public void insertRowGridOnly(int rowIndex, GridRow row, AbstractScesimData abstractScesimData) {
+
             }
 
             @Override
@@ -254,8 +262,10 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
     public void updateColumnTypeFalse() {
         abstractScesimGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, false, FactMappingValueType.NOT_EXPRESSION);
         verify(abstractScesimGridModel, times(2)).checkSimulation();
+        verify(factMappingMock, times(1)).setFactMappingValueType(eq(FactMappingValueType.NOT_EXPRESSION));
         verify(abstractScesimGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(abstractScesimGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
+        verify(abstractScesimGridModel, never()).setCellValue(anyInt(), anyInt(), any());
     }
 
     @Test
@@ -263,6 +273,7 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         abstractScesimGridModel.updateColumnProperty(COLUMN_INDEX, gridColumnMock, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, true, FactMappingValueType.NOT_EXPRESSION);
         verify(abstractScesimGridModel, atLeast(2)).checkSimulation();
         verify(abstractScesimGridModel, atLeast(ROW_COUNT - 1)).getCell(anyInt(), eq(COLUMN_INDEX));
+        verify(factMappingMock, times(1)).setFactMappingValueType(eq(FactMappingValueType.NOT_EXPRESSION));
         verify(abstractScesimGridModel, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(abstractScesimGridModel, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
         verify(abstractScesimGridModel, atLeast(ROW_COUNT - 1)).setCellValue(anyInt(), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
@@ -671,27 +682,33 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         verify(gridColumnMock, times(1)).setWidth(eq(factMappingMock.getColumnWidth()));
     }
 
-
-    /*@Test
-    public void setDOMElementFactory() {
-        FactMapping expressionFactMapping = new FactMapping(
-                FactIdentifier.create("Test", "com.Test"),
-                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
-        expressionFactMapping.addExpressionElement("Test", "com.Test");
-        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, expressionFactMapping);
-        verify(scenarioGridColumnMock, times(1)).setFactory(eq(expressionCellTextAreaSingletonDOMElementFactoryMock));
-        //
-        FactMapping collectionFactMapping = new FactMapping(
-                FactIdentifier.create("Test", "com.Test"),
-                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
-        collectionFactMapping.addExpressionElement("Test", "java.util.List");
-        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, collectionFactMapping);
-        verify(scenarioGridColumnMock, times(1)).setFactory(eq(collectionEditorSingletonDOMElementFactory));
+    @Test
+    public void getDOMElementFactory_Collection() {
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("java.util.Map", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
+        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
+        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
+        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
     }
 
     @Test
-    public void setDOMElementFactory_NotExpressionNotCollection() {
-        scenarioGrid.setDOMElementFactory(scenarioGridColumnMock, factMappingInteger);
-        verify(scenarioGridColumnMock, never()).setFactory(any());
-    }*/
+    public void getDOMElementFactory_Expression() {
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
+        assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
+        assertSame(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock, factory);
+    }
+
+    @Test
+    public void getDOMElementFactory_NotExpressionNotCollection() {
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
+        assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
+        factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
+    }
 }
