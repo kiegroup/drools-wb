@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import javax.enterprise.context.Dependent;
 
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -37,18 +37,18 @@ public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
-        SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
+        ScesimModelDescriptor simulationDescriptor = status.getSimulation().getScesimModelDescriptor();
         int columnIndex = status.getColumnIndex();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getModel().getColumns().get(columnIndex);
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getSelectedScenarioGridModel().getColumns().get(columnIndex);
         String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                     selectedColumn.isPropertyAssigned(),
                                                                     factMapping.getFactMappingValueType(),
                                                                     factMapping.getClassName());
-        context.getModel().setCellValue(status.getRowIndex(),
+        context.getSelectedScenarioGridModel().setCellValue(status.getRowIndex(),
                                         columnIndex,
                                         new ScenarioGridCellValue(status.getGridCellValue(),
                                                                   placeholder));
-        context.getModel().resetError(status.getRowIndex(), columnIndex);
+        context.getSelectedScenarioGridModel().resetError(status.getRowIndex(), columnIndex);
     }
 }

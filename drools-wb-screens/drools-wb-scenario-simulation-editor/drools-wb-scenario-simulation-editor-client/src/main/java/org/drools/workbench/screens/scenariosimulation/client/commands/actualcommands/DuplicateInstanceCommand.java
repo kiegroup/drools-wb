@@ -23,10 +23,13 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
 /**
@@ -39,20 +42,21 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
+        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> selectedScenarioGridModel = context.getSelectedScenarioGridModel();
         /* Generating the new instance alias with following schema: <original instance name> + '_copy_' + <number of existing instances> */
-        int instancesCount = context.getModel().getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
+        int instancesCount = selectedScenarioGridModel.getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         String alias = selectedColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0] + COPY_LABEL + instancesCount;
 
         /* For every columns which belongs to the selected instance, it creates a new column and assign it the duplicated instance
          * and the duplicated property, if are assigned */
-        int columnPosition = context.getModel().getInstanceLimits(context.getModel().getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
+        int columnPosition = selectedScenarioGridModel.getInstanceLimits(selectedScenarioGridModel.getColumns().indexOf(selectedColumn)).getMaxRowIndex() + 1;
         AtomicInteger nextColumnPosition = new AtomicInteger(columnPosition);
-        context.getModel().getInstanceScenarioGridColumns(selectedColumn).forEach(
+        selectedScenarioGridModel.getInstanceScenarioGridColumns(selectedColumn).forEach(
                 originalColumn -> {
                     ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
                     if (originalColumn.isInstanceAssigned()) {
-                        int originalColumnIndex = context.getModel().getColumns().indexOf(originalColumn);
-                        final FactMapping originalFactMapping = context.getModel().getSimulation().orElseThrow(IllegalStateException::new).getSimulationDescriptor().getFactMappingByIndex(originalColumnIndex);
+                        int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
+                        final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().orElseThrow(IllegalStateException::new).getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
                         factMappingValueType = originalFactMapping.getFactMappingValueType();
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
 
@@ -70,8 +74,8 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                                               originalColumn.getPropertyHeaderMetaData().getTitle());
 
                             /* It copies the properties values */
-                            int createdColumnIndex = context.getModel().getColumns().indexOf(createdColumn);
-                            context.getModel().duplicateColumnValues(originalColumnIndex, createdColumnIndex);
+                            int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
+                            selectedScenarioGridModel.duplicateColumnValues(originalColumnIndex, createdColumnIndex);
                         }
                     }
                 });
