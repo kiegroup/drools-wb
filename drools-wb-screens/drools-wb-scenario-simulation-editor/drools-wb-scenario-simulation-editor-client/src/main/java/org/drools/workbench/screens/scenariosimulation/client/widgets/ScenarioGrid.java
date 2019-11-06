@@ -26,6 +26,7 @@ import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.events.DisableTestToolsEvent;
@@ -107,6 +108,10 @@ public class ScenarioGrid extends BaseGridWidget {
         return type;
     }
 
+    protected void setType(ScenarioSimulationModel.Type type) {
+        this.type = type;
+    }
+
     /**
      * Unselect all cells/columns from model {@see GridData.clearSelections()}
      */
@@ -173,10 +178,10 @@ public class ScenarioGrid extends BaseGridWidget {
         String columnGroup = factMapping.getExpressionIdentifier().getType().name();
         boolean isInstanceAssigned = isInstanceAssigned(factIdentifier);
         boolean isPropertyAssigned = isPropertyAssigned(isInstanceAssigned, factMapping);
-        String placeHolder = ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned,
-                                                                    isPropertyAssigned,
-                                                                    factMapping.getFactMappingValueType(),
-                                                                    factMapping.getClassName());
+        String placeHolder = getPlaceHolder(isInstanceAssigned,
+                                            isPropertyAssigned,
+                                            factMapping.getFactMappingValueType(),
+                                            factMapping.getClassName());
         ScenarioGridColumn scenarioGridColumn = getScenarioGridColumnLocal(instanceTitle, propertyTitle, columnId, columnGroup, factMapping.getExpressionIdentifier().getType(), placeHolder);
         scenarioGridColumn.setInstanceAssigned(isInstanceAssigned);
         scenarioGridColumn.setPropertyAssigned(isPropertyAssigned);
@@ -332,5 +337,16 @@ public class ScenarioGrid extends BaseGridWidget {
                                                                              scenarioHeaderMetaData,
                                                                              uiColumnIndex,
                                                                              group);
+    }
+
+    //Indirection for tests
+    protected String getPlaceHolder(final boolean isInstanceAssigned,
+                                     final boolean isPropertyAssigned,
+                                     final FactMappingValueType valueType,
+                                     final String className) {
+        return ScenarioSimulationUtils.getPlaceHolder(isInstanceAssigned,
+                                                      isPropertyAssigned,
+                                                      valueType,
+                                                      className);
     }
 }

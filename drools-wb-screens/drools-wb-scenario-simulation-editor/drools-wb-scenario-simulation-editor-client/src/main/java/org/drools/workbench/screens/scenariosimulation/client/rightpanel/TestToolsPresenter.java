@@ -225,9 +225,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void hideProperties(Map<String, List<List<String>>> propertiesToHide) {
         listGroupItemPresenter.showAll();
         propertiesToHide.entrySet().stream().forEach(
-                stringListEntry -> stringListEntry.getValue().forEach(propertyParts ->
-                    listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts)
-                )
+                stringListEntry -> stringListEntry.getValue().forEach(propertyParts -> {
+                    listGroupItemPresenter.hideProperty(stringListEntry.getKey(), propertyParts);
+                })
         );
     }
 
@@ -458,10 +458,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         return Optional.ofNullable(getFactModelTreeFromSimpleJavaTypeMap(key))
                 .orElseGet(() -> getFactModelTreeFromSimpleJavaInstanceMap(key))
                 .isPresent();
-    }
-
-    protected boolean isSimpleJavaInstance(String key) {
-        return getFactModelTreeFromSimpleJavaInstanceMap(key).isPresent();
     }
 
     protected void clearLists() {

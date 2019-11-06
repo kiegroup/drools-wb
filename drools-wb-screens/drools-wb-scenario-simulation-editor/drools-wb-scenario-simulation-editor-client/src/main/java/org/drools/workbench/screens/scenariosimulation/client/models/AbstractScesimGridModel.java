@@ -1071,8 +1071,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     }
 
     /**
-     * Set the correct <b>DOMElement</b> factory to the given <code>ScenarioGridColumn</code>
-     * @param className
+     * Returns the correct <b>DOMElement</b> factory to the given data
      * @param modelType
      * @param valueType
      */

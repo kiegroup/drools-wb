@@ -33,7 +33,6 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -261,19 +260,19 @@ public class TestToolsViewImpl
         conditionsButton.setDisabled(disabled);
         setContainersDisabledStatus(disabled);
         if (disabled) {
-            kieTestToolsContent.addClassName(ConstantHolder.DISABLED);
+            kieTestToolsContent.addClassName("disabled");
             disableSearch();
             disableAddButton();
         } else {
-            kieTestToolsContent.removeClassName(ConstantHolder.DISABLED);
+            kieTestToolsContent.removeClassName("disabled");
         }
     }
 
     protected void setContainersDisabledStatus(boolean disabled) {
         if (disabled) {
-            managedDivElements.forEach(divElement -> divElement.addClassName(ConstantHolder.DISABLED));
+            managedDivElements.forEach(divElement -> divElement.addClassName("disabled"));
         } else {
-            managedDivElements.forEach(divElement -> divElement.removeClassName(ConstantHolder.DISABLED));
+            managedDivElements.forEach(divElement -> divElement.removeClassName("disabled"));
         }
     }
 }
