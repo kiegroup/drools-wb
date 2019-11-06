@@ -15,9 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import java.util.function.BiFunction;
+
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -40,19 +43,21 @@ public interface SimulationSettingsCreationStrategy {
 
     Settings createSettings(Path context, String value) throws Exception;
 
-    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, Class<E> toInstantiate) throws Exception {
+    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, BiFunction<Integer, T, E> producer) throws Exception {
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
         T scenario = abstractScesimModel.addData();
         scenario.setDescription(null);
         int index = abstractScesimModel.getUnmodifiableData().indexOf(scenario) + 1;
-        return toInstantiate.getConstructor(int.class, scenario.getClass()).newInstance(index, scenario);
+        return producer.apply(index, scenario);
     }
 
     default Background createBackground(Path context, String dmnFilePath) throws Exception {
         Background toReturn = new Background();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
-        BackgroundDataWithIndex backgroundDataWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, BackgroundDataWithIndex.class);
+        int index = toReturn.getUnmodifiableData().size() + 1;
+        BackgroundData backgroundData = toReturn.addData();
+        BackgroundDataWithIndex backgroundDataWithIndex = new BackgroundDataWithIndex(index, backgroundData);
 
         // Add GIVEN Fact
         createEmptyColumn(simulationDescriptor,

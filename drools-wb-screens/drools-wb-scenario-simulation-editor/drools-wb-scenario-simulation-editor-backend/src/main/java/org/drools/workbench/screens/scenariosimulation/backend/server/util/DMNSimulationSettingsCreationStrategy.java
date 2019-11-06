@@ -57,7 +57,7 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         final FactModelTuple factModelTuple = getFactModelTuple(context, dmnFilePath);
         Simulation toReturn = new Simulation();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
-        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex::new);
 
         AtomicInteger id = new AtomicInteger(1);
         final Collection<FactModelTree> visibleFactTrees = factModelTuple.getVisibleFacts().values();

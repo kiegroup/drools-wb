@@ -34,7 +34,7 @@ public class RULESimulationSettingsCreationStrategy implements SimulationSetting
     public Simulation createSimulation(Path context, String value) throws Exception {
         Simulation toReturn = new Simulation();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
-        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex.class);
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, simulationDescriptor, ScenarioWithIndex::new);
 
         // Add GIVEN Fact
         createEmptyColumn(simulationDescriptor,
