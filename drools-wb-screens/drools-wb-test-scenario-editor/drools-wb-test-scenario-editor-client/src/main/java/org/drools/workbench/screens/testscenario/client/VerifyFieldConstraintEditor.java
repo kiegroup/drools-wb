@@ -124,8 +124,7 @@ public class VerifyFieldConstraintEditor extends Composite {
                 //GUVNOR-1324: Java enums are of type TYPE_COMPARABLE whereas Guvnor enums are not.
                 //The distinction here controls whether the EXPECTED value is handled as a true
                 //Java enum or a literal with a selection list (i.e. Guvnor enum)
-                String dataType = oracle.getFieldType(factType, field.getFieldName());
-                if (dataType.equals(DataType.TYPE_COMPARABLE)) {
+                if (flType != null && flType.equals(DataType.TYPE_COMPARABLE)) {
                     field.setNature(FieldData.TYPE_ENUM);
                 } else {
                     field.setNature(FieldData.TYPE_LITERAL);
@@ -141,26 +140,26 @@ public class VerifyFieldConstraintEditor extends Composite {
                                            dropDownData,
                                            oracle.getResourcePath()));
             } else {
-                if (field.getExpected() != null && field.getExpected().length() > 0 && field.getNature() == FieldData.TYPE_UNDEFINED) {
-                    if (field.getExpected().charAt(0) == '=') {
+                if (field.getNature() == FieldData.TYPE_UNDEFINED) {
+                    if (field.getExpected() != null && field.getExpected().length() > 0 && field.getExpected().charAt(0) == '=') {
                         field.setNature(FieldData.TYPE_VARIABLE);
+                    } else if (isThereABoundVariableToSet()) {
+                        Image clickme = CommonAltedImages.INSTANCE.Edit();
+                        clickme.addClickHandler(new ClickHandler() {
+
+                            public void onClick(ClickEvent event) {
+                                showTypeChoice(field);
+                            }
+                        });
+                        panel.add(clickme);
                     } else {
                         field.setNature(FieldData.TYPE_LITERAL);
                     }
                 }
-                if (field.getNature() == FieldData.TYPE_UNDEFINED && isThereABoundVariableToSet() == true) {
-                    Image clickme = CommonAltedImages.INSTANCE.Edit();
-                    clickme.addClickHandler(new ClickHandler() {
 
-                        public void onClick(ClickEvent event) {
-                            showTypeChoice((Widget) event.getSource(),
-                                           field);
-                        }
-                    });
-                    panel.add(clickme);
-                } else if (field.getNature() == FieldData.TYPE_VARIABLE) {
+                if (field.getNature() == FieldData.TYPE_VARIABLE) {
                     panel.add(variableEditor());
-                } else {
+                } else if (field.getNature() == FieldData.TYPE_LITERAL) {
                     panel.add(editableTextBox(callback,
                                               flType,
                                               field.getFieldName(),
@@ -218,8 +217,7 @@ public class VerifyFieldConstraintEditor extends Composite {
                                    initialValue).asWidget();
     }
 
-    private void showTypeChoice(Widget w,
-                                final VerifyField con) {
+    private void showTypeChoice(final VerifyField con) {
         final FormStylePopup form = new FormStylePopup(TestScenarioAltedImages.INSTANCE.Wizard(),
                                                        TestScenarioConstants.INSTANCE.FieldValue());
 
