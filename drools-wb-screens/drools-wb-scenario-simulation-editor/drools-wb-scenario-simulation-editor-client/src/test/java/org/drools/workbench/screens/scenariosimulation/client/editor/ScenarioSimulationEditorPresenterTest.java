@@ -186,6 +186,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(contextMock.getStatus()).thenReturn(statusMock);
         when(contextMock.getSettings()).thenReturn(scenarioSimulationContextLocal.getSettings());
         when(statusMock.getSimulation()).thenReturn(simulationMock);
+        when(statusMock.getBackground()).thenReturn(backgroundMock);
         when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
         when(testRunnerReportingPanelMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
 
@@ -384,6 +385,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridWidgetSpy, times(1)).resetErrors();
         verify(backgroundGridWidgetSpy, times(1)).resetErrors();
         verify(scenarioSimulationModelMock, times(1)).setSimulation(simulationMock);
+        verify(scenarioSimulationModelMock, times(1)).setBackground(backgroundMock);
         verify(scenarioSimulationViewMock, times(1)).showBusyIndicator(anyString());
         verify(scenarioSimulationEditorWrapperMock, times(1)).onRunScenario(any(), any(), any(), eq(settingsLocal), scenarioWithIndexCaptor.capture(), any());
 

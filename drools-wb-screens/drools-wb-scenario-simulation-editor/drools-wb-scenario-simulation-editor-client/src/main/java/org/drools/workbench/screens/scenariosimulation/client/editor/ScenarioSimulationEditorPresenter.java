@@ -255,6 +255,7 @@ public class ScenarioSimulationEditorPresenter {
         scenarioMainGridWidget.resetErrors();
         scenarioBackgroundGridWidget.resetErrors();
         model.setSimulation(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation());
+        model.setBackground(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getBackground());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
