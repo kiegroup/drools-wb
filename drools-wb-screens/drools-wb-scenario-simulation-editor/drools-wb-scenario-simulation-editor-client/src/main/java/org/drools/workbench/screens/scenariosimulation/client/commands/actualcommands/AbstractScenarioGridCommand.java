@@ -86,25 +86,23 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
         try {
             final Simulation simulationToRestore = restorableStatus.getSimulation();
             final Background backgroundToRestore = restorableStatus.getBackground();
-            if (simulationToRestore != null || backgroundToRestore != null) {
-                final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
-                context.getSimulationGrid().getModel().clearSelections();
-                context.getBackgroundGrid().getModel().clearSelections();
-                if (simulationToRestore != null) {
-                    context.getSimulationGrid().setContent(simulationToRestore, context.getSettings().getType());
-                    context.getScenarioSimulationEditorPresenter().getModel().setSimulation(simulationToRestore);
-                }
-                if (backgroundToRestore != null) {
-                    context.getBackgroundGrid().setContent(backgroundToRestore, context.getSettings().getType());
-                    context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
-                }
-                context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
-                context.setStatus(restorableStatus);
-                restorableStatus = originalStatus;
-                return commonExecution(context);
-            } else {
-                return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singletonList(new ScenarioSimulationViolation("Simulation not set inside Model")));
+            if (simulationToRestore == null) {
+                throw new IllegalStateException("Simulation is null in restorable status");
             }
+            if (backgroundToRestore == null) {
+                throw new IllegalStateException("Simulation is null in restorable status");
+            }
+            final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
+            context.getSimulationGrid().getModel().clearSelections();
+            context.getBackgroundGrid().getModel().clearSelections();
+            context.getSimulationGrid().setContent(simulationToRestore, context.getSettings().getType());
+            context.getScenarioSimulationEditorPresenter().getModel().setSimulation(simulationToRestore);
+            context.getBackgroundGrid().setContent(backgroundToRestore, context.getSettings().getType());
+            context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
+            context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
+            context.setStatus(restorableStatus);
+            restorableStatus = originalStatus;
+            return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
         }

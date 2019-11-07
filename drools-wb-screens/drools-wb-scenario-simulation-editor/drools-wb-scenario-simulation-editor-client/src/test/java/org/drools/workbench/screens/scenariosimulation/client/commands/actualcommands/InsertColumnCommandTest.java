@@ -39,7 +39,7 @@ public class InsertColumnCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new InsertColumnCommand(GridWidget.SIMULATION) {
+        commandSpy = spy(new InsertColumnCommand(GridWidget.SIMULATION) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
                                                                     FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
@@ -76,9 +76,9 @@ public class InsertColumnCommandTest extends AbstractScenarioGridCommandTest {
     protected void commonTest(boolean right, boolean asProperty, int expectedIndex) {
         scenarioSimulationContextLocal.getStatus().setRight(right);
         scenarioSimulationContextLocal.getStatus().setAsProperty(asProperty);
-        ((InsertColumnCommand)command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        ((InsertColumnCommand) commandSpy).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
         boolean cloneInstance = scenarioSimulationContextLocal.getStatus().isAsProperty() && gridColumnMock.isInstanceAssigned();
-        verify((InsertColumnCommand) command, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(expectedIndex), eq(cloneInstance));
+        verify((InsertColumnCommand) commandSpy, times(1)).insertNewColumn(eq(scenarioSimulationContextLocal), eq(gridColumnMock), eq(expectedIndex), eq(cloneInstance));
     }
 
 }

@@ -42,7 +42,7 @@ public class PrependColumnCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new PrependColumnCommand(GridWidget.SIMULATION) {
+        commandSpy = spy(new PrependColumnCommand(GridWidget.SIMULATION) {
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader,
                                                                     ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
@@ -55,8 +55,8 @@ public class PrependColumnCommandTest extends AbstractScenarioGridCommandTest {
     public void execute() {
         scenarioSimulationContextLocal.getStatus().setColumnId(COLUMN_ID);
         scenarioSimulationContextLocal.getStatus().setColumnGroup(COLUMN_GROUP);
-        command.execute(scenarioSimulationContextLocal);
-        verify(command, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+        commandSpy.execute(scenarioSimulationContextLocal);
+        verify(commandSpy, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactoryTest), eq(scenarioCellTextAreaSingletonDOMElementFactoryTest), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexLeftOfGroup(eq(COLUMN_GROUP));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(FIRST_INDEX_LEFT), eq(gridColumnMock));
     }

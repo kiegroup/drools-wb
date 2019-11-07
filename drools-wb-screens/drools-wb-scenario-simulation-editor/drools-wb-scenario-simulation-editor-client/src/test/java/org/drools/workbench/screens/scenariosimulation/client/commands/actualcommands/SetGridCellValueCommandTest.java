@@ -38,7 +38,7 @@ public class SetGridCellValueCommandTest extends AbstractScenarioGridCommandTest
     @Before
     public void setup() {
         super.setup();
-        command = spy(new SetGridCellValueCommand(GridWidget.SIMULATION));
+        commandSpy = spy(new SetGridCellValueCommand(GridWidget.SIMULATION));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class SetGridCellValueCommandTest extends AbstractScenarioGridCommandTest
         scenarioSimulationContextLocal.getStatus().setRowIndex(ROW_INDEX);
         scenarioSimulationContextLocal.getStatus().setColumnIndex(COLUMN_INDEX);
         scenarioSimulationContextLocal.getStatus().setGridCellValue(MULTIPART_VALUE);
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).setCellValue(eq(ROW_INDEX), eq(COLUMN_INDEX), isA(ScenarioGridCellValue.class));
         verify(scenarioGridModelMock, times(1)).resetError(eq(ROW_INDEX), eq(COLUMN_INDEX));
     }

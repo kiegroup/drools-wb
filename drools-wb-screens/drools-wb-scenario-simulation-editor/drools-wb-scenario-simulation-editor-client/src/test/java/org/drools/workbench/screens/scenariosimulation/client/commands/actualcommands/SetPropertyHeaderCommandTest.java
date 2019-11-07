@@ -39,7 +39,7 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     @Before
     public void setup() {
         super.setup();
-        command = spy(new SetPropertyHeaderCommand(GridWidget.SIMULATION) {
+        commandSpy = spy(new SetPropertyHeaderCommand(GridWidget.SIMULATION) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,
@@ -52,11 +52,11 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
 
     @Test
     public void executeIfSelected() {
-        ((SetPropertyHeaderCommand) command).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
-        verify((SetPropertyHeaderCommand) command, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal),
-                                                                               eq(gridColumnMock),
-                                                                               eq(MULTIPART_VALUE_ELEMENTS),
-                                                                               eq(VALUE_CLASS_NAME));
+        ((SetPropertyHeaderCommand) commandSpy).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        verify((SetPropertyHeaderCommand) commandSpy, times(1)).setPropertyHeader(eq(scenarioSimulationContextLocal),
+                                                                                  eq(gridColumnMock),
+                                                                                  eq(MULTIPART_VALUE_ELEMENTS),
+                                                                                  eq(VALUE_CLASS_NAME));
     }
 
     @Test

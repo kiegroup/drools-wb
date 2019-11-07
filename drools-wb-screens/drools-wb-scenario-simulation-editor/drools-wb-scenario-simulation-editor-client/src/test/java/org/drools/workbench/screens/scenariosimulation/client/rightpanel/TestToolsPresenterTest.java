@@ -256,6 +256,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void updateSimpleJavaTypeListSeparatorNotEmpty() {
+        testToolsPresenterSpy.gridWidget = GridWidget.SIMULATION;
         when(simpleJavaTypeListContainerMock.getChildCount()).thenReturn(2);
         testToolsPresenterSpy.updateSimpleJavaTypeListSeparator();
         verify(simpleJavaTypeListContainerMock, times(1)).getChildCount();

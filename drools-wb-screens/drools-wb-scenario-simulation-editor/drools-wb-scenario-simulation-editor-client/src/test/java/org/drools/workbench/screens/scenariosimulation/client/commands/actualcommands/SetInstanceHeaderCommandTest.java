@@ -56,7 +56,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioGridCommandTes
         super.setup();
         when(mockGridColumns.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
         when(scenarioGridModelMock.getColumns()).thenReturn(mockGridColumns);
-        command = spy(new SetInstanceHeaderCommand(GridWidget.SIMULATION) {
+        commandSpy = spy(new SetInstanceHeaderCommand(GridWidget.SIMULATION) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup, FactMappingType factMappingType, ScenarioHeaderTextBoxSingletonDOMElementFactory factoryHeader, ScenarioCellTextAreaSingletonDOMElementFactory factoryCell, String placeHolder) {
@@ -74,8 +74,8 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioGridCommandTes
     @Test
     public void executeNoColumn() {
         gridColumnMock = null;
-        command.execute(scenarioSimulationContextLocal);
-        verify((SetInstanceHeaderCommand) command, never()).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
+        commandSpy.execute(scenarioSimulationContextLocal);
+        verify((SetInstanceHeaderCommand) commandSpy, never()).executeIfSelectedColumn(scenarioSimulationContextLocal, gridColumnMock);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioGridCommandTes
         scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.getStatus().setClassName(VALUE_CLASS_NAME);
         settingsLocal.setType(ScenarioSimulationModel.Type.DMN);
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(gridColumnMock, times(1)).setEditableHeaders(eq(false));
         verify(gridColumnMock, atLeastOnce()).getInformationHeaderMetaData();
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE_CLASS_NAME));
@@ -97,7 +97,7 @@ public class SetInstanceHeaderCommandTest extends AbstractScenarioGridCommandTes
         scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.getStatus().setClassName(VALUE_CLASS_NAME);
         settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(gridColumnMock, times(1)).setEditableHeaders(eq(true));
         verify(gridColumnMock, atLeastOnce()).getInformationHeaderMetaData();
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(VALUE_CLASS_NAME));

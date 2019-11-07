@@ -34,12 +34,12 @@ public class AppendRowCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new AppendRowCommand(GridWidget.SIMULATION));
+        commandSpy = spy(new AppendRowCommand(GridWidget.SIMULATION));
     }
 
     @Test
     public void execute() {
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).appendRow(isA(ScenarioGridRow.class));
     }
 }

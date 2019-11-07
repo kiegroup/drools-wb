@@ -35,12 +35,12 @@ public class PrependRowCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new PrependRowCommand(GridWidget.SIMULATION));
+        commandSpy = spy(new PrependRowCommand(GridWidget.SIMULATION));
     }
 
     @Test
     public void execute() {
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).insertRow(eq(0), isA(ScenarioGridRow.class));
     }
 }

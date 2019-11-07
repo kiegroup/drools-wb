@@ -36,13 +36,13 @@ public class InsertRowCommandTest extends AbstractScenarioGridCommandTest {
     @Before
     public void setup() {
         super.setup();
-        command = spy(new InsertRowCommand(GridWidget.SIMULATION));
+        commandSpy = spy(new InsertRowCommand(GridWidget.SIMULATION));
     }
 
     @Test
     public void execute() {
         scenarioSimulationContextLocal.getStatus().setRowIndex(ROW_INDEX);
-        command.execute(scenarioSimulationContextLocal);
+        commandSpy.execute(scenarioSimulationContextLocal);
         verify(scenarioGridModelMock, times(1)).insertRow(eq(ROW_INDEX), isA(ScenarioGridRow.class));
     }
 }
