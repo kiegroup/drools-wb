@@ -244,7 +244,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 showInstances();
                 break;
             default:
-                // noop
+                throw new IllegalArgumentException("Illegal GridWidget " + gridWidget);
         }
     }
 

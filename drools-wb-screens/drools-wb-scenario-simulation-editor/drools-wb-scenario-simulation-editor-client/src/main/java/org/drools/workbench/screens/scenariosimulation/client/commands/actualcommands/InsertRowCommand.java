@@ -34,6 +34,6 @@ public class InsertRowCommand extends AbstractScenarioGridCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        context.getSelectedScenarioGridModel().insertRow(context.getStatus().getRowIndex(), new ScenarioGridRow());
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).insertRow(context.getStatus().getRowIndex(), new ScenarioGridRow());
     }
 }

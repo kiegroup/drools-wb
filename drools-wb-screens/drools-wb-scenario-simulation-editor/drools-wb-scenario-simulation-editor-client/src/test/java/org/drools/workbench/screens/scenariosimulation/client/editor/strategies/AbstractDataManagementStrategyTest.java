@@ -53,7 +53,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
@@ -141,7 +140,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
     public void storeDataSimulation() {
         ScenarioSimulationContext scenarioSimulationContextSpy = spy(scenarioSimulationContextLocal);
         AbstractScesimGridModel abstractScesimGridModelMock = mock(AbstractScesimGridModel.class);
-        when(scenarioSimulationContextSpy.getSelectedScenarioGridModel()).thenReturn(abstractScesimGridModelMock);
+        doReturn(abstractScesimGridModelMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.SIMULATION);
         final FactModelTuple factModelTuple = getFactTuple();
         abstractDataManagementStrategySpy.storeData(factModelTuple, testToolsPresenterMock, scenarioSimulationContextSpy, GridWidget.SIMULATION);
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
@@ -159,7 +158,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
     public void storeDataBackground() {
         ScenarioSimulationContext scenarioSimulationContextSpy = spy(scenarioSimulationContextLocal);
         AbstractScesimGridModel abstractScesimGridModelMock = mock(AbstractScesimGridModel.class);
-        when(scenarioSimulationContextSpy.getSelectedScenarioGridModel()).thenReturn(abstractScesimGridModelMock);
+        doReturn(abstractScesimGridModelMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.BACKGROUND);
         final FactModelTuple factModelTuple = getFactTuple();
         abstractDataManagementStrategySpy.storeData(factModelTuple, testToolsPresenterMock, scenarioSimulationContextSpy, GridWidget.BACKGROUND);
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));

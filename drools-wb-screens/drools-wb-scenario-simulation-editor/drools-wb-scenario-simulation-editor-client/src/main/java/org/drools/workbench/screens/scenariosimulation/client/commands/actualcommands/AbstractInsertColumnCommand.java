@@ -35,7 +35,7 @@ public abstract class AbstractInsertColumnCommand extends AbstractScenarioGridCo
 
     public void commonInsertColumnCommand(ScenarioSimulationContext context, ScenarioSimulationContext.Status status, int index) {
         FactMappingType factMappingType = FactMappingType.valueOf(status.getColumnGroup().toUpperCase());
-        Map.Entry<String, String> validPlaceholders = context.getSelectedScenarioGridModel().getValidPlaceholders();
+        Map.Entry<String, String> validPlaceholders = context.getAbstractScesimGridModelByGridWidget(gridWidget).getValidPlaceholders();
         String instanceTitle = validPlaceholders.getKey();
         String propertyTitle = validPlaceholders.getValue();
         final ScenarioGridColumn scenarioGridColumnLocal = getScenarioGridColumnLocal(instanceTitle,
@@ -43,9 +43,9 @@ public abstract class AbstractInsertColumnCommand extends AbstractScenarioGridCo
                                                                                       status.getColumnId(),
                                                                                       status.getColumnGroup(),
                                                                                       factMappingType,
-                                                                                      context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
-                                                                                      context.getScenarioCellTextAreaSingletonDOMElementFactory(),
+                                                                                      context.getScenarioHeaderTextBoxSingletonDOMElementFactory(gridWidget),
+                                                                                      context.getScenarioCellTextAreaSingletonDOMElementFactory(gridWidget),
                                                                                       ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
-        context.getSelectedScenarioGridModel().insertColumn(index, scenarioGridColumnLocal);
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).insertColumn(index, scenarioGridColumnLocal);
     }
 }

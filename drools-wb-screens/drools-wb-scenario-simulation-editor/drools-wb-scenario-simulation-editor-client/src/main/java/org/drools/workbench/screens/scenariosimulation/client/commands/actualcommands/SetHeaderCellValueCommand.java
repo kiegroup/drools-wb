@@ -54,13 +54,13 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
         } else if (isPropertyHeader) {
             validatePropertyHeader(context, headerCellValue, status.getColumnIndex());
         }
-        context.getSelectedScenarioGridModel().updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
     }
 
     protected void validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
         List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean isADataType = !headerCellValue.endsWith(".") && instanceNameElements.size() == 1 && context.getDataObjectFieldsMap().containsKey(instanceNameElements.get(0));
-        context.getSelectedScenarioGridModel().validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
     protected void validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
@@ -69,7 +69,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();
         final FactModelTree factModelTree = context.getDataObjectFieldsMap().get(className);
         boolean isPropertyType = !headerCellValue.endsWith(".") && factModelTree != null && recursivelyFindIsPropertyType(context, factModelTree, propertyNameElements);
-        context.getSelectedScenarioGridModel().validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).validatePropertyHeaderUpdate(headerCellValue, columnIndex, isPropertyType);
     }
 
     protected boolean recursivelyFindIsPropertyType(ScenarioSimulationContext context, FactModelTree factModelTree, List<String> propertyNameElements) {

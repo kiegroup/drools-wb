@@ -132,7 +132,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
                           final ScenarioSimulationContext context,
                           final GridWidget gridWidget) {
         // Instantiate a map of already assigned properties
-        final Map<String, List<List<String>>> propertiesToHide = getPropertiesToHide(context.getSelectedScenarioGridModel());
+        final Map<String, List<List<String>>> propertiesToHide = getPropertiesToHide(context.getAbstractScesimGridModelByGridWidget(gridWidget));
         final SortedMap<String, FactModelTree> visibleFacts = factModelTuple.getVisibleFacts();
         final Map<Boolean, List<Map.Entry<String, FactModelTree>>> partitionBy = visibleFacts.entrySet().stream()
                 .collect(Collectors.partitioningBy(stringFactModelTreeEntry -> stringFactModelTreeEntry.getValue().isSimple()));
@@ -161,7 +161,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
             context.setDataObjectsInstancesName(dataObjectsInstancesName);
             Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleDataObjects.keySet());
             simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
-            context.getSelectedScenarioGridModelByGridWidget(gridWidget).setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
+            context.getAbstractScesimGridModelByGridWidget(gridWidget).setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
         } else {
             testToolsPresenter.clearInstanceList();
             testToolsPresenter.clearSimpleJavaInstanceFieldList();

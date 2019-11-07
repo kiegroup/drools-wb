@@ -34,6 +34,6 @@ public class PrependRowCommand extends AbstractScenarioGridCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        context.getSelectedScenarioGridModel().insertRow(0, new ScenarioGridRow());
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).insertRow(0, new ScenarioGridRow());
     }
 }

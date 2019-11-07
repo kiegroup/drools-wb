@@ -359,7 +359,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             scenarioByIndex.addOrUpdateMappingValue(factIdentifier, expressionIdentifier, cellValue);
         } catch (Exception e) {
             toReturn = super.deleteCell(rowIndex, columnIndex);
-            eventBus.fireEvent(new ScenarioGridReloadEvent());
+            eventBus.fireEvent(new ScenarioGridReloadEvent(getGridWidget()));
         }
         return toReturn;
     }
@@ -912,7 +912,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                     .forEach(currentIndex -> simulationDescriptor.getFactMappingByIndex(currentIndex).setFactAlias(createdFactMapping.getFactAlias()));
         } catch (Exception e) {
             eventBus.fireEvent(new ScenarioNotificationEvent("Error during column creation: " + e.getMessage(), NotificationEvent.NotificationType.ERROR));
-            eventBus.fireEvent(new ScenarioGridReloadEvent());
+            eventBus.fireEvent(new ScenarioGridReloadEvent(getGridWidget()));
             return;
         }
 

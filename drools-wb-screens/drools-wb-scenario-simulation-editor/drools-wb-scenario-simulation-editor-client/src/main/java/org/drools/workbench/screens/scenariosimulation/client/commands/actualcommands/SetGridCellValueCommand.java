@@ -44,10 +44,10 @@ public class SetGridCellValueCommand extends AbstractScenarioGridCommand {
         int columnIndex = status.getColumnIndex();
         String className = simulationDescriptor.getFactMappingByIndex(columnIndex).getClassName();
         String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(className);
-        context.getSelectedScenarioGridModel().setCellValue(status.getRowIndex(),
-                                                            columnIndex,
-                                                            new ScenarioGridCellValue(status.getGridCellValue(),
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).setCellValue(status.getRowIndex(),
+                                                                                columnIndex,
+                                                                                new ScenarioGridCellValue(status.getGridCellValue(),
                                                                   editableCellPlaceholder));
-        context.getSelectedScenarioGridModel().resetError(status.getRowIndex(), columnIndex);
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).resetError(status.getRowIndex(), columnIndex);
     }
 }

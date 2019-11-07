@@ -242,7 +242,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         ErrorCallback<Object> errorCallBack = mock(ErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onImport(FILE_CONTENT, remoteCallback, errorCallBack, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallBack));
-        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENT), eq(simulationMock));
+        verify(importExportServiceMock, times(1)).importScesimModel(eq(ImportExportType.CSV), eq(FILE_CONTENT), eq(simulationMock));
     }
 
     @Test
@@ -251,7 +251,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onExportToCsv(remoteCallback, errorCallback, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
-        verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), eq(simulationMock));
+        verify(importExportServiceMock, times(1)).exportScesimModel(eq(ImportExportType.CSV), eq(simulationMock));
     }
 
     @Test

@@ -347,10 +347,17 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     }
 
     @Test
-    public void onScenarioGridReloadEvent() {
-        ScenarioGridReloadEvent event = new ScenarioGridReloadEvent();
+    public void onScenarioGridReloadEventSIMULATION() {
+        ScenarioGridReloadEvent event = new ScenarioGridReloadEvent(GridWidget.SIMULATION);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioGridPanelMock, times(1)).onResize();
+    }
+
+    @Test
+    public void onScenarioGridReloadEventBACKGROUND() {
+        ScenarioGridReloadEvent event = new ScenarioGridReloadEvent(GridWidget.BACKGROUND);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(backgroundGridPanelMock, times(1)).onResize();
     }
 
     @Test

@@ -49,7 +49,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
     @Override
     protected void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn) {
-        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> selectedScenarioGridModel = context.getSelectedScenarioGridModel();
+        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> selectedScenarioGridModel = context.getAbstractScesimGridModelByGridWidget(gridWidget);
         /* Generating the new instance alias with following schema: <original instance name> + '_copy_' + <number of existing instances> */
         int instancesCount = selectedScenarioGridModel.getInstancesCount(selectedColumn.getFactIdentifier().getClassName());
         String alias = selectedColumn.getInformationHeaderMetaData().getTitle().split(COPY_LABEL)[0] + COPY_LABEL + instancesCount;

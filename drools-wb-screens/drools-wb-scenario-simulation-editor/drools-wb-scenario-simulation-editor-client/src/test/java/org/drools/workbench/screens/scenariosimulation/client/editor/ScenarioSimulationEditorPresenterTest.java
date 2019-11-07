@@ -427,13 +427,13 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setItemMenuForMainGridEnabled() {
-        presenterSpy.setItemMenuForMainGridEnabled(false);
+        presenterSpy.setItemMenuEnabled(false);
         verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
         verify(importMenuItemMock, times(1)).setEnabled(eq(false));
         verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(false));
         verify(downloadMenuItemMock, times(1)).setEnabled(eq(false));
         //
-        presenterSpy.setItemMenuForMainGridEnabled(true);
+        presenterSpy.setItemMenuEnabled(true);
         verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(true));
         verify(importMenuItemMock, times(1)).setEnabled(eq(true));
         verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(true));
@@ -657,7 +657,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void onEditTabSelected() {
         presenterSpy.onEditTabSelected();
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
-        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(true));
+        verify(presenterSpy, times(1)).setItemMenuEnabled(eq(true));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).select();
         verify(backgroundGridWidgetSpy, times(1)).deselect();
@@ -669,14 +669,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
-        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
 
     @Test
     public void onOverviewSelected() {
         presenterSpy.onOverviewSelected();
-        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
@@ -686,7 +686,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onImportsTabSelected() {
         presenterSpy.onImportsTabSelected();
-        verify(presenterSpy, times(1)).setItemMenuForMainGridEnabled(eq(false));
+        verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(scenarioGridWidgetSpy, times(1)).deselect();

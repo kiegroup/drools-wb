@@ -280,8 +280,7 @@ public class ScenarioSimulationEditorPresenter {
         redoMenuItem.setEnabled(enabled);
     }
 
-    public void setItemMenuForMainGridEnabled(boolean enabled) {
-        runScenarioMenuItem.setEnabled(enabled);
+    public void setItemMenuEnabled(boolean enabled) {
         importMenuItem.setEnabled(enabled);
         exportToCSVMenuItem.setEnabled(enabled);
         if (downloadMenuItem != null) {
@@ -416,7 +415,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onEditTabSelected() {
-        setItemMenuForMainGridEnabled(true);
+        setItemMenuEnabled(true);
+        runScenarioMenuItem.setEnabled(true);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.select();
         scenarioBackgroundGridWidget.deselect();
@@ -424,7 +424,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onBackgroundTabSelected() {
-        setItemMenuForMainGridEnabled(false);
+        setItemMenuEnabled(true);
+        runScenarioMenuItem.setEnabled(false);
         scenarioBackgroundGridWidget.clearSelections();
         scenarioBackgroundGridWidget.select();
         scenarioMainGridWidget.deselect();
@@ -432,7 +433,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onOverviewSelected() {
-        setItemMenuForMainGridEnabled(false);
+        setItemMenuEnabled(false);
+        runScenarioMenuItem.setEnabled(false);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.deselect();
         scenarioBackgroundGridWidget.clearSelections();
@@ -440,7 +442,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onImportsTabSelected() {
-        setItemMenuForMainGridEnabled(false);
+        setItemMenuEnabled(false);
+        runScenarioMenuItem.setEnabled(false);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.deselect();
         scenarioBackgroundGridWidget.clearSelections();
@@ -469,7 +472,14 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected void onExportToCsv() {
-        scenarioSimulationEditorWrapper.onExportToCsv(getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view), context.getStatus().getSimulation());
+        context.getSelectedGridWidget().ifPresent(gridWidget ->
+                                                          scenarioSimulationEditorWrapper
+                                                                  .onExportToCsv(getExportCallBack(),
+                                                                                 new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
+                                                                                 context.getAbstractScesimModelByGridWidget(gridWidget)));
+
+
+
     }
 
     protected RemoteCallback<Object> getExportCallBack() {

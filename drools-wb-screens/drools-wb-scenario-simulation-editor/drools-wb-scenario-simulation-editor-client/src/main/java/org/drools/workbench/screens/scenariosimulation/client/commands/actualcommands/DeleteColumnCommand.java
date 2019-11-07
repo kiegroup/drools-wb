@@ -44,11 +44,11 @@ public class DeleteColumnCommand extends AbstractScenarioGridCommand {
         final ScenarioSimulationContext.Status status = context.getStatus();
         int newColumnPosition = -1;
         if (status.isAsProperty()) {
-            context.getSelectedScenarioGridModel().deleteColumn(status.getColumnIndex());
+            context.getAbstractScesimGridModelByGridWidget(gridWidget).deleteColumn(status.getColumnIndex());
             newColumnPosition = status.getColumnIndex();
         } else {
-            newColumnPosition = context.getSelectedScenarioGridModel().getInstanceLimits(status.getColumnIndex()).getMinRowIndex();
-            context.getSelectedScenarioGridModel().deleteInstance(status.getColumnIndex());
+            newColumnPosition = context.getAbstractScesimGridModelByGridWidget(gridWidget).getInstanceLimits(status.getColumnIndex()).getMinRowIndex();
+            context.getAbstractScesimGridModelByGridWidget(gridWidget).deleteInstance(status.getColumnIndex());
         }
         createColumnIfEmptyGroup(context, status, newColumnPosition);
         new ReloadTestToolsCommand().execute(context);
@@ -62,19 +62,19 @@ public class DeleteColumnCommand extends AbstractScenarioGridCommand {
      * @param newColumnPosition
      */
     protected void createColumnIfEmptyGroup(ScenarioSimulationContext context, ScenarioSimulationContext.Status status, int newColumnPosition) {
-        if (context.getSelectedScenarioGridModel().getGroupSize(status.getColumnGroup()) < 1) {
+        if (context.getAbstractScesimGridModelByGridWidget(gridWidget).getGroupSize(status.getColumnGroup()) < 1) {
             FactMappingType factMappingType = FactMappingType.valueOf(status.getColumnGroup().toUpperCase());
-            Map.Entry<String, String> validPlaceholders = context.getSelectedScenarioGridModel().getValidPlaceholders();
+            Map.Entry<String, String> validPlaceholders = context.getAbstractScesimGridModelByGridWidget(gridWidget).getValidPlaceholders();
             String instanceTitle = validPlaceholders.getKey();
             String propertyTitle = validPlaceholders.getValue();
-            context.getSelectedScenarioGridModel().insertColumn(newColumnPosition, getScenarioGridColumnLocal(instanceTitle,
-                                                                                                              propertyTitle,
-                                                                                                              String.valueOf(new Date().getTime()),
-                                                                                                              status.getColumnGroup(),
-                                                                                                              factMappingType,
-                                                                                                              context.getScenarioHeaderTextBoxSingletonDOMElementFactory(),
-                                                                                                              context.getScenarioCellTextAreaSingletonDOMElementFactory(),
-                                                                                                              ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
+            context.getAbstractScesimGridModelByGridWidget(gridWidget).insertColumn(newColumnPosition, getScenarioGridColumnLocal(instanceTitle,
+                                                                                                                                  propertyTitle,
+                                                                                                                                  String.valueOf(new Date().getTime()),
+                                                                                                                                  status.getColumnGroup(),
+                                                                                                                                  factMappingType,
+                                                                                                                                  context.getScenarioHeaderTextBoxSingletonDOMElementFactory(gridWidget),
+                                                                                                                                  context.getScenarioCellTextAreaSingletonDOMElementFactory(gridWidget),
+                                                                                                                                  ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         }
     }
 }

@@ -69,7 +69,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
         if (restorableStatus == null) {
             String message = this.getClass().getSimpleName() + "restorableStatus status is null";
-            throw new UnsupportedOperationException(message);
+            throw new IllegalStateException(message);
         }
         return setCurrentContext(context);
     }
@@ -77,7 +77,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
     public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext context) {
         if (restorableStatus == null) {
             String message = this.getClass().getSimpleName() + "restorableStatus status is null";
-            throw new UnsupportedOperationException(message);
+            throw new IllegalStateException(message);
         }
         return setCurrentContext(context);
     }
@@ -176,7 +176,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
 
-        return context.getSelectedScenarioGridModel().getColumns().stream()
+        return context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().stream()
                 .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))
                 .findFirst()
                 .map(column -> ((ScenarioGridColumn) column).getFactIdentifier());

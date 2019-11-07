@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.kie.workbench.common.command.client.AbstractCommand;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
@@ -68,8 +69,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
 
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
-        context.getSelectedScenarioGridPanel().onResize();
-        context.getSelectedScenarioGridPanel().select();
+        context.getSelectedScenarioGridPanel().ifPresent(ScenarioGridPanel::onResize);
+        context.getSelectedScenarioGridPanel().ifPresent(ScenarioGridPanel::select);
         return CommandResultBuilder.SUCCESS;
     }
 }
