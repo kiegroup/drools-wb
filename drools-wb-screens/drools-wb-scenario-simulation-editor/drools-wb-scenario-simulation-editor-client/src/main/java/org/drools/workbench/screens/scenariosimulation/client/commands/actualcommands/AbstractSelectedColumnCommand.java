@@ -78,7 +78,6 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
      */
     protected ScenarioGridColumn insertNewColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, int columnPosition, boolean cloneInstance) {
         final ScenarioHeaderMetaData selectedInformationHeaderMetaData = selectedColumn.getInformationHeaderMetaData();
-        final FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
         String columnGroup = selectedInformationHeaderMetaData.getColumnGroup();
         String originalInstanceTitle = selectedInformationHeaderMetaData.getTitle();
         final FactMappingType factMappingType = FactMappingType.valueOf(columnGroup.toUpperCase());
