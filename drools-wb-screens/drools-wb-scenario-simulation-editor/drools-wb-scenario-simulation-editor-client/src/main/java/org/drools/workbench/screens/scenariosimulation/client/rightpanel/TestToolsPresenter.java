@@ -31,7 +31,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
-import org.drools.workbench.screens.scenariosimulation.client.events.SetInstanceHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -360,24 +359,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     public void setSelectedElement(ListGroupItemView selected) {
         selectedListGroupItemView = selected;
         selectedFieldItemView = null;
-        if (hasSelectedFactDisableAddButton(selected)) {
+        if (filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned())) {
             view.disableAddButton();
         } else {
             view.enableAddButton();
         }
-    }
-
-    /**
-     * It determines if a selected Fact can be inserted or not in the model.
-     * It can't be inserted if the Fact class is Simple type and already assigned to related selected column
-     * OR filterTerm(..) return a TRUE, which means selected Fact is already Assigned. Check with filterTerm is required
-     * to handle facts selected through SearchBox
-     * @param selected
-     * @return
-     */
-    protected boolean hasSelectedFactDisableAddButton(ListGroupItemView selected) {
-        return selected.isInstanceAssigned() && isSimple(selected.getFactName()) ||
-                filterTerm(selected.getFactName(), listGroupItemPresenter.getFilterTerm(), selected.isInstanceAssigned());
     }
 
     @Override
@@ -398,16 +384,11 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                if (isSimple(className)) {
-                    getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                            new SetInstanceHeaderEvent(fullPackage, className)));
-                } else {
-                    getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
+                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
                             new SetPropertyHeaderEvent(fullPackage,
                                                        Arrays.asList(className),
                                                        fullPackage + "." + className,
                                                        FactMappingValueType.EXPRESSION)));
-                }
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
                 String value = isSimple(baseClass) ?

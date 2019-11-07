@@ -1079,9 +1079,10 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                                                                ScenarioSimulationModel.Type modelType,
                                                                FactMappingValueType valueType) {
         boolean isRuleScenario = Objects.equals(ScenarioSimulationModel.Type.RULE, modelType);
-        if (ScenarioSimulationSharedUtils.isCollection(className)) {
+        if (ScenarioSimulationSharedUtils.isCollection(className) && Objects.equals(FactMappingValueType.NOT_EXPRESSION, valueType)) {
             return collectionEditorSingletonDOMElementFactory;
-        } if (Objects.equals(FactMappingValueType.EXPRESSION, valueType) && isRuleScenario) {
+        }
+        if (Objects.equals(FactMappingValueType.EXPRESSION, valueType) && isRuleScenario) {
             return scenarioExpressionCellTextAreaSingletonDOMElementFactory;
         }
         return scenarioCellTextAreaSingletonDOMElementFactory;
