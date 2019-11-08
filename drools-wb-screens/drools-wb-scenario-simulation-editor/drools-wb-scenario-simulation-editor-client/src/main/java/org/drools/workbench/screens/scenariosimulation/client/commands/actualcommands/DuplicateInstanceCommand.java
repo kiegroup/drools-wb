@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,6 @@ import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
@@ -55,14 +53,12 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                 originalColumn -> {
                     ScenarioGridColumn createdColumn = insertNewColumn(context, originalColumn, nextColumnPosition.getAndIncrement(), false);
                     if (originalColumn.isInstanceAssigned()) {
-                        int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
-                        final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().orElseThrow(IllegalStateException::new).getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
-                        factMappingValueType = originalFactMapping.getFactMappingValueType();
                         setInstanceHeader(context, createdColumn, alias, originalColumn.getFactIdentifier().getClassName());
 
-                        /* Assigning the property, if the original column has a <code>FactMappingValueType.RAW</code> property
-                         * assigned. If is an expression, it's managed in the previous setInstanceHeader method. */
-                        if (originalColumn.isPropertyAssigned() && Objects.equals(FactMappingValueType.NOT_EXPRESSION, factMappingValueType)) {
+                        if (originalColumn.isPropertyAssigned()) {
+                            int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
+                            final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
+                            factMappingValueType = originalFactMapping.getFactMappingValueType();
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);
