@@ -480,7 +480,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME), eq(FILTER_TERM), eq(false));
         verify(testToolsViewMock, times(1)).disableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
@@ -491,63 +491,10 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME_2);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME_2), eq(FILTER_TERM), eq(false));
         verify(testToolsViewMock, times(1)).enableAddButton();
         assertNull(testToolsPresenter.selectedFieldItemView);
         assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
-    }
-
-    @Test
-    public void setSelectedElement_SimpleTypeAssigned() {
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(String.class.getSimpleName());
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
-        testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
-        verify(testToolsViewMock, times(1)).disableAddButton();
-        assertNull(testToolsPresenter.selectedFieldItemView);
-        assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
-    }
-
-    @Test
-    public void setSelectedElement_SimpleTypeNotAssigned() {
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(String.class.getSimpleName());
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(false);
-        testToolsPresenter.setSelectedElement(selectedListGroupItemViewMock);
-        verify(testToolsPresenter, times(1)).hasSelectedFactDisableAddButton(eq(selectedListGroupItemViewMock));
-        verify(testToolsViewMock, times(1)).enableAddButton();
-        assertNull(testToolsPresenter.selectedFieldItemView);
-        assertEquals(selectedListGroupItemViewMock, testToolsPresenter.selectedListGroupItemView);
-    }
-
-    @Test
-    public void hasSelectedFactDisableAddButton() {
-        // Case where it's selected an assigned instance column and it's selected a Simple class face (e.g. String)
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(String.class.getSimpleName());
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
-        assertTrue(testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock));
-        // Case where it's selected an empty column and it's selected a Simple class face (e.g. String)
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(String.class.getSimpleName());
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(false);
-        assertFalse(testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock));
-        // Case where it's selected an empty column and it's selected an already assigned fact
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME);
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(false);
-        assertTrue(testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock));
-        //Case where it's selected an assigned instance column and it's selected the same Fact (i.e. an expression)
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME);
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
-        assertFalse(testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock));
-        //Case where it's selected an assigned instance column and it's selected the another Fact
-        when(selectedListGroupItemViewMock.getFactName()).thenReturn(FACT_NAME_2);
-        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
-        when(selectedListGroupItemViewMock.isInstanceAssigned()).thenReturn(true);
-        assertTrue(testToolsPresenter.hasSelectedFactDisableAddButton(selectedListGroupItemViewMock));
     }
 
     @Test
@@ -557,7 +504,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
         testToolsPresenter.setSelectedElement(selectedFieldItemViewMock);
         verify(listGroupItemPresenterMock, times(1)).isInstanceAssigned(eq(FACT_NAME));
-        verify(testToolsPresenter, times(1)).filterTerm(FACT_NAME, FILTER_TERM, true);
+        verify(testToolsPresenter, times(1)).filterTerm(eq(FACT_NAME), eq(FILTER_TERM), eq(true));
         verify(testToolsViewMock, times(1)).enableAddButton();
         assertNull(testToolsPresenter.selectedListGroupItemView);
         assertEquals(selectedFieldItemViewMock, testToolsPresenter.selectedFieldItemView);
@@ -631,7 +578,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
-    public void onModifyColumn_ListGroupSelected_NotSimpleType() {
+    public void onModifyColumn_ListGroupSelected() {
         testToolsPresenter.editingColumnEnabled = true;
         testToolsPresenter.selectedListGroupItemView = selectedListGroupItemViewMock;
         testToolsPresenter.selectedFieldItemView = null;
@@ -642,21 +589,6 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         verify(selectedFieldItemViewMock, never()).getClassName();
         verify(eventBusMock, times(1)).fireEvent(isA(SetPropertyHeaderEvent.class));
         verify(eventBusMock, never()).fireEvent(isA(SetInstanceHeaderEvent.class));
-    }
-
-    @Test
-    public void onModifyColumn_ListGroupSelected_SimpleType() {
-        testToolsPresenter.editingColumnEnabled = true;
-        testToolsPresenter.selectedListGroupItemView = selectedListGroupItemViewMock;
-        when(selectedListGroupItemViewMock.getActualClassName()).thenReturn(String.class.getSimpleName());
-        testToolsPresenter.selectedFieldItemView = null;
-        testToolsPresenter.onModifyColumn();
-        verify(selectedListGroupItemViewMock, times(1)).getActualClassName();
-        verify(selectedFieldItemViewMock, never()).getFullPath();
-        verify(selectedFieldItemViewMock, never()).getFieldName();
-        verify(selectedFieldItemViewMock, never()).getClassName();
-        verify(eventBusMock, never()).fireEvent(isA(SetPropertyHeaderEvent.class));
-        verify(eventBusMock, times(1)).fireEvent(isA(SetInstanceHeaderEvent.class));
     }
 
     @Test
