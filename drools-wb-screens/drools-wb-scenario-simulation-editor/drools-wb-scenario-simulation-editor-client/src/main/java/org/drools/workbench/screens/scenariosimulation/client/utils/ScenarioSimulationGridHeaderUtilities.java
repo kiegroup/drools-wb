@@ -166,7 +166,8 @@ public class ScenarioSimulationGridHeaderUtilities {
             if (FactMappingValueType.EXPRESSION.equals(factMapping.getFactMappingValueType())) {
                 return Arrays.asList(ConstantHolder.EXPRESSION);
             }
-            if (abstractScesimGridModel.isSimpleType(factMapping.getFactAlias())) {
+            if (abstractScesimGridModel.isSimpleType(factMapping.getFactAlias()) &&
+                    FactMappingValueType.NOT_EXPRESSION.equals(factMapping.getFactMappingValueType())) {
                 return Arrays.asList(ConstantHolder.VALUE);
             }
             return Collections.unmodifiableList(simulation.getScesimModelDescriptor().getFactMappingByIndex(columnIndex).getExpressionElementsWithoutClass()

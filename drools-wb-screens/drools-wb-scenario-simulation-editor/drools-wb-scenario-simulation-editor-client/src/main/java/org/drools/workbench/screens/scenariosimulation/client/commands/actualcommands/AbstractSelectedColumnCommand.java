@@ -325,11 +325,11 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
     }
 
     protected String getPropertyHeaderTitle(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        if (Objects.equals(FactMappingValueType.EXPRESSION, factMappingValueType)) {
-            return ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER;
+        /* If propertyNameElements contains only one step, it's managing an Expression or a SimpleClass type */
+        if (propertyNameElements.size() == 1) {
+            return FactMappingValueType.EXPRESSION.equals(factMappingValueType) ? ConstantHolder.EXPRESSION : ConstantHolder.VALUE;
         }
-        String propertyPathPart = propertyNameElements.size() > 1 ?
-                String.join(".", propertyNameElements.subList(1, propertyNameElements.size())) : "value";
+        String propertyPathPart = String.join(".", propertyNameElements.subList(1, propertyNameElements.size()));
         List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factIdentifier);
         // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
