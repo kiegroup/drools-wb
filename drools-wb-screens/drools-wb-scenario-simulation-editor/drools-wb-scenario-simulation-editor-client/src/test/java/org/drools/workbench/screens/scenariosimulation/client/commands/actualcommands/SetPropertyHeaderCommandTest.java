@@ -73,7 +73,7 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
 
     @Test
     public void getPropertyHeaderType_Value() {
-        super.getPropertyHeaderTitle_Expression();
+        super.getPropertyHeaderTitle_Value();
     }
 
     @Test
