@@ -30,7 +30,6 @@ import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
-import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -139,8 +138,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
     @Test
     public void storeDataSimulation() {
         ScenarioSimulationContext scenarioSimulationContextSpy = spy(scenarioSimulationContextLocal);
-        AbstractScesimGridModel abstractScesimGridModelMock = mock(AbstractScesimGridModel.class);
-        doReturn(abstractScesimGridModelMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.SIMULATION);
+        doReturn(simulationMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.SIMULATION);
         final FactModelTuple factModelTuple = getFactTuple();
         abstractDataManagementStrategySpy.storeData(factModelTuple, testToolsPresenterMock, scenarioSimulationContextSpy, GridWidget.SIMULATION);
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
@@ -151,14 +149,13 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
         verify(testToolsPresenterMock, times(1)).hideProperties(isA(Map.class));
         verify(scenarioSimulationContextSpy, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(scenarioSimulationContextSpy, times(1)).setDataObjectsInstancesName(isA(Set.class));
-        verify(abstractScesimGridModelMock, times(1)).setSimpleJavaTypeInstancesName(isA(Set.class));
+        verify(scenarioGridModelMock, times(1)).setSimpleJavaTypeInstancesName(isA(Set.class));
     }
 
     @Test
     public void storeDataBackground() {
         ScenarioSimulationContext scenarioSimulationContextSpy = spy(scenarioSimulationContextLocal);
-        AbstractScesimGridModel abstractScesimGridModelMock = mock(AbstractScesimGridModel.class);
-        doReturn(abstractScesimGridModelMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.BACKGROUND);
+        doReturn(backgroundMock).when(scenarioSimulationContextSpy).getAbstractScesimModelByGridWidget(GridWidget.BACKGROUND);
         final FactModelTuple factModelTuple = getFactTuple();
         abstractDataManagementStrategySpy.storeData(factModelTuple, testToolsPresenterMock, scenarioSimulationContextSpy, GridWidget.BACKGROUND);
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
@@ -169,7 +166,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
         verify(testToolsPresenterMock, times(1)).hideProperties(isA(Map.class));
         verify(scenarioSimulationContextSpy, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(scenarioSimulationContextSpy, never()).setDataObjectsInstancesName(isA(Set.class));
-        verify(abstractScesimGridModelMock, never()).setSimpleJavaTypeInstancesName(isA(Set.class));
+        verify(backgroundGridModelMock, never()).setSimpleJavaTypeInstancesName(isA(Set.class));
     }
 
     @Test

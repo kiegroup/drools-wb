@@ -156,9 +156,35 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
     }
 
     @Test
-    public void commonExecution() {
+    public void commonExecutionSIMULATION() {
+        when(backgroundGridWidgetSpy.isSelected()).thenReturn(false);
+        when(scenarioGridWidgetSpy.isSelected()).thenReturn(true);
         commandSpy.commonExecution(scenarioSimulationContextLocal);
         verify(scenarioGridPanelMock, times(1)).onResize();
         verify(scenarioGridPanelMock, times(1)).select();
+        verify(backgroundGridPanelMock, never()).onResize();
+        verify(backgroundGridPanelMock, never()).select();
+    }
+
+    @Test
+    public void commonExecutionBACKGROUND() {
+        when(backgroundGridWidgetSpy.isSelected()).thenReturn(true);
+        when(scenarioGridWidgetSpy.isSelected()).thenReturn(false);
+        commandSpy.commonExecution(scenarioSimulationContextLocal);
+        verify(backgroundGridPanelMock, times(1)).onResize();
+        verify(backgroundGridPanelMock, times(1)).select();
+        verify(scenarioGridPanelMock, never()).onResize();
+        verify(scenarioGridPanelMock, never()).select();
+    }
+
+    @Test
+    public void commonExecutionNone() {
+        when(backgroundGridWidgetSpy.isSelected()).thenReturn(false);
+        when(scenarioGridWidgetSpy.isSelected()).thenReturn(false);
+        commandSpy.commonExecution(scenarioSimulationContextLocal);
+        verify(scenarioGridPanelMock, never()).onResize();
+        verify(scenarioGridPanelMock, never()).select();
+        verify(backgroundGridPanelMock, never()).onResize();
+        verify(backgroundGridPanelMock, never()).select();
     }
 }

@@ -603,6 +603,7 @@ public class ScenarioSimulationEditorPresenter {
         populateRightDocks(SettingsPresenter.IDENTIFIER);
         scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
         context.getStatus().setSimulation(model.getSimulation());
+        context.getStatus().setBackground(model.getBackground());
         CustomBusyPopup.close();
         // check if structure is valid
         getValidateCommand().execute();
@@ -615,6 +616,7 @@ public class ScenarioSimulationEditorPresenter {
     protected void setTestTools(TestToolsView.Presenter presenter) {
         context.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
+        // TODO {gcardosi} evaluate actually selected grid and - if none - disable testtools presenter
         GridWidget gridWidget = scenarioBackgroundGridWidget.isSelected() ? GridWidget.BACKGROUND : GridWidget.SIMULATION;
         presenter.setGridWidget(gridWidget);
         dataManagementStrategy.populateTestTools(presenter, context, gridWidget);

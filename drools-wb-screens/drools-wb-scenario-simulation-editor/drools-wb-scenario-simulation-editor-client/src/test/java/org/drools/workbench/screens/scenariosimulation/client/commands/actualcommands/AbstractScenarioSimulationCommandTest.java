@@ -43,7 +43,7 @@ public abstract class AbstractScenarioSimulationCommandTest extends AbstractScen
         super.setup();
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test(expected = IllegalStateException.class)
     public void undo() {
         command.undo(scenarioSimulationContextLocal);
     }

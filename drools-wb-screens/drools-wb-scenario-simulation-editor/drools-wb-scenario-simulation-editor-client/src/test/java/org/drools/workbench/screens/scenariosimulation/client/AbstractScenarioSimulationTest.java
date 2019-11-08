@@ -348,6 +348,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(backgroundGridMock.getLayer()).thenReturn(backgroundGridLayerMock);
         when(backgroundGridMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         when(backgroundGridMock.getGridWidget()).thenReturn(GridWidget.BACKGROUND);
+        when(backgroundGridModelMock.getGridWidget()).thenReturn(GridWidget.BACKGROUND);
         when(backgroundGridLayerMock.getScenarioGrid()).thenReturn(backgroundGridMock);
         when(backgroundGridPanelMock.getScenarioGridLayer()).thenReturn(backgroundGridLayerMock);
         when(backgroundGridPanelMock.getScenarioGrid()).thenReturn(backgroundGridMock);
@@ -367,6 +368,9 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
         scenarioSimulationContextLocal.setSettings(settingsLocal);
+        when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+        when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);

@@ -50,7 +50,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     @Override
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
         String message = this.getClass().getSimpleName() + " is not undoable";
-        throw new UnsupportedOperationException(message);
+        throw new IllegalStateException(message);
     }
 
     @Override
