@@ -28,8 +28,10 @@ import java.util.stream.Collectors;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Test;
@@ -301,6 +303,21 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, aliasedPropertyNameElements, factIdentifierMock);
         verify((AbstractSelectedColumnCommand) command, times(2)).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(FULL_PROPERTY_NAME_ELEMENTS), eq(factIdentifierMock));
         assertEquals(EXPECTED_VALUE_STRING, retrieved);
+    }
+
+    protected void getPropertyHeaderTitle_Value() {
+        Optional<String> emptyMatching = Optional.empty();
+        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) command).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
+        String retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
+        assertEquals(ConstantHolder.VALUE, retrieved);
+    }
+
+    protected void getPropertyHeaderTitle_Expression() {
+        Optional<String> emptyMatching = Optional.empty();
+        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) command).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
+        ((AbstractSelectedColumnCommand) command).factMappingValueType = FactMappingValueType.EXPRESSION;
+        String retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
+        assertEquals(ConstantHolder.EXPRESSION, retrieved);
     }
 
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */

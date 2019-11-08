@@ -221,7 +221,6 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
         if (propertyTitle == null) {
             throw new IllegalArgumentException("Property title can not be null");
         }
-
         int columnIndex = context.getSelectedScenarioGridModel().getColumns().indexOf(selectedColumn);
         String instanceAliasName = propertyNameElements.get(0);
         if (selectedColumn.isInstanceAssigned() && !instanceAliasName.equals(selectedColumn.getInformationHeaderMetaData().getTitle())) {
