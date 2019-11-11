@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies;
+package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,17 +26,14 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.uberfire.backend.vfs.Path;
 
@@ -58,9 +55,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
-    @Mock
-    private DMNTypeService dmnTypeServiceMock;
-
     private AbstractDMNDataManagementStrategy abstractDMNDataManagementStrategySpy;
     private AbstractDMNDataManagementStrategy.ResultHolder factModelTreeHolderlocal;
 
@@ -74,7 +68,7 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
     public void setup() {
         super.setup();
         factModelTupleLocal = new FactModelTuple(visibleFactsLocal, hiddenFactsLocal);
-        factModelTreeHolderlocal = new BusinessCentralDMNDataManagementStrategy.ResultHolder();
+        factModelTreeHolderlocal = new AbstractDataManagementStrategy.ResultHolder();
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
         when(dmnTypeServiceMock.retrieveFactModelTuple(any(), anyString())).thenReturn(factModelTupleLocal);
         modelLocal.getSettings().setDmnFilePath(DMN_FILE_PATH);
@@ -146,6 +140,7 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
         doReturn(alreadyAssignedProperties).when(abstractDMNDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         abstractDMNDataManagementStrategySpy.getSuccessCallbackMethod(factModelTupleLocal, testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
         verify(abstractDMNDataManagementStrategySpy, times(1)).getPropertiesToHide(eq(scenarioGridModelMock));
+        verify(abstractDMNDataManagementStrategySpy, times(1)).storeData(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
         assertEquals(factModelTupleLocal, factModelTreeHolderlocal.getFactModelTuple());
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));

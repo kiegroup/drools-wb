@@ -29,7 +29,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 
 public class BackgroundGridModel extends AbstractScesimGridModel<Background, BackgroundData> {
 
-    public BackgroundGridModel() {
+    private BackgroundGridModel() {
     }
 
     public BackgroundGridModel(boolean isMerged) {

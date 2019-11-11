@@ -409,13 +409,27 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     }
 
     @Test
-    public void selectSimulationTab() {
+    public void selectSimulationTabWithoutItem() {
+        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(null);
+        scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
+        verify(simulationTabListItemMock, never()).showTab(eq(false));
+    }
+
+    @Test
+    public void selectSimulationTabWithItem() {
         scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
         verify(simulationTabListItemMock, times(1)).showTab(eq(false));
     }
 
     @Test
-    public void selectBackgroundTab() {
+    public void selectBackgroundTabWithoutItem() {
+        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(null);
+        scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
+        verify(backgroundTabListItemMock, never()).showTab(eq(false));
+    }
+
+    @Test
+    public void selectBackgroundTabWithItem() {
         scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
         verify(backgroundTabListItemMock, times(1)).showTab(eq(false));
     }

@@ -29,7 +29,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 
 public class ScenarioGridModel extends AbstractScesimGridModel<Simulation, Scenario> {
 
-    public ScenarioGridModel() {
+    private ScenarioGridModel() {
     }
 
     public ScenarioGridModel(boolean isMerged) {
