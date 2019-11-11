@@ -77,7 +77,6 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 
@@ -562,7 +561,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
         verify(presenter, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
-//        verify(presenter, times(1)).getSaveCommand();
         verify(presenter, times(1)).setSettings(eq(settingsPresenterMock));
         //
         PlaceRequest coverageReportPlaceRequestMock = mock(PlaceRequest.class);
@@ -710,11 +708,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setSettings() {
-        Command saveCommandMock = mock(Command.class);
-//        when(presenter.getSaveCommand()).thenReturn(saveCommandMock);
         presenter.setSettings(settingsPresenterMock);
         verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
-//        verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
     @Test
