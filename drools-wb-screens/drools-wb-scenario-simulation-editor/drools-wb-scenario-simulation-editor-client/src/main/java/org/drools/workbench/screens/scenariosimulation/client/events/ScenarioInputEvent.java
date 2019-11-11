@@ -33,6 +33,6 @@ public class ScenarioInputEvent extends DomEvent<ScenarioInputHandler> {
 
     @Override
     protected void dispatch(ScenarioInputHandler handler) {
-        handler.onInput(this);
+        handler.onEvent(this);
     }
 }

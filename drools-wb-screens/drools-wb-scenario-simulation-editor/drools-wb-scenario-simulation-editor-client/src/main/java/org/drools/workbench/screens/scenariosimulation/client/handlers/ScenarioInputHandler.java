@@ -20,6 +20,6 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioInp
 
 public interface ScenarioInputHandler extends EventHandler {
 
-    void onInput(ScenarioInputEvent event);
+    void onEvent(ScenarioInputEvent event);
 
 }
