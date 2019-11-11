@@ -121,9 +121,6 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                                                    factMappingValueType,
                                                                    fullClassName));
         context.getSelectedScenarioGridModel().updateColumnInstance(columnIndex, selectedColumn);
-        selectedColumn.setFactory(context.getSelectedScenarioGridModel().getDOMElementFactory(fullClassName,
-                                                                                              context.getSettings().getType(),
-                                                                                              factMappingValueType));
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
         }
@@ -250,10 +247,10 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioSimu
                                                 propertyNameElements,
                                                 propertyClass, context.getStatus().isKeepData(),
                                                 factMappingValueType);
-        if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
+        if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
-            selectedColumn.setFactory(context.getSelectedScenarioGridModel().getDOMElementFactory(className,
+            selectedColumn.setFactory(context.getSelectedScenarioGridModel().getDOMElementFactory(propertyClass,
                                                                                                   context.getSettings().getType(),
                                                                                                   factMappingValueType));
         }
