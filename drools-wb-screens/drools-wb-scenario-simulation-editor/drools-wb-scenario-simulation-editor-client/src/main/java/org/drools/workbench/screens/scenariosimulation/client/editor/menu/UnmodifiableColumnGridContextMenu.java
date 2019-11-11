@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
@@ -62,6 +64,16 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
-        mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        if (Objects.equals(GridWidget.BACKGROUND, gridWidget) && runSingleScenarioElement != null) {
+            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
+            removeMenuItem(runSingleScenarioElement);
+            runSingleScenarioElement = null;
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
+            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
+            if (runSingleScenarioElement == null) {
+                runSingleScenarioElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
+            }
+            mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        }
     }
 }

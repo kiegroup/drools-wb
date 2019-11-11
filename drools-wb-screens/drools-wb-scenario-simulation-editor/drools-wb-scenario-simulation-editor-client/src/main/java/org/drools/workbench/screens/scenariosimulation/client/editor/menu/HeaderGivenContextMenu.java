@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
     private static final String HEADERGIVENCONTEXTMENU_GIVEN = "headergivencontextmenu-given";
-    private static final String HEADERGIVENCONTEXTMENU_SCENARIO = "headergivencontextmenu-scenario";
+    private static final String HEADERGIVENCONTEXTMENU_GRID_TITLE = "headergivencontextmenu-grid-title";
     private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "headergivencontextmenu-insert-column-left";
     private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "headergivencontextmenu-insert-column-right";
     private static final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
@@ -41,7 +41,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
     @Override
     public void initMenu() {
         HEADERCONTEXTMENU_GROUP = HEADERGIVENCONTEXTMENU_GIVEN;
-        HEADERCONTEXTMENU_SCENARIO = HEADERGIVENCONTEXTMENU_SCENARIO;
+        HEADERCONTEXTMENU_GRID_TITLE = HEADERGIVENCONTEXTMENU_GRID_TITLE;
         HEADERCONTEXTMENU_INSERT_COLUMN_LEFT = HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT;
         HEADERCONTEXTMENU_INSERT_COLUMN_RIGHT = HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT;
         HEADERCONTEXTMENU_DELETE_COLUMN = HEADERGIVENCONTEXTMENU_DELETE_COLUMN;

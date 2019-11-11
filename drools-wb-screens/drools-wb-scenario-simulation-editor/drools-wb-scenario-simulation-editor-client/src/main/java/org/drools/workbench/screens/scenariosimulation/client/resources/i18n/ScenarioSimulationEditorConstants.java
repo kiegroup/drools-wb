@@ -156,6 +156,8 @@ public interface ScenarioSimulationEditorConstants
 
     String scenario();
 
+    String background();
+
     String given();
 
     String insertRowAbove();
