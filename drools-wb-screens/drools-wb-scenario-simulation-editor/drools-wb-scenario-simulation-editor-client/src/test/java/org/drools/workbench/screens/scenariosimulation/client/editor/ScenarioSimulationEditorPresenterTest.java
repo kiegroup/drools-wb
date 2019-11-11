@@ -95,7 +95,6 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -244,14 +243,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setSaveEnabledTrue() {
         presenter.setSaveEnabled(true);
         assertTrue(presenter.saveEnabled);
-        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
     }
 
     @Test
     public void setSaveEnabledFalse() {
         presenter.setSaveEnabled(false);
         assertFalse(presenter.saveEnabled);
-        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
     }
 
     @Test
@@ -261,9 +258,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.setSaveEnabled(true);
         presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
         assertTrue(presenter.saveEnabled);
-        assertTrue(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
     }
 
     @Test
@@ -273,9 +267,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.setSaveEnabled(false);
         presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
         assertFalse(presenter.saveEnabled);
-        assertFalse(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).restoreSaveButton();
     }
 
     @Test
@@ -285,9 +276,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
         presenter.setSaveEnabled(true);
         assertTrue(presenter.saveEnabled);
-        assertTrue(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
     }
 
     @Test
@@ -297,8 +285,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenter.populateRightDocks(SettingsPresenter.IDENTIFIER);
         presenter.setSaveEnabled(false);
         assertFalse(presenter.saveEnabled);
-        assertFalse(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
     }
 
     @Test
@@ -576,7 +562,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenter, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
         verify(presenter, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
-        verify(presenter, times(1)).getSaveCommand();
+//        verify(presenter, times(1)).getSaveCommand();
         verify(presenter, times(1)).setSettings(eq(settingsPresenterMock));
         //
         PlaceRequest coverageReportPlaceRequestMock = mock(PlaceRequest.class);
@@ -725,10 +711,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void setSettings() {
         Command saveCommandMock = mock(Command.class);
-        when(presenter.getSaveCommand()).thenReturn(saveCommandMock);
+//        when(presenter.getSaveCommand()).thenReturn(saveCommandMock);
         presenter.setSettings(settingsPresenterMock);
         verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
-        verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
+//        verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
     @Test

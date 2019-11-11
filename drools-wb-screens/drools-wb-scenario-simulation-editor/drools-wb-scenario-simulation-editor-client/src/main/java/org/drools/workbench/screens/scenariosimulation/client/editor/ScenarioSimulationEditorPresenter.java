@@ -64,7 +64,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRun
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -174,7 +173,6 @@ public class ScenarioSimulationEditorPresenter {
 
     public void setSaveEnabled(boolean toSet) {
         saveEnabled = toSet;
-        getSettingsPresenter(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER)).ifPresent(presenter -> presenter.setSaveEnabled(toSet));
     }
 
     public void setPackageName(String packageName) {
@@ -611,12 +609,6 @@ public class ScenarioSimulationEditorPresenter {
     protected void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());
-        if (saveEnabled) {
-            presenter.setSaveCommand(getSaveCommand());
-            presenter.setSaveEnabled(true);
-        } else {
-            presenter.setSaveEnabled(false);
-        }
     }
 
     protected void setCoverageReport(CoverageReportView.Presenter presenter) {
@@ -650,10 +642,6 @@ public class ScenarioSimulationEditorPresenter {
     protected Optional<CoverageReportView.Presenter> getCoverageReportPresenter(PlaceRequest placeRequest) {
         final Optional<CoverageReportView> coverageReportViewMap = getCoverageReportView(placeRequest);
         return coverageReportViewMap.map(CoverageReportView::getPresenter);
-    }
-
-    protected Command getSaveCommand() {
-        return () -> scenarioSimulationEditorWrapper.wrappedSave(ConstantHolder.SAVE);
     }
 
     protected Command getDownloadReportCommand(AuditLog auditLog) {
