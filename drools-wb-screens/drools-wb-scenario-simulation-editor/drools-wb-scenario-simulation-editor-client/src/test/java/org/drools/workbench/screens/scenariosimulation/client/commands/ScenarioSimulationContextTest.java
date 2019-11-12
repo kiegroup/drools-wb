@@ -146,4 +146,27 @@ public class ScenarioSimulationContextTest extends AbstractScenarioSimulationTes
         assertEquals(scenarioSimulationContextLocal.status.background, scenarioSimulationContextLocal.getAbstractScesimModelByGridWidget(GridWidget.BACKGROUND));
     }
 
+    @Test
+    public void getCollectionEditorSingletonDOMElementFactory() {
+        assertEquals(collectionEditorSingletonDOMElementFactoryTest,
+                     scenarioSimulationContextLocal.getCollectionEditorSingletonDOMElementFactory());
+    }
+
+    @Test
+    public void getScenarioCellTextAreaSingletonDOMElementFactory() {
+        assertEquals(scenarioCellTextAreaSingletonDOMElementFactoryTest,
+                     scenarioSimulationContextLocal.getScenarioCellTextAreaSingletonDOMElementFactory());
+    }
+
+    @Test
+    public void getScenarioHeaderTextBoxSingletonDOMElementFactory() {
+        assertEquals(scenarioHeaderTextBoxSingletonDOMElementFactoryTest,
+                     scenarioSimulationContextLocal.getScenarioHeaderTextBoxSingletonDOMElementFactory());
+    }
+
+    @Test
+    public void getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
+        assertEquals(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock,
+                     scenarioSimulationContextLocal.getScenarioExpressionCellTextAreaSingletonDOMElementFactory());
+    }
 }

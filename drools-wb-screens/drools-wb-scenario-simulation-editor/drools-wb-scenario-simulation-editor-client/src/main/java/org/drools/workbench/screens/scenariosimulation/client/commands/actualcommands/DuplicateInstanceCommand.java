@@ -37,7 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
-    public final static String COPY_LABEL = "_copy_";
+    public static final String COPY_LABEL = "_copy_";
 
     public DuplicateInstanceCommand(GridWidget gridWidget) {
         super(gridWidget);
@@ -66,8 +66,8 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
                         if (originalColumn.isPropertyAssigned()) {
                             int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
-                            int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
                             final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
+                            factMappingValueType = originalFactMapping.getFactMappingValueType();
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);
@@ -79,6 +79,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                                               originalColumn.getPropertyHeaderMetaData().getTitle());
 
                             /* It copies the properties values */
+                            int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
                             selectedScenarioGridModel.duplicateColumnValues(originalColumnIndex, createdColumnIndex);
                         }
                     }

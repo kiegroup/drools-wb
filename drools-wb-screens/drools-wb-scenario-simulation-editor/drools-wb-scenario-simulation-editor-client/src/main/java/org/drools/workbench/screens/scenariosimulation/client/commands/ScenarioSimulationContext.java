@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -244,6 +245,10 @@ public class ScenarioSimulationContext {
 
     public ScenarioHeaderTextBoxSingletonDOMElementFactory getScenarioHeaderTextBoxSingletonDOMElementFactory(GridWidget gridWidget){
         return getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioHeaderTextBoxSingletonDOMElementFactory();
+    }
+
+    public ScenarioExpressionCellTextAreaSingletonDOMElementFactory getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
+        return getSelectedScenarioGridModel().getScenarioExpressionCellTextAreaSingletonDOMElementFactory();
     }
 
     /**

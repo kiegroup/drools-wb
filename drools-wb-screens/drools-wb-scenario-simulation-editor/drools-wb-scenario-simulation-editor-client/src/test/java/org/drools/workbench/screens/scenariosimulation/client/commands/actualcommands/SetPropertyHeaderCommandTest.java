@@ -65,6 +65,16 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     }
 
     @Test
+    public void getPropertyHeaderType_Expression() {
+        super.getPropertyHeaderTitle_Expression();
+    }
+
+    @Test
+    public void getPropertyHeaderType_Value() {
+        super.getPropertyHeaderTitle_Value();
+    }
+
+    @Test
     public void getMatchingExpressionAlias() {
         super.getMatchingExpressionAlias();
     }
@@ -83,4 +93,5 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     public void manageSimpleTypeCollectionProperty() {
         super.manageSimpleTypeCollectionProperty();
     }
+
 }
