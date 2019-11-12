@@ -35,11 +35,12 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleSc
 public class GridContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private static final  String GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "gridcontextmenu-insert-row-above";
-    private static final  String GRIDCONTEXTMENU_INSERT_ROW_BELOW = "gridcontextmenu-insert-row-below";
-    private static final  String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
-    private static final  String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
-    private static final  String GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "gridcontextmenu-run-single-scenario";
+    private static final String GRIDCONTEXTMENU_GRID_TITLE = "gridcontextmenu-grid-title";
+    private static final String GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "gridcontextmenu-insert-row-above";
+    private static final String GRIDCONTEXTMENU_INSERT_ROW_BELOW = "gridcontextmenu-insert-row-below";
+    private static final String GRIDCONTEXTMENU_DELETE_ROW = "gridcontextmenu-delete-row";
+    private static final String GRIDCONTEXTMENU_DUPLICATE_ROW = "gridcontextmenu-duplicate-row";
+    private static final String GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "gridcontextmenu-run-single-scenario";
 
     private LIElement insertRowAboveLIElement;
     private LIElement insertRowBelowLIElement;
@@ -67,9 +68,11 @@ public class GridContextMenu extends AbstractHeaderMenuPresenter {
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
         if (Objects.equals(GridWidget.BACKGROUND, gridWidget) && runSingleScenarioElement != null) {
+            updateMenuItemAttributes(gridTitleElement , GRIDCONTEXTMENU_GRID_TITLE, constants.background().toUpperCase(), "background");
             removeMenuItem(runSingleScenarioElement);
             runSingleScenarioElement = null;
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
+            updateMenuItemAttributes(gridTitleElement , GRIDCONTEXTMENU_GRID_TITLE, constants.scenario().toUpperCase(), "scenario");
             if (runSingleScenarioElement == null) {
                 runSingleScenarioElement = addExecutableMenuItem(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
             }

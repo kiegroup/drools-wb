@@ -147,6 +147,10 @@ public abstract class BaseMenu implements IsWidget,
     }
 
     protected void updateMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
+        this.updateExecutableMenuItemAttributes(toUpdate, id, "<b>" + label.toUpperCase() + "</b>", i18n);
+    }
+
+    protected void updateExecutableMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
         toUpdate.setId(id);
         toUpdate.getElementsByTagName("span").getItem(0).setInnerHTML(label);
     }

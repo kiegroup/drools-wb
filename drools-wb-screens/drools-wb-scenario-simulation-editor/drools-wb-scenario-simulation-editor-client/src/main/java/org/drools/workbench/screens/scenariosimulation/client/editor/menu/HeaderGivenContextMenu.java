@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
@@ -53,6 +55,11 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
     @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
+        if (Objects.equals(GridWidget.BACKGROUND, gridWidget)) {
+            updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.background(), "background");
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
+            updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
+        }
         super.show(gridWidget, mx, my);
         appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");
         prependColumnEvent = new PrependColumnEvent(gridWidget, "GIVEN");

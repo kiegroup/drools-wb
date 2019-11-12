@@ -58,6 +58,4 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
         super.show(mx, my);
         mapEvent(insertRowBelowElement, new PrependRowEvent(gridWidget));
     }
-
-
 }

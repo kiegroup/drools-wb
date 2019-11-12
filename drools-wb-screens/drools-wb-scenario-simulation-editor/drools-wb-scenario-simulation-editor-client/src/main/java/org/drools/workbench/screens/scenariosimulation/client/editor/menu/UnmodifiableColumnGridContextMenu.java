@@ -65,11 +65,9 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
         if (Objects.equals(GridWidget.BACKGROUND, gridWidget) && runSingleScenarioElement != null) {
-            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
             removeMenuItem(runSingleScenarioElement);
             runSingleScenarioElement = null;
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
-            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
             if (runSingleScenarioElement == null) {
                 runSingleScenarioElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
             }

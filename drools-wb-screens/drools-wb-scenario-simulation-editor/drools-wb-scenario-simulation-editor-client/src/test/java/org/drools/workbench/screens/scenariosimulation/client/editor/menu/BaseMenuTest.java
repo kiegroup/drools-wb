@@ -215,7 +215,7 @@ public class BaseMenuTest {
         String id = "TEST-ID";
         String label = "TEST-LABEL";
         String i18n = "TEST-i18n";
-        baseMenu.updateMenuItemAttributes(toUpdateMock, id, label, i18n);
+        baseMenu.updateExecutableMenuItemAttributes(toUpdateMock, id, label, i18n);
         verify(toUpdateMock, times(1)).setId(eq(id));
         verify(itemMock, times(1)).setInnerHTML(eq(label));
     }

@@ -95,10 +95,10 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnLeftLIElement), isA(InsertColumnEvent.class));
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnRightLIElement), isA(InsertColumnEvent.class));
         if (asProperty) {
-            verify(abstractColumnMenuPresenterSpy, atLeastOnce()).updateMenuItemAttributes(eq(abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement), eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DELETE_COLUMN), eq(abstractColumnMenuPresenter.constants.deleteColumn()), eq("deleteColumn"));
+            verify(abstractColumnMenuPresenterSpy, atLeastOnce()).updateExecutableMenuItemAttributes(eq(abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement), eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DELETE_COLUMN), eq(abstractColumnMenuPresenter.constants.deleteColumn()), eq("deleteColumn"));
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement), isA(DeleteColumnEvent.class));
         } else {
-            verify(abstractColumnMenuPresenterSpy, atLeastOnce()).updateMenuItemAttributes(eq(deleteColumnInstanceLIElementOriginal), eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DELETE_INSTANCE), eq(abstractColumnMenuPresenter.constants.deleteInstance()), eq("deleteInstance"));
+            verify(abstractColumnMenuPresenterSpy, atLeastOnce()).updateExecutableMenuItemAttributes(eq(deleteColumnInstanceLIElementOriginal), eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DELETE_INSTANCE), eq(abstractColumnMenuPresenter.constants.deleteInstance()), eq("deleteInstance"));
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement), isA(DeleteColumnEvent.class));
         }
         if (abstractColumnMenuPresenter.duplicateInstanceLIElement != null) {
