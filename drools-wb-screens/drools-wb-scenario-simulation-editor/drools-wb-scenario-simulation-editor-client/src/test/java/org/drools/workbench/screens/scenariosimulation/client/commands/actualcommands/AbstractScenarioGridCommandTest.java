@@ -156,6 +156,17 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
     }
 
     @Test
+    public void commonUndoRedoPreexecutionDifferentGridCheckSwitch() {
+        // Test to verify there are not new, un-managed, GridWidget
+        for (GridWidget gridWidget : GridWidget.values()) {
+            when(scenarioGridWidgetSpy.isSelected()).thenReturn(GridWidget.BACKGROUND.equals(gridWidget));
+            when(backgroundGridWidgetSpy.isSelected()).thenReturn(GridWidget.SIMULATION.equals(gridWidget));
+            commandSpy.gridWidget = gridWidget;
+            commandSpy.commonUndoRedoPreexecution(scenarioSimulationContextLocal);
+        }
+    }
+
+    @Test
     public void commonExecutionSIMULATION() {
         when(backgroundGridWidgetSpy.isSelected()).thenReturn(false);
         when(scenarioGridWidgetSpy.isSelected()).thenReturn(true);
