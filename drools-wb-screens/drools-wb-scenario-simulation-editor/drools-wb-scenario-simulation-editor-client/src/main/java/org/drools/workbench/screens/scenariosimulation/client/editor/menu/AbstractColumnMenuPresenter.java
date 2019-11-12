@@ -63,7 +63,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
             updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;
-        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) || showDuplicateInstance) {
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
             updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
             if (duplicateInstanceLIElement == null) {
                 duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.runSingleScenario(), "runSingleScenario");
@@ -79,11 +79,11 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
             updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
         }
-        callSuperShow(mx, my);
+        callSuperShow(gridWidget, mx, my);
     }
 
-    protected void callSuperShow(final int mx, final int my) {
-        super.show(mx, my);
+    protected void callSuperShow(final GridWidget gridWidget, final int mx, final int my) {
+        super.show(gridWidget, mx, my);
     }
 
 }
