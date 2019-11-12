@@ -30,7 +30,9 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -119,13 +121,13 @@ public class ScenarioSimulationEditorPresenter {
     protected MenuItem exportToCSVMenuItem;
     protected MenuItem importMenuItem;
     protected MenuItem downloadMenuItem;
+    protected ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
     private ScenarioSimulationResourceType type;
     private ScenarioSimulationView view;
     private Command populateTestToolsCommand;
     private TextFileExport textFileExport;
     private ConfirmPopupPresenter confirmPopupPresenter;
     private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
-    protected ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper;
 
     public ScenarioSimulationEditorPresenter() {
         //Zero-parameter constructor for CDI proxies
@@ -297,8 +299,17 @@ public class ScenarioSimulationEditorPresenter {
         return dataManagementStrategy;
     }
 
-    public void onImport(String fileContents) {
-        scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getSimulation());
+    public void onImport(String fileContents, GridWidget gridWidget) {
+        switch (gridWidget) {
+            case SIMULATION:
+                scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getSimulation());
+                break;
+            case BACKGROUND:
+                scenarioSimulationEditorWrapper.onImport(fileContents, getImportCallBack(), getImportErrorCallback(), context.getStatus().getBackground());
+                break;
+            default:
+                throw new IllegalArgumentException("Illegal GridWidget " + gridWidget);
+        }
     }
 
     public EventBus getEventBus() {
@@ -477,9 +488,6 @@ public class ScenarioSimulationEditorPresenter {
                                                                   .onExportToCsv(getExportCallBack(),
                                                                                  new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                                                  context.getAbstractScesimModelByGridWidget(gridWidget)));
-
-
-
     }
 
     protected RemoteCallback<Object> getExportCallBack() {
@@ -490,13 +498,20 @@ public class ScenarioSimulationEditorPresenter {
         };
     }
 
-    protected RemoteCallback<Simulation> getImportCallBack() {
-        return simulation -> {
-            cleanReadOnlyColumn(simulation);
-            model.setSimulation(simulation);
-            scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
-            context.getStatus().setSimulation(model.getSimulation());
-            scenarioMainGridWidget.onResize();
+    protected RemoteCallback<AbstractScesimModel> getImportCallBack() {
+        return scesimModel -> {
+            if (scesimModel instanceof Simulation) {
+                cleanReadOnlyColumn((Simulation) scesimModel);
+                model.setSimulation((Simulation) scesimModel);
+                scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
+                context.getStatus().setSimulation(model.getSimulation());
+                scenarioMainGridWidget.onResize();
+            } else if (scesimModel instanceof Background) {
+                model.setBackground((Background) scesimModel);
+                scenarioBackgroundGridWidget.setContent(model.getBackground(), context.getSettings().getType());
+                context.getStatus().setBackground(model.getBackground());
+                scenarioBackgroundGridWidget.onResize();
+            }
         };
     }
 

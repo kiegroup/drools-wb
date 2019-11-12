@@ -30,8 +30,8 @@ import javax.inject.Inject;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -392,9 +392,9 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(new SetInstanceHeaderEvent(gridWidget, fullPackage, className)));
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                            new SetPropertyHeaderEvent(fullPackage,
+                            new SetPropertyHeaderEvent(gridWidget,
+                                                       fullPackage,
                                                        Arrays.asList(className),
                                                        fullPackage + "." + className,
                                                        FactMappingValueType.EXPRESSION)));

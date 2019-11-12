@@ -45,7 +45,7 @@ public class SetGridCellValueCommand extends AbstractScenarioGridCommand {
         ScesimModelDescriptor simulationDescriptor = status.getSimulation().getScesimModelDescriptor();
         int columnIndex = status.getColumnIndex();
         FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getSelectedScenarioGridModel().getColumns().get(columnIndex);
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().get(columnIndex);
         String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                     selectedColumn.isPropertyAssigned(),
                                                                     factMapping.getFactMappingValueType(),

@@ -30,8 +30,8 @@ import javax.enterprise.event.Event;
 
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
@@ -398,7 +398,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         context.getStatus().setValueClassName(event.getValueClassName());
         if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSelectedColumnEmpty()) {
             commonExecution(new SetPropertyHeaderCommand(event.getGridWidget(), event.getFactMappingValueType()), true);
-        } else if (context.getSelectedScenarioGridModel().isSameSelectedColumnProperty(event.getPropertyNameElements())) {
+        } else if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSameSelectedColumnProperty(event.getPropertyNameElements())) {
             return;
         } else if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSameSelectedColumnType(event.getValueClassName())) {
             org.uberfire.mvp.Command okDeleteCommand = () -> {

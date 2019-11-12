@@ -250,7 +250,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
-            selectedColumn.setFactory(context.getScenarioGRidModelByGridWidget(gridWidget).getScenarioCellTextAreaSingletonDOMElementFactory());
+            selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioCellTextAreaSingletonDOMElementFactory());
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);

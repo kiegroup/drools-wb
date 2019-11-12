@@ -286,25 +286,16 @@ public class ScenarioGridTest {
         String columnId = factMappingDescription.getExpressionIdentifier().getName();
         FactMappingType type = factMappingDescription.getExpressionIdentifier().getType();
         String columnGroup = type.name();
-        scenarioGrid.setType(ScenarioSimulationModel.Type.RULE);
-        scenarioGrid.setHeaderColumn(1, factMappingDescription, true);
-        verify(scenarioGrid, times(1)).isPropertyAssigned(eq(true), eq(factMappingDescription));
-        verify(scenarioGrid, times(1)).getPlaceHolder(eq(true), eq(true), isA(FactMappingValueType.class), anyString());
-        verify(scenarioGrid, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS_DESCRIPTION),
+        scenarioGridSpy.setType(ScenarioSimulationModel.Type.RULE);
+        scenarioGridSpy.setHeaderColumn(1, factMappingDescription, true);
+        verify(scenarioGridSpy, times(1)).isPropertyAssigned(eq(true), eq(factMappingDescription));
+        verify(scenarioGridSpy, times(1)).getPlaceHolder(eq(true), eq(true), isA(FactMappingValueType.class), anyString());
+        verify(scenarioGridSpy, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS_DESCRIPTION),
                                                                   any(),
                                                                   eq(columnId),
                                                                   eq(columnGroup),
                                                                   eq(type),
                                                                   anyString());
-        scenarioGridSpy.setHeaderColumn(1, factMappingDescription, true);
-        verify(scenarioGridSpy, times(1)).isPropertyAssigned(eq(true), eq(factMappingDescription));
-        verify(scenarioGridSpy, times(1)).getPlaceholder(eq(true), any());
-        verify(scenarioGridSpy, times(1)).getScenarioGridColumnLocal(eq(EXPRESSION_ALIAS_DESCRIPTION),
-                                                                     any(),
-                                                                     eq(columnId),
-                                                                     eq(columnGroup),
-                                                                     eq(type),
-                                                                     anyString());
         verify(scenarioGridColumnMock, times(1)).setColumnWidthMode(ColumnWidthMode.FIXED);
         verify(scenarioGridModelMock, times(1)).getDOMElementFactory(anyString(), eq(ScenarioSimulationModel.Type.RULE), eq(FactMappingValueType.NOT_EXPRESSION));
 
@@ -367,25 +358,6 @@ public class ScenarioGridTest {
         factMappingInteger.getExpressionElements().clear();
         assertFalse(scenarioGridSpy.isPropertyAssigned(false, factMappingInteger));
         assertTrue(scenarioGridSpy.isPropertyAssigned(true, factMappingInteger));
-    }
-
-    @Test
-    public void getPlaceholder() {
-        FactMapping stringFactMapping = new FactMapping(
-                FactIdentifier.create("test", String.class.getCanonicalName()),
-                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.insertValue(),
-                     scenarioGridSpy.getPlaceholder(true, stringFactMapping));
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(),
-                     scenarioGridSpy.getPlaceholder(false, stringFactMapping));
-
-        FactMapping localDateFactMapping = new FactMapping(
-                FactIdentifier.create("test", LocalDate.class.getCanonicalName()),
-                ExpressionIdentifier.create("test", FactMappingType.GIVEN));
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder(),
-                     scenarioGridSpy.getPlaceholder(true, localDateFactMapping));
-        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.defineValidType(),
-                     scenarioGridSpy.getPlaceholder(false, localDateFactMapping));
     }
 
     @Test

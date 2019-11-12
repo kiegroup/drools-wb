@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -39,7 +40,7 @@ public class SetPropertyHeaderCommandTest extends AbstractSelectedColumnCommandT
     @Before
     public void setup() {
         super.setup();
-        commandSpy = spy(new SetPropertyHeaderCommand(GridWidget.SIMULATION) {
+        commandSpy = spy(new SetPropertyHeaderCommand(GridWidget.SIMULATION, FactMappingValueType.NOT_EXPRESSION) {
 
             @Override
             protected ScenarioGridColumn getScenarioGridColumnLocal(String instanceTitle, String propertyTitle, String columnId, String columnGroup,

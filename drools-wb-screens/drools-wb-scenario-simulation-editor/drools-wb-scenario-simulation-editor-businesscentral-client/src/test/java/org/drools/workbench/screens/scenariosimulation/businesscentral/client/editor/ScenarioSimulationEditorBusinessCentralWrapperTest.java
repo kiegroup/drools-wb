@@ -23,11 +23,11 @@ import java.util.function.Supplier;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -238,7 +238,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onImport() {
         String FILE_CONTENT = "FILE_CONTENT";
-        RemoteCallback<Simulation> remoteCallback = mock(RemoteCallback.class);
+        RemoteCallback<AbstractScesimModel> remoteCallback = mock(RemoteCallback.class);
         ErrorCallback<Object> errorCallBack = mock(ErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onImport(FILE_CONTENT, remoteCallback, errorCallBack, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallBack));

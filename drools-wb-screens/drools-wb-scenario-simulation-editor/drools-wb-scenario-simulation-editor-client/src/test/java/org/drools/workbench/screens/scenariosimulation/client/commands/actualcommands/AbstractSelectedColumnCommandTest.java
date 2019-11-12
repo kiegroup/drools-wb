@@ -310,16 +310,16 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
 
     protected void getPropertyHeaderTitle_Value() {
         Optional<String> emptyMatching = Optional.empty();
-        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) command).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
-        String retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
+        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) commandSpy).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
+        String retrieved = ((AbstractSelectedColumnCommand) commandSpy).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
         assertEquals(ConstantHolder.VALUE, retrieved);
     }
 
     protected void getPropertyHeaderTitle_Expression() {
         Optional<String> emptyMatching = Optional.empty();
-        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) command).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
-        ((AbstractSelectedColumnCommand) command).factMappingValueType = FactMappingValueType.EXPRESSION;
-        String retrieved = ((AbstractSelectedColumnCommand) command).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
+        doReturn(emptyMatching).when((AbstractSelectedColumnCommand) commandSpy).getMatchingExpressionAlias(eq(scenarioSimulationContextLocal), eq(Arrays.asList(CLASS_NAME)), eq(factIdentifierMock));
+        ((AbstractSelectedColumnCommand) commandSpy).factMappingValueType = FactMappingValueType.EXPRESSION;
+        String retrieved = ((AbstractSelectedColumnCommand) commandSpy).getPropertyHeaderTitle(scenarioSimulationContextLocal, Arrays.asList(CLASS_NAME), factIdentifierMock);
         assertEquals(ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER, retrieved);
     }
 

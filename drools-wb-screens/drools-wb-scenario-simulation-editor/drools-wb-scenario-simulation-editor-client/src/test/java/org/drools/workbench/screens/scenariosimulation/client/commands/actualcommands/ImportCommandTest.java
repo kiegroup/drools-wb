@@ -40,6 +40,6 @@ public class ImportCommandTest extends AbstractScenarioSimulationCommandTest {
     @Test
     public void execute() {
         command.execute(scenarioSimulationContextLocal);
-        verify(scenarioSimulationEditorPresenterMock, times(1)).onImport(eq(FILE_CONTENT));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onImport(eq(FILE_CONTENT), eq(GridWidget.SIMULATION));
     }
 }

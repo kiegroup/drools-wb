@@ -247,8 +247,8 @@ public class ScenarioSimulationContext {
         return getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioHeaderTextBoxSingletonDOMElementFactory();
     }
 
-    public ScenarioExpressionCellTextAreaSingletonDOMElementFactory getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
-        return getSelectedScenarioGridModel().getScenarioExpressionCellTextAreaSingletonDOMElementFactory();
+    public ScenarioExpressionCellTextAreaSingletonDOMElementFactory getScenarioExpressionCellTextAreaSingletonDOMElementFactory(GridWidget gridWidget) {
+        return getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioExpressionCellTextAreaSingletonDOMElementFactory();
     }
 
     /**

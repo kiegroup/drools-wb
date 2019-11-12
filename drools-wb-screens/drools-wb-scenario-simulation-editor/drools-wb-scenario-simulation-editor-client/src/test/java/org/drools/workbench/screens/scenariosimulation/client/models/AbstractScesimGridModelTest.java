@@ -286,7 +286,7 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         verify(factMappingMock, times(1)).setFactMappingValueType(eq(FactMappingValueType.NOT_EXPRESSION));
         verify(abstractScesimGridModelSpy, times(1)).deleteColumn(eq(COLUMN_INDEX));
         verify(abstractScesimGridModelSpy, times(1)).commonAddColumn(eq(COLUMN_INDEX), eq(gridColumnMock), isA(ExpressionIdentifier.class));
-        verify(abstractScesimGridModel, never()).setCellValue(anyInt(), anyInt(), any());
+        verify(abstractScesimGridModelSpy, never()).setCellValue(anyInt(), anyInt(), any());
     }
 
     @Test
@@ -705,31 +705,31 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
 
     @Test
     public void getDOMElementFactory_Collection() {
-        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
         assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("java.util.Map", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.Map", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
         assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
         assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
         assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
         assertSame(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock, factory);
     }
 
     @Test
     public void getDOMElementFactory_Expression() {
-        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModelSpy.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
         assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
         assertSame(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock, factory);
     }
 
     @Test
     public void getDOMElementFactory_NotExpressionNotCollection() {
-        BaseSingletonDOMElementFactory factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
+        BaseSingletonDOMElementFactory factory = abstractScesimGridModelSpy.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
         assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
-        factory = abstractScesimGridModel.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
+        factory = abstractScesimGridModelSpy.getDOMElementFactory("com.Test", ScenarioSimulationModel.Type.RULE, FactMappingValueType.NOT_EXPRESSION);
         assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
     }
 }

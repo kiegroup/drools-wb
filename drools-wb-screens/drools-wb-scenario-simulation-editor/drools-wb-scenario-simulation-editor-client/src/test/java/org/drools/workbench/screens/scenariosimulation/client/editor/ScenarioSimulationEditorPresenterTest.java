@@ -416,11 +416,19 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void onImport() {
+    public void onImportSIMULATION() {
         String FILE_CONTENT = "FILE_CONTENT";
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenterSpy.onImport(FILE_CONTENT);
+        presenterSpy.onImport(FILE_CONTENT, GridWidget.SIMULATION);
         verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(simulationMock));
+    }
+
+    @Test
+    public void onImportBACKGROUND() {
+        String FILE_CONTENT = "FILE_CONTENT";
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onImport(FILE_CONTENT, GridWidget.BACKGROUND);
+        verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(backgroundMock));
     }
 
     @Test
