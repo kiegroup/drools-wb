@@ -36,6 +36,6 @@ public class ImportCommand extends AbstractScenarioGridCommand {
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
-        context.getScenarioSimulationEditorPresenter().onImport(fileContent);
+        context.getScenarioSimulationEditorPresenter().onImport(fileContent, gridWidget);
     }
 }

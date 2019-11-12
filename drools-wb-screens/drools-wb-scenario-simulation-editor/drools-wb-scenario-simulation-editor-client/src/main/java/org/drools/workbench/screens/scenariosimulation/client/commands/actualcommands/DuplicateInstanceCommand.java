@@ -26,6 +26,7 @@ import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
@@ -37,10 +38,10 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 @Dependent
 public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
-    public final static String COPY_LABEL = "_copy_";
+    public static final String COPY_LABEL = "_copy_";
 
     public DuplicateInstanceCommand(GridWidget gridWidget) {
-        super(gridWidget);
+        super(gridWidget, FactMappingValueType.NOT_EXPRESSION);
     }
 
     private DuplicateInstanceCommand() {
@@ -66,8 +67,8 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
 
                         if (originalColumn.isPropertyAssigned()) {
                             int originalColumnIndex = selectedScenarioGridModel.getColumns().indexOf(originalColumn);
-                            int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
                             final FactMapping originalFactMapping = selectedScenarioGridModel.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(originalColumnIndex);
+                            factMappingValueType = originalFactMapping.getFactMappingValueType();
                             /*  Rebuilt propertyNameElements, which is composed by: factName.property . The property MUST be the original property name */
                             List<String> propertyNameElements = new ArrayList<>();
                             propertyNameElements.add(alias);
@@ -79,6 +80,7 @@ public class DuplicateInstanceCommand extends AbstractSelectedColumnCommand {
                                               originalColumn.getPropertyHeaderMetaData().getTitle());
 
                             /* It copies the properties values */
+                            int createdColumnIndex = selectedScenarioGridModel.getColumns().indexOf(createdColumn);
                             selectedScenarioGridModel.duplicateColumnValues(originalColumnIndex, createdColumnIndex);
                         }
                     }

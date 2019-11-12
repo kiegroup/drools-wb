@@ -29,6 +29,7 @@ import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -50,8 +51,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGridCommand {
 
-    protected AbstractSelectedColumnCommand(GridWidget gridWidget) {
+    protected FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
+
+    protected AbstractSelectedColumnCommand(GridWidget gridWidget, FactMappingValueType factMappingValueType) {
         super(gridWidget);
+        this.factMappingValueType = factMappingValueType;
     }
 
     protected AbstractSelectedColumnCommand() {
@@ -108,7 +112,14 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, alias, fullClassName);
         setInstanceHeaderMetaData(selectedColumn, alias, factIdentifier);
         final ScenarioHeaderMetaData propertyHeaderMetaData = selectedColumn.getPropertyHeaderMetaData();
-        setPropertyMetaData(propertyHeaderMetaData, getPropertyPlaceHolder(columnIndex), false, selectedColumn, ScenarioSimulationEditorConstants.INSTANCE.defineValidType());
+        setPropertyMetaData(propertyHeaderMetaData,
+                            getPropertyPlaceHolder(columnIndex),
+                            false,
+                            selectedColumn,
+                            ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                   selectedColumn.isPropertyAssigned(),
+                                                                   factMappingValueType,
+                                                                   fullClassName));
         context.getAbstractScesimGridModelByGridWidget(gridWidget).updateColumnInstance(columnIndex, selectedColumn);
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
@@ -221,18 +232,25 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
                         setInstanceHeaderMetaData(scenarioGridColumn, instanceAliasName, factIdentifier);
                     }
                 });
-        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(propertyClass);
-        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(), propertyTitle, false, selectedColumn, editableCellPlaceholder);
         selectedColumn.setPropertyAssigned(true);
+        selectedColumn.getPropertyHeaderMetaData().setColumnGroup(getColumnSubGroup(selectedColumn.getInformationHeaderMetaData().getColumnGroup()));
+        setPropertyMetaData(selectedColumn.getPropertyHeaderMetaData(),
+                            propertyTitle,
+                            false,
+                            selectedColumn,
+                            ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                   selectedColumn.isPropertyAssigned(),
+                                                                   factMappingValueType,
+                                                                   propertyClass));
         context.getAbstractScesimGridModelByGridWidget(gridWidget).updateColumnProperty(columnIndex,
                                                                                         selectedColumn,
                                                                                         propertyNameElements,
-                                                                                        propertyClass, context.getStatus().isKeepData());
-        if (ScenarioSimulationSharedUtils.isCollection(propertyClass)) {
+                                                                                        propertyClass, context.getStatus().isKeepData(),
+                                                factMappingValueType);
+        if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
-            selectedColumn.setFactory(context.getScenarioCellTextAreaSingletonDOMElementFactory(gridWidget));
+            selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioCellTextAreaSingletonDOMElementFactory());
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
@@ -301,8 +319,11 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
     }
 
     protected String getPropertyHeaderTitle(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        String propertyPathPart = propertyNameElements.size() > 1 ?
-                String.join(".", propertyNameElements.subList(1, propertyNameElements.size())) : "value";
+        /* If propertyNameElements contains only one step, it's managing an Expression or a SimpleClass type */
+        if (propertyNameElements.size() == 1) {
+            return FactMappingValueType.EXPRESSION.equals(factMappingValueType) ? ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER : ConstantHolder.VALUE;
+        }
+        String propertyPathPart = String.join(".", propertyNameElements.subList(1, propertyNameElements.size()));
         List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factIdentifier);
         // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name

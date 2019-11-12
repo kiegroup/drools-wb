@@ -90,7 +90,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
                 throw new IllegalStateException("Simulation is null in restorable status");
             }
             if (backgroundToRestore == null) {
-                throw new IllegalStateException("Simulation is null in restorable status");
+                throw new IllegalStateException("Background is null in restorable status");
             }
             final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
             context.getSimulationGrid().getModel().clearSelections();

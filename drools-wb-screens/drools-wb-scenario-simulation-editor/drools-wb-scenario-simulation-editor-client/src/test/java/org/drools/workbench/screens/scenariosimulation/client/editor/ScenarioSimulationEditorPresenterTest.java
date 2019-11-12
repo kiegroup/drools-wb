@@ -416,11 +416,19 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void onImport() {
+    public void onImportSIMULATION() {
         String FILE_CONTENT = "FILE_CONTENT";
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
-        presenterSpy.onImport(FILE_CONTENT);
+        presenterSpy.onImport(FILE_CONTENT, GridWidget.SIMULATION);
         verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(simulationMock));
+    }
+
+    @Test
+    public void onImportBACKGROUND() {
+        String FILE_CONTENT = "FILE_CONTENT";
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        presenterSpy.onImport(FILE_CONTENT, GridWidget.BACKGROUND);
+        verify(scenarioSimulationEditorWrapperMock, times(1)).onImport(eq(FILE_CONTENT), isA(RemoteCallback.class), isA(ErrorCallback.class), same(backgroundMock));
     }
 
     @Test
@@ -722,14 +730,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setTestTools() {
         presenterSpy.setTestTools(testToolsPresenterMock);
         assertEquals(scenarioSimulationContextLocal.getTestToolsPresenter(), testToolsPresenterMock);
-        verify(testToolsPresenterMock, times(1)).setEventBus(eventBusMock);
+        verify(testToolsPresenterMock, times(1)).setEventBus(eq(eventBusMock));
         verify(dataManagementStrategyMock, times(1)).populateTestTools(eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     @Test
     public void setCheatSheet() {
         presenterSpy.setCheatSheet(cheatSheetPresenterMock);
-        verify(cheatSheetPresenterMock, times(1)).initCheatSheet(any());
+        verify(cheatSheetPresenterMock, times(1)).initCheatSheet(isA(ScenarioSimulationModel.Type.class));
     }
 
     @Test
@@ -737,7 +745,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         Command saveCommandMock = mock(Command.class);
         when(presenterSpy.getSaveCommand()).thenReturn(saveCommandMock);
         presenterSpy.setSettings(settingsPresenterMock);
-        verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
+        verify(settingsPresenterMock, times(1)).setScenarioType(isA(ScenarioSimulationModel.Type.class), any(), anyString());
         verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
