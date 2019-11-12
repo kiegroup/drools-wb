@@ -41,6 +41,11 @@ public class ScenarioGridModel extends AbstractScesimGridModel<Simulation, Scena
         return GridWidget.SIMULATION;
     }
 
+    @Override
+    public Range getInstanceLimits(int columnIndex) {
+        return getInstanceLimits(columnIndex, 1);
+    }
+
     /**
      * This method <i>insert</i> a row to the grid and populate it with values taken from given <code>Scenario</code>
      * @param row
@@ -70,4 +75,10 @@ public class ScenarioGridModel extends AbstractScesimGridModel<Simulation, Scena
         });
         updateIndexColumn();
     }
+
+    protected void commonAddRow(int rowIndex) {
+        commonAddRow(rowIndex, 1);
+        updateIndexColumn();
+    }
+
 }
