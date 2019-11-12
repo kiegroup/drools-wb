@@ -456,7 +456,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
      */
     protected void commonExecution(final AbstractScenarioSimulationCommand command,
                                    final boolean focusGridAfterExecution) {
-        final Optional<GridWidget> gridWidget = context.getSelectedScenarioGridModel().map(AbstractScesimGridModel::getGridWidget);
+        final Optional<AbstractScesimGridModel> selectedScenarioGridModel = context.getSelectedScenarioGridModel();
+        final Optional<GridWidget> gridWidget = selectedScenarioGridModel.map(AbstractScesimGridModel::getGridWidget);
         gridWidget.ifPresent(grd -> context.getStatus().setCurrentGrid(grd));
         final CommandResult<ScenarioSimulationViolation> status = scenarioCommandManager.execute(context, command);
         if (Objects.equals(CommandResult.Type.ERROR, status.getType())) {

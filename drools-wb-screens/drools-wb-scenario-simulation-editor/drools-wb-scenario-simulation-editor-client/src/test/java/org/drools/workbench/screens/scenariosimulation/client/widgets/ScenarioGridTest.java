@@ -25,6 +25,7 @@ import com.ait.lienzo.client.core.shape.Viewport;
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -126,11 +127,12 @@ public class ScenarioGridTest {
     private FactIdentifier factIdentifierGiven;
     private FactIdentifier factIdentifierInteger;
 
-    private Simulation simulation = new Simulation();
+    private Simulation simulation;
     private ScenarioGrid scenarioGridSpy;
 
     @Before
     public void setup() {
+        simulation = getSimulation();
         when(scenarioGridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetadataMock);
         when(scenarioGridModelMock.getAbstractScesimModel()).thenReturn(Optional.of(simulation));
         when(scenarioGridModelMock.getGridWidget()).thenReturn(GridWidget.SIMULATION);
@@ -141,7 +143,6 @@ public class ScenarioGridTest {
         factMappingDescription = new FactMapping(EXPRESSION_ALIAS_DESCRIPTION, FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
         factMappingGiven = new FactMapping(EXPRESSION_ALIAS_GIVEN, factIdentifierGiven, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
         factMappingInteger = new FactMapping(EXPRESSION_ALIAS_INTEGER, factIdentifierInteger, new ExpressionIdentifier("GIVEN", FactMappingType.GIVEN));
-        simulation = getSimulation();
 
         scenarioGridSpy = spy(new ScenarioGrid(scenarioGridModelMock,
                                                scenarioGridLayerMock,
@@ -279,6 +280,13 @@ public class ScenarioGridTest {
     public void setHeaderColumns() {
         scenarioGridSpy.setHeaderColumns(simulation, ScenarioSimulationModel.Type.RULE);
         verify(scenarioGridSpy, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(true));
+        scenarioGridSpy.setHeaderColumns(simulation, ScenarioSimulationModel.Type.DMN);
+        verify(scenarioGridSpy, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(false));
+        Background background = new Background();
+        scenarioGridSpy.setHeaderColumns(background, ScenarioSimulationModel.Type.RULE);
+        verify(scenarioGridSpy, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(false));
+        scenarioGridSpy.setHeaderColumns(background, ScenarioSimulationModel.Type.DMN);
+        verify(scenarioGridSpy, times(COLUMNS)).setHeaderColumn(anyInt(), isA(FactMapping.class), eq(false));
     }
 
     @Test

@@ -851,7 +851,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     }
 
     public boolean isSimpleType(String factClassName) {
-        return simpleJavaTypeInstancesName.contains(factClassName);
+        return simpleJavaTypeInstancesName != null && simpleJavaTypeInstancesName.contains(factClassName);
     }
 
     /**

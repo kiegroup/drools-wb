@@ -23,6 +23,7 @@ import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
@@ -170,7 +171,7 @@ public class ScenarioGrid extends BaseGridWidget {
 
     protected void setHeaderColumns(AbstractScesimModel abstractScesimModel, ScenarioSimulationModel.Type type) {
         final List<FactMapping> factMappings = abstractScesimModel.getScesimModelDescriptor().getUnmodifiableFactMappings();
-        boolean editableHeaders = !type.equals(ScenarioSimulationModel.Type.DMN);
+        boolean editableHeaders = !(ScenarioSimulationModel.Type.DMN.equals(type) || (abstractScesimModel instanceof Background));
         IntStream.range(0, factMappings.size())
                 .forEach(columnIndex -> setHeaderColumn(columnIndex, factMappings.get(columnIndex), editableHeaders));
     }
