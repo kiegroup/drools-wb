@@ -54,7 +54,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
     @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
         super.show(gridWidget, mx, my);
-        appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");
-        prependColumnEvent = new PrependColumnEvent(gridWidget, "GIVEN");
+        mapEvent(appendColumnElement, new AppendColumnEvent(gridWidget, "GIVEN"));
+        mapEvent(prependColumnElement, new PrependColumnEvent(gridWidget, "GIVEN"));
     }
 }

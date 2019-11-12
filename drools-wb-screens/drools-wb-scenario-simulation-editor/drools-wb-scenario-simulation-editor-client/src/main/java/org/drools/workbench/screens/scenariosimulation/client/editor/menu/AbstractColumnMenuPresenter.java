@@ -73,11 +73,11 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         if (duplicateInstanceLIElement != null) {
             mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
-        callSuperShow(mx, my);
+        callSuperShow(gridWidget, mx, my);
     }
 
-    protected void callSuperShow(final int mx, final int my) {
-        super.show(mx, my);
+    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
+        super.show(gridWidget, mx, my);
     }
 
 }
