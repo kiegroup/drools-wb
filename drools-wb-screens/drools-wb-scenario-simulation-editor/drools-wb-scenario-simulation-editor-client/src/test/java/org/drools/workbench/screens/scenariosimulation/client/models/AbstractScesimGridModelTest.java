@@ -45,7 +45,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
@@ -239,7 +238,6 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         abstractScesimGridModelSpy.insertRow(ROW_INDEX, gridRowMock);
         verify(abstractScesimGridModelSpy, atLeast(1)).checkSimulation();
         verify(abstractScesimGridModelSpy, times(1)).commonAddRow(eq(ROW_INDEX));
-        verify(abstractScesimGridModelSpy, times(1)).updateIndexColumn();
     }
 
     @Test
@@ -356,18 +354,10 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
     }
 
     @Test
-    public void getInstanceLimits() {
-        final GridData.Range retrieved = abstractScesimGridModelSpy.getInstanceLimits(2);
-        assertNotNull(retrieved);
-        assertEquals(1, retrieved.getMinRowIndex());
-        assertEquals(3, retrieved.getMaxRowIndex());
-    }
-
-    @Test
     public void getInstanceScenarioGridColumns() {
         final List<ScenarioGridColumn> retrieved = abstractScesimGridModelSpy.getInstanceScenarioGridColumns((ScenarioGridColumn) gridColumns.get(3));
         assertNotNull(retrieved);
-        assertEquals(4, retrieved.size());
+        assertEquals(1, retrieved.size());
     }
 
     @Test

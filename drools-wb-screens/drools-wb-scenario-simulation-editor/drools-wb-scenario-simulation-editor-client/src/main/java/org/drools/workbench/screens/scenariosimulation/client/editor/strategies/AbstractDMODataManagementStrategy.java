@@ -60,6 +60,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
             storeData(factModelTreeHolder.getFactModelTuple(), testToolsPresenter, context, gridWidget);
         } else {
             if (skipPopulateTestTools()) {
+                testToolsPresenter.hideInstances();
                 return;
             }
             // Retrieve the relevant facttypes

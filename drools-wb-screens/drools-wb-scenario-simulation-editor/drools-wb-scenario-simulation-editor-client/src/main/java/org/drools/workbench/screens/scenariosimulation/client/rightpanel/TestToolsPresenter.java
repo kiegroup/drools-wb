@@ -421,11 +421,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     /**
      * Method to hide all the <b>instance-related</b> html
      */
-    protected void hideInstances() {
+    @Override
+    public void hideInstances() {
+        clearInstanceList();
+        clearSimpleJavaInstanceFieldList();
         view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
         view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.NONE);
-        view.getInstanceListContainer().getStyle().setDisplay(Style.Display.NONE);
-        view.getSimpleJavaInstanceListContainer().getStyle().setDisplay(Style.Display.NONE);
     }
 
     /**
@@ -434,8 +435,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     protected void showInstances() {
         view.getInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
         view.getSimpleJavaInstanceListContainerSeparator().getStyle().setDisplay(Style.Display.BLOCK);
-        view.getInstanceListContainer().getStyle().setDisplay(Style.Display.BLOCK);
-        view.getSimpleJavaInstanceListContainer().getStyle().setDisplay(Style.Display.BLOCK);
     }
 
     /**

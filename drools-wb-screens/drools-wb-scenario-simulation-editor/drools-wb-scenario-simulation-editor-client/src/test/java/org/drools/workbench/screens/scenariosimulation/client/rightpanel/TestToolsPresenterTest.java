@@ -705,19 +705,17 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     @Test
     public void hideInstances() {
         testToolsPresenterSpy.hideInstances();
+        verify(testToolsPresenterSpy, times(1)).clearInstanceList();
+        verify(testToolsPresenterSpy, times(1)).clearSimpleJavaInstanceFieldList();
         verify(instanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
-        verify(instanceListContainerStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(simpleJavaInstanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
-        verify(simpleJavaInstanceListContainerStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
     }
 
     @Test
     public void showInstances() {
         testToolsPresenterSpy.showInstances();
         verify(instanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
-        verify(instanceListContainerStyleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
         verify(simpleJavaInstanceListContainerSeparatorStyleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
-        verify(simpleJavaInstanceListContainerStyleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
     }
 
 

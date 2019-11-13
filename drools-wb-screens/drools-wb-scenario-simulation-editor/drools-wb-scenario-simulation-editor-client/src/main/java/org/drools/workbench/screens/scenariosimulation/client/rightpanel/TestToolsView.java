@@ -146,6 +146,11 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void setSimpleJavaInstanceFieldsMap(SortedMap<String, FactModelTree> factTypeFieldsMap);
 
+        /**
+         * Method to hide all the <b>instance-related</b> html
+         */
+        void hideInstances();
+
         void setEventBus(EventBus eventBus);
 
         void setGridWidget(GridWidget gridWidget);
