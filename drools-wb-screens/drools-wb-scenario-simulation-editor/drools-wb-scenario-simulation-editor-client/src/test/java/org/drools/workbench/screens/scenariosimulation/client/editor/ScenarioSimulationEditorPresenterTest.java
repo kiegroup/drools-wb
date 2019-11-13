@@ -696,20 +696,20 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setTestTools() {
         presenter.setTestTools(testToolsPresenterMock);
         verify(contextMock, times(1)).setTestToolsPresenter(testToolsPresenterMock);
-        verify(testToolsPresenterMock, times(1)).setEventBus(eventBusMock);
+        verify(testToolsPresenterMock, times(1)).setEventBus(eq(eventBusMock));
         verify(dataManagementStrategyMock, times(1)).populateTestTools(eq(testToolsPresenterMock), eq(contextMock));
     }
 
     @Test
     public void setCheatSheet() {
         presenter.setCheatSheet(cheatSheetPresenterMock);
-        verify(cheatSheetPresenterMock, times(1)).initCheatSheet(any());
+        verify(cheatSheetPresenterMock, times(1)).initCheatSheet(isA(ScenarioSimulationModel.Type.class));
     }
 
     @Test
     public void setSettings() {
         presenter.setSettings(settingsPresenterMock);
-        verify(settingsPresenterMock, times(1)).setScenarioType(any(), any(), anyString());
+        verify(settingsPresenterMock, times(1)).setScenarioType(isA(ScenarioSimulationModel.Type.class), any(), anyString());
     }
 
     @Test
