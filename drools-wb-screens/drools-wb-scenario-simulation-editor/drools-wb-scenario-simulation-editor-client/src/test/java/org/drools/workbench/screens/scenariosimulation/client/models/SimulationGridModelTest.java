@@ -38,6 +38,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_CELL_TEXT;
@@ -49,6 +50,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_COUNT;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -154,7 +156,15 @@ public class SimulationGridModelTest extends AbstractScenarioSimulationTest {
     public void getGridWidget() {
         assertEquals(GridWidget.SIMULATION, scenarioGridModelSpy.getGridWidget());
     }
-    
+
+    @Test
+    public void getInstanceLimits() {
+        final GridData.Range retrieved = scenarioGridModelSpy.getInstanceLimits(2);
+        assertNotNull(retrieved);
+        assertEquals(1, retrieved.getMinRowIndex());
+        assertEquals(3, retrieved.getMaxRowIndex());
+    }
+
     @Test
     public void insertRowGridOnly() {
         int setCellInvocations = scenarioMock.getUnmodifiableFactMappingValues().size();
@@ -172,6 +182,12 @@ public class SimulationGridModelTest extends AbstractScenarioSimulationTest {
         verify(scenarioGridModelSpy, never()).insertRow(eq(ROW_INDEX), eq(gridRowMock));
         verify(scenarioGridModelSpy, times(1)).updateIndexColumn();
         verify(scenarioGridModelSpy, times(setCellInvocations)).setCell(anyInt(), anyInt(), isA(Supplier.class));
+    }
+
+    @Test
+    public void commonAddRow() {
+        scenarioGridModelSpy.commonAddRow(1);
+        verify(scenarioGridModelSpy, times(1)).commonAddRow(1, 1);
     }
 
 }

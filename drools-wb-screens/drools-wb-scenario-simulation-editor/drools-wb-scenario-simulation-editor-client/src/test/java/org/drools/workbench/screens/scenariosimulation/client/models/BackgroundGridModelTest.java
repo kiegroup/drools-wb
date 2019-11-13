@@ -38,6 +38,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.GRID_CELL_TEXT;
@@ -49,6 +50,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_COUNT;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -88,7 +90,6 @@ public class BackgroundGridModelTest extends AbstractScenarioSimulationTest {
 
     @Mock
     private BackgroundData backgroundDataMock;
-
 
     @Before
     public void setup() {
@@ -154,14 +155,21 @@ public class BackgroundGridModelTest extends AbstractScenarioSimulationTest {
     public void getGridWidget() {
         assertEquals(GridWidget.BACKGROUND, backgroundGridModelSpy.getGridWidget());
     }
-    
+
+    @Test
+    public void getInstanceLimits() {
+        final GridData.Range retrieved = backgroundGridModelSpy.getInstanceLimits(1);
+        assertNotNull(retrieved);
+        assertEquals(0, retrieved.getMinRowIndex());
+        assertEquals(3, retrieved.getMaxRowIndex());
+    }
+
     @Test
     public void insertRowGridOnly() {
         int setCellInvocations = backgroundDataMock.getUnmodifiableFactMappingValues().size();
         backgroundGridModelSpy.insertRowGridOnly(ROW_INDEX, gridRowMock, backgroundDataMock);
         verify(backgroundGridModelSpy, atLeast(1)).checkSimulation();
         verify(backgroundGridModelSpy, never()).insertRow(eq(ROW_INDEX), eq(gridRowMock));
-        verify(backgroundGridModelSpy, times(1)).updateIndexColumn();
         verify(backgroundGridModelSpy, times(setCellInvocations)).setCell(anyInt(), anyInt(), isA(Supplier.class));
         reset(backgroundGridModelSpy);
         FactMapping factMappingByIndexMock = mock(FactMapping.class);
@@ -170,8 +178,12 @@ public class BackgroundGridModelTest extends AbstractScenarioSimulationTest {
         backgroundGridModelSpy.insertRowGridOnly(ROW_INDEX, gridRowMock, backgroundDataMock);
         verify(backgroundGridModelSpy, atLeast(1)).checkSimulation();
         verify(backgroundGridModelSpy, never()).insertRow(eq(ROW_INDEX), eq(gridRowMock));
-        verify(backgroundGridModelSpy, times(1)).updateIndexColumn();
         verify(backgroundGridModelSpy, times(setCellInvocations)).setCell(anyInt(), anyInt(), isA(Supplier.class));
     }
 
+    @Test
+    public void commonAddRow() {
+        backgroundGridModelSpy.commonAddRow(1);
+        verify(backgroundGridModelSpy, times(1)).commonAddRow(1, 0);
+    }
 }
