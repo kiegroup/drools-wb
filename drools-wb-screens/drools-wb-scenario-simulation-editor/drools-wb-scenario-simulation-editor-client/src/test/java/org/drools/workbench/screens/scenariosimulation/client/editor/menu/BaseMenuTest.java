@@ -206,7 +206,7 @@ public class BaseMenuTest {
     }
 
     @Test
-    public void  updateMenuItemAttributes() {
+    public void updateExecutableMenuItemAttributes() {
         LIElement toUpdateMock = mock(LIElement.class);
         NodeList<Element> elementsByTagNameMock = mock(NodeList.class);
         Element itemMock = mock(Element.class);
@@ -218,5 +218,21 @@ public class BaseMenuTest {
         baseMenu.updateExecutableMenuItemAttributes(toUpdateMock, id, label, i18n);
         verify(toUpdateMock, times(1)).setId(eq(id));
         verify(itemMock, times(1)).setInnerHTML(eq(label));
+    }
+
+    @Test
+    public void updateMenuItemAttributes() {
+        LIElement toUpdateMock = mock(LIElement.class);
+        NodeList<Element> elementsByTagNameMock = mock(NodeList.class);
+        Element itemMock = mock(Element.class);
+        when(elementsByTagNameMock.getItem(0)).thenReturn(itemMock);
+        when(toUpdateMock.getElementsByTagName("span")).thenReturn(elementsByTagNameMock);
+        String id = "TEST-ID";
+        String label = "TEST-LABEL";
+        String i18n = "TEST-i18n";
+        String boldLabel = "<b>" + label + "</b>";
+        baseMenu.updateMenuItemAttributes(toUpdateMock, id, label, i18n);
+        verify(toUpdateMock, times(1)).setId(eq(id));
+        verify(itemMock, times(1)).setInnerHTML(eq(boldLabel));
     }
 }
