@@ -150,6 +150,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         dataObjectFieldsMap.putAll(visibleFacts);
         dataObjectFieldsMap.putAll(factModelTuple.getHiddenFacts());
         context.setDataObjectFieldsMap(dataObjectFieldsMap);
+        testToolsPresenter.hideInstances();
         // Update model
         if (GridWidget.SIMULATION.equals(gridWidget)) {
             final SortedMap<String, FactModelTree> instanceFieldsMap = getInstanceMap(complexDataObjects);
@@ -162,9 +163,6 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
             Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleDataObjects.keySet());
             simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
             context.getAbstractScesimGridModelByGridWidget(gridWidget).setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
-        } else {
-            testToolsPresenter.clearInstanceList();
-            testToolsPresenter.clearSimpleJavaInstanceFieldList();
         }
     }
 
