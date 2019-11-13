@@ -146,7 +146,26 @@ public abstract class BaseMenu implements IsWidget,
         return RootPanel.get();
     }
 
+    /**
+     * It updates the given toUpdate element with given attributes. To be used with not executable menu items.
+     * The given label it's enriched with HTML bold tag.
+     * @param toUpdate
+     * @param id
+     * @param label
+     * @param i18n
+     */
     protected void updateMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
+        this.updateExecutableMenuItemAttributes(toUpdate, id, "<b>" + label.toUpperCase() + "</b>", i18n);
+    }
+
+    /**
+     * It updates the given toUpdate element with given attributes. To be used with executable menu items.
+     * @param toUpdate
+     * @param id
+     * @param label
+     * @param i18n
+     */
+    protected void updateExecutableMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
         toUpdate.setId(id);
         toUpdate.getElementsByTagName("span").getItem(0).setInnerHTML(label);
     }

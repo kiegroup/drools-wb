@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
@@ -33,17 +35,17 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleSc
 public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    private final String UCGRIDCONTEXTMENU_INSERT_ROW_ABOVE = "ucgridcontextmenu-insert-row-above";
-    private final String UCGRIDCONTEXTMENU_INSERT_ROW_BELOW = "ucgridcontextmenu-insert-row-below";
-    private final String UCGRIDCONTEXTMENU_DELETE_ROW = "ucgridcontextmenu-delete-row";
-    private final String UCGRIDCONTEXTMENU_DUPLICATE_ROW = "ucgridcontextmenu-duplicate-row";
-    private final String UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "ucgridcontextmenu-run-single-scenario";
+    protected static final String UCGRIDCONTEXTMENU_INSERT_ROW_ABOVE = "ucgridcontextmenu-insert-row-above";
+    protected static final String UCGRIDCONTEXTMENU_INSERT_ROW_BELOW = "ucgridcontextmenu-insert-row-below";
+    protected static final String UCGRIDCONTEXTMENU_DELETE_ROW = "ucgridcontextmenu-delete-row";
+    protected static final String UCGRIDCONTEXTMENU_DUPLICATE_ROW = "ucgridcontextmenu-duplicate-row";
+    protected static final String UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "ucgridcontextmenu-run-single-scenario";
 
-    private LIElement insertRowAboveLIElement;
-    private LIElement insertRowBelowLIElement;
-    private LIElement duplicateRowLIElement;
-    private LIElement deleteRowLIElement;
-    private LIElement runSingleScenarioElement;
+    protected LIElement insertRowAboveLIElement;
+    protected LIElement insertRowBelowLIElement;
+    protected LIElement duplicateRowLIElement;
+    protected LIElement deleteRowLIElement;
+    protected LIElement runSingleScenarioElement;
 
     @PostConstruct
     @Override
@@ -57,11 +59,23 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int rowIndex) {
-        super.show(gridWidget, mx, my);
+        callSuperShow(gridWidget, mx, my);
         mapEvent(insertRowAboveLIElement, new InsertRowEvent(gridWidget, rowIndex));
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
-        mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        if (Objects.equals(GridWidget.BACKGROUND, gridWidget) && runSingleScenarioElement != null) {
+            removeMenuItem(runSingleScenarioElement);
+            runSingleScenarioElement = null;
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
+            if (runSingleScenarioElement == null) {
+                runSingleScenarioElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
+            }
+            mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        }
+    }
+
+    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
+        super.show(gridWidget, mx, my);
     }
 }

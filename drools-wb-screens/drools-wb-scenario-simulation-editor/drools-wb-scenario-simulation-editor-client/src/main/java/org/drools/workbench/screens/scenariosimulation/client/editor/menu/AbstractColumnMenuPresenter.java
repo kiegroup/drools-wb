@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
@@ -57,21 +59,25 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
-        if(!showDuplicateInstance && duplicateInstanceLIElement != null) {
+        if((!showDuplicateInstance || Objects.equals(GridWidget.BACKGROUND, gridWidget)) && duplicateInstanceLIElement != null) {
+            updateMenuItemAttributes(gridTitleElement, HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
+            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
+            if (duplicateInstanceLIElement == null) {
+                duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance");
+            }
+            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(gridWidget, columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(gridWidget, columnIndex, true, asProperty));
         if (asProperty) {
-            updateMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
+            updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, true));
         } else {
-            updateMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
+            updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
-        }
-        if (duplicateInstanceLIElement != null) {
-            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
         callSuperShow(gridWidget, mx, my);
     }
