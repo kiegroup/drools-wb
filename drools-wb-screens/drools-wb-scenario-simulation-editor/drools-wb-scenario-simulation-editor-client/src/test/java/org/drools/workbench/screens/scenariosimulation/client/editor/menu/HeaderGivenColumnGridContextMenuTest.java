@@ -16,6 +16,9 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -34,9 +37,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class HeaderGivenColumnGridContextMenuTest {
+
+    @Mock
+    private RootPanel rootPanelMock;
 
     @Mock
     private LIElement appendColumnElementMock;
@@ -44,17 +51,26 @@ public class HeaderGivenColumnGridContextMenuTest {
     private LIElement prependColumnElementMock;
     @Mock
     private LIElement gridTitleElementMock;
+    @Mock
+    private BaseMenuView viewMock;
+    @Mock
+    private UListElement contextMenuDropdownMock;
+    @Mock
+    private Style styleMock;
 
     private HeaderGivenContextMenu headerGivenContextMenuSpy;
 
     @Before
     public void setup() {
+        when(contextMenuDropdownMock.getStyle()).thenReturn(styleMock);
+        when(viewMock.getContextMenuDropdown()).thenReturn(contextMenuDropdownMock);
         headerGivenContextMenuSpy = spy(new HeaderGivenContextMenu() {
 
             {
                 this.appendColumnElement = appendColumnElementMock;
                 this.prependColumnElement = prependColumnElementMock;
                 this.gridTitleElement = gridTitleElementMock;
+                this.view = viewMock;
             }
 
             @Override
@@ -68,8 +84,19 @@ public class HeaderGivenColumnGridContextMenuTest {
             }
 
             @Override
-            public void callSuperShow(GridWidget gridWidget, int mx, int my) {
+            public void show(final int mx, final int my) {
                 //Do nothing
+                System.out.println("puppa");
+            }
+
+            @Override
+            public void hide() {
+
+            }
+
+            @Override
+            protected RootPanel getRootPanel() {
+                return rootPanelMock;
             }
         });
     }

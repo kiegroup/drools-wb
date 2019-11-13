@@ -59,7 +59,7 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int rowIndex) {
-        callSuperShow(gridWidget, mx, my);
+        show(gridWidget, mx, my);
         mapEvent(insertRowAboveLIElement, new InsertRowEvent(gridWidget, rowIndex));
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
@@ -75,7 +75,4 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
         }
     }
 
-    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
-        super.show(gridWidget, mx, my);
-    }
 }

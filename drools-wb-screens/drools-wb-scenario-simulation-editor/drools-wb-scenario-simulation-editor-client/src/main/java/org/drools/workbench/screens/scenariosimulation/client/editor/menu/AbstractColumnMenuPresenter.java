@@ -79,11 +79,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
             updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
         }
-        callSuperShow(gridWidget, mx, my);
-    }
-
-    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
-        super.show(gridWidget, mx, my);
+        show(gridWidget, mx, my);
     }
 
 }

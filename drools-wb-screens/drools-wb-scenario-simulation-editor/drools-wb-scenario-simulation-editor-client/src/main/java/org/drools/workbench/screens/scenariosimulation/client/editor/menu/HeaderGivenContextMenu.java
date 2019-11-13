@@ -55,7 +55,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
     @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
-        callSuperShow(gridWidget, mx, my);
+        super.show(gridWidget, mx, my);
         if (Objects.equals(GridWidget.BACKGROUND, gridWidget)) {
             updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.background(), "background");
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
@@ -65,7 +65,4 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
         mapEvent(prependColumnElement, new PrependColumnEvent(gridWidget, "GIVEN"));
     }
 
-    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
-        super.show(gridWidget, mx, my);
-    }
 }

@@ -53,7 +53,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
             }
 
             @Override
-            public void callSuperShow(GridWidget gridWidget, int mx, int my) {
+            public void show(GridWidget gridWidget, int mx, int my) {
             }
         };
         super.setup();
@@ -155,7 +155,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         if (abstractColumnMenuPresenter.duplicateInstanceLIElement != null) {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement), isA(DuplicateInstanceEvent.class));
         }
-        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).callSuperShow(eq(gridWidget), eq(mx), eq(my));
+        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).show(eq(gridWidget), eq(mx), eq(my));
         reset(abstractColumnMenuPresenterSpy);
     }
 }
