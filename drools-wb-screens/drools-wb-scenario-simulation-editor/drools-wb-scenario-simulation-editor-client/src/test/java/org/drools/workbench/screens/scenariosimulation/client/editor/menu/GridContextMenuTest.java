@@ -103,7 +103,7 @@ public class GridContextMenuTest {
             }
 
             @Override
-            public void callSuperShow(GridWidget gridWidget, int mx, int my) {
+            public void show(GridWidget gridWidget, int mx, int my) {
                 //Do nothing
             }
         });
@@ -123,7 +123,7 @@ public class GridContextMenuTest {
     public void show_Simulation_NullRunScenarioElement() {
         gridContextMenuSpy.runSingleScenarioElement = null;
         gridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.SIMULATION), eq(0), eq(0));
+        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -136,7 +136,7 @@ public class GridContextMenuTest {
     @Test
     public void show_Simulation_NotNullRunScenarioElement() {
         gridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.SIMULATION), eq(0), eq(0));
+        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -150,7 +150,7 @@ public class GridContextMenuTest {
     public void show_Background_NullRunScenarioElement() {
         gridContextMenuSpy.runSingleScenarioElement = null;
         gridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.BACKGROUND), eq(0), eq(0));
+        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -163,7 +163,7 @@ public class GridContextMenuTest {
     @Test
     public void show_Background_NotNullRunScenarioElement() {
         gridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.BACKGROUND), eq(0), eq(0));
+        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));

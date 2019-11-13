@@ -16,6 +16,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -40,6 +42,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class UnmodifiableColumnGridContextMenuTest {
@@ -56,11 +59,19 @@ public class UnmodifiableColumnGridContextMenuTest {
     private LIElement runSingleScenarioElementMock;
     @Mock
     private LIElement createdElementMock;
+    @Mock
+    private BaseMenuView viewMock;
+    @Mock
+    private UListElement contextMenuDropdownMock;
+    @Mock
+    private Style styleMock;
 
     private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenuSpy;
 
     @Before
     public void setup() {
+        when(contextMenuDropdownMock.getStyle()).thenReturn(styleMock);
+        when(viewMock.getContextMenuDropdown()).thenReturn(contextMenuDropdownMock);
         unmodifiableColumnGridContextMenuSpy = spy(new UnmodifiableColumnGridContextMenu() {
 
             {
@@ -69,6 +80,7 @@ public class UnmodifiableColumnGridContextMenuTest {
                 this.duplicateRowLIElement = duplicateRowLIElementMock;
                 this.deleteRowLIElement = deleteRowLIElementMock;
                 this.runSingleScenarioElement = runSingleScenarioElementMock;
+                this.view = viewMock;
             }
 
             @Override
@@ -82,7 +94,13 @@ public class UnmodifiableColumnGridContextMenuTest {
             }
 
             @Override
-            public void callSuperShow(GridWidget gridWidget, int mx, int my) {
+            public void hide() {
+                //Do nothing
+            }
+
+            @Override
+            public void show(final GridWidget gridWidget, final int mx, final int my) {
+                //Do nothing
             }
         });
     }
@@ -101,7 +119,7 @@ public class UnmodifiableColumnGridContextMenuTest {
     public void show_Simulation_NullRunScenarioElement() {
         unmodifiableColumnGridContextMenuSpy.runSingleScenarioElement = null;
         unmodifiableColumnGridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.SIMULATION), eq(0), eq(0));
+        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -113,7 +131,7 @@ public class UnmodifiableColumnGridContextMenuTest {
     @Test
     public void show_Simulation_NotNullRunScenarioElement() {
         unmodifiableColumnGridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.SIMULATION), eq(0), eq(0));
+        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -126,7 +144,7 @@ public class UnmodifiableColumnGridContextMenuTest {
     public void show_Background_NullRunScenarioElement() {
         unmodifiableColumnGridContextMenuSpy.runSingleScenarioElement = null;
         unmodifiableColumnGridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.BACKGROUND), eq(0), eq(0));
+        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
@@ -138,12 +156,13 @@ public class UnmodifiableColumnGridContextMenuTest {
     @Test
     public void show_Background_NotNullRunScenarioElement() {
         unmodifiableColumnGridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).callSuperShow(eq(GridWidget.BACKGROUND), eq(0), eq(0));
+        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, never()).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(unmodifiableColumnGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
+        verify(contextMenuDropdownMock, times(1)).removeChild(eq(runSingleScenarioElementMock));
     }
 }
