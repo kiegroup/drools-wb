@@ -41,6 +41,12 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
         return GridWidget.BACKGROUND;
     }
 
+    @Override
+    public Range getInstanceLimits(int columnIndex) {
+        return getInstanceLimits(columnIndex, 0);
+    }
+
+
     /**
      * This method <i>insert</i> a row to the grid and populate it with values taken from given <code>Scenario</code>
      * @param row
@@ -69,6 +75,10 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
                 throw new UnsupportedOperationException("Only string is supported at the moment");
             }
         });
-        updateIndexColumn();
+    }
+
+    @Override
+    protected void commonAddRow(int rowIndex) {
+        commonAddRow(rowIndex, 0);
     }
 }

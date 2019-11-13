@@ -432,6 +432,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void onImportCheckSwitch() {
+        // Test to verify there are not new, un-managed, GridWidget
+        String FILE_CONTENT = "FILE_CONTENT";
+        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+        for (GridWidget gridWidget : GridWidget.values()) {
+            presenterSpy.onImport(FILE_CONTENT, gridWidget);
+        }
+    }
+
+    @Test
     public void resetDocks() {
         presenterSpy.resetDocks();
         verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));

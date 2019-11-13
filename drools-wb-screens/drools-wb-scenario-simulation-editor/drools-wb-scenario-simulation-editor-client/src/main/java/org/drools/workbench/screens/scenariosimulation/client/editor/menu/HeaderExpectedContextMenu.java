@@ -56,7 +56,7 @@ public class HeaderExpectedContextMenu extends AbstractHeaderGroupMenuPresenter 
     @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
         super.show(gridWidget, mx, my);
-        appendColumnEvent = new AppendColumnEvent(gridWidget, "EXPECT");
-        prependColumnEvent = new PrependColumnEvent(gridWidget, "EXPECT");
+        mapEvent(appendColumnElement, new AppendColumnEvent(gridWidget, "EXPECT"));
+        mapEvent(prependColumnElement, new PrependColumnEvent(gridWidget, "EXPECT"));
     }
 }

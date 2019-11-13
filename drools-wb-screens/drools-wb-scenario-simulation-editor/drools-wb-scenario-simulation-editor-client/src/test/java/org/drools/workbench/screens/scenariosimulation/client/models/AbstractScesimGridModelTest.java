@@ -189,6 +189,16 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
             public GridWidget getGridWidget() {
                 return GridWidget.SIMULATION;
             }
+
+            @Override
+            protected void commonAddRow(int rowIndex) {
+
+            }
+
+            @Override
+            public Range getInstanceLimits(int columnIndex) {
+                return new Range(0, 0);
+            }
         });
     }
 

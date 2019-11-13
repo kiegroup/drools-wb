@@ -61,7 +61,7 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
             updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
         }
         super.show(gridWidget, mx, my);
-        appendColumnEvent = new AppendColumnEvent(gridWidget, "GIVEN");
-        prependColumnEvent = new PrependColumnEvent(gridWidget, "GIVEN");
+        mapEvent(appendColumnElement, new AppendColumnEvent(gridWidget, "GIVEN"));
+        mapEvent(prependColumnElement, new PrependColumnEvent(gridWidget, "GIVEN"));
     }
 }

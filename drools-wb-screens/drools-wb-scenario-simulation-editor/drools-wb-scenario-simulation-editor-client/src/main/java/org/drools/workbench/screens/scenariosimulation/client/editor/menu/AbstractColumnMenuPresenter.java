@@ -82,7 +82,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         callSuperShow(gridWidget, mx, my);
     }
 
-    protected void callSuperShow(final GridWidget gridWidget, final int mx, final int my) {
+    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
         super.show(gridWidget, mx, my);
     }
 

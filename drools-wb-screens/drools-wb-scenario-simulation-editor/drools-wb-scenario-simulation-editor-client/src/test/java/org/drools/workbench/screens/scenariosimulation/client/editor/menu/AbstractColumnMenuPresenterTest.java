@@ -42,7 +42,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         abstractColumnMenuPresenter = new AbstractColumnMenuPresenter() {
 
             @Override
-            public void callSuperShow(int mx, int my) {
+            public void callSuperShow(GridWidget gridWidget, int mx, int my) {
             }
         };
         super.setup();
@@ -104,7 +104,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         if (abstractColumnMenuPresenter.duplicateInstanceLIElement != null) {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement), isA(DuplicateInstanceEvent.class));
         }
-        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).callSuperShow(eq(mx), eq(my));
+        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).callSuperShow(eq(GridWidget.SIMULATION), eq(mx), eq(my));
         reset(abstractColumnMenuPresenterSpy);
     }
 }
