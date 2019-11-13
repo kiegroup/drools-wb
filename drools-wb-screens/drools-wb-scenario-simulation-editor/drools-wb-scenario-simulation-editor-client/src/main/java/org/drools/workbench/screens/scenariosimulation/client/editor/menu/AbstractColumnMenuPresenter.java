@@ -60,13 +60,13 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
         if((!showDuplicateInstance || Objects.equals(GridWidget.BACKGROUND, gridWidget)) && duplicateInstanceLIElement != null) {
-            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
+            updateMenuItemAttributes(gridTitleElement, HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
             updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
             if (duplicateInstanceLIElement == null) {
-                duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.runSingleScenario(), "runSingleScenario");
+                duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance");
             }
             mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }

@@ -32,12 +32,12 @@ import org.drools.workbench.screens.scenariosimulation.client.events.PrependColu
 @Dependent
 public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
-    private static final String HEADERGIVENCONTEXTMENU_GIVEN = "headergivencontextmenu-given";
-    private static final String HEADERGIVENCONTEXTMENU_GRID_TITLE = "headergivencontextmenu-grid-title";
-    private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "headergivencontextmenu-insert-column-left";
-    private static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "headergivencontextmenu-insert-column-right";
-    private static final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
-    private static final String HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE = "headergivencontextmenu-insert-row-above";
+    protected static final String HEADERGIVENCONTEXTMENU_GIVEN = "headergivencontextmenu-given";
+    protected static final String HEADERGIVENCONTEXTMENU_GRID_TITLE = "headergivencontextmenu-grid-title";
+    protected static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "headergivencontextmenu-insert-column-left";
+    protected static final String HEADERGIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "headergivencontextmenu-insert-column-right";
+    protected static final String HEADERGIVENCONTEXTMENU_DELETE_COLUMN = "headergivencontextmenu-delete-column";
+    protected static final String HEADERGIVENCONTEXTMENU_INSERT_ROW_ABOVE = "headergivencontextmenu-insert-row-above";
 
     @PostConstruct
     @Override
@@ -55,13 +55,17 @@ public class HeaderGivenContextMenu extends AbstractHeaderGroupMenuPresenter {
 
     @Override
     public void show(final GridWidget gridWidget, int mx, int my) {
+        callSuperShow(gridWidget, mx, my);
         if (Objects.equals(GridWidget.BACKGROUND, gridWidget)) {
             updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.background(), "background");
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
             updateMenuItemAttributes(gridTitleElement , HEADERGIVENCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
         }
-        super.show(gridWidget, mx, my);
         mapEvent(appendColumnElement, new AppendColumnEvent(gridWidget, "GIVEN"));
         mapEvent(prependColumnElement, new PrependColumnEvent(gridWidget, "GIVEN"));
+    }
+
+    protected void callSuperShow(GridWidget gridWidget, final int mx, final int my) {
+        super.show(gridWidget, mx, my);
     }
 }
