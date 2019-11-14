@@ -54,6 +54,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
 
             @Override
             public void show(GridWidget gridWidget, int mx, int my) {
+                //Do nothing
             }
         };
         super.setup();

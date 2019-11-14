@@ -86,7 +86,6 @@ public class HeaderGivenColumnGridContextMenuTest {
             @Override
             public void show(final int mx, final int my) {
                 //Do nothing
-                System.out.println("puppa");
             }
 
             @Override
