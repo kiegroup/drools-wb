@@ -34,7 +34,6 @@ import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
-import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -442,7 +441,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onEditTabSelected() {
-        setItemMenuForMainGridEnabled(true);
+        setItemMenuEnabled(true);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.select();
         scenarioBackgroundGridWidget.deselect();

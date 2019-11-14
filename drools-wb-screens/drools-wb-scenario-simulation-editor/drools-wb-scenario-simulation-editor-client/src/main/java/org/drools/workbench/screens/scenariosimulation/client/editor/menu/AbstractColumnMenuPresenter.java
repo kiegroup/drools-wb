@@ -66,7 +66,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
             updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
             if (duplicateInstanceLIElement == null) {
-                duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance");
+                duplicateInstanceLIElement = addExecutableMenuItemAfter(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance", deleteColumnInstanceLIElement);
             }
             mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
