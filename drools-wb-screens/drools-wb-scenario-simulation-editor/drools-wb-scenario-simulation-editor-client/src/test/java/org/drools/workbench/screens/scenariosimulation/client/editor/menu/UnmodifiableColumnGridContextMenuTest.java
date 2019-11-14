@@ -82,11 +82,6 @@ public class UnmodifiableColumnGridContextMenuTest {
             }
 
             @Override
-            public void removeMenuItem(LIElement toRemove) {
-                //Do nothing
-            }
-
-            @Override
             public void callSuperShow(GridWidget gridWidget, int mx, int my) {
             }
         });
