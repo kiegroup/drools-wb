@@ -76,7 +76,6 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 
@@ -94,7 +93,6 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -224,14 +222,12 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void setSaveEnabledTrue() {
         presenterSpy.setSaveEnabled(true);
         assertTrue(presenterSpy.saveEnabled);
-        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(true));
     }
 
     @Test
     public void setSaveEnabledFalse() {
         presenterSpy.setSaveEnabled(false);
         assertFalse(presenterSpy.saveEnabled);
-        verify(settingsPresenterMock, times(1)).setSaveEnabled(eq(false));
     }
 
     @Test
@@ -241,9 +237,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.setSaveEnabled(true);
         presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
         assertTrue(presenterSpy.saveEnabled);
-        assertTrue(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
     }
 
     @Test
@@ -253,9 +246,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.setSaveEnabled(false);
         presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
         assertFalse(presenterSpy.saveEnabled);
-        assertFalse(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).restoreSaveButton();
     }
 
     @Test
@@ -265,9 +255,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
         presenterSpy.setSaveEnabled(true);
         assertTrue(presenterSpy.saveEnabled);
-        assertTrue(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).restoreSaveButton();
-        verify(settingsPresenterSpy.getView(), never()).removeSaveButton();
     }
 
     @Test
@@ -277,8 +264,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
         presenterSpy.setSaveEnabled(false);
         assertFalse(presenterSpy.saveEnabled);
-        assertFalse(settingsPresenterSpy.isSaveEnabled());
-        verify(settingsPresenterSpy.getView(), atLeastOnce()).removeSaveButton();
     }
 
     @Test
@@ -579,7 +564,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).isUberfireDocksInteractionEventToManage(eq(uberfireDocksInteractionEventMock));
         verify(uberfireDocksInteractionEventMock, times(2)).getTargetDock(); // It's invoked twice
         verify(presenterSpy, times(1)).getSettingsPresenter(eq(settingsPlaceRequestMock));
-        verify(presenterSpy, times(1)).getSaveCommand();
         verify(presenterSpy, times(1)).setSettings(eq(settingsPresenterMock));
         //
         PlaceRequest coverageReportPlaceRequestMock = mock(PlaceRequest.class);
@@ -769,11 +753,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void setSettings() {
-        Command saveCommandMock = mock(Command.class);
-        when(presenterSpy.getSaveCommand()).thenReturn(saveCommandMock);
         presenterSpy.setSettings(settingsPresenterMock);
         verify(settingsPresenterMock, times(1)).setScenarioType(isA(ScenarioSimulationModel.Type.class), any(), anyString());
-        verify(settingsPresenterMock, times(1)).setSaveCommand(eq(saveCommandMock));
     }
 
     @Test
